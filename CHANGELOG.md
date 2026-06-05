@@ -4,7 +4,7 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
-## [0.1.0] — Unreleased
+## [0.1.0] — 2026-06-05
 
 Initial pre-GA release.
 
@@ -16,6 +16,10 @@ Initial pre-GA release.
 - Bearer API-key authentication; the key prefix (`fact_test_` / `fact_live_`)
   selects the environment.
 - `FactuareaClient::create()` ergonomic factory entry point.
+- Pinned `Factuarea-Version: 2026-06-04` header sent on every request
+  (`FactuareaVersionHook`), so API behaviour stays stable until the SDK is
+  upgraded. See `docs/VERSIONING.md` for the `Factuarea-Version` ↔ SDK-version
+  mapping.
 - Automatic backoff retries on `429` + `5xx` (honouring `Retry-After`), never on
   other `4xx`.
 - Automatic `Idempotency-Key` (UUID v4) on every mutating request, reused across
@@ -30,6 +34,7 @@ Initial pre-GA release.
 
 ### Notes
 
-- Not yet published to Packagist (install from GitHub until publication).
-- The `Factuarea-Version` baseline for this release is the date of the spec frozen
-  in P0.
+- The `Factuarea-Version` baseline for this release is `2026-06-04` (the date of
+  the OpenAPI spec frozen in P0, source commit `e822661bc`).
+- Pre-GA `0.x`: the public surface may change before `1.0.0`, which is tied to the
+  API's GA event. See `SUPPORT.md` and `docs/VERSIONING.md`.

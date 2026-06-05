@@ -213,10 +213,28 @@ The full, generated reference for all resources and operations lives in
 
 ## Versioning
 
-The SDK pins the `Factuarea-Version` it was generated against and sends it on
-every request, so the API behaves consistently until you upgrade. SemVer applies
-to the SDK's public surface: new operations are a minor bump, renames/removals a
-major bump. See [`CHANGELOG.md`](CHANGELOG.md).
+The SDK pins the `Factuarea-Version` it was generated against (currently
+`2026-06-04`) and sends it on every request, so the API behaves consistently
+until you upgrade. SemVer applies to the SDK's public surface: new operations are
+a minor bump, renames/removals or a behaviour-changing `Factuarea-Version` bump
+are a major bump, fixes are a patch. The SDK stays on `0.x` until the API's GA,
+which ships `1.0.0`.
+
+See [`docs/VERSIONING.md`](docs/VERSIONING.md) for the full `Factuarea-Version` ↔
+SDK-version mapping and [`CHANGELOG.md`](CHANGELOG.md) for release history.
+
+---
+
+## Support
+
+| Aspect              | Supported                                                  |
+| ------------------- | ---------------------------------------------------------- |
+| PHP                 | 8.2, 8.3, 8.4 (tested in CI)                               |
+| Stability           | Pre-GA `0.x` — the public surface may change before `1.0.0` |
+| `Factuarea-Version` | `2026-06-04` (pinned, sent on every request)              |
+
+Full runtime-support matrix and the deprecation / breaking-change policy live in
+[`SUPPORT.md`](SUPPORT.md).
 
 ---
 
