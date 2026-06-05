@@ -1,0 +1,25 @@
+overlay: 1.0.0
+info:
+  title: Normalize retry status-code casing for the Speakeasy PHP runtime
+  version: 1.0.0
+  # The pinned source spec declares `x-speakeasy-retries.statusCodes: ["429", "5XX"]`
+  # (uppercase, the OpenAPI-conventional family notation). The Speakeasy PHP retry
+  # runtime (RetryUtils::isRetryableResponse, feature `retries@0.1.1`) matches the
+  # family form with the case-sensitive regex `/^[0-9]xx$/`, so an uppercase `5XX`
+  # in the generated retry-code array NEVER matches and 5xx responses are not
+  # retried. This overlay lowercases the family code to `5xx` so the generated
+  # array (`['429', '5xx']`) is recognised and backoff retries fire on 5xx as
+  # intended. It does NOT modify the pinned source spec on disk; it is applied as a
+  # generation input only. Remove this overlay once Speakeasy fixes the runtime
+  # regex to be case-insensitive (tracked in docs/REGENERATION.md).
+actions:
+  # The overlay `update` action merges into arrays (it appends rather than
+  # replacing), so we first drop the existing statusCodes array and then re-add it
+  # with the lowercase family code. The net result is exactly `["429", "5xx"]`.
+  - target: $.paths[*][*].x-speakeasy-retries.statusCodes
+    remove: true
+  - target: $.paths[*][*].x-speakeasy-retries
+    update:
+      statusCodes:
+        - "429"
+        - "5xx"

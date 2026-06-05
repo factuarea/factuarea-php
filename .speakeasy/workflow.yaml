@@ -1,0 +1,21 @@
+workflowVersion: 1.0.0
+speakeasyVersion: latest
+sources:
+    Factuarea Public API:
+        inputs:
+            - location: spec/openapi.json
+        overlays:
+            - location: .speakeasy/overlays/retry-status-code-casing.yaml
+        output: .speakeasy/out.openapi.yaml
+        registry:
+            location: registry.speakeasyapi.dev/factuarea/factuarea/factuarea-public-api
+targets:
+    factuarea:
+        target: php
+        source: Factuarea Public API
+        codeSamples:
+            registry:
+                location: registry.speakeasyapi.dev/factuarea/factuarea/factuarea-public-api-php-code-samples
+            labelOverride:
+                fixedValue: Php (SDK)
+            blocking: false
