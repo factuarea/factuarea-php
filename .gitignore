@@ -6,3 +6,5 @@ vendor
 **/.speakeasy/logs/
 .env
 .env.local
+.phpunit.result.cache
+composer.phar
