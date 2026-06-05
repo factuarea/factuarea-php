@@ -32,10 +32,10 @@ jobs:
       matrix:
         php: ["8.2", "8.3", "8.4"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Setup PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
         with:
           php-version: ${{ matrix.php }}
           coverage: none
@@ -51,7 +51,7 @@ jobs:
     name: Tag matches gen.yaml version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       # The tag (v0.1.0) must match php.version in .speakeasy/gen.yaml (0.1.0).
       # This prevents publishing a tag whose code declares a different version.
@@ -73,7 +73,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       # Pull the changelog section for this tag (everything under the
       # "## [x.y.z]" heading up to the next "## " heading).
@@ -96,7 +96,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           name: ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.notes }}
