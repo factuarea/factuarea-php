@@ -1,0 +1,13 @@
+# EventDataInvoiceAnnulled
+
+Payload (`data`) emitted with the `invoice.annulled` event.
+
+
+## Fields
+
+| Field                                                                                                    | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                   | *string*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `invoice`                                                                                                | [Components\EventDataInvoiceAnnulledInvoice](../../Models/Components/EventDataInvoiceAnnulledInvoice.md) | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `annulledAt`                                                                                             | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                            | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `reason`                                                                                                 | *string*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |

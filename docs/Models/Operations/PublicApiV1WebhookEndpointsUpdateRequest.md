@@ -1,0 +1,9 @@
+# PublicApiV1WebhookEndpointsUpdateRequest
+
+
+## Fields
+
+| Field                                                                                               | Type                                                                                                | Required                                                                                            | Description                                                                                         |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `webhookEndpoint`                                                                                   | *string*                                                                                            | :heavy_check_mark:                                                                                  | N/A                                                                                                 |
+| `body`                                                                                              | [?Components\UpdateWebhookEndpointRequest](../../Models/Components/UpdateWebhookEndpointRequest.md) | :heavy_minus_sign:                                                                                  | N/A                                                                                                 |

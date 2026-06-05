@@ -1,0 +1,10 @@
+# PublicApiV1VerifactuCertificatesUploadResponseBody
+
+FNMT certificate uploaded and activated successfully. The `Location` header contains the canonical (relative) URL of the active certificate.
+
+
+## Fields
+
+| Field                                                                                                                                                        | Type                                                                                                                                                         | Required                                                                                                                                                     | Description                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `data`                                                                                                                                                       | [Components\CompanyCertificate](../../Models/Components/CompanyCertificate.md)                                                                               | :heavy_check_mark:                                                                                                                                           | Metadata of an FNMT (PKCS#12) certificate used to sign VeriFactu transmissions. The certificate password and binary are never exposed — only X.509 metadata. |

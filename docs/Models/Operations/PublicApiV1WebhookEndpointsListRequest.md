@@ -1,0 +1,10 @@
+# PublicApiV1WebhookEndpointsListRequest
+
+
+## Fields
+
+| Field                                                                                   | Type                                                                                    | Required                                                                                | Description                                                                             |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `limit`                                                                                 | *?int*                                                                                  | :heavy_minus_sign:                                                                      | Number of objects to return. Integer between 1 and 100. Defaults to 25.                 |
+| `startingAfter`                                                                         | *?string*                                                                               | :heavy_minus_sign:                                                                      | Cursor for forward pagination. Use the `uuid` of the last object on the previous page.  |
+| `endingBefore`                                                                          | *?string*                                                                               | :heavy_minus_sign:                                                                      | Cursor for backward pagination. Use the `uuid` of the first object on the current page. |

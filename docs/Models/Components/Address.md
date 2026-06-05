@@ -1,0 +1,17 @@
+# Address
+
+
+## Fields
+
+| Field                                                 | Type                                                  | Required                                              | Description                                           | Example                                               |
+| ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| `line1`                                               | *string*                                              | :heavy_check_mark:                                    | Street / main thoroughfare (address line 1).          | Calle Mayor 1                                         |
+| `line2`                                               | *?string*                                             | :heavy_minus_sign:                                    | Optional line 2 (e.g. building, residential complex). | Edificio Central                                      |
+| `number`                                              | *?string*                                             | :heavy_minus_sign:                                    | Street number.                                        | 42                                                    |
+| `floor`                                               | *?string*                                             | :heavy_minus_sign:                                    | Piso.                                                 | 3                                                     |
+| `door`                                                | *?string*                                             | :heavy_minus_sign:                                    | Puerta.                                               | B                                                     |
+| `staircase`                                           | *?string*                                             | :heavy_minus_sign:                                    | Escalera.                                             | A                                                     |
+| `postalCode`                                          | *string*                                              | :heavy_check_mark:                                    | N/A                                                   | 28001                                                 |
+| `city`                                                | *string*                                              | :heavy_check_mark:                                    | N/A                                                   | Madrid                                                |
+| `province`                                            | *string*                                              | :heavy_check_mark:                                    | N/A                                                   | Madrid                                                |
+| `country`                                             | *string*                                              | :heavy_check_mark:                                    | ISO 3166-1 alpha-2 country code.                      | ES                                                    |

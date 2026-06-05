@@ -1,0 +1,12 @@
+# EventDataSeriesNumberConsumed
+
+Payload (`data`) emitted with the `series.number_consumed` event.
+
+
+## Fields
+
+| Field                                                                                                            | Type                                                                                                             | Required                                                                                                         | Description                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                           | *string*                                                                                                         | :heavy_check_mark:                                                                                               | N/A                                                                                                              |
+| `series`                                                                                                         | [Components\EventDataSeriesNumberConsumedSeries](../../Models/Components/EventDataSeriesNumberConsumedSeries.md) | :heavy_check_mark:                                                                                               | N/A                                                                                                              |
+| `number`                                                                                                         | *int*                                                                                                            | :heavy_check_mark:                                                                                               | N/A                                                                                                              |

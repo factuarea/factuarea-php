@@ -1,0 +1,12 @@
+# PublicApiV1TaxReportsHistoryPaginatedList
+
+Cursor-paginated list envelope shared by every v1 listing endpoint. `data` holds the page items; `has_more` signals whether another page exists; `next_cursor` is the opaque cursor (UUID v7) to pass as `?cursor=` for the following page. The cursor is opaque — clients MUST NOT interpret it. Concrete listings narrow `data` to their resource type via `allOf`.
+
+
+## Fields
+
+| Field                                                                            | Type                                                                             | Required                                                                         | Description                                                                      | Example                                                                          |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `data`                                                                           | array<[Components\TaxReport](../../Models/Components/TaxReport.md)>              | :heavy_check_mark:                                                               | N/A                                                                              |                                                                                  |
+| `hasMore`                                                                        | *bool*                                                                           | :heavy_check_mark:                                                               | Whether more pages are available after this one.                                 | true                                                                             |
+| `nextCursor`                                                                     | *string*                                                                         | :heavy_check_mark:                                                               | Opaque cursor for the next page (UUID v7), or `null` when `has_more` is `false`. | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                             |

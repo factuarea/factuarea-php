@@ -1,0 +1,12 @@
+# InvoiceStatusItem
+
+Invoice status from the closed catalog with its label and color for UI.
+
+
+## Fields
+
+| Field                                                                                  | Type                                                                                   | Required                                                                               | Description                                                                            | Example                                                                                |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `value`                                                                                | [Components\InvoiceStatusItemValue](../../Models/Components/InvoiceStatusItemValue.md) | :heavy_check_mark:                                                                     | Identificador interno del estado.                                                      | paid                                                                                   |
+| `label`                                                                                | *string*                                                                               | :heavy_check_mark:                                                                     | Human-readable status label (Spanish).                                                 | Pagado                                                                                 |
+| `color`                                                                                | *string*                                                                               | :heavy_check_mark:                                                                     | Color sugerido para pintar el estado en UI.                                            | green                                                                                  |

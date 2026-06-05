@@ -1,0 +1,11 @@
+# EventDataPurchaseInvoicePaid
+
+Payload (`data`) emitted with the `purchase_invoice.paid` event.
+
+
+## Fields
+
+| Field                                                                                                                            | Type                                                                                                                             | Required                                                                                                                         | Description                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                                           | *string*                                                                                                                         | :heavy_check_mark:                                                                                                               | N/A                                                                                                                              |
+| `purchaseInvoice`                                                                                                                | [Components\EventDataPurchaseInvoicePaidPurchaseInvoice](../../Models/Components/EventDataPurchaseInvoicePaidPurchaseInvoice.md) | :heavy_check_mark:                                                                                                               | N/A                                                                                                                              |

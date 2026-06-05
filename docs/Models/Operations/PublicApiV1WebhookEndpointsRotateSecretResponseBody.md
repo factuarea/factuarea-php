@@ -1,0 +1,8 @@
+# PublicApiV1WebhookEndpointsRotateSecretResponseBody
+
+
+## Fields
+
+| Field                                                                                                         | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                        | [Components\WebhookEndpointWithSecret](../../Models/Components/WebhookEndpointWithSecret.md)                  | :heavy_check_mark:                                                                                            | A WebhookEndpoint returned once at creation or after secret rotation. Includes the plain-text signing secret. |

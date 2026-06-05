@@ -1,0 +1,11 @@
+# EventDataProformaNumberAssigned
+
+Payload (`data`) emitted with the `proforma.number_assigned` event.
+
+
+## Fields
+
+| Field                                                                                                                    | Type                                                                                                                     | Required                                                                                                                 | Description                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `type`                                                                                                                   | *string*                                                                                                                 | :heavy_check_mark:                                                                                                       | N/A                                                                                                                      |
+| `proforma`                                                                                                               | [Components\EventDataProformaNumberAssignedProforma](../../Models/Components/EventDataProformaNumberAssignedProforma.md) | :heavy_check_mark:                                                                                                       | N/A                                                                                                                      |

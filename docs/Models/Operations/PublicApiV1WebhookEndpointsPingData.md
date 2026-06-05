@@ -1,0 +1,12 @@
+# PublicApiV1WebhookEndpointsPingData
+
+
+## Fields
+
+| Field                                                       | Type                                                        | Required                                                    | Description                                                 | Example                                                     |
+| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| `success`                                                   | *bool*                                                      | :heavy_check_mark:                                          | N/A                                                         | false                                                       |
+| `httpStatus`                                                | *int*                                                       | :heavy_check_mark:                                          | N/A                                                         | 503                                                         |
+| `responseBody`                                              | *string*                                                    | :heavy_check_mark:                                          | N/A                                                         | <html><body>503 Service Unavailable</body></html>           |
+| `errorMessage`                                              | *string*                                                    | :heavy_check_mark:                                          | N/A                                                         | El endpoint respondió con un código de estado no-2xx (503). |
+| `durationMs`                                                | *int*                                                       | :heavy_check_mark:                                          | N/A                                                         | 87                                                          |

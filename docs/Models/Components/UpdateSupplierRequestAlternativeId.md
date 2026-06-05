@@ -1,0 +1,10 @@
+# UpdateSupplierRequestAlternativeId
+
+
+## Fields
+
+| Field                                                                                         | Type                                                                                          | Required                                                                                      | Description                                                                                   |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `type`                                                                                        | [?Components\UpdateSupplierRequestType](../../Models/Components/UpdateSupplierRequestType.md) | :heavy_minus_sign:                                                                            | N/A                                                                                           |
+| `value`                                                                                       | *?string*                                                                                     | :heavy_minus_sign:                                                                            | N/A                                                                                           |
+| `countryCode`                                                                                 | *?string*                                                                                     | :heavy_minus_sign:                                                                            | N/A                                                                                           |

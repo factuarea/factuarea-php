@@ -1,0 +1,11 @@
+# EventDataProformaMetadataChanged
+
+Payload (`data`) emitted with the `proforma.metadata_changed` event.
+
+
+## Fields
+
+| Field                                                                                                                      | Type                                                                                                                       | Required                                                                                                                   | Description                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                                     | *string*                                                                                                                   | :heavy_check_mark:                                                                                                         | N/A                                                                                                                        |
+| `proforma`                                                                                                                 | [Components\EventDataProformaMetadataChangedProforma](../../Models/Components/EventDataProformaMetadataChangedProforma.md) | :heavy_check_mark:                                                                                                         | N/A                                                                                                                        |

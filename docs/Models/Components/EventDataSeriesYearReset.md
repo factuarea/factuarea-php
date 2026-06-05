@@ -1,0 +1,13 @@
+# EventDataSeriesYearReset
+
+Payload (`data`) emitted with the `series.year_reset` event.
+
+
+## Fields
+
+| Field                                                                                                  | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `type`                                                                                                 | *string*                                                                                               | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `series`                                                                                               | [Components\EventDataSeriesYearResetSeries](../../Models/Components/EventDataSeriesYearResetSeries.md) | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `oldYear`                                                                                              | *int*                                                                                                  | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `newYear`                                                                                              | *int*                                                                                                  | :heavy_check_mark:                                                                                     | N/A                                                                                                    |

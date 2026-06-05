@@ -1,0 +1,12 @@
+# EventDataInvoiceCancelled
+
+Payload (`data`) emitted with the `invoice.cancelled` event.
+
+
+## Fields
+
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                     | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `invoice`                                                                                                  | [Components\EventDataInvoiceCancelledInvoice](../../Models/Components/EventDataInvoiceCancelledInvoice.md) | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `cancelledAt`                                                                                              | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                              | :heavy_check_mark:                                                                                         | N/A                                                                                                        |

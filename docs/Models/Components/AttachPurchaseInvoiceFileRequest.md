@@ -1,0 +1,29 @@
+# AttachPurchaseInvoiceFileRequest
+
+Public REST API v1 — POST /v1/purchase_invoices/{uuid}/attach-file.
+
+Multipart upload: `file` field.
+
+This FormRequest only validates the basic STRUCTURE (presence, that it is a
+valid uploaded file and a COARSE safety size cap — 50 MB — to cut off
+abusive uploads before touching the Vault). The canonical domain validation
+— exact MIME allowlist and configurable size
+(`config('document.attachment.max_size_mb')`, 10 MB), filename sanitization
+against path traversal — is performed by the Shared VO `AttachmentRef::create()`,
+which emits the canonical exception `InvalidAttachmentException`
+(`PublicApiMappable` → HTTP 422 with subcodes `attachment_mime_not_allowed`
+/ `attachment_too_large` / `attachment_invalid_filename`).
+
+No `mimetypes` rules nor a `max` aligned with the domain limit are declared
+here: doing so would shadow the error catalog (an invalid MIME/size would
+yield Laravel's generic `invalid_param_value` instead of the canonical VO
+subcode). The coarse 50 MB cap never collides with the real 10 MB limit, so
+the VO always gets to emit `attachment_too_large` for files between 10 and
+50 MB while the safety guard still cuts off genuinely abusive uploads.
+
+
+## Fields
+
+| Field                                              | Type                                               | Required                                           | Description                                        |
+| -------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- |
+| `file`                                             | [Components\File](../../Models/Components/File.md) | :heavy_check_mark:                                 | N/A                                                |

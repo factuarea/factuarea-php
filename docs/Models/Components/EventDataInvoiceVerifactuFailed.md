@@ -1,0 +1,11 @@
+# EventDataInvoiceVerifactuFailed
+
+Payload (`data`) emitted with the `invoice.verifactu_failed` event.
+
+
+## Fields
+
+| Field                                                                                                                  | Type                                                                                                                   | Required                                                                                                               | Description                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                                 | *string*                                                                                                               | :heavy_check_mark:                                                                                                     | N/A                                                                                                                    |
+| `invoice`                                                                                                              | [Components\EventDataInvoiceVerifactuFailedInvoice](../../Models/Components/EventDataInvoiceVerifactuFailedInvoice.md) | :heavy_check_mark:                                                                                                     | N/A                                                                                                                    |

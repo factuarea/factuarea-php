@@ -1,0 +1,11 @@
+# EventDataInvoiceVerifactuSubmitted
+
+Payload (`data`) emitted with the `invoice.verifactu_submitted` event.
+
+
+## Fields
+
+| Field                                                                                                                        | Type                                                                                                                         | Required                                                                                                                     | Description                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                                       | *string*                                                                                                                     | :heavy_check_mark:                                                                                                           | N/A                                                                                                                          |
+| `invoice`                                                                                                                    | [Components\EventDataInvoiceVerifactuSubmittedInvoice](../../Models/Components/EventDataInvoiceVerifactuSubmittedInvoice.md) | :heavy_check_mark:                                                                                                           | N/A                                                                                                                          |

@@ -1,0 +1,10 @@
+# PublicApiV1TaxReportsGenerate303ResponseBody
+
+Modelo 303 generated successfully. The `Location` header contains the relative download URL of the generated resource.
+
+
+## Fields
+
+| Field                                                                                                                                                       | Type                                                                                                                                                        | Required                                                                                                                                                    | Description                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                                                                      | [Components\TaxReport](../../Models/Components/TaxReport.md)                                                                                                | :heavy_check_mark:                                                                                                                                          | A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/tax_reports/{uuid}/download`. |

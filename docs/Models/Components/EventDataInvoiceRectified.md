@@ -1,0 +1,13 @@
+# EventDataInvoiceRectified
+
+Payload (`data`) emitted with the `invoice.rectified` event.
+
+
+## Fields
+
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                     | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `invoice`                                                                                                  | [Components\EventDataInvoiceRectifiedInvoice](../../Models/Components/EventDataInvoiceRectifiedInvoice.md) | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `correctiveInvoiceUuid`                                                                                    | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `correctiveInvoiceNumber`                                                                                  | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |

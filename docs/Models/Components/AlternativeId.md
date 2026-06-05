@@ -1,0 +1,13 @@
+# AlternativeId
+
+Alternative tax identification for non-Spanish clients. Mutually exclusive with `tax_id` (NIF/CIF/NIE).
+
+
+## Fields
+
+| Field                                                                             | Type                                                                              | Required                                                                          | Description                                                                       | Example                                                                           |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `object`                                                                          | [Components\AlternativeIdObject](../../Models/Components/AlternativeIdObject.md)  | :heavy_check_mark:                                                                | N/A                                                                               | alternative_id                                                                    |
+| `type`                                                                            | [Components\AlternativeIdType](../../Models/Components/AlternativeIdType.md)      | :heavy_check_mark:                                                                | Type of identification: passport, foreign ID, foreign tax identification or none. | tax_id_foreign                                                                    |
+| `value`                                                                           | *string*                                                                          | :heavy_check_mark:                                                                | Valor del identificador (string libre, 1-50 caracteres).                          | EU123456789                                                                       |
+| `countryCode`                                                                     | *string*                                                                          | :heavy_check_mark:                                                                | ISO 3166-1 alpha-2 country code in uppercase (other than `ES`).                   | FR                                                                                |

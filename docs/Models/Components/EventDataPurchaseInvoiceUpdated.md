@@ -1,0 +1,11 @@
+# EventDataPurchaseInvoiceUpdated
+
+Payload (`data`) emitted with the `purchase_invoice.updated` event.
+
+
+## Fields
+
+| Field                                                                                                                                  | Type                                                                                                                                   | Required                                                                                                                               | Description                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                                                 | *string*                                                                                                                               | :heavy_check_mark:                                                                                                                     | N/A                                                                                                                                    |
+| `purchaseInvoice`                                                                                                                      | [Components\EventDataPurchaseInvoiceUpdatedPurchaseInvoice](../../Models/Components/EventDataPurchaseInvoiceUpdatedPurchaseInvoice.md) | :heavy_check_mark:                                                                                                                     | N/A                                                                                                                                    |

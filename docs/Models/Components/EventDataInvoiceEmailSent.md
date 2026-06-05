@@ -1,0 +1,13 @@
+# EventDataInvoiceEmailSent
+
+Payload (`data`) emitted with the `invoice.email_sent` event.
+
+
+## Fields
+
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                     | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `invoice`                                                                                                  | [Components\EventDataInvoiceEmailSentInvoice](../../Models/Components/EventDataInvoiceEmailSentInvoice.md) | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `recipientEmail`                                                                                           | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |
+| `invoiceNumber`                                                                                            | *string*                                                                                                   | :heavy_check_mark:                                                                                         | N/A                                                                                                        |

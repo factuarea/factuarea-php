@@ -1,0 +1,13 @@
+# EventDataInvoiceOverdue
+
+Payload (`data`) emitted with the `invoice.overdue` event.
+
+
+## Fields
+
+| Field                                                                                                  | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `type`                                                                                                 | *string*                                                                                               | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `invoice`                                                                                              | [Components\EventDataInvoiceOverdueInvoice](../../Models/Components/EventDataInvoiceOverdueInvoice.md) | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `dueDate`                                                                                              | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                          | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `daysOverdue`                                                                                          | *int*                                                                                                  | :heavy_check_mark:                                                                                     | N/A                                                                                                    |

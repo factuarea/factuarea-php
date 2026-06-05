@@ -1,0 +1,9 @@
+# PublicApiV1InvoicesReminderPreviewRequest
+
+
+## Fields
+
+| Field                                                                                               | Type                                                                                                | Required                                                                                            | Description                                                                                         |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `invoice`                                                                                           | *string*                                                                                            | :heavy_check_mark:                                                                                  | N/A                                                                                                 |
+| `body`                                                                                              | [?Components\SendInvoiceReminderV1Request](../../Models/Components/SendInvoiceReminderV1Request.md) | :heavy_minus_sign:                                                                                  | N/A                                                                                                 |

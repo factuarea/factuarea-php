@@ -1,0 +1,13 @@
+# BankAccount
+
+Cuenta bancaria de un cliente. El IBAN es obligatorio; el resto de campos son opcionales.
+
+
+## Fields
+
+| Field                                                                        | Type                                                                         | Required                                                                     | Description                                                                  | Example                                                                      |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `object`                                                                     | [Components\BankAccountObject](../../Models/Components/BankAccountObject.md) | :heavy_check_mark:                                                           | N/A                                                                          | bank_account                                                                 |
+| `iban`                                                                       | *string*                                                                     | :heavy_check_mark:                                                           | International Bank Account Number (IBAN).                                    | ES7621000418401234567891                                                     |
+| `bic`                                                                        | *?string*                                                                    | :heavy_minus_sign:                                                           | Bank Identifier Code / SWIFT (opcional).                                     | CAIXESBBXXX                                                                  |
+| `isDefault`                                                                  | *bool*                                                                       | :heavy_check_mark:                                                           | Marca la cuenta como predeterminada para domiciliaciones.                    | true                                                                         |

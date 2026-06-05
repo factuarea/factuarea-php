@@ -1,0 +1,13 @@
+# EventDataTaxMetadataChanged
+
+Payload (`data`) emitted with the `tax.metadata_changed` event.
+
+
+## Fields
+
+| Field                                                                                                  | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `type`                                                                                                 | *string*                                                                                               | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `tax`                                                                                                  | [Components\EventDataTaxMetadataChangedTax](../../Models/Components/EventDataTaxMetadataChangedTax.md) | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `previousKeys`                                                                                         | array<*string*>                                                                                        | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `newKeys`                                                                                              | array<*string*>                                                                                        | :heavy_check_mark:                                                                                     | N/A                                                                                                    |

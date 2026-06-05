@@ -1,0 +1,13 @@
+# EventDataQuoteConverted
+
+Payload (`data`) emitted with the `quote.converted` event.
+
+
+## Fields
+
+| Field                                                                                                | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `type`                                                                                               | *string*                                                                                             | :heavy_check_mark:                                                                                   | N/A                                                                                                  |
+| `quote`                                                                                              | [Components\EventDataQuoteConvertedQuote](../../Models/Components/EventDataQuoteConvertedQuote.md)   | :heavy_check_mark:                                                                                   | N/A                                                                                                  |
+| `target`                                                                                             | [Components\EventDataQuoteConvertedTarget](../../Models/Components/EventDataQuoteConvertedTarget.md) | :heavy_check_mark:                                                                                   | N/A                                                                                                  |
+| `targetUuid`                                                                                         | *string*                                                                                             | :heavy_check_mark:                                                                                   | N/A                                                                                                  |

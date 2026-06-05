@@ -1,0 +1,13 @@
+# PurchaseInvoiceAttachment
+
+Fichero adjunto (PDF/imagen) de la factura de compra. `null` cuando no hay adjunto.
+
+
+## Fields
+
+| Field                                                                     | Type                                                                      | Required                                                                  | Description                                                               | Example                                                                   |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `filename`                                                                | *string*                                                                  | :heavy_check_mark:                                                        | Nombre original del fichero subido.                                       | factura-suministros-abril-2026.pdf                                        |
+| `mimeType`                                                                | *string*                                                                  | :heavy_check_mark:                                                        | MIME type del fichero (e.g. `application/pdf`).                           | application/pdf                                                           |
+| `sizeBytes`                                                               | *int*                                                                     | :heavy_check_mark:                                                        | File size in bytes.                                                       | 241                                                                       |
+| `downloadUrl`                                                             | *string*                                                                  | :heavy_check_mark:                                                        | URL relativa de descarga del adjunto (`/v1/purchase_invoices/{id}/file`). | /v1/purchase_invoices/019e822c-555a-709d-99d7-2cfeac9fc920/file           |

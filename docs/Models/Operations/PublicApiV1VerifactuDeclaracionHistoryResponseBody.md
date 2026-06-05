@@ -1,0 +1,9 @@
+# PublicApiV1VerifactuDeclaracionHistoryResponseBody
+
+
+## Fields
+
+| Field                                                                                         | Type                                                                                          | Required                                                                                      | Description                                                                                   |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `data`                                                                                        | array<[Components\DeclaracionResponsable](../../Models/Components/DeclaracionResponsable.md)> | :heavy_check_mark:                                                                            | N/A                                                                                           |
+| `totalCount`                                                                                  | *int*                                                                                         | :heavy_check_mark:                                                                            | N/A                                                                                           |

@@ -1,0 +1,10 @@
+# UpdateClientRequestAlternativeId
+
+
+## Fields
+
+| Field                                                                                     | Type                                                                                      | Required                                                                                  | Description                                                                               |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `type`                                                                                    | [?Components\UpdateClientRequestType](../../Models/Components/UpdateClientRequestType.md) | :heavy_minus_sign:                                                                        | N/A                                                                                       |
+| `value`                                                                                   | *?string*                                                                                 | :heavy_minus_sign:                                                                        | N/A                                                                                       |
+| `countryCode`                                                                             | *?string*                                                                                 | :heavy_minus_sign:                                                                        | N/A                                                                                       |

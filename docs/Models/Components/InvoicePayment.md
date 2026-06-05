@@ -1,0 +1,12 @@
+# InvoicePayment
+
+Datos del cobro de la factura. Presente (objeto) cuando `status` es `paid`, `null` en otro caso.
+
+
+## Fields
+
+| Field                                                                                    | Type                                                                                     | Required                                                                                 | Description                                                                              | Example                                                                                  |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `method`                                                                                 | *string*                                                                                 | :heavy_check_mark:                                                                       | Payment method (backing value of the Shared enum `PaymentMethod`, e.g. `bank_transfer`). | bank_transfer                                                                            |
+| `reference`                                                                              | *string*                                                                                 | :heavy_check_mark:                                                                       | Referencia del cobro (e.g. nº de transferencia).                                         | TRF-2026-0042                                                                            |
+| `date`                                                                                   | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                            | :heavy_check_mark:                                                                       | Fecha del cobro (YYYY-MM-DD).                                                            | 2026-03-20                                                                               |
