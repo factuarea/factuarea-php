@@ -1,0 +1,135 @@
+name: Spec sync
+
+# Receiver side of the cross-repo spec synchronisation (design D10).
+#
+# The published Factuarea OpenAPI document is the single source of truth. This
+# workflow detects when it diverges from the spec pinned in this repo
+# (spec/openapi.json), regenerates the SDK with Speakeasy, runs the tests, and
+# opens a pull request with the diff. It NEVER pushes to main directly — every
+# spec change is reviewed.
+#
+# Triggers:
+#   - repository_dispatch (event_type: spec-updated) — pushed by the factuarea
+#     repo's CI when the spec changes (emitter side documented in
+#     docs/SPEC_SYNC.md; not yet wired, pending an org PAT).
+#   - workflow_dispatch — manual run from the Actions tab.
+#   - schedule — daily fallback so a missed dispatch is still picked up.
+
+on:
+  repository_dispatch:
+    types: [spec-updated]
+  workflow_dispatch:
+  schedule:
+    # 06:17 UTC daily — odd minute to avoid the top-of-hour scheduler stampede.
+    - cron: "17 6 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  # Single published source of truth for the spec (design D10, task 0.4).
+  SPEC_URL: https://docs.factuarea.com/api/openapi
+
+jobs:
+  sync:
+    name: Detect, regenerate, PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the published spec
+        run: |
+          curl --fail --silent --show-error --location \
+            -o /tmp/published-openapi.json "$SPEC_URL"
+          echo "Downloaded $(wc -c < /tmp/published-openapi.json) bytes."
+
+      # Canonical comparison: the published spec is minified, the pinned spec is
+      # pretty-printed, so a raw byte diff is meaningless. We compare a canonical
+      # serialisation (jq -S sorts object keys recursively) of both documents.
+      - name: Compare canonically
+        id: compare
+        run: |
+          if ! jq empty /tmp/published-openapi.json 2>/dev/null; then
+            echo "::error::Published spec is not valid JSON; aborting."
+            exit 1
+          fi
+          jq -S . spec/openapi.json        > /tmp/pinned.canonical.json
+          jq -S . /tmp/published-openapi.json > /tmp/published.canonical.json
+          if cmp -s /tmp/pinned.canonical.json /tmp/published.canonical.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Spec is up to date — nothing to do."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Spec differs from the pinned copy — regenerating."
+          fi
+
+      - name: Setup PHP 8.2
+        if: steps.compare.outputs.changed == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Speakeasy CLI
+        if: steps.compare.outputs.changed == 'true'
+        run: |
+          curl --fail --silent --show-error --location \
+            https://github.com/speakeasy-api/speakeasy/releases/latest/download/speakeasy_linux_amd64.zip \
+            -o /tmp/speakeasy.zip
+          unzip -o /tmp/speakeasy.zip -d /tmp/speakeasy-cli
+          sudo install /tmp/speakeasy-cli/speakeasy /usr/local/bin/speakeasy
+          speakeasy --version
+
+      # Pin the new spec pretty-printed, the same way the repo keeps it, so the
+      # PR diff is readable. The Speakeasy run applies the retry-casing overlay
+      # automatically (declared in .speakeasy/workflow.yaml).
+      - name: Pin the new spec and regenerate
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          SPEAKEASY_API_KEY: ${{ secrets.SPEAKEASY_API_KEY }}
+        run: |
+          if [ -z "$SPEAKEASY_API_KEY" ]; then
+            echo "::error::SPEAKEASY_API_KEY secret is missing; cannot regenerate. Set it in repo secrets."
+            exit 1
+          fi
+          jq . /tmp/published-openapi.json > spec/openapi.json
+          speakeasy run --target all --auto-yes --skip-testing
+
+      - name: Install dependencies
+        if: steps.compare.outputs.changed == 'true'
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run tests
+        if: steps.compare.outputs.changed == 'true'
+        run: ./vendor/bin/phpunit --colors=never
+
+      - name: Open a pull request
+        if: steps.compare.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: spec-sync/update
+          base: main
+          commit-message: "chore: sync SDK with updated OpenAPI spec"
+          title: "chore: sync SDK with updated OpenAPI spec"
+          author: "Factuarea <info@factuarea.com>"
+          committer: "Factuarea <info@factuarea.com>"
+          body: |
+            Automated spec sync (design D10).
+
+            The published OpenAPI spec at `${{ env.SPEC_URL }}` diverged from the
+            pinned `spec/openapi.json`. This PR re-pins the spec and regenerates
+            the SDK with Speakeasy (retry-casing overlay applied). Tests passed in
+            CI before this PR was opened.
+
+            Review checklist:
+            - [ ] Surface diff (new/removed/renamed operations) is intended.
+            - [ ] Bump `php.version` in `.speakeasy/gen.yaml` and update
+                  `CHANGELOG.md` per the SemVer rules in `docs/VERSIONING.md`.
+            - [ ] If the API's `Factuarea-Version` changed, update
+                  `FactuareaVersionHook::DEFAULT_VERSION` and treat behaviour
+                  changes as a major bump.
+          labels: |
+            spec-sync
+            automated
