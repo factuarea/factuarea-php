@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.2", "8.3", "8.4"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      # Install from the committed lockfile so every PHP version resolves the
+      # exact same dependency set (PHPUnit 11, locked on PHP 8.2 and compatible
+      # with 8.2/8.3/8.4). See docs/REGENERATION.md.
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: PHPUnit
+        run: ./vendor/bin/phpunit --colors=never
+
+  static-analysis:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      # The generated layer is analysed at level 5; the hand-written runtime in
+      # src/Custom holds the stricter level 8. The level is passed on the command
+      # line because phpstan.neon is Speakeasy-generated (do not hand-edit).
+      - name: PHPStan (generated, level 5)
+        run: ./vendor/bin/phpstan analyse src --level=5 --memory-limit=2g --no-progress
+
+      - name: PHPStan (hand-written runtime, level 8)
+        run: ./vendor/bin/phpstan analyse src/Custom --level=8 --memory-limit=2g --no-progress
+
+  code-style:
+    name: Pint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      # Pint formats the hand-written layer only. The generated layer (src/, root
+      # config files) is formatted by Speakeasy on regeneration, not by Pint, so
+      # running Pint over it would fight the generator. See docs/REGENERATION.md.
+      - name: Pint (check only, hand-written layer)
+        run: ./vendor/bin/pint --test src/Custom Tests
