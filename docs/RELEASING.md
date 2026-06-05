@@ -41,7 +41,7 @@ Packagist requires a one-time **Submit** to create the package and claim the
 done from CI without the user's Packagist token):
 
 1. Ensure the `v0.1.0` tag exists on `factuarea/factuarea-php` (created by P2b).
-2. Log in to Packagist (account `Chelu97`, via GitHub).
+2. Log in to Packagist with the account linked to the GitHub org (via GitHub).
 3. Go to **https://packagist.org/packages/submit**.
 4. Paste the repository URL: **`https://github.com/factuarea/factuarea-php`**.
 5. Submit. Packagist reads `composer.json`, creates
