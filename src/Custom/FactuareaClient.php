@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Custom;
 
 use Factuarea\Sdk\Custom\Idempotency\IdempotencyHook;
+use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
 
@@ -24,6 +25,8 @@ use Factuarea\Sdk\Models\Components\Security;
  * - Authentication by API key. The key prefix (`fact_test_` / `fact_live_`)
  *   selects the environment server-side; there is no environment flag.
  * - Automatic `Idempotency-Key` on every mutating request (see {@see IdempotencyHook}).
+ * - Pinned `Factuarea-Version` header on every request (see {@see FactuareaVersionHook}),
+ *   so the API behaves consistently until the integrator upgrades the SDK.
  * - Backoff retries over `429` + `5XX` honouring `Retry-After` (generated core).
  * - Typed error hierarchy exposing `request_id` (generated core).
  *
@@ -46,7 +49,7 @@ final class FactuareaClient
      * @param  string  $apiKey  Your secret API key (`fact_live_…` or `fact_test_…`).
      *                          NEVER expose this in a browser or mobile client.
      * @param  ?string  $baseUrl  Optional server URL override (self-hosted / staging).
-     *                           Defaults to the production base URL.
+     *                            Defaults to the production base URL.
      */
     public static function create(
         #[\SensitiveParameter] string $apiKey,
@@ -60,6 +63,7 @@ final class FactuareaClient
         }
 
         $sdk = $builder->build();
+        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new IdempotencyHook());
 
         return $sdk;

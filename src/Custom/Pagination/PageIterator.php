@@ -60,7 +60,7 @@ final class PageIterator
 
     /**
      * @param  callable(?string): ResponseInterface  $fetcher  Returns the raw HTTP response
-     *         for the page starting after the given cursor (null for the first page).
+     *                                                         for the page starting after the given cursor (null for the first page).
      * @param  string  $dataKey  JSON key holding the array of items.
      * @param  string  $cursorKey  JSON key holding the cursor for the next page.
      * @param  string  $hasMoreKey  JSON key signalling whether more pages exist.

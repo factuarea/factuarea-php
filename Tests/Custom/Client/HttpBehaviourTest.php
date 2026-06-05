@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Tests\Custom\Client;
 
 use Factuarea\Sdk\Custom\Idempotency\IdempotencyHook;
+use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
 use Factuarea\Sdk\Models\Errors\ErrorThrowable;
@@ -37,11 +38,13 @@ final class HttpBehaviourTest extends TestCase
         $guzzle = new Client(['handler' => $stack]);
 
         // Build the SDK the way FactuareaClient::create does (security wiring via the
-        // generated builder + IdempotencyHook), but inject the mocked transport.
+        // generated builder + FactuareaVersionHook + IdempotencyHook), but inject the
+        // mocked transport.
         $sdk = Factuarea::builder()
             ->setSecurity(new Security(bearerAuth: $apiKey))
             ->setClient($guzzle)
             ->build();
+        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new IdempotencyHook());
 
         return $sdk;
@@ -80,6 +83,29 @@ final class HttpBehaviourTest extends TestCase
         }
 
         $this->assertSame('Bearer fact_test_my_key', $this->lastRequest()->getHeaderLine('Authorization'));
+    }
+
+    public function test_sends_the_pinned_factuarea_version_header_on_every_request(): void
+    {
+        $mock = new MockHandler([
+            new Response(401, ['Content-Type' => 'application/json'], $this->errorEnvelope(
+                'authentication_error',
+                'missing_api_key',
+                'Falta la clave de API.',
+            )),
+        ]);
+        $sdk = $this->sdkWith($mock);
+
+        try {
+            $sdk->account->publicApiV1AccountShow();
+        } catch (\Throwable) {
+            // expected — we only care about the outgoing Factuarea-Version header
+        }
+
+        $this->assertSame(
+            FactuareaVersionHook::DEFAULT_VERSION,
+            $this->lastRequest()->getHeaderLine('Factuarea-Version'),
+        );
     }
 
     public function test_maps_a_422_to_a_typed_error_with_request_id(): void
