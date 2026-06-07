@@ -17,7 +17,6 @@
 * [publicApiV1PurchaseInvoicesStats](#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
 * [publicApiV1PurchaseInvoicesOverdue](#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
 * [publicApiV1PurchaseInvoicesPending](#publicapiv1purchaseinvoicespending) - List pending purchase invoices
-* [~~publicApiV1PurchaseInvoicesBySupplier~~](#publicapiv1purchaseinvoicesbysupplier) - List purchase invoices by supplier :warning: **Deprecated**
 * [publicApiV1PurchaseInvoicesMarkPaid](#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
 
 ## publicApiV1PurchaseInvoicesAttachFile
@@ -1051,65 +1050,6 @@ if ($response->paginatedList !== null) {
 ### Response
 
 **[?Operations\PublicApiV1PurchaseInvoicesPendingResponse](../../Models/Operations/PublicApiV1PurchaseInvoicesPendingResponse.md)**
-
-### Errors
-
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 429       | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
-
-## ~~publicApiV1PurchaseInvoicesBySupplier~~
-
-**Deprecated.** Use `GET /v1/purchase_invoices?supplier_id={uuid}` instead. Sunset: 2026-11-22.
-
-Return purchase invoices for a specific supplier, paginated.
-
-> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
-
-### Example Usage
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.by_supplier" method="get" path="/purchase_invoices/by-supplier/{supplier}" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBySupplier(
-    supplier: '<value>',
-    perPage: '15'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter          | Type               | Required           | Description        |
-| ------------------ | ------------------ | ------------------ | ------------------ |
-| `supplier`         | *string*           | :heavy_check_mark: | N/A                |
-| `perPage`          | *?string*          | :heavy_minus_sign: | N/A                |
-
-### Response
-
-**[?Operations\PublicApiV1PurchaseInvoicesBySupplierResponse](../../Models/Operations/PublicApiV1PurchaseInvoicesBySupplierResponse.md)**
 
 ### Errors
 

@@ -317,6 +317,7 @@ In `live`, all these effects fire normally.
   * [Runtime features](#runtime-features)
   * [API reference](#api-reference)
   * [Versioning](#versioning)
+  * [Support](#support)
   * [Development](#development)
   * [License](#license)
   * [Authentication](#authentication)
@@ -462,7 +463,6 @@ if ($response->object !== null) {
 ### [Clients](docs/sdks/clients/README.md)
 
 * [publicApiV1ClientsBulkDelete](docs/sdks/clients/README.md#publicapiv1clientsbulkdelete) - Delete multiple clients in bulk
-* [~~publicApiV1ClientsBulkDeleteLegacy~~](docs/sdks/clients/README.md#publicapiv1clientsbulkdeletelegacy) - Delete multiple clients in bulk (deprecated alias) :warning: **Deprecated**
 * [publicApiV1ClientsCreate](docs/sdks/clients/README.md#publicapiv1clientscreate) - Create a client
 * [publicApiV1ClientsList](docs/sdks/clients/README.md#publicapiv1clientslist) - List all clients
 * [publicApiV1ClientsDelete](docs/sdks/clients/README.md#publicapiv1clientsdelete) - Delete a client
@@ -477,7 +477,6 @@ if ($response->object !== null) {
 
 * [publicApiV1DeliveryNotesBulkDelete](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkdelete) - Bulk delete delivery notes
 * [publicApiV1DeliveryNotesCancel](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotescancel) - Cancel a delivery note
-* [~~publicApiV1DeliveryNotesChangeStatus~~](docs/sdks/deliverynotes/README.md#publicapiv1deliverynoteschangestatus) - Change delivery note status (deprecated) :warning: **Deprecated**
 * [publicApiV1DeliveryNotesConvert](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesconvert) - Convert delivery note to invoice
 * [publicApiV1DeliveryNotesCreate](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotescreate) - Create a delivery note
 * [publicApiV1DeliveryNotesList](docs/sdks/deliverynotes/README.md#publicapiv1deliverynoteslist) - List all delivery notes
@@ -615,7 +614,6 @@ if ($response->object !== null) {
 * [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
 * [publicApiV1PurchaseInvoicesOverdue](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
 * [publicApiV1PurchaseInvoicesPending](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespending) - List pending purchase invoices
-* [~~publicApiV1PurchaseInvoicesBySupplier~~](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbysupplier) - List purchase invoices by supplier :warning: **Deprecated**
 * [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
 
 ### [Quotes](docs/sdks/quotes/README.md)
@@ -672,7 +670,6 @@ if ($response->object !== null) {
 ### [Suppliers](docs/sdks/suppliers/README.md)
 
 * [publicApiV1SuppliersBulkDelete](docs/sdks/suppliers/README.md#publicapiv1suppliersbulkdelete) - Delete multiple suppliers in bulk
-* [~~publicApiV1SuppliersBulkDeleteLegacy~~](docs/sdks/suppliers/README.md#publicapiv1suppliersbulkdeletelegacy) - Delete multiple suppliers in bulk (deprecated alias) :warning: **Deprecated**
 * [publicApiV1SuppliersCreate](docs/sdks/suppliers/README.md#publicapiv1supplierscreate) - Create a supplier
 * [publicApiV1SuppliersList](docs/sdks/suppliers/README.md#publicapiv1supplierslist) - List all suppliers
 * [publicApiV1SuppliersDelete](docs/sdks/suppliers/README.md#publicapiv1suppliersdelete) - Delete a supplier

@@ -6,7 +6,6 @@
 
 * [publicApiV1DeliveryNotesBulkDelete](#publicapiv1deliverynotesbulkdelete) - Bulk delete delivery notes
 * [publicApiV1DeliveryNotesCancel](#publicapiv1deliverynotescancel) - Cancel a delivery note
-* [~~publicApiV1DeliveryNotesChangeStatus~~](#publicapiv1deliverynoteschangestatus) - Change delivery note status (deprecated) :warning: **Deprecated**
 * [publicApiV1DeliveryNotesConvert](#publicapiv1deliverynotesconvert) - Convert delivery note to invoice
 * [publicApiV1DeliveryNotesCreate](#publicapiv1deliverynotescreate) - Create a delivery note
 * [publicApiV1DeliveryNotesList](#publicapiv1deliverynoteslist) - List all delivery notes
@@ -208,119 +207,115 @@ if ($response->object !== null) {
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
-## ~~publicApiV1DeliveryNotesChangeStatus~~
-
-Use `/mark-delivered` or `/cancel`. Sunset: 2026-08-26.
-
-Scope: `delivery_notes:transition`. Required body: `status` ∈
-{sent, delivered, cancelled}. Public→internal mapping:
- - `sent`/`delivered` → BC `delivered` (transition `draft → delivered`)
- - `cancelled` → BC `cancelled`
-
-The `delivery_note.status_changed` webhook is emitted from the Event Handler.
-
-Invalid transitions → 422 `invalid_status_transition`.
-
-
-
-> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
-
-### Example Usage: idempotency_key_reused
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.change_status" method="post" path="/delivery_notes/{delivery_note}/change_status" example="idempotency_key_reused" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ChangeDeliveryNoteStatusRequest(
-    status: Components\ChangeDeliveryNoteStatusRequestStatus::Delivered,
-);
-
-$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesChangeStatus(
-    deliveryNote: '<value>',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: resource_conflict
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.change_status" method="post" path="/delivery_notes/{delivery_note}/change_status" example="resource_conflict" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ChangeDeliveryNoteStatusRequest(
-    status: Components\ChangeDeliveryNoteStatusRequestStatus::Delivered,
-);
-
-$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesChangeStatus(
-    deliveryNote: '<value>',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `deliveryNote`                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\ChangeDeliveryNoteStatusRequest](../../Models/Components/ChangeDeliveryNoteStatusRequest.md)                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Unique key generated by the client to ensure idempotency on retries. It lets you safely resend the same request: the first response is cached and returned without re-executing the mutation. It is an **opaque string** to the server; any unique value of up to 64 characters is valid (UUID v7, UUID v4, ULID, nanoid, etc.). UUID v7 is recommended for consistency with the API identifiers. The same key reused with a different body returns `409 idempotency_key_reused`. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-
-### Response
-
-**[?Operations\PublicApiV1DeliveryNotesChangeStatusResponse](../../Models/Operations/PublicApiV1DeliveryNotesChangeStatusResponse.md)**
-
-### Errors
-
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
-
 ## publicApiV1DeliveryNotesConvert
 
 Convert a delivery note into a sales invoice. The delivery note moves to `invoiced` with `converted_to_id` populated and the new invoice is returned under `data`. Only `target=invoice` is supported.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/delivery_notes/{delivery_note}/convert" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ConvertDeliveryNoteRequest(
+    target: Components\ConvertDeliveryNoteRequestTarget::Proforma,
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesConvert(
+    deliveryNote: '<value>',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: idempotency_key_reused
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/delivery_notes/{delivery_note}/convert" example="idempotency_key_reused" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ConvertDeliveryNoteRequest(
+    target: Components\ConvertDeliveryNoteRequestTarget::Proforma,
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesConvert(
+    deliveryNote: '<value>',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/delivery_notes/{delivery_note}/convert" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ConvertDeliveryNoteRequest(
+    target: Components\ConvertDeliveryNoteRequestTarget::Proforma,
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesConvert(
+    deliveryNote: '<value>',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/delivery_notes/{delivery_note}/convert" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 

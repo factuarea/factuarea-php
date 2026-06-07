@@ -5,7 +5,6 @@
 ### Available Operations
 
 * [publicApiV1ClientsBulkDelete](#publicapiv1clientsbulkdelete) - Delete multiple clients in bulk
-* [~~publicApiV1ClientsBulkDeleteLegacy~~](#publicapiv1clientsbulkdeletelegacy) - Delete multiple clients in bulk (deprecated alias) :warning: **Deprecated**
 * [publicApiV1ClientsCreate](#publicapiv1clientscreate) - Create a client
 * [publicApiV1ClientsList](#publicapiv1clientslist) - List all clients
 * [publicApiV1ClientsDelete](#publicapiv1clientsdelete) - Delete a client
@@ -130,67 +129,6 @@ if ($response->object !== null) {
 ### Response
 
 **[?Operations\PublicApiV1ClientsBulkDeleteResponse](../../Models/Operations/PublicApiV1ClientsBulkDeleteResponse.md)**
-
-### Errors
-
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 409, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
-
-## ~~publicApiV1ClientsBulkDeleteLegacy~~
-
-**Deprecated.** Use `POST /v1/clients/bulk-delete` instead. Sunset: 2026-12-04.
-
-Deprecated alias of `POST /v1/clients/bulk-delete`. Use the canonical POST endpoint; this `DELETE /v1/clients/bulk` route emits `Deprecation` and `Sunset` headers and will be removed after the sunset date. Same request/response shape as the canonical operation.
-
-> :warning: **DEPRECATED**: This will be removed in a future release, please migrate away from it as soon as possible.
-
-### Example Usage
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.clients.bulk_delete_legacy" method="delete" path="/clients/bulk" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->clients->publicApiV1ClientsBulkDeleteLegacy(
-    ids: [
-        'a1bd1255-361c-4cd7-a0f4-6e1d3ee13057',
-    ],
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ids`                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | array<*string*>                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Unique key generated by the client to ensure idempotency on retries. It lets you safely resend the same request: the first response is cached and returned without re-executing the mutation. It is an **opaque string** to the server; any unique value of up to 64 characters is valid (UUID v7, UUID v4, ULID, nanoid, etc.). UUID v7 is recommended for consistency with the API identifiers. The same key reused with a different body returns `409 idempotency_key_reused`. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-
-### Response
-
-**[?Operations\PublicApiV1ClientsBulkDeleteLegacyResponse](../../Models/Operations/PublicApiV1ClientsBulkDeleteLegacyResponse.md)**
 
 ### Errors
 

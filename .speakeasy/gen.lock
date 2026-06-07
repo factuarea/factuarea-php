@@ -1,21 +1,20 @@
 lockVersion: 2.0.0
 id: 98d34df7-c69e-4c42-ac3e-efa7417c1332
 management:
-  docChecksum: f0f17a59a28be50a0e8612b4f0b13468
+  docChecksum: d5c30024ae9d587307f2a6f0da8be878
   docVersion: 1.0.0
-  speakeasyVersion: 1.770.0
+  speakeasyVersion: 1.771.0
   generationVersion: 2.893.0
   releaseVersion: 0.1.0
   configChecksum: bd4f54f885451dad2f9db8bcc623cd85
 persistentEdits:
-  generation_id: 15a6da84-e3b1-4434-9a82-bd96a062d21c
-  pristine_commit_hash: 838cd10bcab294d979e8b3cb7b338aaf7f4fc597
-  pristine_tree_hash: 91863742154454541b5380058943d4088e47f291
+  generation_id: 8f0d9c59-ac00-4c97-a37e-c136ca88a2be
+  pristine_commit_hash: d2b832cd24a3f12c9e474a3624cccf6d0d574c86
+  pristine_tree_hash: 0825d639f3b545054a6896b82c90ab93fcab03ef
 features:
   php:
     constsAndDefaults: 0.2.2
     core: 3.9.23
-    deprecations: 2.81.1
     flattening: 2.81.2
     globalSecurity: 2.81.12
     globalServerURLs: 2.83.1
@@ -191,14 +190,6 @@ trackedFiles:
     id: 32a92124d41f
     last_write_checksum: sha1:ac0680ec9964f58515d167ff52e094ee5706a2a8
     pristine_git_object: 864799c53785af90926b411a53dbe5086cfeb9bf
-  docs/Models/Components/ChangeDeliveryNoteStatusRequest.md:
-    id: 1a1943b35be5
-    last_write_checksum: sha1:a8f6dc64664dbd814e4f0169935f04e7861f946e
-    pristine_git_object: cca840e956889bc9d655accc8b2faf348f03ca3a
-  docs/Models/Components/ChangeDeliveryNoteStatusRequestStatus.md:
-    id: 2eb6a9f39f95
-    last_write_checksum: sha1:3b6dbf1f3acda7c205b62117bb51cfc32c7bab5c
-    pristine_git_object: 67b5671d5c8be5bd1bd244d692f9175e37d6df88
   docs/Models/Components/Client.md:
     id: 30aadaf69102
     last_write_checksum: sha1:85efb4c07f69c1380fa582ed662c4b0e230ccb41
@@ -1297,8 +1288,8 @@ trackedFiles:
     pristine_git_object: bbad2c1b76b5acdfbe4d8c1cfc61a625344c6464
   docs/Models/Components/InvoiceReminderPreview.md:
     id: 10175cc92b91
-    last_write_checksum: sha1:f4146b95984c3d0e58ee503996a1ba651a122c85
-    pristine_git_object: dac9b540045d6a5b06cbaa120e46fae8e711ba8d
+    last_write_checksum: sha1:c9cf0640c7b6b852ad2bc58067c954503e007c26
+    pristine_git_object: bd808adffbef5224e5e877a13aeb1054f68199aa
   docs/Models/Components/InvoiceReminderSent.md:
     id: a8c18135c312
     last_write_checksum: sha1:64d8725df6d2b82576d5ac0aa79aebbdf9a45898
@@ -1729,8 +1720,8 @@ trackedFiles:
     pristine_git_object: e378d1b9dc10bab30f62ba10c8b70cb8cd2a95d0
   docs/Models/Components/TaxReportPreview.md:
     id: edee986d440b
-    last_write_checksum: sha1:5b7b6edcaff7586b7e797cc5cb262df1168af28d
-    pristine_git_object: 1bebac6ac8b7d1a3cdacf4fad110c140b93a93a6
+    last_write_checksum: sha1:32a502a64115ce29c18dd80701cf373d7e7a1c03
+    pristine_git_object: 5c0a0b156ae91870c546d9cd6167b5f02e169214
   docs/Models/Components/TaxReportPreviewObject.md:
     id: 9cd3822b2b41
     last_write_checksum: sha1:a8d6317b00d5243fb9c4f6c8d860bfd11336a065
@@ -2439,10 +2430,6 @@ trackedFiles:
     id: 9741b99d07b9
     last_write_checksum: sha1:3184014c69904f743879fc52d5068c2d4af67255
     pristine_git_object: 89619509669291a0065d97cb5d3d0688f59c6202
-  docs/Models/Operations/Meta.md:
-    id: 9c4bbe8ee02a
-    last_write_checksum: sha1:4afce6bd2610d6e47d67ceb88e1b2975184ba89e
-    pristine_git_object: b509bfe6f7d27371e54f96e38a2739de6bf3a0c9
   docs/Models/Operations/PublicApiV1AccountShowResponse.md:
     id: af455ff709e3
     last_write_checksum: sha1:a6eb140b9cbaa1c68496f37a22d1509cfa102e24
@@ -2463,18 +2450,6 @@ trackedFiles:
     id: 6763b205e08c
     last_write_checksum: sha1:2357519375c76b5728d3c27c0c0ef30670127a30
     pristine_git_object: 07f913de9825c9bd8a0a206d50a5a536d936f5f9
-  docs/Models/Operations/PublicApiV1ClientsBulkDeleteLegacyRequest.md:
-    id: 55232e4117e0
-    last_write_checksum: sha1:fba338cda66db5a69fc223d914eaf19c2e6d449b
-    pristine_git_object: 72792ba405c9911ccb15b6435963c3df90fb2acb
-  docs/Models/Operations/PublicApiV1ClientsBulkDeleteLegacyResponse.md:
-    id: a13e92bc7d8e
-    last_write_checksum: sha1:8374ccc11ee4c1b470e80cb7e02a79c67ea9cfb1
-    pristine_git_object: 5220b67dfdee037f8231e42dfce7bc31dc31076e
-  docs/Models/Operations/PublicApiV1ClientsBulkDeleteLegacyResponseBody.md:
-    id: 90b738503743
-    last_write_checksum: sha1:c1cacb4ae8dd7924b0a1f78fe7f10ca6f7cd8f39
-    pristine_git_object: 81d2437878168ce67bffe92937535e0319715d8c
   docs/Models/Operations/PublicApiV1ClientsBulkDeleteRequest.md:
     id: 4b2c8e47972e
     last_write_checksum: sha1:b1e0d9ed412050737172ad06501e9203450545eb
@@ -2595,18 +2570,6 @@ trackedFiles:
     id: 34e2db02076c
     last_write_checksum: sha1:ae3ce1511de6d774816a943a3ed5bdd2e3891637
     pristine_git_object: 9055f986fb770e34f6c5999a4e603c878fef9f65
-  docs/Models/Operations/PublicApiV1DeliveryNotesChangeStatusRequest.md:
-    id: 7f9c189ae52b
-    last_write_checksum: sha1:8102fa08fb9c0eb2d9d1bc5ae839c399039efcdc
-    pristine_git_object: 3d1d6d3591411a068c0ef421aff47db65e81c601
-  docs/Models/Operations/PublicApiV1DeliveryNotesChangeStatusResponse.md:
-    id: 653de4cf01db
-    last_write_checksum: sha1:6e3233fbe72f9f02e798e8d078e0084e20b32171
-    pristine_git_object: 0fede4be567d33d1a78909052ee72c2b0b72a4bb
-  docs/Models/Operations/PublicApiV1DeliveryNotesChangeStatusResponseBody.md:
-    id: fa0565ffccb5
-    last_write_checksum: sha1:f027e76e8df45faac681dba75a88e003589135b3
-    pristine_git_object: c7af8efa51c7142a2cf93a08ad904e97bd974141
   docs/Models/Operations/PublicApiV1DeliveryNotesConvertRequest.md:
     id: 31f6742cebcf
     last_write_checksum: sha1:2d63acd5feff328efc2418acface8d1558fa1ced
@@ -3635,18 +3598,6 @@ trackedFiles:
     id: 1b4be1fe10e6
     last_write_checksum: sha1:e93a5fa7ac1026dd24f6d10dfc17ebc0c4b9a307
     pristine_git_object: 994d141b317464f656569ec61f5ba4b8e2232a1c
-  docs/Models/Operations/PublicApiV1PurchaseInvoicesBySupplierRequest.md:
-    id: c6bb40c87b62
-    last_write_checksum: sha1:fea83ae123e45c824ea32b50878258b33072644f
-    pristine_git_object: 9d16d154d1de0013250bddf6342eec8cac04994b
-  docs/Models/Operations/PublicApiV1PurchaseInvoicesBySupplierResponse.md:
-    id: 349c6aa38dc4
-    last_write_checksum: sha1:46616485d6cac812a3f4ba8c3c55c68031fa922d
-    pristine_git_object: e280009716fccd99a7d6423133f88619cc74cd4b
-  docs/Models/Operations/PublicApiV1PurchaseInvoicesBySupplierResponseBody.md:
-    id: c66de7f30cff
-    last_write_checksum: sha1:ee1c5d37d69885564418cca7bbda222668c138e8
-    pristine_git_object: b1dcc650e4f4fd2eb98de235917300fd3a696c11
   docs/Models/Operations/PublicApiV1PurchaseInvoicesCreateRequest.md:
     id: c1d739ab0513
     last_write_checksum: sha1:1418ddf41d21eab5de7fac744e81bf21b22e6659
@@ -4243,18 +4194,6 @@ trackedFiles:
     id: cb75d4077356
     last_write_checksum: sha1:f96227cfdce6f43a8a6b5029262809491c3a2123
     pristine_git_object: 602c8dc5e9cd7978e4d7be4657c04fce36c99864
-  docs/Models/Operations/PublicApiV1SuppliersBulkDeleteLegacyRequest.md:
-    id: 954bcdfe1003
-    last_write_checksum: sha1:28a060baa34a607d7281b236ff72477c7eac1913
-    pristine_git_object: f18eee62a448e3a588bca574a8462e50a4bd482b
-  docs/Models/Operations/PublicApiV1SuppliersBulkDeleteLegacyResponse.md:
-    id: 9fd2ab56f9ea
-    last_write_checksum: sha1:42db494d257292ff039553d06c2de0a178792a76
-    pristine_git_object: 3c838ccc39cd2d45ae12d8d9b727456c07e609b6
-  docs/Models/Operations/PublicApiV1SuppliersBulkDeleteLegacyResponseBody.md:
-    id: 646829670e8f
-    last_write_checksum: sha1:f85a41efc6dc6d6bf69cdae75f8c97cbd23569de
-    pristine_git_object: be6f80eb1806134426566d67df38063d13d37c06
   docs/Models/Operations/PublicApiV1SuppliersBulkDeleteRequest.md:
     id: 007824f41425
     last_write_checksum: sha1:63230ffa6dbb6f60fb8b2519b0467683c5c5bd9d
@@ -5001,8 +4940,8 @@ trackedFiles:
     pristine_git_object: 946912448d4b0966f8d2d7baae9fe06019b72dee
   docs/sdks/clients/README.md:
     id: ba883fd0c1cf
-    last_write_checksum: sha1:b515d217b30fe2c769171ea6a9ccff44dc642490
-    pristine_git_object: 47a2a37007a731350869f74336b39208f45219cf
+    last_write_checksum: sha1:fe3ef042dac2be1acc25ec8d29dfdd0af28af0c5
+    pristine_git_object: e768f02991544d7553f02726fe42e936b1cc25ff
   docs/sdks/declaracion/README.md:
     id: 5772438f28a1
     last_write_checksum: sha1:e4d7b3ac207e8cb200d7076cf6f4ff900bcdf16f
@@ -5013,8 +4952,8 @@ trackedFiles:
     pristine_git_object: b7889a1669b62b1b407febcd29ecdeb888e40ed5
   docs/sdks/deliverynotes/README.md:
     id: 202d1866e0d2
-    last_write_checksum: sha1:d062520525398cd66ffaa7fa2a8c82e33bb5a2da
-    pristine_git_object: 949baf5e1adaa33da88965c72898bdf10909ab94
+    last_write_checksum: sha1:b5b2a29624a6016a809202087f5bf91d0b920fd6
+    pristine_git_object: d8d0d954c038f1fc3a2d8911e40fc9d3695da7c8
   docs/sdks/eventcatalog/README.md:
     id: e483bddd2a37
     last_write_checksum: sha1:aae0797d9df0bfcc1f6784d512da55b85226eb07
@@ -5045,8 +4984,8 @@ trackedFiles:
     pristine_git_object: d467911ddb518647ff5ffbe4c1f698387a0d7818
   docs/sdks/purchaseinvoices/README.md:
     id: f6df90c629ae
-    last_write_checksum: sha1:96cb7ed02928ac625d93c86bfa72255bd518d462
-    pristine_git_object: 770a2c4f9145729f1f80efb957c572688bc6abc8
+    last_write_checksum: sha1:2bf3e3786da14b1845bde3a6ff9ea9ce1b8d8002
+    pristine_git_object: f0071307c2f530e74395cd7d19038d33b9cbaf34
   docs/sdks/quarterly/README.md:
     id: 86a4af0589f5
     last_write_checksum: sha1:469343fbe80db05bdfe33c7ac7c33a6ac1ec13b4
@@ -5077,8 +5016,8 @@ trackedFiles:
     pristine_git_object: fa9649aee740b8cea15bbce198b727b4318a9211
   docs/sdks/suppliers/README.md:
     id: 85867190cd79
-    last_write_checksum: sha1:c667930676a34470dc09b6accd7226e376b6e2e1
-    pristine_git_object: b3ebfb72aa65620d83d24c2222d19cfc5195d05e
+    last_write_checksum: sha1:b14f3830c481e9699070580abe9f18b4c5735ab0
+    pristine_git_object: 625385e23da1f142614f064c76f73810d8b6dbe1
   docs/sdks/taxes/README.md:
     id: c29682421558
     last_write_checksum: sha1:5ec19bbdbf7adda611cac8d7251f032ae0190e28
@@ -5137,8 +5076,8 @@ trackedFiles:
     pristine_git_object: c550be17add8005c6cfaf68e10c7677d76949937
   src/Clients.php:
     id: e778356f2ab3
-    last_write_checksum: sha1:61c40d23460a02e34a642b1b4aa096defabbfb1e
-    pristine_git_object: 28a6809f300e2d36807440deb085d84d27eea98f
+    last_write_checksum: sha1:dfec1b0e4e7a571dd7c84428819eff72d67c03d3
+    pristine_git_object: 9a7871e4d1abfa751cfdd21f234121916c8f46fc
   src/Declaracion.php:
     id: 37cb248159c5
     last_write_checksum: sha1:5a19d06631dbe345dec29222035a0c1ac551a182
@@ -5149,8 +5088,8 @@ trackedFiles:
     pristine_git_object: 8a0ed499e7e436b5e394c1d9350845ebb4b3b7f0
   src/DeliveryNotes.php:
     id: 787731e3311d
-    last_write_checksum: sha1:0d9834334bb7774c737b02a609911a65767fe032
-    pristine_git_object: c51dafc0285821b6d8b41a862f35b0ab367f225b
+    last_write_checksum: sha1:47279925c434223426b043c3cc4c8abe51b40242
+    pristine_git_object: 5dd7c53f6d61120f1436fb6a8c3fc82ef2cedb86
   src/EventCatalog.php:
     id: 95721bdbd7a0
     last_write_checksum: sha1:1ceec56144873594303133db2e9e28b84aa680fa
@@ -5387,14 +5326,6 @@ trackedFiles:
     id: 827b658a31d1
     last_write_checksum: sha1:8943e2bda8fa77fae5872cde292f24fe2c599523
     pristine_git_object: c89f784030a75cbb7f8e5d221c880ef37e1ea62f
-  src/Models/Components/ChangeDeliveryNoteStatusRequest.php:
-    id: 24647d016854
-    last_write_checksum: sha1:e0a6ea85068aa083609ea24f9e9e63d932924d64
-    pristine_git_object: bdf236fe750168c493baab399cc61e0d5f6ad290
-  src/Models/Components/ChangeDeliveryNoteStatusRequestStatus.php:
-    id: c85887d44f0c
-    last_write_checksum: sha1:3f98c5dbdc7ac5341ddfde25f731c2d6c8653973
-    pristine_git_object: 06cda482b3723407c68631851a9c5d7431d2b604
   src/Models/Components/Client.php:
     id: 27c401f16a19
     last_write_checksum: sha1:0dad895f4e35c3fe76252c09906306bdc078f964
@@ -7639,10 +7570,6 @@ trackedFiles:
     id: e398a4d47e9d
     last_write_checksum: sha1:d7f478e3627f60687b313779014c922b44e53db4
     pristine_git_object: 958a929972d27f96cb79a15e0a8b304c21501c13
-  src/Models/Operations/Meta.php:
-    id: 1f28e5939d78
-    last_write_checksum: sha1:dfc7fc91c1b8d530829eb4d245ad43fc6c1ce328
-    pristine_git_object: a7502c901257ef08966269901ed0bd4f38c6dbcb
   src/Models/Operations/PublicApiV1AccountShowResponse.php:
     id: b636d8e6d795
     last_write_checksum: sha1:51b52e2a225ce63737634cf31abd9356c35164d0
@@ -7663,18 +7590,6 @@ trackedFiles:
     id: e19bae2fc3a8
     last_write_checksum: sha1:8cd31037d0b4f61b80536cd5442704cef7cd0a81
     pristine_git_object: 7d021f9ae3492e5ce8444c716a92073a03fbcf4f
-  src/Models/Operations/PublicApiV1ClientsBulkDeleteLegacyRequest.php:
-    id: b6c0b617aa8b
-    last_write_checksum: sha1:0d13d71c108d1700711e80c97675daa3249ef29f
-    pristine_git_object: 655335da7c001cf8285a6cd63c6d940115ff02e5
-  src/Models/Operations/PublicApiV1ClientsBulkDeleteLegacyResponse.php:
-    id: 9fe6e28b8d25
-    last_write_checksum: sha1:07b0a6940868b862209ff6aba7ff7374f970417b
-    pristine_git_object: 692ba909c9775437d68eedbc2319668694168b04
-  src/Models/Operations/PublicApiV1ClientsBulkDeleteLegacyResponseBody.php:
-    id: c06dbf803c68
-    last_write_checksum: sha1:8ff660f2193ed458ae6d97b2ea23fd20d4275e63
-    pristine_git_object: d03bded5947976adce52fd9dd483c2eecfcdf2a0
   src/Models/Operations/PublicApiV1ClientsBulkDeleteRequest.php:
     id: e8e52de283ab
     last_write_checksum: sha1:aaf696902c3a540894f3a035fda1377a46ef3832
@@ -7795,18 +7710,6 @@ trackedFiles:
     id: f21940b856f0
     last_write_checksum: sha1:6fd57e6df6bf677d1e67fb650d27772b727bafcb
     pristine_git_object: 3f1b7dc2a4c65487345bb30d5b26fe15f68d6f6e
-  src/Models/Operations/PublicApiV1DeliveryNotesChangeStatusRequest.php:
-    id: 3fb7d918ef4f
-    last_write_checksum: sha1:9ff3360caab5ff3b2d2dadb682a582afd2450938
-    pristine_git_object: d91a26a2499a3eac7ce03e530d175c5cda11fe3d
-  src/Models/Operations/PublicApiV1DeliveryNotesChangeStatusResponse.php:
-    id: 85f1ac9cded5
-    last_write_checksum: sha1:5248e0a8d06683c6f7bfb3b3841f8ecfa0b702ea
-    pristine_git_object: eb60057827d340d03d128c917beb7163329cb8ee
-  src/Models/Operations/PublicApiV1DeliveryNotesChangeStatusResponseBody.php:
-    id: f16a8f11f40a
-    last_write_checksum: sha1:2b7459ca0bd8cf8d09c1f8f4c4222a4f477d1cf7
-    pristine_git_object: 36f36ba477b9f7db5831436e83d76d1011caf304
   src/Models/Operations/PublicApiV1DeliveryNotesConvertRequest.php:
     id: b88b32f97481
     last_write_checksum: sha1:09519725fff3f00d18beee86fb9051f35ca35e07
@@ -8835,18 +8738,6 @@ trackedFiles:
     id: 05adeea2b02d
     last_write_checksum: sha1:8874e0cd63ef90505697209e2511aa14f730fe97
     pristine_git_object: 0032c1857aaeb3ef8e427b9bb0253d2e78e58f46
-  src/Models/Operations/PublicApiV1PurchaseInvoicesBySupplierRequest.php:
-    id: daa8175f6184
-    last_write_checksum: sha1:8944afd4166a7dd8f31ae502b68cf698bb016ee7
-    pristine_git_object: e1b454712aba60bdc90616837bad0b3dcb2958f8
-  src/Models/Operations/PublicApiV1PurchaseInvoicesBySupplierResponse.php:
-    id: 1fbff89672cf
-    last_write_checksum: sha1:e4437e29aa885e0ae0ec466a2d7744509ee114b2
-    pristine_git_object: a66cd0c24b6480e9ab09d8ae6b41a8cf3dca0346
-  src/Models/Operations/PublicApiV1PurchaseInvoicesBySupplierResponseBody.php:
-    id: eeea3b4b3b4d
-    last_write_checksum: sha1:53da30da943118e93ab44105eaf906aed2f8a50a
-    pristine_git_object: 9c9f9bb1825716ab7ba37a00310a0e774a46a008
   src/Models/Operations/PublicApiV1PurchaseInvoicesCreateRequest.php:
     id: dc3c2d2038b0
     last_write_checksum: sha1:8bc2d577607c1f27c4c07fc291a236f41f52f17b
@@ -9443,18 +9334,6 @@ trackedFiles:
     id: a4074cc25cc7
     last_write_checksum: sha1:477c8061c0436880bde28b1baa070d5a166e7a32
     pristine_git_object: 0e9203898adf685bb0054e681d5dde410c2450ee
-  src/Models/Operations/PublicApiV1SuppliersBulkDeleteLegacyRequest.php:
-    id: cb912dacae1f
-    last_write_checksum: sha1:d4dbe36d7ee682410288668264b3a168012762f0
-    pristine_git_object: 419e204feac77da530908b910a48a3fb644e6ef9
-  src/Models/Operations/PublicApiV1SuppliersBulkDeleteLegacyResponse.php:
-    id: 7647ea7afdba
-    last_write_checksum: sha1:6c2383860eacc9bc37b20e2cf4b374d152a9a150
-    pristine_git_object: d2b723e4f20c5c6946432f41b28f7468a1ed8e2f
-  src/Models/Operations/PublicApiV1SuppliersBulkDeleteLegacyResponseBody.php:
-    id: 089f1e7659ae
-    last_write_checksum: sha1:78e151bddc5429399fdcbbe99602598c94416e7a
-    pristine_git_object: bad7f2dcfab85f668a48d560700772c5f191ae84
   src/Models/Operations/PublicApiV1SuppliersBulkDeleteRequest.php:
     id: 883fda40cc63
     last_write_checksum: sha1:e6c25e055741a9f949e3b652b216d2213b50176f
@@ -10193,8 +10072,8 @@ trackedFiles:
     pristine_git_object: c3ba0caf8ee0582d35edd83fe22193f2e8095d62
   src/PurchaseInvoices.php:
     id: 245cde256471
-    last_write_checksum: sha1:5304d5645aeb6feedb93be91c60fe30c81ddc7f6
-    pristine_git_object: 6f5f480f77ed7debaa8f8235c9fca25945c06764
+    last_write_checksum: sha1:6023447cacfce19d9dcbeec60c52cb9f99ca9240
+    pristine_git_object: db690039cc94ebb8dad955ba95b2d315e5569f9b
   src/Quarterly.php:
     id: 04a68e561e8d
     last_write_checksum: sha1:92fdc567829c682b9fdafa1e376693e3d3fa0aeb
@@ -10229,8 +10108,8 @@ trackedFiles:
     pristine_git_object: dacf20c8c8b13ad3b8e2cd5735387c0563c5ba8e
   src/Suppliers.php:
     id: e0a1529d8120
-    last_write_checksum: sha1:b48b9bf8e00d3c47519af589c00e53421aeeeba2
-    pristine_git_object: ce5ee9d40e5e6b3887ae5efebc01e2c9c7658374
+    last_write_checksum: sha1:24fedbfdfce7e85d9f4703dec2373b0f7e5794ee
+    pristine_git_object: 23cbb5d537e8689bd22e6731dba48c8435cd50a2
   src/TaxReports.php:
     id: 0d82fd1ddade
     last_write_checksum: sha1:5fe62fbd35fc64347fffdf2934f81266ca747445
@@ -10845,6 +10724,39 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          proforma: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          proforma: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          proforma: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.proformas.public_link_get:
     missing_api_key:
       parameters:
@@ -11528,6 +11440,39 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.quotes.public_link_get:
     missing_api_key:
       parameters:
@@ -11712,6 +11657,39 @@ examples:
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
         "500":
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
+    missing_api_key:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.quotes.send:
     speakeasy-default-public-api-v1-quotes-send:
       parameters:
@@ -11748,6 +11726,39 @@ examples:
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
         "500":
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
+    missing_api_key:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          quote: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.verifactu.config:
     missing_api_key:
       responses:
@@ -12593,6 +12604,39 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          recurring_invoice: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          recurring_invoice: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          recurring_invoice: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.recurring_invoices.bulk-delete:
     speakeasy-default-public-api-v1-recurring-invoices-bulk-delete:
       parameters:
@@ -13205,6 +13249,39 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          recurring_invoice: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          recurring_invoice: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          recurring_invoice: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.invoices.annul:
     speakeasy-default-public-api-v1-invoices-annul:
       parameters:
@@ -15932,6 +16009,33 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+    parameter_unknown:
+      parameters:
+        query:
+          limit: 25
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_unknown", "message": "El parámetro 'per_page' no está reconocido por este endpoint.", "param": "per_page", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_unknown", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZ9"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_unknown", "message": "El parámetro 'per_page' no está reconocido por este endpoint.", "param": "per_page", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_unknown", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZ9"}}
+    parameter_invalid_format:
+      parameters:
+        query:
+          limit: 25
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_format", "message": "El parámetro 'created' debe seguir el formato ISO-8601 (YYYY-MM-DDTHH:mm:ssZ).", "param": "created", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_format", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_format", "message": "El parámetro 'created' debe seguir el formato ISO-8601 (YYYY-MM-DDTHH:mm:ssZ).", "param": "created", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_format", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZA"}}
+    parameter_invalid_range:
+      parameters:
+        query:
+          limit: 25
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_range", "message": "El parámetro 'limit' debe estar entre 1 y 100, recibido: 500.", "param": "limit", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_range", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZB"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_range", "message": "El parámetro 'limit' debe estar entre 1 y 100, recibido: 500.", "param": "limit", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_range", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZB"}}
   public-api.v1.clients.delete:
     missing_api_key:
       parameters:
@@ -16145,6 +16249,33 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    parameter_unknown:
+      parameters:
+        path:
+          client: "<value>"
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_unknown", "message": "El parámetro 'per_page' no está reconocido por este endpoint.", "param": "per_page", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_unknown", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZ9"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_unknown", "message": "El parámetro 'per_page' no está reconocido por este endpoint.", "param": "per_page", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_unknown", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZ9"}}
+    parameter_invalid_format:
+      parameters:
+        path:
+          client: "<value>"
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_format", "message": "El parámetro 'created' debe seguir el formato ISO-8601 (YYYY-MM-DDTHH:mm:ssZ).", "param": "created", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_format", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_format", "message": "El parámetro 'created' debe seguir el formato ISO-8601 (YYYY-MM-DDTHH:mm:ssZ).", "param": "created", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_format", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZA"}}
+    parameter_invalid_range:
+      parameters:
+        path:
+          client: "<value>"
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_range", "message": "El parámetro 'limit' debe estar entre 1 y 100, recibido: 500.", "param": "limit", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_range", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZB"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_range", "message": "El parámetro 'limit' debe estar entre 1 y 100, recibido: 500.", "param": "limit", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_range", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZB"}}
   public-api.v1.clients.stats:
     missing_api_key:
       responses:
@@ -16294,6 +16425,39 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.delivery_notes.change_status:
     speakeasy-default-public-api-v1-delivery-notes-change-status:
       parameters:
@@ -16378,6 +16542,45 @@ examples:
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
         "500":
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
+    missing_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      requestBody:
+        application/json: {"target": "proforma"}
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      requestBody:
+        application/json: {"target": "proforma"}
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      requestBody:
+        application/json: {"target": "proforma"}
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.delivery_notes.create:
     speakeasy-default-public-api-v1-delivery-notes-create:
       parameters:
@@ -16464,6 +16667,33 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+    parameter_unknown:
+      parameters:
+        query:
+          limit: 25
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_unknown", "message": "El parámetro 'per_page' no está reconocido por este endpoint.", "param": "per_page", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_unknown", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZ9"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_unknown", "message": "El parámetro 'per_page' no está reconocido por este endpoint.", "param": "per_page", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_unknown", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZ9"}}
+    parameter_invalid_format:
+      parameters:
+        query:
+          limit: 25
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_format", "message": "El parámetro 'created' debe seguir el formato ISO-8601 (YYYY-MM-DDTHH:mm:ssZ).", "param": "created", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_format", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_format", "message": "El parámetro 'created' debe seguir el formato ISO-8601 (YYYY-MM-DDTHH:mm:ssZ).", "param": "created", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_format", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZA"}}
+    parameter_invalid_range:
+      parameters:
+        query:
+          limit: 25
+      responses:
+        "400":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_range", "message": "El parámetro 'limit' debe estar entre 1 y 100, recibido: 500.", "param": "limit", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_range", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZB"}}
+        "500":
+          application/json: {"error": {"type": "invalid_request_error", "code": "parameter_invalid_range", "message": "El parámetro 'limit' debe estar entre 1 y 100, recibido: 500.", "param": "limit", "doc_url": "https://docs.factuarea.com/guides/errors#parameter_invalid_range", "request_id": "req_01HKQS5N7UR6PWJ8K2T5BWPMZB"}}
   public-api.v1.delivery_notes.delete:
     idempotency_key_reused:
       parameters:
@@ -16492,6 +16722,33 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          delivery_note: "<value>"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.delivery_notes.show:
     speakeasy-default-public-api-v1-delivery-notes-show:
       parameters:
@@ -16653,6 +16910,39 @@ examples:
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    missing_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.delivery_notes.stats:
     missing_api_key:
       responses:
@@ -16743,6 +17033,39 @@ examples:
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
         "500":
           application/json: {"error": {"type": "conflict_error", "code": "resource_conflict", "message": "El recurso está en un estado que no permite esta operación.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#resource_conflict", "request_id": "req_01HKQS5NKW1C6W9T4G5HAIBZVL"}}
+    missing_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "message": "No se ha proporcionado una API key válida en el header Authorization.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
+    invalid_api_key:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "invalid_api_key", "message": "La API key no tiene el formato esperado (debe empezar por fact_live_ o fact_test_).", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#invalid_api_key", "request_id": "req_01HKQS5N9JTQM7HVTQP3FBN5XB"}}
+    api_key_revoked:
+      parameters:
+        path:
+          delivery_note: "<value>"
+        header:
+          Idempotency-Key: "01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b"
+      responses:
+        "401":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
+        "500":
+          application/json: {"error": {"type": "authentication_error", "code": "api_key_revoked", "message": "Esta API key ha sido revocada y ya no es válida.", "param": null, "doc_url": "https://docs.factuarea.com/guides/errors#api_key_revoked", "request_id": "req_01HKQS5NA8K7E2V9YDZWMT6RJC"}}
   public-api.v1.delivery_notes.send:
     speakeasy-default-public-api-v1-delivery-notes-send:
       parameters:
