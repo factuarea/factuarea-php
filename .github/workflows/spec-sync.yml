@@ -47,6 +47,13 @@ jobs:
       # Canonical comparison: the published spec is minified, the pinned spec is
       # pretty-printed, so a raw byte diff is meaningless. We compare a canonical
       # serialisation (jq -S sorts object keys recursively) of both documents.
+      #
+      # We also strip `x-codeSamples` (jq's `walk` deletes the key at any depth)
+      # before comparing. The docs site decorates the published spec with those
+      # per-operation usage snippets; the SDK does not need them. Without this,
+      # the daily compare would report a (spurious) change every time the docs
+      # are republished, opening noisy PRs even when the API is unchanged.
+      # `walk` is a jq builtin (jq >= 1.6, present on ubuntu-latest runners).
       - name: Compare canonically
         id: compare
         run: |
@@ -54,8 +61,10 @@ jobs:
             echo "::error::Published spec is not valid JSON; aborting."
             exit 1
           fi
-          jq -S . spec/openapi.json        > /tmp/pinned.canonical.json
-          jq -S . /tmp/published-openapi.json > /tmp/published.canonical.json
+          jq -S 'walk(if type=="object" then del(."x-codeSamples") else . end)' \
+            spec/openapi.json > /tmp/pinned.canonical.json
+          jq -S 'walk(if type=="object" then del(."x-codeSamples") else . end)' \
+            /tmp/published-openapi.json > /tmp/published.canonical.json
           if cmp -s /tmp/pinned.canonical.json /tmp/published.canonical.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Spec is up to date — nothing to do."
@@ -83,8 +92,10 @@ jobs:
           speakeasy --version
 
       # Pin the new spec pretty-printed, the same way the repo keeps it, so the
-      # PR diff is readable. The Speakeasy run applies the retry-casing overlay
-      # automatically (declared in .speakeasy/workflow.yaml).
+      # PR diff is readable. We strip `x-codeSamples` (docs-only per-operation
+      # snippets) so the SDK spec never carries them — same exclusion as the
+      # canonical comparison above. The Speakeasy run applies the retry-casing
+      # overlay automatically (declared in .speakeasy/workflow.yaml).
       - name: Pin the new spec and regenerate
         if: steps.compare.outputs.changed == 'true'
         env:
@@ -94,7 +105,8 @@ jobs:
             echo "::error::SPEAKEASY_API_KEY secret is missing; cannot regenerate. Set it in repo secrets."
             exit 1
           fi
-          jq . /tmp/published-openapi.json > spec/openapi.json
+          jq 'walk(if type=="object" then del(."x-codeSamples") else . end)' \
+            /tmp/published-openapi.json > spec/openapi.json
           speakeasy run --target all --auto-yes --skip-testing
 
       - name: Install dependencies
