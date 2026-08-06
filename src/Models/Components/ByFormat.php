@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ByFormat - Recuento de declaraciones por formato de salida. */
+/** ByFormat - Report count by output format. */
 class ByFormat
 {
     /**

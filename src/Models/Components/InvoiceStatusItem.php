@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class InvoiceStatusItem
 {
     /**
-     * Identificador interno del estado.
+     * Internal status identifier.
      *
      * @var \Factuarea\Sdk\Models\Components\InvoiceStatusItemValue $value
      */
@@ -30,7 +30,7 @@ class InvoiceStatusItem
     public string $label;
 
     /**
-     * Color sugerido para pintar el estado en UI.
+     * Suggested color for rendering the status in the UI.
      *
      * @var string $color
      */

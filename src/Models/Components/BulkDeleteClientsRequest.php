@@ -9,15 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * BulkDeleteClientsRequest - Public REST API v1 — POST /v1/clients/bulk-delete (canónico) y
- *
- * DELETE /v1/clients/bulk (deprecado). Mismo request para ambas rutas.
- *
- * Body: `{ ids: string[] }`. Acepta entre 1 y 200 UUIDs. La validación
- * de pertenencia al tenant la realiza el Handler (filtrado por company_id);
- * los UUIDs ajenos se ignoran silenciosamente y aparecerán en `failed`.
- */
+/** BulkDeleteClientsRequest - Delete several clients in one request. `ids` is an array of 1 to 200 UUIDs; identifiers that do not belong to your company are reported under `failed` rather than failing the whole request. */
 class BulkDeleteClientsRequest
 {
     /**

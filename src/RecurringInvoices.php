@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
@@ -54,10 +55,12 @@ class RecurringInvoices
      *
      * @param  string  $recurringInvoice
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesActivate(string $recurringInvoice, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesActivateResponse
+    public function publicApiV1RecurringInvoicesActivate(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,6 +90,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesActivateRequest(
             recurringInvoice: $recurringInvoice,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/activate', Operations\PublicApiV1RecurringInvoicesActivateRequest::class, $request);
@@ -135,7 +140,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -174,10 +179,12 @@ class RecurringInvoices
      * Return the cursor-paginated activity timeline (domain events: activation, pause, resume, generation, failure, cancellation, etc.) for a recurring invoice. Metadata is sanitized to never expose internal identifiers.
      *
      * @param  string  $recurringInvoice
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesActivitiesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesActivities(string $recurringInvoice, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesActivitiesResponse
+    public function publicApiV1RecurringInvoicesActivities(string $recurringInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesActivitiesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -206,11 +213,17 @@ class RecurringInvoices
         }
         $request = new Operations\PublicApiV1RecurringInvoicesActivitiesRequest(
             recurringInvoice: $recurringInvoice,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/activities', Operations\PublicApiV1RecurringInvoicesActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -250,7 +263,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -290,10 +303,12 @@ class RecurringInvoices
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteRecurringInvoicesRequest  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesBulkDelete(Components\BulkDeleteRecurringInvoicesRequest $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesBulkDeleteResponse
+    public function publicApiV1RecurringInvoicesBulkDelete(Components\BulkDeleteRecurringInvoicesRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -323,6 +338,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesBulkDeleteRequest(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/bulk-delete');
@@ -416,10 +433,12 @@ class RecurringInvoices
      *
      * @param  string  $recurringInvoice
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesCancel(string $recurringInvoice, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesCancelResponse
+    public function publicApiV1RecurringInvoicesCancel(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -449,6 +468,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesCancelRequest(
             recurringInvoice: $recurringInvoice,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/cancel', Operations\PublicApiV1RecurringInvoicesCancelRequest::class, $request);
@@ -497,7 +518,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -537,10 +558,12 @@ class RecurringInvoices
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequest  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesCreate(Components\CreateRecurringInvoiceRequest $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesCreateResponse
+    public function publicApiV1RecurringInvoicesCreate(Components\CreateRecurringInvoiceRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -570,6 +593,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesCreateRequest(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices');
@@ -663,10 +688,12 @@ class RecurringInvoices
      *
      * @param  string  $recurringInvoice
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesDelete(string $recurringInvoice, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesDeleteResponse
+    public function publicApiV1RecurringInvoicesDelete(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -696,6 +723,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesDeleteRequest(
             recurringInvoice: $recurringInvoice,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}', Operations\PublicApiV1RecurringInvoicesDeleteRequest::class, $request);
@@ -734,7 +763,135 @@ class RecurringInvoices
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Find a recurring invoice by external ID
+     *
+     * Look up a single recurring invoice template by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Returns the matching recurring invoice or 404 `recurring_invoice_not_found` if none uses that external_id within your company.
+     *
+     * @param  \Factuarea\Sdk\Models\Components\FindRecurringInvoiceByExternalIdRequest  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesFindByExternalIdResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1RecurringInvoicesFindByExternalId(Components\FindRecurringInvoiceByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesFindByExternalIdResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1RecurringInvoicesFindByExternalIdRequest(
+            body: $body,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/find-by-external-id');
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
+        if ($body === null) {
+            throw new \Exception('Request body is required');
+        }
+        $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.recurring_invoices.find_by_external_id', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesFindByExternalIdResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1RecurringInvoicesFindByExternalIdResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -774,10 +931,12 @@ class RecurringInvoices
      *
      * @param  string  $recurringInvoice
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesGenerateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesGenerate(string $recurringInvoice, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesGenerateResponse
+    public function publicApiV1RecurringInvoicesGenerate(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesGenerateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -807,6 +966,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesGenerateRequest(
             recurringInvoice: $recurringInvoice,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/generate', Operations\PublicApiV1RecurringInvoicesGenerateRequest::class, $request);
@@ -855,7 +1016,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -930,6 +1091,10 @@ class RecurringInvoices
         $httpOptions = ['http_errors' => false];
 
         $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1RecurringInvoicesListRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -1008,14 +1173,11 @@ class RecurringInvoices
      *
      * Return paginated history of generations, failures and other events for this recurring template.
      *
-     * @param  string  $recurringInvoice
-     * @param  ?string  $perPage
-     * @param  ?string  $limit
-     * @param  ?string  $cursor
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesLogsRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesLogsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    private function publicApiV1RecurringInvoicesLogsIndividual(string $recurringInvoice, ?string $perPage = null, ?string $limit = null, ?string $cursor = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesLogsResponse
+    private function publicApiV1RecurringInvoicesLogsIndividual(Operations\PublicApiV1RecurringInvoicesLogsRequest $request, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesLogsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1042,18 +1204,16 @@ class RecurringInvoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1RecurringInvoicesLogsRequest(
-            recurringInvoice: $recurringInvoice,
-            perPage: $perPage,
-            limit: $limit,
-            cursor: $cursor,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/logs', Operations\PublicApiV1RecurringInvoicesLogsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
         $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1RecurringInvoicesLogsRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -1113,10 +1273,14 @@ class RecurringInvoices
                     }
 
                     return $sdk->publicApiV1RecurringInvoicesLogsIndividual(
-                        recurringInvoice: $request != null ? $request->recurringInvoice : '',
-                        perPage: $request != null ? $request->perPage : null,
-                        limit: $request != null ? $request->limit : null,
-                        cursor: $nextCursor,
+                        request: new Operations\PublicApiV1RecurringInvoicesLogsRequest(
+                            recurringInvoice: $request != null ? $request->recurringInvoice : '',
+                            perPage: $request != null ? $request->perPage : null,
+                            limit: $request != null ? $request->limit : null,
+                            cursor: $nextCursor,
+                            factuareaVersion: $request != null ? $request->factuareaVersion : null,
+                            xActiveProfile: $request != null ? $request->xActiveProfile : null,
+                        ),
                     );
                 };
 
@@ -1162,16 +1326,13 @@ class RecurringInvoices
      *
      * Return paginated history of generations, failures and other events for this recurring template.
      *
-     * @param  string  $recurringInvoice
-     * @param  ?string  $perPage
-     * @param  ?string  $limit
-     * @param  ?string  $cursor
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesLogsRequest  $request
      * @return \Generator<\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesLogsResponse>
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesLogs(string $recurringInvoice, ?string $perPage = null, ?string $limit = null, ?string $cursor = null, ?Options $options = null): \Generator
+    public function publicApiV1RecurringInvoicesLogs(Operations\PublicApiV1RecurringInvoicesLogsRequest $request, ?Options $options = null): \Generator
     {
-        $res = $this->publicApiV1RecurringInvoicesLogsIndividual($recurringInvoice, $perPage, $limit, $cursor, $options);
+        $res = $this->publicApiV1RecurringInvoicesLogsIndividual($request, $options);
         while ($res !== null) {
             yield $res;
             $res = $res->next($res);
@@ -1185,10 +1346,12 @@ class RecurringInvoices
      *
      * @param  string  $recurringInvoice
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPauseResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesPause(string $recurringInvoice, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesPauseResponse
+    public function publicApiV1RecurringInvoicesPause(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesPauseResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1218,6 +1381,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesPauseRequest(
             recurringInvoice: $recurringInvoice,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/pause', Operations\PublicApiV1RecurringInvoicesPauseRequest::class, $request);
@@ -1266,7 +1431,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1304,12 +1469,11 @@ class RecurringInvoices
      *
      * Return the next scheduled run dates with their due dates and estimated totals. Defaults to 5 occurrences.
      *
-     * @param  string  $recurringInvoice
-     * @param  ?string  $count
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesPreview(string $recurringInvoice, ?string $count = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesPreviewResponse
+    public function publicApiV1RecurringInvoicesPreview(Operations\PublicApiV1RecurringInvoicesPreviewRequest $request, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesPreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1336,16 +1500,16 @@ class RecurringInvoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1RecurringInvoicesPreviewRequest(
-            recurringInvoice: $recurringInvoice,
-            count: $count,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/preview', Operations\PublicApiV1RecurringInvoicesPreviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
         $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1RecurringInvoicesPreviewRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -1374,13 +1538,13 @@ class RecurringInvoices
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\ResponseBody1|\Factuarea\Sdk\Models\Operations\ResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1RecurringInvoicesPreviewResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    object: $obj);
+                    oneOf: $obj);
 
                 return $response;
             } else {
@@ -1426,10 +1590,12 @@ class RecurringInvoices
      *
      * @param  string  $recurringInvoice
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesResumeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesResume(string $recurringInvoice, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesResumeResponse
+    public function publicApiV1RecurringInvoicesResume(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesResumeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1459,6 +1625,8 @@ class RecurringInvoices
         $request = new Operations\PublicApiV1RecurringInvoicesResumeRequest(
             recurringInvoice: $recurringInvoice,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/resume', Operations\PublicApiV1RecurringInvoicesResumeRequest::class, $request);
@@ -1507,7 +1675,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1546,10 +1714,12 @@ class RecurringInvoices
      * Retrieve a recurring invoice template by its `uuid`.
      *
      * @param  string  $recurringInvoice
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesShow(string $recurringInvoice, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesShowResponse
+    public function publicApiV1RecurringInvoicesShow(string $recurringInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1578,11 +1748,17 @@ class RecurringInvoices
         }
         $request = new Operations\PublicApiV1RecurringInvoicesShowRequest(
             recurringInvoice: $recurringInvoice,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}', Operations\PublicApiV1RecurringInvoicesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -1656,14 +1832,17 @@ class RecurringInvoices
     }
 
     /**
-     * Retrieve recurring invoice stats
+     * Skip the next recurring invoice generation
      *
-     * Aggregate KPIs for your recurring invoices: counts by status, due today / this week, generated and failed this month, breakdown by frequency, next scheduled runs and estimated revenue this month.
+     * Advance the recurring invoice to its following scheduled run without generating an invoice for the current cycle. The skipped occurrence is not counted against any occurrence limit. Cancelled or completed recurring invoices return 422.
      *
-     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesStatsResponse
+     * @param  string  $recurringInvoice
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesSkipResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesStats(?Options $options = null): Operations\PublicApiV1RecurringInvoicesStatsResponse
+    public function publicApiV1RecurringInvoicesSkip(string $recurringInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesSkipResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1690,10 +1869,140 @@ class RecurringInvoices
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1RecurringInvoicesSkipRequest(
+            recurringInvoice: $recurringInvoice,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}/skip', Operations\PublicApiV1RecurringInvoicesSkipRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.recurring_invoices.skip', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesSkipResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1RecurringInvoicesSkipResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retrieve recurring invoice stats
+     *
+     * Aggregate KPIs for your recurring invoices: counts by status, due today / this week, generated and failed this month, breakdown by frequency, next scheduled runs and estimated revenue this month.
+     *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesStatsResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1RecurringInvoicesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesStatsResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1RecurringInvoicesStatsRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/stats');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -1771,13 +2080,11 @@ class RecurringInvoices
      *
      * Update a recurring invoice template. The cadence and lines apply to invoices generated after the update; previously generated invoices are unaffected.
      *
-     * @param  string  $recurringInvoice
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesUpdate(string $recurringInvoice, ?Components\UpdateRecurringInvoiceRequest $body = null, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesUpdateResponse
+    public function publicApiV1RecurringInvoicesUpdate(Operations\PublicApiV1RecurringInvoicesUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1804,11 +2111,6 @@ class RecurringInvoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
-            recurringInvoice: $recurringInvoice,
-            idempotencyKey: $idempotencyKey,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/recurring_invoices/{recurring_invoice}', Operations\PublicApiV1RecurringInvoicesUpdateRequest::class, $request);
         $urlOverride = null;
@@ -1860,7 +2162,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

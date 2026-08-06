@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaCancelled - Payload (`data`) emitted with the `proforma.cancelled` event. */
+/** EventDataProformaCancelled - Payload (`data`) emitted with the `proforma.cancelled` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaCancelled
 {
     /**
+     * A proforma invoice that can be converted to a final invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaCancelledProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaCancelledProforma')]
-    public EventDataProformaCancelledProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
+    public Proforma $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProformaCancelled
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaCancelledProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaCancelledProforma $proforma, string $type = 'proforma.cancelled')
+    public function __construct(Proforma $object, string $type = 'proforma.cancelled')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->type = $type;
     }
 }

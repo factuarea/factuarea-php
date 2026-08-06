@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
@@ -50,14 +51,16 @@ class Settings
     /**
      * Update VeriFactu settings
      *
-     * Update Veri Factu Settings V1.
+     * Update the VeriFactu settings of your company (e.g. mode/environment). Returns 422 `business_rule_violation` when a transition is locked by AEAT compliance (for example, once VeriFactu mode has been enabled it cannot be silently disabled).
      *
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1Request  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuSettingsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuSettingsUpdate(?Components\UpdateVeriFactuSettingsV1Request $body = null, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1VerifactuSettingsUpdateResponse
+    public function publicApiV1VerifactuSettingsUpdate(?Components\UpdateVeriFactuSettingsV1Request $body = null, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuSettingsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,6 +89,8 @@ class Settings
         }
         $request = new Operations\PublicApiV1VerifactuSettingsUpdateRequest(
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
             body: $body,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();

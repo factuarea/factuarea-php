@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataSeriesMarkedAsDefault - Payload (`data`) emitted with the `series.marked_as_default` event. */
+/** EventDataSeriesMarkedAsDefault - Payload (`data`) emitted with the `series.marked_as_default` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataSeriesMarkedAsDefault
 {
     /**
+     * A document numbering series. Immutable per AEAT compliance.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataSeriesMarkedAsDefaultSeries $series
+     * @var \Factuarea\Sdk\Models\Components\Series $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataSeriesMarkedAsDefaultSeries')]
-    public EventDataSeriesMarkedAsDefaultSeries $series;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series')]
+    public Series $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataSeriesMarkedAsDefault
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataSeriesMarkedAsDefaultSeries  $series
+     * @param  \Factuarea\Sdk\Models\Components\Series  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataSeriesMarkedAsDefaultSeries $series, string $type = 'series.marked_as_default')
+    public function __construct(Series $object, string $type = 'series.marked_as_default')
     {
-        $this->series = $series;
+        $this->object = $object;
         $this->type = $type;
     }
 }

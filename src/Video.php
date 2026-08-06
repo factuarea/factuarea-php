@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -54,10 +54,12 @@ class Video
      *
      * @param  string  $product
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVideoDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsVideoDelete(string $product, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDeleteResponse
+    public function publicApiV1ProductsVideoDelete(string $product, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,6 +89,8 @@ class Video
         $request = new Operations\PublicApiV1ProductsVideoDeleteRequest(
             product: $product,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/video', Operations\PublicApiV1ProductsVideoDeleteRequest::class, $request);
@@ -164,10 +168,12 @@ class Video
      * Stream the raw binary of the product video. Returns 404 if the product has no video or the file is not on disk.
      *
      * @param  string  $product
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVideoDownloadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsVideoDownload(string $product, ?Options $options = null): Operations\PublicApiV1ProductsVideoDownloadResponse
+    public function publicApiV1ProductsVideoDownload(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDownloadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -196,11 +202,17 @@ class Video
         }
         $request = new Operations\PublicApiV1ProductsVideoDownloadRequest(
             product: $product,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/video/download', Operations\PublicApiV1ProductsVideoDownloadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/octet-stream';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -275,13 +287,11 @@ class Video
      *
      * Attach a video file (mp4, mov, avi or webm; up to 50 MB) to the product. Replaces any existing video.
      *
-     * @param  \Factuarea\Sdk\Models\Components\UploadProductVideoRequest  $body
-     * @param  string  $product
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVideoUploadRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVideoUploadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsVideoUpload(Components\UploadProductVideoRequest $body, string $product, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoUploadResponse
+    public function publicApiV1ProductsVideoUpload(Operations\PublicApiV1ProductsVideoUploadRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsVideoUploadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -308,11 +318,6 @@ class Video
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-            product: $product,
-            body: $body,
-            idempotencyKey: $idempotencyKey,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/video', Operations\PublicApiV1ProductsVideoUploadRequest::class, $request);
         $urlOverride = null;

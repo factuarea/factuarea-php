@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaDeleted - Payload (`data`) emitted with the `proforma.deleted` event. */
+/** EventDataProformaDeleted - Payload (`data`) emitted with the `proforma.deleted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaDeleted
 {
     /**
+     * Snapshot of the resource at emission time. When the resource is still recoverable the full snapshot is emitted with an additional `deleted: true` key; otherwise it degrades to `{ id, deleted: true }`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaDeletedProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma|\Factuarea\Sdk\Models\Components\EventDeletedObject $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaDeletedProforma')]
-    public EventDataProformaDeletedProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma|\Factuarea\Sdk\Models\Components\EventDeletedObject')]
+    public Proforma|EventDeletedObject $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProformaDeleted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaDeletedProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma|\Factuarea\Sdk\Models\Components\EventDeletedObject  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaDeletedProforma $proforma, string $type = 'proforma.deleted')
+    public function __construct(Proforma|EventDeletedObject $object, string $type = 'proforma.deleted')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->type = $type;
     }
 }

@@ -8,17 +8,46 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
-/** EventDataInvoicePaid - Payload (`data`) emitted with the `invoice.paid` event. */
+use Brick\DateTime\LocalDate;
+/** EventDataInvoicePaid - Payload (`data`) emitted with the `invoice.paid` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoicePaid
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoicePaidInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoicePaidInvoice')]
-    public EventDataInvoicePaidInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
+
+    /**
+     *
+     * @var float $amount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
+    public float $amount;
+
+    /**
+     *
+     * @var ?LocalDate $paymentDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_date')]
+    public ?LocalDate $paymentDate;
+
+    /**
+     *
+     * @var ?string $paymentMethod
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_method')]
+    public ?string $paymentMethod;
+
+    /**
+     *
+     * @var ?string $paymentReference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_reference')]
+    public ?string $paymentReference;
 
     /**
      *
@@ -29,12 +58,20 @@ class EventDataInvoicePaid
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoicePaidInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  float  $amount
+     * @param  ?LocalDate  $paymentDate
+     * @param  ?string  $paymentMethod
+     * @param  ?string  $paymentReference
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoicePaidInvoice $invoice, string $type = 'invoice.paid')
+    public function __construct(Invoice $object, float $amount, ?LocalDate $paymentDate = null, ?string $paymentMethod = null, ?string $paymentReference = null, string $type = 'invoice.paid')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
+        $this->amount = $amount;
+        $this->paymentDate = $paymentDate;
+        $this->paymentMethod = $paymentMethod;
+        $this->paymentReference = $paymentReference;
         $this->type = $type;
     }
 }

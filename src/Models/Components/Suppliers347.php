@@ -31,7 +31,7 @@ class Suppliers347
     public ?array $quarters = null;
 
     /**
-     * NIF/CIF del proveedor.
+     * Supplier tax ID (NIF/CIF).
      *
      * @var ?string $taxId
      */

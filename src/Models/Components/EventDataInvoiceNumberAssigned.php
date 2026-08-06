@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceNumberAssigned - Payload (`data`) emitted with the `invoice.number_assigned` event. */
+/** EventDataInvoiceNumberAssigned - Payload (`data`) emitted with the `invoice.number_assigned` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceNumberAssigned
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceNumberAssignedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceNumberAssignedInvoice')]
-    public EventDataInvoiceNumberAssignedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataInvoiceNumberAssigned
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceNumberAssignedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @param  ?string  $previousNumber
      * @param  ?string  $newNumber
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceNumberAssignedInvoice $invoice, ?string $previousNumber = null, ?string $newNumber = null, string $type = 'invoice.number_assigned')
+    public function __construct(Invoice $object, ?string $previousNumber = null, ?string $newNumber = null, string $type = 'invoice.number_assigned')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->previousNumber = $previousNumber;
         $this->newNumber = $newNumber;
         $this->type = $type;

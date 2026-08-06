@@ -21,7 +21,7 @@ class AlternativeId
     public AlternativeIdObject $object;
 
     /**
-     * Type of identification: passport, foreign ID, foreign tax identification or none.
+     * AEAT IDType (lista L7): nif_iva, passport, country_id, residence_certificate, other_document or not_registered. The legacy values `tax_id_foreign` and `national_id` are accepted on input and normalized.
      *
      * @var \Factuarea\Sdk\Models\Components\AlternativeIdType $type
      */
@@ -30,7 +30,7 @@ class AlternativeId
     public AlternativeIdType $type;
 
     /**
-     * Valor del identificador (string libre, 1-50 caracteres).
+     * Identifier value (free-form string, 1-50 characters).
      *
      * @var string $value
      */

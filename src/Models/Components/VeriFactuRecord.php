@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class VeriFactuRecord
 {
     /**
-     * UUID (v7) del registro VeriFactu.
+     * UUID (v7) of the VeriFactu record.
      *
      * @var string $id
      */
@@ -37,7 +37,7 @@ class VeriFactuRecord
     public string $type;
 
     /**
-     * Tipo de factura AEAT (F1, F2, F3, R1-R5, …).
+     * AEAT invoice type (F1, F2, F3, R1-R5, …).
      *
      * @var string $invoiceType
      */
@@ -53,7 +53,7 @@ class VeriFactuRecord
     public string $invoiceNumber;
 
     /**
-     * Fecha del registro.
+     * Record date.
      *
      * @var string $date
      */
@@ -61,7 +61,7 @@ class VeriFactuRecord
     public string $date;
 
     /**
-     * Importe total de la factura asociada.
+     * Total amount of the associated invoice.
      *
      * @var float $amount
      */
@@ -77,7 +77,7 @@ class VeriFactuRecord
     public string $status;
 
     /**
-     * Huella SHA-256 encadenada del registro (fingerprint VeriFactu).
+     * Chained SHA-256 fingerprint of the record (VeriFactu fingerprint).
      *
      * @var string $huella
      */
@@ -93,7 +93,7 @@ class VeriFactuRecord
     public string $environment;
 
     /**
-     * Indica si la factura es simplificada (F2).
+     * Whether the invoice is simplified (F2).
      *
      * @var bool $isSimplificada
      */
@@ -101,7 +101,7 @@ class VeriFactuRecord
     public bool $isSimplificada;
 
     /**
-     * Indica si sustituye a una o varias facturas simplificadas (F3).
+     * Whether it substitutes one or more simplified invoices (F3).
      *
      * @var bool $isSubstituteForSimplified
      */

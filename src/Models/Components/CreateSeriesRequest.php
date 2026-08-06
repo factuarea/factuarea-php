@@ -9,30 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CreateSeriesRequest - Public REST API v1 — POST /v1/series.
- *
- *
- * Required body: `code` (string, max 10 — invariant of the VO `SeriesCode`),
- * `document_type` (internal enum whitelist `SeriesType`). Optional: `name`,
- * `prefix`, `year_reset` (boolean).
- *
- * `code`, `name` and `year_reset` are honored and materialized by the `Series`
- * aggregate (enables multi-series with distinct codes per type). `prefix`
- * is an OUTPUT alias of `code` in the Resource — it is not mapped to the Command.
- *
- * The `max:10` limit of `code` must match the invariant of
- * `SeriesCode::create()` (throws if empty or > 10 chars). Without this
- * alignment, an 11+ char code would pass validation and blow up in the VO
- * with an HTTP 500 instead of the expected 422.
- *
- * Public `document_type` whitelist: `invoice, quote, delivery_note,
- * proforma`. The `contract` type is outside the public v1 surface
- * (it is not a billable document exposed to integrators) even though the
- * domain VO `SeriesType` still supports it for the SPA. `purchase_invoice`
- * and `recurring_invoice` are not yet supported by the internal BC and are
- * rejected in validation — they will be added additively when the domain supports them.
- */
 class CreateSeriesRequest
 {
     /**
@@ -68,6 +44,15 @@ class CreateSeriesRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateSeriesRequestCounterReset $counterReset
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counter_reset')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateSeriesRequestCounterReset|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateSeriesRequestCounterReset $counterReset = null;
+
+    /**
+     *
      * @var ?bool $yearReset
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('year_reset')]
@@ -75,19 +60,41 @@ class CreateSeriesRequest
     public ?bool $yearReset = null;
 
     /**
+     *
+     * @var ?string $numberFormat
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('number_format')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $numberFormat = null;
+
+    /**
+     *
+     * @var ?int $initialNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('initial_number')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $initialNumber = null;
+
+    /**
      * @param  string  $code
      * @param  \Factuarea\Sdk\Models\Components\CreateSeriesRequestDocumentType  $documentType
      * @param  ?string  $name
      * @param  ?string  $prefix
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateSeriesRequestCounterReset  $counterReset
      * @param  ?bool  $yearReset
+     * @param  ?string  $numberFormat
+     * @param  ?int  $initialNumber
      * @phpstan-pure
      */
-    public function __construct(string $code, CreateSeriesRequestDocumentType $documentType, ?string $name = null, ?string $prefix = null, ?bool $yearReset = null)
+    public function __construct(string $code, CreateSeriesRequestDocumentType $documentType, ?string $name = null, ?string $prefix = null, ?CreateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null)
     {
         $this->code = $code;
         $this->documentType = $documentType;
         $this->name = $name;
         $this->prefix = $prefix;
+        $this->counterReset = $counterReset;
         $this->yearReset = $yearReset;
+        $this->numberFormat = $numberFormat;
+        $this->initialNumber = $initialNumber;
     }
 }

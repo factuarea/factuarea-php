@@ -1,0 +1,200 @@
+# Integrations.Events
+
+## Overview
+
+### Available Operations
+
+* [publicApiV1IntegrationsEventsList](#publicapiv1integrationseventslist) - List integration events
+* [publicApiV1IntegrationsEventsReplay](#publicapiv1integrationseventsreplay) - Replay a parked integration event
+* [publicApiV1IntegrationsEventsShow](#publicapiv1integrationseventsshow) - Retrieve an integration event
+
+## publicApiV1IntegrationsEventsList
+
+Browse everything the payment gateways have sent to Factuarea. This is the inbox to open when a charge did not generate its invoice: every discarded event carries a typed `discard_reason` and whether it can be reprocessed. Newest first, and scoped to the authenticated company. The raw content of the event is never returned.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.integrations.events.list" method="get" path="/integrations/events" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1IntegrationsEventsListRequest(
+    startingAfter: '91544',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+);
+
+$response = $sdk->integrations->events->publicApiV1IntegrationsEventsList(
+    request: $request
+);
+
+if ($response->integrationEventList !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                  | Type                                                                                                                       | Required                                                                                                                   | Description                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                                 | [Operations\PublicApiV1IntegrationsEventsListRequest](../../Models/Operations/PublicApiV1IntegrationsEventsListRequest.md) | :heavy_check_mark:                                                                                                         | The request object to use for the request.                                                                                 |
+
+### Response
+
+**[?Operations\PublicApiV1IntegrationsEventsListResponse](../../Models/Operations/PublicApiV1IntegrationsEventsListResponse.md)**
+
+### Errors
+
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+
+## publicApiV1IntegrationsEventsReplay
+
+Reprocess a gateway event that was parked, once the cause that prevented it from producing its effect is gone.
+
+**Before you call it**
+
+- The event must be published with `is_replayable` set to `true` — anything else returns 422.
+- Fix the cause first: turn automatic invoicing back on, re-link the connected account, wait for the exchange rate.
+- It needs the write scope `integration_events:write`, never the read scope of the inbox.
+
+**What it can do**
+
+> **This action can have real fiscal consequences.** If the cause is already resolved, the replay CAN ISSUE A REAL INVOICE, with its series number and its registration in VeriFactu. Confirm with the account owner before calling it.
+
+**What comes back**
+
+- `202` means accepted and queued, **not** completed.
+- The body returns the event as it stands now, not the outcome of the retry.
+- The outcome appears as a NEW event in the inbox — poll `GET /v1/integrations/events` to see how it ended.
+- It never duplicates invoices: the replay goes through the same idempotency check as the original attempt.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.integrations.events.replay" method="post" path="/integrations/events/{event}/replay" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->integrations->events->publicApiV1IntegrationsEventsReplay(
+    event: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `event`                                                                                                                                                                                                                                                                                                                                                                                          | *string*                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
+| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1IntegrationsEventsReplayResponse](../../Models/Operations/PublicApiV1IntegrationsEventsReplayResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+
+## publicApiV1IntegrationsEventsShow
+
+Retrieve one integration event by its id, typically after finding it in the listing, to know exactly why a charge did not produce its invoice and what to do next. On top of the listing fields, the detail adds `recommended_action`, one imperative sentence with the next step, and `is_replayable`, which tells you whether the replay operation would accept the event.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.integrations.events.show" method="get" path="/integrations/events/{event}" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->integrations->events->publicApiV1IntegrationsEventsShow(
+    event: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `event`                                                                                                                                                                                                                                                                                                                                                                                          | *string*                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
+| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1IntegrationsEventsShowResponse](../../Models/Operations/PublicApiV1IntegrationsEventsShowResponse.md)**
+
+### Errors
+
+| Error Type          | Status Code         | Content Type        |
+| ------------------- | ------------------- | ------------------- |
+| Errors\Error        | 401, 403, 404, 429  | application/json    |
+| Errors\Error        | 500                 | application/json    |
+| Errors\APIException | 4XX, 5XX            | \*/\*               |

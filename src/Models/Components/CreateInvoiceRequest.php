@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * CreateInvoiceRequest - Public REST API v1 — POST /v1/invoices.
- *
- *
- * Required body: `client_id`, `series_id`, `issued_on`, `due_on`,
- * `lines[]` (min 1). Optional: `notes`, `metadata` (≤50 keys, ≤500
- * chars/value — VO `Metadata`).
- */
+/** CreateInvoiceRequest - Create a sales invoice. Required: `client_id`, `series_id`, `issued_on`, `due_on` and `lines[]` (at least one). Optional: `notes`, `metadata`, `tags`, `custom_fields`, and an `options` object to atomically create, issue, send and wait for the PDF in a single call. Without `options` the invoice is created as a draft. A line may also be a DISBURSEMENT (`line_type: "SUPLIDO"`): an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) that is re-invoiced at cost and, under art. 78.Tres.3 of the Spanish VAT Act (LIVA), stays out of the taxable base — it carries no VAT, withholding, surcharge, discount or product, requires `source_invoice_reference`, and is not allowed on a simplified (`F2`) invoice. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line returns `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. */
 class CreateInvoiceRequest
 {
     /**
@@ -58,6 +51,15 @@ class CreateInvoiceRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\Options $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Options|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?Options $options = null;
+
+    /**
+     *
      * @var ?string $notes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('notes')]
@@ -65,7 +67,18 @@ class CreateInvoiceRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -75,23 +88,51 @@ class CreateInvoiceRequest
     public ?array $metadata = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  string  $clientId
      * @param  string  $seriesId
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $dueOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
+     * @param  ?\Factuarea\Sdk\Models\Components\Options  $options
      * @param  ?string  $notes
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?string $notes = null, ?array $metadata = null)
+    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?Options $options = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->seriesId = $seriesId;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
         $this->lines = $lines;
+        $this->options = $options;
         $this->notes = $notes;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

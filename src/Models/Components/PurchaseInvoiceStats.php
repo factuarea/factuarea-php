@@ -78,7 +78,7 @@ class PurchaseInvoiceStats
     public int $overdue;
 
     /**
-     * Importe total acumulado de todas las facturas de compra.
+     * Total aggregate amount of all purchase invoices.
      *
      * @var float $totalAmount
      */
@@ -86,7 +86,7 @@ class PurchaseInvoiceStats
     public float $totalAmount;
 
     /**
-     * Importe total pendiente de pago.
+     * Total amount pending payment.
      *
      * @var float $pendingAmount
      */
@@ -94,7 +94,7 @@ class PurchaseInvoiceStats
     public float $pendingAmount;
 
     /**
-     * Importe total ya pagado.
+     * Total amount already paid.
      *
      * @var float $paidAmount
      */

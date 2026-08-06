@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataTaxExternalReferenceChanged - Payload (`data`) emitted with the `tax.external_reference_changed` event. */
+/** EventDataTaxExternalReferenceChanged - Payload (`data`) emitted with the `tax.external_reference_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataTaxExternalReferenceChanged
 {
     /**
+     * A tax rate configuration. Catalog partially global (`is_system=true` for system taxes, without `company_id`) and partially custom per company.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataTaxExternalReferenceChangedTax $tax
+     * @var \Factuarea\Sdk\Models\Components\Tax $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tax')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataTaxExternalReferenceChangedTax')]
-    public EventDataTaxExternalReferenceChangedTax $tax;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Tax')]
+    public Tax $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataTaxExternalReferenceChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataTaxExternalReferenceChangedTax  $tax
+     * @param  \Factuarea\Sdk\Models\Components\Tax  $object
      * @param  ?string  $previousCode
      * @param  ?string  $newCode
      * @phpstan-pure
      */
-    public function __construct(EventDataTaxExternalReferenceChangedTax $tax, ?string $previousCode = null, ?string $newCode = null, string $type = 'tax.external_reference_changed')
+    public function __construct(Tax $object, ?string $previousCode = null, ?string $newCode = null, string $type = 'tax.external_reference_changed')
     {
-        $this->tax = $tax;
+        $this->object = $object;
         $this->previousCode = $previousCode;
         $this->newCode = $newCode;
         $this->type = $type;

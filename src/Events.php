@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -88,6 +89,10 @@ class Events
         $httpOptions = ['http_errors' => false];
 
         $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1EventsListRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -167,10 +172,12 @@ class Events
      * Retrieve a single event by its `id` (format `evt_<ulid>`, an opaque identifier). Useful for auditing and replaying webhook payloads. Returns `404 not_found` if the event does not exist or belongs to another company.
      *
      * @param  string  $event
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EventsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EventsShow(string $event, ?Options $options = null): Operations\PublicApiV1EventsShowResponse
+    public function publicApiV1EventsShow(string $event, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EventsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -199,11 +206,17 @@ class Events
         }
         $request = new Operations\PublicApiV1EventsShowRequest(
             event: $event,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/events/{event}', Operations\PublicApiV1EventsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);

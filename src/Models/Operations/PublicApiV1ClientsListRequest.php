@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ClientsListRequest
 {
@@ -60,6 +61,54 @@ class PublicApiV1ClientsListRequest
     public ?string $name = null;
 
     /**
+     * City of the client postal address. Exact match on `city`.
+     *
+     * @var ?string $city
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=city')]
+    public ?string $city = null;
+
+    /**
+     * City of the client postal address. Partial case-insensitive match (`LIKE %term%`) on `city`.
+     *
+     * @var ?string $cityContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=city[contains]')]
+    public ?string $cityContains = null;
+
+    /**
+     * Province / region of the client postal address. Exact match on `province`.
+     *
+     * @var ?string $province
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=province')]
+    public ?string $province = null;
+
+    /**
+     * Province / region of the client postal address. Partial case-insensitive match (`LIKE %term%`) on `province`.
+     *
+     * @var ?string $provinceContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=province[contains]')]
+    public ?string $provinceContains = null;
+
+    /**
+     * Phone number of the client. Exact match on `phone`.
+     *
+     * @var ?string $phone
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=phone')]
+    public ?string $phone = null;
+
+    /**
+     * Phone number of the client. Partial case-insensitive match (`LIKE %term%`) on `phone`.
+     *
+     * @var ?string $phoneContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=phone[contains]')]
+    public ?string $phoneContains = null;
+
+    /**
      * Filter by active / inactive clients. Exact match on `is_active`.
      *
      * @var ?bool $isActive
@@ -100,6 +149,30 @@ class PublicApiV1ClientsListRequest
     public ?\DateTime $createdLt = null;
 
     /**
+     * Free-text search. Escaped `LIKE %term%` (case-insensitive, max 80 chars) across the resource's key text columns, combined with the other filters (AND) and compatible with the cursor.
+     *
+     * @var ?string $search
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=search')]
+    public ?string $search = null;
+
+    /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -115,14 +188,23 @@ class PublicApiV1ClientsListRequest
      * @param  ?string  $taxIdIn
      * @param  ?string  $email
      * @param  ?string  $name
+     * @param  ?string  $city
+     * @param  ?string  $cityContains
+     * @param  ?string  $province
+     * @param  ?string  $provinceContains
+     * @param  ?string  $phone
+     * @param  ?string  $phoneContains
      * @param  ?bool  $isActive
      * @param  ?\DateTime  $createdGte
      * @param  ?\DateTime  $createdLte
      * @param  ?\DateTime  $createdGt
      * @param  ?\DateTime  $createdLt
+     * @param  ?string  $search
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $taxId = null, ?string $taxIdIn = null, ?string $email = null, ?string $name = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $taxId = null, ?string $taxIdIn = null, ?string $email = null, ?string $name = null, ?string $city = null, ?string $cityContains = null, ?string $province = null, ?string $provinceContains = null, ?string $phone = null, ?string $phoneContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?string $search = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
@@ -130,11 +212,20 @@ class PublicApiV1ClientsListRequest
         $this->taxIdIn = $taxIdIn;
         $this->email = $email;
         $this->name = $name;
+        $this->city = $city;
+        $this->cityContains = $cityContains;
+        $this->province = $province;
+        $this->provinceContains = $provinceContains;
+        $this->phone = $phone;
+        $this->phoneContains = $phoneContains;
         $this->isActive = $isActive;
         $this->createdGte = $createdGte;
         $this->createdLte = $createdLte;
         $this->createdGt = $createdGt;
         $this->createdLt = $createdLt;
+        $this->search = $search;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

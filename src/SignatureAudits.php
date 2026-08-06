@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -49,13 +50,15 @@ class SignatureAudits
     /**
      * Forget delivery note signature PII
      *
-     * GDPR Art. 17 (right to erasure) — remove the personal data (recipient name/DNI) from a signature audit log entry while preserving the non-PII audit trail required for LSSI-CE compliance. The `{auditId}` is the numeric primary key of the signature audit record. Requires the `delivery_notes:gdpr_forget` scope.
+     * GDPR Art. 17 (right to erasure) — remove the personal data (recipient name/DNI) from a signature audit log entry while preserving the non-PII audit trail required for LSSI-CE compliance. The `{auditId}` is the numeric primary key of the signature audit record.
      *
      * @param  string  $auditId
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesSignatureAuditsForget(string $auditId, ?Options $options = null): Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetResponse
+    public function publicApiV1DeliveryNotesSignatureAuditsForget(string $auditId, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,11 +87,17 @@ class SignatureAudits
         }
         $request = new Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetRequest(
             auditId: $auditId,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/signature-audits/{auditId}/forget', Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);

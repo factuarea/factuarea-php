@@ -9,13 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * AcceptProformaRequest - Public REST API v1 — POST /v1/proformas/{uuid}/accept.
- *
- *
- * Body opcional: `reason` (string ≤500), `metadata` (objeto ≤50 keys,
- * ≤500 chars/valor — validado con el VO `Metadata`).
- */
+/** AcceptProformaRequest - Optional body to record the client acceptance: `reason` (string, ≤500 chars) and `metadata` (object, ≤50 keys, ≤500 chars per value). */
 class AcceptProformaRequest
 {
     /**
@@ -27,7 +21,10 @@ class AcceptProformaRequest
     public ?string $reason = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */

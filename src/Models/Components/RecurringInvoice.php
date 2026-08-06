@@ -60,7 +60,7 @@ class RecurringInvoice
     public string $frequency;
 
     /**
-     * Nombre descriptivo de la recurrencia.
+     * Descriptive name of the recurrence.
      *
      * @var string $name
      */
@@ -152,6 +152,33 @@ class RecurringInvoice
     public array $lines;
 
     /**
+     * Free classification tags (lowercase slugs `[a-z0-9-]`, ≤ 40 chars each, ≤ 30 tags). Filterable via `?tags[in]=tag1,tag2` (JSON_CONTAINS, OR semantics). Empty `[]` when there are none.
+     *
+     * @var array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $tags;
+
+    /**
+     * Ordered list of typed custom fields `[{field, value}]` (≤ 50). Distinct from `metadata` (a free key→value map): use `custom_fields` for structured, display-oriented integration metadata. Empty `[]` when there are none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\CustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CustomField>')]
+    public array $customFields;
+
+    /**
+     * Rich auto-delivery configuration (superset of the scalar `email_to`): the generated invoices are emailed to `recipients` (with optional `cc`) using `subject`/`body`. `recipients`/`cc` are empty lists and `subject`/`body` are `null` when nothing is configured.
+     *
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoiceAutoDelivery $autoDelivery
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceAutoDelivery')]
+    public RecurringInvoiceAutoDelivery $autoDelivery;
+
+    /**
      *
      * @var \DateTime $createdAt
      */
@@ -174,7 +201,7 @@ class RecurringInvoice
     public ?string $description;
 
     /**
-     * Notas internas que se trasladan a las facturas generadas.
+     * Internal notes carried over to the generated invoices.
      *
      * @var ?string $notes
      */
@@ -229,13 +256,24 @@ class RecurringInvoice
     public ?\DateTime $cancelledAt;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('metadata')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     public ?array $metadata;
+
+    /**
+     * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    public ?string $externalId;
 
     /**
      * @param  string  $id
@@ -256,6 +294,9 @@ class RecurringInvoice
      * @param  float  $total
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLine>  $lines
+     * @param  array<string>  $tags
+     * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceAutoDelivery  $autoDelivery
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $description
@@ -267,9 +308,10 @@ class RecurringInvoice
      * @param  ?string  $lastRunAt
      * @param  ?\DateTime  $cancelledAt
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, float $subtotal, float $taxesTotal, float $total, string $currency, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null)
+    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, float $subtotal, float $taxesTotal, float $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -289,6 +331,9 @@ class RecurringInvoice
         $this->total = $total;
         $this->currency = $currency;
         $this->lines = $lines;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
+        $this->autoDelivery = $autoDelivery;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->description = $description;
@@ -300,5 +345,6 @@ class RecurringInvoice
         $this->lastRunAt = $lastRunAt;
         $this->cancelledAt = $cancelledAt;
         $this->metadata = $metadata;
+        $this->externalId = $externalId;
     }
 }

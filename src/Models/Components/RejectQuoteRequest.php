@@ -9,12 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * RejectQuoteRequest - Public REST API v1 — POST /v1/quotes/{uuid}/reject.
- *
- *
- * Body opcional: `reason` (string).
- */
 class RejectQuoteRequest
 {
     /**

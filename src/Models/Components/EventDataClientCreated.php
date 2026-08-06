@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataClientCreated - Payload (`data`) emitted with the `client.created` event. */
+/** EventDataClientCreated - Payload (`data`) emitted with the `client.created` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataClientCreated
 {
     /**
+     * A customer of your company.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataClientCreatedClient $client
+     * @var \Factuarea\Sdk\Models\Components\Client $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('client')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataClientCreatedClient')]
-    public EventDataClientCreatedClient $client;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Client')]
+    public Client $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataClientCreated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataClientCreatedClient  $client
+     * @param  \Factuarea\Sdk\Models\Components\Client  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataClientCreatedClient $client, string $type = 'client.created')
+    public function __construct(Client $object, string $type = 'client.created')
     {
-        $this->client = $client;
+        $this->object = $object;
         $this->type = $type;
     }
 }

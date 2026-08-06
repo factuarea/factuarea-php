@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataSeriesUpdated - Payload (`data`) emitted with the `series.updated` event. */
+/** EventDataSeriesUpdated - Payload (`data`) emitted with the `series.updated` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataSeriesUpdated
 {
     /**
+     * A document numbering series. Immutable per AEAT compliance.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataSeriesUpdatedSeries $series
+     * @var \Factuarea\Sdk\Models\Components\Series $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataSeriesUpdatedSeries')]
-    public EventDataSeriesUpdatedSeries $series;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series')]
+    public Series $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataSeriesUpdated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataSeriesUpdatedSeries  $series
+     * @param  \Factuarea\Sdk\Models\Components\Series  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataSeriesUpdatedSeries $series, string $type = 'series.updated')
+    public function __construct(Series $object, string $type = 'series.updated')
     {
-        $this->series = $series;
+        $this->object = $object;
         $this->type = $type;
     }
 }

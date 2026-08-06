@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -30,7 +31,7 @@ class Verifactu
 
     public Settings $settings;
 
-    public Chain $chain;
+    public VerifactuChain $chain;
 
     /**
      * @param  SDKConfiguration  $sdkConfig
@@ -44,7 +45,7 @@ class Verifactu
         $this->events = new VerifactuEvents($this->sdkConfiguration);
         $this->aeatAccess = new AeatAccess($this->sdkConfiguration);
         $this->settings = new Settings($this->sdkConfiguration);
-        $this->chain = new Chain($this->sdkConfiguration);
+        $this->chain = new VerifactuChain($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -70,12 +71,14 @@ class Verifactu
     /**
      * Retrieve VeriFactu config
      *
-     * Get Veri Factu Config V1.
+     * Return the VeriFactu configuration of your company (mode, environment, enrollment status). The certificate password is never exposed. Returned as `{ "data": VeriFactuConfig }`.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuConfigResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuConfig(?Options $options = null): Operations\PublicApiV1VerifactuConfigResponse
+    public function publicApiV1VerifactuConfig(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuConfigResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -102,10 +105,18 @@ class Verifactu
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuConfigRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/config');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -181,12 +192,14 @@ class Verifactu
     /**
      * Get VeriFactu stats
      *
-     * Get Veri Factu Stats V1.
+     * Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. Returned as `{ "data": VeriFactuStats }`.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuStats(?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
+    public function publicApiV1VerifactuStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -213,10 +226,18 @@ class Verifactu
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuStatsRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/stats');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);

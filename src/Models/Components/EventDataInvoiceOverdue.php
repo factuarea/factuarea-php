@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** EventDataInvoiceOverdue - Payload (`data`) emitted with the `invoice.overdue` event. */
+/** EventDataInvoiceOverdue - Payload (`data`) emitted with the `invoice.overdue` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceOverdue
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceOverdueInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceOverdueInvoice')]
-    public EventDataInvoiceOverdueInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataInvoiceOverdue
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceOverdueInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @param  int  $daysOverdue
      * @param  ?LocalDate  $dueDate
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceOverdueInvoice $invoice, int $daysOverdue, ?LocalDate $dueDate = null, string $type = 'invoice.overdue')
+    public function __construct(Invoice $object, int $daysOverdue, ?LocalDate $dueDate = null, string $type = 'invoice.overdue')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->daysOverdue = $daysOverdue;
         $this->dueDate = $dueDate;
         $this->type = $type;

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataPaymentReceived - Payload (`data`) emitted with the `payment.received` event. */
+/** EventDataPaymentReceived - Payload (`data`) emitted with the `payment.received` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataPaymentReceived
 {
     /**
+     * Snapshot of a received payment captured at emission time. Payments have no dedicated v1 endpoint; this shape only appears inside `payment.*` events.
      *
-     * @var \Factuarea\Sdk\Models\Components\Payment $payment
+     * @var \Factuarea\Sdk\Models\Components\EventPaymentSnapshot $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Payment')]
-    public Payment $payment;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventPaymentSnapshot')]
+    public EventPaymentSnapshot $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataPaymentReceived
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\Payment  $payment
+     * @param  \Factuarea\Sdk\Models\Components\EventPaymentSnapshot  $object
      * @phpstan-pure
      */
-    public function __construct(Payment $payment, string $type = 'payment.received')
+    public function __construct(EventPaymentSnapshot $object, string $type = 'payment.received')
     {
-        $this->payment = $payment;
+        $this->object = $object;
         $this->type = $type;
     }
 }

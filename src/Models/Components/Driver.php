@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Driver
 {
     /**
-     * Nombre del conductor.
+     * Driver name.
      *
      * @var ?string $name
      */
@@ -21,7 +21,7 @@ class Driver
     public ?string $name;
 
     /**
-     * Identificador fiscal (NIF/CIF/NIE) del conductor.
+     * Driver tax ID (NIF/CIF/NIE).
      *
      * @var ?string $taxId
      */

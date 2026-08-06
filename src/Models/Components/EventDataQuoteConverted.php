@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteConverted - Payload (`data`) emitted with the `quote.converted` event. */
+/** EventDataQuoteConverted - Payload (`data`) emitted with the `quote.converted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteConverted
 {
     /**
+     * A sales quote that can be converted to an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteConvertedQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteConvertedQuote')]
-    public EventDataQuoteConvertedQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
+    public Quote $object;
 
     /**
      *
@@ -30,10 +31,10 @@ class EventDataQuoteConverted
 
     /**
      *
-     * @var ?string $targetUuid
+     * @var string $targetId
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('target_uuid')]
-    public ?string $targetUuid;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('target_id')]
+    public string $targetId;
 
     /**
      *
@@ -44,16 +45,16 @@ class EventDataQuoteConverted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteConvertedQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote  $object
      * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteConvertedTarget  $target
-     * @param  ?string  $targetUuid
+     * @param  string  $targetId
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteConvertedQuote $quote, EventDataQuoteConvertedTarget $target, ?string $targetUuid = null, string $type = 'quote.converted')
+    public function __construct(Quote $object, EventDataQuoteConvertedTarget $target, string $targetId, string $type = 'quote.converted')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->target = $target;
-        $this->targetUuid = $targetUuid;
+        $this->targetId = $targetId;
         $this->type = $type;
     }
 }

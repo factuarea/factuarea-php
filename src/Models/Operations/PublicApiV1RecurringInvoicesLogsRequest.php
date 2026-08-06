@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1RecurringInvoicesLogsRequest
 {
@@ -34,6 +35,22 @@ class PublicApiV1RecurringInvoicesLogsRequest
     public ?string $cursor = null;
 
     /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      *
      * @var ?string $perPage
      */
@@ -45,13 +62,17 @@ class PublicApiV1RecurringInvoicesLogsRequest
      * @param  ?string  $perPage
      * @param  ?string  $limit
      * @param  ?string  $cursor
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(string $recurringInvoice, ?string $limit = null, ?string $cursor = null, ?string $perPage = '25')
+    public function __construct(string $recurringInvoice, ?string $limit = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $perPage = '25')
     {
         $this->recurringInvoice = $recurringInvoice;
         $this->limit = $limit;
         $this->cursor = $cursor;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->perPage = $perPage;
     }
 }

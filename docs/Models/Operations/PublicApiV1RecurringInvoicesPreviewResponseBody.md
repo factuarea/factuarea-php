@@ -1,8 +1,23 @@
 # PublicApiV1RecurringInvoicesPreviewResponseBody
 
 
-## Fields
+## Supported Types
 
-| Field                                                                         | Type                                                                          | Required                                                                      | Description                                                                   |
-| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `data`                                                                        | [Components\RecurringInvoice](../../Models/Components/RecurringInvoice.md)    | :heavy_check_mark:                                                            | A recurring invoice template that auto-generates invoices on a fixed cadence. |
+### `Operations\ResponseBody1`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Operations\ResponseBody1
+*/
+Operations\ResponseBody1 $value = /* values here */
+```
+
+### `Operations\ResponseBody2`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Operations\ResponseBody2
+*/
+Operations\ResponseBody2 $value = /* values here */
+```
+

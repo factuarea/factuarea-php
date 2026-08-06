@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaxDefaultsForDocuments
 {
     /**
-     * Taxes con `type=vat` que son default para el docType consultado.
+     * Taxes with `type=vat` that are default for the requested docType.
      *
      * @var array<\Factuarea\Sdk\Models\Components\Tax> $vat
      */

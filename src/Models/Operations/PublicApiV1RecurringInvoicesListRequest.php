@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1RecurringInvoicesListRequest
 {
@@ -108,6 +109,78 @@ class PublicApiV1RecurringInvoicesListRequest
     public ?\DateTime $nextRunAtLt = null;
 
     /**
+     * Name of the recurring plan. Exact match on `name`.
+     *
+     * @var ?string $name
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=name')]
+    public ?string $name = null;
+
+    /**
+     * Name of the recurring plan. Partial case-insensitive match (`LIKE %term%`) on `name`.
+     *
+     * @var ?string $nameContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=name[contains]')]
+    public ?string $nameContains = null;
+
+    /**
+     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches recurring invoices carrying ANY of the tags). Exact match on `tags`.
+     *
+     * @var ?string $tags
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=tags')]
+    public ?string $tags = null;
+
+    /**
+     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches recurring invoices carrying ANY of the tags). Comma-separated list. Any of the values matches.
+     *
+     * @var ?string $tagsIn
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=tags[in]')]
+    public ?string $tagsIn = null;
+
+    /**
+     * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `next_run_at`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending).
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesListSort $sort
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=sort')]
+    public ?PublicApiV1RecurringInvoicesListSort $sort = null;
+
+    /**
+     * Free-text search. Escaped `LIKE %term%` (case-insensitive, max 80 chars) across the resource's key text columns, combined with the other filters (AND) and compatible with the cursor.
+     *
+     * @var ?string $search
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=search')]
+    public ?string $search = null;
+
+    /**
+     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     *
+     * @var ?array<string, string> $metadata
+     */
+    #[SpeakeasyMetadata('queryParam:style=deepObject,explode=true,name=metadata')]
+    public ?array $metadata = null;
+
+    /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -129,9 +202,18 @@ class PublicApiV1RecurringInvoicesListRequest
      * @param  ?\DateTime  $nextRunAtLte
      * @param  ?\DateTime  $nextRunAtGt
      * @param  ?\DateTime  $nextRunAtLt
+     * @param  ?string  $name
+     * @param  ?string  $nameContains
+     * @param  ?string  $tags
+     * @param  ?string  $tagsIn
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesListSort  $sort
+     * @param  ?string  $search
+     * @param  ?array<string, string>  $metadata
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $frequency = null, ?string $frequencyIn = null, ?\DateTime $nextRunAtGte = null, ?\DateTime $nextRunAtLte = null, ?\DateTime $nextRunAtGt = null, ?\DateTime $nextRunAtLt = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $frequency = null, ?string $frequencyIn = null, ?\DateTime $nextRunAtGte = null, ?\DateTime $nextRunAtLte = null, ?\DateTime $nextRunAtGt = null, ?\DateTime $nextRunAtLt = null, ?string $name = null, ?string $nameContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1RecurringInvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
@@ -145,6 +227,15 @@ class PublicApiV1RecurringInvoicesListRequest
         $this->nextRunAtLte = $nextRunAtLte;
         $this->nextRunAtGt = $nextRunAtGt;
         $this->nextRunAtLt = $nextRunAtLt;
+        $this->name = $name;
+        $this->nameContains = $nameContains;
+        $this->tags = $tags;
+        $this->tagsIn = $tagsIn;
+        $this->sort = $sort;
+        $this->search = $search;
+        $this->metadata = $metadata;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

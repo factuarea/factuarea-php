@@ -43,6 +43,14 @@ class Supplier
     public Address $address;
 
     /**
+     * Whether this supplier accumulates towards the annual Modelo 347 report (operations with third parties above the legal threshold).
+     *
+     * @var bool $accumulate347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('accumulate_347')]
+    public bool $accumulate347;
+
+    /**
      *
      * @var bool $isActive
      */
@@ -50,7 +58,7 @@ class Supplier
     public bool $isActive;
 
     /**
-     * Spanish fiscal identifier (NIF, CIF, NIE). Mutuamente excluyente con `alternative_id`.
+     * Spanish fiscal identifier (NIF, CIF, NIE). Structural format: NIF `^\d{8}[A-Z]$`, NIE `^[XYZ]\d{7}[A-Z]$`, CIF `^[A-Z]\d{7}[A-Z0-9]$`. AEAT control-digit (checksum) validation is enforced when the request opts in via the `Factuarea-Version` header on or after the activation version; without that opt-in the legacy permissive behaviour is preserved. Mutually exclusive with `alternative_id`.
      *
      * @var ?string $taxId
      */
@@ -90,7 +98,7 @@ class Supplier
     public ?array $billingEmails = null;
 
     /**
-     * Legacy alias for bank_accounts[].iban where is_default=true. Se conserva por compatibilidad con integradores existentes; preferir leer `bank_accounts[]` para consumidores nuevos.
+     * Legacy alias for bank_accounts[].iban where is_default=true. Kept for backward compatibility with existing integrators; prefer reading `bank_accounts[]` for new consumers.
      *
      * @var ?string $iban
      */
@@ -124,7 +132,10 @@ class Supplier
     public ?string $notes;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -156,7 +167,7 @@ class Supplier
     public ?string $businessName = null;
 
     /**
-     * Nombre comercial (DBA) opcional, distinto del nombre fiscal.
+     * Optional trade name (DBA), distinct from the legal name.
      *
      * @var ?string $commercialName
      */
@@ -183,7 +194,7 @@ class Supplier
     public ?string $mobile = null;
 
     /**
-     * Sitio web del proveedor.
+     * Supplier website.
      *
      * @var ?string $website
      */
@@ -211,7 +222,7 @@ class Supplier
     public ?SupplierCoordinates $coordinates = null;
 
     /**
-     * UUID (v7) del impuesto por defecto aplicable al proveedor.
+     * UUID (v7) of the default tax applied to the supplier.
      *
      * @var ?string $defaultTaxesId
      */
@@ -220,7 +231,7 @@ class Supplier
     public ?string $defaultTaxesId = null;
 
     /**
-     * Descuento por defecto aplicable al proveedor (porcentaje).
+     * Default discount applied to the supplier (percentage).
      *
      * @var ?float $defaultDiscount
      */
@@ -229,7 +240,7 @@ class Supplier
     public ?float $defaultDiscount = null;
 
     /**
-     * Tipo de IVA por defecto aplicable al proveedor (porcentaje).
+     * Default VAT rate applied to the supplier (percentage).
      *
      * @var ?float $defaultVatRate
      */
@@ -275,10 +286,20 @@ class Supplier
     public ?PaymentPreferences $paymentPreferences = null;
 
     /**
+     * External integration key (ERP/CRM/e-commerce) mapping this supplier to a record in a third-party system. Free-format, unique per company, distinct from the fiscal `tax_id`. Persistent ERP synchronization key, independent of the request-level `Idempotency-Key`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\SupplierObject  $object
      * @param  string  $name
      * @param  \Factuarea\Sdk\Models\Components\Address  $address
+     * @param  bool  $accumulate347
      * @param  bool  $isActive
      * @param  ?string  $taxId
      * @param  ?string  $vatId
@@ -306,14 +327,16 @@ class Supplier
      * @param  ?\Factuarea\Sdk\Models\Components\SupplierPreferredOperationRegime  $preferredOperationRegime
      * @param  ?\Factuarea\Sdk\Models\Components\AlternativeId  $alternativeId
      * @param  ?\Factuarea\Sdk\Models\Components\PaymentPreferences  $paymentPreferences
+     * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, SupplierObject $object, string $name, Address $address, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?string $iban = null, ?array $bankAccounts = null, ?bool $isSurchargeSubject = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $businessName = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?SupplierCoordinates $coordinates = null, ?string $defaultTaxesId = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?SupplierPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null)
+    public function __construct(string $id, SupplierObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?string $iban = null, ?array $bankAccounts = null, ?bool $isSurchargeSubject = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $businessName = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?SupplierCoordinates $coordinates = null, ?string $defaultTaxesId = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?SupplierPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->name = $name;
         $this->address = $address;
+        $this->accumulate347 = $accumulate347;
         $this->isActive = $isActive;
         $this->taxId = $taxId;
         $this->vatId = $vatId;
@@ -341,5 +364,6 @@ class Supplier
         $this->preferredOperationRegime = $preferredOperationRegime;
         $this->alternativeId = $alternativeId;
         $this->paymentPreferences = $paymentPreferences;
+        $this->externalId = $externalId;
     }
 }

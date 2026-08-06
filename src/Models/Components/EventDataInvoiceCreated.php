@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceCreated - Payload (`data`) emitted with the `invoice.created` event. */
+/** EventDataInvoiceCreated - Payload (`data`) emitted with the `invoice.created` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceCreated
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceCreatedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceCreatedInvoice')]
-    public EventDataInvoiceCreatedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataInvoiceCreated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceCreatedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceCreatedInvoice $invoice, string $type = 'invoice.created')
+    public function __construct(Invoice $object, string $type = 'invoice.created')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->type = $type;
     }
 }

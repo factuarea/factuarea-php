@@ -21,7 +21,7 @@ class InvoicePayment
     public ?string $method;
 
     /**
-     * Referencia del cobro (e.g. nº de transferencia).
+     * Payment reference (e.g. transfer number).
      *
      * @var ?string $reference
      */
@@ -29,7 +29,7 @@ class InvoicePayment
     public ?string $reference;
 
     /**
-     * Fecha del cobro (YYYY-MM-DD).
+     * Payment date (YYYY-MM-DD).
      *
      * @var ?LocalDate $date
      */

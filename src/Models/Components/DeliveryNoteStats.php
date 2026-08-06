@@ -21,7 +21,7 @@ class DeliveryNoteStats
     public int $totalCount;
 
     /**
-     * Importe acumulado de los albaranes (EUR).
+     * Aggregate amount of the delivery notes (EUR).
      *
      * @var float $totalAmount
      */
@@ -46,7 +46,7 @@ class DeliveryNoteStats
     public int $pendingSignature;
 
     /**
-     * Albaranes convertidos a factura (`invoiced`) durante el mes en curso.
+     * Delivery notes converted to an invoice (`invoiced`) during the current month.
      *
      * @var int $convertedThisMonth
      */

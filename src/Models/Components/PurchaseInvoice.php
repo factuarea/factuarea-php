@@ -28,20 +28,12 @@ class PurchaseInvoice
     public PurchaseInvoiceObject $object;
 
     /**
-     * The number assigned by the supplier on their invoice.
+     * Whether this is a simplified purchase invoice (expense ticket). When `true`, `supplier` and `external_invoice_number` may be `null`.
      *
-     * @var string $externalInvoiceNumber
+     * @var bool $isSimplified
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('external_invoice_number')]
-    public string $externalInvoiceNumber;
-
-    /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\SupplierRef $supplier
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SupplierRef')]
-    public SupplierRef $supplier;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_simplified')]
+    public bool $isSimplified;
 
     /**
      *
@@ -72,6 +64,14 @@ class PurchaseInvoice
     public float $taxesTotal;
 
     /**
+     * Aggregated IRPF withholding of the lines (Σ retention_amount). Header invariant: `total === subtotal + taxes_total − total_retention`.
+     *
+     * @var float $totalRetention
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
+    public float $totalRetention;
+
+    /**
      *
      * @var float $total
      */
@@ -86,6 +86,48 @@ class PurchaseInvoice
     public string $currency;
 
     /**
+     * Amount already paid against this purchase invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
+     *
+     * @var float $paidAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_amount')]
+    public float $paidAmount;
+
+    /**
+     * Outstanding balance pending payment for this purchase invoice (derived from the payment ledger).
+     *
+     * @var float $pendingAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pending_amount')]
+    public float $pendingAmount;
+
+    /**
+     * Derived payment status, NOT a persisted domain state (the model keeps 4 statuses). `overdue` derives from `pending` + `due_date < today` and prevails in presentation.
+     *
+     * @var \Factuarea\Sdk\Models\Components\PaymentStatus $paymentStatus
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PaymentStatus')]
+    public PaymentStatus $paymentStatus;
+
+    /**
+     * Operation class for the input VAT of Modelo 303. Defaults to `corriente`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoiceOperationClass $operationClass
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_class')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceOperationClass')]
+    public PurchaseInvoiceOperationClass $operationClass;
+
+    /**
+     * Declarative per-document flag: whether this purchase invoice is excluded from the annual Modelo 347 report.
+     *
+     * @var bool $exclude347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exclude_347')]
+    public bool $exclude347;
+
+    /**
      * Indicates whether the invoice is subject to reverse charge.
      *
      * @var bool $isReverseCharge
@@ -94,13 +136,22 @@ class PurchaseInvoice
     public bool $isReverseCharge;
 
     /**
-     * Free classification tags.
+     * Free classification tags (lowercase slugs `[a-z0-9-]`, ≤ 40 chars each, ≤ 30 tags). Filterable via `?tags[in]=tag1,tag2` (JSON_CONTAINS, OR semantics). Empty `[]` when there are none.
      *
      * @var array<string> $tags
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
     public array $tags;
+
+    /**
+     * Ordered list of typed custom fields `[{field, value}]` (≤ 50). Distinct from `metadata` (a free key→value map): use `custom_fields` for structured, display-oriented integration metadata. Empty `[]` when there are none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\CustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CustomField>')]
+    public array $customFields;
 
     /**
      * $lines
@@ -126,12 +177,36 @@ class PurchaseInvoice
     public \DateTime $updatedAt;
 
     /**
+     * The number assigned by the supplier on their invoice. `null` for a simplified expense ticket (`is_simplified`) with no supplier number.
+     *
+     * @var ?string $externalInvoiceNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_invoice_number')]
+    public ?string $externalInvoiceNumber;
+
+    /**
+     * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    public ?string $externalId;
+
+    /**
      * Optional internal code assigned by the company for its own classification.
      *
      * @var ?string $internalCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('internal_code')]
     public ?string $internalCode;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SupplierRef $supplier
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SupplierRef|null')]
+    public ?SupplierRef $supplier;
 
     /**
      * Reception date of the invoice, or `null`.
@@ -188,6 +263,22 @@ class PurchaseInvoice
     public ?string $expenseAccount;
 
     /**
+     * UUID (v7) of the associated expense category, or `null`.
+     *
+     * @var ?string $expenseCategoryId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expense_category_id')]
+    public ?string $expenseCategoryId;
+
+    /**
+     * Deductible percentage of the input VAT (0–100), or `null` when not set.
+     *
+     * @var ?float $deductiblePercentage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deductible_percentage')]
+    public ?float $deductiblePercentage;
+
+    /**
      * Fiscal allocation period (format `YYYY-MM` or `YYYY-QN`), or `null`.
      *
      * @var ?string $taxPeriod
@@ -196,7 +287,7 @@ class PurchaseInvoice
     public ?string $taxPeriod;
 
     /**
-     * Notas internas no visibles para el proveedor, o `null`.
+     * Internal notes not visible to the supplier, or `null`.
      *
      * @var ?string $internalNotes
      */
@@ -212,7 +303,10 @@ class PurchaseInvoice
     public ?PurchaseInvoiceAttachment $attachment;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -230,20 +324,29 @@ class PurchaseInvoice
     /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceObject  $object
-     * @param  string  $externalInvoiceNumber
-     * @param  \Factuarea\Sdk\Models\Components\SupplierRef  $supplier
+     * @param  bool  $isSimplified
      * @param  string  $status
      * @param  LocalDate  $issuedOn
      * @param  float  $subtotal
      * @param  float  $taxesTotal
+     * @param  float  $totalRetention
      * @param  float  $total
      * @param  string  $currency
+     * @param  float  $paidAmount
+     * @param  float  $pendingAmount
+     * @param  \Factuarea\Sdk\Models\Components\PaymentStatus  $paymentStatus
+     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceOperationClass  $operationClass
+     * @param  bool  $exclude347
      * @param  bool  $isReverseCharge
      * @param  array<string>  $tags
+     * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseInvoiceLine>  $lines
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
+     * @param  ?string  $externalInvoiceNumber
+     * @param  ?string  $externalId
      * @param  ?string  $internalCode
+     * @param  ?\Factuarea\Sdk\Models\Components\SupplierRef  $supplier
      * @param  ?LocalDate  $receivedOn
      * @param  ?LocalDate  $dueOn
      * @param  ?LocalDate  $paidAt
@@ -251,6 +354,8 @@ class PurchaseInvoice
      * @param  ?int  $paymentTermsDays
      * @param  mixed  $bankAccount
      * @param  ?string  $expenseAccount
+     * @param  ?string  $expenseCategoryId
+     * @param  ?float  $deductiblePercentage
      * @param  ?string  $taxPeriod
      * @param  ?string  $internalNotes
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceAttachment  $attachment
@@ -258,24 +363,33 @@ class PurchaseInvoice
      * @param  ?string  $notes
      * @phpstan-pure
      */
-    public function __construct(string $id, PurchaseInvoiceObject $object, string $externalInvoiceNumber, SupplierRef $supplier, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $total, string $currency, bool $isReverseCharge, array $tags, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
+    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalRetention, float $total, string $currency, float $paidAmount, float $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
     {
         $this->id = $id;
         $this->object = $object;
-        $this->externalInvoiceNumber = $externalInvoiceNumber;
-        $this->supplier = $supplier;
+        $this->isSimplified = $isSimplified;
         $this->status = $status;
         $this->issuedOn = $issuedOn;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
+        $this->totalRetention = $totalRetention;
         $this->total = $total;
         $this->currency = $currency;
+        $this->paidAmount = $paidAmount;
+        $this->pendingAmount = $pendingAmount;
+        $this->paymentStatus = $paymentStatus;
+        $this->operationClass = $operationClass;
+        $this->exclude347 = $exclude347;
         $this->isReverseCharge = $isReverseCharge;
         $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->lines = $lines;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->externalInvoiceNumber = $externalInvoiceNumber;
+        $this->externalId = $externalId;
         $this->internalCode = $internalCode;
+        $this->supplier = $supplier;
         $this->receivedOn = $receivedOn;
         $this->dueOn = $dueOn;
         $this->paidAt = $paidAt;
@@ -283,6 +397,8 @@ class PurchaseInvoice
         $this->paymentTermsDays = $paymentTermsDays;
         $this->bankAccount = $bankAccount;
         $this->expenseAccount = $expenseAccount;
+        $this->expenseCategoryId = $expenseCategoryId;
+        $this->deductiblePercentage = $deductiblePercentage;
         $this->taxPeriod = $taxPeriod;
         $this->internalNotes = $internalNotes;
         $this->attachment = $attachment;

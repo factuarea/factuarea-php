@@ -58,6 +58,15 @@ class Series
     public string $prefix;
 
     /**
+     * Canonical numbering mask describing how the document number is rendered: padding (the block of zeros), year token (`{YYYY}` 4 digits / `{YY}` 2 digits / omitted for no year), optional month token (`{MM}` 2 digits) and separator. Example: `{code}-{YYYY}-{000}` (default) or `{code}-{YYYY}-{00000}` for 5-digit padding. When `counter_reset` is `monthly`, the mask must include the `{MM}` token (e.g. `F-{YYYY}-{MM}-{000}`) so the rendered number stays unique across months; otherwise two months would both start at `1`. Set on creation and immutable afterwards. Mirrors Holded's `format`.
+     *
+     * @var string $numberFormat
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('number_format')]
+    public string $numberFormat;
+
+    /**
+     * Next correlative that will be assigned on the next real emission.
      *
      * @var int $nextNumber
      */
@@ -65,8 +74,35 @@ class Series
     public int $nextNumber;
 
     /**
+     * Last correlative actually emitted in the current fiscal year (0 for a brand-new series).
+     *
+     * @var int $currentNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('current_number')]
+    public int $currentNumber;
+
+    /**
+     * Number the counter starts from. Set on creation to continue an existing numbering when migrating (e.g. 235). Defaults to 1.
+     *
+     * @var int $initialNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('initial_number')]
+    public int $initialNumber;
+
+    /**
+     * Counter reset policy (source of truth): `never` (the counter never resets), `annual` (resets on January 1st) or `monthly` (resets on the 1st of each month). `monthly` requires the `number_format` mask to include the `{MM}` token to keep rendered numbers unique across months.
+     *
+     * @var \Factuarea\Sdk\Models\Components\SeriesCounterReset $counterReset
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counter_reset')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SeriesCounterReset')]
+    public SeriesCounterReset $counterReset;
+
+    /**
+     * Deprecated alias of `counter_reset`. `true` is equivalent to `counter_reset: "annual"`, `false` to `counter_reset: "never"`. Use `counter_reset` instead; this field will be removed in v2.
      *
      * @var bool $yearReset
+     * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('year_reset')]
     public bool $yearReset;
@@ -106,7 +142,11 @@ class Series
      * @param  string  $name
      * @param  string  $documentType
      * @param  string  $prefix
+     * @param  string  $numberFormat
      * @param  int  $nextNumber
+     * @param  int  $currentNumber
+     * @param  int  $initialNumber
+     * @param  \Factuarea\Sdk\Models\Components\SeriesCounterReset  $counterReset
      * @param  bool  $yearReset
      * @param  bool  $isDefault
      * @param  bool  $isActive
@@ -114,7 +154,7 @@ class Series
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, SeriesObject $object, string $code, string $name, string $documentType, string $prefix, int $nextNumber, bool $yearReset, bool $isDefault, bool $isActive, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, SeriesObject $object, string $code, string $name, string $documentType, string $prefix, string $numberFormat, int $nextNumber, int $currentNumber, int $initialNumber, SeriesCounterReset $counterReset, bool $yearReset, bool $isDefault, bool $isActive, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -122,7 +162,11 @@ class Series
         $this->name = $name;
         $this->documentType = $documentType;
         $this->prefix = $prefix;
+        $this->numberFormat = $numberFormat;
         $this->nextNumber = $nextNumber;
+        $this->currentNumber = $currentNumber;
+        $this->initialNumber = $initialNumber;
+        $this->counterReset = $counterReset;
         $this->yearReset = $yearReset;
         $this->isDefault = $isDefault;
         $this->isActive = $isActive;

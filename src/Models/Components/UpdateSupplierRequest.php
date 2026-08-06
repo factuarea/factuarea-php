@@ -36,6 +36,14 @@ class UpdateSupplierRequest
 
     /**
      *
+     * @var ?bool $accumulate347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('accumulate_347')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $accumulate347 = null;
+
+    /**
+     *
      * @var ?bool $isActive
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('is_active')]
@@ -248,7 +256,10 @@ class UpdateSupplierRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -256,6 +267,14 @@ class UpdateSupplierRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $metadata = null;
+
+    /**
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
 
     /**
      * $billingEmails
@@ -279,6 +298,7 @@ class UpdateSupplierRequest
 
     /**
      * @param  ?string  $name
+     * @param  ?bool  $accumulate347
      * @param  ?bool  $isActive
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates  $coordinates
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestAlternativeId  $alternativeId
@@ -306,13 +326,15 @@ class UpdateSupplierRequest
      * @param  ?int  $paymentTermsDays
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $externalId
      * @param  ?array<string>  $billingEmails
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount>  $bankAccounts
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?bool $isActive = null, ?UpdateSupplierRequestCoordinates $coordinates = null, ?UpdateSupplierRequestAlternativeId $alternativeId = null, ?UpdateSupplierRequestAddress $address = null, ?string $businessName = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?string $iban = null, ?string $defaultTaxesId = null, ?UpdateSupplierRequestPreferredOperationRegime $preferredOperationRegime = null, ?UpdateSupplierRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?array $billingEmails = null, ?array $bankAccounts = null)
+    public function __construct(?string $name = null, ?bool $accumulate347 = null, ?bool $isActive = null, ?UpdateSupplierRequestCoordinates $coordinates = null, ?UpdateSupplierRequestAlternativeId $alternativeId = null, ?UpdateSupplierRequestAddress $address = null, ?string $businessName = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?string $iban = null, ?string $defaultTaxesId = null, ?UpdateSupplierRequestPreferredOperationRegime $preferredOperationRegime = null, ?UpdateSupplierRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?array $billingEmails = null, ?array $bankAccounts = null)
     {
         $this->name = $name;
+        $this->accumulate347 = $accumulate347;
         $this->isActive = $isActive;
         $this->coordinates = $coordinates;
         $this->alternativeId = $alternativeId;
@@ -340,6 +362,7 @@ class UpdateSupplierRequest
         $this->paymentTermsDays = $paymentTermsDays;
         $this->notes = $notes;
         $this->metadata = $metadata;
+        $this->externalId = $externalId;
         $this->billingEmails = $billingEmails;
         $this->bankAccounts = $bankAccounts;
     }

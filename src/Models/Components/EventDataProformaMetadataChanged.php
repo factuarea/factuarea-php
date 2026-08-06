@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaMetadataChanged - Payload (`data`) emitted with the `proforma.metadata_changed` event. */
+/** EventDataProformaMetadataChanged - Payload (`data`) emitted with the `proforma.metadata_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaMetadataChanged
 {
     /**
+     * A proforma invoice that can be converted to a final invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaMetadataChangedProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaMetadataChangedProforma')]
-    public EventDataProformaMetadataChangedProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
+    public Proforma $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProformaMetadataChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaMetadataChangedProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaMetadataChangedProforma $proforma, string $type = 'proforma.metadata_changed')
+    public function __construct(Proforma $object, string $type = 'proforma.metadata_changed')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->type = $type;
     }
 }

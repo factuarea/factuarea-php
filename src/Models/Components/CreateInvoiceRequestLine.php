@@ -50,6 +50,38 @@ class CreateInvoiceRequestLine
 
     /**
      *
+     * @var ?float $retentionRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $retentionRate = null;
+
+    /**
+     *
+     * @var ?float $surchargeRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $surchargeRate = null;
+
+    /**
+     *
+     * @var ?string $retentionRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $retentionRateId = null;
+
+    /**
+     *
+     * @var ?string $surchargeRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $surchargeRateId = null;
+
+    /**
+     *
      * @var ?string $productId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
@@ -65,23 +97,132 @@ class CreateInvoiceRequestLine
     public ?float $discountPercent = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRegimeKey $regimeKey
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regime_key')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRegimeKey|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestRegimeKey $regimeKey = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestExemptionReason $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestExemptionReason|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestExemptionReason $exemptionReason = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
+     * Kind of line: `NORMAL` (default) for an ordinary line of your own operation, or `SUPLIDO` for a DISBURSEMENT — an amount you paid in the name and on behalf of the client (an official fee, duty or registry charge) and now re-invoice at cost. A disbursement is not part of your taxable base (art. 78.Tres.3 LIVA): it stays out of `subtotal`/`taxes_total`/`total`, is aggregated into `total_disbursements`, and is never declared in the AEAT VeriFactu record. A `SUPLIDO` line must carry no VAT, withholding, surcharge, discount, regime key, exemption cause or product, and is rejected on a simplified (`F2`) invoice.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLineType $lineType
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('line_type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLineType|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestLineType $lineType = null;
+
+    /**
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely registered as a purchase invoice.
+     *
+     * @var ?string $sourceInvoiceReference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_invoice_reference')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $sourceInvoiceReference = null;
+
+    /**
+     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own purchase invoices that back it. A purchase invoice of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
+     *
+     * @var ?array<string> $sourceInvoiceIds
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_invoice_ids')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $sourceInvoiceIds = null;
+
+    /**
+     * Unit of measure printed next to the quantity on the document (`hours`, `kg`, `units`, …), up to 20 characters. Presentation only: free text, no closed catalog and no fiscal effect.
+     *
+     * @var ?string $unit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('unit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $unit = null;
+
+    /**
+     * Free-text wording of the exemption provision of this line (up to 255 characters), printed under the line description to satisfy the mention required by art. 6.1.j of Royal Decree 1619/2012 when the catalogued cause does not cover it. Orthogonal to `exemption_reason` and to the document-level exemption cause; no coherence is enforced between them.
+     *
+     * @var ?string $exemptionReasonText
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason_text')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $exemptionReasonText = null;
+
+    /**
+     * Optional CHECKSUM of the line total. When sent, it is compared against the total this API computes and the request is rejected with 422 (`line_total_checksum_mismatch`, with the expected and received values in `error.details`) when they differ by more than one cent. Never stored and never returned: the invoiced amount is always the computed one, so this field only reports a rounding mismatch with your own ERP. Omit it and no checksum runs.
+     *
+     * @var ?float $lineTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('line_total')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $lineTotal = null;
+
+    /**
      * @param  string  $description
      * @param  float  $quantity
      * @param  float  $unitPrice
      * @param  ?string  $taxRateId
      * @param  ?float  $taxRate
+     * @param  ?float  $retentionRate
+     * @param  ?float  $surchargeRate
+     * @param  ?string  $retentionRateId
+     * @param  ?string  $surchargeRateId
      * @param  ?string  $productId
      * @param  ?float  $discountPercent
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRegimeKey  $regimeKey
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestExemptionReason  $exemptionReason
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLineType  $lineType
+     * @param  ?string  $sourceInvoiceReference
+     * @param  ?array<string>  $sourceInvoiceIds
+     * @param  ?string  $unit
+     * @param  ?string  $exemptionReasonText
+     * @param  ?float  $lineTotal
      * @phpstan-pure
      */
-    public function __construct(string $description, float $quantity, float $unitPrice, ?string $taxRateId = null, ?float $taxRate = null, ?string $productId = null, ?float $discountPercent = null)
+    public function __construct(string $description, float $quantity, float $unitPrice, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?float $discountPercent = null, ?CreateInvoiceRequestRegimeKey $regimeKey = null, ?CreateInvoiceRequestExemptionReason $exemptionReason = null, ?CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRateId = $taxRateId;
         $this->taxRate = $taxRate;
+        $this->retentionRate = $retentionRate;
+        $this->surchargeRate = $surchargeRate;
+        $this->retentionRateId = $retentionRateId;
+        $this->surchargeRateId = $surchargeRateId;
         $this->productId = $productId;
         $this->discountPercent = $discountPercent;
+        $this->regimeKey = $regimeKey;
+        $this->exemptionReason = $exemptionReason;
+        $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->lineType = $lineType;
+        $this->sourceInvoiceReference = $sourceInvoiceReference;
+        $this->sourceInvoiceIds = $sourceInvoiceIds;
+        $this->unit = $unit;
+        $this->exemptionReasonText = $exemptionReasonText;
+        $this->lineTotal = $lineTotal;
     }
 }

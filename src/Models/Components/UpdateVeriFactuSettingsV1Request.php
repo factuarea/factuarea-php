@@ -9,22 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * UpdateVeriFactuSettingsV1Request - Public REST API v1 — PUT /v1/verifactu/settings.
- *
- *
- * PARTIAL update of the company's VeriFactu configuration: each field is
- * optional and is only applied if present in the body (`*Provided` pattern
- * of `UpdateVeriFactuSettingsV1Command`). The controller resolves
- * the `*Provided` flag via `$this->has('field')`.
- *
- * Per-field validation:
- *  - `enabled: boolean`
- *  - `mode: in:verifactu,no_verifactu`
- *  - `auto_transmit: boolean`
- *  - `environment: in:sandbox,production`
- *  - `notification_emails: array|max:5`, `notification_emails.*: email`
- */
 class UpdateVeriFactuSettingsV1Request
 {
     /**
@@ -37,12 +21,12 @@ class UpdateVeriFactuSettingsV1Request
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Mode $mode
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestMode $mode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('mode')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Mode|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestMode|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?Mode $mode = null;
+    public ?UpdateVeriFactuSettingsV1RequestMode $mode = null;
 
     /**
      *
@@ -54,12 +38,12 @@ class UpdateVeriFactuSettingsV1Request
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Environment $environment
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestEnvironment $environment
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Environment|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestEnvironment|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?Environment $environment = null;
+    public ?UpdateVeriFactuSettingsV1RequestEnvironment $environment = null;
 
     /**
      * $notificationEmails
@@ -73,13 +57,13 @@ class UpdateVeriFactuSettingsV1Request
 
     /**
      * @param  ?bool  $enabled
-     * @param  ?\Factuarea\Sdk\Models\Components\Mode  $mode
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestMode  $mode
      * @param  ?bool  $autoTransmit
-     * @param  ?\Factuarea\Sdk\Models\Components\Environment  $environment
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestEnvironment  $environment
      * @param  ?array<string>  $notificationEmails
      * @phpstan-pure
      */
-    public function __construct(?bool $enabled = null, ?Mode $mode = null, ?bool $autoTransmit = null, ?Environment $environment = null, ?array $notificationEmails = null)
+    public function __construct(?bool $enabled = null, ?UpdateVeriFactuSettingsV1RequestMode $mode = null, ?bool $autoTransmit = null, ?UpdateVeriFactuSettingsV1RequestEnvironment $environment = null, ?array $notificationEmails = null)
     {
         $this->enabled = $enabled;
         $this->mode = $mode;

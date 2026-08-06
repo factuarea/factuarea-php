@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataRecurringInvoiceDeleted - Payload (`data`) emitted with the `recurring_invoice.deleted` event. */
+/** EventDataRecurringInvoiceDeleted - Payload (`data`) emitted with the `recurring_invoice.deleted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataRecurringInvoiceDeleted
 {
     /**
+     * Snapshot of the resource at emission time. When the resource is still recoverable the full snapshot is emitted with an additional `deleted: true` key; otherwise it degrades to `{ id, deleted: true }`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceDeletedRecurringInvoice $recurringInvoice
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice|\Factuarea\Sdk\Models\Components\EventDeletedObject $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceDeletedRecurringInvoice')]
-    public EventDataRecurringInvoiceDeletedRecurringInvoice $recurringInvoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice|\Factuarea\Sdk\Models\Components\EventDeletedObject')]
+    public RecurringInvoice|EventDeletedObject $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataRecurringInvoiceDeleted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceDeletedRecurringInvoice  $recurringInvoice
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice|\Factuarea\Sdk\Models\Components\EventDeletedObject  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataRecurringInvoiceDeletedRecurringInvoice $recurringInvoice, string $type = 'recurring_invoice.deleted')
+    public function __construct(RecurringInvoice|EventDeletedObject $object, string $type = 'recurring_invoice.deleted')
     {
-        $this->recurringInvoice = $recurringInvoice;
+        $this->object = $object;
         $this->type = $type;
     }
 }

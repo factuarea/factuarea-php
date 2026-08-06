@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class SimplifiedInvoiceEligibility
 {
     /**
-     * Indica si la factura puede emitirse como simplificada (F2).
+     * Whether the invoice can be issued as a simplified invoice (F2).
      *
      * @var bool $canBeSimplified
      */
@@ -21,7 +21,7 @@ class SimplifiedInvoiceEligibility
     public bool $canBeSimplified;
 
     /**
-     * Indica si la factura debe emitirse como completa (F1). Es el complemento de `can_be_simplified`.
+     * Whether the invoice must be issued as a full invoice (F1). It is the complement of `can_be_simplified`.
      *
      * @var bool $mustBeComplete
      */

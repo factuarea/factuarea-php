@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
@@ -50,13 +51,15 @@ class TaxReports
     /**
      * List tax report activities
      *
-     * Get Tax Report Activities V1.
+     * Returns the cursor-paginated activity timeline (generation, download, etc.) of a single tax report generation.
      *
      * @param  string  $taxReport
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsActivitiesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsActivities(string $taxReport, ?Options $options = null): Operations\PublicApiV1TaxReportsActivitiesResponse
+    public function publicApiV1TaxReportsActivities(string $taxReport, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsActivitiesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +88,17 @@ class TaxReports
         }
         $request = new Operations\PublicApiV1TaxReportsActivitiesRequest(
             taxReport: $taxReport,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/{tax_report}/activities', Operations\PublicApiV1TaxReportsActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -165,13 +174,15 @@ class TaxReports
     /**
      * Download tax report file
      *
-     * Download Tax Report V1.
+     * Downloads the generated file for a tax report. Adds `X-Tax-Report-Hash` header for integrity verification.
      *
      * @param  string  $taxReport
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsDownloadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsDownload(string $taxReport, ?Options $options = null): Operations\PublicApiV1TaxReportsDownloadResponse
+    public function publicApiV1TaxReportsDownload(string $taxReport, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsDownloadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -200,11 +211,17 @@ class TaxReports
         }
         $request = new Operations\PublicApiV1TaxReportsDownloadRequest(
             taxReport: $taxReport,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/{tax_report}/download', Operations\PublicApiV1TaxReportsDownloadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -280,13 +297,15 @@ class TaxReports
     /**
      * Find a tax report by period
      *
-     * Find Tax Report By Period V1.
+     * Looks up the most recent generated tax report for a given type and period. Returns the report or 404 `tax_report_not_found` when none exists for the period.
      *
-     * @param  \Factuarea\Sdk\Models\Components\FindTaxReportByPeriodV1Request  $request
+     * @param  \Factuarea\Sdk\Models\Components\FindTaxReportByPeriodV1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsFindByPeriodResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsFindByPeriod(Components\FindTaxReportByPeriodV1Request $request, ?Options $options = null): Operations\PublicApiV1TaxReportsFindByPeriodResponse
+    public function publicApiV1TaxReportsFindByPeriod(Components\FindTaxReportByPeriodV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsFindByPeriodResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -313,15 +332,24 @@ class TaxReports
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1TaxReportsFindByPeriodRequest(
+            body: $body,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/find-by-period');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'request', 'json');
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body === null) {
             throw new \Exception('Request body is required');
         }
         $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
@@ -395,16 +423,146 @@ class TaxReports
     }
 
     /**
+     * Generate Modelo 130
+     *
+     * Generates the Spanish Modelo 130 (quarterly IRPF instalment payment, direct estimation) for the given year and quarter in the requested format (txt_aeat, pdf, excel; defaults to pdf). The calculation is cumulative year-to-date (1 Jan to end of quarter).
+     *
+     * @param  \Factuarea\Sdk\Models\Components\GenerateModelo130V1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate130Response
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1TaxReportsGenerate130(Components\GenerateModelo130V1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate130Response
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1TaxReportsGenerate130Request(
+            body: $body,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/130');
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
+        if ($body === null) {
+            throw new \Exception('Request body is required');
+        }
+        $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.tax_reports.generate_130', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['201'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate130ResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1TaxReportsGenerate130Response(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
      * Generate Modelo 303
      *
-     * Generate Modelo303 V1.
+     * Generates the Spanish Modelo 303 (quarterly VAT) for the given year and quarter in the requested format (txt_aeat, pdf, excel).
      *
      * @param  \Factuarea\Sdk\Models\Components\GenerateModelo303V1Request  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate303Response
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsGenerate303(Components\GenerateModelo303V1Request $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate303Response
+    public function publicApiV1TaxReportsGenerate303(Components\GenerateModelo303V1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate303Response
     {
         $retryConfig = null;
         if ($options) {
@@ -434,6 +592,8 @@ class TaxReports
         $request = new Operations\PublicApiV1TaxReportsGenerate303Request(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/303');
@@ -523,14 +683,16 @@ class TaxReports
     /**
      * Generate Modelo 347
      *
-     * Generate Modelo347 V1.
+     * Generates the Spanish Modelo 347 (annual third-party operations > 3,005.06 EUR) for the given year.
      *
      * @param  \Factuarea\Sdk\Models\Components\GenerateModelo347V1Request  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate347Response
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsGenerate347(Components\GenerateModelo347V1Request $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate347Response
+    public function publicApiV1TaxReportsGenerate347(Components\GenerateModelo347V1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate347Response
     {
         $retryConfig = null;
         if ($options) {
@@ -560,6 +722,8 @@ class TaxReports
         $request = new Operations\PublicApiV1TaxReportsGenerate347Request(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/347');
@@ -649,12 +813,14 @@ class TaxReports
     /**
      * List tax report history
      *
-     * List Tax Reports V1.
+     * Returns the paginated history of generated tax reports for the company. Optional filters: type, year.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsHistoryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsHistory(?Options $options = null): Operations\PublicApiV1TaxReportsHistoryResponse
+    public function publicApiV1TaxReportsHistory(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsHistoryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -681,10 +847,18 @@ class TaxReports
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1TaxReportsHistoryRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/history');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -760,13 +934,15 @@ class TaxReports
     /**
      * Preview a tax report
      *
-     * Preview Tax Report V1.
+     * Computes the breakdown of a tax report without persisting a generation or writing files. Ideal for interactive UIs that confirm totals before commit.
      *
-     * @param  \Factuarea\Sdk\Models\Components\PreviewTaxReportV1Request  $request
+     * @param  \Factuarea\Sdk\Models\Components\PreviewTaxReportV1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsPreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsPreview(Components\PreviewTaxReportV1Request $request, ?Options $options = null): Operations\PublicApiV1TaxReportsPreviewResponse
+    public function publicApiV1TaxReportsPreview(Components\PreviewTaxReportV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsPreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -793,15 +969,24 @@ class TaxReports
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1TaxReportsPreviewRequest(
+            body: $body,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/preview');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'request', 'json');
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body === null) {
             throw new \Exception('Request body is required');
         }
         $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
@@ -877,12 +1062,14 @@ class TaxReports
     /**
      * Retrieve tax report stats
      *
-     * Get Tax Report Stats V1.
+     * Returns aggregate KPIs of the generated tax report history: totals by type and format, accumulated file size, and the current fiscal quarter/year.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsStats(?Options $options = null): Operations\PublicApiV1TaxReportsStatsResponse
+    public function publicApiV1TaxReportsStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -909,10 +1096,18 @@ class TaxReports
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1TaxReportsStatsRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/tax_reports/stats');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class VeriFactuEvent
 {
     /**
-     * UUID (v7) del evento.
+     * UUID (v7) of the event.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class VeriFactuEvent
     public VeriFactuEventObject $object;
 
     /**
-     * Tipo de evento del SIF.
+     * SIF event type.
      *
      * @var string $eventType
      */
@@ -46,7 +46,7 @@ class VeriFactuEvent
     public array $eventData;
 
     /**
-     * Estado AEAT del evento.
+     * AEAT status of the event.
      *
      * @var string $status
      */

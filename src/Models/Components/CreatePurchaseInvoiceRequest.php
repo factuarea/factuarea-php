@@ -9,32 +9,8 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * CreatePurchaseInvoiceRequest - Public REST API v1 — POST /v1/purchase_invoices.
- *
- *
- * Required body: `supplier_id`, `external_invoice_number`,
- * `issued_on`, `lines[]` (min 1). Optional: `due_on`, `received_on`,
- * `internal_code`, `notes`, `metadata` (≤50 keys, ≤500 chars/value —
- * VO `Metadata`).
- *
- * `external_invoice_number` is the number the supplier puts on their
- * invoice (it is not one of our series). The combination
- * `(company_id, external_invoice_number)` is UNIQUE in the database.
- *
- * We accept `supplier_invoice_number` as a deprecated alias of the
- * canonical `external_invoice_number` (more readable for integrators
- * used to Stripe/Holded).
- */
 class CreatePurchaseInvoiceRequest
 {
-    /**
-     *
-     * @var string $supplierId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_id')]
-    public string $supplierId;
-
     /**
      *
      * @var string $externalInvoiceNumber
@@ -59,7 +35,20 @@ class CreatePurchaseInvoiceRequest
     public array $lines;
 
     /**
-     * Optional initial status (BR-PUR-001). 4-state model:
+     * Factura simplificada (ticket de gasto): con `is_simplified: true`
+     *
+     * el proveedor pasa a opcional. El número del proveedor
+     * (`external_invoice_number`) SIGUE siendo obligatorio en v1/MCP
+     * (el recurso se recupera por número tras crear).
+     *
+     * @var ?bool $isSimplified
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_simplified')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $isSimplified = null;
+
+    /**
+     * Optional initial status. 4-state model:
      *
      * CREATION allowlist `draft|pending` (`received`/`pending_payment`
      * were merged into `pending`). `paid|cancelled` are lifecycle
@@ -72,6 +61,40 @@ class CreatePurchaseInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestStatus|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CreatePurchaseInvoiceRequestStatus $status = null;
+
+    /**
+     * Whether to exclude this purchase invoice from the annual Modelo 347 declaration.
+     *
+     * @var ?bool $exclude347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exclude_347')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $exclude347 = null;
+
+    /**
+     *
+     * @var ?string $supplierId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $supplierId = null;
+
+    /**
+     *
+     * @var ?string $expenseCategoryId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expense_category_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expenseCategoryId = null;
+
+    /**
+     * External business key (integration key from your ERP/CRM), unique per company. Orthogonal to `external_invoice_number` (the supplier fiscal number): `external_id` is the resource ID in the integrator system.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
 
     /**
      *
@@ -106,7 +129,10 @@ class CreatePurchaseInvoiceRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -176,6 +202,24 @@ class CreatePurchaseInvoiceRequest
     public ?bool $isReverseCharge = null;
 
     /**
+     *
+     * @var ?float $deductiblePercentage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deductible_percentage')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $deductiblePercentage = null;
+
+    /**
+     * Classifies the origin of the expense for the input VAT of Modelo 303 (boxes [28]-[39]). Closed set; nullable → defaults to `corriente`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOperationClass $operationClass
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_class')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOperationClass|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null;
+
+    /**
      * $tags
      *
      * @var ?array<string> $tags
@@ -186,11 +230,25 @@ class CreatePurchaseInvoiceRequest
     public ?array $tags = null;
 
     /**
-     * @param  string  $supplierId
+     * Typed custom fields as `[{field, value}]`. `field` up to 60 characters (non-empty), `value` up to 500 characters, up to 50 entries.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  string  $externalInvoiceNumber
      * @param  LocalDate  $issuedOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestLine>  $lines
+     * @param  ?bool  $isSimplified
      * @param  ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestStatus  $status
+     * @param  ?bool  $exclude347
+     * @param  ?string  $supplierId
+     * @param  ?string  $expenseCategoryId
+     * @param  ?string  $externalId
      * @param  ?string  $internalCode
      * @param  ?LocalDate  $receivedOn
      * @param  ?LocalDate  $dueOn
@@ -203,16 +261,23 @@ class CreatePurchaseInvoiceRequest
      * @param  ?string  $expenseAccount
      * @param  ?string  $taxPeriod
      * @param  ?bool  $isReverseCharge
+     * @param  ?float  $deductiblePercentage
+     * @param  ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOperationClass  $operationClass
      * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $supplierId, string $externalInvoiceNumber, LocalDate $issuedOn, array $lines, ?CreatePurchaseInvoiceRequestStatus $status = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?bool $isReverseCharge = null, ?array $tags = null)
+    public function __construct(string $externalInvoiceNumber, LocalDate $issuedOn, array $lines, ?bool $isSimplified = null, ?CreatePurchaseInvoiceRequestStatus $status = null, ?bool $exclude347 = null, ?string $supplierId = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null, ?array $tags = null, ?array $customFields = null)
     {
-        $this->supplierId = $supplierId;
         $this->externalInvoiceNumber = $externalInvoiceNumber;
         $this->issuedOn = $issuedOn;
         $this->lines = $lines;
+        $this->isSimplified = $isSimplified;
         $this->status = $status;
+        $this->exclude347 = $exclude347;
+        $this->supplierId = $supplierId;
+        $this->expenseCategoryId = $expenseCategoryId;
+        $this->externalId = $externalId;
         $this->internalCode = $internalCode;
         $this->receivedOn = $receivedOn;
         $this->dueOn = $dueOn;
@@ -225,6 +290,9 @@ class CreatePurchaseInvoiceRequest
         $this->expenseAccount = $expenseAccount;
         $this->taxPeriod = $taxPeriod;
         $this->isReverseCharge = $isReverseCharge;
+        $this->deductiblePercentage = $deductiblePercentage;
+        $this->operationClass = $operationClass;
         $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CanAnnulInvoice
 {
     /**
-     * Indica si la factura puede anularse en su estado actual.
+     * Whether the invoice can be annulled in its current status.
      *
      * @var bool $canAnnul
      */

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaRejected - Payload (`data`) emitted with the `proforma.rejected` event. */
+/** EventDataProformaRejected - Payload (`data`) emitted with the `proforma.rejected` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaRejected
 {
     /**
+     * A proforma invoice that can be converted to a final invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaRejectedProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaRejectedProforma')]
-    public EventDataProformaRejectedProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
+    public Proforma $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProformaRejected
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaRejectedProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaRejectedProforma $proforma, string $type = 'proforma.rejected')
+    public function __construct(Proforma $object, string $type = 'proforma.rejected')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->type = $type;
     }
 }

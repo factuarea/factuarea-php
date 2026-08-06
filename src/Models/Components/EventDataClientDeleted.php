@@ -9,16 +9,24 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataClientDeleted - Payload (`data`) emitted with the `client.deleted` event. */
+/** EventDataClientDeleted - Payload (`data`) emitted with the `client.deleted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataClientDeleted
 {
     /**
+     * Snapshot of the resource at emission time. When the resource is still recoverable the full snapshot is emitted with an additional `deleted: true` key; otherwise it degrades to `{ id, deleted: true }`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataClientDeletedClient $client
+     * @var \Factuarea\Sdk\Models\Components\Client|\Factuarea\Sdk\Models\Components\EventDeletedObject $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('client')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataClientDeletedClient')]
-    public EventDataClientDeletedClient $client;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Client|\Factuarea\Sdk\Models\Components\EventDeletedObject')]
+    public Client|EventDeletedObject $object;
+
+    /**
+     *
+     * @var ?string $name
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
+    public ?string $name;
 
     /**
      *
@@ -29,12 +37,14 @@ class EventDataClientDeleted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataClientDeletedClient  $client
+     * @param  \Factuarea\Sdk\Models\Components\Client|\Factuarea\Sdk\Models\Components\EventDeletedObject  $object
+     * @param  ?string  $name
      * @phpstan-pure
      */
-    public function __construct(EventDataClientDeletedClient $client, string $type = 'client.deleted')
+    public function __construct(Client|EventDeletedObject $object, ?string $name = null, string $type = 'client.deleted')
     {
-        $this->client = $client;
+        $this->object = $object;
+        $this->name = $name;
         $this->type = $type;
     }
 }

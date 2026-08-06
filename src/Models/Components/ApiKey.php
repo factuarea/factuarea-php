@@ -9,15 +9,25 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ApiKey - Metadata of the API key used to authenticate the request. The secret is never returned (it is only shown once at creation time). */
+/** ApiKey - An API key of your company. The plaintext secret is never exposed in this representation — it is shown only once, at creation or after rotation. */
 class ApiKey
 {
     /**
+     * Opaque identifier (UUID v7) of the API key.
      *
      * @var string $id
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('id')]
     public string $id;
+
+    /**
+     * Always `api_key`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ApiKeyObject $object
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiKeyObject')]
+    public ApiKeyObject $object;
 
     /**
      * Human-friendly label assigned at creation time.
@@ -28,7 +38,7 @@ class ApiKey
     public string $name;
 
     /**
-     * First chars of the key (e.g. `fact_live_1N0Fnyhh`) — safe to log.
+     * First chars of the key (e.g. `fact_live_1N0Fnyhh`) — safe to log. Does NOT authenticate.
      *
      * @var string $prefix
      */
@@ -45,12 +55,21 @@ class ApiKey
     public array $scopes;
 
     /**
-     * Rate-limit tier (e.g. `starter`, `scale`, `enterprise`).
+     * Rate-limit tier (`free`, `starter`, `pro`, `scale`). Derived from the company plan (or from an active capacity boost when higher), never set from the request body.
      *
      * @var string $tier
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tier')]
     public string $tier;
+
+    /**
+     * Key environment: `live` (`fact_live_`, real side effects) or `test` (`fact_test_`, sandbox company, no real-world effects).
+     *
+     * @var \Factuarea\Sdk\Models\Components\ApiKeyEnvironment $environment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiKeyEnvironment')]
+    public ApiKeyEnvironment $environment;
 
     /**
      *
@@ -60,6 +79,23 @@ class ApiKey
     public \DateTime $createdAt;
 
     /**
+     * `true` when the key is usable (not revoked and not expired).
+     *
+     * @var bool $isActive
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_active')]
+    public bool $isActive;
+
+    /**
+     * `true` once the key has been revoked.
+     *
+     * @var bool $isRevoked
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_revoked')]
+    public bool $isRevoked;
+
+    /**
+     * Timestamp of the last authenticated request with this key, or `null` if never used.
      *
      * @var ?\DateTime $lastUsedAt
      */
@@ -67,6 +103,7 @@ class ApiKey
     public ?\DateTime $lastUsedAt;
 
     /**
+     * Expiry instant (ISO 8601), or `null` if the key does not expire.
      *
      * @var ?\DateTime $expiresAt
      */
@@ -74,25 +111,43 @@ class ApiKey
     public ?\DateTime $expiresAt;
 
     /**
+     * Revocation instant (ISO 8601), or `null` if the key is not revoked.
+     *
+     * @var ?\DateTime $revokedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('revoked_at')]
+    public ?\DateTime $revokedAt;
+
+    /**
      * @param  string  $id
+     * @param  \Factuarea\Sdk\Models\Components\ApiKeyObject  $object
      * @param  string  $name
      * @param  string  $prefix
      * @param  array<string>  $scopes
      * @param  string  $tier
+     * @param  \Factuarea\Sdk\Models\Components\ApiKeyEnvironment  $environment
      * @param  \DateTime  $createdAt
+     * @param  bool  $isActive
+     * @param  bool  $isRevoked
      * @param  ?\DateTime  $lastUsedAt
      * @param  ?\DateTime  $expiresAt
+     * @param  ?\DateTime  $revokedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, string $name, string $prefix, array $scopes, string $tier, \DateTime $createdAt, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null)
+    public function __construct(string $id, ApiKeyObject $object, string $name, string $prefix, array $scopes, string $tier, ApiKeyEnvironment $environment, \DateTime $createdAt, bool $isActive, bool $isRevoked, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null, ?\DateTime $revokedAt = null)
     {
         $this->id = $id;
+        $this->object = $object;
         $this->name = $name;
         $this->prefix = $prefix;
         $this->scopes = $scopes;
         $this->tier = $tier;
+        $this->environment = $environment;
         $this->createdAt = $createdAt;
+        $this->isActive = $isActive;
+        $this->isRevoked = $isRevoked;
         $this->lastUsedAt = $lastUsedAt;
         $this->expiresAt = $expiresAt;
+        $this->revokedAt = $revokedAt;
     }
 }

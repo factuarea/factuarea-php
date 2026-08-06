@@ -9,23 +9,24 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceRectified - Payload (`data`) emitted with the `invoice.rectified` event. */
+/** EventDataInvoiceRectified - Payload (`data`) emitted with the `invoice.rectified` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceRectified
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceRectifiedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceRectifiedInvoice')]
-    public EventDataInvoiceRectifiedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
-     * @var ?string $correctiveInvoiceUuid
+     * @var ?string $correctiveInvoiceId
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('corrective_invoice_uuid')]
-    public ?string $correctiveInvoiceUuid;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('corrective_invoice_id')]
+    public ?string $correctiveInvoiceId;
 
     /**
      *
@@ -43,15 +44,15 @@ class EventDataInvoiceRectified
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceRectifiedInvoice  $invoice
-     * @param  ?string  $correctiveInvoiceUuid
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  ?string  $correctiveInvoiceId
      * @param  ?string  $correctiveInvoiceNumber
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceRectifiedInvoice $invoice, ?string $correctiveInvoiceUuid = null, ?string $correctiveInvoiceNumber = null, string $type = 'invoice.rectified')
+    public function __construct(Invoice $object, ?string $correctiveInvoiceId = null, ?string $correctiveInvoiceNumber = null, string $type = 'invoice.rectified')
     {
-        $this->invoice = $invoice;
-        $this->correctiveInvoiceUuid = $correctiveInvoiceUuid;
+        $this->object = $object;
+        $this->correctiveInvoiceId = $correctiveInvoiceId;
         $this->correctiveInvoiceNumber = $correctiveInvoiceNumber;
         $this->type = $type;
     }

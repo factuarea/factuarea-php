@@ -9,33 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CreateClientRequest - Public REST API v1 — POST /v1/clients.
- *
- *
- * Required body: `name`. Optional: `tax_id`, `vat_id`, `email`, `phone`,
- * `address` (object with sub-keys `line1`, `line2`, `number`, `floor`,
- * `door`, `staircase`, `postal_code`, `city`, `province`, `country`),
- * `notes`, `metadata`, `commercial_name`, `contact_person`, `fax`, `mobile`,
- * `website`, `billing_emails[]`, `default_discount`, `default_vat_rate`,
- * `default_retention_rate`, `is_surcharge_subject`, `bank_accounts[]`,
- * `latitude`, `longitude`, `preferred_operation_regime`, `payment_method`,
- * `payment_terms_days`, `alternative_id` (object `{type, value, country_code}`).
- *
- * The validation of `metadata` invariants (≤50 keys, ≤500 chars/value) is
- * performed by the Handler via `Metadata::create()`. The validation of domain
- * invariants (XOR `tax_id`/`alternative_id`, direct_debit ⇒ default bank
- * account, billing_emails without duplicates) is performed by the `Client`
- * aggregate. The typed exceptions (`MetadataTooManyKeysException`,
- * `MetadataValueTooLongException`, `InvalidTaxIdException`,
- * `InvalidAlternativeIdException`, `InvalidBillingEmailsException`,
- * `InvalidClientStateException`) implement `PublicApiMappable` and propagate
- * to the `ExceptionRenderer` with the canonical v1 envelope.
- *
- * `tax_id` is de facto required unless `alternative_id` is sent. The
- * FormRequest leaves it `nullable` and delegates validation to the aggregate,
- * which throws `InvalidTaxIdException` (422 `tax_id_required`) if both are missing.
- */
 class CreateClientRequest
 {
     /**
@@ -44,6 +17,14 @@ class CreateClientRequest
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
     public string $name;
+
+    /**
+     *
+     * @var ?bool $accumulate347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('accumulate_347')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $accumulate347 = null;
 
     /**
      *
@@ -218,7 +199,10 @@ class CreateClientRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -226,6 +210,38 @@ class CreateClientRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $metadata = null;
+
+    /**
+     *
+     * @var ?string $dir3AccountingOffice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_accounting_office')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $dir3AccountingOffice = null;
+
+    /**
+     *
+     * @var ?string $dir3ManagingBody
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_managing_body')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $dir3ManagingBody = null;
+
+    /**
+     *
+     * @var ?string $dir3ProcessingUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_processing_unit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $dir3ProcessingUnit = null;
+
+    /**
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
 
     /**
      * $billingEmails
@@ -249,6 +265,7 @@ class CreateClientRequest
 
     /**
      * @param  string  $name
+     * @param  ?bool  $accumulate347
      * @param  ?\Factuarea\Sdk\Models\Components\CreateClientRequestAlternativeId  $alternativeId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateClientRequestAddress  $address
      * @param  ?string  $commercialName
@@ -271,13 +288,18 @@ class CreateClientRequest
      * @param  ?int  $paymentTermsDays
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $dir3AccountingOffice
+     * @param  ?string  $dir3ManagingBody
+     * @param  ?string  $dir3ProcessingUnit
+     * @param  ?string  $externalId
      * @param  ?array<string>  $billingEmails
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateClientRequestBankAccount>  $bankAccounts
      * @phpstan-pure
      */
-    public function __construct(string $name, ?CreateClientRequestAlternativeId $alternativeId = null, ?CreateClientRequestAddress $address = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?CreateClientRequestPreferredOperationRegime $preferredOperationRegime = null, ?CreateClientRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?array $billingEmails = null, ?array $bankAccounts = null)
+    public function __construct(string $name, ?bool $accumulate347 = null, ?CreateClientRequestAlternativeId $alternativeId = null, ?CreateClientRequestAddress $address = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?CreateClientRequestPreferredOperationRegime $preferredOperationRegime = null, ?CreateClientRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $externalId = null, ?array $billingEmails = null, ?array $bankAccounts = null)
     {
         $this->name = $name;
+        $this->accumulate347 = $accumulate347;
         $this->alternativeId = $alternativeId;
         $this->address = $address;
         $this->commercialName = $commercialName;
@@ -300,6 +322,10 @@ class CreateClientRequest
         $this->paymentTermsDays = $paymentTermsDays;
         $this->notes = $notes;
         $this->metadata = $metadata;
+        $this->dir3AccountingOffice = $dir3AccountingOffice;
+        $this->dir3ManagingBody = $dir3ManagingBody;
+        $this->dir3ProcessingUnit = $dir3ProcessingUnit;
+        $this->externalId = $externalId;
         $this->billingEmails = $billingEmails;
         $this->bankAccounts = $bankAccounts;
     }

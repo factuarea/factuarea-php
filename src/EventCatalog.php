@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -49,12 +50,14 @@ class EventCatalog
     /**
      * List event types
      *
-     * List the closed catalog of event types that Factuarea can emit to webhook endpoints. Use it to populate a subscription UI instead of hard-coding event names. Each entry exposes its `name`, `category` (derived from the `<category>.*` prefix), a Spanish `description`, and a `status` (`available` if emitted today, `coming_soon` if reserved for a future release).
+     * List the closed catalog of event types Factuarea can emit to webhooks. Each entry exposes its `name`, `category`, a description and a `status`: `available` types are emitted today and subscribable via `enabled_events`; `coming_soon` types are reserved for a future release and not yet subscribable (passing one in `enabled_events` returns 422).
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EventCatalogListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EventCatalogList(?Options $options = null): Operations\PublicApiV1EventCatalogListResponse
+    public function publicApiV1EventCatalogList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EventCatalogListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -81,10 +84,18 @@ class EventCatalog
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1EventCatalogListRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/event-catalog');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);

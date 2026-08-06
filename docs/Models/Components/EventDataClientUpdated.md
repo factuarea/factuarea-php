@@ -1,11 +1,11 @@
 # EventDataClientUpdated
 
-Payload (`data`) emitted with the `client.updated` event.
+Payload (`data`) emitted with the `client.updated` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
 
 
 ## Fields
 
-| Field                                                                                              | Type                                                                                               | Required                                                                                           | Description                                                                                        |
-| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `type`                                                                                             | *string*                                                                                           | :heavy_check_mark:                                                                                 | N/A                                                                                                |
-| `client`                                                                                           | [Components\EventDataClientUpdatedClient](../../Models/Components/EventDataClientUpdatedClient.md) | :heavy_check_mark:                                                                                 | N/A                                                                                                |
+| Field                                                  | Type                                                   | Required                                               | Description                                            |
+| ------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------ |
+| `type`                                                 | *string*                                               | :heavy_check_mark:                                     | N/A                                                    |
+| `object`                                               | [Components\Client](../../Models/Components/Client.md) | :heavy_check_mark:                                     | A customer of your company.                            |

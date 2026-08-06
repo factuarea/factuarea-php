@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TaxesListRequest
 {
@@ -124,6 +125,38 @@ class PublicApiV1TaxesListRequest
     public ?bool $isSystem = null;
 
     /**
+     * AEAT fiscal zone: `peninsula`, `canarias`, `ceuta`, `melilla`. Exact match on `country_aeat_zone`.
+     *
+     * @var ?string $countryAeatZone
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=country_aeat_zone')]
+    public ?string $countryAeatZone = null;
+
+    /**
+     * Indirect tax regime DERIVED from the AEAT zone: `iva`, `igic`, `ipsi`. Translated to the equivalent zone filter. Exact match on `indirect_tax_regime`.
+     *
+     * @var ?string $indirectTaxRegime
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=indirect_tax_regime')]
+    public ?string $indirectTaxRegime = null;
+
+    /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -147,9 +180,13 @@ class PublicApiV1TaxesListRequest
      * @param  ?string  $externalReference
      * @param  ?string  $externalReferenceIn
      * @param  ?bool  $isSystem
+     * @param  ?string  $countryAeatZone
+     * @param  ?string  $indirectTaxRegime
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $typeIn = null, ?bool $isActive = null, ?bool $isDefault = null, ?string $appliesTo = null, ?string $appliesToIn = null, ?string $country = null, ?string $code = null, ?string $search = null, ?string $externalReference = null, ?string $externalReferenceIn = null, ?bool $isSystem = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $typeIn = null, ?bool $isActive = null, ?bool $isDefault = null, ?string $appliesTo = null, ?string $appliesToIn = null, ?string $country = null, ?string $code = null, ?string $search = null, ?string $externalReference = null, ?string $externalReferenceIn = null, ?bool $isSystem = null, ?string $countryAeatZone = null, ?string $indirectTaxRegime = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
@@ -165,6 +202,10 @@ class PublicApiV1TaxesListRequest
         $this->externalReference = $externalReference;
         $this->externalReferenceIn = $externalReferenceIn;
         $this->isSystem = $isSystem;
+        $this->countryAeatZone = $countryAeatZone;
+        $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

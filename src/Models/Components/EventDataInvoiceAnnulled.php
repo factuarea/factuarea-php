@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceAnnulled - Payload (`data`) emitted with the `invoice.annulled` event. */
+/** EventDataInvoiceAnnulled - Payload (`data`) emitted with the `invoice.annulled` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceAnnulled
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceAnnulledInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceAnnulledInvoice')]
-    public EventDataInvoiceAnnulledInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataInvoiceAnnulled
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceAnnulledInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @param  ?\DateTime  $annulledAt
      * @param  ?string  $reason
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceAnnulledInvoice $invoice, ?\DateTime $annulledAt = null, ?string $reason = null, string $type = 'invoice.annulled')
+    public function __construct(Invoice $object, ?\DateTime $annulledAt = null, ?string $reason = null, string $type = 'invoice.annulled')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->annulledAt = $annulledAt;
         $this->reason = $reason;
         $this->type = $type;

@@ -12,19 +12,19 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1ProformasBulkDeleteResponseBody
 {
     /**
-     * Result of a bulk-delete operation. Indicates how many resources were deleted successfully and the list of failures (id + reason in Spanish). Shape shared by all `/v1/{resource}/bulk` endpoints of the public API.
+     * Result of a bulk or import operation that reports per-resource status. `total` is how many rows/resources were processed (`successful + failed`), `successful` how many were applied (deleted, created or validated) and `failed` how many could not be processed. `failures[]` carries one item per failed row. Shape shared by every bulk endpoint of the public API (the `/v1/{resource}/bulk-delete` endpoints emit it today). Anchored integrators before `2026-09-01` keep receiving the previous `{object, deleted, failed[{id, reason}]}` shape via `Factuarea-Version`.
      *
-     * @var \Factuarea\Sdk\Models\Components\BulkDeleteResult $data
+     * @var \Factuarea\Sdk\Models\Components\BulkPartialSuccessResult $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkDeleteResult')]
-    public Components\BulkDeleteResult $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkPartialSuccessResult')]
+    public Components\BulkPartialSuccessResult $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\BulkDeleteResult  $data
+     * @param  \Factuarea\Sdk\Models\Components\BulkPartialSuccessResult  $data
      * @phpstan-pure
      */
-    public function __construct(Components\BulkDeleteResult $data)
+    public function __construct(Components\BulkPartialSuccessResult $data)
     {
         $this->data = $data;
     }

@@ -1,0 +1,11 @@
+# BulkStatusProformasV1Request
+
+Transition several proformas to `new_status` (`accepted` or `rejected`) in one request, up to 50 per batch. `ids` is an array of proforma UUIDs; every transition passes the document state guard, and proformas that cannot transition are returned under `failures[]`.
+
+
+## Fields
+
+| Field                                                                                                                | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `newStatus`                                                                                                          | [Components\BulkStatusProformasV1RequestNewStatus](../../Models/Components/BulkStatusProformasV1RequestNewStatus.md) | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `ids`                                                                                                                | array<*string*>                                                                                                      | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataTaxMetadataChanged - Payload (`data`) emitted with the `tax.metadata_changed` event. */
+/** EventDataTaxMetadataChanged - Payload (`data`) emitted with the `tax.metadata_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataTaxMetadataChanged
 {
     /**
+     * A tax rate configuration. Catalog partially global (`is_system=true` for system taxes, without `company_id`) and partially custom per company.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataTaxMetadataChangedTax $tax
+     * @var \Factuarea\Sdk\Models\Components\Tax $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tax')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataTaxMetadataChangedTax')]
-    public EventDataTaxMetadataChangedTax $tax;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Tax')]
+    public Tax $object;
 
     /**
      * $previousKeys
@@ -47,14 +48,14 @@ class EventDataTaxMetadataChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataTaxMetadataChangedTax  $tax
+     * @param  \Factuarea\Sdk\Models\Components\Tax  $object
      * @param  array<string>  $previousKeys
      * @param  array<string>  $newKeys
      * @phpstan-pure
      */
-    public function __construct(EventDataTaxMetadataChangedTax $tax, array $previousKeys, array $newKeys, string $type = 'tax.metadata_changed')
+    public function __construct(Tax $object, array $previousKeys, array $newKeys, string $type = 'tax.metadata_changed')
     {
-        $this->tax = $tax;
+        $this->object = $object;
         $this->previousKeys = $previousKeys;
         $this->newKeys = $newKeys;
         $this->type = $type;

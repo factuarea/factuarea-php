@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataSeriesYearReset - Payload (`data`) emitted with the `series.year_reset` event. */
+/** EventDataSeriesYearReset - Payload (`data`) emitted with the `series.year_reset` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataSeriesYearReset
 {
     /**
+     * A document numbering series. Immutable per AEAT compliance.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataSeriesYearResetSeries $series
+     * @var \Factuarea\Sdk\Models\Components\Series $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataSeriesYearResetSeries')]
-    public EventDataSeriesYearResetSeries $series;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series')]
+    public Series $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataSeriesYearReset
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataSeriesYearResetSeries  $series
+     * @param  \Factuarea\Sdk\Models\Components\Series  $object
      * @param  ?int  $oldYear
      * @param  ?int  $newYear
      * @phpstan-pure
      */
-    public function __construct(EventDataSeriesYearResetSeries $series, ?int $oldYear = null, ?int $newYear = null, string $type = 'series.year_reset')
+    public function __construct(Series $object, ?int $oldYear = null, ?int $newYear = null, string $type = 'series.year_reset')
     {
-        $this->series = $series;
+        $this->object = $object;
         $this->oldYear = $oldYear;
         $this->newYear = $newYear;
         $this->type = $type;

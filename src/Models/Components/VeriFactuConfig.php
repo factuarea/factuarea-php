@@ -70,7 +70,7 @@ class VeriFactuConfig
     public bool $hasActiveCertificate;
 
     /**
-     * Date until which the mode change is locked (BR-VFC-001), or `null` if not locked.
+     * Date until which the mode change is locked, or `null` if not locked.
      *
      * @var ?\DateTime $isLockedUntil
      */
@@ -78,7 +78,7 @@ class VeriFactuConfig
     public ?\DateTime $isLockedUntil;
 
     /**
-     * UUID (v7) del certificado activo, o `null` si no hay ninguno.
+     * UUID (v7) of the active certificate, or `null` if there is none.
      *
      * @var ?string $activeCertificateId
      */

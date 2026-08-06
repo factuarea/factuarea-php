@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataSeriesNumberConsumed - Payload (`data`) emitted with the `series.number_consumed` event. */
+/** EventDataSeriesNumberConsumed - Payload (`data`) emitted with the `series.number_consumed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataSeriesNumberConsumed
 {
     /**
+     * A document numbering series. Immutable per AEAT compliance.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataSeriesNumberConsumedSeries $series
+     * @var \Factuarea\Sdk\Models\Components\Series $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataSeriesNumberConsumedSeries')]
-    public EventDataSeriesNumberConsumedSeries $series;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series')]
+    public Series $object;
 
     /**
      *
@@ -36,13 +37,13 @@ class EventDataSeriesNumberConsumed
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataSeriesNumberConsumedSeries  $series
+     * @param  \Factuarea\Sdk\Models\Components\Series  $object
      * @param  ?int  $number
      * @phpstan-pure
      */
-    public function __construct(EventDataSeriesNumberConsumedSeries $series, ?int $number = null, string $type = 'series.number_consumed')
+    public function __construct(Series $object, ?int $number = null, string $type = 'series.number_consumed')
     {
-        $this->series = $series;
+        $this->object = $object;
         $this->number = $number;
         $this->type = $type;
     }

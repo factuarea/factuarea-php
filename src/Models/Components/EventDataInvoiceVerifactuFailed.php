@@ -9,16 +9,38 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceVerifactuFailed - Payload (`data`) emitted with the `invoice.verifactu_failed` event. */
+/** EventDataInvoiceVerifactuFailed - Payload (`data`) emitted with the `invoice.verifactu_failed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceVerifactuFailed
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceVerifactuFailedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceVerifactuFailedInvoice')]
-    public EventDataInvoiceVerifactuFailedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
+
+    /**
+     *
+     * @var ?string $verifactuRecordId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('verifactu_record_id')]
+    public ?string $verifactuRecordId;
+
+    /**
+     *
+     * @var ?string $errorCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('error_code')]
+    public ?string $errorCode;
+
+    /**
+     *
+     * @var ?string $errorMessage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('error_message')]
+    public ?string $errorMessage;
 
     /**
      *
@@ -29,12 +51,18 @@ class EventDataInvoiceVerifactuFailed
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceVerifactuFailedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  ?string  $verifactuRecordId
+     * @param  ?string  $errorCode
+     * @param  ?string  $errorMessage
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceVerifactuFailedInvoice $invoice, string $type = 'invoice.verifactu_failed')
+    public function __construct(Invoice $object, ?string $verifactuRecordId = null, ?string $errorCode = null, ?string $errorMessage = null, string $type = 'invoice.verifactu_failed')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
+        $this->verifactuRecordId = $verifactuRecordId;
+        $this->errorCode = $errorCode;
+        $this->errorMessage = $errorMessage;
         $this->type = $type;
     }
 }

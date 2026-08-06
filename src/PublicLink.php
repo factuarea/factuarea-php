@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -53,10 +53,12 @@ class PublicLink
      * Return the public share link state of a delivery note: `url` (absolute, ready to send to the client), `enabled`, `expires_at` (`null` = unlimited), and `max_days` (plan-enforced maximum when extending the link).
      *
      * @param  string  $deliveryNote
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPublicLinkGetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesPublicLinkGet(string $deliveryNote, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPublicLinkGetResponse
+    public function publicApiV1DeliveryNotesPublicLinkGet(string $deliveryNote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPublicLinkGetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +87,17 @@ class PublicLink
         }
         $request = new Operations\PublicApiV1DeliveryNotesPublicLinkGetRequest(
             deliveryNote: $deliveryNote,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/public-link', Operations\PublicApiV1DeliveryNotesPublicLinkGetRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -167,13 +175,11 @@ class PublicLink
      *
      * Enable/disable the public share link of a delivery note or change its expiry. Returns 422 `expiry_exceeds_max_days` if the requested expiry exceeds the plan-enforced `max_days`. Supports `Idempotency-Key` for safe retries.
      *
-     * @param  \Factuarea\Sdk\Models\Components\UpdateDeliveryNotePublicLinkRequest  $body
-     * @param  string  $deliveryNote
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPublicLinkUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesPublicLinkUpdate(Components\UpdateDeliveryNotePublicLinkRequest $body, string $deliveryNote, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPublicLinkUpdateResponse
+    public function publicApiV1DeliveryNotesPublicLinkUpdate(Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPublicLinkUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -200,11 +206,6 @@ class PublicLink
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
-            deliveryNote: $deliveryNote,
-            body: $body,
-            idempotencyKey: $idempotencyKey,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/public-link', Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest::class, $request);
         $urlOverride = null;
@@ -257,7 +258,7 @@ class PublicLink
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

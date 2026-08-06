@@ -21,7 +21,7 @@ class SupplierStats
     public SupplierStatsObject $object;
 
     /**
-     * Total de proveedores registrados en la empresa.
+     * Total number of suppliers registered in the company.
      *
      * @var int $total
      */
@@ -45,7 +45,7 @@ class SupplierStats
     public int $inactive;
 
     /**
-     * Proveedores con al menos una factura de compra registrada.
+     * Suppliers with at least one recorded purchase invoice.
      *
      * @var int $withPurchaseInvoices
      */

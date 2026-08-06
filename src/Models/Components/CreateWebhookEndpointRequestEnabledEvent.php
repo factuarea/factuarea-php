@@ -12,6 +12,9 @@ namespace Factuarea\Sdk\Models\Components;
 enum CreateWebhookEndpointRequestEnabledEvent: string
 {
     case InvoiceCreated = 'invoice.created';
+    case InvoiceAutoCreated = 'invoice.auto_created';
+    case InvoiceCorrectiveAutoCreated = 'invoice.corrective_auto_created';
+    case InvoiceSubscriptionAutoCreated = 'invoice.subscription_auto_created';
     case InvoiceUpdated = 'invoice.updated';
     case InvoiceSent = 'invoice.sent';
     case InvoicePaid = 'invoice.paid';
@@ -41,6 +44,8 @@ enum CreateWebhookEndpointRequestEnabledEvent: string
     case QuoteCancelled = 'quote.cancelled';
     case QuoteNumberAssigned = 'quote.number_assigned';
     case QuoteMetadataChanged = 'quote.metadata_changed';
+    case QuoteEmailSent = 'quote.email_sent';
+    case QuoteEmailFailed = 'quote.email_failed';
     case ProformaCreated = 'proforma.created';
     case ProformaUpdated = 'proforma.updated';
     case ProformaDeleted = 'proforma.deleted';
@@ -51,16 +56,21 @@ enum CreateWebhookEndpointRequestEnabledEvent: string
     case ProformaConvertedToInvoice = 'proforma.converted_to_invoice';
     case ProformaNumberAssigned = 'proforma.number_assigned';
     case ProformaMetadataChanged = 'proforma.metadata_changed';
+    case ProformaEmailSent = 'proforma.email_sent';
+    case ProformaEmailFailed = 'proforma.email_failed';
     case DeliveryNoteCreated = 'delivery_note.created';
     case DeliveryNoteUpdated = 'delivery_note.updated';
     case DeliveryNoteStatusChanged = 'delivery_note.status_changed';
     case DeliveryNoteSigned = 'delivery_note.signed';
     case DeliveryNoteConverted = 'delivery_note.converted';
+    case DeliveryNoteEmailSent = 'delivery_note.email_sent';
+    case DeliveryNoteEmailFailed = 'delivery_note.email_failed';
     case PurchaseInvoiceCreated = 'purchase_invoice.created';
     case PurchaseInvoiceUpdated = 'purchase_invoice.updated';
     case PurchaseInvoicePaid = 'purchase_invoice.paid';
     case PurchaseInvoiceCancelled = 'purchase_invoice.cancelled';
     case PurchaseInvoiceMetadataChanged = 'purchase_invoice.metadata_changed';
+    case PurchaseInvoicePaymentRegistered = 'purchase_invoice.payment_registered';
     case RecurringInvoiceCreated = 'recurring_invoice.created';
     case RecurringInvoiceActivated = 'recurring_invoice.activated';
     case RecurringInvoicePaused = 'recurring_invoice.paused';
@@ -89,5 +99,20 @@ enum CreateWebhookEndpointRequestEnabledEvent: string
     case SeriesMarkedAsDefault = 'series.marked_as_default';
     case SeriesDemotedFromDefault = 'series.demoted_from_default';
     case SeriesYearReset = 'series.year_reset';
+    case SeriesMonthReset = 'series.month_reset';
     case SeriesNumberConsumed = 'series.number_consumed';
+    case FacturaeFaceSubmitted = 'facturae.face_submitted';
+    case FacturaeFaceStatusChanged = 'facturae.face_status_changed';
+    case FacturaeFaceCancellationRequested = 'facturae.face_cancellation_requested';
+    case PayoutReconciled = 'payout.reconciled';
+    case EmployeeCreated = 'employee.created';
+    case EmployeeUpdated = 'employee.updated';
+    case EmployeeDeactivated = 'employee.deactivated';
+    case EmployeeInvited = 'employee.invited';
+    case TimeEntryRecorded = 'time_entry.recorded';
+    case TimeEntryCorrected = 'time_entry.corrected';
+    case AbsenceRequested = 'absence.requested';
+    case AbsenceApproved = 'absence.approved';
+    case AbsenceRejected = 'absence.rejected';
+    case MonthlyRegisterClosed = 'monthly_register.closed';
 }

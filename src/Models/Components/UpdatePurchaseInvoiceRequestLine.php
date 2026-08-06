@@ -44,17 +44,72 @@ class UpdatePurchaseInvoiceRequestLine
     public ?float $taxRate = null;
 
     /**
+     * Per-line IRPF retention and deductible VAT. Same shape rules as create.
+     *
+     * @var ?float $retentionRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $retentionRate = null;
+
+    /**
+     *
+     * @var ?bool $vatDeductible
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('vat_deductible')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $vatDeductible = null;
+
+    /**
+     * Per-line equivalence surcharge (the legal VAT↔surcharge pair is validated) and LIVA exemption reason (closed catalog).
+     *
+     * @var ?float $surchargeRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $surchargeRate = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestExemptionReason|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null;
+
+    /**
+     * Per-line indirect tax regime of the supplier. Same shape rule as create (defense in depth); the real invariant lives in the domain.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
      * @param  ?string  $description
      * @param  ?float  $quantity
      * @param  ?float  $unitPrice
      * @param  ?float  $taxRate
+     * @param  ?float  $retentionRate
+     * @param  ?bool  $vatDeductible
+     * @param  ?float  $surchargeRate
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestExemptionReason  $exemptionReason
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null)
+    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->retentionRate = $retentionRate;
+        $this->vatDeductible = $vatDeductible;
+        $this->surchargeRate = $surchargeRate;
+        $this->exemptionReason = $exemptionReason;
+        $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

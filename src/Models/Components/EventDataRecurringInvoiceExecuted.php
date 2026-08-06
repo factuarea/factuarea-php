@@ -9,24 +9,24 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** EventDataRecurringInvoiceExecuted - Payload (`data`) emitted with the `recurring_invoice.executed` event. */
+/** EventDataRecurringInvoiceExecuted - Payload (`data`) emitted with the `recurring_invoice.executed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataRecurringInvoiceExecuted
 {
     /**
+     * A recurring invoice template that auto-generates invoices on a fixed cadence.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceExecutedRecurringInvoice $recurringInvoice
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceExecutedRecurringInvoice')]
-    public EventDataRecurringInvoiceExecutedRecurringInvoice $recurringInvoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice')]
+    public RecurringInvoice $object;
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceExecutedInvoice $invoice
+     * @var string $invoiceId
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceExecutedInvoice')]
-    public EventDataRecurringInvoiceExecutedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_id')]
+    public string $invoiceId;
 
     /**
      *
@@ -34,6 +34,13 @@ class EventDataRecurringInvoiceExecuted
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('occurrence_number')]
     public int $occurrenceNumber;
+
+    /**
+     *
+     * @var ?string $invoiceNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_number')]
+    public ?string $invoiceNumber;
 
     /**
      *
@@ -51,17 +58,19 @@ class EventDataRecurringInvoiceExecuted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceExecutedRecurringInvoice  $recurringInvoice
-     * @param  \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceExecutedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice  $object
+     * @param  string  $invoiceId
      * @param  int  $occurrenceNumber
+     * @param  ?string  $invoiceNumber
      * @param  ?LocalDate  $nextRunDate
      * @phpstan-pure
      */
-    public function __construct(EventDataRecurringInvoiceExecutedRecurringInvoice $recurringInvoice, EventDataRecurringInvoiceExecutedInvoice $invoice, int $occurrenceNumber, ?LocalDate $nextRunDate = null, string $type = 'recurring_invoice.executed')
+    public function __construct(RecurringInvoice $object, string $invoiceId, int $occurrenceNumber, ?string $invoiceNumber = null, ?LocalDate $nextRunDate = null, string $type = 'recurring_invoice.executed')
     {
-        $this->recurringInvoice = $recurringInvoice;
-        $this->invoice = $invoice;
+        $this->object = $object;
+        $this->invoiceId = $invoiceId;
         $this->occurrenceNumber = $occurrenceNumber;
+        $this->invoiceNumber = $invoiceNumber;
         $this->nextRunDate = $nextRunDate;
         $this->type = $type;
     }

@@ -1,6 +1,6 @@
 # DeliveryNoteStatusItemValue
 
-Identificador interno del estado.
+Internal status identifier.
 
 
 ## Values

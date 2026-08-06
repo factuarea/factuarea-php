@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
@@ -57,10 +58,12 @@ class WebhookEndpoints
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateWebhookEndpointRequest  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsCreate(Components\CreateWebhookEndpointRequest $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsCreateResponse
+    public function publicApiV1WebhookEndpointsCreate(Components\CreateWebhookEndpointRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -90,6 +93,8 @@ class WebhookEndpoints
         $request = new Operations\PublicApiV1WebhookEndpointsCreateRequest(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints');
@@ -143,7 +148,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -182,10 +187,12 @@ class WebhookEndpoints
      * Delete a webhook endpoint. In-flight deliveries are not cancelled but no new deliveries are queued.
      *
      * @param  string  $webhookEndpoint
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsDelete(string $webhookEndpoint, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeleteResponse
+    public function publicApiV1WebhookEndpointsDelete(string $webhookEndpoint, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -214,11 +221,17 @@ class WebhookEndpoints
         }
         $request = new Operations\PublicApiV1WebhookEndpointsDeleteRequest(
             webhookEndpoint: $webhookEndpoint,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('DELETE', $url);
@@ -248,7 +261,7 @@ class WebhookEndpoints
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -286,13 +299,11 @@ class WebhookEndpoints
      *
      * List your webhook endpoints with cursor-based pagination.
      *
-     * @param  ?int  $limit
-     * @param  ?string  $startingAfter
-     * @param  ?string  $endingBefore
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsList(?int $limit = null, ?string $startingAfter = null, ?string $endingBefore = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsListResponse
+    public function publicApiV1WebhookEndpointsList(?Operations\PublicApiV1WebhookEndpointsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -319,17 +330,16 @@ class WebhookEndpoints
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1WebhookEndpointsListRequest(
-            limit: $limit,
-            startingAfter: $startingAfter,
-            endingBefore: $endingBefore,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
         $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1WebhookEndpointsListRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -410,10 +420,12 @@ class WebhookEndpoints
      *
      * @param  string  $webhookEndpoint
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsPingResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsPing(string $webhookEndpoint, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsPingResponse
+    public function publicApiV1WebhookEndpointsPing(string $webhookEndpoint, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsPingResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -443,6 +455,8 @@ class WebhookEndpoints
         $request = new Operations\PublicApiV1WebhookEndpointsPingRequest(
             webhookEndpoint: $webhookEndpoint,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/ping', Operations\PublicApiV1WebhookEndpointsPingRequest::class, $request);
@@ -491,7 +505,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -531,10 +545,12 @@ class WebhookEndpoints
      *
      * @param  string  $webhookEndpoint
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsRotateSecret(string $webhookEndpoint, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
+    public function publicApiV1WebhookEndpointsRotateSecret(string $webhookEndpoint, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -564,6 +580,8 @@ class WebhookEndpoints
         $request = new Operations\PublicApiV1WebhookEndpointsRotateSecretRequest(
             webhookEndpoint: $webhookEndpoint,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/rotate_secret', Operations\PublicApiV1WebhookEndpointsRotateSecretRequest::class, $request);
@@ -612,7 +630,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -651,10 +669,12 @@ class WebhookEndpoints
      * Retrieve a webhook endpoint by its `uuid`. The signing secret is never exposed in this representation.
      *
      * @param  string  $webhookEndpoint
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsShow(string $webhookEndpoint, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsShowResponse
+    public function publicApiV1WebhookEndpointsShow(string $webhookEndpoint, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -683,11 +703,17 @@ class WebhookEndpoints
         }
         $request = new Operations\PublicApiV1WebhookEndpointsShowRequest(
             webhookEndpoint: $webhookEndpoint,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -727,7 +753,136 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Send a test event
+     *
+     * Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the delivered envelope. Unlike `ping` (a synthetic `webhook.ping`), this records a real `Event` (visible in `GET /events`) and queues a signed, retried `WebhookDelivery`. Optionally pass `type` to choose which subscribed event to simulate. The delivery reaches only this endpoint.
+     *
+     * @param  string  $webhookEndpoint
+     * @param  ?\Factuarea\Sdk\Models\Components\SendTestEventRequest  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1WebhookEndpointsTestEvent(string $webhookEndpoint, ?Components\SendTestEventRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsTestEventResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1WebhookEndpointsTestEventRequest(
+            webhookEndpoint: $webhookEndpoint,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+            body: $body,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/test_event', Operations\PublicApiV1WebhookEndpointsTestEventRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
+        if ($body !== null) {
+            $httpOptions = array_merge_recursive($httpOptions, $body);
+        }
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.webhook_endpoints.test_event', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['202'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1WebhookEndpointsTestEventResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -767,10 +922,12 @@ class WebhookEndpoints
      *
      * @param  string  $webhookEndpoint
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequest  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsUpdate(string $webhookEndpoint, ?Components\UpdateWebhookEndpointRequest $body = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsUpdateResponse
+    public function publicApiV1WebhookEndpointsUpdate(string $webhookEndpoint, ?Components\UpdateWebhookEndpointRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -799,6 +956,8 @@ class WebhookEndpoints
         }
         $request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
             webhookEndpoint: $webhookEndpoint,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
             body: $body,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
@@ -808,6 +967,10 @@ class WebhookEndpoints
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body !== null) {
             $httpOptions = array_merge_recursive($httpOptions, $body);
+        }
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
@@ -848,7 +1011,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

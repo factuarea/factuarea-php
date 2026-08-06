@@ -29,7 +29,7 @@ class TaxReportStats
     public int $totalReports;
 
     /**
-     * Recuento de declaraciones por tipo.
+     * Report count by type.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxReportStatsByType $byType
      */
@@ -38,7 +38,7 @@ class TaxReportStats
     public TaxReportStatsByType $byType;
 
     /**
-     * Recuento de declaraciones por formato de salida.
+     * Report count by output format.
      *
      * @var \Factuarea\Sdk\Models\Components\ByFormat $byFormat
      */

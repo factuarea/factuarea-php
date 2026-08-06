@@ -21,7 +21,7 @@ class TaxStats
     public TaxStatsObject $object;
 
     /**
-     * Total de taxes visibles para la empresa (system + custom).
+     * Total taxes visible to the company (system + custom).
      *
      * @var int $total
      */
@@ -29,7 +29,7 @@ class TaxStats
     public int $total;
 
     /**
-     * Taxes con `is_active=true`.
+     * Taxes with `is_active=true`.
      *
      * @var int $active
      */
@@ -37,7 +37,7 @@ class TaxStats
     public int $active;
 
     /**
-     * Taxes con `is_active=false`.
+     * Taxes with `is_active=false`.
      *
      * @var int $inactive
      */
@@ -61,7 +61,7 @@ class TaxStats
     public int $customCount;
 
     /**
-     * Conteo de taxes por `type`.
+     * Tax count by `type`.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxStatsByType $byType
      */

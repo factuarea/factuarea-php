@@ -27,7 +27,7 @@ class PublicApiV1InvoicesQuarterlySendEmailData
 
     /**
      *
-     * @var mixed|\Factuarea\Sdk\Models\Operations\RecipientEnum $recipient
+     * @var mixed $recipient
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('recipient')]
     #[\Speakeasy\Serializer\Annotation\Type('mixed')]
@@ -44,7 +44,7 @@ class PublicApiV1InvoicesQuarterlySendEmailData
      * @param  string  $message
      * @param  int  $year
      * @param  int  $quarter
-     * @param  mixed|\Factuarea\Sdk\Models\Operations\RecipientEnum  $recipient
+     * @param  mixed  $recipient
      * @phpstan-pure
      */
     public function __construct(int $year, int $quarter, mixed $recipient, string $message = 'Email trimestral encolado correctamente.')

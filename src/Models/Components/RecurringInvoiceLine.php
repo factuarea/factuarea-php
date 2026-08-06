@@ -42,6 +42,22 @@ class RecurringInvoiceLine
     public float $taxRate;
 
     /**
+     * IRPF withholding percentage applied to the line (0–100). Default 0. Its amount is already aggregated into `taxes`.
+     *
+     * @var float $retention
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention')]
+    public float $retention;
+
+    /**
+     * Equivalence surcharge (recargo de equivalencia) percentage applied to the line (0–100). Default 0. Its amount is already aggregated into `taxes`.
+     *
+     * @var float $surcharge
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge')]
+    public float $surcharge;
+
+    /**
      *
      * @var float $subtotal
      */
@@ -70,25 +86,81 @@ class RecurringInvoiceLine
     public ?string $description;
 
     /**
+     * LIVA exemption / non-subjection cause of the line (subset of the E and N codes). `null` if not informed.
+     *
+     * @var ?string $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    public ?string $exemptionReason;
+
+    /**
+     * VeriFactu regime key (`ClaveRegimen`, AEAT list L8.1) of the line. `null` if not informed.
+     *
+     * @var ?string $regimeKey
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regime_key')]
+    public ?string $regimeKey;
+
+    /**
+     * Public identifier (UUID v7) of the catalog tax applied as IRPF withholding to the line. Opaque: it does not take part in the `taxes`/`total` computation (the formula uses the flat `retention` percentage). `null` if not informed.
+     *
+     * @var ?string $retentionRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate_id')]
+    public ?string $retentionRateId;
+
+    /**
+     * Public identifier (UUID v7) of the catalog tax applied as equivalence surcharge to the line. Opaque: it does not take part in the `taxes`/`total` computation (the formula uses the flat `surcharge` percentage). `null` if not informed.
+     *
+     * @var ?string $surchargeRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate_id')]
+    public ?string $surchargeRateId;
+
+    /**
+     * Indirect tax regime override of the recurring template line: `iva`/`igic`/`ipsi` when set per-document (precedence override>zone), otherwise `null`. Writable on create/update; propagated to each generated invoice. The template must be homogeneous (a single non-null regime across all lines, 422 otherwise).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceLineObject  $object
      * @param  float  $quantity
      * @param  float  $unitPrice
      * @param  float  $taxRate
+     * @param  float  $retention
+     * @param  float  $surcharge
      * @param  float  $subtotal
      * @param  float  $taxes
      * @param  float  $total
      * @param  ?string  $description
+     * @param  ?string  $exemptionReason
+     * @param  ?string  $regimeKey
+     * @param  ?string  $retentionRateId
+     * @param  ?string  $surchargeRateId
+     * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $subtotal, float $taxes, float $total, ?string $description = null)
+    public function __construct(RecurringInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retention, float $surcharge, float $subtotal, float $taxes, float $total, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->retention = $retention;
+        $this->surcharge = $surcharge;
         $this->subtotal = $subtotal;
         $this->taxes = $taxes;
         $this->total = $total;
         $this->description = $description;
+        $this->exemptionReason = $exemptionReason;
+        $this->regimeKey = $regimeKey;
+        $this->retentionRateId = $retentionRateId;
+        $this->surchargeRateId = $surchargeRateId;
+        $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceCancelled - Payload (`data`) emitted with the `invoice.cancelled` event. */
+/** EventDataInvoiceCancelled - Payload (`data`) emitted with the `invoice.cancelled` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceCancelled
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceCancelledInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceCancelledInvoice')]
-    public EventDataInvoiceCancelledInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -36,13 +37,13 @@ class EventDataInvoiceCancelled
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceCancelledInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @param  ?\DateTime  $cancelledAt
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceCancelledInvoice $invoice, ?\DateTime $cancelledAt = null, string $type = 'invoice.cancelled')
+    public function __construct(Invoice $object, ?\DateTime $cancelledAt = null, string $type = 'invoice.cancelled')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->cancelledAt = $cancelledAt;
         $this->type = $type;
     }

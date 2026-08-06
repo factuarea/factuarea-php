@@ -15,11 +15,11 @@ class Error
 {
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Error $error
+     * @var \Factuarea\Sdk\Models\Components\Error2 $error
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('error')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Error')]
-    public Components\Error $error;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Error2')]
+    public Components\Error2 $error;
 
     /**
      * Raw HTTP response; suitable for custom response parsing
@@ -31,11 +31,11 @@ class Error
     public ?\Psr\Http\Message\ResponseInterface $rawResponse = null;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Error  $error
+     * @param  \Factuarea\Sdk\Models\Components\Error2  $error
      * @param  ?\Psr\Http\Message\ResponseInterface  $rawResponse
      * @phpstan-pure
      */
-    public function __construct(Components\Error $error, ?\Psr\Http\Message\ResponseInterface $rawResponse = null)
+    public function __construct(Components\Error2 $error, ?\Psr\Http\Message\ResponseInterface $rawResponse = null)
     {
         $this->error = $error;
         $this->rawResponse = $rawResponse;

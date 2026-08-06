@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteNumberAssigned - Payload (`data`) emitted with the `quote.number_assigned` event. */
+/** EventDataQuoteNumberAssigned - Payload (`data`) emitted with the `quote.number_assigned` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteNumberAssigned
 {
     /**
+     * A sales quote that can be converted to an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteNumberAssignedQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteNumberAssignedQuote')]
-    public EventDataQuoteNumberAssignedQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
+    public Quote $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataQuoteNumberAssigned
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteNumberAssignedQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteNumberAssignedQuote $quote, string $type = 'quote.number_assigned')
+    public function __construct(Quote $object, string $type = 'quote.number_assigned')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

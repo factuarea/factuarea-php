@@ -1,0 +1,12 @@
+# Absence
+
+
+## Fields
+
+| Field                                                                       | Type                                                                        | Required                                                                    | Description                                                                 |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `startDate`                                                                 | [\DateTime](https://www.php.net/manual/en/class.datetime.php)               | :heavy_check_mark:                                                          | First day of the absence (YYYY-MM-DD).                                      |
+| `endDate`                                                                   | [\DateTime](https://www.php.net/manual/en/class.datetime.php)               | :heavy_check_mark:                                                          | Last day of the absence (YYYY-MM-DD).                                       |
+| `absenceTypeName`                                                           | *string*                                                                    | :heavy_check_mark:                                                          | Name of the absence type.                                                   |
+| `color`                                                                     | *string*                                                                    | :heavy_check_mark:                                                          | Hex color `#RRGGBB` of the absence type, used to render it on the calendar. |
+| `status`                                                                    | *string*                                                                    | :heavy_check_mark:                                                          | Status of the absence (always `approved` on the calendar).                  |

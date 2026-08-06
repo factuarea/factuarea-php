@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -88,6 +89,10 @@ class Deliveries
         $httpOptions = ['http_errors' => false];
 
         $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1WebhookEndpointsDeliveriesListRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -128,7 +133,7 @@ class Deliveries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -166,13 +171,11 @@ class Deliveries
      *
      * Re-queue a webhook delivery. A new delivery attempt is created (with `attempt: 1`) for the same event/endpoint pair.
      *
-     * @param  string  $webhookEndpoint
-     * @param  string  $delivery
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeliveriesReplayRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeliveriesReplayResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsDeliveriesReplay(string $webhookEndpoint, string $delivery, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeliveriesReplayResponse
+    public function publicApiV1WebhookEndpointsDeliveriesReplay(Operations\PublicApiV1WebhookEndpointsDeliveriesReplayRequest $request, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeliveriesReplayResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -199,11 +202,6 @@ class Deliveries
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1WebhookEndpointsDeliveriesReplayRequest(
-            webhookEndpoint: $webhookEndpoint,
-            delivery: $delivery,
-            idempotencyKey: $idempotencyKey,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}/replay', Operations\PublicApiV1WebhookEndpointsDeliveriesReplayRequest::class, $request);
         $urlOverride = null;
@@ -251,7 +249,7 @@ class Deliveries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -291,10 +289,12 @@ class Deliveries
      *
      * @param  string  $webhookEndpoint
      * @param  string  $delivery
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeliveriesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsDeliveriesShow(string $webhookEndpoint, string $delivery, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeliveriesShowResponse
+    public function publicApiV1WebhookEndpointsDeliveriesShow(string $webhookEndpoint, string $delivery, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeliveriesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -324,11 +324,17 @@ class Deliveries
         $request = new Operations\PublicApiV1WebhookEndpointsDeliveriesShowRequest(
             webhookEndpoint: $webhookEndpoint,
             delivery: $delivery,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}', Operations\PublicApiV1WebhookEndpointsDeliveriesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -368,7 +374,7 @@ class Deliveries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataClientMetadataChanged - Payload (`data`) emitted with the `client.metadata_changed` event. */
+/** EventDataClientMetadataChanged - Payload (`data`) emitted with the `client.metadata_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataClientMetadataChanged
 {
     /**
+     * A customer of your company.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataClientMetadataChangedClient $client
+     * @var \Factuarea\Sdk\Models\Components\Client $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('client')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataClientMetadataChangedClient')]
-    public EventDataClientMetadataChangedClient $client;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Client')]
+    public Client $object;
 
     /**
      * $previousKeys
@@ -47,14 +48,14 @@ class EventDataClientMetadataChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataClientMetadataChangedClient  $client
+     * @param  \Factuarea\Sdk\Models\Components\Client  $object
      * @param  array<string>  $previousKeys
      * @param  array<string>  $newKeys
      * @phpstan-pure
      */
-    public function __construct(EventDataClientMetadataChangedClient $client, array $previousKeys, array $newKeys, string $type = 'client.metadata_changed')
+    public function __construct(Client $object, array $previousKeys, array $newKeys, string $type = 'client.metadata_changed')
     {
-        $this->client = $client;
+        $this->object = $object;
         $this->previousKeys = $previousKeys;
         $this->newKeys = $newKeys;
         $this->type = $type;

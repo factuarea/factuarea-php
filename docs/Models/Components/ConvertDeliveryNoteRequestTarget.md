@@ -3,7 +3,6 @@
 
 ## Values
 
-| Name       | Value      |
-| ---------- | ---------- |
-| `Invoice`  | invoice    |
-| `Proforma` | proforma   |
+| Name      | Value     |
+| --------- | --------- |
+| `Invoice` | invoice   |

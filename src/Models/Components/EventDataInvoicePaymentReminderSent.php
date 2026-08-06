@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoicePaymentReminderSent - Payload (`data`) emitted with the `invoice.payment_reminder_sent` event. */
+/** EventDataInvoicePaymentReminderSent - Payload (`data`) emitted with the `invoice.payment_reminder_sent` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoicePaymentReminderSent
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoicePaymentReminderSentInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoicePaymentReminderSentInvoice')]
-    public EventDataInvoicePaymentReminderSentInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataInvoicePaymentReminderSent
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoicePaymentReminderSentInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @param  ?string  $recipientEmail
      * @param  ?string  $invoiceNumber
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoicePaymentReminderSentInvoice $invoice, ?string $recipientEmail = null, ?string $invoiceNumber = null, string $type = 'invoice.payment_reminder_sent')
+    public function __construct(Invoice $object, ?string $recipientEmail = null, ?string $invoiceNumber = null, string $type = 'invoice.payment_reminder_sent')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->recipientEmail = $recipientEmail;
         $this->invoiceNumber = $invoiceNumber;
         $this->type = $type;

@@ -13,7 +13,7 @@ use Brick\DateTime\LocalDate;
 class InvoiceReminderPreview
 {
     /**
-     * Asunto del email de recordatorio.
+     * Subject of the reminder email.
      *
      * @var string $subject
      */
@@ -21,7 +21,7 @@ class InvoiceReminderPreview
     public string $subject;
 
     /**
-     * Cuerpo HTML renderizado del email.
+     * Rendered HTML body of the email.
      *
      * @var string $html
      */
@@ -37,7 +37,7 @@ class InvoiceReminderPreview
     public string $from;
 
     /**
-     * Nombre legible del remitente.
+     * Human-readable sender name.
      *
      * @var string $fromName
      */
@@ -71,7 +71,7 @@ class InvoiceReminderPreview
     public array $bcc;
 
     /**
-     * Estado actual de la factura (p. ej. `sent`, `overdue`).
+     * Current status of the invoice (e.g. `sent`, `overdue`).
      *
      * @var string $status
      */
@@ -87,7 +87,7 @@ class InvoiceReminderPreview
     public string $invoiceNumber;
 
     /**
-     * Importe total de la factura.
+     * Total amount of the invoice.
      *
      * @var float $total
      */
@@ -119,7 +119,7 @@ class InvoiceReminderPreview
     public bool $cooldownActive;
 
     /**
-     * Fecha de vencimiento (YYYY-MM-DD), o `null` si no aplica.
+     * Due date (YYYY-MM-DD), or `null` if not applicable.
      *
      * @var ?LocalDate $dueDate
      */

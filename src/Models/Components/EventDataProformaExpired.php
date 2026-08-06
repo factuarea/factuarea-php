@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaExpired - Payload (`data`) emitted with the `proforma.expired` event. */
+/** EventDataProformaExpired - Payload (`data`) emitted with the `proforma.expired` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaExpired
 {
     /**
+     * A proforma invoice that can be converted to a final invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaExpiredProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaExpiredProforma')]
-    public EventDataProformaExpiredProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
+    public Proforma $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProformaExpired
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaExpiredProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaExpiredProforma $proforma, string $type = 'proforma.expired')
+    public function __construct(Proforma $object, string $type = 'proforma.expired')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->type = $type;
     }
 }

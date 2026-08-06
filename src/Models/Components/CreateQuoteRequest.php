@@ -9,14 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * CreateQuoteRequest - Public REST API v1 — POST /v1/quotes.
- *
- *
- * Required body: `client_id`, `series_id`, `issued_on`, `valid_until`,
- * `lines[]` (min 1). Optional: `notes`, `terms`, `metadata` (≤50 keys,
- * ≤500 chars/value — VO `Metadata`).
- */
 class CreateQuoteRequest
 {
     /**
@@ -74,7 +66,27 @@ class CreateQuoteRequest
     public ?string $terms = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateQuoteRequestCurrency $currency
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('currency')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateQuoteRequestCurrency|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateQuoteRequestCurrency $currency = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -84,6 +96,26 @@ class CreateQuoteRequest
     public ?array $metadata = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  string  $clientId
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $validUntil
@@ -91,10 +123,14 @@ class CreateQuoteRequest
      * @param  ?string  $seriesId
      * @param  ?string  $notes
      * @param  ?string  $terms
+     * @param  ?string  $externalId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateQuoteRequestCurrency  $currency
      * @param  ?array<string, string>  $metadata
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, LocalDate $issuedOn, LocalDate $validUntil, array $lines, ?string $seriesId = null, ?string $notes = null, ?string $terms = null, ?array $metadata = null)
+    public function __construct(string $clientId, LocalDate $issuedOn, LocalDate $validUntil, array $lines, ?string $seriesId = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?CreateQuoteRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
@@ -103,6 +139,10 @@ class CreateQuoteRequest
         $this->seriesId = $seriesId;
         $this->notes = $notes;
         $this->terms = $terms;
+        $this->externalId = $externalId;
+        $this->currency = $currency;
         $this->metadata = $metadata;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

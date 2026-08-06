@@ -9,17 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * BulkDeleteRecurringInvoicesRequest - Public REST API v1 — POST /v1/recurring_invoices/bulk-delete.
- *
- *
- * Body requerido: `ids` (array de UUIDs entre 1 y 100). La pertenencia al
- * tenant se resuelve en el Handler — UUIDs desconocidos o de otra company se
- * reportan en `failed[]` (defense-in-depth contra enumeration cross-tenant).
- *
- * La key del payload es `ids` (alineado con PurchaseInvoice/Quote/Supplier y
- * el spec `public-api-recurring-invoice-bulk-delete-cqrs`).
- */
+/** BulkDeleteRecurringInvoicesRequest - Delete several recurring invoices in one request. `ids` is an array of 1 to 100 UUIDs; unknown or cross-tenant identifiers are reported under `failed`. */
 class BulkDeleteRecurringInvoicesRequest
 {
     /**

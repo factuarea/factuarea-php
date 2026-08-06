@@ -1,0 +1,10 @@
+# Template
+
+
+## Fields
+
+| Field                                                                    | Type                                                                     | Required                                                                 | Description                                                              | Example                                                                  |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `slug`                                                                   | [Components\Slug](../../Models/Components/Slug.md)                       | :heavy_check_mark:                                                       | Template slug (closed `PdfTemplate` catalog) accepted by `pdf_template`. | modern                                                                   |
+| `label`                                                                  | *string*                                                                 | :heavy_check_mark:                                                       | Human-friendly label of the template.                                    | Moderna                                                                  |
+| `available`                                                              | *bool*                                                                   | :heavy_check_mark:                                                       | Whether the template is available for the account's current plan.        | true                                                                     |

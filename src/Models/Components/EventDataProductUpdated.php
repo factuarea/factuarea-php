@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProductUpdated - Payload (`data`) emitted with the `product.updated` event. */
+/** EventDataProductUpdated - Payload (`data`) emitted with the `product.updated` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProductUpdated
 {
     /**
+     * A product in your catalog.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProductUpdatedProduct $product
+     * @var \Factuarea\Sdk\Models\Components\Product $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('product')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProductUpdatedProduct')]
-    public EventDataProductUpdatedProduct $product;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Product')]
+    public Product $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProductUpdated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProductUpdatedProduct  $product
+     * @param  \Factuarea\Sdk\Models\Components\Product  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProductUpdatedProduct $product, string $type = 'product.updated')
+    public function __construct(Product $object, string $type = 'product.updated')
     {
-        $this->product = $product;
+        $this->object = $object;
         $this->type = $type;
     }
 }

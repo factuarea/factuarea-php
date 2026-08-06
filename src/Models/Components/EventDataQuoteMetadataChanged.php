@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteMetadataChanged - Payload (`data`) emitted with the `quote.metadata_changed` event. */
+/** EventDataQuoteMetadataChanged - Payload (`data`) emitted with the `quote.metadata_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteMetadataChanged
 {
     /**
+     * A sales quote that can be converted to an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteMetadataChangedQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteMetadataChangedQuote')]
-    public EventDataQuoteMetadataChangedQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
+    public Quote $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataQuoteMetadataChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteMetadataChangedQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteMetadataChangedQuote $quote, string $type = 'quote.metadata_changed')
+    public function __construct(Quote $object, string $type = 'quote.metadata_changed')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

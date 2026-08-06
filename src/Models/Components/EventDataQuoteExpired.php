@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteExpired - Payload (`data`) emitted with the `quote.expired` event. */
+/** EventDataQuoteExpired - Payload (`data`) emitted with the `quote.expired` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteExpired
 {
     /**
+     * A sales quote that can be converted to an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteExpiredQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteExpiredQuote')]
-    public EventDataQuoteExpiredQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
+    public Quote $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataQuoteExpired
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteExpiredQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteExpiredQuote $quote, string $type = 'quote.expired')
+    public function __construct(Quote $object, string $type = 'quote.expired')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

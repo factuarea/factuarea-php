@@ -4,6 +4,93 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.2.0] — 2026-08-06
+
+Regenerated from the published OpenAPI spec: **+183 operations, −4 operations**
+(413 operations over 345 paths, up from 234 over 192). The SDK had been pinned to
+the spec frozen on 2026-06-05 and had not been regenerated since.
+
+While the SDK is in `0.x`, a breaking change ships as a `minor`; `1.0.0` is
+reserved for the API's GA. See [`docs/VERSIONING.md`](docs/VERSIONING.md).
+
+### Removed — breaking
+
+Four operations were renamed on the API and are gone from the SDK. Each has a
+direct replacement, and three of the four replacements already shipped in
+`0.1.0`, so for those the migration is a method rename:
+
+- `Clients::publicApiV1ClientsBulkDeleteLegacy()` (`DELETE /clients/bulk`) →
+  `Clients::publicApiV1ClientsBulkDelete()` (`POST /clients/bulk-delete`),
+  already available in `0.1.0`. Bulk creation is now its own operation,
+  `Clients::publicApiV1ClientsBulkCreate()` (`POST /clients/bulk-create`).
+- `Suppliers::publicApiV1SuppliersBulkDeleteLegacy()` (`DELETE /suppliers/bulk`)
+  → `Suppliers::publicApiV1SuppliersBulkDelete()`
+  (`POST /suppliers/bulk-delete`), already available in `0.1.0`. Bulk
+  activation/deactivation is now `Suppliers::publicApiV1SuppliersBulkStatus()`
+  (`POST /suppliers/bulk-status`).
+- `DeliveryNotes::publicApiV1DeliveryNotesChangeStatus()`
+  (`POST /delivery_notes/{delivery_note}/change_status`) → the REST
+  sub-resources, all three already available in `0.1.0`:
+  `publicApiV1DeliveryNotesMarkDelivered()`, `publicApiV1DeliveryNotesCancel()`
+  and `publicApiV1DeliveryNotesSign()`. Call the one matching the target status
+  instead of passing the status in the body.
+- `PurchaseInvoices::publicApiV1PurchaseInvoicesBySupplier($supplier)`
+  (`GET /purchase_invoices/by-supplier/{supplier}`) →
+  `PurchaseInvoices::publicApiV1PurchaseInvoicesList()` with `supplierId` on the
+  request object, or `supplierIdIn` (`supplier_id[in]`) for several suppliers at
+  once.
+
+### Changed — breaking
+
+The published spec now documents two optional headers, `Factuarea-Version` and
+`X-Active-Profile`, on every operation. They surface as two optional method
+parameters, which changes **216 of the 229 method signatures carried over from
+`0.1.0`**:
+
+- **45 methods** crossed the four-parameter threshold and now take a single
+  request object instead of positional arguments. For example
+  `$sdk->proformas->publicApiV1ProformasAccept($proforma, $body, $idempotencyKey)`
+  becomes
+  `$sdk->proformas->publicApiV1ProformasAccept(new Operations\PublicApiV1ProformasAcceptRequest(proforma: $proforma, body: $body, idempotencyKey: $idempotencyKey))`.
+  Every call site of these methods must be updated.
+- **171 methods** keep positional arguments but gain `?LocalDate
+  $factuareaVersion` and `?string $xActiveProfile` before the trailing
+  `?Options $options`. Calls that pass `$options` by name are unaffected; calls
+  that pass it positionally must be updated.
+- `Factuarea\Sdk\Chain` is renamed to `Factuarea\Sdk\VerifactuChain`, because the
+  spec introduced a second chain resource (`TimeEntriesChain`). The accessor is
+  unchanged — `$sdk->verifactu->chain` still works — so only code that type-hints
+  the class name is affected.
+
+The `Factuarea-Version` parameter is a per-call override. Leaving it `null` keeps
+the existing behaviour: `FactuareaVersionHook` sets the pinned version and never
+overwrites a header the caller set.
+
+### Added
+
+27 new resources: `absence-balances`, `absence-calendar`, `absence-policies`,
+`absence-requests`, `absence-types`, `companies`, `developers`, `emails`,
+`employee-invitations`, `employee-seats`, `employees`, `face_submissions`,
+`gestoria`, `holidays`, `integrations`, `monthly_time_record_closes`,
+`payment_methods`, `payouts`, `payroll_export_formats`, `presence`,
+`stripe_autoinvoicing`, `tax-catalog`, `time_balances`, `time_corrections`,
+`time_entries`, `time_tracking_settings`, `work_schedules` — most of them the
+time-tracking and HR module, which the SDK did not cover at all.
+
+New operations on 14 existing resources: `invoices`, `account`, `clients`,
+`deliveryNotes`, `proformas`, `quotes`, `purchaseInvoices`, `products`,
+`suppliers`, `recurringInvoices`, `series`, `taxReports`, `webhookEndpoints`,
+`verifactu`.
+
+### Notes
+
+- `Factuarea-Version` stays at `2026-06-04`
+  (`FactuareaVersionHook::DEFAULT_VERSION`). This release widens the surface; it
+  does not move the API version, so no existing call changes behaviour.
+- The hand-written layer (`FactuareaClient`, `PageIterator`, `IdempotencyHook`,
+  `FactuareaVersionHook`, `WebhookVerifier`) and its tests are unchanged: they
+  live outside the Speakeasy-managed file set.
+
 ## [0.1.0] — 2026-06-05
 
 Initial pre-GA release.

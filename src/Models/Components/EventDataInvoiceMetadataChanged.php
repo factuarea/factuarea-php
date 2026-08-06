@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceMetadataChanged - Payload (`data`) emitted with the `invoice.metadata_changed` event. */
+/** EventDataInvoiceMetadataChanged - Payload (`data`) emitted with the `invoice.metadata_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceMetadataChanged
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceMetadataChangedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceMetadataChangedInvoice')]
-    public EventDataInvoiceMetadataChangedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      * $previousKeys
@@ -47,14 +48,14 @@ class EventDataInvoiceMetadataChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceMetadataChangedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @param  array<string>  $previousKeys
      * @param  array<string>  $newKeys
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceMetadataChangedInvoice $invoice, array $previousKeys, array $newKeys, string $type = 'invoice.metadata_changed')
+    public function __construct(Invoice $object, array $previousKeys, array $newKeys, string $type = 'invoice.metadata_changed')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->previousKeys = $previousKeys;
         $this->newKeys = $newKeys;
         $this->type = $type;

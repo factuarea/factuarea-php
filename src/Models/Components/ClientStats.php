@@ -21,7 +21,7 @@ class ClientStats
     public ClientStatsObject $object;
 
     /**
-     * Total de clientes registrados en la empresa.
+     * Total number of clients registered in the company.
      *
      * @var int $total
      */
@@ -53,7 +53,7 @@ class ClientStats
     public int $withPhone;
 
     /**
-     * Clientes que tienen al menos una factura emitida.
+     * Clients with at least one issued invoice.
      *
      * @var int $withInvoices
      */
@@ -61,7 +61,7 @@ class ClientStats
     public int $withInvoices;
 
     /**
-     * Importe total facturado a clientes (EUR).
+     * Total amount invoiced to clients (EUR).
      *
      * @var float $totalInvoiced
      */
@@ -69,7 +69,7 @@ class ClientStats
     public float $totalInvoiced;
 
     /**
-     * Importe total pendiente de cobro (EUR).
+     * Total amount pending collection (EUR).
      *
      * @var float $totalPending
      */
@@ -77,7 +77,7 @@ class ClientStats
     public float $totalPending;
 
     /**
-     * Clientes con al menos una factura pendiente de cobro.
+     * Clients with at least one invoice pending collection.
      *
      * @var int $withPendingInvoices
      */
@@ -85,7 +85,7 @@ class ClientStats
     public int $withPendingInvoices;
 
     /**
-     * Importe agregado de facturas pendientes de cobro (EUR).
+     * Aggregate amount of invoices pending collection (EUR).
      *
      * @var float $pendingInvoicesAmount
      */
@@ -109,7 +109,7 @@ class ClientStats
     public int $inactiveClients;
 
     /**
-     * Importe medio facturado por cliente (EUR).
+     * Average amount invoiced per client (EUR).
      *
      * @var float $averagePerClient
      */

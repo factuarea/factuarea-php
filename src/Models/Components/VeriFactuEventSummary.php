@@ -29,7 +29,7 @@ class VeriFactuEventSummary
     public int $totalEvents;
 
     /**
-     * Recuento de eventos por tipo.
+     * Event count by type.
      *
      * @var array<string, int> $eventsByType
      */
@@ -38,7 +38,7 @@ class VeriFactuEventSummary
     public array $eventsByType;
 
     /**
-     * Recuento de eventos por estado AEAT.
+     * Event count by AEAT status.
      *
      * @var array<string, int> $eventsByStatus
      */

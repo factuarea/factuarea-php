@@ -21,7 +21,7 @@ class ProformaStats
     public int $totalCount;
 
     /**
-     * Importe acumulado de las proformas (EUR).
+     * Aggregate amount of the proformas (EUR).
      *
      * @var float $totalAmount
      */
@@ -29,7 +29,7 @@ class ProformaStats
     public float $totalAmount;
 
     /**
-     * Desglose por estado. Claves: `draft`, `accepted`, `rejected`, `cancelled`, `expired`, `converted`.
+     * Breakdown by status. Keys: `draft`, `accepted`, `rejected`, `cancelled`, `expired`, `converted`.
      *
      * @var array<string, \Factuarea\Sdk\Models\Components\ProformaStatsByStatus> $byStatus
      */
@@ -54,7 +54,7 @@ class ProformaStats
     public int $expiringSoon;
 
     /**
-     * Valor medio de las proformas (EUR).
+     * Average value of the proformas (EUR).
      *
      * @var float $averageValue
      */

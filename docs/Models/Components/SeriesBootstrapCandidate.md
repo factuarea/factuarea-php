@@ -1,0 +1,11 @@
+# SeriesBootstrapCandidate
+
+An active series eligible to become the default of its document type. Only appears on `no_default` entries, where the bootstrap deliberately refuses to choose for you.
+
+
+## Fields
+
+| Field                                                                                               | Type                                                                                                | Required                                                                                            | Description                                                                                         | Example                                                                                             |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `id`                                                                                                | *string*                                                                                            | :heavy_check_mark:                                                                                  | Opaque identifier (UUID v7) of the series. Pass it to `POST /v1/series/{id}/default` to promote it. | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b02                                                                |
+| `code`                                                                                              | *string*                                                                                            | :heavy_check_mark:                                                                                  | Code of the series, so the choice is informed rather than blind.                                    | ALB                                                                                                 |

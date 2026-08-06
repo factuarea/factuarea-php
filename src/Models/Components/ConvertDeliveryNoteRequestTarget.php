@@ -12,5 +12,4 @@ namespace Factuarea\Sdk\Models\Components;
 enum ConvertDeliveryNoteRequestTarget: string
 {
     case Invoice = 'invoice';
-    case Proforma = 'proforma';
 }

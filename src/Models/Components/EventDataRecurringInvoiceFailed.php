@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataRecurringInvoiceFailed - Payload (`data`) emitted with the `recurring_invoice.failed` event. */
+/** EventDataRecurringInvoiceFailed - Payload (`data`) emitted with the `recurring_invoice.failed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataRecurringInvoiceFailed
 {
     /**
+     * A recurring invoice template that auto-generates invoices on a fixed cadence.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceFailedRecurringInvoice $recurringInvoice
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceFailedRecurringInvoice')]
-    public EventDataRecurringInvoiceFailedRecurringInvoice $recurringInvoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice')]
+    public RecurringInvoice $object;
 
     /**
      *
@@ -43,14 +44,14 @@ class EventDataRecurringInvoiceFailed
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceFailedRecurringInvoice  $recurringInvoice
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice  $object
      * @param  int  $attemptNumber
      * @param  ?string  $errorMessage
      * @phpstan-pure
      */
-    public function __construct(EventDataRecurringInvoiceFailedRecurringInvoice $recurringInvoice, int $attemptNumber, ?string $errorMessage = null, string $type = 'recurring_invoice.failed')
+    public function __construct(RecurringInvoice $object, int $attemptNumber, ?string $errorMessage = null, string $type = 'recurring_invoice.failed')
     {
-        $this->recurringInvoice = $recurringInvoice;
+        $this->object = $object;
         $this->attemptNumber = $attemptNumber;
         $this->errorMessage = $errorMessage;
         $this->type = $type;

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataSeriesDeleted - Payload (`data`) emitted with the `series.deleted` event. */
+/** EventDataSeriesDeleted - Payload (`data`) emitted with the `series.deleted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataSeriesDeleted
 {
     /**
+     * Snapshot of the resource at emission time. When the resource is still recoverable the full snapshot is emitted with an additional `deleted: true` key; otherwise it degrades to `{ id, deleted: true }`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataSeriesDeletedSeries $series
+     * @var \Factuarea\Sdk\Models\Components\Series|\Factuarea\Sdk\Models\Components\EventDeletedObject $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataSeriesDeletedSeries')]
-    public EventDataSeriesDeletedSeries $series;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series|\Factuarea\Sdk\Models\Components\EventDeletedObject')]
+    public Series|EventDeletedObject $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataSeriesDeleted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataSeriesDeletedSeries  $series
+     * @param  \Factuarea\Sdk\Models\Components\Series|\Factuarea\Sdk\Models\Components\EventDeletedObject  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataSeriesDeletedSeries $series, string $type = 'series.deleted')
+    public function __construct(Series|EventDeletedObject $object, string $type = 'series.deleted')
     {
-        $this->series = $series;
+        $this->object = $object;
         $this->type = $type;
     }
 }

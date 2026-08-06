@@ -9,24 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CreateWebhookEndpointRequest - POST /v1/webhook_endpoints
- *
- *
- * Body:
- *   - `url`            required, HTTPS, max 2048
- *   - `enabled_events` required, non-empty array, elements from the closed
- *                      catalog `EventName::CATALOG` (31 active values in V1;
- *                      the roadmap in `docs/api/events.md` documents 6 reserved
- *                      for Q3 2026). For compatibility, the alias `events` is
- *                      also accepted: if the client sends `events` and does not
- *                      send `enabled_events`, we promote it in
- *                      `prepareForValidation`.
- *   - `description`    optional, max 255
- *   - `ip_allowlist`   optional, array of strings (plain IP or CIDR)
- *   - `api_version`    optional, `YYYY-MM-DD` format and a supported value
- *   - `timeout_seconds` optional, integer between 1 and 30 (default 10)
- */
 class CreateWebhookEndpointRequest
 {
     /**
@@ -72,7 +54,10 @@ class CreateWebhookEndpointRequest
     public ?string $apiVersion = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */

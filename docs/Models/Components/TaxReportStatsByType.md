@@ -1,6 +1,6 @@
 # TaxReportStatsByType
 
-Recuento de declaraciones por tipo.
+Report count by type.
 
 
 ## Fields

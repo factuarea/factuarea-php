@@ -9,20 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * UpdateTaxRequest - Public REST API v1 — PUT /v1/taxes/{uuid}.
- *
- *
- * Partial update (PATCH semantics controlled by `*Provided` flags
- * in the Mapper). Any omitted field is kept; if `null` is sent
- * explicitly, the value is cleared in the database.
- *
- * The uniqueness validation of `code` is delegated to the aggregate
- * (`DuplicateTaxCodeException` → 409). For system taxes,
- * the non-allowlist fields (`is_active`, `default_for_documents`) throw
- * `SystemTaxCannotBeMutatedException::forField()` → 422 with
- * `subcode='system_tax_immutable_field'`.
- */
 class UpdateTaxRequest
 {
     /**
@@ -75,7 +61,7 @@ class UpdateTaxRequest
     public ?bool $reverseCharge = null;
 
     /**
-     * ===== DEFAULTS CONSOLIDADO =====
+     * Sets this tax as the default per document type. Object with optional booleans: `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateTaxRequestDefaultForDocuments $defaultForDocuments
      */
@@ -101,12 +87,7 @@ class UpdateTaxRequest
     public ?string $description = null;
 
     /**
-     * ===== EXTEND AEAT/B2B =====
-     *
-     * NOTE: no `max:200` rule here. The 200-char limit is enforced by the
-     * VO `CustomerVisibleLabel::create()` via
-     * `InvalidCustomerVisibleLabelException::tooLong(200)` with the canonical
-     * subcode `invalid_customer_visible_label` (spec error catalog §24).
+     * Custom label for this tax shown to the customer on documents (e.g. "IVA 21% incluido"). Up to 200 characters.
      *
      * @var ?string $customerVisibleLabel
      */
@@ -131,11 +112,7 @@ class UpdateTaxRequest
     public ?LocalDate $validFrom = null;
 
     /**
-     * NOTE: no `after_or_equal:valid_from` rule here. The invariant
-     *
-     * `valid_until >= valid_from` is enforced by the Aggregate via
-     * `InvalidValidityWindowException::endBeforeStart()` with the canonical
-     * subcode `invalid_validity_window` (spec error catalog §6).
+     * End date of the tax validity window (`YYYY-MM-DD`). Must be on or after `valid_from`.
      *
      * @var ?LocalDate $validUntil
      */
@@ -153,7 +130,19 @@ class UpdateTaxRequest
     public ?UpdateTaxRequestCountryAeatZone $countryAeatZone = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * FK to the linked equivalence-surcharge tax; `null` unlinks it. UUID v7 value referencing the global `taxes` catalog.
+     *
+     * @var ?string $linkedSurchargeTaxesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('linked_surcharge_taxes_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $linkedSurchargeTaxesId = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -177,10 +166,11 @@ class UpdateTaxRequest
      * @param  ?LocalDate  $validFrom
      * @param  ?LocalDate  $validUntil
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateTaxRequestCountryAeatZone  $countryAeatZone
+     * @param  ?string  $linkedSurchargeTaxesId
      * @param  ?array<string, string>  $metadata
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?string $code = null, ?float $rate = null, ?UpdateTaxRequestAppliesTo $appliesTo = null, ?bool $isActive = null, ?bool $reverseCharge = null, ?UpdateTaxRequestDefaultForDocuments $defaultForDocuments = null, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?string $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?UpdateTaxRequestCountryAeatZone $countryAeatZone = null, ?array $metadata = null)
+    public function __construct(?string $name = null, ?string $code = null, ?float $rate = null, ?UpdateTaxRequestAppliesTo $appliesTo = null, ?bool $isActive = null, ?bool $reverseCharge = null, ?UpdateTaxRequestDefaultForDocuments $defaultForDocuments = null, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?string $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?UpdateTaxRequestCountryAeatZone $countryAeatZone = null, ?string $linkedSurchargeTaxesId = null, ?array $metadata = null)
     {
         $this->name = $name;
         $this->code = $code;
@@ -196,6 +186,7 @@ class UpdateTaxRequest
         $this->validFrom = $validFrom;
         $this->validUntil = $validUntil;
         $this->countryAeatZone = $countryAeatZone;
+        $this->linkedSurchargeTaxesId = $linkedSurchargeTaxesId;
         $this->metadata = $metadata;
     }
 }

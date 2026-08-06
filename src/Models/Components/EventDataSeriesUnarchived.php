@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataSeriesUnarchived - Payload (`data`) emitted with the `series.unarchived` event. */
+/** EventDataSeriesUnarchived - Payload (`data`) emitted with the `series.unarchived` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataSeriesUnarchived
 {
     /**
+     * A document numbering series. Immutable per AEAT compliance.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataSeriesUnarchivedSeries $series
+     * @var \Factuarea\Sdk\Models\Components\Series $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataSeriesUnarchivedSeries')]
-    public EventDataSeriesUnarchivedSeries $series;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series')]
+    public Series $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataSeriesUnarchived
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataSeriesUnarchivedSeries  $series
+     * @param  \Factuarea\Sdk\Models\Components\Series  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataSeriesUnarchivedSeries $series, string $type = 'series.unarchived')
+    public function __construct(Series $object, string $type = 'series.unarchived')
     {
-        $this->series = $series;
+        $this->object = $object;
         $this->type = $type;
     }
 }

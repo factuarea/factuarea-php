@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CompanyCertificate
 {
     /**
-     * UUID (v7) del certificado.
+     * UUID (v7) of the certificate.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class CompanyCertificate
     public CompanyCertificateObject $object;
 
     /**
-     * NIF del titular del certificado X.509.
+     * Tax ID (NIF) of the X.509 certificate holder.
      *
      * @var string $subjectNif
      */
@@ -37,7 +37,7 @@ class CompanyCertificate
     public string $subjectNif;
 
     /**
-     * Nombre del titular del certificado.
+     * Name of the certificate holder.
      *
      * @var string $subjectName
      */
@@ -53,7 +53,7 @@ class CompanyCertificate
     public string $subjectKind;
 
     /**
-     * Inicio de validez del certificado.
+     * Certificate validity start date.
      *
      * @var \DateTime $validFrom
      */
@@ -61,7 +61,7 @@ class CompanyCertificate
     public \DateTime $validFrom;
 
     /**
-     * Fin de validez (caducidad) del certificado.
+     * Certificate validity end date (expiration).
      *
      * @var \DateTime $validTo
      */
@@ -69,7 +69,7 @@ class CompanyCertificate
     public \DateTime $validTo;
 
     /**
-     * Indica si es el certificado activo para firmar transmisiones.
+     * Whether this is the active certificate used to sign transmissions.
      *
      * @var bool $isActive
      */
@@ -77,7 +77,7 @@ class CompanyCertificate
     public bool $isActive;
 
     /**
-     * Fecha de subida del certificado.
+     * Date the certificate was uploaded.
      *
      * @var \DateTime $createdAt
      */

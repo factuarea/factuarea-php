@@ -1,0 +1,19 @@
+# CreateCompanyV1Request
+
+Register a managed child company under your master tenant. `name` and `tax_id` are required; the rest of the profile (business name, fiscal address, contact details) is optional. `tax_id` is validated as a Spanish tax ID (NIF/CIF/NIE) and must be unique among the companies you manage; `country_aeat_zone` is derived from the postal code.
+
+
+## Fields
+
+| Field                                                               | Type                                                                | Required                                                            | Description                                                         |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `name`                                                              | *string*                                                            | :heavy_check_mark:                                                  | Trade name of the child company (1-255 characters).                 |
+| `taxId`                                                             | *string*                                                            | :heavy_check_mark:                                                  | Spanish tax identifier (NIF, CIF or NIE). Immutable after creation. |
+| `businessName`                                                      | *?string*                                                           | :heavy_minus_sign:                                                  | Legal/registered business name of the child company.                |
+| `address`                                                           | *?string*                                                           | :heavy_minus_sign:                                                  | Fiscal address.                                                     |
+| `city`                                                              | *?string*                                                           | :heavy_minus_sign:                                                  | City of the fiscal address.                                         |
+| `postalCode`                                                        | *?string*                                                           | :heavy_minus_sign:                                                  | Postal code (derives the AEAT zone).                                |
+| `province`                                                          | *?string*                                                           | :heavy_minus_sign:                                                  | Province.                                                           |
+| `country`                                                           | *?string*                                                           | :heavy_minus_sign:                                                  | Country.                                                            |
+| `email`                                                             | *?string*                                                           | :heavy_minus_sign:                                                  | Contact email of the child company.                                 |
+| `phone`                                                             | *?string*                                                           | :heavy_minus_sign:                                                  | Contact phone number.                                               |

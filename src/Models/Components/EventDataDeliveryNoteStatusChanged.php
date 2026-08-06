@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** EventDataDeliveryNoteStatusChanged - Payload (`data`) emitted with the `delivery_note.status_changed` event. */
+/** EventDataDeliveryNoteStatusChanged - Payload (`data`) emitted with the `delivery_note.status_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataDeliveryNoteStatusChanged
 {
     /**
+     * A delivery note tracking goods delivered to a customer.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteStatusChangedDeliveryNote $deliveryNote
+     * @var \Factuarea\Sdk\Models\Components\DeliveryNote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_note')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataDeliveryNoteStatusChangedDeliveryNote')]
-    public EventDataDeliveryNoteStatusChangedDeliveryNote $deliveryNote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DeliveryNote')]
+    public DeliveryNote $object;
 
     /**
      *
@@ -51,15 +52,15 @@ class EventDataDeliveryNoteStatusChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteStatusChangedDeliveryNote  $deliveryNote
+     * @param  \Factuarea\Sdk\Models\Components\DeliveryNote  $object
      * @param  \Factuarea\Sdk\Models\Components\ToStatus  $toStatus
      * @param  ?string  $fromStatus
      * @param  ?LocalDate  $deliveryDate
      * @phpstan-pure
      */
-    public function __construct(EventDataDeliveryNoteStatusChangedDeliveryNote $deliveryNote, ToStatus $toStatus, ?string $fromStatus = null, ?LocalDate $deliveryDate = null, string $type = 'delivery_note.status_changed')
+    public function __construct(DeliveryNote $object, ToStatus $toStatus, ?string $fromStatus = null, ?LocalDate $deliveryDate = null, string $type = 'delivery_note.status_changed')
     {
-        $this->deliveryNote = $deliveryNote;
+        $this->object = $object;
         $this->toStatus = $toStatus;
         $this->fromStatus = $fromStatus;
         $this->deliveryDate = $deliveryDate;

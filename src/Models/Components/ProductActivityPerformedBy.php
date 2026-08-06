@@ -12,7 +12,16 @@ namespace Factuarea\Sdk\Models\Components;
 class ProductActivityPerformedBy
 {
     /**
-     * UUID (v7) of the user who performed the action.
+     * Type of actor that originated the event: `user` for a human in the internal app, `api_key` for an action performed through the public v1 API.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ProductActivityType $type
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductActivityType')]
+    public ProductActivityType $type;
+
+    /**
+     * UUID (v7) of the actor: the user when `type=user`, or the API key when `type=api_key`.
      *
      * @var string $id
      */
@@ -20,7 +29,7 @@ class ProductActivityPerformedBy
     public string $id;
 
     /**
-     * Nombre del usuario en el momento del evento.
+     * Actor name at the time of the event: the user name or the API key name. `null` if it could not be resolved.
      *
      * @var ?string $name
      */
@@ -28,12 +37,14 @@ class ProductActivityPerformedBy
     public ?string $name;
 
     /**
+     * @param  \Factuarea\Sdk\Models\Components\ProductActivityType  $type
      * @param  string  $id
      * @param  ?string  $name
      * @phpstan-pure
      */
-    public function __construct(string $id, ?string $name = null)
+    public function __construct(ProductActivityType $type, string $id, ?string $name = null)
     {
+        $this->type = $type;
         $this->id = $id;
         $this->name = $name;
     }

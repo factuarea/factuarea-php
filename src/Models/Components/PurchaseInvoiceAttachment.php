@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class PurchaseInvoiceAttachment
 {
     /**
-     * Nombre original del fichero subido.
+     * Original name of the uploaded file.
      *
      * @var string $filename
      */
@@ -21,7 +21,7 @@ class PurchaseInvoiceAttachment
     public string $filename;
 
     /**
-     * MIME type del fichero (e.g. `application/pdf`).
+     * MIME type of the file (e.g. `application/pdf`).
      *
      * @var string $mimeType
      */
@@ -37,7 +37,7 @@ class PurchaseInvoiceAttachment
     public int $sizeBytes;
 
     /**
-     * URL relativa de descarga del adjunto (`/v1/purchase_invoices/{id}/file`).
+     * Relative download URL of the attachment (`/v1/purchase_invoices/{id}/file`).
      *
      * @var string $downloadUrl
      */

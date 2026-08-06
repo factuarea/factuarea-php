@@ -9,31 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * CreateRecurringInvoiceRequest - Public REST API v1 — POST /v1/recurring_invoices.
- *
- *
- * Required body: `client_id`, `series_id`, `frequency`,
- * `start_on`, `lines[]` (min 1). Optional: `end_on`, `name`,
- * `description`, `notes`, `metadata` (≤50 keys, ≤500 chars/value —
- * VO `Metadata`), `holiday_handling`, `days_before_due`,
- * `max_occurrences`, `email_to`.
- *
- * Frequency v1 (contractual whitelist): `weekly|monthly|quarterly|yearly`.
- * `yearly` is mapped to `annual` (internal RecurringInvoice BC) in the
- * controller.
- *
- * By default the recurrence is born `active`, with `frequency_interval=1`
- * and `send_automatically=true` (not configurable in v1). The fields
- * `holiday_handling` (default `same`), `days_before_due` (default `30`),
- * `max_occurrences` (default ∞) and `email_to` (default none) ARE
- * configurable in the body; if omitted, those defaults apply.
- *
- * `holiday_handling` accepts `skip|same|before|after`. The value validation
- * is performed by the VO `HolidayHandling::create()` in the Handler (throws
- * `InvalidHolidayHandlingException` → 422 `invalid_holiday_handling`); it is
- * not duplicated here with an `in:` rule, to preserve the canonical catalog subcode.
- */
+/** CreateRecurringInvoiceRequest - Create a recurring invoice template that auto-generates invoices on a fixed cadence. Required: `client_id`, `series_id`, `frequency`, `start_on` and `lines[]` (at least one). Optional: `end_on`, `name`, `description`, `notes`, `metadata`, `holiday_handling`, `days_before_due`, `max_occurrences`, `email_to`, `send_automatically`, `tags` and `custom_fields`. `frequency` accepts `daily`, `weekly`, `biweekly`, `monthly`, `quarterly`, `semiannual` or `yearly`. */
 class CreateRecurringInvoiceRequest
 {
     /**
@@ -77,6 +53,23 @@ class CreateRecurringInvoiceRequest
 
     /**
      *
+     * @var ?bool $sendAutomatically
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('send_automatically')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $sendAutomatically = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestAutoDelivery $autoDelivery
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestAutoDelivery|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateRecurringInvoiceRequestAutoDelivery $autoDelivery = null;
+
+    /**
+     *
      * @var ?string $seriesId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
@@ -116,7 +109,10 @@ class CreateRecurringInvoiceRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -124,6 +120,14 @@ class CreateRecurringInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $metadata = null;
+
+    /**
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
 
     /**
      *
@@ -150,37 +154,67 @@ class CreateRecurringInvoiceRequest
     public ?string $emailTo = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  string  $clientId
      * @param  \Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestFrequency  $frequency
      * @param  LocalDate  $startOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestLine>  $lines
      * @param  ?string  $holidayHandling
+     * @param  ?bool  $sendAutomatically
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestAutoDelivery  $autoDelivery
      * @param  ?string  $seriesId
      * @param  ?string  $name
      * @param  ?string  $description
      * @param  ?LocalDate  $endOn
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $externalId
      * @param  ?int  $daysBeforeDue
      * @param  ?int  $maxOccurrences
      * @param  ?string  $emailTo
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, CreateRecurringInvoiceRequestFrequency $frequency, LocalDate $startOn, array $lines, ?string $holidayHandling = null, ?string $seriesId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null)
+    public function __construct(string $clientId, CreateRecurringInvoiceRequestFrequency $frequency, LocalDate $startOn, array $lines, ?string $holidayHandling = null, ?bool $sendAutomatically = null, ?CreateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?string $seriesId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->frequency = $frequency;
         $this->startOn = $startOn;
         $this->lines = $lines;
         $this->holidayHandling = $holidayHandling;
+        $this->sendAutomatically = $sendAutomatically;
+        $this->autoDelivery = $autoDelivery;
         $this->seriesId = $seriesId;
         $this->name = $name;
         $this->description = $description;
         $this->endOn = $endOn;
         $this->notes = $notes;
         $this->metadata = $metadata;
+        $this->externalId = $externalId;
         $this->daysBeforeDue = $daysBeforeDue;
         $this->maxOccurrences = $maxOccurrences;
         $this->emailTo = $emailTo;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

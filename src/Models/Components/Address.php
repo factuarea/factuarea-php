@@ -67,7 +67,7 @@ class Address
     public ?string $number = null;
 
     /**
-     * Piso.
+     * Floor.
      *
      * @var ?string $floor
      */
@@ -76,7 +76,7 @@ class Address
     public ?string $floor = null;
 
     /**
-     * Puerta.
+     * Door.
      *
      * @var ?string $door
      */
@@ -85,7 +85,7 @@ class Address
     public ?string $door = null;
 
     /**
-     * Escalera.
+     * Staircase.
      *
      * @var ?string $staircase
      */

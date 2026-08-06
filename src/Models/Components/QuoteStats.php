@@ -21,7 +21,7 @@ class QuoteStats
     public int $totalCount;
 
     /**
-     * Importe acumulado de los presupuestos (EUR).
+     * Aggregate amount of the quotes (EUR).
      *
      * @var float $totalAmount
      */
@@ -29,7 +29,7 @@ class QuoteStats
     public float $totalAmount;
 
     /**
-     * Recuento de presupuestos por estado. Claves: `draft`, `sent`, `accepted`, `rejected`, `expired`, `converted`, `cancelled`.
+     * Quote count by status. Keys: `draft`, `sent`, `accepted`, `rejected`, `expired`, `converted`, `cancelled`.
      *
      * @var array<string, int> $countByStatus
      */
@@ -46,7 +46,7 @@ class QuoteStats
     public int $expiredCount;
 
     /**
-     * Presupuestos convertidos a factura.
+     * Quotes converted to an invoice.
      *
      * @var int $convertedCount
      */

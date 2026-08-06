@@ -13,7 +13,7 @@ use Brick\DateTime\LocalDate;
 class InvoiceCorrective
 {
     /**
-     * UUID (v7) de la factura original rectificada.
+     * UUID (v7) of the original corrected invoice.
      *
      * @var ?string $originalId
      */
@@ -77,6 +77,15 @@ class InvoiceCorrective
     public ?float $cuotaRectificada;
 
     /**
+     * AEAT corrective invoice type code (`R1`–`R5`) frozen at issuance from the VeriFactu record. `null` if not resolved.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CorrectionAeatType $correctionAeatType
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('correction_aeat_type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CorrectionAeatType|null')]
+    public ?CorrectionAeatType $correctionAeatType;
+
+    /**
      * @param  ?string  $originalId
      * @param  ?string  $originalNumber
      * @param  ?LocalDate  $originalDate
@@ -85,9 +94,10 @@ class InvoiceCorrective
      * @param  ?string  $correctionNature
      * @param  ?float  $baseRectificada
      * @param  ?float  $cuotaRectificada
+     * @param  ?\Factuarea\Sdk\Models\Components\CorrectionAeatType  $correctionAeatType
      * @phpstan-pure
      */
-    public function __construct(?string $originalId = null, ?string $originalNumber = null, ?LocalDate $originalDate = null, ?string $correctionReason = null, ?string $correctionType = null, ?string $correctionNature = null, ?float $baseRectificada = null, ?float $cuotaRectificada = null)
+    public function __construct(?string $originalId = null, ?string $originalNumber = null, ?LocalDate $originalDate = null, ?string $correctionReason = null, ?string $correctionType = null, ?string $correctionNature = null, ?float $baseRectificada = null, ?float $cuotaRectificada = null, ?CorrectionAeatType $correctionAeatType = null)
     {
         $this->originalId = $originalId;
         $this->originalNumber = $originalNumber;
@@ -97,5 +107,6 @@ class InvoiceCorrective
         $this->correctionNature = $correctionNature;
         $this->baseRectificada = $baseRectificada;
         $this->cuotaRectificada = $cuotaRectificada;
+        $this->correctionAeatType = $correctionAeatType;
     }
 }

@@ -14,6 +14,33 @@ The event envelope delivered to a webhook endpoint, discriminated by `type`. Eac
 Components\WebhookEventPayloadInvoiceCreated $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadInvoiceAutoCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceAutoCreated
+*/
+Components\WebhookEventPayloadInvoiceAutoCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadInvoiceCorrectiveAutoCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceCorrectiveAutoCreated
+*/
+Components\WebhookEventPayloadInvoiceCorrectiveAutoCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadInvoiceSubscriptionAutoCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceSubscriptionAutoCreated
+*/
+Components\WebhookEventPayloadInvoiceSubscriptionAutoCreated $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadInvoiceUpdated`
 
 ```php
@@ -275,6 +302,24 @@ Components\WebhookEventPayloadQuoteNumberAssigned $value = /* values here */
 Components\WebhookEventPayloadQuoteMetadataChanged $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadQuoteEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadQuoteEmailSent
+*/
+Components\WebhookEventPayloadQuoteEmailSent $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadQuoteEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadQuoteEmailFailed
+*/
+Components\WebhookEventPayloadQuoteEmailFailed $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadProformaCreated`
 
 ```php
@@ -365,6 +410,24 @@ Components\WebhookEventPayloadProformaNumberAssigned $value = /* values here */
 Components\WebhookEventPayloadProformaMetadataChanged $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadProformaEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProformaEmailSent
+*/
+Components\WebhookEventPayloadProformaEmailSent $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadProformaEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProformaEmailFailed
+*/
+Components\WebhookEventPayloadProformaEmailFailed $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadDeliveryNoteCreated`
 
 ```php
@@ -410,6 +473,24 @@ Components\WebhookEventPayloadDeliveryNoteSigned $value = /* values here */
 Components\WebhookEventPayloadDeliveryNoteConverted $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadDeliveryNoteEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadDeliveryNoteEmailSent
+*/
+Components\WebhookEventPayloadDeliveryNoteEmailSent $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadDeliveryNoteEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadDeliveryNoteEmailFailed
+*/
+Components\WebhookEventPayloadDeliveryNoteEmailFailed $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadPurchaseInvoiceCreated`
 
 ```php
@@ -453,6 +534,15 @@ Components\WebhookEventPayloadPurchaseInvoiceCancelled $value = /* values here *
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPurchaseInvoiceMetadataChanged
 */
 Components\WebhookEventPayloadPurchaseInvoiceMetadataChanged $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPurchaseInvoicePaymentRegistered`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPurchaseInvoicePaymentRegistered
+*/
+Components\WebhookEventPayloadPurchaseInvoicePaymentRegistered $value = /* values here */
 ```
 
 ### `Components\WebhookEventPayloadRecurringInvoiceCreated`
@@ -707,6 +797,15 @@ Components\WebhookEventPayloadSeriesDemotedFromDefault $value = /* values here *
 Components\WebhookEventPayloadSeriesYearReset $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadSeriesMonthReset`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadSeriesMonthReset
+*/
+Components\WebhookEventPayloadSeriesMonthReset $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadSeriesNumberConsumed`
 
 ```php
@@ -714,5 +813,131 @@ Components\WebhookEventPayloadSeriesYearReset $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadSeriesNumberConsumed
 */
 Components\WebhookEventPayloadSeriesNumberConsumed $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadFacturaeFaceSubmitted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadFacturaeFaceSubmitted
+*/
+Components\WebhookEventPayloadFacturaeFaceSubmitted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadFacturaeFaceStatusChanged`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadFacturaeFaceStatusChanged
+*/
+Components\WebhookEventPayloadFacturaeFaceStatusChanged $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadFacturaeFaceCancellationRequested`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadFacturaeFaceCancellationRequested
+*/
+Components\WebhookEventPayloadFacturaeFaceCancellationRequested $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPayoutReconciled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPayoutReconciled
+*/
+Components\WebhookEventPayloadPayoutReconciled $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadEmployeeCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadEmployeeCreated
+*/
+Components\WebhookEventPayloadEmployeeCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadEmployeeUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadEmployeeUpdated
+*/
+Components\WebhookEventPayloadEmployeeUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadEmployeeDeactivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadEmployeeDeactivated
+*/
+Components\WebhookEventPayloadEmployeeDeactivated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadEmployeeInvited`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadEmployeeInvited
+*/
+Components\WebhookEventPayloadEmployeeInvited $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTimeEntryRecorded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTimeEntryRecorded
+*/
+Components\WebhookEventPayloadTimeEntryRecorded $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTimeEntryCorrected`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTimeEntryCorrected
+*/
+Components\WebhookEventPayloadTimeEntryCorrected $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAbsenceRequested`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAbsenceRequested
+*/
+Components\WebhookEventPayloadAbsenceRequested $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAbsenceApproved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAbsenceApproved
+*/
+Components\WebhookEventPayloadAbsenceApproved $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAbsenceRejected`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAbsenceRejected
+*/
+Components\WebhookEventPayloadAbsenceRejected $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadMonthlyRegisterClosed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadMonthlyRegisterClosed
+*/
+Components\WebhookEventPayloadMonthlyRegisterClosed $value = /* values here */
 ```
 

@@ -9,25 +9,26 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceSimplifiedSubstituted - Payload (`data`) emitted with the `invoice.simplified_substituted` event. */
+/** EventDataInvoiceSimplifiedSubstituted - Payload (`data`) emitted with the `invoice.simplified_substituted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceSimplifiedSubstituted
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSimplifiedSubstitutedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceSimplifiedSubstitutedInvoice')]
-    public EventDataInvoiceSimplifiedSubstitutedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
-     * $substitutedInvoiceUuids
+     * $substitutedInvoiceIds
      *
-     * @var array<string> $substitutedInvoiceUuids
+     * @var array<string> $substitutedInvoiceIds
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('substituted_invoice_uuids')]
+    #[\Speakeasy\Serializer\Annotation\SerializedName('substituted_invoice_ids')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
-    public array $substitutedInvoiceUuids;
+    public array $substitutedInvoiceIds;
 
     /**
      *
@@ -38,14 +39,14 @@ class EventDataInvoiceSimplifiedSubstituted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceSimplifiedSubstitutedInvoice  $invoice
-     * @param  array<string>  $substitutedInvoiceUuids
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  array<string>  $substitutedInvoiceIds
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceSimplifiedSubstitutedInvoice $invoice, array $substitutedInvoiceUuids, string $type = 'invoice.simplified_substituted')
+    public function __construct(Invoice $object, array $substitutedInvoiceIds, string $type = 'invoice.simplified_substituted')
     {
-        $this->invoice = $invoice;
-        $this->substitutedInvoiceUuids = $substitutedInvoiceUuids;
+        $this->object = $object;
+        $this->substitutedInvoiceIds = $substitutedInvoiceIds;
         $this->type = $type;
     }
 }

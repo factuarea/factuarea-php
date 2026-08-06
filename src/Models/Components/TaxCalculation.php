@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaxCalculation
 {
     /**
-     * Importe base sobre el que se aplica el tax (EUR).
+     * Base amount the tax is applied to (EUR).
      *
      * @var float $base
      */
@@ -21,7 +21,7 @@ class TaxCalculation
     public float $base;
 
     /**
-     * Tipo impositivo aplicado, ej. `21` para IVA 21%.
+     * Applied tax rate, e.g. `21` for 21% VAT.
      *
      * @var float $taxRate
      */
@@ -29,7 +29,7 @@ class TaxCalculation
     public float $taxRate;
 
     /**
-     * Cuota del impuesto (base × tax_rate / 100).
+     * Tax amount (base × tax_rate / 100).
      *
      * @var float $taxAmount
      */
@@ -37,7 +37,7 @@ class TaxCalculation
     public float $taxAmount;
 
     /**
-     * Importe total resultante (base + tax_amount).
+     * Resulting total amount (base + tax_amount).
      *
      * @var float $totalAmount
      */

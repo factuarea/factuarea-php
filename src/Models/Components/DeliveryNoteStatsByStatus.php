@@ -28,7 +28,7 @@ class DeliveryNoteStatsByStatus
     public int $count;
 
     /**
-     * Importe acumulado de los albaranes en ese estado (EUR).
+     * Aggregate amount of the delivery notes in that status (EUR).
      *
      * @var float $total
      */

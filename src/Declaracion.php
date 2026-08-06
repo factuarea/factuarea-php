@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -49,12 +50,14 @@ class Declaracion
     /**
      * Retrieve the current declaración responsable
      *
-     * Get Declaracion Responsable V1.
+     * Return the current (latest) version of the producer-level VeriFactu Declaración Responsable. Read-only: the declaration is global to the producer of the system (Factuarea), not per-company. Returns 404 `declaracion_not_found` if none has been published.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuDeclaracionCurrentResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuDeclaracionCurrent(?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionCurrentResponse
+    public function publicApiV1VerifactuDeclaracionCurrent(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionCurrentResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -81,10 +84,18 @@ class Declaracion
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuDeclaracionCurrentRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/declaracion-responsable');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -160,12 +171,14 @@ class Declaracion
     /**
      * List declaración responsable history
      *
-     * Get Declaracion Responsable History V1.
+     * Return every version of the producer-level VeriFactu Declaración Responsable (the SIF compliance declaration issued by Factuarea), ordered by `version` descending. Read-only: the declaration is global to the producer of the system, not per-company.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuDeclaracionHistoryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuDeclaracionHistory(?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionHistoryResponse
+    public function publicApiV1VerifactuDeclaracionHistory(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionHistoryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -192,10 +205,18 @@ class Declaracion
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuDeclaracionHistoryRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/declaracion-responsable/history');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);

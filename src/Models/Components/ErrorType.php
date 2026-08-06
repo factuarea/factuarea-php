@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Machine-readable category of the error. */
+/** Machine-readable category of the error. Versioned by `Factuarea-Version`: from `2026-09-01` onwards the payment gate codes `payment_method_required`, `seat_charge_failed`, `gestoria_plan_required`, `employee_seat_payment_method_required` and `employee_seat_charge_failed` are served as `payment_required_error`; requests pinned to an earlier version keep receiving `invalid_request_error` for those five. `error.code` and `error.subcode` never change — branch on `code` if you want version-independent behaviour. */
 enum ErrorType: string
 {
     case ApiError = 'api_error';
@@ -19,6 +19,7 @@ enum ErrorType: string
     case IdempotencyError = 'idempotency_error';
     case InvalidRequestError = 'invalid_request_error';
     case NotFoundError = 'not_found_error';
+    case PaymentRequiredError = 'payment_required_error';
     case PermissionError = 'permission_error';
     case RateLimitError = 'rate_limit_error';
     case ServiceUnavailableError = 'service_unavailable_error';

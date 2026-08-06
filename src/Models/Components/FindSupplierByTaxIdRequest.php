@@ -9,13 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * FindSupplierByTaxIdRequest - Public REST API v1 — POST /v1/suppliers/find-by-tax-id.
- *
- *
- * Busca un proveedor por su identificador fiscal (NIF/CIF/NIE/VAT) dentro
- * de la company autenticada.
- */
+/** FindSupplierByTaxIdRequest - Look up a supplier by its Spanish tax ID (NIF/CIF/NIE/VAT) within your company. */
 class FindSupplierByTaxIdRequest
 {
     /**

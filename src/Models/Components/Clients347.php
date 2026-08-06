@@ -31,7 +31,7 @@ class Clients347
     public ?array $quarters = null;
 
     /**
-     * NIF/CIF del cliente.
+     * Client tax ID (NIF/CIF).
      *
      * @var ?string $taxId
      */

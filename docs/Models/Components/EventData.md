@@ -1,6 +1,6 @@
 # EventData
 
-The payload embedded when the event was emitted, discriminated by `type`. Holds a thin reference to the affected resource keyed by its type — e.g. `{ "type": "invoice.paid", "invoice": { "uuid": "..." } }`. Fetch the resource from its own endpoint for the full representation.
+The payload embedded when the event was emitted, discriminated by `type`. Carries the full snapshot of the affected resource under `object` — identical to `GET /v1/<resource>/{id}` at emission time — plus event-specific keys, e.g. `{ "type": "invoice.paid", "object": { ...invoice... }, "amount": 1210.0 }`. The snapshot is frozen: later changes to the resource do not rewrite past events.
 
 
 ## Supported Types
@@ -12,6 +12,33 @@ The payload embedded when the event was emitted, discriminated by `type`. Holds 
 * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceCreated
 */
 Components\EventDataInvoiceCreated $value = /* values here */
+```
+
+### `Components\EventDataInvoiceAutoCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataInvoiceAutoCreated
+*/
+Components\EventDataInvoiceAutoCreated $value = /* values here */
+```
+
+### `Components\EventDataInvoiceCorrectiveAutoCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataInvoiceCorrectiveAutoCreated
+*/
+Components\EventDataInvoiceCorrectiveAutoCreated $value = /* values here */
+```
+
+### `Components\EventDataInvoiceSubscriptionAutoCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSubscriptionAutoCreated
+*/
+Components\EventDataInvoiceSubscriptionAutoCreated $value = /* values here */
 ```
 
 ### `Components\EventDataInvoiceUpdated`
@@ -275,6 +302,24 @@ Components\EventDataQuoteNumberAssigned $value = /* values here */
 Components\EventDataQuoteMetadataChanged $value = /* values here */
 ```
 
+### `Components\EventDataQuoteEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataQuoteEmailSent
+*/
+Components\EventDataQuoteEmailSent $value = /* values here */
+```
+
+### `Components\EventDataQuoteEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataQuoteEmailFailed
+*/
+Components\EventDataQuoteEmailFailed $value = /* values here */
+```
+
 ### `Components\EventDataProformaCreated`
 
 ```php
@@ -365,6 +410,24 @@ Components\EventDataProformaNumberAssigned $value = /* values here */
 Components\EventDataProformaMetadataChanged $value = /* values here */
 ```
 
+### `Components\EventDataProformaEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProformaEmailSent
+*/
+Components\EventDataProformaEmailSent $value = /* values here */
+```
+
+### `Components\EventDataProformaEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProformaEmailFailed
+*/
+Components\EventDataProformaEmailFailed $value = /* values here */
+```
+
 ### `Components\EventDataDeliveryNoteCreated`
 
 ```php
@@ -410,6 +473,24 @@ Components\EventDataDeliveryNoteSigned $value = /* values here */
 Components\EventDataDeliveryNoteConverted $value = /* values here */
 ```
 
+### `Components\EventDataDeliveryNoteEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteEmailSent
+*/
+Components\EventDataDeliveryNoteEmailSent $value = /* values here */
+```
+
+### `Components\EventDataDeliveryNoteEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteEmailFailed
+*/
+Components\EventDataDeliveryNoteEmailFailed $value = /* values here */
+```
+
 ### `Components\EventDataPurchaseInvoiceCreated`
 
 ```php
@@ -453,6 +534,15 @@ Components\EventDataPurchaseInvoiceCancelled $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataPurchaseInvoiceMetadataChanged
 */
 Components\EventDataPurchaseInvoiceMetadataChanged $value = /* values here */
+```
+
+### `Components\EventDataPurchaseInvoicePaymentRegistered`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseInvoicePaymentRegistered
+*/
+Components\EventDataPurchaseInvoicePaymentRegistered $value = /* values here */
 ```
 
 ### `Components\EventDataRecurringInvoiceCreated`
@@ -707,6 +797,15 @@ Components\EventDataSeriesDemotedFromDefault $value = /* values here */
 Components\EventDataSeriesYearReset $value = /* values here */
 ```
 
+### `Components\EventDataSeriesMonthReset`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSeriesMonthReset
+*/
+Components\EventDataSeriesMonthReset $value = /* values here */
+```
+
 ### `Components\EventDataSeriesNumberConsumed`
 
 ```php
@@ -714,5 +813,131 @@ Components\EventDataSeriesYearReset $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataSeriesNumberConsumed
 */
 Components\EventDataSeriesNumberConsumed $value = /* values here */
+```
+
+### `Components\EventDataFacturaeFaceSubmitted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFacturaeFaceSubmitted
+*/
+Components\EventDataFacturaeFaceSubmitted $value = /* values here */
+```
+
+### `Components\EventDataFacturaeFaceStatusChanged`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFacturaeFaceStatusChanged
+*/
+Components\EventDataFacturaeFaceStatusChanged $value = /* values here */
+```
+
+### `Components\EventDataFacturaeFaceCancellationRequested`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFacturaeFaceCancellationRequested
+*/
+Components\EventDataFacturaeFaceCancellationRequested $value = /* values here */
+```
+
+### `Components\EventDataPayoutReconciled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPayoutReconciled
+*/
+Components\EventDataPayoutReconciled $value = /* values here */
+```
+
+### `Components\EventDataEmployeeCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataEmployeeCreated
+*/
+Components\EventDataEmployeeCreated $value = /* values here */
+```
+
+### `Components\EventDataEmployeeUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataEmployeeUpdated
+*/
+Components\EventDataEmployeeUpdated $value = /* values here */
+```
+
+### `Components\EventDataEmployeeDeactivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataEmployeeDeactivated
+*/
+Components\EventDataEmployeeDeactivated $value = /* values here */
+```
+
+### `Components\EventDataEmployeeInvited`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataEmployeeInvited
+*/
+Components\EventDataEmployeeInvited $value = /* values here */
+```
+
+### `Components\EventDataTimeEntryRecorded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTimeEntryRecorded
+*/
+Components\EventDataTimeEntryRecorded $value = /* values here */
+```
+
+### `Components\EventDataTimeEntryCorrected`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTimeEntryCorrected
+*/
+Components\EventDataTimeEntryCorrected $value = /* values here */
+```
+
+### `Components\EventDataAbsenceRequested`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAbsenceRequested
+*/
+Components\EventDataAbsenceRequested $value = /* values here */
+```
+
+### `Components\EventDataAbsenceApproved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAbsenceApproved
+*/
+Components\EventDataAbsenceApproved $value = /* values here */
+```
+
+### `Components\EventDataAbsenceRejected`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAbsenceRejected
+*/
+Components\EventDataAbsenceRejected $value = /* values here */
+```
+
+### `Components\EventDataMonthlyRegisterClosed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataMonthlyRegisterClosed
+*/
+Components\EventDataMonthlyRegisterClosed $value = /* values here */
 ```
 

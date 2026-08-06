@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -49,13 +50,15 @@ class Records
     /**
      * List VeriFactu record activity timeline
      *
-     * Get Veri Factu Activities V1.
+     * Return the audit timeline for a single VeriFactu record (creation, transmission attempts, AEAT acceptance/rejection). Paginated with a page-number cursor.
      *
      * @param  string  $record
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsActivitiesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsActivities(string $record, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsActivitiesResponse
+    public function publicApiV1VerifactuRecordsActivities(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsActivitiesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,11 +87,17 @@ class Records
         }
         $request = new Operations\PublicApiV1VerifactuRecordsActivitiesRequest(
             record: $record,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/{record}/activities', Operations\PublicApiV1VerifactuRecordsActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -128,7 +137,7 @@ class Records
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -164,13 +173,15 @@ class Records
     /**
      * Find a VeriFactu record by AEAT CSV
      *
-     * Find Record By Aeat Csv V1.
+     * Look up a VeriFactu record by the `aeat_csv` (Código Seguro de Verificación) returned by AEAT on acceptance, sent in the JSON body. Returns the matching record or 404 `verifactu_record_not_found`.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByAeatCsvV1Request  $request
+     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByAeatCsvV1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsFindByCsvResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsFindByCsv(?Operations\FindRecordByAeatCsvV1Request $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsFindByCsvResponse
+    public function publicApiV1VerifactuRecordsFindByCsv(?Operations\FindRecordByAeatCsvV1Request $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsFindByCsvResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -197,13 +208,22 @@ class Records
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+            body: $body,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/find-by-csv');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'request', 'json');
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body !== null) {
             $httpOptions = array_merge_recursive($httpOptions, $body);
+        }
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
@@ -280,13 +300,15 @@ class Records
     /**
      * Find a VeriFactu record by hash
      *
-     * Find Record By Huella V1.
+     * Look up a VeriFactu record by its `huella` (the chained SHA-256 fingerprint sent in the JSON body). Returns the matching record or 404 `verifactu_record_not_found` if none exists within your company.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByHuellaV1Request  $request
+     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByHuellaV1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsFindByHuellaResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsFindByHuella(?Operations\FindRecordByHuellaV1Request $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsFindByHuellaResponse
+    public function publicApiV1VerifactuRecordsFindByHuella(?Operations\FindRecordByHuellaV1Request $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsFindByHuellaResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -313,13 +335,22 @@ class Records
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+            body: $body,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/find-by-huella');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'request', 'json');
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body !== null) {
             $httpOptions = array_merge_recursive($httpOptions, $body);
+        }
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
@@ -396,13 +427,15 @@ class Records
     /**
      * Find a VeriFactu record by invoice number
      *
-     * Find Record By Invoice Number V1.
+     * Look up the VeriFactu record associated with a given invoice number (sent in the JSON body). Returns the matching record or 404 `verifactu_record_not_found` if the invoice has no record within your company.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByInvoiceNumberV1Request  $request
+     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByInvoiceNumberV1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsFindByInvoiceNumber(?Operations\FindRecordByInvoiceNumberV1Request $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberResponse
+    public function publicApiV1VerifactuRecordsFindByInvoiceNumber(?Operations\FindRecordByInvoiceNumberV1Request $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -429,13 +462,22 @@ class Records
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+            body: $body,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/find-by-invoice-number');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'request', 'json');
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body !== null) {
             $httpOptions = array_merge_recursive($httpOptions, $body);
+        }
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
@@ -512,12 +554,14 @@ class Records
     /**
      * List VeriFactu records
      *
-     * List Veri Factu Records V1.
+     * List the VeriFactu (Spanish AEAT SIF) records of your company with cursor-based pagination. Each record captures the alta/anulación submitted to AEAT, its hash chain (`huella`), `aeat_csv`, and transmission status. Supports filtering by `status`, `type`, `date_from`/`date_to`, and `environment`.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsList(?Options $options = null): Operations\PublicApiV1VerifactuRecordsListResponse
+    public function publicApiV1VerifactuRecordsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -544,10 +588,18 @@ class Records
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuRecordsListRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -623,13 +675,15 @@ class Records
     /**
      * Retry VeriFactu transmission
      *
-     * Retry Veri Factu Record V1.
+     * Requeues a failed VeriFactu record for transmission to AEAT. Conflict (409) if already accepted, 422 if retry limit exceeded.
      *
      * @param  string  $record
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsRetryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsRetry(string $record, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsRetryResponse
+    public function publicApiV1VerifactuRecordsRetry(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsRetryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -658,11 +712,17 @@ class Records
         }
         $request = new Operations\PublicApiV1VerifactuRecordsRetryRequest(
             record: $record,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/{record}/retry', Operations\PublicApiV1VerifactuRecordsRetryRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
@@ -702,7 +762,7 @@ class Records
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -738,13 +798,15 @@ class Records
     /**
      * Retrieve a VeriFactu record
      *
-     * Show Veri Factu Record V1.
+     * Retrieve a VeriFactu record by its `id` (UUID v7). Returns 404 `verifactu_record_not_found` if the record does not exist or belongs to another company.
      *
      * @param  string  $record
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsShow(string $record, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsShowResponse
+    public function publicApiV1VerifactuRecordsShow(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -773,11 +835,17 @@ class Records
         }
         $request = new Operations\PublicApiV1VerifactuRecordsShowRequest(
             record: $record,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/{record}', Operations\PublicApiV1VerifactuRecordsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -817,7 +885,130 @@ class Records
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Subsanar a rejected VeriFactu record
+     *
+     * Correct (subsana) an AEAT-rejected VeriFactu record: regenerate the correctable content from the source invoice keeping the original `huella`, reset the transmission round and re-queue the AEAT transmission (202). Returns 422 `record_not_rejected` if the record is not rejected, or `requires_annulment` when the correction affects fingerprint fields (annul + new alta required instead).
+     *
+     * @param  string  $record
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsSubsanarResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1VerifactuRecordsSubsanar(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsSubsanarResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1VerifactuRecordsSubsanarRequest(
+            record: $record,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/{record}/subsanar', Operations\PublicApiV1VerifactuRecordsSubsanarRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.verifactu.records.subsanar', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['202'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsSubsanarResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1VerifactuRecordsSubsanarResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

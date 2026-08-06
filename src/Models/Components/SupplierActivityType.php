@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Type of actor that originated the event. */
+/** Type of actor that originated the event: `user` for a human in the internal app, `api_key` for an action performed through the public v1 API. */
 enum SupplierActivityType: string
 {
     case User = 'user';
+    case ApiKey = 'api_key';
 }
