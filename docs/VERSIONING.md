@@ -42,6 +42,12 @@ header, so any per-call or per-client header you set wins.
 `1.0.0` is reserved for the **API's GA event** (no fixed date). Until then the
 SDK stays on `0.x`, which signals that the surface may still change.
 
+**While the SDK is in `0.x`, a breaking change is released as a `minor`, not a
+major.** Spending the major on a routine withdrawal would make the GA
+indistinguishable from it. What a breaking release owes its readers instead is
+the [`CHANGELOG.md`](../CHANGELOG.md) entry naming, for every operation removed
+or renamed, its concrete replacement.
+
 ---
 
 ## `Factuarea-Version` ↔ SDK-version mapping
@@ -55,8 +61,9 @@ When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 1. Bump `php.version` in `.speakeasy/gen.yaml`.
 2. If the API's `Factuarea-Version` advanced, update
    `FactuareaVersionHook::DEFAULT_VERSION` and decide the SemVer bump by whether
-   the new version changes observable behaviour (major) or only adds surface
-   (minor).
+   the new version changes observable behaviour (breaking) or only adds surface
+   — which in `0.x` is a `minor` either way, with the behaviour change called out
+   in the changelog.
 3. Add a row to this table and a section to [`CHANGELOG.md`](../CHANGELOG.md).
 4. Tag `vX.Y.Z`; the [release workflow](../.github/workflows/release.yml) verifies
    the tag matches `gen.yaml` before publishing.

@@ -100,3 +100,57 @@ secrets only — never in these SDK repos.
 If the secret is missing, the emitter **fails red** instead of skipping the
 dispatch quietly. An emitter that silently does nothing is how this SDK went two
 months without a spec update.
+
+---
+
+## Auditing the sync state
+
+**When was the spec last checked?** The date of the most recent
+[`Spec sync` run](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml),
+which the badge at the top of the [README](../README.md) links to. That date is
+*not* the date of the last commit: a run that finds the spec unchanged is the
+normal outcome and leaves no commit behind, so from the commit log a repo that
+is checked daily and one nobody watches look the same.
+
+**Is anything still watching?** PHPUnit asserts, in
+[`Tests/Workflows/SpecSyncTriggersTest.php`](../Tests/Workflows/SpecSyncTriggersTest.php),
+that at least one unattended trigger — `repository_dispatch` or `schedule` — is
+live in `spec-sync.yml`. `workflow_dispatch` does not count: it fires when
+someone remembers, and that is the assumption that failed. The assertion has no
+allowlist, so switching the last one off turns CI red instead of going unnoticed.
+
+**How big is the drift?** A sync PR states it in its title and body
+(`+N/-M ops`), and the run's job summary lists every operation being withdrawn
+by name — which is what the changelog has to pair with a replacement.
+
+### Pausing a trigger
+
+Pausing a trigger is allowed. Pausing it silently is not: the pause carries the
+condition that brings it back, written so whoever reads the file next can check
+it without knowing why it was paused.
+
+```yaml
+# PAUSED schedule since 2026-06-07; reactivate when: the published spec has at
+# least as many paths as spec/openapi.json
+# schedule:
+#   - cron: "17 6 * * *"
+```
+
+The test rejects a disabled trigger with no such line, and rejects a vague one —
+the date and the condition are both mandatory, so "paused for now, will re-enable
+later" does not pass.
+
+Reactivating **replaces** that note with the evidence the condition was met, and
+the date it was met. The same test rejects an active trigger still carrying its
+pause note, so the substitution cannot be skipped:
+
+```yaml
+# `schedule` restored 2026-08-06: published spec 345 paths vs 192 pinned, which
+# satisfies the `docs == prod` condition it was paused under on 2026-06-07.
+```
+
+A pause that outlives its own condition is not caught by re-reading the comment;
+nobody re-reads comments, which is how the 2026-06 pause survived two months
+past the moment its condition inverted. It is caught by its effects: while one
+trigger is live, the accumulated drift shows up as a sync PR whose title carries
+its magnitude.

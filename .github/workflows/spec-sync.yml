@@ -70,10 +70,35 @@ jobs:
           if cmp -s /tmp/pinned.canonical.json /tmp/published.canonical.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Spec is up to date — nothing to do."
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Spec differs from the pinned copy — regenerating."
+            exit 0
           fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          # Operation counts, not just a boolean: a review needs to tell one new
+          # endpoint from a mass withdrawal before opening the diff. `unique`
+          # sorts, which is what `comm` requires.
+          operation_ids() {
+            jq -r '[.paths // {} | to_entries[] | .value
+                      | to_entries[]
+                      | select(.key | IN("get","post","put","patch","delete"))
+                      | .value.operationId // empty]
+                    | unique[]' "$1"
+          }
+          operation_ids spec/openapi.json > /tmp/pinned.ops
+          operation_ids /tmp/published-openapi.json > /tmp/published.ops
+          added=$(comm -13 /tmp/pinned.ops /tmp/published.ops | wc -l | tr -d ' ')
+          removed=$(comm -23 /tmp/pinned.ops /tmp/published.ops | wc -l | tr -d ' ')
+          echo "added_ops=${added}" >> "$GITHUB_OUTPUT"
+          echo "removed_ops=${removed}" >> "$GITHUB_OUTPUT"
+          echo "Spec differs from the pinned copy — regenerating (+${added}/-${removed} operations)."
+          {
+            echo "### Spec drift"
+            echo
+            echo "- Added operations: **${added}**"
+            echo "- Removed operations: **${removed}**"
+            echo
+            comm -23 /tmp/pinned.ops /tmp/published.ops \
+              | sed 's/^/- removed: `/; s/$/`/'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Setup PHP 8.2
         if: steps.compare.outputs.changed == 'true'
@@ -126,7 +151,7 @@ jobs:
           branch: spec-sync/update
           base: main
           commit-message: "chore: sync SDK with updated OpenAPI spec"
-          title: "chore: sync SDK with updated OpenAPI spec"
+          title: "chore: sync SDK with updated OpenAPI spec (+${{ steps.compare.outputs.added_ops }}/-${{ steps.compare.outputs.removed_ops }} ops)"
           author: "Factuarea <info@factuarea.com>"
           committer: "Factuarea <info@factuarea.com>"
           body: |
@@ -137,13 +162,22 @@ jobs:
             the SDK with Speakeasy (retry-casing overlay applied). Tests passed in
             CI before this PR was opened.
 
+            - Added operations: **${{ steps.compare.outputs.added_ops }}**
+            - Removed operations: **${{ steps.compare.outputs.removed_ops }}**
+
+            The removed operations are listed in the run's job summary.
+
             Review checklist:
             - [ ] Surface diff (new/removed/renamed operations) is intended.
             - [ ] Bump `php.version` in `.speakeasy/gen.yaml` and update
                   `CHANGELOG.md` per the SemVer rules in `docs/VERSIONING.md`.
+                  While the SDK is in `0.x` a removed or renamed operation is a
+                  **minor**, not a major: `1.0.0` is reserved for the API's GA.
+            - [ ] Every removed operation is named in `CHANGELOG.md` together
+                  with its replacement.
             - [ ] If the API's `Factuarea-Version` changed, update
-                  `FactuareaVersionHook::DEFAULT_VERSION` and treat behaviour
-                  changes as a major bump.
+                  `FactuareaVersionHook::DEFAULT_VERSION` and call out the
+                  behaviour change in the changelog.
           labels: |
             spec-sync
             automated
