@@ -35,7 +35,7 @@ class Product
     public string $name;
 
     /**
-     * Monetary amount as a string with two decimal places (Stripe-style). NOTE: some legacy resources currently emit floats; see harden-public-api-v1-pre-ga.
+     * Monetary amount as a string with two decimal places (Stripe-style), e.g. "1234.56".
      *
      * @var string $price
      */
@@ -140,7 +140,7 @@ class Product
     public ?string $description;
 
     /**
-     * Umbral a partir del cual el stock se considera bajo, o `null` si no configurado.
+     * Threshold below which stock is considered low, or `null` if not configured.
      *
      * @var ?int $lowStockThreshold
      */
@@ -148,7 +148,10 @@ class Product
     public ?int $lowStockThreshold;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -171,6 +174,24 @@ class Product
     public ?\DateTime $updatedAt;
 
     /**
+     * External integration key (ERP/CRM/e-commerce) mapping this product to a record in a third-party system. Free-format, unique per company, orthogonal to the catalog `sku` (a product may have both, neither, or either).
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * Whether the product participates in document-driven stock movements (invoices, delivery notes). Requires the company `stock_management` module to be enabled. Defaults to `false`.
+     *
+     * @var ?bool $manageStock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('manage_stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $manageStock = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ProductObject  $object
      * @param  string  $name
@@ -185,15 +206,17 @@ class Product
      * @param  array<string, mixed>  $specifications
      * @param  ?string  $sku
      * @param  ?\Factuarea\Sdk\Models\Components\TaxRateRef  $taxRate
+     * @param  ?bool  $manageStock
      * @param  ?\Factuarea\Sdk\Models\Components\ProductVideo  $video
      * @param  ?string  $description
      * @param  ?int  $lowStockThreshold
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
+     * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, int $stock, array $gallery, bool $isActive, array $tags, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?int $lowStockThreshold = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, int $stock, array $gallery, bool $isActive, array $tags, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?int $lowStockThreshold = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $externalId = null, ?bool $manageStock = false)
     {
         $this->id = $id;
         $this->object = $object;
@@ -215,5 +238,7 @@ class Product
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->externalId = $externalId;
+        $this->manageStock = $manageStock;
     }
 }

@@ -37,7 +37,7 @@ class InvoiceActivity
     public string $description;
 
     /**
-     * Metadatos del evento. Los identificadores internos (PKs) se eliminan; los `*_uuid` se conservan.
+     * Event metadata. Internal identifiers (PKs) are stripped; `*_uuid` values are preserved.
      *
      * @var array<string, mixed> $metadata
      */
@@ -54,7 +54,7 @@ class InvoiceActivity
     public \DateTime $createdAt;
 
     /**
-     * Actor that originated the event. `null` when the event is system-generated or there is no associated user.
+     * Actor that originated the event. `{type:"user",...}` for an internal user, `{type:"api_key",...}` when performed via the public v1 API, or `null` when the event is system-generated (scheduler, periodic sweep) with no attributable actor.
      *
      * @var ?\Factuarea\Sdk\Models\Components\InvoiceActivityPerformedBy $performedBy
      */

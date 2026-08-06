@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaNumberAssigned - Payload (`data`) emitted with the `proforma.number_assigned` event. */
+/** EventDataProformaNumberAssigned - Payload (`data`) emitted with the `proforma.number_assigned` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaNumberAssigned
 {
     /**
+     * A proforma invoice that can be converted to a final invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaNumberAssignedProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaNumberAssignedProforma')]
-    public EventDataProformaNumberAssignedProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
+    public Proforma $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataProformaNumberAssigned
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaNumberAssignedProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaNumberAssignedProforma $proforma, string $type = 'proforma.number_assigned')
+    public function __construct(Proforma $object, string $type = 'proforma.number_assigned')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->type = $type;
     }
 }

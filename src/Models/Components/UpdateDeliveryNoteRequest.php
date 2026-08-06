@@ -118,13 +118,7 @@ class UpdateDeliveryNoteRequest
     public ?string $deliveryCountry = null;
 
     /**
-     * Logistics extension (semantic format validated in the Aggregate)
-     *
-     * The `required_with` pairing of each duo (driver/carrier/received_by)
-     * is NOT declared here: under `sometimes` the rule is dead when the
-     * dependent field is omitted (Laravel skips ALL its rules). It is applied
-     * in `withValidator()` so that the partial PUT still allows omitting
-     * both fields of the pair, but requires the second when the first is sent.
+     * Licence plate of the vehicle used for the delivery (up to 20 characters).
      *
      * @var ?string $vehiclePlate
      */
@@ -181,7 +175,18 @@ class UpdateDeliveryNoteRequest
     public ?string $receivedByTaxId = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -199,6 +204,26 @@ class UpdateDeliveryNoteRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $billingEmails = null;
+
+    /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
 
     /**
      * @param  ?string  $clientId
@@ -220,11 +245,14 @@ class UpdateDeliveryNoteRequest
      * @param  ?string  $carrierCompany
      * @param  ?string  $receivedByName
      * @param  ?string  $receivedByTaxId
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $billingEmails
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?array $lines = null, ?LocalDate $deliveryDate = null, ?string $notes = null, ?string $internalNotes = null, ?string $referenceNumber = null, ?string $transportDetails = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?string $vehiclePlate = null, ?string $driverName = null, ?string $driverTaxId = null, ?string $trackingNumber = null, ?string $carrierCompany = null, ?string $receivedByName = null, ?string $receivedByTaxId = null, ?array $metadata = null, ?array $billingEmails = null)
+    public function __construct(?string $clientId = null, ?array $lines = null, ?LocalDate $deliveryDate = null, ?string $notes = null, ?string $internalNotes = null, ?string $referenceNumber = null, ?string $transportDetails = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?string $vehiclePlate = null, ?string $driverName = null, ?string $driverTaxId = null, ?string $trackingNumber = null, ?string $carrierCompany = null, ?string $receivedByName = null, ?string $receivedByTaxId = null, ?string $externalId = null, ?array $metadata = null, ?array $billingEmails = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->lines = $lines;
@@ -245,7 +273,10 @@ class UpdateDeliveryNoteRequest
         $this->carrierCompany = $carrierCompany;
         $this->receivedByName = $receivedByName;
         $this->receivedByTaxId = $receivedByTaxId;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
         $this->billingEmails = $billingEmails;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

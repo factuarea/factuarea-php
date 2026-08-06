@@ -1,10 +1,5 @@
 # ConvertQuoteRequest
 
-Public REST API v1 — POST /v1/quotes/{uuid}/convert.
-
-Body requerido: `target` ∈ {invoice, proforma, delivery_note}.
-Body opcional: `issued_on` (date), `due_on` (date).
-
 
 ## Fields
 

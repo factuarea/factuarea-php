@@ -1,0 +1,9 @@
+# UpdateWeeklyScheduleRequestWeekPattern
+
+
+## Fields
+
+| Field                                                                                                             | Type                                                                                                              | Required                                                                                                          | Description                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `day`                                                                                                             | *int*                                                                                                             | :heavy_check_mark:                                                                                                | Day of the week in ISO 8601 format (1 Monday .. 7 Sunday).                                                        |
+| `ranges`                                                                                                          | array<[Components\UpdateWeeklyScheduleRequestRange](../../Models/Components/UpdateWeeklyScheduleRequestRange.md)> | :heavy_check_mark:                                                                                                | Time ranges for the day (empty = rest day).                                                                       |

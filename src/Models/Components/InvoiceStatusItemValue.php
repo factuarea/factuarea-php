@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Identificador interno del estado. */
+/** Internal status identifier. */
 enum InvoiceStatusItemValue: string
 {
     case Draft = 'draft';

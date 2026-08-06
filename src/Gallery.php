@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -52,13 +52,11 @@ class Gallery
      *
      * Delete a gallery image by its 0-based index. Remaining images shift positions to fill the gap.
      *
-     * @param  string  $product
-     * @param  int  $index
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsGalleryDeleteRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsGalleryDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsGalleryDelete(string $product, int $index, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1ProductsGalleryDeleteResponse
+    public function publicApiV1ProductsGalleryDelete(Operations\PublicApiV1ProductsGalleryDeleteRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsGalleryDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +83,6 @@ class Gallery
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsGalleryDeleteRequest(
-            product: $product,
-            index: $index,
-            idempotencyKey: $idempotencyKey,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/gallery/{index}', Operations\PublicApiV1ProductsGalleryDeleteRequest::class, $request);
         $urlOverride = null;
@@ -167,10 +160,12 @@ class Gallery
      *
      * @param  string  $product
      * @param  int  $index
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsGalleryDownloadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsGalleryDownload(string $product, int $index, ?Options $options = null): Operations\PublicApiV1ProductsGalleryDownloadResponse
+    public function publicApiV1ProductsGalleryDownload(string $product, int $index, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsGalleryDownloadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -200,11 +195,17 @@ class Gallery
         $request = new Operations\PublicApiV1ProductsGalleryDownloadRequest(
             product: $product,
             index: $index,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/gallery/{index}/download', Operations\PublicApiV1ProductsGalleryDownloadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/octet-stream';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -279,13 +280,11 @@ class Gallery
      *
      * Attach an image (jpeg, png, jpg, gif or webp; up to 3 MB) to the product gallery. Returns the updated product. Fails with 422 if the gallery limit is exceeded.
      *
-     * @param  \Factuarea\Sdk\Models\Components\UploadProductGalleryImageRequest  $body
-     * @param  string  $product
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsGalleryUploadRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsGalleryUploadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsGalleryUpload(Components\UploadProductGalleryImageRequest $body, string $product, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1ProductsGalleryUploadResponse
+    public function publicApiV1ProductsGalleryUpload(Operations\PublicApiV1ProductsGalleryUploadRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsGalleryUploadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -312,11 +311,6 @@ class Gallery
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
-            product: $product,
-            body: $body,
-            idempotencyKey: $idempotencyKey,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/gallery', Operations\PublicApiV1ProductsGalleryUploadRequest::class, $request);
         $urlOverride = null;

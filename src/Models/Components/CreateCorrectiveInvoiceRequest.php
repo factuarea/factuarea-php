@@ -9,21 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CreateCorrectiveInvoiceRequest - Public REST API v1 — POST /v1/invoices/{uuid}/corrective.
- *
- *
- * Body:
- *  - `correction_reason` (canonical slug BR-INV-018) — required field. Maps to
- *    a fine-grained VeriFactu code R1..R4 (error_fundado→R1, concurso→R2,
- *    incobrable→R3, rest→R4). Replaces the former free-text `reason` that the
- *    controller hardcoded to `'otras'` (fiscal bug).
- *  - `correction_type` (`full` or `partial`) — canonical field.
- *  - `corrective_type` — deprecated alias kept for backward compatibility.
- *    If sent and `correction_type` is absent, it is promoted automatically.
- *  - `notes` (optional string) — free-text traceability.
- *  - `lines` (array, required if `correction_type=partial`).
- */
+/** CreateCorrectiveInvoiceRequest - Generate a corrective (rectificativa) invoice for a previously issued invoice. `correction_reason` (required) maps to a VeriFactu R-code; `correction_type` is `full` or `partial`; the optional `correction_code` (`R1`..`R5`) forces the explicit R-code and is validated against the AEAT legal matrix for the original invoice type. Optional `justification`, `notes`, and `lines[]` (required when `correction_type` is `partial`). */
 class CreateCorrectiveInvoiceRequest
 {
     /**
@@ -36,11 +22,11 @@ class CreateCorrectiveInvoiceRequest
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\CorrectionType $correctionType
+     * @var \Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCorrectionType $correctionType
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('correction_type')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CorrectionType')]
-    public CorrectionType $correctionType;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCorrectionType')]
+    public CreateCorrectiveInvoiceRequestCorrectionType $correctionType;
 
     /**
      * $lines
@@ -54,6 +40,23 @@ class CreateCorrectiveInvoiceRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\CorrectionCode $correctionCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('correction_code')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CorrectionCode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CorrectionCode $correctionCode = null;
+
+    /**
+     *
+     * @var ?string $justification
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('justification')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $justification = null;
+
+    /**
+     *
      * @var ?string $notes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('notes')]
@@ -61,17 +64,45 @@ class CreateCorrectiveInvoiceRequest
     public ?string $notes = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\CorrectionReason  $correctionReason
-     * @param  \Factuarea\Sdk\Models\Components\CorrectionType  $correctionType
+     * @param  \Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCorrectionType  $correctionType
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLine>  $lines
+     * @param  ?\Factuarea\Sdk\Models\Components\CorrectionCode  $correctionCode
+     * @param  ?string  $justification
      * @param  ?string  $notes
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(CorrectionReason $correctionReason, CorrectionType $correctionType, ?array $lines = null, ?string $notes = null)
+    public function __construct(CorrectionReason $correctionReason, CreateCorrectiveInvoiceRequestCorrectionType $correctionType, ?array $lines = null, ?CorrectionCode $correctionCode = null, ?string $justification = null, ?string $notes = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->correctionReason = $correctionReason;
         $this->correctionType = $correctionType;
         $this->lines = $lines;
+        $this->correctionCode = $correctionCode;
+        $this->justification = $justification;
         $this->notes = $notes;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

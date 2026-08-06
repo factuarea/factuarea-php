@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
@@ -52,10 +53,12 @@ class Quarterly
      *
      * Returns the quarters that have at least one invoice, with breakdown by invoice type (F1/F2/F3/R5). Useful to populate "quarter to export" selectors.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesQuarterlyAvailableResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesQuarterlyAvailable(?Options $options = null): Operations\PublicApiV1InvoicesQuarterlyAvailableResponse
+    public function publicApiV1InvoicesQuarterlyAvailable(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlyAvailableResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -82,10 +85,18 @@ class Quarterly
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1InvoicesQuarterlyAvailableRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/quarterly/available-quarters');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -163,11 +174,13 @@ class Quarterly
      *
      * Builds a ZIP with all invoice PDFs of the given quarter. Returns ZIP metadata (path, processed counts, errors).
      *
-     * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $request
+     * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $body
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesQuarterlyDownloadZipResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesQuarterlyDownloadZip(Components\QuarterlyDownloadV1Request $request, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlyDownloadZipResponse
+    public function publicApiV1InvoicesQuarterlyDownloadZip(Components\QuarterlyDownloadV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlyDownloadZipResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -194,15 +207,24 @@ class Quarterly
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1InvoicesQuarterlyDownloadZipRequest(
+            body: $body,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/quarterly/download-zip');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'request', 'json');
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
         if ($body === null) {
             throw new \Exception('Request body is required');
         }
         $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/zip';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
@@ -279,10 +301,12 @@ class Quarterly
      *
      * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesQuarterlySendEmailResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesQuarterlySendEmail(Components\QuarterlyDownloadV1Request $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlySendEmailResponse
+    public function publicApiV1InvoicesQuarterlySendEmail(Components\QuarterlyDownloadV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlySendEmailResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -312,6 +336,8 @@ class Quarterly
         $request = new Operations\PublicApiV1InvoicesQuarterlySendEmailRequest(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/quarterly/send-email');

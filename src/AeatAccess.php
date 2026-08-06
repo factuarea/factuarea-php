@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -49,12 +50,14 @@ class AeatAccess
     /**
      * List AEAT access records
      *
-     * List Aeat Access Records V1.
+     * Return the dissociated (anonymized) AEAT access ledger with cursor-based pagination. Third-party tax identifiers (NIF) are never exposed; the cursor uses the underlying record UUID v7 only for ordering.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuAeatAccessList(?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessListResponse
+    public function publicApiV1VerifactuAeatAccessList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -81,10 +84,18 @@ class AeatAccess
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuAeatAccessListRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/aeat-access/records');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -160,13 +171,15 @@ class AeatAccess
     /**
      * Retrieve an AEAT access record
      *
-     * Show Aeat Access Record V1.
+     * Retrieve a single dissociated AEAT access record by its `id` (UUID v7). Returns 404 if the record does not exist or belongs to another company.
      *
      * @param  string  $record
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuAeatAccessShow(string $record, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessShowResponse
+    public function publicApiV1VerifactuAeatAccessShow(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -195,11 +208,17 @@ class AeatAccess
         }
         $request = new Operations\PublicApiV1VerifactuAeatAccessShowRequest(
             record: $record,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/aeat-access/records/{record}', Operations\PublicApiV1VerifactuAeatAccessShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -239,7 +258,7 @@ class AeatAccess
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

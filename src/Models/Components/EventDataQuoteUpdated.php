@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteUpdated - Payload (`data`) emitted with the `quote.updated` event. */
+/** EventDataQuoteUpdated - Payload (`data`) emitted with the `quote.updated` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteUpdated
 {
     /**
+     * A sales quote that can be converted to an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteUpdatedQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteUpdatedQuote')]
-    public EventDataQuoteUpdatedQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
+    public Quote $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataQuoteUpdated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteUpdatedQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteUpdatedQuote $quote, string $type = 'quote.updated')
+    public function __construct(Quote $object, string $type = 'quote.updated')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

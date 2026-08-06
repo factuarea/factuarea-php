@@ -9,13 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CreateProductRequest - Public REST API v1 — POST /v1/products.
- *
- *
- * Required body: `name`, `price`. Optional: `sku`, `currency`, `tax_rate_id`,
- * `is_active`, `metadata`. Validation of `metadata` via VO `Metadata`.
- */
+/** CreateProductRequest - Create a product in your catalog. Required: `name` and `price`. Optional: `sku` (unique per company), `description`, `tags`, `stock` (initial quantity), `low_stock_threshold`, `manage_stock`, `currency` (`EUR` only — any other code returns 422), `tax_rate_id`, `is_active`, `metadata` and `external_id`. Stock changes after creation are made through `PUT /v1/products/{product}/stock`, not through this endpoint. */
 class CreateProductRequest
 {
     /**
@@ -33,11 +27,7 @@ class CreateProductRequest
     public string $price;
 
     /**
-     * `sku` uniqueness per company is NOT validated here — the Aggregate
-     *
-     * throws `DuplicateSkuException` and the controller translates it to 409
-     * `sku_already_exists` (not 422). Validating here would give 422 and break
-     * the external-api-products spec contract.
+     * Stock keeping unit (your own product code), unique per company. Optional; up to 100 characters.
      *
      * @var ?string $sku
      */
@@ -46,12 +36,52 @@ class CreateProductRequest
     public ?string $sku = null;
 
     /**
+     * Columna `products.description` es `text` → sin `max` artificial.
      *
-     * @var ?string $currency
+     * @var ?string $description
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $description = null;
+
+    /**
+     * Initial stock (create only; later stock changes are made via `PUT /v1/products/{uuid}/stock`). Absent → defaults to 0.
+     *
+     * @var ?int $stock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $stock = null;
+
+    /**
+     * Umbral per-producto; se persiste en `metadata.low_stock_threshold`.
+     *
+     * @var ?int $lowStockThreshold
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $lowStockThreshold = null;
+
+    /**
+     * Whether this product takes part in document-driven stock movements: with `true`, issuing or receiving a document that includes it moves its stock automatically and the movement is recorded in the stock ledger. It only takes effect if your company also has stock management enabled; absent or `null` means `false`.
+     *
+     * @var ?bool $manageStock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('manage_stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $manageStock = null;
+
+    /**
+     * Producto es read-only EUR: solo se admite `EUR` (o ausencia/null).
+     *
+     * Cualquier otra moneda → 422 (antes se aceptaba-y-descartaba).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency $currency
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('currency')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $currency = null;
+    public ?CreateProductRequestCurrency $currency = null;
 
     /**
      * `taxes` is a global system catalog (without a `company_id` column).
@@ -75,7 +105,10 @@ class CreateProductRequest
     public ?bool $isActive = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -85,23 +118,54 @@ class CreateProductRequest
     public ?array $metadata = null;
 
     /**
+     * Third-party integration key from your ERP/CRM (orthogonal to `sku`). Free-form, up to 100 characters.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
      * @param  string  $name
      * @param  string  $price
      * @param  ?string  $sku
-     * @param  ?string  $currency
+     * @param  ?string  $description
+     * @param  ?int  $stock
+     * @param  ?int  $lowStockThreshold
+     * @param  ?bool  $manageStock
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
      * @param  ?bool  $isActive
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $externalId
+     * @param  ?array<string>  $tags
      * @phpstan-pure
      */
-    public function __construct(string $name, string $price, ?string $sku = null, ?string $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null)
+    public function __construct(string $name, string $price, ?string $sku = null, ?string $description = null, ?int $stock = null, ?int $lowStockThreshold = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $tags = null)
     {
         $this->name = $name;
         $this->price = $price;
         $this->sku = $sku;
+        $this->description = $description;
+        $this->stock = $stock;
+        $this->lowStockThreshold = $lowStockThreshold;
+        $this->manageStock = $manageStock;
         $this->currency = $currency;
         $this->taxRateId = $taxRateId;
         $this->isActive = $isActive;
         $this->metadata = $metadata;
+        $this->externalId = $externalId;
+        $this->tags = $tags;
     }
 }

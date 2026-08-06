@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataPurchaseInvoiceUpdated - Payload (`data`) emitted with the `purchase_invoice.updated` event. */
+/** EventDataPurchaseInvoiceUpdated - Payload (`data`) emitted with the `purchase_invoice.updated` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataPurchaseInvoiceUpdated
 {
     /**
+     * An invoice received from a supplier.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataPurchaseInvoiceUpdatedPurchaseInvoice $purchaseInvoice
+     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('purchase_invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataPurchaseInvoiceUpdatedPurchaseInvoice')]
-    public EventDataPurchaseInvoiceUpdatedPurchaseInvoice $purchaseInvoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoice')]
+    public PurchaseInvoice $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataPurchaseInvoiceUpdated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataPurchaseInvoiceUpdatedPurchaseInvoice  $purchaseInvoice
+     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoice  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataPurchaseInvoiceUpdatedPurchaseInvoice $purchaseInvoice, string $type = 'purchase_invoice.updated')
+    public function __construct(PurchaseInvoice $object, string $type = 'purchase_invoice.updated')
     {
-        $this->purchaseInvoice = $purchaseInvoice;
+        $this->object = $object;
         $this->type = $type;
     }
 }

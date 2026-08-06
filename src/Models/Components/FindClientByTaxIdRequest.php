@@ -9,13 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * FindClientByTaxIdRequest - Public REST API v1 — POST /v1/clients/find-by-tax-id.
- *
- *
- * Busca un cliente por su identificador fiscal (NIF/CIF/NIE) dentro de la
- * company autenticada.
- */
+/** FindClientByTaxIdRequest - Look up a client by its Spanish tax ID (NIF/CIF/NIE) within your company. */
 class FindClientByTaxIdRequest
 {
     /**

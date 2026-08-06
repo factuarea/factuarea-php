@@ -52,19 +52,62 @@ class CreateCorrectiveInvoiceRequestLine
     public ?float $discountPercent = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
+     *
+     * @var ?string $productId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $productId = null;
+
+    /**
+     * Kind of line: `NORMAL` (default) for an ordinary line, or `SUPLIDO` for a DISBURSEMENT — an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) re-invoiced at cost, which stays out of the taxable base (art. 78.Tres.3 LIVA) and is aggregated into `total_disbursements`. A `SUPLIDO` line must carry no VAT, withholding, surcharge, discount or product, and requires `source_invoice_reference`. Only meaningful when `correction_type` is `partial`, which is when `lines[]` is sent; a value outside the catalog is rejected with 422.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLineType $lineType
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('line_type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLineType|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateCorrectiveInvoiceRequestLineType $lineType = null;
+
+    /**
+     *
+     * @var ?string $sourceInvoiceReference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_invoice_reference')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $sourceInvoiceReference = null;
+
+    /**
      * @param  ?string  $description
      * @param  ?float  $quantity
      * @param  ?float  $unitPrice
      * @param  ?float  $taxRate
      * @param  ?float  $discountPercent
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $productId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLineType  $lineType
+     * @param  ?string  $sourceInvoiceReference
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null, ?float $discountPercent = null)
+    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
         $this->discountPercent = $discountPercent;
+        $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->productId = $productId;
+        $this->lineType = $lineType;
+        $this->sourceInvoiceReference = $sourceInvoiceReference;
     }
 }

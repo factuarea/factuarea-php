@@ -9,16 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * ConvertDeliveryNoteRequest - Public REST API v1 — POST /v1/delivery_notes/{uuid}/convert.
- *
- *
- * Required body: `target` ∈ {invoice, proforma}. The spec lists both
- * targets, but the DeliveryNote BC in this phase only supports
- * conversion to invoice — the controller returns 422 with a descriptive
- * message if `target=proforma` until the BC adds the
- * `ConvertDeliveryNoteToProformaCommand`.
- */
 class ConvertDeliveryNoteRequest
 {
     /**
@@ -30,11 +20,21 @@ class ConvertDeliveryNoteRequest
     public ConvertDeliveryNoteRequestTarget $target;
 
     /**
+     *
+     * @var ?string $targetSeriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('target_series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $targetSeriesId = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ConvertDeliveryNoteRequestTarget  $target
+     * @param  ?string  $targetSeriesId
      * @phpstan-pure
      */
-    public function __construct(ConvertDeliveryNoteRequestTarget $target)
+    public function __construct(ConvertDeliveryNoteRequestTarget $target, ?string $targetSeriesId = null)
     {
         $this->target = $target;
+        $this->targetSeriesId = $targetSeriesId;
     }
 }

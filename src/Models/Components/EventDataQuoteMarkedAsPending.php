@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteMarkedAsPending - Payload (`data`) emitted with the `quote.marked_as_pending` event. */
+/** EventDataQuoteMarkedAsPending - Payload (`data`) emitted with the `quote.marked_as_pending` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteMarkedAsPending
 {
     /**
+     * A sales quote that can be converted to an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteMarkedAsPendingQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteMarkedAsPendingQuote')]
-    public EventDataQuoteMarkedAsPendingQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
+    public Quote $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataQuoteMarkedAsPending
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteMarkedAsPendingQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteMarkedAsPendingQuote $quote, string $type = 'quote.marked_as_pending')
+    public function __construct(Quote $object, string $type = 'quote.marked_as_pending')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

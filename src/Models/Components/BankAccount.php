@@ -21,7 +21,7 @@ class BankAccount
     public BankAccountObject $object;
 
     /**
-     * International Bank Account Number (IBAN).
+     * International Bank Account Number (IBAN), forma canónica normalizada sin espacios y en mayúsculas (ISO 13616, longitud total 15..34). En entrada se toleran espacios y minúsculas.
      *
      * @var string $iban
      */
@@ -29,7 +29,7 @@ class BankAccount
     public string $iban;
 
     /**
-     * Marca la cuenta como predeterminada para domiciliaciones.
+     * Marks the account as the default for direct debits.
      *
      * @var bool $isDefault
      */
@@ -37,7 +37,6 @@ class BankAccount
     public bool $isDefault;
 
     /**
-     * Bank Identifier Code / SWIFT (opcional).
      *
      * @var ?string $bic
      */

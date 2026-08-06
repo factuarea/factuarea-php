@@ -9,16 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * BulkDeletePurchaseInvoicesRequest - Public REST API v1 — POST /v1/purchase_invoices/bulk-delete (canónico). El
- *
- * alias legacy `DELETE /v1/purchase_invoices/bulk` se eliminó en el change
- * `public-api-official-sdks` (P0 1.3).
- *
- * Body requerido: `ids` (array de UUIDs entre 1 y 100). La pertenencia al
- * tenant se valida en el controller — UUIDs desconocidos se reportan como
- * fallidos.
- */
+/** BulkDeletePurchaseInvoicesRequest - Delete several purchase invoices in one request. `ids` is an array of 1 to 100 UUIDs; unknown identifiers are reported as failed rather than failing the whole request. */
 class BulkDeletePurchaseInvoicesRequest
 {
     /**

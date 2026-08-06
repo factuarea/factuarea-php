@@ -9,14 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * UpdateWebhookEndpointRequest - PUT /v1/webhook_endpoints/{uuid}
- *
- *
- * Partial — all fields optional (`sometimes`). Only the fields present in the
- * body are updated; absent ones are preserved. To clear an optional field send
- * an explicit `null` (`{field}Provided=true` + `value=null` semantics).
- */
 class UpdateWebhookEndpointRequest
 {
     /**
@@ -64,7 +56,10 @@ class UpdateWebhookEndpointRequest
     public ?string $apiVersion = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */

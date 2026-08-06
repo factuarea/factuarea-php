@@ -1,11 +1,11 @@
 # EventDataProformaNumberAssigned
 
-Payload (`data`) emitted with the `proforma.number_assigned` event.
+Payload (`data`) emitted with the `proforma.number_assigned` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
 
 
 ## Fields
 
-| Field                                                                                                                    | Type                                                                                                                     | Required                                                                                                                 | Description                                                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `type`                                                                                                                   | *string*                                                                                                                 | :heavy_check_mark:                                                                                                       | N/A                                                                                                                      |
-| `proforma`                                                                                                               | [Components\EventDataProformaNumberAssignedProforma](../../Models/Components/EventDataProformaNumberAssignedProforma.md) | :heavy_check_mark:                                                                                                       | N/A                                                                                                                      |
+| Field                                                        | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `type`                                                       | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `object`                                                     | [Components\Proforma](../../Models/Components/Proforma.md)   | :heavy_check_mark:                                           | A proforma invoice that can be converted to a final invoice. |

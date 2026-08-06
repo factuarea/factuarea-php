@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1SuppliersListRequest
 {
@@ -44,6 +45,14 @@ class PublicApiV1SuppliersListRequest
     public ?string $taxIdIn = null;
 
     /**
+     * Fiscal tax number (NIF/CIF/NIE) of the supplier. Partial case-insensitive match (`LIKE %term%`) on `tax_id`.
+     *
+     * @var ?string $taxIdContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=tax_id[contains]')]
+    public ?string $taxIdContains = null;
+
+    /**
      * Intra-community VAT number. Exact match on `vat_id`.
      *
      * @var ?string $vatId
@@ -52,12 +61,60 @@ class PublicApiV1SuppliersListRequest
     public ?string $vatId = null;
 
     /**
+     * Intra-community VAT number. Partial case-insensitive match (`LIKE %term%`) on `vat_id`.
+     *
+     * @var ?string $vatIdContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=vat_id[contains]')]
+    public ?string $vatIdContains = null;
+
+    /**
      * Trade name of the supplier. Exact match on `name`.
      *
      * @var ?string $name
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=name')]
     public ?string $name = null;
+
+    /**
+     * Trade name of the supplier. Partial case-insensitive match (`LIKE %term%`) on `name`.
+     *
+     * @var ?string $nameContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=name[contains]')]
+    public ?string $nameContains = null;
+
+    /**
+     * City of the supplier postal address. Exact match on `city`.
+     *
+     * @var ?string $city
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=city')]
+    public ?string $city = null;
+
+    /**
+     * City of the supplier postal address. Partial case-insensitive match (`LIKE %term%`) on `city`.
+     *
+     * @var ?string $cityContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=city[contains]')]
+    public ?string $cityContains = null;
+
+    /**
+     * Province / region of the supplier postal address. Exact match on `province`.
+     *
+     * @var ?string $province
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=province')]
+    public ?string $province = null;
+
+    /**
+     * Province / region of the supplier postal address. Partial case-insensitive match (`LIKE %term%`) on `province`.
+     *
+     * @var ?string $provinceContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=province[contains]')]
+    public ?string $provinceContains = null;
 
     /**
      * Filter by active / inactive suppliers. Exact match on `is_active`.
@@ -100,6 +157,38 @@ class PublicApiV1SuppliersListRequest
     public ?\DateTime $createdLt = null;
 
     /**
+     * Free-text search. Escaped `LIKE %term%` (case-insensitive, max 80 chars) across the resource's key text columns, combined with the other filters (AND) and compatible with the cursor.
+     *
+     * @var ?string $search
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=search')]
+    public ?string $search = null;
+
+    /**
+     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     *
+     * @var ?array<string, string> $metadata
+     */
+    #[SpeakeasyMetadata('queryParam:style=deepObject,explode=true,name=metadata')]
+    public ?array $metadata = null;
+
+    /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -113,28 +202,50 @@ class PublicApiV1SuppliersListRequest
      * @param  ?string  $endingBefore
      * @param  ?string  $taxId
      * @param  ?string  $taxIdIn
+     * @param  ?string  $taxIdContains
      * @param  ?string  $vatId
+     * @param  ?string  $vatIdContains
      * @param  ?string  $name
+     * @param  ?string  $nameContains
+     * @param  ?string  $city
+     * @param  ?string  $cityContains
+     * @param  ?string  $province
+     * @param  ?string  $provinceContains
      * @param  ?bool  $isActive
      * @param  ?\DateTime  $createdGte
      * @param  ?\DateTime  $createdLte
      * @param  ?\DateTime  $createdGt
      * @param  ?\DateTime  $createdLt
+     * @param  ?string  $search
+     * @param  ?array<string, string>  $metadata
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $taxId = null, ?string $taxIdIn = null, ?string $vatId = null, ?string $name = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $taxId = null, ?string $taxIdIn = null, ?string $taxIdContains = null, ?string $vatId = null, ?string $vatIdContains = null, ?string $name = null, ?string $nameContains = null, ?string $city = null, ?string $cityContains = null, ?string $province = null, ?string $provinceContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->taxId = $taxId;
         $this->taxIdIn = $taxIdIn;
+        $this->taxIdContains = $taxIdContains;
         $this->vatId = $vatId;
+        $this->vatIdContains = $vatIdContains;
         $this->name = $name;
+        $this->nameContains = $nameContains;
+        $this->city = $city;
+        $this->cityContains = $cityContains;
+        $this->province = $province;
+        $this->provinceContains = $provinceContains;
         $this->isActive = $isActive;
         $this->createdGte = $createdGte;
         $this->createdLte = $createdLte;
         $this->createdGt = $createdGt;
         $this->createdLt = $createdLt;
+        $this->search = $search;
+        $this->metadata = $metadata;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

@@ -9,16 +9,31 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceVerifactuSubmitted - Payload (`data`) emitted with the `invoice.verifactu_submitted` event. */
+/** EventDataInvoiceVerifactuSubmitted - Payload (`data`) emitted with the `invoice.verifactu_submitted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceVerifactuSubmitted
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceVerifactuSubmittedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceVerifactuSubmittedInvoice')]
-    public EventDataInvoiceVerifactuSubmittedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
+
+    /**
+     *
+     * @var ?string $verifactuRecordId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('verifactu_record_id')]
+    public ?string $verifactuRecordId;
+
+    /**
+     *
+     * @var ?string $huella
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('huella')]
+    public ?string $huella;
 
     /**
      *
@@ -29,12 +44,16 @@ class EventDataInvoiceVerifactuSubmitted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceVerifactuSubmittedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  ?string  $verifactuRecordId
+     * @param  ?string  $huella
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceVerifactuSubmittedInvoice $invoice, string $type = 'invoice.verifactu_submitted')
+    public function __construct(Invoice $object, ?string $verifactuRecordId = null, ?string $huella = null, string $type = 'invoice.verifactu_submitted')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
+        $this->verifactuRecordId = $verifactuRecordId;
+        $this->huella = $huella;
         $this->type = $type;
     }
 }

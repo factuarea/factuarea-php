@@ -1,0 +1,11 @@
+# BulkStatusQuotesV1Request
+
+Transition several quotes to `new_status` (`approved` or `rejected`) in one request, up to 50 per batch. `ids` is an array of quote UUIDs; every transition passes the document state guard, and quotes that cannot transition are returned under `failures[]`.
+
+
+## Fields
+
+| Field                                                                                                          | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `newStatus`                                                                                                    | [Components\BulkStatusQuotesV1RequestNewStatus](../../Models/Components/BulkStatusQuotesV1RequestNewStatus.md) | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
+| `ids`                                                                                                          | array<*string*>                                                                                                | :heavy_check_mark:                                                                                             | N/A                                                                                                            |

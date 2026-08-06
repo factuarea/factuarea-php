@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1VerifactuEventsListPaginatedList - Cursor-paginated list envelope shared by every v1 listing endpoint. `data` holds the page items; `has_more` signals whether another page exists; `next_cursor` is the opaque cursor (UUID v7) to pass as `?cursor=` for the following page. The cursor is opaque — clients MUST NOT interpret it. Concrete listings narrow `data` to their resource type via `allOf`. */
+/** PublicApiV1VerifactuEventsListPaginatedList - Cursor-paginated list envelope shared by every v1 listing endpoint. `data` holds the page items; `has_more` signals whether another page exists; `next_cursor` is the cursor to pass back for the following page. Treat it as strictly opaque: send it through verbatim, never parse it and never assume a format — it is not the same across listings, and each listing documents its own cursor parameter. Concrete listings narrow `data` to their resource type via `allOf`. */
 class PublicApiV1VerifactuEventsListPaginatedList
 {
     /**
@@ -30,7 +30,7 @@ class PublicApiV1VerifactuEventsListPaginatedList
     public bool $hasMore;
 
     /**
-     * Opaque cursor for the next page (UUID v7), or `null` when `has_more` is `false`.
+     * Opaque cursor for the next page, or `null` when `has_more` is `false`. The example below shows the shape used by most listings; others return a different one, so pass the value back verbatim instead of validating it.
      *
      * @var ?string $nextCursor
      */

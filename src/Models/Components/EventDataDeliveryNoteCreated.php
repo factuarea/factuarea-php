@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataDeliveryNoteCreated - Payload (`data`) emitted with the `delivery_note.created` event. */
+/** EventDataDeliveryNoteCreated - Payload (`data`) emitted with the `delivery_note.created` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataDeliveryNoteCreated
 {
     /**
+     * A delivery note tracking goods delivered to a customer.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteCreatedDeliveryNote $deliveryNote
+     * @var \Factuarea\Sdk\Models\Components\DeliveryNote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_note')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataDeliveryNoteCreatedDeliveryNote')]
-    public EventDataDeliveryNoteCreatedDeliveryNote $deliveryNote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DeliveryNote')]
+    public DeliveryNote $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataDeliveryNoteCreated
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteCreatedDeliveryNote  $deliveryNote
+     * @param  \Factuarea\Sdk\Models\Components\DeliveryNote  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataDeliveryNoteCreatedDeliveryNote $deliveryNote, string $type = 'delivery_note.created')
+    public function __construct(DeliveryNote $object, string $type = 'delivery_note.created')
     {
-        $this->deliveryNote = $deliveryNote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

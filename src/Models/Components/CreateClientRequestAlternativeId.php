@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateClientRequestAlternativeId
 {
     /**
+     * Alternative identifier type from the AEAT L7 catalog. Legacy aliases (`tax_id_foreign`/`national_id`) are accepted on input for backward compatibility.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreateClientRequestType $type
      */

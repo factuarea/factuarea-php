@@ -1,0 +1,11 @@
+# BulkStatusProductsV1Request
+
+Transition several products to `new_status` (`active` or `inactive`) in one request, up to 50 per batch. `ids` is an array of product UUIDs; the change is idempotent (a product already in the target status counts as successful). Products that do not exist are returned under `failures[]`.
+
+
+## Fields
+
+| Field                                                                                                              | Type                                                                                                               | Required                                                                                                           | Description                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `newStatus`                                                                                                        | [Components\BulkStatusProductsV1RequestNewStatus](../../Models/Components/BulkStatusProductsV1RequestNewStatus.md) | :heavy_check_mark:                                                                                                 | N/A                                                                                                                |
+| `ids`                                                                                                              | array<*string*>                                                                                                    | :heavy_check_mark:                                                                                                 | N/A                                                                                                                |

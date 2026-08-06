@@ -1,0 +1,11 @@
+# BulkStatusDeliveryNotesV1Request
+
+Transition several delivery notes to `new_status` (`delivered` or `cancelled`) in one request, up to 50 per batch. `ids` is an array of delivery-note UUIDs; every transition passes the document state guard, and notes that cannot transition are returned under `failures[]`.
+
+
+## Fields
+
+| Field                                                                                                                        | Type                                                                                                                         | Required                                                                                                                     | Description                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `newStatus`                                                                                                                  | [Components\BulkStatusDeliveryNotesV1RequestNewStatus](../../Models/Components/BulkStatusDeliveryNotesV1RequestNewStatus.md) | :heavy_check_mark:                                                                                                           | N/A                                                                                                                          |
+| `ids`                                                                                                                        | array<*string*>                                                                                                              | :heavy_check_mark:                                                                                                           | N/A                                                                                                                          |

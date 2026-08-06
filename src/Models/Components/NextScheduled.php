@@ -20,7 +20,7 @@ class NextScheduled
     public ?string $id;
 
     /**
-     * Nombre de la recurrencia.
+     * Name of the recurrence.
      *
      * @var ?string $name
      */

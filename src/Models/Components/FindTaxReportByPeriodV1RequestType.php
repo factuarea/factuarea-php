@@ -13,4 +13,5 @@ enum FindTaxReportByPeriodV1RequestType: string
 {
     case Modelo303 = 'modelo_303';
     case Modelo347 = 'modelo_347';
+    case Modelo130 = 'modelo_130';
 }

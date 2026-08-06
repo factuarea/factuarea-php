@@ -9,14 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * UpdatePurchaseInvoiceRequest - Public REST API v1 — PUT /v1/purchase_invoices/{uuid}.
- *
- *
- * Partial update: omitted fields are kept. Only allowed when
- * the purchase invoice is in `draft` status (the controller maps the
- * transition exception to 409 `invalid_status_transition`).
- */
 class UpdatePurchaseInvoiceRequest
 {
     /**
@@ -44,6 +36,14 @@ class UpdatePurchaseInvoiceRequest
     public ?LocalDate $issuedOn = null;
 
     /**
+     *
+     * @var ?bool $exclude347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exclude_347')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $exclude347 = null;
+
+    /**
      * $lines
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestLine> $lines
@@ -52,6 +52,23 @@ class UpdatePurchaseInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestLine>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $lines = null;
+
+    /**
+     *
+     * @var ?string $expenseCategoryId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expense_category_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expenseCategoryId = null;
+
+    /**
+     * External business key (integration key from your ERP/CRM). Partial update: an explicit `external_id: null` clears the key. Orthogonal to `external_invoice_number`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
 
     /**
      *
@@ -86,7 +103,10 @@ class UpdatePurchaseInvoiceRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -156,6 +176,23 @@ class UpdatePurchaseInvoiceRequest
     public ?bool $isReverseCharge = null;
 
     /**
+     *
+     * @var ?float $deductiblePercentage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deductible_percentage')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $deductiblePercentage = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOperationClass $operationClass
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_class')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOperationClass|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestOperationClass $operationClass = null;
+
+    /**
      * $tags
      *
      * @var ?array<string> $tags
@@ -166,10 +203,23 @@ class UpdatePurchaseInvoiceRequest
     public ?array $tags = null;
 
     /**
+     * Typed custom fields as `[{field, value}]`. Partial update: an explicit `custom_fields: null` empties the collection.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  ?string  $supplierId
      * @param  ?string  $externalInvoiceNumber
      * @param  ?LocalDate  $issuedOn
+     * @param  ?bool  $exclude347
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestLine>  $lines
+     * @param  ?string  $expenseCategoryId
+     * @param  ?string  $externalId
      * @param  ?string  $internalCode
      * @param  ?LocalDate  $receivedOn
      * @param  ?LocalDate  $dueOn
@@ -182,15 +232,21 @@ class UpdatePurchaseInvoiceRequest
      * @param  ?string  $expenseAccount
      * @param  ?string  $taxPeriod
      * @param  ?bool  $isReverseCharge
+     * @param  ?float  $deductiblePercentage
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOperationClass  $operationClass
      * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $supplierId = null, ?string $externalInvoiceNumber = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?bool $isReverseCharge = null, ?array $tags = null)
+    public function __construct(?string $supplierId = null, ?string $externalInvoiceNumber = null, ?LocalDate $issuedOn = null, ?bool $exclude347 = null, ?array $lines = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?UpdatePurchaseInvoiceRequestOperationClass $operationClass = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->supplierId = $supplierId;
         $this->externalInvoiceNumber = $externalInvoiceNumber;
         $this->issuedOn = $issuedOn;
+        $this->exclude347 = $exclude347;
         $this->lines = $lines;
+        $this->expenseCategoryId = $expenseCategoryId;
+        $this->externalId = $externalId;
         $this->internalCode = $internalCode;
         $this->receivedOn = $receivedOn;
         $this->dueOn = $dueOn;
@@ -203,6 +259,9 @@ class UpdatePurchaseInvoiceRequest
         $this->expenseAccount = $expenseAccount;
         $this->taxPeriod = $taxPeriod;
         $this->isReverseCharge = $isReverseCharge;
+        $this->deductiblePercentage = $deductiblePercentage;
+        $this->operationClass = $operationClass;
         $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

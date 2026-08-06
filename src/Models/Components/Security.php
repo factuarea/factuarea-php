@@ -33,15 +33,24 @@ class Security
     public ?string $apiKeyAuth = null;
 
     /**
+     *
+     * @var ?string $oAuth2
+     */
+    #[SpeakeasyMetadata('security:scheme=true,type=oauth2,name=Authorization')]
+    public ?string $oAuth2 = null;
+
+    /**
      * @param  ?string  $http
      * @param  ?string  $bearerAuth
      * @param  ?string  $apiKeyAuth
+     * @param  ?string  $oAuth2
      * @phpstan-pure
      */
-    public function __construct(?string $http = null, ?string $bearerAuth = null, ?string $apiKeyAuth = null)
+    public function __construct(?string $http = null, ?string $bearerAuth = null, ?string $apiKeyAuth = null, ?string $oAuth2 = null)
     {
         $this->http = $http;
         $this->bearerAuth = $bearerAuth;
         $this->apiKeyAuth = $apiKeyAuth;
+        $this->oAuth2 = $oAuth2;
     }
 }

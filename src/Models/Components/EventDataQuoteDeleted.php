@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataQuoteDeleted - Payload (`data`) emitted with the `quote.deleted` event. */
+/** EventDataQuoteDeleted - Payload (`data`) emitted with the `quote.deleted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataQuoteDeleted
 {
     /**
+     * Snapshot of the resource at emission time. When the resource is still recoverable the full snapshot is emitted with an additional `deleted: true` key; otherwise it degrades to `{ id, deleted: true }`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataQuoteDeletedQuote $quote
+     * @var \Factuarea\Sdk\Models\Components\Quote|\Factuarea\Sdk\Models\Components\EventDeletedObject $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quote')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataQuoteDeletedQuote')]
-    public EventDataQuoteDeletedQuote $quote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote|\Factuarea\Sdk\Models\Components\EventDeletedObject')]
+    public Quote|EventDeletedObject $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataQuoteDeleted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataQuoteDeletedQuote  $quote
+     * @param  \Factuarea\Sdk\Models\Components\Quote|\Factuarea\Sdk\Models\Components\EventDeletedObject  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataQuoteDeletedQuote $quote, string $type = 'quote.deleted')
+    public function __construct(Quote|EventDeletedObject $object, string $type = 'quote.deleted')
     {
-        $this->quote = $quote;
+        $this->object = $object;
         $this->type = $type;
     }
 }

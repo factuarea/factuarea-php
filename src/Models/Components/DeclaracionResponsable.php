@@ -53,7 +53,7 @@ class DeclaracionResponsable
     public string $systemName;
 
     /**
-     * NIF del productor del SIF.
+     * Tax ID (NIF) of the SIF producer.
      *
      * @var string $producerTaxId
      */
@@ -61,7 +61,7 @@ class DeclaracionResponsable
     public string $producerTaxId;
 
     /**
-     * Nombre del productor del SIF.
+     * Name of the SIF producer.
      *
      * @var string $producerName
      */

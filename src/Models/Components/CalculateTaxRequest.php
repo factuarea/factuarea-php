@@ -27,14 +27,7 @@ class CalculateTaxRequest
     public float $base;
 
     /**
-     * NOTE: no `exists:taxes,uuid` rule here. Existence is resolved by the
-     *
-     * Controller via `resolveUuid(TaxModel::class)`, which throws
-     * `TaxNotFoundException` (404 `tax_not_found`) for a well-formed but
-     * non-existent uuid — via `PublicApiNotFoundExceptionRegistry`. With
-     * `exists` the FormRequest would emit 422 `invalid_param_value` and the
-     * canonical 404 would never be reached. The `uuid` rule keeps the 422 for
-     * malformed uuids (arbitrary text is not passed to the database lookup).
+     * Identifier (UUID v7) of the tax to apply, from the global `taxes` catalog. A well-formed but non-existent value returns 404 `tax_not_found`.
      *
      * @var string $taxesId
      */

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceDeleted - Payload (`data`) emitted with the `invoice.deleted` event. */
+/** EventDataInvoiceDeleted - Payload (`data`) emitted with the `invoice.deleted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceDeleted
 {
     /**
+     * Snapshot of the resource at emission time. When the resource is still recoverable the full snapshot is emitted with an additional `deleted: true` key; otherwise it degrades to `{ id, deleted: true }`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceDeletedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice|\Factuarea\Sdk\Models\Components\EventDeletedObject $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceDeletedInvoice')]
-    public EventDataInvoiceDeletedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice|\Factuarea\Sdk\Models\Components\EventDeletedObject')]
+    public Invoice|EventDeletedObject $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataInvoiceDeleted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceDeletedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice|\Factuarea\Sdk\Models\Components\EventDeletedObject  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceDeletedInvoice $invoice, string $type = 'invoice.deleted')
+    public function __construct(Invoice|EventDeletedObject $object, string $type = 'invoice.deleted')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->type = $type;
     }
 }

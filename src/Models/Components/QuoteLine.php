@@ -42,6 +42,22 @@ class QuoteLine
     public float $taxRate;
 
     /**
+     * IRPF withholding percentage applied to the line (0–100). Default 0. Its amount is already aggregated into `taxes`.
+     *
+     * @var float $retentionRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate')]
+    public float $retentionRate;
+
+    /**
+     * Equivalence surcharge (recargo de equivalencia) percentage applied to the line (0–100). Default 0. Its amount is already aggregated into `taxes`.
+     *
+     * @var float $surchargeRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate')]
+    public float $surchargeRate;
+
+    /**
      *
      * @var float $discountPercent
      */
@@ -85,29 +101,45 @@ class QuoteLine
     public ?ProductRef $product;
 
     /**
+     * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\QuoteLineObject  $object
      * @param  float  $quantity
      * @param  float  $unitPrice
      * @param  float  $taxRate
+     * @param  float  $retentionRate
+     * @param  float  $surchargeRate
      * @param  float  $discountPercent
      * @param  float  $subtotal
      * @param  float  $taxes
      * @param  float  $total
      * @param  ?string  $description
      * @param  ?\Factuarea\Sdk\Models\Components\ProductRef  $product
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(QuoteLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $discountPercent, float $subtotal, float $taxes, float $total, ?string $description = null, ?ProductRef $product = null)
+    public function __construct(QuoteLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, ?string $description = null, ?ProductRef $product = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->retentionRate = $retentionRate;
+        $this->surchargeRate = $surchargeRate;
         $this->discountPercent = $discountPercent;
         $this->subtotal = $subtotal;
         $this->taxes = $taxes;
         $this->total = $total;
         $this->description = $description;
         $this->product = $product;
+        $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

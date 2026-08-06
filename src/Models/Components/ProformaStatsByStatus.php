@@ -20,7 +20,7 @@ class ProformaStatsByStatus
     public int $count;
 
     /**
-     * Importe acumulado de las proformas en este estado (EUR).
+     * Aggregate amount of the proformas in this status (EUR).
      *
      * @var float $total
      */

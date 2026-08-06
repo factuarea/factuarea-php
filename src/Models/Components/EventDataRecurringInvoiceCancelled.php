@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataRecurringInvoiceCancelled - Payload (`data`) emitted with the `recurring_invoice.cancelled` event. */
+/** EventDataRecurringInvoiceCancelled - Payload (`data`) emitted with the `recurring_invoice.cancelled` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataRecurringInvoiceCancelled
 {
     /**
+     * A recurring invoice template that auto-generates invoices on a fixed cadence.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceCancelledRecurringInvoice $recurringInvoice
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceCancelledRecurringInvoice')]
-    public EventDataRecurringInvoiceCancelledRecurringInvoice $recurringInvoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice')]
+    public RecurringInvoice $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataRecurringInvoiceCancelled
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceCancelledRecurringInvoice  $recurringInvoice
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataRecurringInvoiceCancelledRecurringInvoice $recurringInvoice, string $type = 'recurring_invoice.cancelled')
+    public function __construct(RecurringInvoice $object, string $type = 'recurring_invoice.cancelled')
     {
-        $this->recurringInvoice = $recurringInvoice;
+        $this->object = $object;
         $this->type = $type;
     }
 }

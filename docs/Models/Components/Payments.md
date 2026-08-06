@@ -1,0 +1,12 @@
+# Payments
+
+Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/invoices/{id}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/invoices/{id}/payments`.
+
+
+## Fields
+
+| Field                                                                                        | Type                                                                                         | Required                                                                                     | Description                                                                                  |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `detail`                                                                                     | array<[Components\InvoicePaymentDetail](../../Models/Components/InvoicePaymentDetail.md)>    | :heavy_check_mark:                                                                           | List of individual payments. Empty `[]` in list responses or when there are no payments yet. |
+| `total`                                                                                      | *float*                                                                                      | :heavy_check_mark:                                                                           | Total amount collected (mirrors `paid_amount`).                                              |
+| `pending`                                                                                    | *float*                                                                                      | :heavy_check_mark:                                                                           | Outstanding balance pending collection (mirrors `pending_amount`).                           |

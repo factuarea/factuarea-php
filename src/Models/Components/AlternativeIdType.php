@@ -9,11 +9,15 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Type of identification: passport, foreign ID, foreign tax identification or none. */
+/** AEAT IDType (lista L7): nif_iva, passport, country_id, residence_certificate, other_document or not_registered. The legacy values `tax_id_foreign` and `national_id` are accepted on input and normalized. */
 enum AlternativeIdType: string
 {
+    case NifIva = 'nif_iva';
     case Passport = 'passport';
-    case NationalId = 'national_id';
-    case TaxIdForeign = 'tax_id_foreign';
+    case CountryId = 'country_id';
+    case ResidenceCertificate = 'residence_certificate';
+    case OtherDocument = 'other_document';
     case NotRegistered = 'not_registered';
+    case TaxIdForeign = 'tax_id_foreign';
+    case NationalId = 'national_id';
 }

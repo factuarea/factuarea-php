@@ -9,16 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * BulkDeleteSuppliersRequest - Public REST API v1 — POST /v1/suppliers/bulk-delete (canónico) y
- *
- * DELETE /v1/suppliers/bulk (deprecado). Mismo request para ambas rutas.
- *
- * Body: `{ ids: string[] }`. Acepta entre 1 y 200 identificadores (valor
- * UUID v7). La validación de pertenencia al tenant la realiza el Handler
- * (filtrado por company_id); los identificadores ajenos se ignoran
- * silenciosamente y aparecerán en `failed`.
- */
+/** BulkDeleteSuppliersRequest - Delete several suppliers in one request. `ids` is an array of 1 to 200 UUIDs; identifiers that do not belong to your company are reported under `failed`. */
 class BulkDeleteSuppliersRequest
 {
     /**

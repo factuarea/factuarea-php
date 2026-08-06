@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsListRequest
 {
@@ -44,12 +45,28 @@ class PublicApiV1ProductsListRequest
     public ?string $skuIn = null;
 
     /**
+     * Product SKU. Partial case-insensitive match (`LIKE %term%`) on `sku`.
+     *
+     * @var ?string $skuContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=sku[contains]')]
+    public ?string $skuContains = null;
+
+    /**
      * Product name. Exact match on `name`.
      *
      * @var ?string $name
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=name')]
     public ?string $name = null;
+
+    /**
+     * Product name. Partial case-insensitive match (`LIKE %term%`) on `name`.
+     *
+     * @var ?string $nameContains
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=name[contains]')]
+    public ?string $nameContains = null;
 
     /**
      * Filter by active / inactive products. Exact match on `is_active`.
@@ -156,6 +173,38 @@ class PublicApiV1ProductsListRequest
     public ?string $tagIn = null;
 
     /**
+     * Free-text search. Escaped `LIKE %term%` (case-insensitive, max 80 chars) across the resource's key text columns, combined with the other filters (AND) and compatible with the cursor.
+     *
+     * @var ?string $search
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=search')]
+    public ?string $search = null;
+
+    /**
+     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     *
+     * @var ?array<string, string> $metadata
+     */
+    #[SpeakeasyMetadata('queryParam:style=deepObject,explode=true,name=metadata')]
+    public ?array $metadata = null;
+
+    /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -169,7 +218,9 @@ class PublicApiV1ProductsListRequest
      * @param  ?string  $endingBefore
      * @param  ?string  $sku
      * @param  ?string  $skuIn
+     * @param  ?string  $skuContains
      * @param  ?string  $name
+     * @param  ?string  $nameContains
      * @param  ?bool  $isActive
      * @param  ?\DateTime  $createdGte
      * @param  ?\DateTime  $createdLte
@@ -183,15 +234,21 @@ class PublicApiV1ProductsListRequest
      * @param  ?bool  $lowStock
      * @param  ?string  $tag
      * @param  ?string  $tagIn
+     * @param  ?string  $search
+     * @param  ?array<string, string>  $metadata
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $sku = null, ?string $skuIn = null, ?string $name = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?float $priceGte = null, ?float $priceLte = null, ?float $priceGt = null, ?float $priceLt = null, ?bool $inStock = null, ?bool $lowStock = null, ?string $tag = null, ?string $tagIn = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $sku = null, ?string $skuIn = null, ?string $skuContains = null, ?string $name = null, ?string $nameContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?float $priceGte = null, ?float $priceLte = null, ?float $priceGt = null, ?float $priceLt = null, ?bool $inStock = null, ?bool $lowStock = null, ?string $tag = null, ?string $tagIn = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->sku = $sku;
         $this->skuIn = $skuIn;
+        $this->skuContains = $skuContains;
         $this->name = $name;
+        $this->nameContains = $nameContains;
         $this->isActive = $isActive;
         $this->createdGte = $createdGte;
         $this->createdLte = $createdLte;
@@ -205,6 +262,10 @@ class PublicApiV1ProductsListRequest
         $this->lowStock = $lowStock;
         $this->tag = $tag;
         $this->tagIn = $tagIn;
+        $this->search = $search;
+        $this->metadata = $metadata;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

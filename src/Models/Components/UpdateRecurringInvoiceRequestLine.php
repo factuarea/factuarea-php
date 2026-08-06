@@ -44,17 +44,90 @@ class UpdateRecurringInvoiceRequestLine
     public ?float $taxRate = null;
 
     /**
+     *
+     * @var ?float $retention
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $retention = null;
+
+    /**
+     *
+     * @var ?float $surcharge
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $surcharge = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestExemptionReason $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestExemptionReason|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestExemptionReason $exemptionReason = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRegimeKey $regimeKey
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regime_key')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRegimeKey|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestRegimeKey $regimeKey = null;
+
+    /**
+     *
+     * @var ?string $retentionRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $retentionRateId = null;
+
+    /**
+     *
+     * @var ?string $surchargeRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $surchargeRateId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
      * @param  ?string  $description
      * @param  ?float  $quantity
      * @param  ?float  $unitPrice
      * @param  ?float  $taxRate
+     * @param  ?float  $retention
+     * @param  ?float  $surcharge
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestExemptionReason  $exemptionReason
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRegimeKey  $regimeKey
+     * @param  ?string  $retentionRateId
+     * @param  ?string  $surchargeRateId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null)
+    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?UpdateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?UpdateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?UpdateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->retention = $retention;
+        $this->surcharge = $surcharge;
+        $this->exemptionReason = $exemptionReason;
+        $this->regimeKey = $regimeKey;
+        $this->retentionRateId = $retentionRateId;
+        $this->surchargeRateId = $surchargeRateId;
+        $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

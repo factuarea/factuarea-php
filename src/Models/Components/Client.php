@@ -43,6 +43,14 @@ class Client
     public Address $address;
 
     /**
+     * Whether this client accumulates towards the annual Modelo 347 report (operations with third parties above the legal threshold).
+     *
+     * @var bool $accumulate347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('accumulate_347')]
+    public bool $accumulate347;
+
+    /**
      *
      * @var bool $isActive
      */
@@ -50,7 +58,7 @@ class Client
     public bool $isActive;
 
     /**
-     * Spanish fiscal identifier (NIF, CIF, NIE).
+     * Spanish fiscal identifier (NIF, CIF, NIE). Structural format: NIF `^\d{8}[A-Z]$`, NIE `^[XYZ]\d{7}[A-Z]$`, CIF `^[A-Z]\d{7}[A-Z0-9]$`. AEAT control-digit (checksum) validation is enforced when the request opts in via the `Factuarea-Version` header on or after the activation version; without that opt-in the legacy permissive behaviour is preserved.
      *
      * @var ?string $taxId
      */
@@ -109,6 +117,30 @@ class Client
     public ?array $bankAccounts = null;
 
     /**
+     * DIR3 code of the public-administration accounting office (Oficina Contable). FACe/Facturae directory code, not a foreign key. `null` for non-AAPP clients.
+     *
+     * @var ?string $dir3AccountingOffice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_accounting_office')]
+    public ?string $dir3AccountingOffice;
+
+    /**
+     * DIR3 code of the public-administration managing body (Órgano Gestor). FACe/Facturae directory code, not a foreign key. `null` for non-AAPP clients.
+     *
+     * @var ?string $dir3ManagingBody
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_managing_body')]
+    public ?string $dir3ManagingBody;
+
+    /**
+     * DIR3 code of the public-administration processing unit (Unidad Tramitadora). FACe/Facturae directory code, not a foreign key. `null` for non-AAPP clients.
+     *
+     * @var ?string $dir3ProcessingUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_processing_unit')]
+    public ?string $dir3ProcessingUnit;
+
+    /**
      *
      * @var ?string $notes
      */
@@ -116,7 +148,10 @@ class Client
     public ?string $notes;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -139,7 +174,7 @@ class Client
     public ?\DateTime $updatedAt;
 
     /**
-     * Nombre comercial (DBA) opcional, distinto del nombre fiscal.
+     * Optional trade name (DBA), distinct from the legal name.
      *
      * @var ?string $commercialName
      */
@@ -166,7 +201,7 @@ class Client
     public ?string $mobile = null;
 
     /**
-     * Sitio web del cliente.
+     * Client website.
      *
      * @var ?string $website
      */
@@ -194,7 +229,7 @@ class Client
     public ?ClientCoordinates $coordinates = null;
 
     /**
-     * Descuento por defecto aplicable al cliente (porcentaje).
+     * Default discount applied to the client (percentage).
      *
      * @var ?float $defaultDiscount
      */
@@ -203,7 +238,7 @@ class Client
     public ?float $defaultDiscount = null;
 
     /**
-     * Tipo de IVA por defecto aplicable al cliente (porcentaje).
+     * Default VAT rate applied to the client (percentage).
      *
      * @var ?float $defaultVatRate
      */
@@ -249,10 +284,20 @@ class Client
     public ?PaymentPreferences $paymentPreferences = null;
 
     /**
+     * External integration key (ERP/CRM/e-commerce) mapping this client to a record in a third-party system. Free-format, unique per company, distinct from the fiscal `tax_id`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ClientObject  $object
      * @param  string  $name
      * @param  \Factuarea\Sdk\Models\Components\Address  $address
+     * @param  bool  $accumulate347
      * @param  bool  $isActive
      * @param  ?string  $taxId
      * @param  ?string  $vatId
@@ -261,6 +306,9 @@ class Client
      * @param  ?array<string>  $billingEmails
      * @param  ?bool  $isSurchargeSubject
      * @param  ?array<\Factuarea\Sdk\Models\Components\BankAccount>  $bankAccounts
+     * @param  ?string  $dir3AccountingOffice
+     * @param  ?string  $dir3ManagingBody
+     * @param  ?string  $dir3ProcessingUnit
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
@@ -277,14 +325,16 @@ class Client
      * @param  ?\Factuarea\Sdk\Models\Components\ClientPreferredOperationRegime  $preferredOperationRegime
      * @param  ?\Factuarea\Sdk\Models\Components\AlternativeId  $alternativeId
      * @param  ?\Factuarea\Sdk\Models\Components\PaymentPreferences  $paymentPreferences
+     * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, ClientObject $object, string $name, Address $address, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?ClientCoordinates $coordinates = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?ClientPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null)
+    public function __construct(string $id, ClientObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?ClientCoordinates $coordinates = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?ClientPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->name = $name;
         $this->address = $address;
+        $this->accumulate347 = $accumulate347;
         $this->isActive = $isActive;
         $this->taxId = $taxId;
         $this->vatId = $vatId;
@@ -293,6 +343,9 @@ class Client
         $this->billingEmails = $billingEmails;
         $this->isSurchargeSubject = $isSurchargeSubject;
         $this->bankAccounts = $bankAccounts;
+        $this->dir3AccountingOffice = $dir3AccountingOffice;
+        $this->dir3ManagingBody = $dir3ManagingBody;
+        $this->dir3ProcessingUnit = $dir3ProcessingUnit;
         $this->notes = $notes;
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;
@@ -309,5 +362,6 @@ class Client
         $this->preferredOperationRegime = $preferredOperationRegime;
         $this->alternativeId = $alternativeId;
         $this->paymentPreferences = $paymentPreferences;
+        $this->externalId = $externalId;
     }
 }

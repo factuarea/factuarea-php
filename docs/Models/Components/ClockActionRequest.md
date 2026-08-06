@@ -1,0 +1,10 @@
+# ClockActionRequest
+
+
+## Fields
+
+| Field                                                                                      | Type                                                                                       | Required                                                                                   | Description                                                                                |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `employeeId`                                                                               | *string*                                                                                   | :heavy_check_mark:                                                                         | Employee ID (UUID v7) clocking in or out.                                                  |
+| `source`                                                                                   | [Components\ClockActionRequestSource](../../Models/Components/ClockActionRequestSource.md) | :heavy_check_mark:                                                                         | Origin of the clock entry: `web` or `mobile`.                                              |
+| `occurredAt`                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                              | :heavy_minus_sign:                                                                         | Clock entry timestamp in ISO 8601 (defaults to the server instant).                        |

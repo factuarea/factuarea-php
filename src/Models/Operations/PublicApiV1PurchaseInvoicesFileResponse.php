@@ -40,25 +40,28 @@ class PublicApiV1PurchaseInvoicesFileResponse
     public array $headers;
 
     /**
+     * El adjunto está cifrado at-rest en el Vault; el handler entrega un
      *
-     * @var ?string $bytes
+     * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFileResponseBody $object
      */
-    public ?string $bytes = null;
+    public ?PublicApiV1PurchaseInvoicesFileResponseBody $object = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?string  $bytes
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFileResponseBody  $object
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $bytes = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1PurchaseInvoicesFileResponseBody $object = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->bytes = $bytes;
+        $this->object = $object;
     }
 }

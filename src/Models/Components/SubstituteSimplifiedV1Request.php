@@ -9,13 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * SubstituteSimplifiedV1Request - Public REST API v1 — POST /v1/invoices/substitute-simplified.
- *
- *
- * Body: `client_id` (cliente destinatario), `simplified_invoice_ids`
- * (array de ids de facturas F2 a sustituir), `notes` opcional.
- */
 class SubstituteSimplifiedV1Request
 {
     /**

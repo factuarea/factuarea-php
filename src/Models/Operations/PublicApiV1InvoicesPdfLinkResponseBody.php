@@ -8,23 +8,23 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
-use Factuarea\Sdk\Models\Components;
+
+/** PublicApiV1InvoicesPdfLinkResponseBody - The PDF is already materialized: returns a temporary `url` to download it, its `filename` and the `expires_at` of the link. */
 class PublicApiV1InvoicesPdfLinkResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\Invoice $data
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkDataResponseBody $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
-    public Components\Invoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkDataResponseBody')]
+    public PublicApiV1InvoicesPdfLinkDataResponseBody $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkDataResponseBody  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(PublicApiV1InvoicesPdfLinkDataResponseBody $data)
     {
         $this->data = $data;
     }

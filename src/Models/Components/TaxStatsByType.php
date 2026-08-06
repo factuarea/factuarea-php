@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxStatsByType - Conteo de taxes por `type`. */
+/** TaxStatsByType - Tax count by `type`. */
 class TaxStatsByType
 {
     /**

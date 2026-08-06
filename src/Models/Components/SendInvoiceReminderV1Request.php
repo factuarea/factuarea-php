@@ -20,6 +20,7 @@ namespace Factuarea\Sdk\Models\Components;
 class SendInvoiceReminderV1Request
 {
     /**
+     * Recipient other than the client email.
      *
      * @var ?string $email
      */
@@ -28,6 +29,7 @@ class SendInvoiceReminderV1Request
     public ?string $email = null;
 
     /**
+     * Custom subject for the reminder.
      *
      * @var ?string $subject
      */
@@ -36,6 +38,7 @@ class SendInvoiceReminderV1Request
     public ?string $subject = null;
 
     /**
+     * Additional message for the reminder body.
      *
      * @var ?string $message
      */
@@ -44,7 +47,25 @@ class SendInvoiceReminderV1Request
     public ?string $message = null;
 
     /**
-     * $cc
+     * Per-send override for "attach the invoice PDF". If omitted (or `null`), the company default (`email_settings`) is used.
+     *
+     * @var ?bool $attachPdf
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('attach_pdf')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $attachPdf = null;
+
+    /**
+     * Per-send override for the "Stripe payment button". If omitted (or `null`), the company default is used.
+     *
+     * @var ?bool $stripePaymentButton
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('stripe_payment_button')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $stripePaymentButton = null;
+
+    /**
+     * Direcciones en copia.
      *
      * @var ?array<string> $cc
      */
@@ -54,7 +75,7 @@ class SendInvoiceReminderV1Request
     public ?array $cc = null;
 
     /**
-     * $bcc
+     * Direcciones en copia oculta.
      *
      * @var ?array<string> $bcc
      */
@@ -67,15 +88,19 @@ class SendInvoiceReminderV1Request
      * @param  ?string  $email
      * @param  ?string  $subject
      * @param  ?string  $message
+     * @param  ?bool  $attachPdf
+     * @param  ?bool  $stripePaymentButton
      * @param  ?array<string>  $cc
      * @param  ?array<string>  $bcc
      * @phpstan-pure
      */
-    public function __construct(?string $email = null, ?string $subject = null, ?string $message = null, ?array $cc = null, ?array $bcc = null)
+    public function __construct(?string $email = null, ?string $subject = null, ?string $message = null, ?bool $attachPdf = null, ?bool $stripePaymentButton = null, ?array $cc = null, ?array $bcc = null)
     {
         $this->email = $email;
         $this->subject = $subject;
         $this->message = $message;
+        $this->attachPdf = $attachPdf;
+        $this->stripePaymentButton = $stripePaymentButton;
         $this->cc = $cc;
         $this->bcc = $bcc;
     }

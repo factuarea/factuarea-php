@@ -9,26 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * GenerateModelo347V1Request - Public REST API v1 — POST /v1/tax_reports/347.
- *
- *
- * F-078: `format` now defaults to `pdf` when omitted.
- * Allowed values: `txt_aeat`, `pdf`, `excel`.
- *
- * The FormRequest validates ONLY the parseable shape of `year` / `quarter`
- * (integers) and delegates the period business rules to the Domain:
- *  - year range (`TaxPeriod::guardYear`) → 422 `invalid_period.year_out_of_range`,
- *  - cross-field BR-TXR-001 "347 does not allow quarter"
- *    (`TaxReportType::assertPeriodMatches`) → 422
- *    `invalid_period.quarter_not_allowed_for_347`.
- *
- * We accept `quarter` as a nullable integer so that, if the integrator
- * sends it by mistake, the Domain emits the canonical code instead of
- * silently ignoring it. `format` IS validated here with `in:` (as in /303)
- * so that a non-enumerable value like `docx` yields 422 and not a 500 from
- * the `\ValueError` of `ReportFormat::from()`.
- */
+/** GenerateModelo347V1Request - Generate Modelo 347 (annual declaration of third-party operations). `format` defaults to `pdf` when omitted; allowed values are `txt_aeat`, `pdf` and `excel`. Modelo 347 is annual, so sending a `quarter` returns 422. */
 class GenerateModelo347V1Request
 {
     /**

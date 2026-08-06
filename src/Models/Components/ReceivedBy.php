@@ -21,7 +21,7 @@ class ReceivedBy
     public ?string $name;
 
     /**
-     * Identificador fiscal (NIF/CIF/NIE) del receptor.
+     * Recipient tax ID (NIF/CIF/NIE).
      *
      * @var ?string $taxId
      */

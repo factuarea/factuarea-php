@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class SeriesActivityPerformedBy
 {
     /**
-     * Type of actor that originated the event.
+     * Type of actor that originated the event: `user` for a human in the internal app, `api_key` for an action performed through the public v1 API.
      *
      * @var \Factuarea\Sdk\Models\Components\SeriesActivityType $type
      */
@@ -21,7 +21,7 @@ class SeriesActivityPerformedBy
     public SeriesActivityType $type;
 
     /**
-     * UUID (v7) of the user who performed the action.
+     * UUID (v7) of the actor: the user when `type=user`, or the API key when `type=api_key`.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class SeriesActivityPerformedBy
     public string $id;
 
     /**
-     * Nombre del usuario en el momento del evento.
+     * Actor name at the time of the event: the user name or the API key name. `null` if it could not be resolved.
      *
      * @var ?string $name
      */

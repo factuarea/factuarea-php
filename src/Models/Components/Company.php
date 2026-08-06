@@ -9,9 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** Company - A managed company (child sub-account) under your master tenant. Created and operated through the gestoría endpoints; its child API keys can only hold a subset of the scopes of the key that created them. */
 class Company
 {
     /**
+     * Opaque identifier (UUID v7) of the managed company.
      *
      * @var string $id
      */
@@ -19,6 +21,16 @@ class Company
     public string $id;
 
     /**
+     * Always `company`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\CompanyObject $object
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CompanyObject')]
+    public CompanyObject $object;
+
+    /**
+     * Commercial name of the managed company.
      *
      * @var string $name
      */
@@ -26,7 +38,7 @@ class Company
     public string $name;
 
     /**
-     * Spanish fiscal identifier (NIF, CIF, NIE).
+     * Spanish fiscal identifier (NIF/CIF/NIE). Unique across the companies managed by your master tenant.
      *
      * @var string $taxId
      */
@@ -34,15 +46,149 @@ class Company
     public string $taxId;
 
     /**
+     * Lifecycle status: `active` (operational) or `archived` (no longer accepts operations).
+     *
+     * @var \Factuarea\Sdk\Models\Components\CompanyStatus $status
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CompanyStatus')]
+    public CompanyStatus $status;
+
+    /**
+     * When the managed company was registered (ISO 8601).
+     *
+     * @var \DateTime $createdAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('created_at')]
+    public \DateTime $createdAt;
+
+    /**
+     * Legal/registered business name (razón social), or `null` if not set.
+     *
+     * @var ?string $businessName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_name')]
+    public ?string $businessName;
+
+    /**
+     * Street address of the fiscal domicile, or `null`.
+     *
+     * @var ?string $address
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('address')]
+    public ?string $address;
+
+    /**
+     * City of the fiscal domicile, or `null`.
+     *
+     * @var ?string $city
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('city')]
+    public ?string $city;
+
+    /**
+     * Postal code of the fiscal domicile, or `null`.
+     *
+     * @var ?string $postalCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('postal_code')]
+    public ?string $postalCode;
+
+    /**
+     * Province of the fiscal domicile, or `null`.
+     *
+     * @var ?string $province
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('province')]
+    public ?string $province;
+
+    /**
+     * AEAT territorial zone of the company (`peninsula`, `canarias`, `ceuta`, `melilla`), or `null`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CompanyCountryAeatZone $countryAeatZone
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('country_aeat_zone')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CompanyCountryAeatZone|null')]
+    public ?CompanyCountryAeatZone $countryAeatZone;
+
+    /**
+     * Contact email, or `null`.
+     *
+     * @var ?string $email
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('email')]
+    public ?string $email;
+
+    /**
+     * Contact phone, or `null`.
+     *
+     * @var ?string $phone
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('phone')]
+    public ?string $phone;
+
+    /**
+     * Absolute URL of the company logo, or `null` if not set.
+     *
+     * @var ?string $logoUrl
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('logo_url')]
+    public ?string $logoUrl;
+
+    /**
+     * Paid seat coverage of this managed company (ISO 8601): reactivating it before this date is free. `null` when the seat was never charged or the coverage expired.
+     *
+     * @var ?\DateTime $seatPaidUntil
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seat_paid_until')]
+    public ?\DateTime $seatPaidUntil;
+
+    /**
+     * When the managed company was last updated (ISO 8601), or `null`.
+     *
+     * @var ?\DateTime $updatedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('updated_at')]
+    public ?\DateTime $updatedAt;
+
+    /**
      * @param  string  $id
+     * @param  \Factuarea\Sdk\Models\Components\CompanyObject  $object
      * @param  string  $name
      * @param  string  $taxId
+     * @param  \Factuarea\Sdk\Models\Components\CompanyStatus  $status
+     * @param  \DateTime  $createdAt
+     * @param  ?string  $businessName
+     * @param  ?string  $address
+     * @param  ?string  $city
+     * @param  ?string  $postalCode
+     * @param  ?string  $province
+     * @param  ?\Factuarea\Sdk\Models\Components\CompanyCountryAeatZone  $countryAeatZone
+     * @param  ?string  $email
+     * @param  ?string  $phone
+     * @param  ?string  $logoUrl
+     * @param  ?\DateTime  $seatPaidUntil
+     * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, string $name, string $taxId)
+    public function __construct(string $id, CompanyObject $object, string $name, string $taxId, CompanyStatus $status, \DateTime $createdAt, ?string $businessName = null, ?string $address = null, ?string $city = null, ?string $postalCode = null, ?string $province = null, ?CompanyCountryAeatZone $countryAeatZone = null, ?string $email = null, ?string $phone = null, ?string $logoUrl = null, ?\DateTime $seatPaidUntil = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
+        $this->object = $object;
         $this->name = $name;
         $this->taxId = $taxId;
+        $this->status = $status;
+        $this->createdAt = $createdAt;
+        $this->businessName = $businessName;
+        $this->address = $address;
+        $this->city = $city;
+        $this->postalCode = $postalCode;
+        $this->province = $province;
+        $this->countryAeatZone = $countryAeatZone;
+        $this->email = $email;
+        $this->phone = $phone;
+        $this->logoUrl = $logoUrl;
+        $this->seatPaidUntil = $seatPaidUntil;
+        $this->updatedAt = $updatedAt;
     }
 }

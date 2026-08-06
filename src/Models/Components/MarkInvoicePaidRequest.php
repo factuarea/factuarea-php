@@ -9,13 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * MarkInvoicePaidRequest - Public REST API v1 — POST /v1/invoices/{uuid}/mark_paid.
- *
- *
- * Body opcional: `paid_on` (date, default hoy), `payment_method`,
- * `notes`.
- */
 class MarkInvoicePaidRequest
 {
     /**
@@ -36,6 +29,14 @@ class MarkInvoicePaidRequest
 
     /**
      *
+     * @var ?string $paymentReference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_reference')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $paymentReference = null;
+
+    /**
+     *
      * @var ?string $notes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('notes')]
@@ -45,13 +46,15 @@ class MarkInvoicePaidRequest
     /**
      * @param  ?LocalDate  $paidOn
      * @param  ?string  $paymentMethod
+     * @param  ?string  $paymentReference
      * @param  ?string  $notes
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $paidOn = null, ?string $paymentMethod = null, ?string $notes = null)
+    public function __construct(?LocalDate $paidOn = null, ?string $paymentMethod = null, ?string $paymentReference = null, ?string $notes = null)
     {
         $this->paidOn = $paidOn;
         $this->paymentMethod = $paymentMethod;
+        $this->paymentReference = $paymentReference;
         $this->notes = $notes;
     }
 }

@@ -28,7 +28,7 @@ class Tax
     public TaxObject $object;
 
     /**
-     * Nombre legible del impuesto (ej. "IVA 21%").
+     * Human-readable name of the tax (e.g. "IVA 21%").
      *
      * @var string $name
      */
@@ -44,7 +44,7 @@ class Tax
     public string $code;
 
     /**
-     * Tipo impositivo aplicado, ej. `21` para IVA 21%.
+     * Applied tax rate, e.g. `21` for 21% VAT.
      *
      * @var float $rate
      */
@@ -70,7 +70,7 @@ class Tax
     public TaxAppliesTo $appliesTo;
 
     /**
-     * true si es el tax default para su `type` (independiente del map `default_for_documents`).
+     * true if this is the default tax for its `type` (independent of the `default_for_documents` map).
      *
      * @var bool $isDefault
      */
@@ -127,7 +127,7 @@ class Tax
     public ?string $description;
 
     /**
-     * Etiqueta del impuesto mostrada al cliente final en documentos (PDF, public link, email).
+     * Tax label shown to the end customer on documents (PDF, public link, email).
      *
      * @var ?string $customerVisibleLabel
      */
@@ -144,7 +144,7 @@ class Tax
     public ?ExternalReference $externalReference;
 
     /**
-     * Fecha de inicio de vigencia legal del tipo (BOE). Formato `YYYY-MM-DD`.
+     * Legal effective start date of the rate (BOE). Format `YYYY-MM-DD`.
      *
      * @var ?LocalDate $validFrom
      */
@@ -152,7 +152,7 @@ class Tax
     public ?LocalDate $validFrom;
 
     /**
-     * Fecha de fin de vigencia legal del tipo. Invariante: `valid_until >= valid_from` cuando ambos no-null.
+     * Legal effective end date of the rate. Invariant: `valid_until >= valid_from` when both are non-null.
      *
      * @var ?LocalDate $validUntil
      */
@@ -169,7 +169,27 @@ class Tax
     public ?TaxCountryAeatZone $countryAeatZone;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * Indirect tax regime DERIVED from the AEAT zone, read-only: `iva` (Península), `igic` (Canarias), `ipsi` (Ceuta/Melilla). Only set for `type=vat`; `null` otherwise.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\TaxIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TaxIndirectTaxRegime|null')]
+    public ?TaxIndirectTaxRegime $indirectTaxRegime;
+
+    /**
+     * Identity (UUID v7) of the linked equivalence-surcharge tax. Foreign key to the global `taxes` table (key suffix `_taxes_id` per the UUID policy). `null` when there is no link.
+     *
+     * @var ?string $linkedSurchargeTaxesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('linked_surcharge_taxes_id')]
+    public ?string $linkedSurchargeTaxesId;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -211,12 +231,14 @@ class Tax
      * @param  ?LocalDate  $validFrom
      * @param  ?LocalDate  $validUntil
      * @param  ?\Factuarea\Sdk\Models\Components\TaxCountryAeatZone  $countryAeatZone
+     * @param  ?\Factuarea\Sdk\Models\Components\TaxIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $linkedSurchargeTaxesId
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, TaxObject $object, string $name, string $code, float $rate, TaxType $type, TaxAppliesTo $appliesTo, bool $isDefault, bool $isActive, bool $isSystem, TaxDefaultForDocuments $defaultForDocuments, bool $reverseCharge, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?ExternalReference $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?TaxCountryAeatZone $countryAeatZone = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, TaxObject $object, string $name, string $code, float $rate, TaxType $type, TaxAppliesTo $appliesTo, bool $isDefault, bool $isActive, bool $isSystem, TaxDefaultForDocuments $defaultForDocuments, bool $reverseCharge, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?ExternalReference $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?TaxCountryAeatZone $countryAeatZone = null, ?TaxIndirectTaxRegime $indirectTaxRegime = null, ?string $linkedSurchargeTaxesId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -237,6 +259,8 @@ class Tax
         $this->validFrom = $validFrom;
         $this->validUntil = $validUntil;
         $this->countryAeatZone = $countryAeatZone;
+        $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->linkedSurchargeTaxesId = $linkedSurchargeTaxesId;
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;

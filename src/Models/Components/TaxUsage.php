@@ -21,7 +21,7 @@ class TaxUsage
     public TaxUsageObject $object;
 
     /**
-     * UUID (v7) del tax consultado.
+     * UUID (v7) of the requested tax.
      *
      * @var string $taxesId
      */
@@ -37,7 +37,7 @@ class TaxUsage
     public bool $inUse;
 
     /**
-     * Suma agregada de las 6 keys de `used_by`.
+     * Aggregate sum of the 6 keys in `used_by`.
      *
      * @var int $totalCount
      */

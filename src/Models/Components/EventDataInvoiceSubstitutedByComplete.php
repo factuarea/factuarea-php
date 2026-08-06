@@ -9,23 +9,24 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceSubstitutedByComplete - Payload (`data`) emitted with the `invoice.substituted_by_complete` event. */
+/** EventDataInvoiceSubstitutedByComplete - Payload (`data`) emitted with the `invoice.substituted_by_complete` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceSubstitutedByComplete
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSubstitutedByCompleteInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceSubstitutedByCompleteInvoice')]
-    public EventDataInvoiceSubstitutedByCompleteInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
-     * @var ?string $substituteInvoiceUuid
+     * @var ?string $substituteInvoiceId
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('substitute_invoice_uuid')]
-    public ?string $substituteInvoiceUuid;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('substitute_invoice_id')]
+    public ?string $substituteInvoiceId;
 
     /**
      *
@@ -43,15 +44,15 @@ class EventDataInvoiceSubstitutedByComplete
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceSubstitutedByCompleteInvoice  $invoice
-     * @param  ?string  $substituteInvoiceUuid
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  ?string  $substituteInvoiceId
      * @param  ?string  $substituteInvoiceNumber
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceSubstitutedByCompleteInvoice $invoice, ?string $substituteInvoiceUuid = null, ?string $substituteInvoiceNumber = null, string $type = 'invoice.substituted_by_complete')
+    public function __construct(Invoice $object, ?string $substituteInvoiceId = null, ?string $substituteInvoiceNumber = null, string $type = 'invoice.substituted_by_complete')
     {
-        $this->invoice = $invoice;
-        $this->substituteInvoiceUuid = $substituteInvoiceUuid;
+        $this->object = $object;
+        $this->substituteInvoiceId = $substituteInvoiceId;
         $this->substituteInvoiceNumber = $substituteInvoiceNumber;
         $this->type = $type;
     }

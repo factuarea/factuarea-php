@@ -45,7 +45,7 @@ class VeriFactuStats
     public int $submitted;
 
     /**
-     * Registros aceptados por AEAT.
+     * Records accepted by AEAT.
      *
      * @var int $accepted
      */
@@ -53,7 +53,7 @@ class VeriFactuStats
     public int $accepted;
 
     /**
-     * Registros rechazados por AEAT.
+     * Records rejected by AEAT.
      *
      * @var int $rejected
      */
@@ -69,7 +69,7 @@ class VeriFactuStats
     public int $error;
 
     /**
-     * Recuento por tipo de registro (alta/anulacion).
+     * Count by record type (registration/cancellation).
      *
      * @var array<string, int> $byRecordType
      */
@@ -78,7 +78,7 @@ class VeriFactuStats
     public array $byRecordType;
 
     /**
-     * Recuento por tipo de factura AEAT (F1, F2, F3, …).
+     * Count by AEAT invoice type (F1, F2, F3, …).
      *
      * @var array<string, int> $byInvoiceType
      */

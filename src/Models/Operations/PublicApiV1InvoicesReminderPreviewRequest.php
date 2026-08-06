@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesReminderPreviewRequest
@@ -20,6 +21,22 @@ class PublicApiV1InvoicesReminderPreviewRequest
     public string $invoice;
 
     /**
+     * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
+     *
+     * @var ?LocalDate $factuareaVersion
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
      *
      * @var ?\Factuarea\Sdk\Models\Components\SendInvoiceReminderV1Request $body
      */
@@ -28,12 +45,16 @@ class PublicApiV1InvoicesReminderPreviewRequest
 
     /**
      * @param  string  $invoice
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @param  ?\Factuarea\Sdk\Models\Components\SendInvoiceReminderV1Request  $body
      * @phpstan-pure
      */
-    public function __construct(string $invoice, ?Components\SendInvoiceReminderV1Request $body = null)
+    public function __construct(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Components\SendInvoiceReminderV1Request $body = null)
     {
         $this->invoice = $invoice;
+        $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->body = $body;
     }
 }

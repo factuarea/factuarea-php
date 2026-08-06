@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaxReport
 {
     /**
-     * UUID (v7) opaco del informe generado.
+     * Opaque UUID (v7) of the generated report.
      *
      * @var string $id
      */
@@ -94,7 +94,7 @@ class TaxReport
     public string $generatedById;
 
     /**
-     * URL relativa de descarga del recurso generado (`/v1/tax_reports/{uuid}/download`).
+     * Relative download URL of the generated resource (`/v1/tax_reports/{uuid}/download`).
      *
      * @var string $downloadUrl
      */

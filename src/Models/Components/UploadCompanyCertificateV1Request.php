@@ -9,37 +9,10 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
-/**
- * UploadCompanyCertificateV1Request - Public REST API v1 — POST /v1/verifactu/certificates.
- *
- *
- * Uploads an FNMT certificate (PKCS#12) multipart for the authenticated company.
- * Fields: `certificate_file` (file) + `certificate_password` (string).
- *
- * Genuinely new hardening compared to the SPA upload:
- *  - Extension `.p12`/`.pfx` (`mimes`).
- *  - Size ≤ 102400 bytes (100 KB) — explicit guard in bytes,
- *    a generous upper bound for a real FNMT PKCS#12 (typically 4-15 KB).
- *  - ASN.1 DER/BER magic bytes via the reusable rule
- *    {@see Pkcs12MagicBytes}: the first 2 bytes MUST be `0x30 0x82`
- *    or `0x30 0x80`. Defense-in-depth against files that lie about their MIME.
- *
- * A magic-bytes / size failure throws `InvalidCertificateFormatException`
- * (Mappable → 422 `business_rule_violation` / `invalid_certificate_format`),
- * NOT a generic `ValidationException`, so that the canonical V1 envelope is
- * preserved (subcode `certificate_too_large` for the size limit).
- */
 class UploadCompanyCertificateV1Request
 {
     /**
-     * `extensions:` validates the extension declared by the client (p12/pfx) —
-     *
-     * `mimes:` fails because the Symfony guesser does not map PKCS#12 from
-     * the content. The real format defense (ASN.1 DER magic bytes) and the
-     * size limit are applied in `withValidator()`, throwing the Mappable
-     * `InvalidCertificateFormatException` to preserve the canonical envelope
-     * (`business_rule_violation`), instead of the generic `invalid_param_value`
-     * that a `$fail()` would produce.
+     * The digital certificate file in PKCS#12 format (`.p12` or `.pfx`).
      *
      * @var \Factuarea\Sdk\Models\Components\CertificateFile $certificateFile
      */

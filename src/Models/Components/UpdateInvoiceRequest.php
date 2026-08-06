@@ -9,14 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * UpdateInvoiceRequest - Public REST API v1 — PUT /v1/invoices/{uuid}.
- *
- *
- * Partial update: omitted fields are kept. Only allowed when
- * the invoice is in `draft` status (the controller maps the
- * transition exception to 422 `invalid_status_transition`).
- */
 class UpdateInvoiceRequest
 {
     /**
@@ -62,7 +54,18 @@ class UpdateInvoiceRequest
     public ?string $notes = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -72,21 +75,47 @@ class UpdateInvoiceRequest
     public ?array $metadata = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      * @param  ?string  $clientId
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $dueOn
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>  $lines
      * @param  ?string  $notes
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $notes = null, ?array $metadata = null)
+    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
         $this->lines = $lines;
         $this->notes = $notes;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

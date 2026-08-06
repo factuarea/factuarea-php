@@ -1,6 +1,6 @@
 # CreateTaxRequestDefaultForDocuments
 
-===== DEFAULTS CONSOLIDADO =====
+Sets this tax as the default per document type. Object with optional booleans: `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice`.
 
 
 ## Fields

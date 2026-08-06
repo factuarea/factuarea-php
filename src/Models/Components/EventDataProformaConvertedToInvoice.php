@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataProformaConvertedToInvoice - Payload (`data`) emitted with the `proforma.converted_to_invoice` event. */
+/** EventDataProformaConvertedToInvoice - Payload (`data`) emitted with the `proforma.converted_to_invoice` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataProformaConvertedToInvoice
 {
     /**
+     * A proforma invoice that can be converted to a final invoice.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataProformaConvertedToInvoiceProforma $proforma
+     * @var \Factuarea\Sdk\Models\Components\Proforma $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proforma')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataProformaConvertedToInvoiceProforma')]
-    public EventDataProformaConvertedToInvoiceProforma $proforma;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
+    public Proforma $object;
 
     /**
      *
@@ -37,13 +38,13 @@ class EventDataProformaConvertedToInvoice
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataProformaConvertedToInvoiceProforma  $proforma
+     * @param  \Factuarea\Sdk\Models\Components\Proforma  $object
      * @param  \Factuarea\Sdk\Models\Components\EventDataProformaConvertedToInvoiceTarget  $target
      * @phpstan-pure
      */
-    public function __construct(EventDataProformaConvertedToInvoiceProforma $proforma, EventDataProformaConvertedToInvoiceTarget $target, string $type = 'proforma.converted_to_invoice')
+    public function __construct(Proforma $object, EventDataProformaConvertedToInvoiceTarget $target, string $type = 'proforma.converted_to_invoice')
     {
-        $this->proforma = $proforma;
+        $this->object = $object;
         $this->target = $target;
         $this->type = $type;
     }

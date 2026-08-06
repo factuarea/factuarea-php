@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateTaxRequestDefaultForDocuments - ===== DEFAULTS CONSOLIDADO ===== */
+/** CreateTaxRequestDefaultForDocuments - Sets this tax as the default per document type. Object with optional booleans: `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice`. */
 class CreateTaxRequestDefaultForDocuments
 {
     /**

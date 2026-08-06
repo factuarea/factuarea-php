@@ -21,12 +21,12 @@ class WebhookEventPayloadInvoiceSubstitutedByComplete
     public string $id;
 
     /**
-     * ISO 8601 timestamp of when the event was created.
+     * Unix timestamp (seconds) of when the event was created.
      *
-     * @var \DateTime $created
+     * @var int $created
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('created')]
-    public \DateTime $created;
+    public int $created;
 
     /**
      * `true` for production events (`fact_live_`); `false` for test-mode events (`fact_test_`).
@@ -37,7 +37,15 @@ class WebhookEventPayloadInvoiceSubstitutedByComplete
     public bool $livemode;
 
     /**
-     * Payload (`data`) emitted with the `invoice.substituted_by_complete` event.
+     * `true` when the event is a test delivery triggered from the dashboard; `false` for real events. Orthogonal to `livemode`: a test delivery may be sent over a live endpoint (`livemode: true, test: true`).
+     *
+     * @var bool $test
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('test')]
+    public bool $test;
+
+    /**
+     * Payload (`data`) emitted with the `invoice.substituted_by_complete` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
      *
      * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSubstitutedByComplete $data
      */
@@ -46,12 +54,20 @@ class WebhookEventPayloadInvoiceSubstitutedByComplete
     public EventDataInvoiceSubstitutedByComplete $data;
 
     /**
-     * API version (date-based) the payload was serialized under. `null` for events emitted before the account pinned an API version.
+     * API version (date-based) the payload was serialized under, sealed at emission (e.g. `2026-05-22`). `null` only for legacy events emitted before versions were sealed.
      *
      * @var ?string $apiVersion
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('api_version')]
     public ?string $apiVersion;
+
+    /**
+     * UUID v7 correlating this event end-to-end with the operation that produced it. `null` for events without a correlation context. The key is always present.
+     *
+     * @var ?string $correlationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('correlation_id')]
+    public ?string $correlationId;
 
     /**
      * Event type. Always `invoice.substituted_by_complete`.
@@ -64,19 +80,23 @@ class WebhookEventPayloadInvoiceSubstitutedByComplete
     /**
      * @param  string  $id
      * @param  string  $type
-     * @param  \DateTime  $created
+     * @param  int  $created
      * @param  bool  $livemode
+     * @param  bool  $test
      * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceSubstitutedByComplete  $data
      * @param  ?string  $apiVersion
+     * @param  ?string  $correlationId
      * @phpstan-pure
      */
-    public function __construct(string $id, \DateTime $created, bool $livemode, EventDataInvoiceSubstitutedByComplete $data, ?string $apiVersion = null, string $type = 'invoice.substituted_by_complete')
+    public function __construct(string $id, int $created, bool $livemode, bool $test, EventDataInvoiceSubstitutedByComplete $data, ?string $apiVersion = null, ?string $correlationId = null, string $type = 'invoice.substituted_by_complete')
     {
         $this->id = $id;
         $this->created = $created;
         $this->livemode = $livemode;
+        $this->test = $test;
         $this->data = $data;
         $this->apiVersion = $apiVersion;
+        $this->correlationId = $correlationId;
         $this->type = $type;
     }
 }

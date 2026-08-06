@@ -1,6 +1,6 @@
 # TaxStatsByType
 
-Conteo de taxes por `type`.
+Tax count by `type`.
 
 
 ## Fields

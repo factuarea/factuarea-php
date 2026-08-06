@@ -23,19 +23,19 @@ class Account
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Company $company
+     * @var \Factuarea\Sdk\Models\Components\AccountCompany $company
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('company')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Company')]
-    public Company $company;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountCompany')]
+    public AccountCompany $company;
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Plan $plan
+     * @var \Factuarea\Sdk\Models\Components\AccountPlan $plan
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('plan')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Plan')]
-    public Plan $plan;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountPlan')]
+    public AccountPlan $plan;
 
     /**
      * State of the `developer_api` addon for this company.
@@ -49,26 +49,37 @@ class Account
     /**
      * Metadata of the API key used to authenticate the request. The secret is never returned (it is only shown once at creation time).
      *
-     * @var \Factuarea\Sdk\Models\Components\ApiKey $apiKey
+     * @var \Factuarea\Sdk\Models\Components\AccountApiKey $apiKey
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('api_key')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiKey')]
-    public ApiKey $apiKey;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountApiKey')]
+    public AccountApiKey $apiKey;
+
+    /**
+     * Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/account/personalization`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\Personalization $personalization
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('personalization')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Personalization')]
+    public Personalization $personalization;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\AccountObject  $object
-     * @param  \Factuarea\Sdk\Models\Components\Company  $company
-     * @param  \Factuarea\Sdk\Models\Components\Plan  $plan
+     * @param  \Factuarea\Sdk\Models\Components\AccountCompany  $company
+     * @param  \Factuarea\Sdk\Models\Components\AccountPlan  $plan
      * @param  \Factuarea\Sdk\Models\Components\Addon  $addon
-     * @param  \Factuarea\Sdk\Models\Components\ApiKey  $apiKey
+     * @param  \Factuarea\Sdk\Models\Components\AccountApiKey  $apiKey
+     * @param  \Factuarea\Sdk\Models\Components\Personalization  $personalization
      * @phpstan-pure
      */
-    public function __construct(AccountObject $object, Company $company, Plan $plan, Addon $addon, ApiKey $apiKey)
+    public function __construct(AccountObject $object, AccountCompany $company, AccountPlan $plan, Addon $addon, AccountApiKey $apiKey, Personalization $personalization)
     {
         $this->object = $object;
         $this->company = $company;
         $this->plan = $plan;
         $this->addon = $addon;
         $this->apiKey = $apiKey;
+        $this->personalization = $personalization;
     }
 }

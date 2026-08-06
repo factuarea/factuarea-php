@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataRecurringInvoiceMetadataChanged - Payload (`data`) emitted with the `recurring_invoice.metadata_changed` event. */
+/** EventDataRecurringInvoiceMetadataChanged - Payload (`data`) emitted with the `recurring_invoice.metadata_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataRecurringInvoiceMetadataChanged
 {
     /**
+     * A recurring invoice template that auto-generates invoices on a fixed cadence.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceMetadataChangedRecurringInvoice $recurringInvoice
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceMetadataChangedRecurringInvoice')]
-    public EventDataRecurringInvoiceMetadataChangedRecurringInvoice $recurringInvoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice')]
+    public RecurringInvoice $object;
 
     /**
      * $previousKeys
@@ -47,14 +48,14 @@ class EventDataRecurringInvoiceMetadataChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataRecurringInvoiceMetadataChangedRecurringInvoice  $recurringInvoice
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice  $object
      * @param  array<string>  $previousKeys
      * @param  array<string>  $newKeys
      * @phpstan-pure
      */
-    public function __construct(EventDataRecurringInvoiceMetadataChangedRecurringInvoice $recurringInvoice, array $previousKeys, array $newKeys, string $type = 'recurring_invoice.metadata_changed')
+    public function __construct(RecurringInvoice $object, array $previousKeys, array $newKeys, string $type = 'recurring_invoice.metadata_changed')
     {
-        $this->recurringInvoice = $recurringInvoice;
+        $this->object = $object;
         $this->previousKeys = $previousKeys;
         $this->newKeys = $newKeys;
         $this->type = $type;

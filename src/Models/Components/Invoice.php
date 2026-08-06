@@ -96,6 +96,22 @@ class Invoice
     public float $total;
 
     /**
+     * Sum of the `SUPLIDO` (disbursement) lines of this invoice: amounts the issuer paid in the name and on behalf of the client and re-invoices at cost. Deliberately OUTSIDE `subtotal`, `taxes_total` and `total`, because a disbursement is not part of the issuer's taxable base (art. 78.Tres.3 LIVA) and is not declared in the AEAT VeriFactu record. `0` on an invoice without disbursements.
+     *
+     * @var float $totalDisbursements
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_disbursements')]
+    public float $totalDisbursements;
+
+    /**
+     * Amount the client actually has to pay: `total + total_disbursements`. DERIVED, never stored — one single formula computes it — and equal to `total` on an invoice without disbursements. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line yields `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. Note that `paid_amount`/`pending_amount` are measured against `total`, not against `total_to_pay`.
+     *
+     * @var float $totalToPay
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_to_pay')]
+    public float $totalToPay;
+
+    /**
      * ISO 4217 currency code (always "EUR" in v1).
      *
      * @var string $currency
@@ -113,6 +129,24 @@ class Invoice
     public array $lines;
 
     /**
+     * Free classification tags (lowercase slugs `[a-z0-9-]`, ≤ 40 chars each, ≤ 30 tags). Filterable via `?tags[in]=tag1,tag2` (JSON_CONTAINS, OR semantics). Empty `[]` when there are none.
+     *
+     * @var array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $tags;
+
+    /**
+     * Ordered list of typed custom fields `[{field, value}]` (≤ 50). Distinct from `metadata` (a free key→value map): use `custom_fields` for structured, display-oriented integration metadata. Empty `[]` when there are none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\CustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CustomField>')]
+    public array $customFields;
+
+    /**
      * AEAT VAT operation regime (`general`, `recargo_equivalencia`, `exenta`, etc.).
      *
      * @var string $operationRegime
@@ -121,12 +155,54 @@ class Invoice
     public string $operationRegime;
 
     /**
+     * Header legal mentions (includes the mention derived from the exemption cause). Read-only.
+     *
+     * @var array<string> $legalMentions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legal_mentions')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $legalMentions;
+
+    /**
+     * Read-only flag: whether this invoice is excluded from the annual Modelo 347 report. The public API cannot mutate it (the create/update FormRequest does not accept it); managing the flag is exclusive to the internal app.
+     *
+     * @var bool $exclude347
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exclude_347')]
+    public bool $exclude347;
+
+    /**
      * Status of the AEAT VeriFactu submission.
      *
      * @var string $verifactuStatus
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('verifactu_status')]
     public string $verifactuStatus;
+
+    /**
+     * Amount already collected for this invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
+     *
+     * @var float $paidAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_amount')]
+    public float $paidAmount;
+
+    /**
+     * Outstanding balance pending collection for this invoice (derived from the payment ledger).
+     *
+     * @var float $pendingAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pending_amount')]
+    public float $pendingAmount;
+
+    /**
+     * Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/invoices/{id}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/invoices/{id}/payments`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\Payments $payments
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payments')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Payments')]
+    public Payments $payments;
 
     /**
      * Whether this invoice is a corrective (rectificativa) of another invoice.
@@ -173,13 +249,32 @@ class Invoice
     public ?string $notes;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    public ?string $externalId;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('metadata')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     public ?array $metadata;
+
+    /**
+     * VAT exemption cause per document (AEAT catalog E1..E6), or `null` when not exempt. Read-only: the public API derives the AEAT qualification from the regime/cause at issuance.
+     *
+     * @var ?string $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    public ?string $exemptionReason;
 
     /**
      *
@@ -257,6 +352,23 @@ class Invoice
     public ?string $voidReason;
 
     /**
+     * Scheduled emission timestamp (ISO 8601), or `null` when the invoice is not scheduled. Populated only while `status` is `scheduled`.
+     *
+     * @var ?\DateTime $scheduledFor
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('scheduled_for')]
+    public ?\DateTime $scheduledFor;
+
+    /**
+     * Action the scheduler runs when `scheduled_for` is reached: `issue_and_send` (issue and email) or `draft` (issue only). `null` when the invoice is not scheduled.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceScheduledAction $scheduledAction
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('scheduled_action')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceScheduledAction|null')]
+    public ?InvoiceScheduledAction $scheduledAction;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\InvoiceObject  $object
      * @param  bool  $isNumberAssigned
@@ -268,17 +380,28 @@ class Invoice
      * @param  float  $subtotal
      * @param  float  $taxesTotal
      * @param  float  $total
+     * @param  float  $totalDisbursements
+     * @param  float  $totalToPay
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\InvoiceLine>  $lines
+     * @param  array<string>  $tags
+     * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
      * @param  string  $operationRegime
+     * @param  array<string>  $legalMentions
+     * @param  bool  $exclude347
      * @param  string  $verifactuStatus
+     * @param  float  $paidAmount
+     * @param  float  $pendingAmount
+     * @param  \Factuarea\Sdk\Models\Components\Payments  $payments
      * @param  bool  $isCorrective
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $number
      * @param  ?LocalDate  $dueOn
      * @param  ?string  $notes
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $exemptionReason
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceCorrective  $corrective
      * @param  ?\Factuarea\Sdk\Models\Components\InvoicePayment  $payment
      * @param  ?\Factuarea\Sdk\Models\Components\PublicLink  $publicLink
@@ -289,9 +412,11 @@ class Invoice
      * @param  ?\DateTime  $sentAt
      * @param  ?\DateTime  $voidedAt
      * @param  ?string  $voidReason
+     * @param  ?\DateTime  $scheduledFor
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceScheduledAction  $scheduledAction
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $total, string $currency, array $lines, string $operationRegime, string $verifactuStatus, bool $isCorrective, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $sentAt = null, ?\DateTime $voidedAt = null, ?string $voidReason = null)
+    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, Payments $payments, bool $isCorrective, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?LocalDate $dueOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $sentAt = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -304,17 +429,28 @@ class Invoice
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
         $this->total = $total;
+        $this->totalDisbursements = $totalDisbursements;
+        $this->totalToPay = $totalToPay;
         $this->currency = $currency;
         $this->lines = $lines;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->operationRegime = $operationRegime;
+        $this->legalMentions = $legalMentions;
+        $this->exclude347 = $exclude347;
         $this->verifactuStatus = $verifactuStatus;
+        $this->paidAmount = $paidAmount;
+        $this->pendingAmount = $pendingAmount;
+        $this->payments = $payments;
         $this->isCorrective = $isCorrective;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->number = $number;
         $this->dueOn = $dueOn;
         $this->notes = $notes;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
+        $this->exemptionReason = $exemptionReason;
         $this->corrective = $corrective;
         $this->payment = $payment;
         $this->publicLink = $publicLink;
@@ -325,5 +461,7 @@ class Invoice
         $this->sentAt = $sentAt;
         $this->voidedAt = $voidedAt;
         $this->voidReason = $voidReason;
+        $this->scheduledFor = $scheduledFor;
+        $this->scheduledAction = $scheduledAction;
     }
 }

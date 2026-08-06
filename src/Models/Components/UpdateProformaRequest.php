@@ -135,7 +135,18 @@ class UpdateProformaRequest
     public ?OperationRegime $operationRegime = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -143,6 +154,26 @@ class UpdateProformaRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $metadata = null;
+
+    /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
 
     /**
      * @param  ?string  $clientId
@@ -159,10 +190,13 @@ class UpdateProformaRequest
      * @param  ?string  $deliveryTerms
      * @param  ?LocalDate  $estimatedDeliveryDate
      * @param  ?\Factuarea\Sdk\Models\Components\OperationRegime  $operationRegime
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?OperationRegime $operationRegime = null, ?array $metadata = null)
+    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?OperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
@@ -178,6 +212,9 @@ class UpdateProformaRequest
         $this->deliveryTerms = $deliveryTerms;
         $this->estimatedDeliveryDate = $estimatedDeliveryDate;
         $this->operationRegime = $operationRegime;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
     }
 }

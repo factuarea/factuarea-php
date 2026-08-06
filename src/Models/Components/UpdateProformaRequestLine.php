@@ -53,6 +53,38 @@ class UpdateProformaRequestLine
 
     /**
      *
+     * @var ?float $retentionRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $retentionRate = null;
+
+    /**
+     *
+     * @var ?float $surchargeRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $surchargeRate = null;
+
+    /**
+     *
+     * @var ?string $retentionRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $retentionRateId = null;
+
+    /**
+     *
+     * @var ?string $surchargeRateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $surchargeRateId = null;
+
+    /**
+     *
      * @var ?string $productId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
@@ -68,23 +100,42 @@ class UpdateProformaRequestLine
     public ?float $discountPercent = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProformaRequestIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProformaRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
      * @param  ?string  $description
      * @param  ?float  $quantity
      * @param  ?float  $unitPrice
      * @param  ?string  $taxRateId
      * @param  ?float  $taxRate
+     * @param  ?float  $retentionRate
+     * @param  ?float  $surchargeRate
+     * @param  ?string  $retentionRateId
+     * @param  ?string  $surchargeRateId
      * @param  ?string  $productId
      * @param  ?float  $discountPercent
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?string $productId = null, ?float $discountPercent = null)
+    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?float $discountPercent = null, ?UpdateProformaRequestIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRateId = $taxRateId;
         $this->taxRate = $taxRate;
+        $this->retentionRate = $retentionRate;
+        $this->surchargeRate = $surchargeRate;
+        $this->retentionRateId = $retentionRateId;
+        $this->surchargeRateId = $surchargeRateId;
         $this->productId = $productId;
         $this->discountPercent = $discountPercent;
+        $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

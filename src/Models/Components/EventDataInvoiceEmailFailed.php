@@ -9,16 +9,35 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceEmailFailed - Payload (`data`) emitted with the `invoice.email_failed` event. */
+/** EventDataInvoiceEmailFailed - Payload (`data`) emitted with the `invoice.email_failed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceEmailFailed
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceEmailFailedInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceEmailFailedInvoice')]
-    public EventDataInvoiceEmailFailedInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
+
+    /**
+     * $cc
+     *
+     * @var array<string> $cc
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cc')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $cc;
+
+    /**
+     * $bcc
+     *
+     * @var array<string> $bcc
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('bcc')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $bcc;
 
     /**
      *
@@ -50,15 +69,19 @@ class EventDataInvoiceEmailFailed
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceEmailFailedInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
+     * @param  array<string>  $cc
+     * @param  array<string>  $bcc
      * @param  ?string  $recipientEmail
      * @param  ?string  $errorMessage
      * @param  ?string  $errorClass
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceEmailFailedInvoice $invoice, ?string $recipientEmail = null, ?string $errorMessage = null, ?string $errorClass = null, string $type = 'invoice.email_failed')
+    public function __construct(Invoice $object, array $cc, array $bcc, ?string $recipientEmail = null, ?string $errorMessage = null, ?string $errorClass = null, string $type = 'invoice.email_failed')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
+        $this->cc = $cc;
+        $this->bcc = $bcc;
         $this->recipientEmail = $recipientEmail;
         $this->errorMessage = $errorMessage;
         $this->errorClass = $errorClass;

@@ -15,7 +15,14 @@ namespace Factuarea\Sdk\Models\Components;
  *
  * Full update (PUT). All fields `sometimes`: if not sent, the
  * handler keeps the current value. `sku` unique scoped to the company,
- * ignoring the product itself.
+ * ignoring the product itself. Writable: `name`, `sku`, `price`,
+ * `description`, `tags`, `low_stock_threshold` (per-product),
+ * `manage_stock` (document-driven stock movements flag, PATCH-style),
+ * `currency` (EUR only — Producto is read-only EUR; any other code → 422),
+ * `tax_rate_id`, `is_active`, `metadata`, `external_id`. `stock` is NOT
+ * writable here (D1): stock mutation lives only in
+ * `PUT /v1/products/{uuid}/stock` with its `set`/`increase`/`decrease`
+ * semantics. Validation of `metadata` via VO `Metadata`.
  */
 class UpdateProductRequest
 {
@@ -36,6 +43,15 @@ class UpdateProductRequest
     public ?string $price = null;
 
     /**
+     * Whether this product takes part in document-driven stock movements: with `true`, issuing or receiving a document that includes it moves its stock automatically and the movement is recorded in the stock ledger. It only takes effect if your company also has stock management enabled; absent or `null` means `false`.
+     *
+     * @var ?bool $manageStock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('manage_stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $manageStock = null;
+
+    /**
      *
      * @var ?bool $isActive
      */
@@ -52,12 +68,32 @@ class UpdateProductRequest
     public ?string $sku = null;
 
     /**
+     * Columna `products.description` es `text` → sin `max` artificial.
      *
-     * @var ?string $currency
+     * @var ?string $description
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $description = null;
+
+    /**
+     * Umbral per-producto; se persiste en `metadata.low_stock_threshold`.
+     *
+     * @var ?int $lowStockThreshold
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $lowStockThreshold = null;
+
+    /**
+     * Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted. Stock is not writable here; stock changes are made via `PUT /v1/products/{uuid}/stock`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency $currency
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('currency')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $currency = null;
+    public ?UpdateProductRequestCurrency $currency = null;
 
     /**
      * `taxes` is a global system catalog (without a `company_id` column).
@@ -73,7 +109,10 @@ class UpdateProductRequest
     public ?string $taxRateId = null;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -83,23 +122,52 @@ class UpdateProductRequest
     public ?array $metadata = null;
 
     /**
+     * Third-party integration key from your ERP/CRM. Partial update: an absent value is preserved. Free-form, up to 100 characters; unique per company.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $externalId = null;
+
+    /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
      * @param  ?string  $name
      * @param  ?string  $price
+     * @param  ?bool  $manageStock
      * @param  ?bool  $isActive
      * @param  ?string  $sku
-     * @param  ?string  $currency
+     * @param  ?string  $description
+     * @param  ?int  $lowStockThreshold
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $externalId
+     * @param  ?array<string>  $tags
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?string $price = null, ?bool $isActive = null, ?string $sku = null, ?string $currency = null, ?string $taxRateId = null, ?array $metadata = null)
+    public function __construct(?string $name = null, ?string $price = null, ?bool $manageStock = null, ?bool $isActive = null, ?string $sku = null, ?string $description = null, ?int $lowStockThreshold = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?array $tags = null)
     {
         $this->name = $name;
         $this->price = $price;
+        $this->manageStock = $manageStock;
         $this->isActive = $isActive;
         $this->sku = $sku;
+        $this->description = $description;
+        $this->lowStockThreshold = $lowStockThreshold;
         $this->currency = $currency;
         $this->taxRateId = $taxRateId;
         $this->metadata = $metadata;
+        $this->externalId = $externalId;
+        $this->tags = $tags;
     }
 }

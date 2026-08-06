@@ -29,7 +29,7 @@ class AeatAccessRecord
     public \DateTime $accessedAt;
 
     /**
-     * Hash SHA-256 anonimizado del identificador del emisor (no se expone el NIF en claro).
+     * Anonymized SHA-256 hash of the issuer identifier (the plaintext tax ID is never exposed).
      *
      * @var string $accessorIdentifierHash
      */
@@ -53,7 +53,7 @@ class AeatAccessRecord
     public string $disclosureScope;
 
     /**
-     * UUID (v7) del billing record subyacente (usado solo para ordenar/cursorear).
+     * UUID (v7) of the underlying billing record (used only for ordering/cursoring).
      *
      * @var ?string $id
      */

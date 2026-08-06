@@ -46,7 +46,7 @@ class InvoiceStats
     public float $revenueTotal;
 
     /**
-     * Importe total pendiente de cobro.
+     * Total amount pending collection.
      *
      * @var float $pendingAmount
      */
@@ -62,7 +62,7 @@ class InvoiceStats
     public int $overdueCount;
 
     /**
-     * Importe total vencido e impagado.
+     * Total amount overdue and unpaid.
      *
      * @var float $overdueAmount
      */

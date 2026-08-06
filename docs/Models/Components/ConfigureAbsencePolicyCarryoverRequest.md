@@ -1,0 +1,11 @@
+# ConfigureAbsencePolicyCarryoverRequest
+
+
+## Fields
+
+| Field                                                                                 | Type                                                                                  | Required                                                                              | Description                                                                           |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `carryoverType`                                                                       | [Components\CarryoverType](../../Models/Components/CarryoverType.md)                  | :heavy_check_mark:                                                                    | Carryover mode: `none` (no carryover), `capped` (with a cap) or `unlimited` (no cap). |
+| `carryoverMaxDays`                                                                    | *?int*                                                                                | :heavy_minus_sign:                                                                    | Cap of carryover days; required and positive when the mode is `capped`.               |
+| `carryoverExpiryMonth`                                                                | *?int*                                                                                | :heavy_minus_sign:                                                                    | Carryover expiry month (1-12); when provided, the day is also required.               |
+| `carryoverExpiryDay`                                                                  | *?int*                                                                                | :heavy_minus_sign:                                                                    | Carryover expiry day (1-31); when provided, the month is also required.               |

@@ -29,7 +29,7 @@ class TaxReportPeriod
     public string $label;
 
     /**
-     * Trimestre (1-4) o `null` para declaraciones anuales (347).
+     * Quarter (1-4), or `null` for annual reports (347).
      *
      * @var ?int $quarter
      */

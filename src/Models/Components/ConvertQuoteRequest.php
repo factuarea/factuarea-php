@@ -9,13 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * ConvertQuoteRequest - Public REST API v1 — POST /v1/quotes/{uuid}/convert.
- *
- *
- * Body requerido: `target` ∈ {invoice, proforma, delivery_note}.
- * Body opcional: `issued_on` (date), `due_on` (date).
- */
 class ConvertQuoteRequest
 {
     /**

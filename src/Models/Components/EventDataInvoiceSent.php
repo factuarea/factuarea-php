@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceSent - Payload (`data`) emitted with the `invoice.sent` event. */
+/** EventDataInvoiceSent - Payload (`data`) emitted with the `invoice.sent` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataInvoiceSent
 {
     /**
+     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSentInvoice $invoice
+     * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceSentInvoice')]
-    public EventDataInvoiceSentInvoice $invoice;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
+    public Invoice $object;
 
     /**
      *
@@ -29,12 +30,12 @@ class EventDataInvoiceSent
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceSentInvoice  $invoice
+     * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
      * @phpstan-pure
      */
-    public function __construct(EventDataInvoiceSentInvoice $invoice, string $type = 'invoice.sent')
+    public function __construct(Invoice $object, string $type = 'invoice.sent')
     {
-        $this->invoice = $invoice;
+        $this->object = $object;
         $this->type = $type;
     }
 }

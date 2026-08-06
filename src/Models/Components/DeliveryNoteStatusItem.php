@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class DeliveryNoteStatusItem
 {
     /**
-     * Identificador interno del estado.
+     * Internal status identifier.
      *
      * @var \Factuarea\Sdk\Models\Components\DeliveryNoteStatusItemValue $value
      */
@@ -30,7 +30,7 @@ class DeliveryNoteStatusItem
     public string $label;
 
     /**
-     * Color sugerido para pintar el estado en UI.
+     * Suggested color for rendering the status in the UI.
      *
      * @var string $color
      */

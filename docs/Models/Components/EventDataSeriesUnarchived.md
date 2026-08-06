@@ -1,11 +1,11 @@
 # EventDataSeriesUnarchived
 
-Payload (`data`) emitted with the `series.unarchived` event.
+Payload (`data`) emitted with the `series.unarchived` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
 
 
 ## Fields
 
-| Field                                                                                                    | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `type`                                                                                                   | *string*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
-| `series`                                                                                                 | [Components\EventDataSeriesUnarchivedSeries](../../Models/Components/EventDataSeriesUnarchivedSeries.md) | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| Field                                                       | Type                                                        | Required                                                    | Description                                                 |
+| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| `type`                                                      | *string*                                                    | :heavy_check_mark:                                          | N/A                                                         |
+| `object`                                                    | [Components\Series](../../Models/Components/Series.md)      | :heavy_check_mark:                                          | A document numbering series. Immutable per AEAT compliance. |

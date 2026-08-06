@@ -128,6 +128,24 @@ class Quote
     public array $lines;
 
     /**
+     * Free classification tags (lowercase slugs `[a-z0-9-]`, ≤ 40 chars each, ≤ 30 tags). Filterable via `?tags[in]=tag1,tag2` (JSON_CONTAINS, OR semantics). Empty `[]` when there are none.
+     *
+     * @var array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $tags;
+
+    /**
+     * Ordered list of typed custom fields `[{field, value}]` (≤ 50). Distinct from `metadata` (a free key→value map): use `custom_fields` for structured, display-oriented integration metadata. Empty `[]` when there are none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\CustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CustomField>')]
+    public array $customFields;
+
+    /**
      * Whether the public share link is currently active.
      *
      * @var bool $linkIsActive
@@ -202,7 +220,18 @@ class Quote
     public ?string $terms;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    public ?string $externalId;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -234,6 +263,8 @@ class Quote
      * @param  float  $total
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\QuoteLine>  $lines
+     * @param  array<string>  $tags
+     * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
      * @param  bool  $linkIsActive
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
@@ -244,11 +275,12 @@ class Quote
      * @param  ?string  $convertedInvoiceNumber
      * @param  ?string  $notes
      * @param  ?string  $terms
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -265,6 +297,8 @@ class Quote
         $this->total = $total;
         $this->currency = $currency;
         $this->lines = $lines;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->linkIsActive = $linkIsActive;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -275,6 +309,7 @@ class Quote
         $this->convertedInvoiceNumber = $convertedInvoiceNumber;
         $this->notes = $notes;
         $this->terms = $terms;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
         $this->linkExpiresAt = $linkExpiresAt;
     }

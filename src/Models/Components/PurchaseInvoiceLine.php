@@ -42,6 +42,22 @@ class PurchaseInvoiceLine
     public float $taxRate;
 
     /**
+     * IRPF withholding percentage applied to the supplier (0–100). Default 0.
+     *
+     * @var float $retentionRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate')]
+    public float $retentionRate;
+
+    /**
+     * Equivalence surcharge (recargo de equivalencia) percentage paid to the retail supplier (0–100). Default 0. Only the legal VAT-surcharge pairs are accepted (21→5.2, 10→1.4, 4→0.5).
+     *
+     * @var float $surchargeRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate')]
+    public float $surchargeRate;
+
+    /**
      *
      * @var float $subtotal
      */
@@ -54,6 +70,30 @@ class PurchaseInvoiceLine
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes')]
     public float $taxes;
+
+    /**
+     * Withholding amount of the line (`subtotal * retention_rate / 100`). The line total follows `subtotal + taxes − retention_amount + surcharge_amount`.
+     *
+     * @var float $retentionAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_amount')]
+    public float $retentionAmount;
+
+    /**
+     * Equivalence surcharge amount of the line (`subtotal * surcharge_rate / 100`). Default 0.
+     *
+     * @var float $surchargeAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_amount')]
+    public float $surchargeAmount;
+
+    /**
+     * Whether the line VAT is deductible. Informational: it does not change the amount paid.
+     *
+     * @var bool $vatDeductible
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('vat_deductible')]
+    public bool $vatDeductible;
 
     /**
      *
@@ -70,25 +110,58 @@ class PurchaseInvoiceLine
     public ?string $description;
 
     /**
+     * LIVA exemption cause (E1–E6) or non-subjection cause (N1/N2) declared for this line, or null when the line does not declare one.
+     *
+     * @var ?string $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $exemptionReason = null;
+
+    /**
+     * Indirect tax regime override of the supplier line: `iva`/`igic`/`ipsi` when set per-document (precedence override>zone), otherwise `null`. Writable on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceLineObject  $object
      * @param  float  $quantity
      * @param  float  $unitPrice
      * @param  float  $taxRate
+     * @param  float  $retentionRate
+     * @param  float  $surchargeRate
      * @param  float  $subtotal
      * @param  float  $taxes
+     * @param  float  $retentionAmount
+     * @param  float  $surchargeAmount
+     * @param  bool  $vatDeductible
      * @param  float  $total
      * @param  ?string  $description
+     * @param  ?string  $exemptionReason
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(PurchaseInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $subtotal, float $taxes, float $total, ?string $description = null)
+    public function __construct(PurchaseInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $subtotal, float $taxes, float $retentionAmount, float $surchargeAmount, bool $vatDeductible, float $total, ?string $description = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->retentionRate = $retentionRate;
+        $this->surchargeRate = $surchargeRate;
         $this->subtotal = $subtotal;
         $this->taxes = $taxes;
+        $this->retentionAmount = $retentionAmount;
+        $this->surchargeAmount = $surchargeAmount;
+        $this->vatDeductible = $vatDeductible;
         $this->total = $total;
         $this->description = $description;
+        $this->exemptionReason = $exemptionReason;
+        $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

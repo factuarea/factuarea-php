@@ -1,0 +1,15 @@
+# EventDataSeriesMonthReset
+
+Payload (`data`) emitted with the `series.month_reset` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
+
+
+## Fields
+
+| Field                                                       | Type                                                        | Required                                                    | Description                                                 |
+| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| `type`                                                      | *string*                                                    | :heavy_check_mark:                                          | N/A                                                         |
+| `object`                                                    | [Components\Series](../../Models/Components/Series.md)      | :heavy_check_mark:                                          | A document numbering series. Immutable per AEAT compliance. |
+| `oldYear`                                                   | *int*                                                       | :heavy_check_mark:                                          | N/A                                                         |
+| `newYear`                                                   | *int*                                                       | :heavy_check_mark:                                          | N/A                                                         |
+| `oldMonth`                                                  | *int*                                                       | :heavy_check_mark:                                          | N/A                                                         |
+| `newMonth`                                                  | *int*                                                       | :heavy_check_mark:                                          | N/A                                                         |

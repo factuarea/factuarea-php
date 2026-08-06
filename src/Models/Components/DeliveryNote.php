@@ -106,6 +106,24 @@ class DeliveryNote
     public array $lines;
 
     /**
+     * Free classification tags (lowercase slugs `[a-z0-9-]`, ≤ 40 chars each, ≤ 30 tags). Filterable via `?tags[in]=tag1,tag2` (JSON_CONTAINS, OR semantics). Empty `[]` when there are none.
+     *
+     * @var array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $tags;
+
+    /**
+     * Ordered list of typed custom fields `[{field, value}]` (≤ 50). Distinct from `metadata` (a free key→value map): use `custom_fields` for structured, display-oriented integration metadata. Empty `[]` when there are none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\CustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CustomField>')]
+    public array $customFields;
+
+    /**
      *
      * @var ?LocalDate $issuedOn
      */
@@ -183,7 +201,18 @@ class DeliveryNote
     public ?string $notes;
 
     /**
-     * Up to 50 key-value pairs for storing additional structured data. Values must be strings up to 500 characters.
+     * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
+     *
+     * @var ?string $externalId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
+    public ?string $externalId;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
      *
      * @var ?array<string, string> $metadata
      */
@@ -226,6 +255,8 @@ class DeliveryNote
      * @param  float  $total
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\DeliveryNoteLine>  $lines
+     * @param  array<string>  $tags
+     * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $deliveryDate
      * @param  ?\DateTime  $signedAt
@@ -236,13 +267,14 @@ class DeliveryNote
      * @param  ?\Factuarea\Sdk\Models\Components\Tracking  $tracking
      * @param  ?\Factuarea\Sdk\Models\Components\ReceivedBy  $receivedBy
      * @param  ?string  $notes
+     * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $convertedToId
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, float $subtotal, float $taxesTotal, float $total, string $currency, array $lines, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?string $notes = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, float $subtotal, float $taxesTotal, float $total, string $currency, array $lines, array $tags, array $customFields, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -256,6 +288,8 @@ class DeliveryNote
         $this->total = $total;
         $this->currency = $currency;
         $this->lines = $lines;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->issuedOn = $issuedOn;
         $this->deliveryDate = $deliveryDate;
         $this->signedAt = $signedAt;
@@ -266,6 +300,7 @@ class DeliveryNote
         $this->tracking = $tracking;
         $this->receivedBy = $receivedBy;
         $this->notes = $notes;
+        $this->externalId = $externalId;
         $this->metadata = $metadata;
         $this->convertedToId = $convertedToId;
         $this->createdAt = $createdAt;

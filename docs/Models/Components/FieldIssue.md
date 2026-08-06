@@ -1,0 +1,12 @@
+# FieldIssue
+
+A single per-field issue (error or warning) of a bulk/import row, in the `{param, code, message}` shape of the multi-field error model.
+
+
+## Fields
+
+| Field                                                                                 | Type                                                                                  | Required                                                                              | Description                                                                           | Example                                                                               |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `param`                                                                               | *string*                                                                              | :heavy_check_mark:                                                                    | Name of the affected field, or `null` when the issue is not tied to a specific field. | tax_id                                                                                |
+| `code`                                                                                | *string*                                                                              | :heavy_check_mark:                                                                    | Machine-readable code for the field issue (stable across languages).                  | invalid_tax_id                                                                        |
+| `message`                                                                             | *string*                                                                              | :heavy_check_mark:                                                                    | Human-readable description of the issue, in Spanish.                                  | El NIF/CIF indicado no es válido.                                                     |

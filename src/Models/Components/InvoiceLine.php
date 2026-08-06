@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** InvoiceLine - A line item on an invoice. */
+/** InvoiceLine - A line item on an invoice. `line_total` is NOT part of this response: it is a write-only checksum the client may send on create/update so a rounding mismatch with its own ERP is caught (see the create/update request body). */
 class InvoiceLine
 {
     /**
@@ -40,6 +40,22 @@ class InvoiceLine
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_rate')]
     public float $taxRate;
+
+    /**
+     * IRPF withholding percentage applied to the line (0–100). Default 0. Its amount is already aggregated into `taxes`.
+     *
+     * @var float $retentionRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('retention_rate')]
+    public float $retentionRate;
+
+    /**
+     * Equivalence surcharge (recargo de equivalencia) percentage applied to the line (0–100). Default 0. Its amount is already aggregated into `taxes`.
+     *
+     * @var float $surchargeRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_rate')]
+    public float $surchargeRate;
 
     /**
      *
@@ -85,29 +101,135 @@ class InvoiceLine
     public ?ProductRef $product;
 
     /**
+     * Kind of line. `NORMAL` is an ordinary line of the issuer's own operation. `SUPLIDO` is a DISBURSEMENT: an amount the issuer paid in the name and on behalf of the client (an official fee, duty or registry charge) and now re-invoices at cost. Under art. 78.Tres.3 of the Spanish VAT Act (LIVA) a disbursement is not part of the issuer's taxable base, so a `SUPLIDO` line stays out of `subtotal`, `taxes_total` and `total`, is aggregated into `total_disbursements` instead, carries no VAT, withholding, surcharge, discount or product, and is never declared in the AEAT VeriFactu record. Always present and never `null` in a response (a line created before this field existed reads as `NORMAL`); optional on write, where it defaults to `NORMAL`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineLineType $lineType
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('line_type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineLineType|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceLineLineType $lineType = null;
+
+    /**
+     * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineIndirectTaxRegime $indirectTaxRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('indirect_tax_regime')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineIndirectTaxRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
+     * VeriFactu special regime key (ClaveRegimen, AEAT L8.1) declared for this line, or null when the line inherits the regime from the invoice header.
+     *
+     * @var ?string $regimeKey
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regime_key')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $regimeKey = null;
+
+    /**
+     * LIVA exemption cause (E1–E6) or non-subjection cause (N1/N2) declared for this line, or null when the line inherits the qualification from the invoice header.
+     *
+     * @var ?string $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $exemptionReason = null;
+
+    /**
+     * AEAT operation qualification code snapshot frozen at issuance. Read-only (derived).
+     *
+     * @var ?string $aeatTaxCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('aeat_tax_code')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $aeatTaxCode = null;
+
+    /**
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (≤100 chars). REQUIRED on a `SUPLIDO` line (a disbursement without its supporting reference is rejected with 422) and `null` on a normal line. Free text on purpose: the receipt of a public body is rarely registered as a purchase invoice.
+     *
+     * @var ?string $sourceInvoiceReference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_invoice_reference')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $sourceInvoiceReference = null;
+
+    /**
+     * Optional traceability of a `SUPLIDO` line: IDs (UUID v7) of your own purchase invoices that back the disbursement. `null` when the line carries no traceability — never `[]`, so "no traceability" cannot be confused with "empty list". A purchase invoice of another company is rejected with 422.
+     *
+     * @var ?array<string> $sourceInvoiceIds
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_invoice_ids')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $sourceInvoiceIds = null;
+
+    /**
+     * Unit of measure printed next to the quantity on the document (`hours`, `kg`, `units`, …), ≤20 chars, or `null` when not reported. Presentation only: free text with no closed catalog and no fiscal effect, since no AEAT catalog applies to the ordinary Spanish invoice.
+     *
+     * @var ?string $unit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('unit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $unit = null;
+
+    /**
+     * Free-text wording of the exemption provision of this line (≤255 chars), printed under the line description to satisfy the mention required by art. 6.1.j of Royal Decree 1619/2012 when the catalogued cause does not cover it. Orthogonal to `exemption_reason` and to the document-level exemption cause: no coherence is enforced between them and the automatic header legal mention is unchanged.
+     *
+     * @var ?string $exemptionReasonText
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason_text')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $exemptionReasonText = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\InvoiceLineObject  $object
      * @param  float  $quantity
      * @param  float  $unitPrice
      * @param  float  $taxRate
+     * @param  float  $retentionRate
+     * @param  float  $surchargeRate
      * @param  float  $discountPercent
      * @param  float  $subtotal
      * @param  float  $taxes
      * @param  float  $total
      * @param  ?string  $description
      * @param  ?\Factuarea\Sdk\Models\Components\ProductRef  $product
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineLineType  $lineType
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $regimeKey
+     * @param  ?string  $exemptionReason
+     * @param  ?string  $aeatTaxCode
+     * @param  ?string  $sourceInvoiceReference
+     * @param  ?array<string>  $sourceInvoiceIds
+     * @param  ?string  $unit
+     * @param  ?string  $exemptionReasonText
      * @phpstan-pure
      */
-    public function __construct(InvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $discountPercent, float $subtotal, float $taxes, float $total, ?string $description = null, ?ProductRef $product = null)
+    public function __construct(InvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, ?string $description = null, ?ProductRef $product = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->retentionRate = $retentionRate;
+        $this->surchargeRate = $surchargeRate;
         $this->discountPercent = $discountPercent;
         $this->subtotal = $subtotal;
         $this->taxes = $taxes;
         $this->total = $total;
         $this->description = $description;
         $this->product = $product;
+        $this->lineType = $lineType;
+        $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->regimeKey = $regimeKey;
+        $this->exemptionReason = $exemptionReason;
+        $this->aeatTaxCode = $aeatTaxCode;
+        $this->sourceInvoiceReference = $sourceInvoiceReference;
+        $this->sourceInvoiceIds = $sourceInvoiceIds;
+        $this->unit = $unit;
+        $this->exemptionReasonText = $exemptionReasonText;
     }
 }

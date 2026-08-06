@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataDeliveryNoteConverted - Payload (`data`) emitted with the `delivery_note.converted` event. */
+/** EventDataDeliveryNoteConverted - Payload (`data`) emitted with the `delivery_note.converted` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataDeliveryNoteConverted
 {
     /**
+     * A delivery note tracking goods delivered to a customer.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteConvertedDeliveryNote $deliveryNote
+     * @var \Factuarea\Sdk\Models\Components\DeliveryNote $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_note')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataDeliveryNoteConvertedDeliveryNote')]
-    public EventDataDeliveryNoteConvertedDeliveryNote $deliveryNote;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DeliveryNote')]
+    public DeliveryNote $object;
 
     /**
      *
@@ -37,13 +38,13 @@ class EventDataDeliveryNoteConverted
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteConvertedDeliveryNote  $deliveryNote
+     * @param  \Factuarea\Sdk\Models\Components\DeliveryNote  $object
      * @param  \Factuarea\Sdk\Models\Components\EventDataDeliveryNoteConvertedTarget  $target
      * @phpstan-pure
      */
-    public function __construct(EventDataDeliveryNoteConvertedDeliveryNote $deliveryNote, EventDataDeliveryNoteConvertedTarget $target, string $type = 'delivery_note.converted')
+    public function __construct(DeliveryNote $object, EventDataDeliveryNoteConvertedTarget $target, string $type = 'delivery_note.converted')
     {
-        $this->deliveryNote = $deliveryNote;
+        $this->object = $object;
         $this->target = $target;
         $this->type = $type;
     }

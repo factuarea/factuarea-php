@@ -9,10 +9,15 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** Alternative identifier type from the AEAT L7 catalog. Legacy aliases (`tax_id_foreign`/`national_id`) are accepted on input for backward compatibility. */
 enum CreateSupplierRequestType: string
 {
+    case NifIva = 'nif_iva';
     case Passport = 'passport';
-    case NationalId = 'national_id';
-    case TaxIdForeign = 'tax_id_foreign';
+    case CountryId = 'country_id';
+    case ResidenceCertificate = 'residence_certificate';
+    case OtherDocument = 'other_document';
     case NotRegistered = 'not_registered';
+    case TaxIdForeign = 'tax_id_foreign';
+    case NationalId = 'national_id';
 }

@@ -1,11 +1,11 @@
 # EventDataQuoteMarkedAsPending
 
-Payload (`data`) emitted with the `quote.marked_as_pending` event.
+Payload (`data`) emitted with the `quote.marked_as_pending` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
 
 
 ## Fields
 
-| Field                                                                                                          | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `type`                                                                                                         | *string*                                                                                                       | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
-| `quote`                                                                                                        | [Components\EventDataQuoteMarkedAsPendingQuote](../../Models/Components/EventDataQuoteMarkedAsPendingQuote.md) | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
+| Field                                                | Type                                                 | Required                                             | Description                                          |
+| ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| `type`                                               | *string*                                             | :heavy_check_mark:                                   | N/A                                                  |
+| `object`                                             | [Components\Quote](../../Models/Components/Quote.md) | :heavy_check_mark:                                   | A sales quote that can be converted to an invoice.   |

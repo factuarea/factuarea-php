@@ -41,24 +41,24 @@ class PublicApiV1RecurringInvoicesPreviewResponse
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewResponseBody $object
+     * @var \Factuarea\Sdk\Models\Operations\ResponseBody1|\Factuarea\Sdk\Models\Operations\ResponseBody2|null $oneOf
      */
-    public ?PublicApiV1RecurringInvoicesPreviewResponseBody $object = null;
+    public ResponseBody1|ResponseBody2|null $oneOf = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewResponseBody  $object
+     * @param  \Factuarea\Sdk\Models\Operations\ResponseBody1|\Factuarea\Sdk\Models\Operations\ResponseBody2|null  $oneOf
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1RecurringInvoicesPreviewResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ResponseBody1|ResponseBody2|null $oneOf = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->oneOf = $oneOf;
     }
 }

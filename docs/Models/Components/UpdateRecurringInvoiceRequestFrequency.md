@@ -3,9 +3,12 @@
 
 ## Values
 
-| Name        | Value       |
-| ----------- | ----------- |
-| `Weekly`    | weekly      |
-| `Monthly`   | monthly     |
-| `Quarterly` | quarterly   |
-| `Yearly`    | yearly      |
+| Name         | Value        |
+| ------------ | ------------ |
+| `Daily`      | daily        |
+| `Weekly`     | weekly       |
+| `Biweekly`   | biweekly     |
+| `Monthly`    | monthly      |
+| `Quarterly`  | quarterly    |
+| `Semiannual` | semiannual   |
+| `Yearly`     | yearly       |

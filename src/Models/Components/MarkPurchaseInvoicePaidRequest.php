@@ -9,13 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * MarkPurchaseInvoicePaidRequest - Public REST API v1 — POST /v1/purchase_invoices/{uuid}/mark_paid.
- *
- *
- * Body opcional: `paid_on` (date, default hoy), `payment_method`,
- * `notes`.
- */
 class MarkPurchaseInvoicePaidRequest
 {
     /**

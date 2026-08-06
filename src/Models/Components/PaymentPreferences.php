@@ -21,13 +21,13 @@ class PaymentPreferences
     public PaymentPreferencesObject $object;
 
     /**
-     * Preferred payment method. If `direct_debit`, the client must have at least one bank account marked as default.
+     * Preferred payment method. If `direct_debit` or `sepa_direct_debit`, the client must have at least one bank account marked as default.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Method $method
+     * @var ?\Factuarea\Sdk\Models\Components\PaymentPreferencesMethod $method
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('method')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Method|null')]
-    public ?Method $method;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PaymentPreferencesMethod|null')]
+    public ?PaymentPreferencesMethod $method;
 
     /**
      * Payment term in days (Net X). Valid range: 0-365.
@@ -39,11 +39,11 @@ class PaymentPreferences
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\PaymentPreferencesObject  $object
-     * @param  ?\Factuarea\Sdk\Models\Components\Method  $method
+     * @param  ?\Factuarea\Sdk\Models\Components\PaymentPreferencesMethod  $method
      * @param  ?int  $termsDays
      * @phpstan-pure
      */
-    public function __construct(PaymentPreferencesObject $object, ?Method $method = null, ?int $termsDays = null)
+    public function __construct(PaymentPreferencesObject $object, ?PaymentPreferencesMethod $method = null, ?int $termsDays = null)
     {
         $this->object = $object;
         $this->method = $method;

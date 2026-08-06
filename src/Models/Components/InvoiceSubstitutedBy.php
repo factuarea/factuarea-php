@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class InvoiceSubstitutedBy
 {
     /**
-     * UUID (v7) de la factura completa sustituta.
+     * UUID (v7) of the substitute full invoice.
      *
      * @var ?string $id
      */

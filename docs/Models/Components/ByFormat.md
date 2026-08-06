@@ -1,6 +1,6 @@
 # ByFormat
 
-Recuento de declaraciones por formato de salida.
+Report count by output format.
 
 
 ## Fields

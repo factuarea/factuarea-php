@@ -67,13 +67,25 @@ class Factuarea
 
     public Quotes $quotes;
 
+    public Companies $companies;
+
     public Verifactu $verifactu;
 
     public RecurringInvoices $recurringInvoices;
 
     public Invoices $invoices;
 
+    public AbsenceRequests $absenceRequests;
+
+    public TimeCorrections $timeCorrections;
+
+    public AbsencePolicies $absencePolicies;
+
+    public AbsenceTypes $absenceTypes;
+
     public Series $series;
+
+    public WorkSchedules $workSchedules;
 
     public PurchaseInvoices $purchaseInvoices;
 
@@ -87,15 +99,57 @@ class Factuarea
 
     public Taxes $taxes;
 
+    public EmployeeInvitations $employeeInvitations;
+
+    public EmployeeSeats $employeeSeats;
+
+    public FaceSubmissions $faceSubmissions;
+
+    public TimeEntries $timeEntries;
+
+    public MonthlyTimeRecordCloses $monthlyTimeRecordCloses;
+
+    public Account $account;
+
+    public Employees $employees;
+
     public WebhookEndpoints $webhookEndpoints;
+
+    public StripeAutoinvoicing $stripeAutoinvoicing;
 
     public TaxReports $taxReports;
 
-    public Account $account;
+    public Gestoria $gestoria;
+
+    public Emails $emails;
+
+    public Presence $presence;
+
+    public TimeBalances $timeBalances;
+
+    public Payouts $payouts;
+
+    public TaxCatalog $taxCatalog;
+
+    public AbsenceCalendar $absenceCalendar;
+
+    public TimeTrackingSettings $timeTrackingSettings;
+
+    public AbsenceBalances $absenceBalances;
+
+    public Developers $developers;
 
     public EventCatalog $eventCatalog;
 
     public Events $events;
+
+    public Holidays $holidays;
+
+    public Integrations $integrations;
+
+    public PaymentMethods $paymentMethods;
+
+    public PayrollExportFormats $payrollExportFormats;
 
     /**
      * Returns a new instance of the SDK builder used to configure and create the SDK instance.
@@ -115,21 +169,48 @@ class Factuarea
     ) {
         $this->proformas = new Proformas($this->sdkConfiguration);
         $this->quotes = new Quotes($this->sdkConfiguration);
+        $this->companies = new Companies($this->sdkConfiguration);
         $this->verifactu = new Verifactu($this->sdkConfiguration);
         $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
         $this->invoices = new Invoices($this->sdkConfiguration);
+        $this->absenceRequests = new AbsenceRequests($this->sdkConfiguration);
+        $this->timeCorrections = new TimeCorrections($this->sdkConfiguration);
+        $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
+        $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
+        $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
         $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
         $this->clients = new Clients($this->sdkConfiguration);
         $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
         $this->products = new Products($this->sdkConfiguration);
         $this->suppliers = new Suppliers($this->sdkConfiguration);
         $this->taxes = new Taxes($this->sdkConfiguration);
-        $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
-        $this->taxReports = new TaxReports($this->sdkConfiguration);
+        $this->employeeInvitations = new EmployeeInvitations($this->sdkConfiguration);
+        $this->employeeSeats = new EmployeeSeats($this->sdkConfiguration);
+        $this->faceSubmissions = new FaceSubmissions($this->sdkConfiguration);
+        $this->timeEntries = new TimeEntries($this->sdkConfiguration);
+        $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->account = new Account($this->sdkConfiguration);
+        $this->employees = new Employees($this->sdkConfiguration);
+        $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
+        $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
+        $this->taxReports = new TaxReports($this->sdkConfiguration);
+        $this->gestoria = new Gestoria($this->sdkConfiguration);
+        $this->emails = new Emails($this->sdkConfiguration);
+        $this->presence = new Presence($this->sdkConfiguration);
+        $this->timeBalances = new TimeBalances($this->sdkConfiguration);
+        $this->payouts = new Payouts($this->sdkConfiguration);
+        $this->taxCatalog = new TaxCatalog($this->sdkConfiguration);
+        $this->absenceCalendar = new AbsenceCalendar($this->sdkConfiguration);
+        $this->timeTrackingSettings = new TimeTrackingSettings($this->sdkConfiguration);
+        $this->absenceBalances = new AbsenceBalances($this->sdkConfiguration);
+        $this->developers = new Developers($this->sdkConfiguration);
         $this->eventCatalog = new EventCatalog($this->sdkConfiguration);
         $this->events = new Events($this->sdkConfiguration);
+        $this->holidays = new Holidays($this->sdkConfiguration);
+        $this->integrations = new Integrations($this->sdkConfiguration);
+        $this->paymentMethods = new PaymentMethods($this->sdkConfiguration);
+        $this->payrollExportFormats = new PayrollExportFormats($this->sdkConfiguration);
         $this->initHooks();
 
     }

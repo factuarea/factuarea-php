@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
@@ -50,14 +51,16 @@ class Certificates
     /**
      * Activate a company certificate
      *
-     * Activate Company Certificate V1.
+     * Make a previously uploaded certificate the active one. Any other active certificate is deactivated atomically. Returns 404 if the certificate does not exist within your company.
      *
      * @param  string  $certificate
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuCertificatesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuCertificatesActivate(string $certificate, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesActivateResponse
+    public function publicApiV1VerifactuCertificatesActivate(string $certificate, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,6 +90,8 @@ class Certificates
         $request = new Operations\PublicApiV1VerifactuCertificatesActivateRequest(
             certificate: $certificate,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/certificates/{certificate}/activate', Operations\PublicApiV1VerifactuCertificatesActivateRequest::class, $request);
@@ -135,7 +140,7 @@ class Certificates
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,12 +176,14 @@ class Certificates
     /**
      * Retrieve the active certificate
      *
-     * Get Active Company Certificate V1.
+     * Return the currently active FNMT certificate used to sign VeriFactu transmissions. Returns 404 if no certificate has been uploaded yet.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuCertificatesActiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuCertificatesActive(?Options $options = null): Operations\PublicApiV1VerifactuCertificatesActiveResponse
+    public function publicApiV1VerifactuCertificatesActive(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesActiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -203,10 +210,18 @@ class Certificates
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuCertificatesActiveRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/certificates/active');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -282,12 +297,14 @@ class Certificates
     /**
      * List company certificates
      *
-     * List Company Certificates V1.
+     * List the FNMT (PKCS#12) certificates uploaded for your company. The certificate password is never exposed in this representation.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuCertificatesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuCertificatesList(?Options $options = null): Operations\PublicApiV1VerifactuCertificatesListResponse
+    public function publicApiV1VerifactuCertificatesList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -314,10 +331,18 @@ class Certificates
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuCertificatesListRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/certificates');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -393,15 +418,13 @@ class Certificates
     /**
      * Revoke a company certificate
      *
-     * Revoke Company Certificate V1.
+     * Revoke (delete) a company certificate so it can no longer sign VeriFactu transmissions. Returns 404 if the certificate does not exist within your company.
      *
-     * @param  string  $certificate
-     * @param  ?string  $reason
-     * @param  ?string  $idempotencyKey
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuCertificatesRevokeRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuCertificatesRevokeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuCertificatesRevoke(string $certificate, ?string $reason = null, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesRevokeResponse
+    public function publicApiV1VerifactuCertificatesRevoke(Operations\PublicApiV1VerifactuCertificatesRevokeRequest $request, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesRevokeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -428,11 +451,6 @@ class Certificates
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1VerifactuCertificatesRevokeRequest(
-            certificate: $certificate,
-            reason: $reason,
-            idempotencyKey: $idempotencyKey,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/certificates/{certificate}', Operations\PublicApiV1VerifactuCertificatesRevokeRequest::class, $request);
         $urlOverride = null;
@@ -473,7 +491,7 @@ class Certificates
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -509,14 +527,16 @@ class Certificates
     /**
      * Upload a company certificate
      *
-     * Upload Company Certificate V1.
+     * Upload an FNMT certificate (PKCS#12, `.p12`/`.pfx`) as `multipart/form-data` with `certificate_file` and `certificate_password`. The file is validated by magic bytes (ASN.1 DER) and capped at 100 KB; the password is encrypted at rest. The uploaded certificate is activated automatically (previous ones are deactivated). The `Location` header points to `/v1/verifactu/certificates/active`.
      *
      * @param  \Factuarea\Sdk\Models\Components\UploadCompanyCertificateV1Request  $body
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuCertificatesUploadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuCertificatesUpload(Components\UploadCompanyCertificateV1Request $body, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesUploadResponse
+    public function publicApiV1VerifactuCertificatesUpload(Components\UploadCompanyCertificateV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuCertificatesUploadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -546,6 +566,8 @@ class Certificates
         $request = new Operations\PublicApiV1VerifactuCertificatesUploadRequest(
             body: $body,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/certificates');

@@ -9,16 +9,17 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** EventDataTaxValidityChanged - Payload (`data`) emitted with the `tax.validity_changed` event. */
+/** EventDataTaxValidityChanged - Payload (`data`) emitted with the `tax.validity_changed` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
 class EventDataTaxValidityChanged
 {
     /**
+     * A tax rate configuration. Catalog partially global (`is_system=true` for system taxes, without `company_id`) and partially custom per company.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataTaxValidityChangedTax $tax
+     * @var \Factuarea\Sdk\Models\Components\Tax $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tax')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataTaxValidityChangedTax')]
-    public EventDataTaxValidityChangedTax $tax;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Tax')]
+    public Tax $object;
 
     /**
      *
@@ -57,16 +58,16 @@ class EventDataTaxValidityChanged
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventDataTaxValidityChangedTax  $tax
+     * @param  \Factuarea\Sdk\Models\Components\Tax  $object
      * @param  ?LocalDate  $previousValidFrom
      * @param  ?LocalDate  $previousValidUntil
      * @param  ?LocalDate  $newValidFrom
      * @param  ?LocalDate  $newValidUntil
      * @phpstan-pure
      */
-    public function __construct(EventDataTaxValidityChangedTax $tax, ?LocalDate $previousValidFrom = null, ?LocalDate $previousValidUntil = null, ?LocalDate $newValidFrom = null, ?LocalDate $newValidUntil = null, string $type = 'tax.validity_changed')
+    public function __construct(Tax $object, ?LocalDate $previousValidFrom = null, ?LocalDate $previousValidUntil = null, ?LocalDate $newValidFrom = null, ?LocalDate $newValidUntil = null, string $type = 'tax.validity_changed')
     {
-        $this->tax = $tax;
+        $this->object = $object;
         $this->previousValidFrom = $previousValidFrom;
         $this->previousValidUntil = $previousValidUntil;
         $this->newValidFrom = $newValidFrom;

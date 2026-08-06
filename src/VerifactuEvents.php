@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
+use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -49,12 +50,14 @@ class VerifactuEvents
     /**
      * List VeriFactu events
      *
-     * List Veri Factu Events V1.
+     * List the VeriFactu SIF events of your company (alta/anulación transmissions, retries, AEAT responses) with cursor-based pagination.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuEventsList(?Options $options = null): Operations\PublicApiV1VerifactuEventsListResponse
+    public function publicApiV1VerifactuEventsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -81,10 +84,18 @@ class VerifactuEvents
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuEventsListRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/events');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -160,14 +171,16 @@ class VerifactuEvents
     /**
      * Retry a VeriFactu event
      *
-     * Retry Veri Factu Event V1.
+     * Re-queue the AEAT transmission of a failed VeriFactu event. Returns 404 if the event does not exist, 422 `business_rule_violation` / `event_already_processed` if it was already accepted, and 422 `max_retries_exceeded` once the retry limit is reached.
      *
      * @param  string  $event
      * @param  ?string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsRetryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuEventsRetry(string $event, ?string $idempotencyKey = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsRetryResponse
+    public function publicApiV1VerifactuEventsRetry(string $event, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsRetryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -197,6 +210,8 @@ class VerifactuEvents
         $request = new Operations\PublicApiV1VerifactuEventsRetryRequest(
             event: $event,
             idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/events/{event}/retry', Operations\PublicApiV1VerifactuEventsRetryRequest::class, $request);
@@ -245,7 +260,7 @@ class VerifactuEvents
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -281,13 +296,15 @@ class VerifactuEvents
     /**
      * Retrieve a VeriFactu event
      *
-     * Show Veri Factu Event V1.
+     * Retrieve a single VeriFactu SIF event by its `id` (UUID v7). Returns 404 if the event does not exist or belongs to another company.
      *
      * @param  string  $event
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuEventsShow(string $event, ?Options $options = null): Operations\PublicApiV1VerifactuEventsShowResponse
+    public function publicApiV1VerifactuEventsShow(string $event, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -316,11 +333,17 @@ class VerifactuEvents
         }
         $request = new Operations\PublicApiV1VerifactuEventsShowRequest(
             event: $event,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/events/{event}', Operations\PublicApiV1VerifactuEventsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -360,7 +383,7 @@ class VerifactuEvents
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -396,12 +419,14 @@ class VerifactuEvents
     /**
      * Get VeriFactu event summary
      *
-     * Get Veri Factu Event Summary V1.
+     * Return an aggregated summary of your VeriFactu SIF events grouped by type and outcome. Useful for dashboards. Returned as `{ "data": VeriFactuEventSummary }`.
      *
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsSummaryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuEventsSummary(?Options $options = null): Operations\PublicApiV1VerifactuEventsSummaryResponse
+    public function publicApiV1VerifactuEventsSummary(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsSummaryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -428,10 +453,18 @@ class VerifactuEvents
                 '5xx',
             ];
         }
+        $request = new Operations\PublicApiV1VerifactuEventsSummaryRequest(
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/events/summary');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
