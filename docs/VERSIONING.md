@@ -49,6 +49,7 @@ SDK stays on `0.x`, which signals that the surface may still change.
 | SDK version | `Factuarea-Version` | Notes                          |
 | ----------- | ------------------- | ------------------------------ |
 | `0.1.0`     | `2026-06-04`        | Initial pre-GA release.        |
+| `0.2.0`     | `2026-06-04`        | Spec sync: +183/−4 operations. |
 
 When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 
