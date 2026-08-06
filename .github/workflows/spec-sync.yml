@@ -10,23 +10,20 @@ name: Spec sync
 #
 # Triggers:
 #   - repository_dispatch (event_type: spec-updated) — pushed by the factuarea
-#     repo's CI when the spec changes (emitter side documented in
-#     docs/SPEC_SYNC.md; not yet wired, pending an org PAT).
+#     repo's CI when the public spec is republished. The emitter is its `SDK
+#     Spec Dispatch` workflow, wired on 2026-08-06 (see docs/SPEC_SYNC.md).
 #   - workflow_dispatch — manual run from the Actions tab.
+#   - schedule — daily fallback so a missed dispatch is still picked up.
 #
-# NOTE (2026-06): the daily `schedule` trigger is intentionally PAUSED until the
-# P0 spec is deployed to production and the published spec at
-# docs.factuarea.com/api/openapi reflects production (currently the SDK is
-# published ahead of the prod deploy, so the published spec and the pinned spec
-# are temporarily out of sync — a scheduled run would open a PR that wrongly
-# removes endpoints). Re-add the `schedule` block below once docs == prod.
-#   schedule:
-#     - cron: "17 6 * * *"  # 06:17 UTC daily
+# `schedule` restored 2026-08-06: published spec 345 paths vs 192 pinned, which
+# satisfies the `docs == prod` condition it was paused under on 2026-06-07.
 
 on:
   repository_dispatch:
     types: [spec-updated]
   workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * *"
 
 permissions:
   contents: write

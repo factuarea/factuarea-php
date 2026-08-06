@@ -43,66 +43,60 @@ missing rather than producing a partial generation.
 
 ---
 
-## Emitter side (NOT implemented — pending an org PAT)
+## Emitter side (implemented in the private `factuarea` repo)
 
-The emitter lives in the **private `factuarea` repo** and fires the
-`repository_dispatch` when the public spec changes on `develop`/release. It is
-**not implemented yet** because it needs a Personal Access Token (or GitHub App
-token) with `repo` scope on the `factuarea` org to dispatch into this repo — a
-manual setup step the user must complete.
+The emitter is the `SDK Spec Dispatch` workflow
+(`.github/workflows/sdk-spec-dispatch.yml`) in the private `factuarea` repo. It
+fires the `repository_dispatch` into this repo and into `factuarea-node`:
 
-Until then, the **daily schedule** in the receiver keeps the SDK in sync within
-24h of any spec change; the dispatch only makes it near-instant.
-
-### Snippet to add to the `factuarea` repo CI
-
-Add a step to the workflow that regenerates/exports `openapi-public.json` (after
-it is committed/published), gated to only fire when the spec actually changed:
-
-```yaml
-# .github/workflows/<spec-export-or-deploy>.yml in the private `factuarea` repo.
-# Fires after openapi-public.json is published, on develop / release only.
-  notify-sdk-repos:
-    name: Notify SDK repos of a spec change
-    runs-on: ubuntu-latest
-    # Only when the published spec actually changed in this push.
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Detect spec change
-        id: spec
-        run: |
-          if git diff --quiet HEAD~1 HEAD -- backend/public/docs/openapi-public.json; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Dispatch spec-updated to the PHP SDK
-        if: steps.spec.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.SDK_DISPATCH_TOKEN }}
-        run: |
-          gh api repos/factuarea/factuarea-php/dispatches \
-            -f event_type=spec-updated
-
-      - name: Dispatch spec-updated to the Node SDK
-        if: steps.spec.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.SDK_DISPATCH_TOKEN }}
-        run: |
-          gh api repos/factuarea/factuarea-node/dispatches \
-            -f event_type=spec-updated
+```sh
+# GH_TOKEN is the SDK_DISPATCH_TOKEN secret of the private repo.
+for repo in factuarea/factuarea-node factuarea/factuarea-php; do
+  gh api "repos/${repo}/dispatches" -f event_type=spec-updated
+done
 ```
+
+Its triggers are:
+
+- **`workflow_dispatch`** — the reference trigger, run by hand right after the
+  documentation portal is republished. That is the only moment the published
+  spec is known to have changed.
+- **`push` of a `v*` tag** — the release event that exists in the private repo,
+  as a best-effort automatic nudge.
+
+It deliberately does **not** fire on pushes to `develop`. The receiver reads the
+*published* spec, not the spec on a branch, so a `develop` push would only
+produce a run that finds nothing to sync. The published document is served by a
+separate repo (`factuarea-docs`) that has no hook back into `factuarea`, so
+there is no unambiguous "the published spec just changed" event to hang the
+emitter on — which is why the manual trigger is the primary one. A tag push may
+land before the portal is republished; the run then reports that there is
+nothing to sync, and the daily schedule picks the change up within 24h.
+
+Earlier revisions of this document showed the emitter detecting the change by
+diffing `backend/public/docs/openapi-public.json` between commits. That file is
+generated in CI and is **not** versioned in `factuarea`, so no such diff exists;
+the deployed emitter does not attempt it.
+
+### Why the emitter sends no `spec_url`
+
+The dispatch carries **no `client_payload`**, and must not: `SPEC_URL` is fixed
+in this receiver so that a dispatch cannot point CI at a foreign spec, which
+would be downloaded, regenerated into code and executed on the runner. A
+`repository_dispatch` is only a "go regenerate" signal, never a "from where".
+Sending a value the receiver ignores on purpose invites someone to "fix" the
+inconsistency the wrong way round — by making the receiver honour it.
 
 ### Secret to create in the `factuarea` repo
 
 | Secret               | Scope / type                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
-| `SDK_DISPATCH_TOKEN` | A fine-grained PAT (or GitHub App installation token) with **Contents: read** and **`repository_dispatch` / Actions** write on `factuarea/factuarea-php` and `factuarea/factuarea-node`. |
+| `SDK_DISPATCH_TOKEN` | A fine-grained PAT (or GitHub App installation token) scoped to `factuarea/factuarea-php` and `factuarea/factuarea-node`, with **Contents: Read and write** (plus the mandatory **Metadata: Read-only**). There is no permission literally named `repository_dispatch`: `POST /repos/{owner}/{repo}/dispatches` is gated by *Contents* write, so read-only is not enough. |
 
 The default `GITHUB_TOKEN` cannot dispatch to **other** repositories, which is
 why a dedicated token is required. Keep it in the `factuarea` repo's Actions
 secrets only — never in these SDK repos.
+
+If the secret is missing, the emitter **fails red** instead of skipping the
+dispatch quietly. An emitter that silently does nothing is how this SDK went two
+months without a spec update.
