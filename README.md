@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PHP 8.2+](https://img.shields.io/badge/php-8.2%2B-777bb4.svg)](https://www.php.net/)
+[![Spec sync](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml/badge.svg)](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml)
 
 Official PHP SDK for the [Factuarea](https://factuarea.com) public API — invoicing,
 quotes, proformas, delivery notes, products, clients, suppliers, taxes, VeriFactu
@@ -217,11 +218,17 @@ The SDK pins the `Factuarea-Version` it was generated against (currently
 `2026-06-04`) and sends it on every request, so the API behaves consistently
 until you upgrade. SemVer applies to the SDK's public surface: new operations are
 a minor bump, renames/removals or a behaviour-changing `Factuarea-Version` bump
-are a major bump, fixes are a patch. The SDK stays on `0.x` until the API's GA,
-which ships `1.0.0`.
+are breaking, fixes are a patch. The SDK stays on `0.x` until the API's GA, which
+ships `1.0.0` — so while it is pre-GA a breaking change lands in a **minor**, and
+the changelog names the replacement of every operation withdrawn.
 
 See [`docs/VERSIONING.md`](docs/VERSIONING.md) for the full `Factuarea-Version` ↔
 SDK-version mapping and [`CHANGELOG.md`](CHANGELOG.md) for release history.
+
+The pinned spec is kept in sync with the published one automatically — see
+[`docs/SPEC_SYNC.md`](docs/SPEC_SYNC.md). The **Spec sync** badge above is when
+that check last ran, not when the repo was last committed to: a check that finds
+nothing to sync leaves no commit. Click it for the date of the latest run.
 
 ---
 
