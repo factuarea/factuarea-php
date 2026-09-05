@@ -6,6 +6,7 @@ sources:
             - location: spec/openapi.json
         overlays:
             - location: .speakeasy/overlays/retry-status-code-casing.yaml
+            - location: .speakeasy/overlays/product-options-namespace.yaml
         output: .speakeasy/out.openapi.yaml
         registry:
             location: registry.speakeasyapi.dev/factuarea/factuarea/factuarea-public-api

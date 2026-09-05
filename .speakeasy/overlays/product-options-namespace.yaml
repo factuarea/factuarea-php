@@ -1,0 +1,11 @@
+overlay: 1.0.0
+info:
+  title: Avoid the PHP runtime Options class when grouping product options
+  version: 1.0.0
+actions:
+  # Speakeasy flattens nested PHP groups into root classes. products.options
+  # would generate Factuarea\Sdk\Options, which imports Utils\Options under
+  # the same short name and cannot be loaded. Keep the public spec unchanged.
+  - target: $.paths['/products/{product}/options'].get
+    update:
+      x-speakeasy-group: products.productOptions
