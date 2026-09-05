@@ -82,6 +82,16 @@ This is an upstream Speakeasy runtime bug; if a future Speakeasy release makes t
 regex case-insensitive, remove the overlay and its `overlays:` entry in
 `.speakeasy/workflow.yaml`.
 
+### Overlay: product options namespace
+
+`.speakeasy/overlays/product-options-namespace.yaml` maps the new product-options
+operation to `products.productOptions` for PHP generation. Speakeasy flattens
+nested PHP groups into root classes: `products.options` would generate an
+`Options` class that collides with its own `Utils\\Options` import and fails
+PHPStan and PHP loading. The generated entry point is
+`$sdk->products->productOptions`; the HTTP path, operation ID, tags and pinned
+public spec remain unchanged. Keep this overlay on every spec-sync regeneration.
+
 ### Notes on regenerated files
 
 - **`composer.json`** is regenerated. Dev dependencies (`phpunit/phpunit`) allow

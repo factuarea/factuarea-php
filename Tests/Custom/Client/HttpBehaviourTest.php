@@ -123,6 +123,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                idempotencyKey: IdempotencyHook::uuidV4(),
             );
             $this->fail('Expected a typed ErrorThrowable.');
         } catch (ErrorThrowable $e) {
@@ -148,6 +149,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                idempotencyKey: IdempotencyHook::uuidV4(),
             );
             $this->fail('Expected a typed ErrorThrowable.');
         } catch (ErrorThrowable $e) {
@@ -181,6 +183,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                idempotencyKey: IdempotencyHook::uuidV4(),
             );
         } catch (ErrorThrowable) {
             // expected on the final attempt
@@ -211,6 +214,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                idempotencyKey: IdempotencyHook::uuidV4(),
             );
         } catch (ErrorThrowable) {
             // expected
