@@ -53,12 +53,13 @@ class SignatureAudits
      * GDPR Art. 17 (right to erasure) — remove the personal data (recipient name/DNI) from a signature audit log entry while preserving the non-PII audit trail required for LSSI-CE compliance. The `{auditId}` is the numeric primary key of the signature audit record.
      *
      * @param  string  $auditId
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesSignatureAuditsForget(string $auditId, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetResponse
+    public function publicApiV1DeliveryNotesSignatureAuditsForget(string $auditId, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,6 +88,7 @@ class SignatureAudits
         }
         $request = new Operations\PublicApiV1DeliveryNotesSignatureAuditsForgetRequest(
             auditId: $auditId,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -137,7 +139,7 @@ class SignatureAudits
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

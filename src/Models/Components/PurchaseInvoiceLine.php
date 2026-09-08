@@ -88,7 +88,7 @@ class PurchaseInvoiceLine
     public float $surchargeAmount;
 
     /**
-     * Whether the line VAT is deductible. Informational: it does not change the amount paid.
+     * Whether the line VAT is deductible. It does not change the amount paid, but a `false` line is excluded from the deductible input VAT of Modelo 303 (boxes [28]-[37]).
      *
      * @var bool $vatDeductible
      */
@@ -103,11 +103,134 @@ class PurchaseInvoiceLine
     public float $total;
 
     /**
+     * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineOption>')]
+    public array $options;
+
+    /**
      *
      * @var ?string $description
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
     public ?string $description;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProductRef $product
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('product')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductRef|null')]
+    public ?ProductRef $product;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineVariant $variant
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineVariant|null')]
+    public ?PurchaseInvoiceLineVariant $variant;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePresentation $presentation
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePresentation|null')]
+    public ?PurchaseInvoiceLinePresentation $presentation;
+
+    /**
+     *
+     * @var ?string $supplierOfferId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offer_id')]
+    public ?string $supplierOfferId;
+
+    /**
+     *
+     * @var ?string $itemKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
+    public ?string $itemKind;
+
+    /**
+     *
+     * @var ?string $commercialUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('commercial_unit_code')]
+    public ?string $commercialUnitCode;
+
+    /**
+     *
+     * @var ?string $baseUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_code')]
+    public ?string $baseUnitCode;
+
+    /**
+     *
+     * @var ?string $conversionFactor
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('conversion_factor')]
+    public ?string $conversionFactor;
+
+    /**
+     *
+     * @var ?string $baseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_quantity')]
+    public ?string $baseQuantity;
+
+    /**
+     *
+     * @var ?string $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    public ?string $priceSource;
+
+    /**
+     *
+     * @var ?string $priceUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
+    public ?string $priceUnitCode;
+
+    /**
+     * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineConfiguration $configuration
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineConfiguration|null')]
+    public ?PurchaseInvoiceLineConfiguration $configuration;
+
+    /**
+     * Monetary semantics of the frozen price: `per_base_unit` (converted once by the presentation factor) or `per_commercial_unit` (never converted). `null` when the line carries no catalog price context.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePriceSemantics|null')]
+    public ?PurchaseInvoiceLinePriceSemantics $priceSemantics;
+
+    /**
+     * Sum of the adjustments of the chosen option values, as a decimal string.
+     *
+     * @var ?string $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    public ?string $priceAdjustmentTotal;
+
+    /**
+     * TRI-STATE, and `null` is NOT `false`. `true`: the frozen price already includes the option adjustments. `false`: they were added on top. `null`: it could not be determined.
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    public ?bool $optionAdjustmentsAbsorbed;
 
     /**
      * LIVA exemption cause (E1–E6) or non-subjection cause (N1/N2) declared for this line, or null when the line does not declare one.
@@ -141,12 +264,28 @@ class PurchaseInvoiceLine
      * @param  float  $surchargeAmount
      * @param  bool  $vatDeductible
      * @param  float  $total
+     * @param  array<\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineOption>  $options
      * @param  ?string  $description
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductRef  $product
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineVariant  $variant
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePresentation  $presentation
+     * @param  ?string  $supplierOfferId
+     * @param  ?string  $itemKind
+     * @param  ?string  $commercialUnitCode
+     * @param  ?string  $baseUnitCode
+     * @param  ?string  $conversionFactor
+     * @param  ?string  $baseQuantity
+     * @param  ?string  $priceSource
+     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineConfiguration  $configuration
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePriceSemantics  $priceSemantics
+     * @param  ?string  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @param  ?string  $exemptionReason
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(PurchaseInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $subtotal, float $taxes, float $retentionAmount, float $surchargeAmount, bool $vatDeductible, float $total, ?string $description = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(PurchaseInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $subtotal, float $taxes, float $retentionAmount, float $surchargeAmount, bool $vatDeductible, float $total, array $options, ?string $description = null, ?ProductRef $product = null, ?PurchaseInvoiceLineVariant $variant = null, ?PurchaseInvoiceLinePresentation $presentation = null, ?string $supplierOfferId = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?PurchaseInvoiceLineConfiguration $configuration = null, ?PurchaseInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -160,7 +299,23 @@ class PurchaseInvoiceLine
         $this->surchargeAmount = $surchargeAmount;
         $this->vatDeductible = $vatDeductible;
         $this->total = $total;
+        $this->options = $options;
         $this->description = $description;
+        $this->product = $product;
+        $this->variant = $variant;
+        $this->presentation = $presentation;
+        $this->supplierOfferId = $supplierOfferId;
+        $this->itemKind = $itemKind;
+        $this->commercialUnitCode = $commercialUnitCode;
+        $this->baseUnitCode = $baseUnitCode;
+        $this->conversionFactor = $conversionFactor;
+        $this->baseQuantity = $baseQuantity;
+        $this->priceSource = $priceSource;
+        $this->priceUnitCode = $priceUnitCode;
+        $this->configuration = $configuration;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
         $this->exemptionReason = $exemptionReason;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }

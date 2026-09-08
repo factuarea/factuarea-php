@@ -174,13 +174,13 @@ class Quotes
      * Deletes up to 100 quotes in one call. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteQuotesV1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkDelete(Components\BulkDeleteQuotesV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkDeleteResponse
+    public function publicApiV1QuotesBulkDelete(Components\BulkDeleteQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,8 +208,8 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkDeleteRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -304,12 +304,13 @@ class Quotes
      * Packages the PDFs of up to 50 quotes (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfQuotesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkPdf(Components\BulkPdfQuotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkPdfResponse
+    public function publicApiV1QuotesBulkPdf(Components\BulkPdfQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -337,6 +338,7 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkPdfRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -390,7 +392,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '413', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -429,12 +431,13 @@ class Quotes
      * Sends up to 200 quotes by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each quote that could not be sent (not found, terminal status or no resolvable recipient).
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkSendQuotesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkSend(Components\BulkSendQuotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkSendResponse
+    public function publicApiV1QuotesBulkSend(Components\BulkSendQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -462,6 +465,7 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkSendRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -557,12 +561,13 @@ class Quotes
      * Transition up to 50 quotes (by id) to a status from the closed set `[approved, rejected]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; quotes whose transition is rejected (not found or not transitionable) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkStatus(Components\BulkStatusQuotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkStatusResponse
+    public function publicApiV1QuotesBulkStatus(Components\BulkStatusQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -590,6 +595,7 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkStatusRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -936,12 +942,13 @@ class Quotes
      * Delete a quote. Returns 422 if the quote has been converted to an invoice.
      *
      * @param  string  $quote
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesDelete(string $quote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesDeleteResponse
+    public function publicApiV1QuotesDelete(string $quote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -970,6 +977,7 @@ class Quotes
         }
         $request = new Operations\PublicApiV1QuotesDeleteRequest(
             quote: $quote,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -1010,7 +1018,7 @@ class Quotes
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1470,7 +1478,7 @@ class Quotes
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'application/pdf';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.quotes.pdf', null, $this->sdkConfiguration->securitySource);
@@ -1493,20 +1501,17 @@ class Quotes
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'application/pdf')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, 'string', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1QuotesPdfResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1QuotesPdfResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    string: $obj);
-
-                return $response;
+                    bytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }

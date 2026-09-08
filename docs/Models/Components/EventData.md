@@ -698,6 +698,15 @@ Components\EventDataProductUpdated $value = /* values here */
 Components\EventDataPaymentReceived $value = /* values here */
 ```
 
+### `Components\EventDataPaymentReversed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPaymentReversed
+*/
+Components\EventDataPaymentReversed $value = /* values here */
+```
+
 ### `Components\EventDataTaxMetadataChanged`
 
 ```php

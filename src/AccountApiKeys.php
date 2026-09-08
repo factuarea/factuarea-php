@@ -425,13 +425,13 @@ class AccountApiKeys
      * Invalidate the current secret of an API key immediately, generate a fresh `prefix` + `secret`, and return the new secret in plaintext exactly once. Any request made with the previous secret stops authenticating right away. Irreversible.
      *
      * @param  string  $apiKey
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysRotateSecretResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountApiKeysRotateSecret(string $apiKey, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountApiKeysRotateSecretResponse
+    public function publicApiV1AccountApiKeysRotateSecret(string $apiKey, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountApiKeysRotateSecretResponse
     {
         $retryConfig = null;
         if ($options) {

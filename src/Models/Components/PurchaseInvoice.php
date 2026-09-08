@@ -57,6 +57,7 @@ class PurchaseInvoice
     public float $subtotal;
 
     /**
+     * VAT BORNE (IVA soportado) of this purchase invoice, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
      *
      * @var float $taxesTotal
      */
@@ -64,7 +65,15 @@ class PurchaseInvoice
     public float $taxesTotal;
 
     /**
-     * Aggregated IRPF withholding of the lines (Σ retention_amount). Header invariant: `total === subtotal + taxes_total − total_retention`.
+     * Same VAT amount as `taxes_total`, published under the name the concept carries in the other four document families, so that the explicit identity `total === subtotal + total_vat + total_surcharge − total_retention` holds across all five without knowing which resource produced the body.
+     *
+     * @var float $totalVat
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
+    public float $totalVat;
+
+    /**
+     * Aggregated IRPF withholding of the lines (Σ retention_amount). Header invariant: `total === subtotal + taxes_total + total_surcharge − total_retention`.
      *
      * @var float $totalRetention
      */
@@ -72,6 +81,15 @@ class PurchaseInvoice
     public float $totalRetention;
 
     /**
+     * Aggregated equivalence surcharge of the lines (Σ surcharge_amount). It adds to the total exactly like VAT does, so it is part of the header invariant above.
+     *
+     * @var float $totalSurcharge
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
+    public float $totalSurcharge;
+
+    /**
+     * Total of the purchase invoice. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
      *
      * @var float $total
      */
@@ -111,7 +129,7 @@ class PurchaseInvoice
     public PaymentStatus $paymentStatus;
 
     /**
-     * Operation class for the input VAT of Modelo 303. Defaults to `corriente`.
+     * Operation class for the input VAT of Modelo 303. Defaults to `corriente`. `isp` (domestic reverse charge, Art. 84.Uno.2 LIVA) and `intracomunitaria` are self-assessed: the buyer declares both the output VAT and the deductible input VAT.
      *
      * @var \Factuarea\Sdk\Models\Components\PurchaseInvoiceOperationClass $operationClass
      */
@@ -329,7 +347,9 @@ class PurchaseInvoice
      * @param  LocalDate  $issuedOn
      * @param  float  $subtotal
      * @param  float  $taxesTotal
+     * @param  float  $totalVat
      * @param  float  $totalRetention
+     * @param  float  $totalSurcharge
      * @param  float  $total
      * @param  string  $currency
      * @param  float  $paidAmount
@@ -363,7 +383,7 @@ class PurchaseInvoice
      * @param  ?string  $notes
      * @phpstan-pure
      */
-    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalRetention, float $total, string $currency, float $paidAmount, float $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
+    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, float $paidAmount, float $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -372,7 +392,9 @@ class PurchaseInvoice
         $this->issuedOn = $issuedOn;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
+        $this->totalVat = $totalVat;
         $this->totalRetention = $totalRetention;
+        $this->totalSurcharge = $totalSurcharge;
         $this->total = $total;
         $this->currency = $currency;
         $this->paidAmount = $paidAmount;

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Account - Snapshot of the company, plan, developer addon status and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call. */
+/** Account - Snapshot of the company, plan, Developer API entitlement and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call. */
 class Account
 {
     /**
@@ -38,7 +38,7 @@ class Account
     public AccountPlan $plan;
 
     /**
-     * State of the `developer_api` addon for this company.
+     * Developer API entitlement derived from the company plan. The `addon` property name is retained for backwards compatibility.
      *
      * @var \Factuarea\Sdk\Models\Components\Addon $addon
      */

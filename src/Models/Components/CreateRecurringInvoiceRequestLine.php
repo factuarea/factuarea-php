@@ -13,13 +13,6 @@ class CreateRecurringInvoiceRequestLine
 {
     /**
      *
-     * @var string $description
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
-    public string $description;
-
-    /**
-     *
      * @var float $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
@@ -27,10 +20,51 @@ class CreateRecurringInvoiceRequestLine
 
     /**
      *
-     * @var float $unitPrice
+     * @var ?string $description
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $description = null;
+
+    /**
+     *
+     * @var ?float $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $unitPrice = null;
+
+    /**
+     *
+     * @var ?string $productId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $productId = null;
+
+    /**
+     *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
+
+    /**
+     *
+     * @var ?string $presentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationId = null;
+
+    /**
+     *
+     * @var ?float $confirmedBaseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('confirmed_base_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $confirmedBaseQuantity = null;
 
     /**
      *
@@ -100,9 +134,81 @@ class CreateRecurringInvoiceRequestLine
     public ?CreateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
 
     /**
-     * @param  string  $description
+     *
+     * @var ?string $configurationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationUuid = null;
+
+    /**
+     * $options
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestOption>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $options = null;
+
+    /**
+     *
+     * @var ?string $configurationSignature
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_signature')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationSignature = null;
+
+    /**
+     *
+     * @var ?string $configurationName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_name')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationName = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSource $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSource|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateRecurringInvoiceRequestPriceSource $priceSource = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSemantics|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateRecurringInvoiceRequestPriceSemantics $priceSemantics = null;
+
+    /**
+     *
+     * @var ?float $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $priceAdjustmentTotal = null;
+
+    /**
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $optionAdjustmentsAbsorbed = null;
+
+    /**
      * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  ?string  $description
+     * @param  ?float  $unitPrice
+     * @param  ?string  $productId
+     * @param  ?string  $variantId
+     * @param  ?string  $presentationId
+     * @param  ?float  $confirmedBaseQuantity
      * @param  ?float  $taxRate
      * @param  ?float  $retention
      * @param  ?float  $surcharge
@@ -111,13 +217,25 @@ class CreateRecurringInvoiceRequestLine
      * @param  ?string  $retentionRateId
      * @param  ?string  $surchargeRateId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $configurationUuid
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestOption>  $options
+     * @param  ?string  $configurationSignature
+     * @param  ?string  $configurationName
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSource  $priceSource
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSemantics  $priceSemantics
+     * @param  ?float  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(string $description, float $quantity, float $unitPrice, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?CreateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?CreateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?CreateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(float $quantity, ?string $description = null, ?float $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?CreateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?CreateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?CreateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateRecurringInvoiceRequestPriceSource $priceSource = null, ?CreateRecurringInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
-        $this->description = $description;
         $this->quantity = $quantity;
+        $this->description = $description;
         $this->unitPrice = $unitPrice;
+        $this->productId = $productId;
+        $this->variantId = $variantId;
+        $this->presentationId = $presentationId;
+        $this->confirmedBaseQuantity = $confirmedBaseQuantity;
         $this->taxRate = $taxRate;
         $this->retention = $retention;
         $this->surcharge = $surcharge;
@@ -126,5 +244,13 @@ class CreateRecurringInvoiceRequestLine
         $this->retentionRateId = $retentionRateId;
         $this->surchargeRateId = $surchargeRateId;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->configurationUuid = $configurationUuid;
+        $this->options = $options;
+        $this->configurationSignature = $configurationSignature;
+        $this->configurationName = $configurationName;
+        $this->priceSource = $priceSource;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
     }
 }

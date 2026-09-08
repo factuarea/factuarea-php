@@ -40,17 +40,25 @@ class PublicApiV1PurchaseInvoicesPaymentReceiptResponse
     public array $headers;
 
     /**
+     *
+     * @var ?string $bytes
+     */
+    public ?string $bytes = null;
+
+    /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
+     * @param  ?string  $bytes
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $bytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
+        $this->bytes = $bytes;
     }
 }

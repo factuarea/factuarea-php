@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxReportStatsByType - Report count by type. */
+/** TaxReportStatsByType - Report count by type. Covers every declaration type, so the three values add up to `total_reports`. */
 class TaxReportStatsByType
 {
     /**
@@ -29,13 +29,23 @@ class TaxReportStatsByType
     public int $modelo347;
 
     /**
+     * Declaraciones Modelo 130 generadas.
+     *
+     * @var int $modelo130
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('modelo_130')]
+    public int $modelo130;
+
+    /**
      * @param  int  $modelo303
      * @param  int  $modelo347
+     * @param  int  $modelo130
      * @phpstan-pure
      */
-    public function __construct(int $modelo303, int $modelo347)
+    public function __construct(int $modelo303, int $modelo347, int $modelo130)
     {
         $this->modelo303 = $modelo303;
         $this->modelo347 = $modelo347;
+        $this->modelo130 = $modelo130;
     }
 }

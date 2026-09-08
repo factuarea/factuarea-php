@@ -11,6 +11,8 @@
 | `ProductsRead`                 | products:read                  |
 | `ProductsWrite`                | products:write                 |
 | `ProductsDelete`               | products:delete                |
+| `PriceListsRead`               | price_lists:read               |
+| `PriceListsWrite`              | price_lists:write              |
 | `SuppliersRead`                | suppliers:read                 |
 | `SuppliersWrite`               | suppliers:write                |
 | `SuppliersDelete`              | suppliers:delete               |

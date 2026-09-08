@@ -27,3 +27,7 @@ Typed reason why the event was discarded, from a CLOSED catalogue, or `null` whe
 | `PaymentFailed`                     | payment_failed                      |
 | `EventTypeNotCovered`               | event_type_not_covered              |
 | `CheckoutLinesRetrieveFailed`       | checkout_lines_retrieve_failed      |
+| `ReversalPaymentNotFound`           | reversal_payment_not_found          |
+| `ReversalAlreadyApplied`            | reversal_already_applied            |
+| `DisputeInProgress`                 | dispute_in_progress                 |
+| `DisputeResolved`                   | dispute_resolved                    |

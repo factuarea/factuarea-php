@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
  * UpdateProductStockRequest - Public REST API v1 — PUT /v1/products/{uuid}/stock.
  *
  *
- * Body: `{ stock: int, operation?: 'set'|'increase'|'decrease' }`.
+ * Body: `{ stock: numeric-string, operation?: 'set'|'increase'|'decrease' }`.
  * `operation` defaults to `set` (replace). Accepts also `add` / `subtract`
  * as aliases for `increase` / `decrease` for ergonomics.
  */
@@ -21,10 +21,10 @@ class UpdateProductStockRequest
 {
     /**
      *
-     * @var int $stock
+     * @var float $stock
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
-    public int $stock;
+    public float $stock;
 
     /**
      *
@@ -36,11 +36,11 @@ class UpdateProductStockRequest
     public ?UpdateProductStockRequestOperation $operation = null;
 
     /**
-     * @param  int  $stock
+     * @param  float  $stock
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductStockRequestOperation  $operation
      * @phpstan-pure
      */
-    public function __construct(int $stock, ?UpdateProductStockRequestOperation $operation = null)
+    public function __construct(float $stock, ?UpdateProductStockRequestOperation $operation = null)
     {
         $this->stock = $stock;
         $this->operation = $operation;

@@ -12,6 +12,9 @@ namespace Factuarea\Sdk\Models\Components;
 class Update
 {
     /**
+     * Tenant-scoped resolution happens in the controller to preserve the
+     *
+     * bulk skip-on-miss contract without revealing cross-tenant UUIDs.
      *
      * @var string $productId
      */
@@ -20,10 +23,10 @@ class Update
 
     /**
      *
-     * @var int $stock
+     * @var float $stock
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
-    public int $stock;
+    public float $stock;
 
     /**
      *
@@ -36,11 +39,11 @@ class Update
 
     /**
      * @param  string  $productId
-     * @param  int  $stock
+     * @param  float  $stock
      * @param  ?\Factuarea\Sdk\Models\Components\BulkUpdateProductStockRequestOperation  $operation
      * @phpstan-pure
      */
-    public function __construct(string $productId, int $stock, ?BulkUpdateProductStockRequestOperation $operation = null)
+    public function __construct(string $productId, float $stock, ?BulkUpdateProductStockRequestOperation $operation = null)
     {
         $this->productId = $productId;
         $this->stock = $stock;

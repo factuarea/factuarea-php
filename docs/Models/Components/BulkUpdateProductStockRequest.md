@@ -2,7 +2,7 @@
 
 Public REST API v1 — POST /v1/products/bulk-update-stock.
 
-Body: `{ updates: [{ product_id: string, stock: int, operation?: 'set'|'add'|'subtract' }] }`.
+Body: `{ updates: [{ product_id: string, stock: numeric-string, operation?: 'set'|'add'|'subtract' }] }`.
 Accepts up to 500 updates in a single operation.
 
 We accept `items` as an alias of the canonical `updates` field for

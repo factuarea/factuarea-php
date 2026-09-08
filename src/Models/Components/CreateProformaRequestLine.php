@@ -13,13 +13,6 @@ class CreateProformaRequestLine
 {
     /**
      *
-     * @var string $description
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
-    public string $description;
-
-    /**
-     *
      * @var float $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
@@ -27,10 +20,19 @@ class CreateProformaRequestLine
 
     /**
      *
-     * @var float $unitPrice
+     * @var ?string $description
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $description = null;
+
+    /**
+     *
+     * @var ?float $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $unitPrice = null;
 
     /**
      *
@@ -90,6 +92,30 @@ class CreateProformaRequestLine
 
     /**
      *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
+
+    /**
+     *
+     * @var ?string $presentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationId = null;
+
+    /**
+     *
+     * @var ?float $confirmedBaseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('confirmed_base_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $confirmedBaseQuantity = null;
+
+    /**
+     *
      * @var ?float $discountPercent
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('discount_percent')]
@@ -106,9 +132,77 @@ class CreateProformaRequestLine
     public ?CreateProformaRequestIndirectTaxRegime $indirectTaxRegime = null;
 
     /**
-     * @param  string  $description
+     *
+     * @var ?string $configurationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationUuid = null;
+
+    /**
+     * $options
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateProformaRequestOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateProformaRequestOption>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $options = null;
+
+    /**
+     *
+     * @var ?string $configurationSignature
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_signature')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationSignature = null;
+
+    /**
+     *
+     * @var ?string $configurationName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_name')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationName = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProformaRequestPriceSource $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProformaRequestPriceSource|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProformaRequestPriceSource $priceSource = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProformaRequestPriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProformaRequestPriceSemantics|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProformaRequestPriceSemantics $priceSemantics = null;
+
+    /**
+     *
+     * @var ?float $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $priceAdjustmentTotal = null;
+
+    /**
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $optionAdjustmentsAbsorbed = null;
+
+    /**
      * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  ?string  $description
+     * @param  ?float  $unitPrice
      * @param  ?string  $taxRateId
      * @param  ?float  $taxRate
      * @param  ?float  $retentionRate
@@ -116,14 +210,25 @@ class CreateProformaRequestLine
      * @param  ?string  $retentionRateId
      * @param  ?string  $surchargeRateId
      * @param  ?string  $productId
+     * @param  ?string  $variantId
+     * @param  ?string  $presentationId
+     * @param  ?float  $confirmedBaseQuantity
      * @param  ?float  $discountPercent
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProformaRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $configurationUuid
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateProformaRequestOption>  $options
+     * @param  ?string  $configurationSignature
+     * @param  ?string  $configurationName
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProformaRequestPriceSource  $priceSource
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProformaRequestPriceSemantics  $priceSemantics
+     * @param  ?float  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(string $description, float $quantity, float $unitPrice, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?float $discountPercent = null, ?CreateProformaRequestIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(float $quantity, ?string $description = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?CreateProformaRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateProformaRequestPriceSource $priceSource = null, ?CreateProformaRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
-        $this->description = $description;
         $this->quantity = $quantity;
+        $this->description = $description;
         $this->unitPrice = $unitPrice;
         $this->taxRateId = $taxRateId;
         $this->taxRate = $taxRate;
@@ -132,7 +237,18 @@ class CreateProformaRequestLine
         $this->retentionRateId = $retentionRateId;
         $this->surchargeRateId = $surchargeRateId;
         $this->productId = $productId;
+        $this->variantId = $variantId;
+        $this->presentationId = $presentationId;
+        $this->confirmedBaseQuantity = $confirmedBaseQuantity;
         $this->discountPercent = $discountPercent;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->configurationUuid = $configurationUuid;
+        $this->options = $options;
+        $this->configurationSignature = $configurationSignature;
+        $this->configurationName = $configurationName;
+        $this->priceSource = $priceSource;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
     }
 }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted. Stock is not writable here; stock changes are made via `PUT /v1/products/{uuid}/stock`. */
+/** Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted. */
 enum UpdateProductRequestCurrency: string
 {
     case Eur = 'EUR';

@@ -290,13 +290,13 @@ class EmployeeInvitations
      * Resend a pending employee invitation identified by its `id` (UUID v7), regenerating its token and expiry and re-sending the invitation email. Returns 422 if the invitation was already accepted or canceled, and 404 if it does not exist in your company.
      *
      * @param  string  $invitation
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeInvitationsResendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeInvitationsResend(string $invitation, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsResendResponse
+    public function publicApiV1EmployeeInvitationsResend(string $invitation, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsResendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -376,7 +376,7 @@ class EmployeeInvitations
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -415,13 +415,13 @@ class EmployeeInvitations
      * Invite a person to join your company as an employee (Control Horario portal). Only `email` is required — the `employee` role is fixed by the server, never taken from the payload. The invited person receives an email with an acceptance link. Inviting an email that already belongs to a company user, or one that already has a pending invitation, returns 422. Employee invitations do not consume the plan `users` seat limit.
      *
      * @param  \Factuarea\Sdk\Models\Components\SendEmployeeInvitationRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeInvitationsSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeInvitationsSend(Components\SendEmployeeInvitationRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsSendResponse
+    public function publicApiV1EmployeeInvitationsSend(Components\SendEmployeeInvitationRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -449,8 +449,8 @@ class EmployeeInvitations
             ];
         }
         $request = new Operations\PublicApiV1EmployeeInvitationsSendRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

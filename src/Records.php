@@ -678,12 +678,13 @@ class Records
      * Requeues a failed VeriFactu record for transmission to AEAT. Conflict (409) if already accepted, 422 if retry limit exceeded.
      *
      * @param  string  $record
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsRetryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsRetry(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsRetryResponse
+    public function publicApiV1VerifactuRecordsRetry(string $record, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsRetryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -712,6 +713,7 @@ class Records
         }
         $request = new Operations\PublicApiV1VerifactuRecordsRetryRequest(
             record: $record,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -762,7 +764,7 @@ class Records
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -924,12 +926,13 @@ class Records
      * Correct (subsana) an AEAT-rejected VeriFactu record: regenerate the correctable content from the source invoice keeping the original `huella`, reset the transmission round and re-queue the AEAT transmission (202). Returns 422 `record_not_rejected` if the record is not rejected, or `requires_annulment` when the correction affects fingerprint fields (annul + new alta required instead).
      *
      * @param  string  $record
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsSubsanarResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRecordsSubsanar(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsSubsanarResponse
+    public function publicApiV1VerifactuRecordsSubsanar(string $record, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsSubsanarResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -958,6 +961,7 @@ class Records
         }
         $request = new Operations\PublicApiV1VerifactuRecordsSubsanarRequest(
             record: $record,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -1008,7 +1012,7 @@ class Records
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

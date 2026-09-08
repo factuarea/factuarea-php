@@ -116,10 +116,6 @@ class UpdatePurchaseInvoiceRequest
     public ?array $metadata = null;
 
     /**
-     * Extend fields. Basic SHAPE only; the `payment_method` allowlist,
-     *
-     * `tax_period` format and `tags` cardinality are validated by the
-     * VO/Aggregate.
      *
      * @var ?string $internalNotes
      */

@@ -32,4 +32,8 @@ enum DiscardReason: string
     case PaymentFailed = 'payment_failed';
     case EventTypeNotCovered = 'event_type_not_covered';
     case CheckoutLinesRetrieveFailed = 'checkout_lines_retrieve_failed';
+    case ReversalPaymentNotFound = 'reversal_payment_not_found';
+    case ReversalAlreadyApplied = 'reversal_already_applied';
+    case DisputeInProgress = 'dispute_in_progress';
+    case DisputeResolved = 'dispute_resolved';
 }

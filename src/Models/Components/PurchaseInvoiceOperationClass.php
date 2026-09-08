@@ -9,11 +9,12 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Operation class for the input VAT of Modelo 303. Defaults to `corriente`. */
+/** Operation class for the input VAT of Modelo 303. Defaults to `corriente`. `isp` (domestic reverse charge, Art. 84.Uno.2 LIVA) and `intracomunitaria` are self-assessed: the buyer declares both the output VAT and the deductible input VAT. */
 enum PurchaseInvoiceOperationClass: string
 {
     case Corriente = 'corriente';
     case BienInversion = 'bien_inversion';
     case Importacion = 'importacion';
     case Intracomunitaria = 'intracomunitaria';
+    case Isp = 'isp';
 }

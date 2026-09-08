@@ -13,9 +13,15 @@ namespace Factuarea\Sdk\Models\Components;
  * FindInvoiceByNumberRequest - Public REST API v1 — POST /v1/invoices/find-by-number.
  *
  *
- * Body: `number` (invoice number, required), `year` optional to
- * disambiguate when the number repeats across fiscal years. Aligned with
- * Supplier's `find-by-tax-id`.
+ * Body: `number` (invoice number, required) plus TWO optional discriminators,
+ * because a number repeats for two independent reasons:
+ *
+ * - `year` — series recycle numbering across fiscal years.
+ * - `series_id` — two series of the same company each issue their own
+ *   `F-2026-001`; the year cannot tell them apart. Accepts the public UUID v7
+ *   of a series of type `invoice` belonging to the caller's company.
+ *
+ * Aligned with Supplier's `find-by-tax-id`.
  */
 class FindInvoiceByNumberRequest
 {
@@ -35,13 +41,24 @@ class FindInvoiceByNumberRequest
     public ?int $year = null;
 
     /**
+     * Identificador de la serie que emitió la factura. Desambigua cuando dos series comparten número.
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
+
+    /**
      * @param  string  $number
      * @param  ?int  $year
+     * @param  ?string  $seriesId
      * @phpstan-pure
      */
-    public function __construct(string $number, ?int $year = null)
+    public function __construct(string $number, ?int $year = null, ?string $seriesId = null)
     {
         $this->number = $number;
         $this->year = $year;
+        $this->seriesId = $seriesId;
     }
 }

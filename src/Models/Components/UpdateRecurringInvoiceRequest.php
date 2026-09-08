@@ -22,6 +22,15 @@ class UpdateRecurringInvoiceRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestFrequency $frequency
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('frequency')]
@@ -79,6 +88,14 @@ class UpdateRecurringInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $seriesId = null;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
 
     /**
      *
@@ -179,6 +196,7 @@ class UpdateRecurringInvoiceRequest
 
     /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestFrequency  $frequency
      * @param  ?string  $holidayHandling
      * @param  ?LocalDate  $startOn
@@ -186,6 +204,7 @@ class UpdateRecurringInvoiceRequest
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery  $autoDelivery
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestLine>  $lines
      * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
      * @param  ?string  $name
      * @param  ?string  $description
      * @param  ?LocalDate  $endOn
@@ -199,9 +218,10 @@ class UpdateRecurringInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, ?string $seriesId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->frequency = $frequency;
         $this->holidayHandling = $holidayHandling;
         $this->startOn = $startOn;
@@ -209,6 +229,7 @@ class UpdateRecurringInvoiceRequest
         $this->autoDelivery = $autoDelivery;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
         $this->name = $name;
         $this->description = $description;
         $this->endOn = $endOn;

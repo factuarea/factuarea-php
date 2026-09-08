@@ -57,13 +57,13 @@ class Companies
      * Reactivate a previously deactivated (`inactive`) managed company. Activation is gated by an atomic per-seat charge — in live mode the prorated seat is charged synchronously and the company only becomes `active` if the charge succeeds. No payment method on file returns 402, and a plan without the gestoría module returns 403. Trial, enterprise and test keys skip the charge.
      *
      * @param  string  $company
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesActivate(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateResponse
+    public function publicApiV1CompaniesActivate(string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -143,7 +143,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -182,13 +182,13 @@ class Companies
      * Reactivate several deactivated (`inactive`) managed companies in one operation, charging the combined prorated seats in a single invoice. Pass `company_ids`. The gate is atomic: every company is validated (ownership and `inactive` status) before any charge, so if one is invalid the whole batch is rejected without charging or activating any.
      *
      * @param  \Factuarea\Sdk\Models\Components\ActivateCompaniesBatchV1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateBatchResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesActivateBatch(Components\ActivateCompaniesBatchV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateBatchResponse
+    public function publicApiV1CompaniesActivateBatch(Components\ActivateCompaniesBatchV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateBatchResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -216,8 +216,8 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesActivateBatchRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -312,13 +312,13 @@ class Companies
      * Register a new managed company (a child sub-account) under your master tenant — the gestoría model. `name` and `tax_id` are required, and `tax_id` must be unique among the companies you manage (a duplicate returns 409). In live mode the prorated per-seat charge gates creation: with no payment method on file or a failed charge the call returns 402 and nothing is created. Use `GET /v1/companies/seat-charge-preview` to anticipate the cost; test keys skip the charge.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateCompanyV1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesCreate(Components\CreateCompanyV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreateResponse
+    public function publicApiV1CompaniesCreate(Components\CreateCompanyV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -346,8 +346,8 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesCreateRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

@@ -12,19 +12,19 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1InvoicesPaymentsCreateResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/invoices/{id}/payments`.
      *
-     * @var \Factuarea\Sdk\Models\Components\Invoice $data
+     * @var \Factuarea\Sdk\Models\Components\InvoicePaymentDetail $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
-    public Components\Invoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoicePaymentDetail')]
+    public Components\InvoicePaymentDetail $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  \Factuarea\Sdk\Models\Components\InvoicePaymentDetail  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(Components\InvoicePaymentDetail $data)
     {
         $this->data = $data;
     }

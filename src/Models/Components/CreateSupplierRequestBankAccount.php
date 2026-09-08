@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateSupplierRequestBankAccount
 {
     /**
+     * Legacy alias for the whole `bank_accounts` collection, not a single field within it: the value you send becomes the supplier's ONLY bank account, marked as the default one. Send `bank_accounts` instead to register several accounts, or to set `bic`/`notes`. If you send both, `bank_accounts` wins and `iban` is ignored.
      *
      * @var string $iban
      */

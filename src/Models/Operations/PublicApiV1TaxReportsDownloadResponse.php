@@ -41,24 +41,40 @@ class PublicApiV1TaxReportsDownloadResponse
 
     /**
      *
-     * @var ?string $string
+     * @var ?string $twoHundredTextPlainBytes
      */
-    public ?string $string = null;
+    public ?string $twoHundredTextPlainBytes = null;
+
+    /**
+     *
+     * @var ?string $twoHundredApplicationPdfBytes
+     */
+    public ?string $twoHundredApplicationPdfBytes = null;
+
+    /**
+     *
+     * @var ?string $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes
+     */
+    public ?string $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?string  $string
+     * @param  ?string  $twoHundredTextPlainBytes
+     * @param  ?string  $twoHundredApplicationPdfBytes
+     * @param  ?string  $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $string = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $twoHundredTextPlainBytes = null, ?string $twoHundredApplicationPdfBytes = null, ?string $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->string = $string;
+        $this->twoHundredTextPlainBytes = $twoHundredTextPlainBytes;
+        $this->twoHundredApplicationPdfBytes = $twoHundredApplicationPdfBytes;
+        $this->twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes = $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes;
     }
 }

@@ -9,21 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * UpdateProductRequest - Public REST API v1 — PUT /v1/products/{uuid}.
- *
- *
- * Full update (PUT). All fields `sometimes`: if not sent, the
- * handler keeps the current value. `sku` unique scoped to the company,
- * ignoring the product itself. Writable: `name`, `sku`, `price`,
- * `description`, `tags`, `low_stock_threshold` (per-product),
- * `manage_stock` (document-driven stock movements flag, PATCH-style),
- * `currency` (EUR only — Producto is read-only EUR; any other code → 422),
- * `tax_rate_id`, `is_active`, `metadata`, `external_id`. `stock` is NOT
- * writable here (D1): stock mutation lives only in
- * `PUT /v1/products/{uuid}/stock` with its `set`/`increase`/`decrease`
- * semantics. Validation of `metadata` via VO `Metadata`.
- */
 class UpdateProductRequest
 {
     /**
@@ -41,6 +26,24 @@ class UpdateProductRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('price')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $price = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestItemKind $itemKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestItemKind|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProductRequestItemKind $itemKind = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestBaseUnit $baseUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestBaseUnit|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProductRequestBaseUnit $baseUnit = null;
 
     /**
      * Whether this product takes part in document-driven stock movements: with `true`, issuing or receiving a document that includes it moves its stock automatically and the movement is recorded in the stock ledger. It only takes effect if your company also has stock management enabled; absent or `null` means `false`.
@@ -61,6 +64,15 @@ class UpdateProductRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('catalog_availability_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestCatalogAvailabilityMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null;
+
+    /**
+     *
      * @var ?string $sku
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('sku')]
@@ -68,7 +80,6 @@ class UpdateProductRequest
     public ?string $sku = null;
 
     /**
-     * Columna `products.description` es `text` → sin `max` artificial.
      *
      * @var ?string $description
      */
@@ -77,16 +88,23 @@ class UpdateProductRequest
     public ?string $description = null;
 
     /**
-     * Umbral per-producto; se persiste en `metadata.low_stock_threshold`.
      *
-     * @var ?int $lowStockThreshold
+     * @var ?float $stock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $stock = null;
+
+    /**
+     *
+     * @var ?float $lowStockThreshold
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $lowStockThreshold = null;
+    public ?float $lowStockThreshold = null;
 
     /**
-     * Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted. Stock is not writable here; stock changes are made via `PUT /v1/products/{uuid}/stock`.
+     * Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency $currency
      */
@@ -96,11 +114,6 @@ class UpdateProductRequest
     public ?UpdateProductRequestCurrency $currency = null;
 
     /**
-     * `taxes` is a global system catalog (without a `company_id` column).
-     *
-     * Do NOT use TenantRule here — it would add `WHERE company_id = X` against a
-     * table without that column and cause a 500 (SQLSTATE 42S22). Global
-     * validation by uuid, like in the rest of the BCs (DeliveryNote V1, etc.).
      *
      * @var ?string $taxRateId
      */
@@ -131,6 +144,14 @@ class UpdateProductRequest
     public ?string $externalId = null;
 
     /**
+     *
+     * @var ?string $impactToken
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('impact_token')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $impactToken = null;
+
+    /**
      * $tags
      *
      * @var ?array<string> $tags
@@ -141,33 +162,79 @@ class UpdateProductRequest
     public ?array $tags = null;
 
     /**
+     * $specifications
+     *
+     * @var ?array<?string> $specifications
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('specifications')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string|null>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $specifications = null;
+
+    /**
+     * $optionGroups
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateProductRequestOptionGroup> $optionGroups
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_groups')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateProductRequestOptionGroup>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $optionGroups = null;
+
+    /**
+     * $configurations
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateProductRequestConfiguration> $configurations
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configurations')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateProductRequestConfiguration>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $configurations = null;
+
+    /**
      * @param  ?string  $name
      * @param  ?string  $price
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestItemKind  $itemKind
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestBaseUnit  $baseUnit
      * @param  ?bool  $manageStock
      * @param  ?bool  $isActive
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCatalogAvailabilityMode  $catalogAvailabilityMode
      * @param  ?string  $sku
      * @param  ?string  $description
-     * @param  ?int  $lowStockThreshold
+     * @param  ?float  $stock
+     * @param  ?float  $lowStockThreshold
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $externalId
+     * @param  ?string  $impactToken
      * @param  ?array<string>  $tags
+     * @param  ?array<?string>  $specifications
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProductRequestOptionGroup>  $optionGroups
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProductRequestConfiguration>  $configurations
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?string $price = null, ?bool $manageStock = null, ?bool $isActive = null, ?string $sku = null, ?string $description = null, ?int $lowStockThreshold = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?array $tags = null)
+    public function __construct(?string $name = null, ?string $price = null, ?UpdateProductRequestItemKind $itemKind = null, ?UpdateProductRequestBaseUnit $baseUnit = null, ?bool $manageStock = null, ?bool $isActive = null, ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?float $stock = null, ?float $lowStockThreshold = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?string $impactToken = null, ?array $tags = null, ?array $specifications = null, ?array $optionGroups = null, ?array $configurations = null)
     {
         $this->name = $name;
         $this->price = $price;
+        $this->itemKind = $itemKind;
+        $this->baseUnit = $baseUnit;
         $this->manageStock = $manageStock;
         $this->isActive = $isActive;
+        $this->catalogAvailabilityMode = $catalogAvailabilityMode;
         $this->sku = $sku;
         $this->description = $description;
+        $this->stock = $stock;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->currency = $currency;
         $this->taxRateId = $taxRateId;
         $this->metadata = $metadata;
         $this->externalId = $externalId;
+        $this->impactToken = $impactToken;
         $this->tags = $tags;
+        $this->specifications = $specifications;
+        $this->optionGroups = $optionGroups;
+        $this->configurations = $configurations;
     }
 }

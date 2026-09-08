@@ -300,12 +300,13 @@ class Account
      *
      * Check the persisted company name + tax ID pair against the AEAT census (VNifV2) to anticipate VeriFactu 4104 rejections. No request body: the endpoint always verifies the account's persisted fiscal data. Fail-open — if AEAT is unreachable the call returns 200 with `status: unavailable`. Test keys (`fact_test_`) return deterministic statuses per magic NIF without contacting AEAT.
      *
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountVerifyCensusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountVerifyCensus(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountVerifyCensusResponse
+    public function publicApiV1AccountVerifyCensus(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountVerifyCensusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,6 +334,7 @@ class Account
             ];
         }
         $request = new Operations\PublicApiV1AccountVerifyCensusRequest(
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -383,7 +385,7 @@ class Account
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -1,0 +1,10 @@
+# InvoiceLinePresentation
+
+
+## Fields
+
+| Field              | Type               | Required           | Description        |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| `id`               | *string*           | :heavy_check_mark: | N/A                |
+| `name`             | *string*           | :heavy_check_mark: | N/A                |
+| `mode`             | *string*           | :heavy_check_mark: | N/A                |

@@ -187,12 +187,13 @@ class WebhookEndpoints
      * Delete a webhook endpoint. In-flight deliveries are not cancelled but no new deliveries are queued.
      *
      * @param  string  $webhookEndpoint
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsDelete(string $webhookEndpoint, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeleteResponse
+    public function publicApiV1WebhookEndpointsDelete(string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -221,6 +222,7 @@ class WebhookEndpoints
         }
         $request = new Operations\PublicApiV1WebhookEndpointsDeleteRequest(
             webhookEndpoint: $webhookEndpoint,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -261,7 +263,7 @@ class WebhookEndpoints
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -419,13 +421,13 @@ class WebhookEndpoints
      * Send a test event (`webhook.ping`) to the endpoint to verify it is reachable and the signature handshake works. The synthetic delivery appears in `GET /webhook_endpoints/{webhook_endpoint}/deliveries`.
      *
      * @param  string  $webhookEndpoint
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsPingResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsPing(string $webhookEndpoint, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsPingResponse
+    public function publicApiV1WebhookEndpointsPing(string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsPingResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -505,7 +507,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -544,13 +546,13 @@ class WebhookEndpoints
      * Rotate the signing secret of a webhook endpoint. The new secret is returned **once** in this response. The previous secret remains valid for a 24-hour grace period (see `previous_secret_valid_until`) to allow zero-downtime rotation.
      *
      * @param  string  $webhookEndpoint
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsRotateSecret(string $webhookEndpoint, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
+    public function publicApiV1WebhookEndpointsRotateSecret(string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -630,7 +632,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -791,14 +793,11 @@ class WebhookEndpoints
      *
      * Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the delivered envelope. Unlike `ping` (a synthetic `webhook.ping`), this records a real `Event` (visible in `GET /events`) and queues a signed, retried `WebhookDelivery`. Optionally pass `type` to choose which subscribed event to simulate. The delivery reaches only this endpoint.
      *
-     * @param  string  $webhookEndpoint
-     * @param  ?\Factuarea\Sdk\Models\Components\SendTestEventRequest  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsTestEvent(string $webhookEndpoint, ?Components\SendTestEventRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsTestEventResponse
+    public function publicApiV1WebhookEndpointsTestEvent(Operations\PublicApiV1WebhookEndpointsTestEventRequest $request, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsTestEventResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -825,12 +824,6 @@ class WebhookEndpoints
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1WebhookEndpointsTestEventRequest(
-            webhookEndpoint: $webhookEndpoint,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/test_event', Operations\PublicApiV1WebhookEndpointsTestEventRequest::class, $request);
         $urlOverride = null;

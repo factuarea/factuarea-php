@@ -88,6 +88,7 @@ enum CreateWebhookEndpointRequestEnabledEvent: string
     case ProductCreated = 'product.created';
     case ProductUpdated = 'product.updated';
     case PaymentReceived = 'payment.received';
+    case PaymentReversed = 'payment.reversed';
     case TaxMetadataChanged = 'tax.metadata_changed';
     case TaxValidityChanged = 'tax.validity_changed';
     case TaxExternalReferenceChanged = 'tax.external_reference_changed';

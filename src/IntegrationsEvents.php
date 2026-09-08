@@ -189,12 +189,13 @@ class IntegrationsEvents
      * - It never duplicates invoices: the replay goes through the same idempotency check as the original attempt.
      *
      * @param  string  $event
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsReplayResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1IntegrationsEventsReplay(string $event, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsReplayResponse
+    public function publicApiV1IntegrationsEventsReplay(string $event, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsReplayResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -223,6 +224,7 @@ class IntegrationsEvents
         }
         $request = new Operations\PublicApiV1IntegrationsEventsReplayRequest(
             event: $event,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

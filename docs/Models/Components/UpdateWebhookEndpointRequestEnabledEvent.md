@@ -82,6 +82,7 @@
 | `ProductCreated`                     | product.created                      |
 | `ProductUpdated`                     | product.updated                      |
 | `PaymentReceived`                    | payment.received                     |
+| `PaymentReversed`                    | payment.reversed                     |
 | `TaxMetadataChanged`                 | tax.metadata_changed                 |
 | `TaxValidityChanged`                 | tax.validity_changed                 |
 | `TaxExternalReferenceChanged`        | tax.external_reference_changed       |

@@ -113,6 +113,8 @@ class Factuarea
 
     public Employees $employees;
 
+    public PriceLists $priceLists;
+
     public WebhookEndpoints $webhookEndpoints;
 
     public StripeAutoinvoicing $stripeAutoinvoicing;
@@ -192,6 +194,7 @@ class Factuarea
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->account = new Account($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
+        $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);

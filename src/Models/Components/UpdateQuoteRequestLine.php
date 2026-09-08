@@ -13,19 +13,19 @@ class UpdateQuoteRequestLine
 {
     /**
      *
-     * @var ?string $description
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $description = null;
-
-    /**
-     *
      * @var ?float $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?float $quantity = null;
+
+    /**
+     *
+     * @var ?string $description
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $description = null;
 
     /**
      *
@@ -93,6 +93,30 @@ class UpdateQuoteRequestLine
 
     /**
      *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
+
+    /**
+     *
+     * @var ?string $presentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationId = null;
+
+    /**
+     *
+     * @var ?float $confirmedBaseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('confirmed_base_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $confirmedBaseQuantity = null;
+
+    /**
+     *
      * @var ?float $discountPercent
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('discount_percent')]
@@ -109,8 +133,76 @@ class UpdateQuoteRequestLine
     public ?UpdateQuoteRequestIndirectTaxRegime $indirectTaxRegime = null;
 
     /**
-     * @param  ?string  $description
+     *
+     * @var ?string $configurationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationUuid = null;
+
+    /**
+     * $options
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestOption>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $options = null;
+
+    /**
+     *
+     * @var ?string $configurationSignature
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_signature')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationSignature = null;
+
+    /**
+     *
+     * @var ?string $configurationName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_name')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationName = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestPriceSource $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateQuoteRequestPriceSource|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateQuoteRequestPriceSource $priceSource = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestPriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateQuoteRequestPriceSemantics|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateQuoteRequestPriceSemantics $priceSemantics = null;
+
+    /**
+     *
+     * @var ?float $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $priceAdjustmentTotal = null;
+
+    /**
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $optionAdjustmentsAbsorbed = null;
+
+    /**
      * @param  ?float  $quantity
+     * @param  ?string  $description
      * @param  ?float  $unitPrice
      * @param  ?string  $taxRateId
      * @param  ?float  $taxRate
@@ -119,14 +211,25 @@ class UpdateQuoteRequestLine
      * @param  ?string  $retentionRateId
      * @param  ?string  $surchargeRateId
      * @param  ?string  $productId
+     * @param  ?string  $variantId
+     * @param  ?string  $presentationId
+     * @param  ?float  $confirmedBaseQuantity
      * @param  ?float  $discountPercent
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $configurationUuid
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestOption>  $options
+     * @param  ?string  $configurationSignature
+     * @param  ?string  $configurationName
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestPriceSource  $priceSource
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestPriceSemantics  $priceSemantics
+     * @param  ?float  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?float $discountPercent = null, ?UpdateQuoteRequestIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(?float $quantity = null, ?string $description = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?UpdateQuoteRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateQuoteRequestPriceSource $priceSource = null, ?UpdateQuoteRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
-        $this->description = $description;
         $this->quantity = $quantity;
+        $this->description = $description;
         $this->unitPrice = $unitPrice;
         $this->taxRateId = $taxRateId;
         $this->taxRate = $taxRate;
@@ -135,7 +238,18 @@ class UpdateQuoteRequestLine
         $this->retentionRateId = $retentionRateId;
         $this->surchargeRateId = $surchargeRateId;
         $this->productId = $productId;
+        $this->variantId = $variantId;
+        $this->presentationId = $presentationId;
+        $this->confirmedBaseQuantity = $confirmedBaseQuantity;
         $this->discountPercent = $discountPercent;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->configurationUuid = $configurationUuid;
+        $this->options = $options;
+        $this->configurationSignature = $configurationSignature;
+        $this->configurationName = $configurationName;
+        $this->priceSource = $priceSource;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
     }
 }

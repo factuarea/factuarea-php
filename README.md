@@ -712,6 +712,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesReminderPreview](docs/sdks/invoices/README.md#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
 * [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download payment receipt PDF
 * [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
+* [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
 * [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
 * [publicApiV1InvoicesSend](docs/sdks/invoices/README.md#publicapiv1invoicessend) - Send invoice by email
 * [publicApiV1InvoicesSendReminder](docs/sdks/invoices/README.md#publicapiv1invoicessendreminder) - Send a payment reminder
@@ -762,6 +763,25 @@ if ($response->object !== null) {
 * [publicApiV1PresenceLive](docs/sdks/presence/README.md#publicapiv1presencelive) - Get the live team presence
 * [publicApiV1PresenceDaily](docs/sdks/presence/README.md#publicapiv1presencedaily) - List office/remote presence declarations
 
+### [PriceLists](docs/sdks/pricelists/README.md)
+
+* [publicApiV1PriceListsCreate](docs/sdks/pricelists/README.md#publicapiv1pricelistscreate) - Create a price list
+* [publicApiV1PriceListsList](docs/sdks/pricelists/README.md#publicapiv1pricelistslist) - List price lists
+* [publicApiV1PriceListsDelete](docs/sdks/pricelists/README.md#publicapiv1pricelistsdelete) - Delete a price list
+* [publicApiV1PriceListsShow](docs/sdks/pricelists/README.md#publicapiv1pricelistsshow) - Retrieve a price list
+* [publicApiV1PriceListsUpdate](docs/sdks/pricelists/README.md#publicapiv1pricelistsupdate) - Update a price list
+* [publicApiV1PriceListsOptions](docs/sdks/pricelists/README.md#publicapiv1pricelistsoptions) - List active price list options
+* [publicApiV1PriceListsResolve](docs/sdks/pricelists/README.md#publicapiv1pricelistsresolve) - Resolve a catalog price
+* [publicApiV1PriceListsResolveMany](docs/sdks/pricelists/README.md#publicapiv1pricelistsresolvemany) - Resolve many catalog prices
+
+#### [PriceLists.Items](docs/sdks/items/README.md)
+
+* [publicApiV1PriceListsItemsDelete](docs/sdks/items/README.md#publicapiv1pricelistsitemsdelete) - Delete a price list item
+* [publicApiV1PriceListsItemsList](docs/sdks/items/README.md#publicapiv1pricelistsitemslist) - List price list items
+* [publicApiV1PriceListsItemsUpsert](docs/sdks/items/README.md#publicapiv1pricelistsitemsupsert) - Upsert a price list item
+* [publicApiV1PriceListsItemsPurgeRetired](docs/sdks/items/README.md#publicapiv1pricelistsitemspurgeretired) - Permanently delete a retired price list item
+* [publicApiV1PriceListsItemsReassignRetired](docs/sdks/items/README.md#publicapiv1pricelistsitemsreassignretired) - Reassign a retired price list item
+
 ### [Products](docs/sdks/products/README.md)
 
 * [publicApiV1ProductsBulkDelete](docs/sdks/products/README.md#publicapiv1productsbulkdelete) - Delete multiple products in bulk
@@ -778,15 +798,51 @@ if ($response->object !== null) {
 * [publicApiV1ProductsActivities](docs/sdks/products/README.md#publicapiv1productsactivities) - List product activity timeline
 * [publicApiV1ProductsSalesAnalytics](docs/sdks/products/README.md#publicapiv1productssalesanalytics) - Get product sales analytics
 * [publicApiV1ProductsStats](docs/sdks/products/README.md#publicapiv1productsstats) - Get product stats
+* [publicApiV1ProductsResolveSelection](docs/sdks/products/README.md#publicapiv1productsresolveselection) - Resolve a catalog selection
 * [publicApiV1ProductsSearch](docs/sdks/products/README.md#publicapiv1productssearch) - Search products
 * [publicApiV1ProductsToggleActive](docs/sdks/products/README.md#publicapiv1productstoggleactive) - Toggle product active state
 * [publicApiV1ProductsUpdateStock](docs/sdks/products/README.md#publicapiv1productsupdatestock) - Update product stock
+
+#### [Products.Configurations](docs/sdks/configurations/README.md)
+
+* [publicApiV1ProductsConfigurationsList](docs/sdks/configurations/README.md#publicapiv1productsconfigurationslist) - List product commercial combinations
+* [publicApiV1ProductsConfigurationsImpactPreview](docs/sdks/configurations/README.md#publicapiv1productsconfigurationsimpactpreview) - Preview the impact of restricting a catalog
 
 #### [Products.Gallery](docs/sdks/gallery/README.md)
 
 * [publicApiV1ProductsGalleryDelete](docs/sdks/gallery/README.md#publicapiv1productsgallerydelete) - Remove a gallery image from a product
 * [publicApiV1ProductsGalleryDownload](docs/sdks/gallery/README.md#publicapiv1productsgallerydownload) - Download a product gallery image binary
 * [publicApiV1ProductsGalleryUpload](docs/sdks/gallery/README.md#publicapiv1productsgalleryupload) - Upload a gallery image to a product
+
+#### [Products.Presentations](docs/sdks/presentations/README.md)
+
+* [publicApiV1ProductsPresentationsCreate](docs/sdks/presentations/README.md#publicapiv1productspresentationscreate) - Create a product presentation
+* [publicApiV1ProductsPresentationsList](docs/sdks/presentations/README.md#publicapiv1productspresentationslist) - List product presentations
+* [publicApiV1ProductsPresentationsDelete](docs/sdks/presentations/README.md#publicapiv1productspresentationsdelete) - Delete a product presentation
+* [publicApiV1ProductsPresentationsUpdate](docs/sdks/presentations/README.md#publicapiv1productspresentationsupdate) - Update a product presentation
+
+#### [Products.ProductOptions](docs/sdks/productoptions/README.md)
+
+* [publicApiV1ProductsOptionsList](docs/sdks/productoptions/README.md#publicapiv1productsoptionslist) - List product option groups
+
+#### [Products.StockMovements](docs/sdks/stockmovements/README.md)
+
+* [publicApiV1ProductsStockMovementsList](docs/sdks/stockmovements/README.md#publicapiv1productsstockmovementslist) - List stock movements of a product
+
+#### [Products.SupplierOffers](docs/sdks/supplieroffers/README.md)
+
+* [publicApiV1ProductsSupplierOffersCreate](docs/sdks/supplieroffers/README.md#publicapiv1productssupplierofferscreate) - Create a supplier offer
+* [publicApiV1ProductsSupplierOffersList](docs/sdks/supplieroffers/README.md#publicapiv1productssupplierofferslist) - List supplier offers
+* [publicApiV1ProductsSupplierOffersDelete](docs/sdks/supplieroffers/README.md#publicapiv1productssupplieroffersdelete) - Delete a supplier offer
+* [publicApiV1ProductsSupplierOffersUpdate](docs/sdks/supplieroffers/README.md#publicapiv1productssupplieroffersupdate) - Update a supplier offer
+* [publicApiV1ProductsSupplierOffersPreferred](docs/sdks/supplieroffers/README.md#publicapiv1productssupplierofferspreferred) - Set the preferred supplier offer
+
+#### [Products.Variants](docs/sdks/variants/README.md)
+
+* [publicApiV1ProductsVariantsCreate](docs/sdks/variants/README.md#publicapiv1productsvariantscreate) - Create a product variant
+* [publicApiV1ProductsVariantsList](docs/sdks/variants/README.md#publicapiv1productsvariantslist) - List product variants
+* [publicApiV1ProductsVariantsDelete](docs/sdks/variants/README.md#publicapiv1productsvariantsdelete) - Delete a product variant
+* [publicApiV1ProductsVariantsUpdate](docs/sdks/variants/README.md#publicapiv1productsvariantsupdate) - Update a product variant
 
 #### [Products.Video](docs/sdks/video/README.md)
 

@@ -60,6 +60,23 @@ class CreateInvoiceRequest
 
     /**
      *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?string $notes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('notes')]
@@ -114,6 +131,8 @@ class CreateInvoiceRequest
      * @param  LocalDate  $dueOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
      * @param  ?\Factuarea\Sdk\Models\Components\Options  $options
+     * @param  ?string  $priceListId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
@@ -121,7 +140,7 @@ class CreateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?Options $options = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?Options $options = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->seriesId = $seriesId;
@@ -129,6 +148,8 @@ class CreateInvoiceRequest
         $this->dueOn = $dueOn;
         $this->lines = $lines;
         $this->options = $options;
+        $this->priceListId = $priceListId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->metadata = $metadata;

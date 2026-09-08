@@ -244,6 +244,14 @@ class CreateClientRequest
     public ?string $externalId = null;
 
     /**
+     *
+     * @var ?string $defaultPriceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('default_price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $defaultPriceListId = null;
+
+    /**
      * $billingEmails
      *
      * @var ?array<string> $billingEmails
@@ -292,11 +300,12 @@ class CreateClientRequest
      * @param  ?string  $dir3ManagingBody
      * @param  ?string  $dir3ProcessingUnit
      * @param  ?string  $externalId
+     * @param  ?string  $defaultPriceListId
      * @param  ?array<string>  $billingEmails
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateClientRequestBankAccount>  $bankAccounts
      * @phpstan-pure
      */
-    public function __construct(string $name, ?bool $accumulate347 = null, ?CreateClientRequestAlternativeId $alternativeId = null, ?CreateClientRequestAddress $address = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?CreateClientRequestPreferredOperationRegime $preferredOperationRegime = null, ?CreateClientRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $externalId = null, ?array $billingEmails = null, ?array $bankAccounts = null)
+    public function __construct(string $name, ?bool $accumulate347 = null, ?CreateClientRequestAlternativeId $alternativeId = null, ?CreateClientRequestAddress $address = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?CreateClientRequestPreferredOperationRegime $preferredOperationRegime = null, ?CreateClientRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $externalId = null, ?string $defaultPriceListId = null, ?array $billingEmails = null, ?array $bankAccounts = null)
     {
         $this->name = $name;
         $this->accumulate347 = $accumulate347;
@@ -326,6 +335,7 @@ class CreateClientRequest
         $this->dir3ManagingBody = $dir3ManagingBody;
         $this->dir3ProcessingUnit = $dir3ProcessingUnit;
         $this->externalId = $externalId;
+        $this->defaultPriceListId = $defaultPriceListId;
         $this->billingEmails = $billingEmails;
         $this->bankAccounts = $bankAccounts;
     }

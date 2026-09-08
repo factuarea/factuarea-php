@@ -58,6 +58,14 @@ class RecurringInvoiceLine
     public float $surcharge;
 
     /**
+     * Discount percentage applied to the line (0-100) BEFORE any tax, exactly as the domain and the invoice this recurrence will issue apply it. `subtotal` is already net of it, so `unit_price` multiplied by `quantity` does NOT equal `subtotal` on a discounted line. Default 0.
+     *
+     * @var float $discountPercent
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('discount_percent')]
+    public float $discountPercent;
+
+    /**
      *
      * @var float $subtotal
      */
@@ -77,6 +85,15 @@ class RecurringInvoiceLine
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
     public float $total;
+
+    /**
+     * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLineOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLineOption>')]
+    public array $options;
 
     /**
      *
@@ -118,6 +135,152 @@ class RecurringInvoiceLine
     public ?string $surchargeRateId;
 
     /**
+     *
+     * @var ?string $productId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
+    public ?string $productId;
+
+    /**
+     *
+     * @var ?string $productName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('product_name')]
+    public ?string $productName;
+
+    /**
+     *
+     * @var ?string $itemKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
+    public ?string $itemKind;
+
+    /**
+     *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    public ?string $variantId;
+
+    /**
+     *
+     * @var ?string $variantName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_name')]
+    public ?string $variantName;
+
+    /**
+     *
+     * @var ?string $presentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
+    public ?string $presentationId;
+
+    /**
+     *
+     * @var ?string $presentationName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_name')]
+    public ?string $presentationName;
+
+    /**
+     *
+     * @var ?string $presentationMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_mode')]
+    public ?string $presentationMode;
+
+    /**
+     *
+     * @var ?string $commercialUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('commercial_unit_code')]
+    public ?string $commercialUnitCode;
+
+    /**
+     *
+     * @var ?string $baseUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_code')]
+    public ?string $baseUnitCode;
+
+    /**
+     *
+     * @var ?string $conversionFactor
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('conversion_factor')]
+    public ?string $conversionFactor;
+
+    /**
+     *
+     * @var ?string $baseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_quantity')]
+    public ?string $baseQuantity;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    public ?string $priceListId;
+
+    /**
+     *
+     * @var ?string $priceListName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_name')]
+    public ?string $priceListName;
+
+    /**
+     *
+     * @var ?string $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    public ?string $priceSource;
+
+    /**
+     *
+     * @var ?string $priceUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
+    public ?string $priceUnitCode;
+
+    /**
+     * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineConfiguration $configuration
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceLineConfiguration|null')]
+    public ?RecurringInvoiceLineConfiguration $configuration;
+
+    /**
+     * Monetary semantics of the frozen price: `per_base_unit` (converted once by the presentation factor) or `per_commercial_unit` (never converted). `null` when the line carries no catalog price context.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceSemantics|null')]
+    public ?RecurringInvoiceLinePriceSemantics $priceSemantics;
+
+    /**
+     * Sum of the adjustments of the chosen option values, as a decimal string.
+     *
+     * @var ?string $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    public ?string $priceAdjustmentTotal;
+
+    /**
+     * TRI-STATE, and `null` is NOT `false`. `true`: the frozen price already includes the option adjustments. `false`: they were added on top. `null`: it could not be determined.
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    public ?bool $optionAdjustmentsAbsorbed;
+
+    /**
      * Indirect tax regime override of the recurring template line: `iva`/`igic`/`ipsi` when set per-document (precedence override>zone), otherwise `null`. Writable on create/update; propagated to each generated invoice. The template must be homogeneous (a single non-null regime across all lines, 422 otherwise).
      *
      * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime
@@ -134,18 +297,40 @@ class RecurringInvoiceLine
      * @param  float  $taxRate
      * @param  float  $retention
      * @param  float  $surcharge
+     * @param  float  $discountPercent
      * @param  float  $subtotal
      * @param  float  $taxes
      * @param  float  $total
+     * @param  array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLineOption>  $options
      * @param  ?string  $description
      * @param  ?string  $exemptionReason
      * @param  ?string  $regimeKey
      * @param  ?string  $retentionRateId
      * @param  ?string  $surchargeRateId
+     * @param  ?string  $productId
+     * @param  ?string  $productName
+     * @param  ?string  $itemKind
+     * @param  ?string  $variantId
+     * @param  ?string  $variantName
+     * @param  ?string  $presentationId
+     * @param  ?string  $presentationName
+     * @param  ?string  $presentationMode
+     * @param  ?string  $commercialUnitCode
+     * @param  ?string  $baseUnitCode
+     * @param  ?string  $conversionFactor
+     * @param  ?string  $baseQuantity
+     * @param  ?string  $priceListId
+     * @param  ?string  $priceListName
+     * @param  ?string  $priceSource
+     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineConfiguration  $configuration
+     * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceSemantics  $priceSemantics
+     * @param  ?string  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retention, float $surcharge, float $subtotal, float $taxes, float $total, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(RecurringInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -153,14 +338,36 @@ class RecurringInvoiceLine
         $this->taxRate = $taxRate;
         $this->retention = $retention;
         $this->surcharge = $surcharge;
+        $this->discountPercent = $discountPercent;
         $this->subtotal = $subtotal;
         $this->taxes = $taxes;
         $this->total = $total;
+        $this->options = $options;
         $this->description = $description;
         $this->exemptionReason = $exemptionReason;
         $this->regimeKey = $regimeKey;
         $this->retentionRateId = $retentionRateId;
         $this->surchargeRateId = $surchargeRateId;
+        $this->productId = $productId;
+        $this->productName = $productName;
+        $this->itemKind = $itemKind;
+        $this->variantId = $variantId;
+        $this->variantName = $variantName;
+        $this->presentationId = $presentationId;
+        $this->presentationName = $presentationName;
+        $this->presentationMode = $presentationMode;
+        $this->commercialUnitCode = $commercialUnitCode;
+        $this->baseUnitCode = $baseUnitCode;
+        $this->conversionFactor = $conversionFactor;
+        $this->baseQuantity = $baseQuantity;
+        $this->priceListId = $priceListId;
+        $this->priceListName = $priceListName;
+        $this->priceSource = $priceSource;
+        $this->priceUnitCode = $priceUnitCode;
+        $this->configuration = $configuration;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

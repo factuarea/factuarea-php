@@ -82,6 +82,7 @@ class Invoice
     public float $subtotal;
 
     /**
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var float $taxesTotal
      */
@@ -89,6 +90,31 @@ class Invoice
     public float $taxesTotal;
 
     /**
+     * Output VAT (IVA repercutido) accrued by the document: sum of the VAT of its lines. This is the figure a Spanish Modelo 303 declares, and it is NOT recoverable from `taxes_total`, which nets the withholding out.
+     *
+     * @var float $totalVat
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
+    public float $totalVat;
+
+    /**
+     * Withholding (retención de IRPF) applied to the document: sum of the withholding of its lines, as a POSITIVE amount that SUBTRACTS from the total. This is the figure a Spanish Modelo 130/111 declares. It is ALREADY netted out inside `taxes_total`, so do not subtract it again.
+     *
+     * @var float $totalRetention
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
+    public float $totalRetention;
+
+    /**
+     * Equivalence surcharge (recargo de equivalencia) of the document: sum of the surcharge of its lines. It ADDS to the total exactly like VAT does, and is ALREADY included inside `taxes_total`.
+     *
+     * @var float $totalSurcharge
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
+    public float $totalSurcharge;
+
+    /**
+     * Total of the document. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the AGGREGATE one, specific to the sales-side families - `total = subtotal + taxes_total`. NEVER reconstruct it as `subtotal + taxes_total - total_retention`: `taxes_total` ALREADY has the withholding netted out, so that combination subtracts it twice and yields a false total (4,320.00 + 259.20 - 648.00 = 3,931.20 against a real 4,579.20).
      *
      * @var float $total
      */
@@ -235,6 +261,22 @@ class Invoice
     public ?string $number;
 
     /**
+     * UUID of the price list selected for this document.
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    public ?string $priceListId;
+
+    /**
+     * Price-list name snapshot frozen on the document.
+     *
+     * @var ?string $priceListName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_name')]
+    public ?string $priceListName;
+
+    /**
      *
      * @var ?LocalDate $dueOn
      */
@@ -379,6 +421,9 @@ class Invoice
      * @param  LocalDate  $issuedOn
      * @param  float  $subtotal
      * @param  float  $taxesTotal
+     * @param  float  $totalVat
+     * @param  float  $totalRetention
+     * @param  float  $totalSurcharge
      * @param  float  $total
      * @param  float  $totalDisbursements
      * @param  float  $totalToPay
@@ -397,6 +442,8 @@ class Invoice
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $number
+     * @param  ?string  $priceListId
+     * @param  ?string  $priceListName
      * @param  ?LocalDate  $dueOn
      * @param  ?string  $notes
      * @param  ?string  $externalId
@@ -416,7 +463,7 @@ class Invoice
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceScheduledAction  $scheduledAction
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, Payments $payments, bool $isCorrective, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?LocalDate $dueOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $sentAt = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null)
+    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, Payments $payments, bool $isCorrective, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $sentAt = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -428,6 +475,9 @@ class Invoice
         $this->issuedOn = $issuedOn;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
+        $this->totalVat = $totalVat;
+        $this->totalRetention = $totalRetention;
+        $this->totalSurcharge = $totalSurcharge;
         $this->total = $total;
         $this->totalDisbursements = $totalDisbursements;
         $this->totalToPay = $totalToPay;
@@ -446,6 +496,8 @@ class Invoice
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->number = $number;
+        $this->priceListId = $priceListId;
+        $this->priceListName = $priceListName;
         $this->dueOn = $dueOn;
         $this->notes = $notes;
         $this->externalId = $externalId;

@@ -14,6 +14,14 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1QuotesBulkPdfRequest
 {
     /**
+     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
+     *
+     * @var string $idempotencyKey
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=Idempotency-Key')]
+    public string $idempotencyKey;
+
+    /**
      *
      * @var \Factuarea\Sdk\Models\Components\BulkPdfQuotesV1Request $body
      */
@@ -37,13 +45,15 @@ class PublicApiV1QuotesBulkPdfRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * @param  string  $idempotencyKey
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfQuotesV1Request  $body
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(Components\BulkPdfQuotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $idempotencyKey, Components\BulkPdfQuotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
     {
+        $this->idempotencyKey = $idempotencyKey;
         $this->body = $body;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;

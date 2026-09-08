@@ -698,6 +698,15 @@ Components\WebhookEventPayloadProductUpdated $value = /* values here */
 Components\WebhookEventPayloadPaymentReceived $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadPaymentReversed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPaymentReversed
+*/
+Components\WebhookEventPayloadPaymentReversed $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadTaxMetadataChanged`
 
 ```php

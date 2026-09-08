@@ -53,14 +53,14 @@ class Settings
      *
      * Update the VeriFactu settings of your company (e.g. mode/environment). Returns 422 `business_rule_violation` when a transition is locked by AEAT compliance (for example, once VeriFactu mode has been enabled it cannot be silently disabled).
      *
+     * @param  string  $idempotencyKey
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1Request  $body
-     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuSettingsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuSettingsUpdate(?Components\UpdateVeriFactuSettingsV1Request $body = null, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuSettingsUpdateResponse
+    public function publicApiV1VerifactuSettingsUpdate(string $idempotencyKey, ?Components\UpdateVeriFactuSettingsV1Request $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuSettingsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {

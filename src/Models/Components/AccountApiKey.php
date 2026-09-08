@@ -45,7 +45,7 @@ class AccountApiKey
     public array $scopes;
 
     /**
-     * Rate-limit tier (`free`, `starter`, `pro`, `scale`). Derived from the company plan (or from an active capacity boost when higher).
+     * Rate-limit tier (`free`, `starter`, `pro`, `scale`). Derived from the company plan (or preserved by historical grandfathering).
      *
      * @var string $tier
      */

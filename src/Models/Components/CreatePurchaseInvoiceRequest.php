@@ -35,11 +35,6 @@ class CreatePurchaseInvoiceRequest
     public array $lines;
 
     /**
-     * Factura simplificada (ticket de gasto): con `is_simplified: true`
-     *
-     * el proveedor pasa a opcional. El número del proveedor
-     * (`external_invoice_number`) SIGUE siendo obligatorio en v1/MCP
-     * (el recurso se recupera por número tras crear).
      *
      * @var ?bool $isSimplified
      */
@@ -48,12 +43,6 @@ class CreatePurchaseInvoiceRequest
     public ?bool $isSimplified = null;
 
     /**
-     * Optional initial status. 4-state model:
-     *
-     * CREATION allowlist `draft|pending` (`received`/`pending_payment`
-     * were merged into `pending`). `paid|cancelled` are lifecycle
-     * transitions (mark_paid/change_status), NOT creation states.
-     * If omitted, the domain applies the default `draft`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestStatus $status
      */
@@ -142,10 +131,6 @@ class CreatePurchaseInvoiceRequest
     public ?array $metadata = null;
 
     /**
-     * Extend fields. Basic SHAPE only; the `payment_method` allowlist,
-     *
-     * `tax_period` format and `tags` cardinality are validated by the
-     * VO/Aggregate.
      *
      * @var ?string $internalNotes
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** AbsenceBalance - An absence balance for the Control Horario (time tracking) module: the accrued, carried-over, consumed and available days of one employee for one absence type in a given year. Day amounts are exact decimal strings. `available_days` is the usable balance (accrued + non-expired carried-over − consumed). */
+/** AbsenceBalance - An absence balance for the Control Horario (time tracking) module: the accrued, carried-over, consumed and available days of one employee for one absence type in a given year. Day amounts are decimal strings. `accrued_days`, `carried_over_days` and `consumed_days` are the exact ledger figures; `available_days` is the usable balance (accrued + non-expired carried-over − consumed) **rounded up to a whole day**, because absences are requested in whole working days. As a result `available_days` can exceed the exact arithmetic by up to one day — that fraction is granted by the company — so do not expect it to reconcile to the cent with the other three fields. */
 class AbsenceBalance
 {
     /**
@@ -86,7 +86,7 @@ class AbsenceBalance
     public string $consumedDays;
 
     /**
-     * Usable balance (accrued + non-expired carried-over − consumed), as an exact decimal string.
+     * Usable balance (accrued + non-expired carried-over − consumed), rounded up to a whole day. Always an integer value, serialised as a decimal string.
      *
      * @var string $availableDays
      */

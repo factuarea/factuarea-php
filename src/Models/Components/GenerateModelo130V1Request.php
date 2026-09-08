@@ -61,15 +61,28 @@ class GenerateModelo130V1Request
     public ?int $pagosFraccionadosAnterioresOverrideCentimos = null;
 
     /**
+     * [13] Rendimiento neto del EJERCICIO ANTERIOR (base de la minoración
+     *
+     * del art. 110.3.c RIRPF). SIN `min:0`: el ejercicio anterior puede
+     * haber cerrado en pérdidas y un valor negativo es fiscalmente válido.
+     *
+     * @var ?int $rendimientoNetoEjercicioAnteriorCentimos
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('rendimiento_neto_ejercicio_anterior_centimos')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $rendimientoNetoEjercicioAnteriorCentimos = null;
+
+    /**
      * @param  int  $year
      * @param  \Factuarea\Sdk\Models\Components\GenerateModelo130V1RequestFormat  $format
      * @param  ?int  $quarter
      * @param  ?int  $deduccionViviendaCentimos
      * @param  ?int  $resultadoComplementariaCentimos
      * @param  ?int  $pagosFraccionadosAnterioresOverrideCentimos
+     * @param  ?int  $rendimientoNetoEjercicioAnteriorCentimos
      * @phpstan-pure
      */
-    public function __construct(int $year, GenerateModelo130V1RequestFormat $format, ?int $quarter = null, ?int $deduccionViviendaCentimos = null, ?int $resultadoComplementariaCentimos = null, ?int $pagosFraccionadosAnterioresOverrideCentimos = null)
+    public function __construct(int $year, GenerateModelo130V1RequestFormat $format, ?int $quarter = null, ?int $deduccionViviendaCentimos = null, ?int $resultadoComplementariaCentimos = null, ?int $pagosFraccionadosAnterioresOverrideCentimos = null, ?int $rendimientoNetoEjercicioAnteriorCentimos = null)
     {
         $this->year = $year;
         $this->format = $format;
@@ -77,5 +90,6 @@ class GenerateModelo130V1Request
         $this->deduccionViviendaCentimos = $deduccionViviendaCentimos;
         $this->resultadoComplementariaCentimos = $resultadoComplementariaCentimos;
         $this->pagosFraccionadosAnterioresOverrideCentimos = $pagosFraccionadosAnterioresOverrideCentimos;
+        $this->rendimientoNetoEjercicioAnteriorCentimos = $rendimientoNetoEjercicioAnteriorCentimos;
     }
 }

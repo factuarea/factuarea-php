@@ -41,6 +41,10 @@ enum OAuth2Scope: string
 
     case ProductsDelete = 'products:delete';
 
+    case PriceListsRead = 'price_lists:read';
+
+    case PriceListsWrite = 'price_lists:write';
+
     case SuppliersRead = 'suppliers:read';
 
     case SuppliersWrite = 'suppliers:write';

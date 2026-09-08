@@ -9,7 +9,7 @@
 
 ## publicApiV1AbsenceBalancesList
 
-List your company’s absence balances with cursor-based pagination. Each balance is the accrued, carried-over and consumed days of one employee for one absence type in a given year, with the resulting `available_days`. Supports filtering by `employee_id` (UUID v7), `absence_type_id` (UUID v7) and `year`. Day amounts are exact decimal strings.
+List your company’s absence balances with cursor-based pagination. Each balance is the accrued, carried-over and consumed days of one employee for one absence type in a given year, with the resulting `available_days`. Supports filtering by `employee_id` (UUID v7), `absence_type_id` (UUID v7) and `year`. Ledger amounts are exact decimal strings; `available_days` is rounded up to a whole day.
 
 ### Example Usage
 

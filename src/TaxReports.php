@@ -222,7 +222,7 @@ class TaxReports
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'text/plain;q=1, application/pdf;q=0.7, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;q=0';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.tax_reports.download', null, $this->sdkConfiguration->securitySource);
@@ -244,20 +244,39 @@ class TaxReports
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'text/plain')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, 'string', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1TaxReportsDownloadResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1TaxReportsDownloadResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    string: $obj);
+                    twoHundredTextPlainBytes: $obj);
+            } elseif (Utils\Utils::matchContentType($contentType, 'application/pdf')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                return $response;
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1TaxReportsDownloadResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    twoHundredApplicationPdfBytes: $obj);
+            } elseif (Utils\Utils::matchContentType($contentType, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1TaxReportsDownloadResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
@@ -428,12 +447,13 @@ class TaxReports
      * Generates the Spanish Modelo 130 (quarterly IRPF instalment payment, direct estimation) for the given year and quarter in the requested format (txt_aeat, pdf, excel; defaults to pdf). The calculation is cumulative year-to-date (1 Jan to end of quarter).
      *
      * @param  \Factuarea\Sdk\Models\Components\GenerateModelo130V1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate130Response
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsGenerate130(Components\GenerateModelo130V1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate130Response
+    public function publicApiV1TaxReportsGenerate130(Components\GenerateModelo130V1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate130Response
     {
         $retryConfig = null;
         if ($options) {
@@ -461,6 +481,7 @@ class TaxReports
             ];
         }
         $request = new Operations\PublicApiV1TaxReportsGenerate130Request(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -556,13 +577,13 @@ class TaxReports
      * Generates the Spanish Modelo 303 (quarterly VAT) for the given year and quarter in the requested format (txt_aeat, pdf, excel).
      *
      * @param  \Factuarea\Sdk\Models\Components\GenerateModelo303V1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate303Response
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsGenerate303(Components\GenerateModelo303V1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate303Response
+    public function publicApiV1TaxReportsGenerate303(Components\GenerateModelo303V1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate303Response
     {
         $retryConfig = null;
         if ($options) {
@@ -590,8 +611,8 @@ class TaxReports
             ];
         }
         $request = new Operations\PublicApiV1TaxReportsGenerate303Request(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -686,13 +707,13 @@ class TaxReports
      * Generates the Spanish Modelo 347 (annual third-party operations > 3,005.06 EUR) for the given year.
      *
      * @param  \Factuarea\Sdk\Models\Components\GenerateModelo347V1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate347Response
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxReportsGenerate347(Components\GenerateModelo347V1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate347Response
+    public function publicApiV1TaxReportsGenerate347(Components\GenerateModelo347V1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxReportsGenerate347Response
     {
         $retryConfig = null;
         if ($options) {
@@ -720,8 +741,8 @@ class TaxReports
             ];
         }
         $request = new Operations\PublicApiV1TaxReportsGenerate347Request(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

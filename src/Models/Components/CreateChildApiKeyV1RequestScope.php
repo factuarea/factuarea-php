@@ -17,6 +17,8 @@ enum CreateChildApiKeyV1RequestScope: string
     case ProductsRead = 'products:read';
     case ProductsWrite = 'products:write';
     case ProductsDelete = 'products:delete';
+    case PriceListsRead = 'price_lists:read';
+    case PriceListsWrite = 'price_lists:write';
     case SuppliersRead = 'suppliers:read';
     case SuppliersWrite = 'suppliers:write';
     case SuppliersDelete = 'suppliers:delete';

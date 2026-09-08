@@ -50,12 +50,29 @@ class Product
     public string $currency;
 
     /**
-     * Cantidad disponible en stock.
+     * Available stock quantity with four-decimal scale.
      *
-     * @var int $stock
+     * @var string $stock
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
-    public int $stock;
+    public string $stock;
+
+    /**
+     * Catalog item kind.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ProductItemKind $itemKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductItemKind')]
+    public ProductItemKind $itemKind;
+
+    /**
+     * UNECE base unit code.
+     *
+     * @var string $baseUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit')]
+    public string $baseUnit;
 
     /**
      * Product gallery images.
@@ -81,6 +98,97 @@ class Product
     #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
     public array $tags;
+
+    /**
+     *
+     * @var int $presentationCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_count')]
+    public int $presentationCount;
+
+    /**
+     *
+     * @var int $variantCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_count')]
+    public int $variantCount;
+
+    /**
+     *
+     * @var int $supplierOfferCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offer_count')]
+    public int $supplierOfferCount;
+
+    /**
+     * Number of option groups the product declares (active and inactive). Always reported, so a listing that omits `option_groups` for brevity never reads as a plain product.
+     *
+     * @var int $optionGroupCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_group_count')]
+    public int $optionGroupCount;
+
+    /**
+     * Number of commercial combinations the product declares (active and inactive). Matches the size of `configurations` returned by the product detail.
+     *
+     * @var int $configurationCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_count')]
+    public int $configurationCount;
+
+    /**
+     * `open` keeps the Cartesian product of active axes sellable; only configurations with `restricts_availability=true` constrain their own variant. `closed` treats all active configurations as the exact allow-list.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode $catalogAvailabilityMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('catalog_availability_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode')]
+    public ProductCatalogAvailabilityMode $catalogAvailabilityMode;
+
+    /**
+     * $presentations
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\ProductPresentation> $presentations
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentations')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductPresentation>')]
+    public array $presentations;
+
+    /**
+     * $variants
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\ProductVariant> $variants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductVariant>')]
+    public array $variants;
+
+    /**
+     * $supplierOffers
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\SupplierProductOffer> $supplierOffers
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offers')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\SupplierProductOffer>')]
+    public array $supplierOffers;
+
+    /**
+     * Sellable option groups (finish, flavour, quality) with their values. Always an array; `[]` when the product declares none. Populated only when the caller asks for the configurable catalog.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\ProductOptionGroup> $optionGroups
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_groups')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductOptionGroup>')]
+    public array $optionGroups;
+
+    /**
+     * Commercial configurations used for exact pricing and, depending on `catalog_availability_mode`, availability. In `open`, they do not restrict unless a row explicitly opts in. In `closed`, active rows form the exact allow-list; an empty active list means nothing is sellable.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\ProductConfiguration> $configurations
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configurations')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductConfiguration>')]
+    public array $configurations;
 
     /**
      * Indicates whether the current stock is below the configured threshold.
@@ -142,10 +250,17 @@ class Product
     /**
      * Threshold below which stock is considered low, or `null` if not configured.
      *
-     * @var ?int $lowStockThreshold
+     * @var ?string $lowStockThreshold
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
-    public ?int $lowStockThreshold;
+    public ?string $lowStockThreshold;
+
+    /**
+     *
+     * @var ?string $preferredSupplierOfferId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('preferred_supplier_offer_id')]
+    public ?string $preferredSupplierOfferId;
 
     /**
      * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
@@ -197,10 +312,23 @@ class Product
      * @param  string  $name
      * @param  string  $price
      * @param  string  $currency
-     * @param  int  $stock
+     * @param  string  $stock
+     * @param  \Factuarea\Sdk\Models\Components\ProductItemKind  $itemKind
+     * @param  string  $baseUnit
      * @param  array<\Factuarea\Sdk\Models\Components\Gallery>  $gallery
      * @param  bool  $isActive
      * @param  array<string>  $tags
+     * @param  int  $presentationCount
+     * @param  int  $variantCount
+     * @param  int  $supplierOfferCount
+     * @param  int  $optionGroupCount
+     * @param  int  $configurationCount
+     * @param  \Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode  $catalogAvailabilityMode
+     * @param  array<\Factuarea\Sdk\Models\Components\ProductPresentation>  $presentations
+     * @param  array<\Factuarea\Sdk\Models\Components\ProductVariant>  $variants
+     * @param  array<\Factuarea\Sdk\Models\Components\SupplierProductOffer>  $supplierOffers
+     * @param  array<\Factuarea\Sdk\Models\Components\ProductOptionGroup>  $optionGroups
+     * @param  array<\Factuarea\Sdk\Models\Components\ProductConfiguration>  $configurations
      * @param  bool  $isLowStock
      * @param  bool  $isInStock
      * @param  array<string, mixed>  $specifications
@@ -209,14 +337,15 @@ class Product
      * @param  ?bool  $manageStock
      * @param  ?\Factuarea\Sdk\Models\Components\ProductVideo  $video
      * @param  ?string  $description
-     * @param  ?int  $lowStockThreshold
+     * @param  ?string  $lowStockThreshold
+     * @param  ?string  $preferredSupplierOfferId
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, int $stock, array $gallery, bool $isActive, array $tags, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?int $lowStockThreshold = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $externalId = null, ?bool $manageStock = false)
+    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, string $stock, ProductItemKind $itemKind, string $baseUnit, array $gallery, bool $isActive, array $tags, int $presentationCount, int $variantCount, int $supplierOfferCount, int $optionGroupCount, int $configurationCount, ProductCatalogAvailabilityMode $catalogAvailabilityMode, array $presentations, array $variants, array $supplierOffers, array $optionGroups, array $configurations, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $externalId = null, ?bool $manageStock = false)
     {
         $this->id = $id;
         $this->object = $object;
@@ -224,9 +353,22 @@ class Product
         $this->price = $price;
         $this->currency = $currency;
         $this->stock = $stock;
+        $this->itemKind = $itemKind;
+        $this->baseUnit = $baseUnit;
         $this->gallery = $gallery;
         $this->isActive = $isActive;
         $this->tags = $tags;
+        $this->presentationCount = $presentationCount;
+        $this->variantCount = $variantCount;
+        $this->supplierOfferCount = $supplierOfferCount;
+        $this->optionGroupCount = $optionGroupCount;
+        $this->configurationCount = $configurationCount;
+        $this->catalogAvailabilityMode = $catalogAvailabilityMode;
+        $this->presentations = $presentations;
+        $this->variants = $variants;
+        $this->supplierOffers = $supplierOffers;
+        $this->optionGroups = $optionGroups;
+        $this->configurations = $configurations;
         $this->isLowStock = $isLowStock;
         $this->isInStock = $isInStock;
         $this->specifications = $specifications;
@@ -235,6 +377,7 @@ class Product
         $this->video = $video;
         $this->description = $description;
         $this->lowStockThreshold = $lowStockThreshold;
+        $this->preferredSupplierOfferId = $preferredSupplierOfferId;
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
