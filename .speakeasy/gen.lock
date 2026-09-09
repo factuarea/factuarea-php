@@ -4,11 +4,11 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.796.4
   generationVersion: 2.935.1
-  releaseVersion: 0.3.0
+  releaseVersion: 0.3.1
 persistentEdits:
-  generation_id: 79dba6d5-dbcb-4e12-b49a-0c33b88a4d6f
-  pristine_commit_hash: c9ddfc694596ad530fce11798cc50f4e9e0b8cf2
-  pristine_tree_hash: 9d612f347accf46963665fab0a4bb8739c74dc95
+  generation_id: 1b05042f-5acf-48ee-9d5b-d626232cbc0c
+  pristine_commit_hash: 81f96df015ca34d21b64bc079e92fc40d9322495
+  pristine_tree_hash: 928dbfe66deda3618f55cc1ccfbbb71dd9dd1991
 features:
   php:
     constsAndDefaults: 0.2.2
@@ -22198,8 +22198,8 @@ trackedFiles:
     pristine_git_object: 808261e26d27e7a258b289584575d92a1fb5710e
   src/SDKConfiguration.php:
     id: 9d60ab0bec0b
-    last_write_checksum: sha1:91c0052213a2c1bb5128cb79e7f32d0a9fc39cd7
-    pristine_git_object: 390c4465a0e5729291a86c74f5e05f51a04f2f0f
+    last_write_checksum: sha1:7cddec0706b918104754cdb2c6b2fe39e4dd460d
+    pristine_git_object: f077ed1e164ecfb7cacc398e9a66c73a77e116ab
   src/Series.php:
     id: 5440b1edb5f5
     last_write_checksum: sha1:44244b6a1e292483fa13f91f1c178b635a6dec28

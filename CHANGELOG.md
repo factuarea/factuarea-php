@@ -4,7 +4,7 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
-## [Unreleased]
+## [0.3.1] — 2026-09-10
 
 Regenerated from the Factuarea public OpenAPI spec after the variant stock
 contract change: `UpdateProductVariantRequest.stock` no longer declares

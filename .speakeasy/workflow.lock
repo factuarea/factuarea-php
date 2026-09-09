@@ -15,7 +15,7 @@ targets:
         sourceRevisionDigest: sha256:644e6dea3d04a4e850ff2e91fc55235e8ff523a2d47db0629c899b9acd9d296c
         sourceBlobDigest: sha256:dadf3d82e11ae8e31df2d360fad1d9a933dc138492119616da301a2dc6044465
         codeSamplesNamespace: factuarea-public-api-php-code-samples
-        codeSamplesRevisionDigest: sha256:9bcc1bc73d70fec5ea83be42f8d927c8b9df1ee8fa65d44a2111698238cf5d47
+        codeSamplesRevisionDigest: sha256:7e8a792091b031f89b7c0efa70c7c6ebac8a61b84b686ad90060ae26225de70c
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
