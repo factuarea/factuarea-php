@@ -14,7 +14,7 @@ Return the time balance of an arbitrary period of an employee: expected vs worke
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_balances.employee" method="get" path="/time-balances/employee/{employee}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_balances.employee" method="get" path="/time-balances/employee/{employee}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -28,7 +28,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -74,7 +74,7 @@ Return the live monthly time sheet of an employee for the open (in-progress) per
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_balances.monthly_sheet" method="get" path="/time-balances/monthly-sheet" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_balances.monthly_sheet" method="get" path="/time-balances/monthly-sheet" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -87,7 +87,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -121,12 +121,12 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                    | Status Code                   | Content Type                  |
-| ----------------------------- | ----------------------------- | ----------------------------- |
-| Errors\ModelNotFoundException | 404                           | application/json              |
-| Errors\Error                  | 401, 403, 422, 429            | application/json              |
-| Errors\Error                  | 500                           | application/json              |
-| Errors\APIException           | 4XX, 5XX                      | \*/\*                         |
+| Error Type          | Status Code         | Content Type        |
+| ------------------- | ------------------- | ------------------- |
+| Errors\Error        | 404                 | application/json    |
+| Errors\Error        | 401, 403, 422, 429  | application/json    |
+| Errors\Error        | 500                 | application/json    |
+| Errors\APIException | 4XX, 5XX            | \*/\*               |
 
 ## publicApiV1TimeBalancesTeamSummary
 
@@ -134,7 +134,7 @@ Return the team time balance summary (manager view) for a month: one row per act
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_balances.team_summary" method="get" path="/time-balances/team-summary" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_balances.team_summary" method="get" path="/time-balances/team-summary" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -147,7 +147,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

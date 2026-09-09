@@ -82,6 +82,7 @@
 | `ProductCreated`                     | product.created                      |
 | `ProductUpdated`                     | product.updated                      |
 | `PaymentReceived`                    | payment.received                     |
+| `PaymentReversed`                    | payment.reversed                     |
 | `TaxMetadataChanged`                 | tax.metadata_changed                 |
 | `TaxValidityChanged`                 | tax.validity_changed                 |
 | `TaxExternalReferenceChanged`        | tax.external_reference_changed       |
@@ -109,3 +110,12 @@
 | `AbsenceApproved`                    | absence.approved                     |
 | `AbsenceRejected`                    | absence.rejected                     |
 | `MonthlyRegisterClosed`              | monthly_register.closed              |
+| `AutomationRuleActivated`            | automation_rule.activated            |
+| `AutomationRulePaused`               | automation_rule.paused               |
+| `AutomationRuleAutoPaused`           | automation_rule.auto_paused          |
+| `AutomationRunStarted`               | automation_run.started               |
+| `AutomationRunCompleted`             | automation_run.completed             |
+| `AutomationRunFailed`                | automation_run.failed                |
+| `AutomationRunStepDeadLettered`      | automation_run.step_dead_lettered    |
+| `OrderInvoiced`                      | order.invoiced                       |
+| `OrderRefunded`                      | order.refunded                       |

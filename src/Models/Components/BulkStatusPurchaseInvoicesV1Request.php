@@ -13,14 +13,6 @@ namespace Factuarea\Sdk\Models\Components;
 class BulkStatusPurchaseInvoicesV1Request
 {
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1RequestNewStatus $newStatus
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('new_status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1RequestNewStatus')]
-    public BulkStatusPurchaseInvoicesV1RequestNewStatus $newStatus;
-
-    /**
      * $ids
      *
      * @var array<string> $ids
@@ -31,6 +23,14 @@ class BulkStatusPurchaseInvoicesV1Request
 
     /**
      *
+     * @var \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1RequestNewStatus $newStatus
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('new_status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1RequestNewStatus')]
+    public BulkStatusPurchaseInvoicesV1RequestNewStatus $newStatus;
+
+    /**
+     *
      * @var ?\DateTime $paymentDate
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('payment_date')]
@@ -38,15 +38,15 @@ class BulkStatusPurchaseInvoicesV1Request
     public ?\DateTime $paymentDate = null;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1RequestNewStatus  $newStatus
      * @param  array<string>  $ids
+     * @param  \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1RequestNewStatus  $newStatus
      * @param  ?\DateTime  $paymentDate
      * @phpstan-pure
      */
-    public function __construct(BulkStatusPurchaseInvoicesV1RequestNewStatus $newStatus, array $ids, ?\DateTime $paymentDate = null)
+    public function __construct(array $ids, BulkStatusPurchaseInvoicesV1RequestNewStatus $newStatus, ?\DateTime $paymentDate = null)
     {
-        $this->newStatus = $newStatus;
         $this->ids = $ids;
+        $this->newStatus = $newStatus;
         $this->paymentDate = $paymentDate;
     }
 }

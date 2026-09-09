@@ -40,6 +40,7 @@ class PublicApiV1ProformasStatusesResponse
     public array $headers;
 
     /**
+     * Complete public status catalog, with Spanish labels and color tokens.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProformasStatusesResponseBody $object
      */

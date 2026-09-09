@@ -12,7 +12,7 @@ List the payroll software formats supported by the payroll export (`a3`, `sage`,
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.payroll_export_formats.list" method="get" path="/payroll-export-formats" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.payroll_export_formats.list" method="get" path="/payroll-export-formats" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

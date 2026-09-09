@@ -32,7 +32,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -70,7 +70,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -108,7 +108,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -145,7 +145,44 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '61a10e53-764d-4d06-a61a-ea598eac5c21',
+    source: Components\ClockActionRequestSource::Mobile,
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/time-entries/clock-in" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -208,7 +245,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -246,7 +283,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -284,7 +321,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -321,7 +358,44 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '56e7c7af-d389-4ddc-afc5-42b03da5d4b7',
+    source: Components\ClockActionRequestSource::Web,
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesClockOut(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/time-entries/clock-out" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -371,7 +445,7 @@ Return the derived state of an employee’s current workday (`not_started`/`work
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.current" method="get" path="/time-entries/current" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.current" method="get" path="/time-entries/current" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -384,7 +458,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -429,7 +503,7 @@ List the time entries of your company with cursor-based pagination, ordered by `
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.list" method="get" path="/time-entries" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.list" method="get" path="/time-entries" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -443,7 +517,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -499,7 +573,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -536,7 +610,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -573,7 +647,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -611,7 +685,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -620,6 +694,43 @@ $body = new Components\ClockActionRequest(
     employeeId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b01',
     source: Components\ClockActionRequestSource::Mobile,
     occurredAt: Utils\Utils::parseDateTime('2026-06-01T14:00:00+02:00'),
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/time-entries/pause" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '561424af-d667-41c8-a2dc-13d707ef870a',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
@@ -676,7 +787,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -716,7 +827,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -756,7 +867,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -802,7 +913,47 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\RecordManualTimeEntryRequest(
+    employeeId: 'b3370fb7-7502-4b17-a0c8-a2956b25d7cf',
+    startedAt: Utils\Utils::parseDateTime('2025-03-12T14:48:37.243Z'),
+    endedAt: Utils\Utils::parseDateTime('2024-11-28T12:45:16.786Z'),
+    reason: '<value>',
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesManual(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.manual" method="post" path="/time-entries/manual" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -867,7 +1018,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -904,7 +1055,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -941,7 +1092,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -979,7 +1130,7 @@ use Factuarea\Sdk\Utils;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -988,6 +1139,43 @@ $body = new Components\ClockActionRequest(
     employeeId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b01',
     source: Components\ClockActionRequestSource::Mobile,
     occurredAt: Utils\Utils::parseDateTime('2026-06-01T14:30:00+02:00'),
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/time-entries/resume" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '53622d74-5d8f-4f65-ac96-a6ef4b53d041',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
@@ -1030,7 +1218,7 @@ Retrieve a single time entry by its `id` (UUID v7). An entry belonging to anothe
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.show" method="get" path="/time-entries/{time_entry}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.show" method="get" path="/time-entries/{time_entry}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1043,7 +1231,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

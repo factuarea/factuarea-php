@@ -17,7 +17,7 @@ Archive an absence type (transition `active` → `archived`), retiring it from u
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.archive" method="post" path="/absence-types/{absence_type}/archive" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.archive" method="post" path="/absence-types/{absence_type}/archive" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -30,7 +30,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -90,7 +90,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -131,7 +131,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -172,7 +172,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -213,7 +213,48 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAbsenceTypeRequest(
+    name: '<value>',
+    isPaid: false,
+    requiresApproval: false,
+    measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
+    color: 'orchid',
+    visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
+);
+
+$response = $sdk->absenceTypes->publicApiV1AbsenceTypesCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.create" method="post" path="/absence-types" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -267,7 +308,7 @@ List your company’s absence types with cursor-based pagination. Supports filte
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.list" method="get" path="/absence-types" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.list" method="get" path="/absence-types" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -281,7 +322,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -324,7 +365,7 @@ Retrieve a single absence type by its `id` (UUID v7). A type belonging to anothe
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.show" method="get" path="/absence-types/{absence_type}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.show" method="get" path="/absence-types/{absence_type}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -337,7 +378,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -380,7 +421,7 @@ if ($response->object !== null) {
 
 Partially update an absence type: only the fields present in the payload are changed; omitted fields keep their current value. Returns the updated type.
 
-### Example Usage
+### Example Usage: absence_type_update
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.update" method="put" path="/absence-types/{absence_type}" example="absence_type_update" -->
 ```php
@@ -396,7 +437,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -410,6 +451,42 @@ $request = new Operations\PublicApiV1AbsenceTypesUpdateRequest(
         requiresApproval: false,
         color: '#22C55E',
     ),
+);
+
+$response = $sdk->absenceTypes->publicApiV1AbsenceTypesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.update" method="put" path="/absence-types/{absence_type}" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsenceTypesUpdateRequest(
+    absenceType: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->absenceTypes->publicApiV1AbsenceTypesUpdate(
@@ -445,7 +522,7 @@ Unarchive an absence type (transition `archived` → `active`), returning it to 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.unarchive" method="post" path="/absence-types/{absence_type}/unarchive" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.unarchive" method="post" path="/absence-types/{absence_type}/unarchive" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -458,7 +535,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

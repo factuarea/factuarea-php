@@ -51,6 +51,31 @@ class Supplier
     public bool $accumulate347;
 
     /**
+     * Number of catalog supplier offers linked to this supplier.
+     *
+     * @var int $offersCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('offers_count')]
+    public int $offersCount;
+
+    /**
+     * Number of distinct products linked through supplier offers.
+     *
+     * @var int $relatedProductsCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('related_products_count')]
+    public int $relatedProductsCount;
+
+    /**
+     * Filter to list the supplier offers owned by this supplier.
+     *
+     * @var \Factuarea\Sdk\Models\Components\OffersFilter $offersFilter
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('offers_filter')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\OffersFilter')]
+    public OffersFilter $offersFilter;
+
+    /**
      *
      * @var bool $isActive
      */
@@ -300,6 +325,9 @@ class Supplier
      * @param  string  $name
      * @param  \Factuarea\Sdk\Models\Components\Address  $address
      * @param  bool  $accumulate347
+     * @param  int  $offersCount
+     * @param  int  $relatedProductsCount
+     * @param  \Factuarea\Sdk\Models\Components\OffersFilter  $offersFilter
      * @param  bool  $isActive
      * @param  ?string  $taxId
      * @param  ?string  $vatId
@@ -330,13 +358,16 @@ class Supplier
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, SupplierObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?string $iban = null, ?array $bankAccounts = null, ?bool $isSurchargeSubject = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $businessName = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?SupplierCoordinates $coordinates = null, ?string $defaultTaxesId = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?SupplierPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
+    public function __construct(string $id, SupplierObject $object, string $name, Address $address, bool $accumulate347, int $offersCount, int $relatedProductsCount, OffersFilter $offersFilter, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?string $iban = null, ?array $bankAccounts = null, ?bool $isSurchargeSubject = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $businessName = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?SupplierCoordinates $coordinates = null, ?string $defaultTaxesId = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?SupplierPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->name = $name;
         $this->address = $address;
         $this->accumulate347 = $accumulate347;
+        $this->offersCount = $offersCount;
+        $this->relatedProductsCount = $relatedProductsCount;
+        $this->offersFilter = $offersFilter;
         $this->isActive = $isActive;
         $this->taxId = $taxId;
         $this->vatId = $vatId;

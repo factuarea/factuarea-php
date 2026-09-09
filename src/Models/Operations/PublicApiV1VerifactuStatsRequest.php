@@ -13,6 +13,54 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1VerifactuStatsRequest
 {
     /**
+     * Optional status filter.
+     *
+     * @var ?string $status
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=status')]
+    public ?string $status = null;
+
+    /**
+     * Optional record type filter.
+     *
+     * @var ?string $recordType
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=record_type')]
+    public ?string $recordType = null;
+
+    /**
+     * Optional invoice type filter.
+     *
+     * @var ?string $invoiceType
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_type')]
+    public ?string $invoiceType = null;
+
+    /**
+     * Optional date from filter.
+     *
+     * @var ?string $dateFrom
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date_from')]
+    public ?string $dateFrom = null;
+
+    /**
+     * Optional date to filter.
+     *
+     * @var ?string $dateTo
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date_to')]
+    public ?string $dateTo = null;
+
+    /**
+     * Optional environment filter.
+     *
+     * @var ?string $environment
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=environment')]
+    public ?string $environment = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -29,12 +77,24 @@ class PublicApiV1VerifactuStatsRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * @param  ?string  $status
+     * @param  ?string  $recordType
+     * @param  ?string  $invoiceType
+     * @param  ?string  $dateFrom
+     * @param  ?string  $dateTo
+     * @param  ?string  $environment
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(?string $status = null, ?string $recordType = null, ?string $invoiceType = null, ?string $dateFrom = null, ?string $dateTo = null, ?string $environment = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
     {
+        $this->status = $status;
+        $this->recordType = $recordType;
+        $this->invoiceType = $invoiceType;
+        $this->dateFrom = $dateFrom;
+        $this->dateTo = $dateTo;
+        $this->environment = $environment;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
     }

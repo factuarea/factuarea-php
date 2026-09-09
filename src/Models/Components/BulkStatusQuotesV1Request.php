@@ -13,14 +13,6 @@ namespace Factuarea\Sdk\Models\Components;
 class BulkStatusQuotesV1Request
 {
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus $newStatus
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('new_status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus')]
-    public BulkStatusQuotesV1RequestNewStatus $newStatus;
-
-    /**
      * $ids
      *
      * @var array<string> $ids
@@ -30,13 +22,21 @@ class BulkStatusQuotesV1Request
     public array $ids;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus  $newStatus
+     *
+     * @var \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus $newStatus
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('new_status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus')]
+    public BulkStatusQuotesV1RequestNewStatus $newStatus;
+
+    /**
      * @param  array<string>  $ids
+     * @param  \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus  $newStatus
      * @phpstan-pure
      */
-    public function __construct(BulkStatusQuotesV1RequestNewStatus $newStatus, array $ids)
+    public function __construct(array $ids, BulkStatusQuotesV1RequestNewStatus $newStatus)
     {
-        $this->newStatus = $newStatus;
         $this->ids = $ids;
+        $this->newStatus = $newStatus;
     }
 }

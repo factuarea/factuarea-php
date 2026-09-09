@@ -39,16 +39,6 @@ class CreateApiKeyV1Request
     public ?\DateTime $expiresAt = null;
 
     /**
-     * Key environment: `live` (production) or `test` (sandbox). Defaults to `live`.
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestEnvironment $environment
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestEnvironment|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateApiKeyV1RequestEnvironment $environment = null;
-
-    /**
      * Optional list of allowed IPs / CIDR ranges (IPv4, IPv6, /N).
      *
      * @var ?array<string> $ipAllowlist
@@ -59,19 +49,29 @@ class CreateApiKeyV1Request
     public ?array $ipAllowlist = null;
 
     /**
+     * Key environment: `live` (production) or `test` (sandbox). Defaults to `live`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestEnvironment $environment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestEnvironment|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateApiKeyV1RequestEnvironment $environment = null;
+
+    /**
      * @param  string  $name
      * @param  array<\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestScope>  $scopes
      * @param  ?\DateTime  $expiresAt
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestEnvironment  $environment
      * @param  ?array<string>  $ipAllowlist
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateApiKeyV1RequestEnvironment  $environment
      * @phpstan-pure
      */
-    public function __construct(string $name, array $scopes, ?\DateTime $expiresAt = null, ?CreateApiKeyV1RequestEnvironment $environment = null, ?array $ipAllowlist = null)
+    public function __construct(string $name, array $scopes, ?\DateTime $expiresAt = null, ?array $ipAllowlist = null, ?CreateApiKeyV1RequestEnvironment $environment = null)
     {
         $this->name = $name;
         $this->scopes = $scopes;
         $this->expiresAt = $expiresAt;
-        $this->environment = $environment;
         $this->ipAllowlist = $ipAllowlist;
+        $this->environment = $environment;
     }
 }

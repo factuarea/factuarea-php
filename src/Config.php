@@ -175,12 +175,13 @@ class Config
      * Enable or disable auto-invoicing of Stripe Connect charges and choose the series used. Optionally tune the fiscal policy (`simplified_threshold_cents` in cents [0, 300000], `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`); omitted fields keep their value. With multiple connected accounts it returns 422 `per_account_config_required` — configure each account individually.
      *
      * @param  \Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingConfigUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingConfigUpdate(Components\UpdateStripeAutoinvoicingConfigRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingConfigUpdateResponse
+    public function publicApiV1StripeAutoinvoicingConfigUpdate(Components\UpdateStripeAutoinvoicingConfigRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingConfigUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,6 +209,7 @@ class Config
             ];
         }
         $request = new Operations\PublicApiV1StripeAutoinvoicingConfigUpdateRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,

@@ -40,6 +40,7 @@ class PublicApiV1SeriesActiveResponse
     public array $headers;
 
     /**
+     * Active document series, optionally filtered by document_type.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveResponseBody $object
      */

@@ -40,6 +40,7 @@ class PublicApiV1InvoicesVerifactuGetResponse
     public array $headers;
 
     /**
+     * The invoice VeriFactu record, or null when no record exists, and the effective company activation flag.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesVerifactuGetResponseBody $object
      */

@@ -44,24 +44,46 @@ class PublicApiV1PurchaseInvoicesFileResponse
      *
      * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFileResponseBody $object
+     * @var ?string $twoHundredApplicationPdfBytes
      */
-    public ?PublicApiV1PurchaseInvoicesFileResponseBody $object = null;
+    public ?string $twoHundredApplicationPdfBytes = null;
+
+    /**
+     * El adjunto está cifrado at-rest en el Vault; el handler entrega un
+     *
+     * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
+     *
+     * @var ?string $twoHundredImageJpegBytes
+     */
+    public ?string $twoHundredImageJpegBytes = null;
+
+    /**
+     * El adjunto está cifrado at-rest en el Vault; el handler entrega un
+     *
+     * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
+     *
+     * @var ?string $twoHundredImagePngBytes
+     */
+    public ?string $twoHundredImagePngBytes = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFileResponseBody  $object
+     * @param  ?string  $twoHundredApplicationPdfBytes
+     * @param  ?string  $twoHundredImageJpegBytes
+     * @param  ?string  $twoHundredImagePngBytes
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1PurchaseInvoicesFileResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $twoHundredApplicationPdfBytes = null, ?string $twoHundredImageJpegBytes = null, ?string $twoHundredImagePngBytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->twoHundredApplicationPdfBytes = $twoHundredApplicationPdfBytes;
+        $this->twoHundredImageJpegBytes = $twoHundredImageJpegBytes;
+        $this->twoHundredImagePngBytes = $twoHundredImagePngBytes;
     }
 }

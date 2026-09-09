@@ -28,6 +28,15 @@ class UpdateDeliveryNoteRequest
     public ?string $clientId = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateDeliveryNoteRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
      * $lines
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestLine> $lines
@@ -36,6 +45,14 @@ class UpdateDeliveryNoteRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestLine>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $lines = null;
+
+    /**
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
 
     /**
      *
@@ -175,12 +192,30 @@ class UpdateDeliveryNoteRequest
     public ?string $receivedByTaxId = null;
 
     /**
+     * $billingEmails
+     *
+     * @var ?array<string> $billingEmails
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('billing_emails')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $billingEmails = null;
+
+    /**
      *
      * @var ?string $externalId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $externalId = null;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
 
     /**
      * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
@@ -194,16 +229,6 @@ class UpdateDeliveryNoteRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $metadata = null;
-
-    /**
-     * $billingEmails
-     *
-     * @var ?array<string> $billingEmails
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('billing_emails')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $billingEmails = null;
 
     /**
      * $tags
@@ -227,7 +252,9 @@ class UpdateDeliveryNoteRequest
 
     /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestRepriceStrategy  $repriceStrategy
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestLine>  $lines
+     * @param  ?string  $seriesId
      * @param  ?LocalDate  $deliveryDate
      * @param  ?string  $notes
      * @param  ?string  $internalNotes
@@ -245,17 +272,20 @@ class UpdateDeliveryNoteRequest
      * @param  ?string  $carrierCompany
      * @param  ?string  $receivedByName
      * @param  ?string  $receivedByTaxId
-     * @param  ?string  $externalId
-     * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $billingEmails
+     * @param  ?string  $externalId
+     * @param  ?string  $priceListId
+     * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $tags
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?array $lines = null, ?LocalDate $deliveryDate = null, ?string $notes = null, ?string $internalNotes = null, ?string $referenceNumber = null, ?string $transportDetails = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?string $vehiclePlate = null, ?string $driverName = null, ?string $driverTaxId = null, ?string $trackingNumber = null, ?string $carrierCompany = null, ?string $receivedByName = null, ?string $receivedByTaxId = null, ?string $externalId = null, ?array $metadata = null, ?array $billingEmails = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateDeliveryNoteRequestRepriceStrategy $repriceStrategy = null, ?array $lines = null, ?string $seriesId = null, ?LocalDate $deliveryDate = null, ?string $notes = null, ?string $internalNotes = null, ?string $referenceNumber = null, ?string $transportDetails = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?string $vehiclePlate = null, ?string $driverName = null, ?string $driverTaxId = null, ?string $trackingNumber = null, ?string $carrierCompany = null, ?string $receivedByName = null, ?string $receivedByTaxId = null, ?array $billingEmails = null, ?string $externalId = null, ?string $priceListId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->lines = $lines;
+        $this->seriesId = $seriesId;
         $this->deliveryDate = $deliveryDate;
         $this->notes = $notes;
         $this->internalNotes = $internalNotes;
@@ -273,9 +303,10 @@ class UpdateDeliveryNoteRequest
         $this->carrierCompany = $carrierCompany;
         $this->receivedByName = $receivedByName;
         $this->receivedByTaxId = $receivedByTaxId;
-        $this->externalId = $externalId;
-        $this->metadata = $metadata;
         $this->billingEmails = $billingEmails;
+        $this->externalId = $externalId;
+        $this->priceListId = $priceListId;
+        $this->metadata = $metadata;
         $this->tags = $tags;
         $this->customFields = $customFields;
     }

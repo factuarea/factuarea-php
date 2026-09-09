@@ -40,6 +40,7 @@ class PublicApiV1CompaniesSeatChargePreviewResponse
     public array $headers;
 
     /**
+     * Preview the charge for managed-company seats without creating a company or charging a payment method. Monetary amounts are in cents.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesSeatChargePreviewResponseBody $object
      */

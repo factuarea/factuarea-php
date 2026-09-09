@@ -194,12 +194,11 @@ class Verifactu
      *
      * Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. Returned as `{ "data": VeriFactuStats }`.
      *
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
+    public function publicApiV1VerifactuStats(?Operations\PublicApiV1VerifactuStatsRequest $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -226,14 +225,12 @@ class Verifactu
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1VerifactuStatsRequest(
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/stats');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1VerifactuStatsRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -243,6 +240,7 @@ class Verifactu
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.verifactu.stats', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -277,7 +275,7 @@ class Verifactu
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

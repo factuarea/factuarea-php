@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateSupplierRequestBankAccount
 {
     /**
+     * Legacy alias for the whole `bank_accounts` collection, not a single field within it: sending it REPLACES every bank account the supplier has with the single one you provide, so any other account already registered is removed. To keep several accounts, send the full `bank_accounts` array instead; to leave the accounts untouched, omit both fields. If you send both, `bank_accounts` wins and `iban` is ignored.
      *
      * @var string $iban
      */

@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1SeriesActiveResponseBody - Active document series, optionally filtered by document_type. */
 class PublicApiV1SeriesActiveResponseBody
 {
     /**
-     * A document numbering series. Immutable per AEAT compliance.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\Series $data
+     * @var array<\Factuarea\Sdk\Models\Components\Series> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Series')]
-    public Components\Series $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Series>')]
+    public array $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Series  $data
+     * @param  array<\Factuarea\Sdk\Models\Components\Series>  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Series $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

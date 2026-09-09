@@ -12,6 +12,4 @@ namespace Factuarea\Sdk\Models\Components;
 enum ConvertQuoteRequestTarget: string
 {
     case Invoice = 'invoice';
-    case Proforma = 'proforma';
-    case DeliveryNote = 'delivery_note';
 }

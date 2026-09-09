@@ -13,7 +13,7 @@ List the PDF templates available for the account's plan (plan-aware) plus the ac
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.personalization.templates" method="get" path="/account/personalization/templates" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.personalization.templates" method="get" path="/account/personalization/templates" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -26,7 +26,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -69,7 +69,7 @@ Set the invoice-emission language, PDF template and accent color of the company 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.personalization.update" method="patch" path="/account/personalization" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.personalization.update" method="patch" path="/account/personalization" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -82,7 +82,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

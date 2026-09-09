@@ -7,5 +7,5 @@ Create invoices in bulk. `invoices[]` holds up to 100 invoice payloads and `dry_
 
 | Field                  | Type                   | Required               | Description            |
 | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| `dryRun`               | *?bool*                | :heavy_minus_sign:     | N/A                    |
 | `invoices`             | array<array<*string*>> | :heavy_check_mark:     | N/A                    |
+| `dryRun`               | *?bool*                | :heavy_minus_sign:     | N/A                    |

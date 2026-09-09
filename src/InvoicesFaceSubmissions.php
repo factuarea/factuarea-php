@@ -176,12 +176,13 @@ class InvoicesFaceSubmissions
      * Submit an issued invoice to FACe (the Spanish B2G entry point). Requires the client's three DIR3 codes and an active signing certificate; the FacturaE 3.2.2 XML is signed XAdES-EPES and presented to FACe, returning the registry number. No request body — the DIR3 codes are read from the client. Test keys simulate the submission without contacting FACe.
      *
      * @param  string  $invoice
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesFaceSubmissionsSubmit(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
+    public function publicApiV1InvoicesFaceSubmissionsSubmit(string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -210,6 +211,7 @@ class InvoicesFaceSubmissions
         }
         $request = new Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest(
             invoice: $invoice,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -260,7 +262,7 @@ class InvoicesFaceSubmissions
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

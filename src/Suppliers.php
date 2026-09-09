@@ -53,13 +53,11 @@ class Suppliers
      *
      * Return the audit timeline for a supplier combining its own domain events plus purchase invoice and contract events that reference it. Paginated with page and per_page query params (default 50).
      *
-     * @param  string  $supplier
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SuppliersActivitiesRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SuppliersActivitiesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SuppliersActivities(string $supplier, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersActivitiesResponse
+    public function publicApiV1SuppliersActivities(Operations\PublicApiV1SuppliersActivitiesRequest $request, ?Options $options = null): Operations\PublicApiV1SuppliersActivitiesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,15 +84,12 @@ class Suppliers
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1SuppliersActivitiesRequest(
-            supplier: $supplier,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/suppliers/{supplier}/activities', Operations\PublicApiV1SuppliersActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1SuppliersActivitiesRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -104,6 +99,7 @@ class Suppliers
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.suppliers.activities', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -177,13 +173,13 @@ class Suppliers
      * Delete up to 200 suppliers in one request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`); suppliers with associated contracts are reported in `failures`. UUIDs from other tenants are ignored.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteSuppliersRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SuppliersBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SuppliersBulkDelete(Components\BulkDeleteSuppliersRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersBulkDeleteResponse
+    public function publicApiV1SuppliersBulkDelete(Components\BulkDeleteSuppliersRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -211,8 +207,8 @@ class Suppliers
             ];
         }
         $request = new Operations\PublicApiV1SuppliersBulkDeleteRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -307,12 +303,13 @@ class Suppliers
      * Move up to 50 suppliers (by id) to the target `new_status` (`active` or `inactive`). Idempotent with respect to the target: a supplier already in the requested state counts as `successful` without flipping. Returns a `BulkPartialSuccessResult`; suppliers not found come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusSuppliersV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SuppliersBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SuppliersBulkStatus(Components\BulkStatusSuppliersV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersBulkStatusResponse
+    public function publicApiV1SuppliersBulkStatus(Components\BulkStatusSuppliersV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -340,6 +337,7 @@ class Suppliers
             ];
         }
         $request = new Operations\PublicApiV1SuppliersBulkStatusRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -565,13 +563,13 @@ class Suppliers
      * Delete a supplier. Returns 422 if the supplier is referenced by any purchase invoice.
      *
      * @param  string  $supplier
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SuppliersDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SuppliersDelete(string $supplier, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersDeleteResponse
+    public function publicApiV1SuppliersDelete(string $supplier, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SuppliersDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -641,7 +639,7 @@ class Suppliers
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

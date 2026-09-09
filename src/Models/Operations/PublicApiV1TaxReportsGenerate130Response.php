@@ -40,6 +40,7 @@ class PublicApiV1TaxReportsGenerate130Response
     public array $headers;
 
     /**
+     * The generated Modelo 130 report, with its identifier for downloading the artifact.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TaxReportsGenerate130ResponseBody $object
      */

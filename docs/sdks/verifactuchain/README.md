@@ -12,7 +12,7 @@ Recompute the VeriFactu hash chain (`huella`) for your company and compare it ag
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.chain.validate" method="get" path="/verifactu/chain/validate" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.chain.validate" method="get" path="/verifactu/chain/validate" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

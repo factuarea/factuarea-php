@@ -10,7 +10,6 @@ namespace Factuarea\Sdk\Models\Errors;
 
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils;
-/** Error - Missing or invalid API key. */
 class Error
 {
     /**

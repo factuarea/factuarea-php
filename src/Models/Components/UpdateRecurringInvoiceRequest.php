@@ -22,6 +22,15 @@ class UpdateRecurringInvoiceRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestFrequency $frequency
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('frequency')]
@@ -82,6 +91,14 @@ class UpdateRecurringInvoiceRequest
 
     /**
      *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
+
+    /**
+     *
      * @var ?string $name
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
@@ -126,6 +143,26 @@ class UpdateRecurringInvoiceRequest
     public ?array $metadata = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $customFields
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      *
      * @var ?string $externalId
      */
@@ -158,27 +195,8 @@ class UpdateRecurringInvoiceRequest
     public ?string $emailTo = null;
 
     /**
-     * $tags
-     *
-     * @var ?array<string> $tags
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $tags = null;
-
-    /**
-     * $customFields
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField> $customFields
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $customFields = null;
-
-    /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestFrequency  $frequency
      * @param  ?string  $holidayHandling
      * @param  ?LocalDate  $startOn
@@ -186,22 +204,24 @@ class UpdateRecurringInvoiceRequest
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery  $autoDelivery
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestLine>  $lines
      * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
      * @param  ?string  $name
      * @param  ?string  $description
      * @param  ?LocalDate  $endOn
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField>  $customFields
      * @param  ?string  $externalId
      * @param  ?int  $daysBeforeDue
      * @param  ?int  $maxOccurrences
      * @param  ?string  $emailTo
-     * @param  ?array<string>  $tags
-     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, ?string $seriesId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null)
     {
         $this->clientId = $clientId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->frequency = $frequency;
         $this->holidayHandling = $holidayHandling;
         $this->startOn = $startOn;
@@ -209,16 +229,17 @@ class UpdateRecurringInvoiceRequest
         $this->autoDelivery = $autoDelivery;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
         $this->name = $name;
         $this->description = $description;
         $this->endOn = $endOn;
         $this->notes = $notes;
         $this->metadata = $metadata;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->externalId = $externalId;
         $this->daysBeforeDue = $daysBeforeDue;
         $this->maxOccurrences = $maxOccurrences;
         $this->emailTo = $emailTo;
-        $this->tags = $tags;
-        $this->customFields = $customFields;
     }
 }

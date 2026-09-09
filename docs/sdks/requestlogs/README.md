@@ -13,7 +13,7 @@ Inspect the requests your own integration has made against this API, newest firs
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.developers.request_logs.list" method="get" path="/developers/request-logs" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.developers.request_logs.list" method="get" path="/developers/request-logs" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -27,7 +27,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -71,7 +71,7 @@ Retrieve a single request of your own integration by the `request_id` the API re
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.developers.request_logs.show" method="get" path="/developers/request-logs/{request_id}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.developers.request_logs.show" method="get" path="/developers/request-logs/{request_id}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -84,7 +84,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

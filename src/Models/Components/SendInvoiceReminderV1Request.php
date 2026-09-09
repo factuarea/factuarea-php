@@ -47,24 +47,6 @@ class SendInvoiceReminderV1Request
     public ?string $message = null;
 
     /**
-     * Per-send override for "attach the invoice PDF". If omitted (or `null`), the company default (`email_settings`) is used.
-     *
-     * @var ?bool $attachPdf
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('attach_pdf')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?bool $attachPdf = null;
-
-    /**
-     * Per-send override for the "Stripe payment button". If omitted (or `null`), the company default is used.
-     *
-     * @var ?bool $stripePaymentButton
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('stripe_payment_button')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?bool $stripePaymentButton = null;
-
-    /**
      * Direcciones en copia.
      *
      * @var ?array<string> $cc
@@ -85,23 +67,41 @@ class SendInvoiceReminderV1Request
     public ?array $bcc = null;
 
     /**
+     * Per-send override for "attach the invoice PDF". If omitted (or `null`), the company default (`email_settings`) is used.
+     *
+     * @var ?bool $attachPdf
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('attach_pdf')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $attachPdf = null;
+
+    /**
+     * Per-send override for the "Stripe payment button". If omitted (or `null`), the company default is used.
+     *
+     * @var ?bool $stripePaymentButton
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('stripe_payment_button')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $stripePaymentButton = null;
+
+    /**
      * @param  ?string  $email
      * @param  ?string  $subject
      * @param  ?string  $message
-     * @param  ?bool  $attachPdf
-     * @param  ?bool  $stripePaymentButton
      * @param  ?array<string>  $cc
      * @param  ?array<string>  $bcc
+     * @param  ?bool  $attachPdf
+     * @param  ?bool  $stripePaymentButton
      * @phpstan-pure
      */
-    public function __construct(?string $email = null, ?string $subject = null, ?string $message = null, ?bool $attachPdf = null, ?bool $stripePaymentButton = null, ?array $cc = null, ?array $bcc = null)
+    public function __construct(?string $email = null, ?string $subject = null, ?string $message = null, ?array $cc = null, ?array $bcc = null, ?bool $attachPdf = null, ?bool $stripePaymentButton = null)
     {
         $this->email = $email;
         $this->subject = $subject;
         $this->message = $message;
-        $this->attachPdf = $attachPdf;
-        $this->stripePaymentButton = $stripePaymentButton;
         $this->cc = $cc;
         $this->bcc = $bcc;
+        $this->attachPdf = $attachPdf;
+        $this->stripePaymentButton = $stripePaymentButton;
     }
 }

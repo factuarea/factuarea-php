@@ -73,7 +73,7 @@ class Proforma
     public float $subtotal;
 
     /**
-     * Aggregate tax amount (= total_vat + total_surcharge − total_retention). Use total_vat/total_retention/total_surcharge for the breakdown.
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var float $taxesTotal
      */
@@ -105,6 +105,7 @@ class Proforma
     public float $totalSurcharge;
 
     /**
+     * Total of the document. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the AGGREGATE one, specific to the sales-side families - `total = subtotal + taxes_total`. NEVER reconstruct it as `subtotal + taxes_total - total_retention`: `taxes_total` ALREADY has the withholding netted out, so that combination subtracts it twice and yields a false total (4,320.00 + 259.20 - 648.00 = 3,931.20 against a real 4,579.20).
      *
      * @var float $total
      */
@@ -182,6 +183,22 @@ class Proforma
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('updated_at')]
     public \DateTime $updatedAt;
+
+    /**
+     * UUID of the price list selected for this document.
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    public ?string $priceListId;
+
+    /**
+     * Price-list name snapshot frozen on the document.
+     *
+     * @var ?string $priceListName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_name')]
+    public ?string $priceListName;
 
     /**
      *
@@ -320,6 +337,8 @@ class Proforma
      * @param  bool  $linkIsActive
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
+     * @param  ?string  $priceListId
+     * @param  ?string  $priceListName
      * @param  ?LocalDate  $validUntil
      * @param  ?int  $validityDays
      * @param  ?string  $reference
@@ -336,7 +355,7 @@ class Proforma
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $shippingCost, float $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $shippingCost, float $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -360,6 +379,8 @@ class Proforma
         $this->linkIsActive = $linkIsActive;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->priceListId = $priceListId;
+        $this->priceListName = $priceListName;
         $this->validUntil = $validUntil;
         $this->validityDays = $validityDays;
         $this->reference = $reference;

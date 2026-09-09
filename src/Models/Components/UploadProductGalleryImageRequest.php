@@ -23,6 +23,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class UploadProductGalleryImageRequest
 {
     /**
+     * Maximum file size: 3072 kilobytes.
      *
      * @var \Factuarea\Sdk\Models\Components\Image $image
      */

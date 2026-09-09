@@ -41,24 +41,32 @@ class PublicApiV1InvoicesExportExcelResponse
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesExportExcelResponseBody $object
+     * @var ?string $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes
      */
-    public ?PublicApiV1InvoicesExportExcelResponseBody $object = null;
+    public ?string $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes = null;
+
+    /**
+     *
+     * @var ?string $twoHundredTextCsvBytes
+     */
+    public ?string $twoHundredTextCsvBytes = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesExportExcelResponseBody  $object
+     * @param  ?string  $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes
+     * @param  ?string  $twoHundredTextCsvBytes
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesExportExcelResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes = null, ?string $twoHundredTextCsvBytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes = $twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheetBytes;
+        $this->twoHundredTextCsvBytes = $twoHundredTextCsvBytes;
     }
 }

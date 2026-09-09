@@ -11,3 +11,4 @@ Classifies the origin of the expense for the input VAT of Modelo 303 (boxes [28]
 | `BienInversion`    | bien_inversion     |
 | `Importacion`      | importacion        |
 | `Intracomunitaria` | intracomunitaria   |
+| `Isp`              | isp                |

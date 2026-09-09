@@ -40,15 +40,12 @@ class PublicApiV1RecurringInvoicesLogsResponse
     public array $headers;
 
     /**
+     * Cursor-paginated execution history for the recurring invoice.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesLogsResponseBody $object
      */
     public ?PublicApiV1RecurringInvoicesLogsResponseBody $object = null;
 
-    /**
-     * @var \Closure(string): ?PublicApiV1RecurringInvoicesLogsResponse $next
-     */
-    public \Closure $next;
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
@@ -64,18 +61,5 @@ class PublicApiV1RecurringInvoicesLogsResponse
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
         $this->object = $object;
-    }
-    /**
-     * @param  string  $name
-     * @param  array<mixed>  $args
-     * @return ?PublicApiV1RecurringInvoicesLogsResponse
-     */
-    public function __call($name, $args): ?PublicApiV1RecurringInvoicesLogsResponse
-    {
-        if ($name === 'next') {
-            return call_user_func_array($this->next, $args);
-        }
-
-        return null;
     }
 }

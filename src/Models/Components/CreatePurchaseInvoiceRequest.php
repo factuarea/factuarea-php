@@ -35,11 +35,6 @@ class CreatePurchaseInvoiceRequest
     public array $lines;
 
     /**
-     * Factura simplificada (ticket de gasto): con `is_simplified: true`
-     *
-     * el proveedor pasa a opcional. El número del proveedor
-     * (`external_invoice_number`) SIGUE siendo obligatorio en v1/MCP
-     * (el recurso se recupera por número tras crear).
      *
      * @var ?bool $isSimplified
      */
@@ -48,12 +43,6 @@ class CreatePurchaseInvoiceRequest
     public ?bool $isSimplified = null;
 
     /**
-     * Optional initial status. 4-state model:
-     *
-     * CREATION allowlist `draft|pending` (`received`/`pending_payment`
-     * were merged into `pending`). `paid|cancelled` are lifecycle
-     * transitions (mark_paid/change_status), NOT creation states.
-     * If omitted, the domain applies the default `draft`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestStatus $status
      */
@@ -142,10 +131,6 @@ class CreatePurchaseInvoiceRequest
     public ?array $metadata = null;
 
     /**
-     * Extend fields. Basic SHAPE only; the `payment_method` allowlist,
-     *
-     * `tax_period` format and `tags` cardinality are validated by the
-     * VO/Aggregate.
      *
      * @var ?string $internalNotes
      */
@@ -194,6 +179,26 @@ class CreatePurchaseInvoiceRequest
     public ?string $taxPeriod = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * Typed custom fields as `[{field, value}]`. `field` up to 60 characters (non-empty), `value` up to 500 characters, up to 50 entries.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      *
      * @var ?bool $isReverseCharge
      */
@@ -220,26 +225,6 @@ class CreatePurchaseInvoiceRequest
     public ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null;
 
     /**
-     * $tags
-     *
-     * @var ?array<string> $tags
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $tags = null;
-
-    /**
-     * Typed custom fields as `[{field, value}]`. `field` up to 60 characters (non-empty), `value` up to 500 characters, up to 50 entries.
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField> $customFields
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $customFields = null;
-
-    /**
      * @param  string  $externalInvoiceNumber
      * @param  LocalDate  $issuedOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestLine>  $lines
@@ -260,14 +245,14 @@ class CreatePurchaseInvoiceRequest
      * @param  ?int  $bankAccountId
      * @param  ?string  $expenseAccount
      * @param  ?string  $taxPeriod
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField>  $customFields
      * @param  ?bool  $isReverseCharge
      * @param  ?float  $deductiblePercentage
      * @param  ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOperationClass  $operationClass
-     * @param  ?array<string>  $tags
-     * @param  ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $externalInvoiceNumber, LocalDate $issuedOn, array $lines, ?bool $isSimplified = null, ?CreatePurchaseInvoiceRequestStatus $status = null, ?bool $exclude347 = null, ?string $supplierId = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $externalInvoiceNumber, LocalDate $issuedOn, array $lines, ?bool $isSimplified = null, ?CreatePurchaseInvoiceRequestStatus $status = null, ?bool $exclude347 = null, ?string $supplierId = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?array $tags = null, ?array $customFields = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null)
     {
         $this->externalInvoiceNumber = $externalInvoiceNumber;
         $this->issuedOn = $issuedOn;
@@ -289,10 +274,10 @@ class CreatePurchaseInvoiceRequest
         $this->bankAccountId = $bankAccountId;
         $this->expenseAccount = $expenseAccount;
         $this->taxPeriod = $taxPeriod;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->isReverseCharge = $isReverseCharge;
         $this->deductiblePercentage = $deductiblePercentage;
         $this->operationClass = $operationClass;
-        $this->tags = $tags;
-        $this->customFields = $customFields;
     }
 }

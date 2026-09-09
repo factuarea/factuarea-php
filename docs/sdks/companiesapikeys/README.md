@@ -30,7 +30,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -72,7 +72,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -114,7 +114,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -127,7 +127,49 @@ $request = new Operations\PublicApiV1CompaniesApiKeysCreateRequest(
     body: new Components\CreateChildApiKeyV1Request(
         name: '<value>',
         scopes: [
-            Components\CreateChildApiKeyV1RequestScope::QuotesTransition,
+            Components\CreateChildApiKeyV1RequestScope::ProformasRead,
+        ],
+    ),
+);
+
+$response = $sdk->companies->apiKeys->publicApiV1CompaniesApiKeysCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.create" method="post" path="/companies/{company}/api-keys" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1CompaniesApiKeysCreateRequest(
+    company: 'Dach - Wuckert',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\CreateChildApiKeyV1Request(
+        name: '<value>',
+        scopes: [
+            Components\CreateChildApiKeyV1RequestScope::ProformasRead,
         ],
     ),
 );
@@ -165,7 +207,7 @@ List the API keys of one of your managed companies with cursor-based pagination,
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.list" method="get" path="/companies/{company}/api-keys" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.list" method="get" path="/companies/{company}/api-keys" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -178,7 +220,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -223,7 +265,7 @@ Revoke a child API key immediately and irreversibly, leaving it unusable. Subseq
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.revoke" method="delete" path="/companies/{company}/api-keys/{api_key}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.revoke" method="delete" path="/companies/{company}/api-keys/{api_key}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -237,7 +279,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -283,7 +325,7 @@ Retrieve a single API key of one of your managed companies by its `id` (UUID v7)
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.show" method="get" path="/companies/{company}/api-keys/{api_key}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.show" method="get" path="/companies/{company}/api-keys/{api_key}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -296,7 +338,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -343,7 +385,7 @@ Invalidate the current secret of a child API key immediately, generate a fresh `
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.rotate_secret" method="post" path="/companies/{company}/api-keys/{api_key}/rotate-secret" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.companies.api_keys.rotate_secret" method="post" path="/companies/{company}/api-keys/{api_key}/rotate-secret" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -357,7 +399,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -391,8 +433,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 409, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

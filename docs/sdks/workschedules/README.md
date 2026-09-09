@@ -22,7 +22,7 @@ Archive a work schedule (transition `active` → `archived`), retiring it from u
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.archive" method="post" path="/work-schedules/{schedule}/archive" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.archive" method="post" path="/work-schedules/{schedule}/archive" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -35,7 +35,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -96,7 +96,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -136,7 +136,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -176,7 +176,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -216,7 +216,47 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesAssignRequest(
+    schedule: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\AssignScheduleRequest(
+        employeeId: 'c79fb215-b043-460c-87f2-620747dc1e0b',
+        effectiveFrom: LocalDate::parse('2025-09-15'),
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assign" method="post" path="/work-schedules/{schedule}/assign" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -278,7 +318,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -316,7 +356,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -354,7 +394,45 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWeeklyScheduleRequest(
+    name: '<value>',
+    mode: Components\CreateWeeklyScheduleRequestMode::Validated,
+    weekPattern: [],
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.create" method="post" path="/work-schedules" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -392,7 +470,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -515,7 +593,7 @@ List the weekly work schedules of your company with cursor-based pagination. Sup
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.list" method="get" path="/work-schedules" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.list" method="get" path="/work-schedules" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -529,7 +607,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -572,7 +650,7 @@ Resolve the work schedule currently in effect (today) for an employee by its `id
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.employee_schedule" method="get" path="/work-schedules/employee/{employee}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.employee_schedule" method="get" path="/work-schedules/employee/{employee}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -585,7 +663,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -630,7 +708,7 @@ Aggregated KPIs for your work schedules: total count, active and archived counts
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.stats" method="get" path="/work-schedules/stats" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.stats" method="get" path="/work-schedules/stats" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -643,7 +721,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -686,7 +764,7 @@ List the employees with an open assignment (`effective_to` = null) to this work 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assignments" method="get" path="/work-schedules/{schedule}/assignments" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assignments" method="get" path="/work-schedules/{schedule}/assignments" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -699,7 +777,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -744,7 +822,7 @@ Retrieve a single work schedule by its `id` (UUID v7). A schedule belonging to a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.show" method="get" path="/work-schedules/{schedule}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.show" method="get" path="/work-schedules/{schedule}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -757,7 +835,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -816,7 +894,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -857,7 +935,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -898,7 +976,48 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesUpdateRequest(
+    schedule: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateWeeklyScheduleRequest(
+        name: '<value>',
+        mode: Components\UpdateWeeklyScheduleRequestMode::RealClocking,
+        weekPattern: [],
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.update" method="put" path="/work-schedules/{schedule}" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -939,7 +1058,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1043,7 +1162,7 @@ Unarchive a work schedule (transition `archived` → `active`), returning it to 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.unarchive" method="post" path="/work-schedules/{schedule}/unarchive" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.unarchive" method="post" path="/work-schedules/{schedule}/unarchive" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1056,7 +1175,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1117,7 +1236,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1156,7 +1275,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1195,7 +1314,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1234,7 +1353,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

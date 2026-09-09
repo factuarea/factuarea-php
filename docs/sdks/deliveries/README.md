@@ -14,7 +14,7 @@ List delivery attempts for a webhook endpoint with cursor-based pagination. Each
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.deliveries.list" method="get" path="/webhook_endpoints/{webhook_endpoint}/deliveries" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.deliveries.list" method="get" path="/webhook_endpoints/{webhook_endpoint}/deliveries" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -28,7 +28,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -72,7 +72,7 @@ Re-queue a webhook delivery. A new delivery attempt is created (with `attempt: 1
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.deliveries.replay" method="post" path="/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}/replay" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.deliveries.replay" method="post" path="/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}/replay" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -86,7 +86,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -120,11 +120,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 409, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1WebhookEndpointsDeliveriesShow
 
@@ -132,7 +132,7 @@ Retrieve a single delivery attempt by its `uuid`, including the full event paylo
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.deliveries.show" method="get" path="/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.deliveries.show" method="get" path="/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -145,7 +145,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

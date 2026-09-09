@@ -1,7 +1,5 @@
 # Error
 
-Missing or invalid API key.
-
 
 ## Fields
 

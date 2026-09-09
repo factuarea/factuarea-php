@@ -27,6 +27,33 @@ class CreateProductRequest
     public string $price;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestItemKind $itemKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestItemKind|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProductRequestItemKind $itemKind = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestBaseUnit $baseUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestBaseUnit|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProductRequestBaseUnit $baseUnit = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('catalog_availability_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestCatalogAvailabilityMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null;
+
+    /**
      * Stock keeping unit (your own product code), unique per company. Optional; up to 100 characters.
      *
      * @var ?string $sku
@@ -36,7 +63,6 @@ class CreateProductRequest
     public ?string $sku = null;
 
     /**
-     * Columna `products.description` es `text` → sin `max` artificial.
      *
      * @var ?string $description
      */
@@ -45,22 +71,41 @@ class CreateProductRequest
     public ?string $description = null;
 
     /**
-     * Initial stock (create only; later stock changes are made via `PUT /v1/products/{uuid}/stock`). Absent → defaults to 0.
+     * $tags
      *
-     * @var ?int $stock
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * $specifications
+     *
+     * @var ?array<?string> $specifications
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('specifications')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string|null>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $specifications = null;
+
+    /**
+     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PUT /v1/products/{uuid}`, or move it with `PUT /v1/products/{uuid}/stock` (`set`/`increase`/`decrease`).
+     *
+     * @var ?float $stock
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $stock = null;
+    public ?float $stock = null;
 
     /**
-     * Umbral per-producto; se persiste en `metadata.low_stock_threshold`.
      *
-     * @var ?int $lowStockThreshold
+     * @var ?float $lowStockThreshold
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $lowStockThreshold = null;
+    public ?float $lowStockThreshold = null;
 
     /**
      * Whether this product takes part in document-driven stock movements: with `true`, issuing or receiving a document that includes it moves its stock automatically and the movement is recorded in the stock ledger. It only takes effect if your company also has stock management enabled; absent or `null` means `false`.
@@ -72,9 +117,7 @@ class CreateProductRequest
     public ?bool $manageStock = null;
 
     /**
-     * Producto es read-only EUR: solo se admite `EUR` (o ausencia/null).
-     *
-     * Cualquier otra moneda → 422 (antes se aceptaba-y-descartaba).
+     * Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency $currency
      */
@@ -84,11 +127,6 @@ class CreateProductRequest
     public ?CreateProductRequestCurrency $currency = null;
 
     /**
-     * `taxes` is a global system catalog (without a `company_id` column).
-     *
-     * Do NOT use TenantRule here — it would add `WHERE company_id = X` against a
-     * table without that column and cause a 500 (SQLSTATE 42S22). Global
-     * validation by uuid, like in the rest of the BCs (DeliveryNote V1, etc.).
      *
      * @var ?string $taxRateId
      */
@@ -127,37 +165,67 @@ class CreateProductRequest
     public ?string $externalId = null;
 
     /**
-     * $tags
+     * $optionGroups
      *
-     * @var ?array<string> $tags
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateProductRequestOptionGroup> $optionGroups
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_groups')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateProductRequestOptionGroup>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $tags = null;
+    public ?array $optionGroups = null;
+
+    /**
+     * $configurations
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\CreateProductRequestConfiguration> $configurations
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configurations')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateProductRequestConfiguration>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $configurations = null;
+
+    /**
+     *
+     * @var ?string $impactToken
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('impact_token')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $impactToken = null;
 
     /**
      * @param  string  $name
      * @param  string  $price
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestItemKind  $itemKind
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestBaseUnit  $baseUnit
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestCatalogAvailabilityMode  $catalogAvailabilityMode
      * @param  ?string  $sku
      * @param  ?string  $description
-     * @param  ?int  $stock
-     * @param  ?int  $lowStockThreshold
+     * @param  ?array<string>  $tags
+     * @param  ?array<?string>  $specifications
+     * @param  ?float  $stock
+     * @param  ?float  $lowStockThreshold
      * @param  ?bool  $manageStock
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
      * @param  ?bool  $isActive
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $externalId
-     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateProductRequestOptionGroup>  $optionGroups
+     * @param  ?array<\Factuarea\Sdk\Models\Components\CreateProductRequestConfiguration>  $configurations
+     * @param  ?string  $impactToken
      * @phpstan-pure
      */
-    public function __construct(string $name, string $price, ?string $sku = null, ?string $description = null, ?int $stock = null, ?int $lowStockThreshold = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $tags = null)
+    public function __construct(string $name, string $price, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
     {
         $this->name = $name;
         $this->price = $price;
+        $this->itemKind = $itemKind;
+        $this->baseUnit = $baseUnit;
+        $this->catalogAvailabilityMode = $catalogAvailabilityMode;
         $this->sku = $sku;
         $this->description = $description;
+        $this->tags = $tags;
+        $this->specifications = $specifications;
         $this->stock = $stock;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->manageStock = $manageStock;
@@ -166,6 +234,8 @@ class CreateProductRequest
         $this->isActive = $isActive;
         $this->metadata = $metadata;
         $this->externalId = $externalId;
-        $this->tags = $tags;
+        $this->optionGroups = $optionGroups;
+        $this->configurations = $configurations;
+        $this->impactToken = $impactToken;
     }
 }

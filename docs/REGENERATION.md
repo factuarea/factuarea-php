@@ -64,6 +64,21 @@ composer test
 composer stan
 ```
 
+### Overlay: drop `x-speakeasy-pagination`
+
+`.speakeasy/overlays/drop-speakeasy-pagination.yaml` removes the
+`x-speakeasy-pagination` extension from every operation before generation. The
+public spec declares it only on the e-commerce store listings, and the Speakeasy
+PHP generator turns it into a `next()` closure that re-calls the request
+constructor with the raw parameter name (`starting_after: $nextCursor`) while
+the generated request model exposes it camelCased (`$startingAfter`); PHPStan
+then fails the generation with *Unknown parameter $starting_after* (Spec Sync
+run of 2026-09-09). Every other cursor-paginated listing of this SDK carries no
+extension and is iterated by the hand-written page iterator in `src/Custom/`,
+which already follows `next_cursor`, so dropping the extension makes the store
+listings behave like the rest. Remove the overlay (and its `overlays:` entry in
+`.speakeasy/workflow.yaml`) once Speakeasy emits the camelCased argument.
+
 ### Overlay: retry status-code casing
 
 `.speakeasy/overlays/retry-status-code-casing.yaml` lowercases each operation's

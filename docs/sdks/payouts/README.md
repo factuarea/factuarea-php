@@ -13,7 +13,7 @@ Retrieve a Stripe payout by its `id` (UUID v7). Returns the amounts, currency, a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.payouts.show" method="get" path="/payouts/{payout}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.payouts.show" method="get" path="/payouts/{payout}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -26,7 +26,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -71,7 +71,7 @@ List the Stripe payouts ingested for your company, with cursor-based pagination.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.payouts.list" method="get" path="/payouts" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.payouts.list" method="get" path="/payouts" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -85,7 +85,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

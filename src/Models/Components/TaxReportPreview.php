@@ -100,6 +100,15 @@ class TaxReportPreview
     public array $warnings;
 
     /**
+     * Stable machine-readable codes paired one-to-one (same index) with `warnings`. Branch on these instead of matching the Spanish text; unknown codes should fall back to the corresponding `warnings` entry.
+     *
+     * @var array<string> $warningCodes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warning_codes')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $warningCodes;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\TaxReportPreviewObject  $object
      * @param  \Factuarea\Sdk\Models\Components\TaxReportPreviewType  $type
      * @param  \Factuarea\Sdk\Models\Components\TaxReportPreviewPeriod  $period
@@ -110,9 +119,10 @@ class TaxReportPreview
      * @param  int  $invoiceCount
      * @param  int  $purchaseInvoiceCount
      * @param  array<string>  $warnings
+     * @param  array<string>  $warningCodes
      * @phpstan-pure
      */
-    public function __construct(TaxReportPreviewObject $object, TaxReportPreviewType $type, TaxReportPreviewPeriod $period, array $breakdown303, array $totals, array $clients347, array $suppliers347, int $invoiceCount, int $purchaseInvoiceCount, array $warnings)
+    public function __construct(TaxReportPreviewObject $object, TaxReportPreviewType $type, TaxReportPreviewPeriod $period, array $breakdown303, array $totals, array $clients347, array $suppliers347, int $invoiceCount, int $purchaseInvoiceCount, array $warnings, array $warningCodes)
     {
         $this->object = $object;
         $this->type = $type;
@@ -124,5 +134,6 @@ class TaxReportPreview
         $this->invoiceCount = $invoiceCount;
         $this->purchaseInvoiceCount = $purchaseInvoiceCount;
         $this->warnings = $warnings;
+        $this->warningCodes = $warningCodes;
     }
 }

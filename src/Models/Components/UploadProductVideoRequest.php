@@ -18,6 +18,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class UploadProductVideoRequest
 {
     /**
+     * Maximum file size: 51200 kilobytes.
      *
      * @var \Factuarea\Sdk\Models\Components\UploadProductVideoRequestVideo $video
      */

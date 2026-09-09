@@ -1,8 +1,10 @@
 # PublicApiV1TaxReportsGenerate130ResponseBody
 
+The generated Modelo 130 report, with its identifier for downloading the artifact.
+
 
 ## Fields
 
-| Field              | Type               | Required           | Description        |
-| ------------------ | ------------------ | ------------------ | ------------------ |
-| `data`             | array<*mixed*>     | :heavy_check_mark: | N/A                |
+| Field                                                                                                                                                       | Type                                                                                                                                                        | Required                                                                                                                                                    | Description                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                                                                      | [Components\TaxReport](../../Models/Components/TaxReport.md)                                                                                                | :heavy_check_mark:                                                                                                                                          | A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/tax_reports/{uuid}/download`. |

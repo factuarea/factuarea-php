@@ -12,6 +12,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class AttachPurchaseInvoiceFileRequest
 {
     /**
+     * Maximum file size: 51200 kilobytes.
      *
      * @var \Factuarea\Sdk\Models\Components\AttachPurchaseInvoiceFileRequestFile $file
      */

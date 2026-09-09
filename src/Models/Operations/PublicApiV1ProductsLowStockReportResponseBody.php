@@ -9,30 +9,31 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1ProductsLowStockReportResponseBody - Products below their stock threshold. The response is a collection, without cursor pagination. */
 class PublicApiV1ProductsLowStockReportResponseBody
 {
     /**
-     * A product in your catalog.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\Product $data
+     * @var array<\Factuarea\Sdk\Models\Components\Product> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Product')]
-    public Components\Product $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Product>')]
+    public array $data;
 
     /**
      *
-     * @var string $totalCount
+     * @var int $totalCount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_count')]
-    public string $totalCount;
+    public int $totalCount;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Product  $data
-     * @param  string  $totalCount
+     * @param  array<\Factuarea\Sdk\Models\Components\Product>  $data
+     * @param  int  $totalCount
      * @phpstan-pure
      */
-    public function __construct(Components\Product $data, string $totalCount)
+    public function __construct(array $data, int $totalCount)
     {
         $this->data = $data;
         $this->totalCount = $totalCount;

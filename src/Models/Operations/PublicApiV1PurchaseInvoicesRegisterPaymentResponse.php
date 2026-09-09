@@ -40,6 +40,7 @@ class PublicApiV1PurchaseInvoicesRegisterPaymentResponse
     public array $headers;
 
     /**
+     * The newly registered purchase-invoice payment.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponseBody $object
      */

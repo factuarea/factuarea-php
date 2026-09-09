@@ -9,22 +9,22 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1CompaniesSeatChargePreviewResponseBody - Preview the charge for managed-company seats without creating a company or charging a payment method. Monetary amounts are in cents. */
 class PublicApiV1CompaniesSeatChargePreviewResponseBody
 {
     /**
-     * A managed company (child sub-account) under your master tenant. Created and operated through the gestoría endpoints; its child API keys can only hold a subset of the scopes of the key that created them.
      *
-     * @var \Factuarea\Sdk\Models\Components\Company $data
+     * @var \Factuarea\Sdk\Models\Components\CompanySeatChargePreview $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Company')]
-    public Components\Company $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CompanySeatChargePreview')]
+    public Components\CompanySeatChargePreview $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Company  $data
+     * @param  \Factuarea\Sdk\Models\Components\CompanySeatChargePreview  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Company $data)
+    public function __construct(Components\CompanySeatChargePreview $data)
     {
         $this->data = $data;
     }

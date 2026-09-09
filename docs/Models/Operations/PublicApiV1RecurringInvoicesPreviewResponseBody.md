@@ -1,23 +1,11 @@
 # PublicApiV1RecurringInvoicesPreviewResponseBody
 
+Upcoming dates. When expand=document is supplied, next_invoice includes the computed lines and totals without persisting an invoice.
 
-## Supported Types
 
-### `Operations\ResponseBody1`
+## Fields
 
-```php
-/**
-* @var \Factuarea\Sdk\Models\Operations\ResponseBody1
-*/
-Operations\ResponseBody1 $value = /* values here */
-```
-
-### `Operations\ResponseBody2`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Operations\ResponseBody2
-*/
-Operations\ResponseBody2 $value = /* values here */
-```
-
+| Field                                                                                                     | Type                                                                                                      | Required                                                                                                  | Description                                                                                               |
+| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                    | array<[Components\RecurringInvoicePreviewDate](../../Models/Components/RecurringInvoicePreviewDate.md)>   | :heavy_check_mark:                                                                                        | N/A                                                                                                       |
+| `nextInvoice`                                                                                             | [?Components\RecurringInvoicePreviewDocument](../../Models/Components/RecurringInvoicePreviewDocument.md) | :heavy_minus_sign:                                                                                        | N/A                                                                                                       |

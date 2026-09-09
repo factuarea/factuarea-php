@@ -40,6 +40,7 @@ class PublicApiV1InvoicesVerifactuCreateResponse
     public array $headers;
 
     /**
+     * The newly created VeriFactu record. Transmission to AEAT is asynchronous.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesVerifactuCreateResponseBody $object
      */

@@ -13,7 +13,7 @@ Return the time tracking configuration of your company: the overtime computation
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.show" method="get" path="/time-tracking-settings" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.show" method="get" path="/time-tracking-settings" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -26,7 +26,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -82,7 +82,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -121,7 +121,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -160,7 +160,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -199,7 +199,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -211,6 +211,45 @@ $body = new Components\UpdateTimeTrackingSettingsRequest(
     overtimeToleranceMinutes: 5,
     clockInReminderEnabled: true,
     clockInReminderGraceMinutes: 15,
+);
+
+$response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="put" path="/time-tracking-settings" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateTimeTrackingSettingsRequest(
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
+    overtimeToleranceMinutes: 290077,
+    clockInReminderEnabled: false,
+    clockInReminderGraceMinutes: 469595,
 );
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(

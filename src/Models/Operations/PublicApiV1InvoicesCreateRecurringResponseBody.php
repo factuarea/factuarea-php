@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1InvoicesCreateRecurringResponseBody - The recurring invoice created from the source invoice. */
 class PublicApiV1InvoicesCreateRecurringResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * A recurring invoice template that auto-generates invoices on a fixed cadence.
      *
-     * @var \Factuarea\Sdk\Models\Components\Invoice $data
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
-    public Components\Invoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice')]
+    public Components\RecurringInvoice $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(Components\RecurringInvoice $data)
     {
         $this->data = $data;
     }

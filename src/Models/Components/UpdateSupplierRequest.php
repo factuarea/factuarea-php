@@ -36,6 +36,15 @@ class UpdateSupplierRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates $coordinates
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('coordinates')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateSupplierRequestCoordinates $coordinates = null;
+
+    /**
+     *
      * @var ?bool $accumulate347
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('accumulate_347')]
@@ -49,15 +58,6 @@ class UpdateSupplierRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('is_active')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?bool $isActive = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates $coordinates
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('coordinates')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateSupplierRequestCoordinates $coordinates = null;
 
     /**
      *
@@ -158,6 +158,16 @@ class UpdateSupplierRequest
     public ?string $contactPerson = null;
 
     /**
+     * $billingEmails
+     *
+     * @var ?array<string> $billingEmails
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('billing_emails')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $billingEmails = null;
+
+    /**
      *
      * @var ?float $latitude
      */
@@ -206,6 +216,17 @@ class UpdateSupplierRequest
     public ?bool $isSurchargeSubject = null;
 
     /**
+     * $bankAccounts
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount> $bankAccounts
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('bank_accounts')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $bankAccounts = null;
+
+    /**
+     * Legacy alias for the whole `bank_accounts` collection, not a single field within it: sending it REPLACES every bank account the supplier has with the single one you provide, so any other account already registered is removed. To keep several accounts, send the full `bank_accounts` array instead; to leave the accounts untouched, omit both fields. If you send both, `bank_accounts` wins and `iban` is ignored.
      *
      * @var ?string $iban
      */
@@ -277,30 +298,10 @@ class UpdateSupplierRequest
     public ?string $externalId = null;
 
     /**
-     * $billingEmails
-     *
-     * @var ?array<string> $billingEmails
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('billing_emails')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $billingEmails = null;
-
-    /**
-     * $bankAccounts
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount> $bankAccounts
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('bank_accounts')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $bankAccounts = null;
-
-    /**
      * @param  ?string  $name
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates  $coordinates
      * @param  ?bool  $accumulate347
      * @param  ?bool  $isActive
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestCoordinates  $coordinates
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestAlternativeId  $alternativeId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestAddress  $address
      * @param  ?string  $businessName
@@ -313,12 +314,14 @@ class UpdateSupplierRequest
      * @param  ?string  $mobile
      * @param  ?string  $website
      * @param  ?string  $contactPerson
+     * @param  ?array<string>  $billingEmails
      * @param  ?float  $latitude
      * @param  ?float  $longitude
      * @param  ?float  $defaultDiscount
      * @param  ?float  $defaultVatRate
      * @param  ?float  $defaultRetentionRate
      * @param  ?bool  $isSurchargeSubject
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount>  $bankAccounts
      * @param  ?string  $iban
      * @param  ?string  $defaultTaxesId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSupplierRequestPreferredOperationRegime  $preferredOperationRegime
@@ -327,16 +330,14 @@ class UpdateSupplierRequest
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $externalId
-     * @param  ?array<string>  $billingEmails
-     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateSupplierRequestBankAccount>  $bankAccounts
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?bool $accumulate347 = null, ?bool $isActive = null, ?UpdateSupplierRequestCoordinates $coordinates = null, ?UpdateSupplierRequestAlternativeId $alternativeId = null, ?UpdateSupplierRequestAddress $address = null, ?string $businessName = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?string $iban = null, ?string $defaultTaxesId = null, ?UpdateSupplierRequestPreferredOperationRegime $preferredOperationRegime = null, ?UpdateSupplierRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?array $billingEmails = null, ?array $bankAccounts = null)
+    public function __construct(?string $name = null, ?UpdateSupplierRequestCoordinates $coordinates = null, ?bool $accumulate347 = null, ?bool $isActive = null, ?UpdateSupplierRequestAlternativeId $alternativeId = null, ?UpdateSupplierRequestAddress $address = null, ?string $businessName = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?array $billingEmails = null, ?float $latitude = null, ?float $longitude = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $iban = null, ?string $defaultTaxesId = null, ?UpdateSupplierRequestPreferredOperationRegime $preferredOperationRegime = null, ?UpdateSupplierRequestPaymentMethod $paymentMethod = null, ?int $paymentTermsDays = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null)
     {
         $this->name = $name;
+        $this->coordinates = $coordinates;
         $this->accumulate347 = $accumulate347;
         $this->isActive = $isActive;
-        $this->coordinates = $coordinates;
         $this->alternativeId = $alternativeId;
         $this->address = $address;
         $this->businessName = $businessName;
@@ -349,12 +350,14 @@ class UpdateSupplierRequest
         $this->mobile = $mobile;
         $this->website = $website;
         $this->contactPerson = $contactPerson;
+        $this->billingEmails = $billingEmails;
         $this->latitude = $latitude;
         $this->longitude = $longitude;
         $this->defaultDiscount = $defaultDiscount;
         $this->defaultVatRate = $defaultVatRate;
         $this->defaultRetentionRate = $defaultRetentionRate;
         $this->isSurchargeSubject = $isSurchargeSubject;
+        $this->bankAccounts = $bankAccounts;
         $this->iban = $iban;
         $this->defaultTaxesId = $defaultTaxesId;
         $this->preferredOperationRegime = $preferredOperationRegime;
@@ -363,7 +366,5 @@ class UpdateSupplierRequest
         $this->notes = $notes;
         $this->metadata = $metadata;
         $this->externalId = $externalId;
-        $this->billingEmails = $billingEmails;
-        $this->bankAccounts = $bankAccounts;
     }
 }

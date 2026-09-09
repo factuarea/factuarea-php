@@ -88,6 +88,7 @@ enum SendTestEventRequestType: string
     case ProductCreated = 'product.created';
     case ProductUpdated = 'product.updated';
     case PaymentReceived = 'payment.received';
+    case PaymentReversed = 'payment.reversed';
     case TaxMetadataChanged = 'tax.metadata_changed';
     case TaxValidityChanged = 'tax.validity_changed';
     case TaxExternalReferenceChanged = 'tax.external_reference_changed';
@@ -118,4 +119,13 @@ enum SendTestEventRequestType: string
     case AbsenceApproved = 'absence.approved';
     case AbsenceRejected = 'absence.rejected';
     case MonthlyRegisterClosed = 'monthly_register.closed';
+    case AutomationRuleActivated = 'automation_rule.activated';
+    case AutomationRulePaused = 'automation_rule.paused';
+    case AutomationRuleAutoPaused = 'automation_rule.auto_paused';
+    case AutomationRunStarted = 'automation_run.started';
+    case AutomationRunCompleted = 'automation_run.completed';
+    case AutomationRunFailed = 'automation_run.failed';
+    case AutomationRunStepDeadLettered = 'automation_run.step_dead_lettered';
+    case OrderInvoiced = 'order.invoiced';
+    case OrderRefunded = 'order.refunded';
 }

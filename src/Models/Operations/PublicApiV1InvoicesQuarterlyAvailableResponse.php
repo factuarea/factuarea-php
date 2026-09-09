@@ -40,6 +40,7 @@ class PublicApiV1InvoicesQuarterlyAvailableResponse
     public array $headers;
 
     /**
+     * Quarters with issued invoices and counts by invoice type.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesQuarterlyAvailableResponseBody $object
      */

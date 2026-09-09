@@ -55,7 +55,7 @@ class ApiKey
     public array $scopes;
 
     /**
-     * Rate-limit tier (`free`, `starter`, `pro`, `scale`). Derived from the company plan (or from an active capacity boost when higher), never set from the request body.
+     * Rate-limit tier (`free`, `starter`, `pro`, `scale`). Derived from the company plan (or preserved by historical grandfathering), never set from the request body.
      *
      * @var string $tier
      */

@@ -13,7 +13,7 @@ Return every version of the producer-level VeriFactu Declaración Responsable (t
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.declaracion.history" method="get" path="/verifactu/declaracion-responsable/history" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.declaracion.history" method="get" path="/verifactu/declaracion-responsable/history" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -26,7 +26,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -69,7 +69,7 @@ Return the current (latest) version of the producer-level VeriFactu Declaración
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.declaracion.current" method="get" path="/verifactu/declaracion-responsable" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.declaracion.current" method="get" path="/verifactu/declaracion-responsable" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -82,7 +82,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

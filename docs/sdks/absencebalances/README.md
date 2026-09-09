@@ -9,11 +9,11 @@
 
 ## publicApiV1AbsenceBalancesList
 
-List your company’s absence balances with cursor-based pagination. Each balance is the accrued, carried-over and consumed days of one employee for one absence type in a given year, with the resulting `available_days`. Supports filtering by `employee_id` (UUID v7), `absence_type_id` (UUID v7) and `year`. Day amounts are exact decimal strings.
+List your company’s absence balances with cursor-based pagination. Each balance is the accrued, carried-over and consumed days of one employee for one absence type in a given year, with the resulting `available_days`. Supports filtering by `employee_id` (UUID v7), `absence_type_id` (UUID v7) and `year`. Ledger amounts are exact decimal strings; `available_days` is rounded up to a whole day.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-balances.list" method="get" path="/absence-balances" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-balances.list" method="get" path="/absence-balances" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -27,7 +27,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -70,7 +70,7 @@ Retrieve a single absence balance by its `id` (UUID v7), including its accrued, 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-balances.show" method="get" path="/absence-balances/{absence_balance}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-balances.show" method="get" path="/absence-balances/{absence_balance}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -83,7 +83,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

@@ -333,7 +333,6 @@ In `live`, all these effects fire normally.
   * [SDK Example Usage](#sdk-example-usage)
   * [Authentication](#authentication-1)
   * [Available Resources and Operations](#available-resources-and-operations)
-  * [Pagination](#pagination)
   * [Retries](#retries)
   * [Error Handling](#error-handling)
   * [Server Selection](#server-selection)
@@ -390,7 +389,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -424,7 +423,6 @@ This SDK supports the following security schemes globally:
 
 | Name         | Type   | Scheme       |
 | ------------ | ------ | ------------ |
-| `http`       | http   | HTTP Bearer  |
 | `bearerAuth` | http   | HTTP Bearer  |
 | `apiKeyAuth` | apiKey | API key      |
 | `oAuth2`     | oauth2 | OAuth2 token |
@@ -443,7 +441,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -532,6 +530,42 @@ if ($response->object !== null) {
 
 * [publicApiV1AccountPersonalizationTemplates](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationtemplates) - List available personalization templates
 * [publicApiV1AccountPersonalizationUpdate](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationupdate) - Update account personalization
+
+### [Automations.Catalog](docs/sdks/catalog/README.md)
+
+* [publicApiV1AutomationsCatalogShow](docs/sdks/catalog/README.md#publicapiv1automationscatalogshow) - Retrieve the automation catalog
+* [publicApiV1AutomationsCatalogTriggerFields](docs/sdks/catalog/README.md#publicapiv1automationscatalogtriggerfields) - Retrieve the evaluable fields of a trigger
+
+### [Automations.Rules](docs/sdks/rules/README.md)
+
+* [publicApiV1AutomationsRulesActivate](docs/sdks/rules/README.md#publicapiv1automationsrulesactivate) - Activate an automation rule
+* [publicApiV1AutomationsRulesCreate](docs/sdks/rules/README.md#publicapiv1automationsrulescreate) - Create an automation rule
+* [publicApiV1AutomationsRulesList](docs/sdks/rules/README.md#publicapiv1automationsruleslist) - List your automation rules
+* [publicApiV1AutomationsRulesDelete](docs/sdks/rules/README.md#publicapiv1automationsrulesdelete) - Delete an automation rule
+* [publicApiV1AutomationsRulesShow](docs/sdks/rules/README.md#publicapiv1automationsrulesshow) - Retrieve an automation rule
+* [publicApiV1AutomationsRulesUpdate](docs/sdks/rules/README.md#publicapiv1automationsrulesupdate) - Update an automation rule
+* [publicApiV1AutomationsRulesDryRun](docs/sdks/rules/README.md#publicapiv1automationsrulesdryrun) - Dry-run an automation rule
+* [publicApiV1AutomationsRulesPause](docs/sdks/rules/README.md#publicapiv1automationsrulespause) - Pause an automation rule
+
+#### [Automations.Rules.Versions](docs/sdks/versions/README.md)
+
+* [publicApiV1AutomationsRulesVersionsList](docs/sdks/versions/README.md#publicapiv1automationsrulesversionslist) - List the versions of an automation rule
+* [publicApiV1AutomationsRulesVersionsShow](docs/sdks/versions/README.md#publicapiv1automationsrulesversionsshow) - Retrieve a version of an automation rule
+
+### [Automations.Runs](docs/sdks/runs/README.md)
+
+* [publicApiV1AutomationsRunsList](docs/sdks/runs/README.md#publicapiv1automationsrunslist) - List automation runs
+* [publicApiV1AutomationsRunsReplay](docs/sdks/runs/README.md#publicapiv1automationsrunsreplay) - Replay the parked steps of an automation run
+* [publicApiV1AutomationsRunsShow](docs/sdks/runs/README.md#publicapiv1automationsrunsshow) - Retrieve an automation run
+
+#### [Automations.Runs.Steps](docs/sdks/steps/README.md)
+
+* [publicApiV1AutomationsRunsStepsList](docs/sdks/steps/README.md#publicapiv1automationsrunsstepslist) - List the steps of an automation run
+* [publicApiV1AutomationsRunsStepsReplay](docs/sdks/steps/README.md#publicapiv1automationsrunsstepsreplay) - Replay one step of an automation run
+
+### [Automations.Usage](docs/sdks/usage/README.md)
+
+* [publicApiV1AutomationsUsageShow](docs/sdks/usage/README.md#publicapiv1automationsusageshow) - Retrieve automation usage
 
 ### [Clients](docs/sdks/clients/README.md)
 
@@ -712,6 +746,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesReminderPreview](docs/sdks/invoices/README.md#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
 * [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download payment receipt PDF
 * [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
+* [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
 * [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
 * [publicApiV1InvoicesSend](docs/sdks/invoices/README.md#publicapiv1invoicessend) - Send invoice by email
 * [publicApiV1InvoicesSendReminder](docs/sdks/invoices/README.md#publicapiv1invoicessendreminder) - Send a payment reminder
@@ -762,6 +797,25 @@ if ($response->object !== null) {
 * [publicApiV1PresenceLive](docs/sdks/presence/README.md#publicapiv1presencelive) - Get the live team presence
 * [publicApiV1PresenceDaily](docs/sdks/presence/README.md#publicapiv1presencedaily) - List office/remote presence declarations
 
+### [PriceLists](docs/sdks/pricelists/README.md)
+
+* [publicApiV1PriceListsCreate](docs/sdks/pricelists/README.md#publicapiv1pricelistscreate) - Create a price list
+* [publicApiV1PriceListsList](docs/sdks/pricelists/README.md#publicapiv1pricelistslist) - List price lists
+* [publicApiV1PriceListsDelete](docs/sdks/pricelists/README.md#publicapiv1pricelistsdelete) - Delete a price list
+* [publicApiV1PriceListsShow](docs/sdks/pricelists/README.md#publicapiv1pricelistsshow) - Retrieve a price list
+* [publicApiV1PriceListsUpdate](docs/sdks/pricelists/README.md#publicapiv1pricelistsupdate) - Update a price list
+* [publicApiV1PriceListsOptions](docs/sdks/pricelists/README.md#publicapiv1pricelistsoptions) - List active price list options
+* [publicApiV1PriceListsResolve](docs/sdks/pricelists/README.md#publicapiv1pricelistsresolve) - Resolve a catalog price
+* [publicApiV1PriceListsResolveMany](docs/sdks/pricelists/README.md#publicapiv1pricelistsresolvemany) - Resolve many catalog prices
+
+#### [PriceLists.Items](docs/sdks/items/README.md)
+
+* [publicApiV1PriceListsItemsDelete](docs/sdks/items/README.md#publicapiv1pricelistsitemsdelete) - Delete a price list item
+* [publicApiV1PriceListsItemsList](docs/sdks/items/README.md#publicapiv1pricelistsitemslist) - List price list items
+* [publicApiV1PriceListsItemsUpsert](docs/sdks/items/README.md#publicapiv1pricelistsitemsupsert) - Upsert a price list item
+* [publicApiV1PriceListsItemsPurgeRetired](docs/sdks/items/README.md#publicapiv1pricelistsitemspurgeretired) - Permanently delete a retired price list item
+* [publicApiV1PriceListsItemsReassignRetired](docs/sdks/items/README.md#publicapiv1pricelistsitemsreassignretired) - Reassign a retired price list item
+
 ### [Products](docs/sdks/products/README.md)
 
 * [publicApiV1ProductsBulkDelete](docs/sdks/products/README.md#publicapiv1productsbulkdelete) - Delete multiple products in bulk
@@ -778,15 +832,51 @@ if ($response->object !== null) {
 * [publicApiV1ProductsActivities](docs/sdks/products/README.md#publicapiv1productsactivities) - List product activity timeline
 * [publicApiV1ProductsSalesAnalytics](docs/sdks/products/README.md#publicapiv1productssalesanalytics) - Get product sales analytics
 * [publicApiV1ProductsStats](docs/sdks/products/README.md#publicapiv1productsstats) - Get product stats
+* [publicApiV1ProductsResolveSelection](docs/sdks/products/README.md#publicapiv1productsresolveselection) - Resolve a catalog selection
 * [publicApiV1ProductsSearch](docs/sdks/products/README.md#publicapiv1productssearch) - Search products
 * [publicApiV1ProductsToggleActive](docs/sdks/products/README.md#publicapiv1productstoggleactive) - Toggle product active state
 * [publicApiV1ProductsUpdateStock](docs/sdks/products/README.md#publicapiv1productsupdatestock) - Update product stock
+
+#### [Products.Configurations](docs/sdks/configurations/README.md)
+
+* [publicApiV1ProductsConfigurationsList](docs/sdks/configurations/README.md#publicapiv1productsconfigurationslist) - List product commercial combinations
+* [publicApiV1ProductsConfigurationsImpactPreview](docs/sdks/configurations/README.md#publicapiv1productsconfigurationsimpactpreview) - Preview the impact of restricting a catalog
 
 #### [Products.Gallery](docs/sdks/gallery/README.md)
 
 * [publicApiV1ProductsGalleryDelete](docs/sdks/gallery/README.md#publicapiv1productsgallerydelete) - Remove a gallery image from a product
 * [publicApiV1ProductsGalleryDownload](docs/sdks/gallery/README.md#publicapiv1productsgallerydownload) - Download a product gallery image binary
 * [publicApiV1ProductsGalleryUpload](docs/sdks/gallery/README.md#publicapiv1productsgalleryupload) - Upload a gallery image to a product
+
+#### [Products.Presentations](docs/sdks/presentations/README.md)
+
+* [publicApiV1ProductsPresentationsCreate](docs/sdks/presentations/README.md#publicapiv1productspresentationscreate) - Create a product presentation
+* [publicApiV1ProductsPresentationsList](docs/sdks/presentations/README.md#publicapiv1productspresentationslist) - List product presentations
+* [publicApiV1ProductsPresentationsDelete](docs/sdks/presentations/README.md#publicapiv1productspresentationsdelete) - Delete a product presentation
+* [publicApiV1ProductsPresentationsUpdate](docs/sdks/presentations/README.md#publicapiv1productspresentationsupdate) - Update a product presentation
+
+#### [Products.ProductOptions](docs/sdks/productoptions/README.md)
+
+* [publicApiV1ProductsOptionsList](docs/sdks/productoptions/README.md#publicapiv1productsoptionslist) - List product option groups
+
+#### [Products.StockMovements](docs/sdks/stockmovements/README.md)
+
+* [publicApiV1ProductsStockMovementsList](docs/sdks/stockmovements/README.md#publicapiv1productsstockmovementslist) - List stock movements of a product
+
+#### [Products.SupplierOffers](docs/sdks/supplieroffers/README.md)
+
+* [publicApiV1ProductsSupplierOffersCreate](docs/sdks/supplieroffers/README.md#publicapiv1productssupplierofferscreate) - Create a supplier offer
+* [publicApiV1ProductsSupplierOffersList](docs/sdks/supplieroffers/README.md#publicapiv1productssupplierofferslist) - List supplier offers
+* [publicApiV1ProductsSupplierOffersDelete](docs/sdks/supplieroffers/README.md#publicapiv1productssupplieroffersdelete) - Delete a supplier offer
+* [publicApiV1ProductsSupplierOffersUpdate](docs/sdks/supplieroffers/README.md#publicapiv1productssupplieroffersupdate) - Update a supplier offer
+* [publicApiV1ProductsSupplierOffersPreferred](docs/sdks/supplieroffers/README.md#publicapiv1productssupplierofferspreferred) - Set the preferred supplier offer
+
+#### [Products.Variants](docs/sdks/variants/README.md)
+
+* [publicApiV1ProductsVariantsCreate](docs/sdks/variants/README.md#publicapiv1productsvariantscreate) - Create a product variant
+* [publicApiV1ProductsVariantsList](docs/sdks/variants/README.md#publicapiv1productsvariantslist) - List product variants
+* [publicApiV1ProductsVariantsDelete](docs/sdks/variants/README.md#publicapiv1productsvariantsdelete) - Delete a product variant
+* [publicApiV1ProductsVariantsUpdate](docs/sdks/variants/README.md#publicapiv1productsvariantsupdate) - Update a product variant
 
 #### [Products.Video](docs/sdks/video/README.md)
 
@@ -895,6 +985,18 @@ if ($response->object !== null) {
 * [publicApiV1SeriesSetDefault](docs/sdks/series/README.md#publicapiv1seriessetdefault) - Mark a series as default for its type
 * [publicApiV1SeriesShow](docs/sdks/series/README.md#publicapiv1seriesshow) - Retrieve a series
 * [publicApiV1SeriesUnarchive](docs/sdks/series/README.md#publicapiv1seriesunarchive) - Unarchive a series
+
+### [Shopify.Stores](docs/sdks/shopifystores/README.md)
+
+* [publicApiV1ShopifyStoresConnectionTest](docs/sdks/shopifystores/README.md#publicapiv1shopifystoresconnectiontest) - Test a Shopify store connection
+
+### [Stores](docs/sdks/stores/README.md)
+
+* [publicApiV1StoresCreate](docs/sdks/stores/README.md#publicapiv1storescreate) - Connect a store
+* [publicApiV1StoresIndex](docs/sdks/stores/README.md#publicapiv1storesindex) - List connected stores
+* [publicApiV1StoresDisconnect](docs/sdks/stores/README.md#publicapiv1storesdisconnect) - Disconnect a store
+* [publicApiV1StoresShow](docs/sdks/stores/README.md#publicapiv1storesshow) - Retrieve a connected store
+* [publicApiV1StoresUpdate](docs/sdks/stores/README.md#publicapiv1storesupdate) - Update store settings
 
 ### [StripeAutoinvoicing.Accounts](docs/sdks/accounts/README.md)
 
@@ -1068,6 +1170,10 @@ if ($response->object !== null) {
 * [publicApiV1WebhookEndpointsDeliveriesReplay](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliveriesreplay) - Replay webhook delivery
 * [publicApiV1WebhookEndpointsDeliveriesShow](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliveriesshow) - Retrieve webhook delivery
 
+### [Woocommerce.Stores](docs/sdks/woocommercestores/README.md)
+
+* [publicApiV1WoocommerceStoresConnectionTest](docs/sdks/woocommercestores/README.md#publicapiv1woocommercestoresconnectiontest) - Test a WooCommerce store connection
+
 ### [WorkSchedules](docs/sdks/workschedules/README.md)
 
 * [publicApiV1WorkSchedulesArchive](docs/sdks/workschedules/README.md#publicapiv1workschedulesarchive) - Archive a work schedule
@@ -1084,50 +1190,6 @@ if ($response->object !== null) {
 
 </details>
 <!-- End Available Resources and Operations [operations] -->
-
-<!-- Start Pagination [pagination] -->
-## Pagination
-
-Some of the endpoints in this SDK support pagination. To use pagination, you make your SDK calls as usual, but the
-returned object will be a `Generator` instead of an individual response.
-
-Working with generators is as simple as iterating over the responses in a `foreach` loop, and you can see an example below:
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1RecurringInvoicesLogsRequest(
-    recurringInvoice: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-);
-
-$responses = $sdk->recurringInvoices->publicApiV1RecurringInvoicesLogs(
-    request: $request
-);
-
-
-foreach ($responses as $response) {
-    if ($response->statusCode === 200) {
-        // handle response
-    }
-}
-```
-<!-- End Pagination [pagination] -->
 
 <!-- Start Retries [retries] -->
 ## Retries
@@ -1149,7 +1211,7 @@ use Factuarea\Sdk\Utils\Retry;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1205,7 +1267,7 @@ $sdk = Sdk\Factuarea::builder()
   )
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1268,7 +1330,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1324,7 +1386,7 @@ $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

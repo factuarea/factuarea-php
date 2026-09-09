@@ -116,10 +116,6 @@ class UpdatePurchaseInvoiceRequest
     public ?array $metadata = null;
 
     /**
-     * Extend fields. Basic SHAPE only; the `payment_method` allowlist,
-     *
-     * `tax_period` format and `tags` cardinality are validated by the
-     * VO/Aggregate.
      *
      * @var ?string $internalNotes
      */
@@ -168,6 +164,26 @@ class UpdatePurchaseInvoiceRequest
     public ?string $taxPeriod = null;
 
     /**
+     * $tags
+     *
+     * @var ?array<string> $tags
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $tags = null;
+
+    /**
+     * Typed custom fields as `[{field, value}]`. Partial update: an explicit `custom_fields: null` empties the collection.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField> $customFields
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $customFields = null;
+
+    /**
      *
      * @var ?bool $isReverseCharge
      */
@@ -193,26 +209,6 @@ class UpdatePurchaseInvoiceRequest
     public ?UpdatePurchaseInvoiceRequestOperationClass $operationClass = null;
 
     /**
-     * $tags
-     *
-     * @var ?array<string> $tags
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tags')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $tags = null;
-
-    /**
-     * Typed custom fields as `[{field, value}]`. Partial update: an explicit `custom_fields: null` empties the collection.
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField> $customFields
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('custom_fields')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $customFields = null;
-
-    /**
      * @param  ?string  $supplierId
      * @param  ?string  $externalInvoiceNumber
      * @param  ?LocalDate  $issuedOn
@@ -231,14 +227,14 @@ class UpdatePurchaseInvoiceRequest
      * @param  ?int  $bankAccountId
      * @param  ?string  $expenseAccount
      * @param  ?string  $taxPeriod
+     * @param  ?array<string>  $tags
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField>  $customFields
      * @param  ?bool  $isReverseCharge
      * @param  ?float  $deductiblePercentage
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOperationClass  $operationClass
-     * @param  ?array<string>  $tags
-     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $supplierId = null, ?string $externalInvoiceNumber = null, ?LocalDate $issuedOn = null, ?bool $exclude347 = null, ?array $lines = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?UpdatePurchaseInvoiceRequestOperationClass $operationClass = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $supplierId = null, ?string $externalInvoiceNumber = null, ?LocalDate $issuedOn = null, ?bool $exclude347 = null, ?array $lines = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?array $tags = null, ?array $customFields = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?UpdatePurchaseInvoiceRequestOperationClass $operationClass = null)
     {
         $this->supplierId = $supplierId;
         $this->externalInvoiceNumber = $externalInvoiceNumber;
@@ -258,10 +254,10 @@ class UpdatePurchaseInvoiceRequest
         $this->bankAccountId = $bankAccountId;
         $this->expenseAccount = $expenseAccount;
         $this->taxPeriod = $taxPeriod;
+        $this->tags = $tags;
+        $this->customFields = $customFields;
         $this->isReverseCharge = $isReverseCharge;
         $this->deductiblePercentage = $deductiblePercentage;
         $this->operationClass = $operationClass;
-        $this->tags = $tags;
-        $this->customFields = $customFields;
     }
 }

@@ -267,7 +267,7 @@ class TimeBalances
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\ModelNotFoundException', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $obj->rawResponse = $httpResponse;
                 throw $obj->toException();
             } else {

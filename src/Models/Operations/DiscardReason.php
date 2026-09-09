@@ -32,4 +32,25 @@ enum DiscardReason: string
     case PaymentFailed = 'payment_failed';
     case EventTypeNotCovered = 'event_type_not_covered';
     case CheckoutLinesRetrieveFailed = 'checkout_lines_retrieve_failed';
+    case ReversalPaymentNotFound = 'reversal_payment_not_found';
+    case ReversalAlreadyApplied = 'reversal_already_applied';
+    case DisputeInProgress = 'dispute_in_progress';
+    case DisputeResolved = 'dispute_resolved';
+    case TestModeEvent = 'test_mode_event';
+    case OrderEventNotCovered = 'order_event_not_covered';
+    case StoreNotFound = 'store_not_found';
+    case StoreEnvironmentTest = 'store_environment_test';
+    case RefundBeforeOrder = 'refund_before_order';
+    case RefundReasonUnmapped = 'refund_reason_unmapped';
+    case RecurringInvoiceOverlap = 'recurring_invoice_overlap';
+    case SeriesDateClamped = 'series_date_clamped';
+    case StoreAutoinvoicingDisabled = 'store_autoinvoicing_disabled';
+    case VatResidualOutOfTolerance = 'vat_residual_out_of_tolerance';
+    case SimplifiedAbsoluteLimitExceeded = 'simplified_absolute_limit_exceeded';
+    case SimplifiedThresholdExceededWithoutRecipient = 'simplified_threshold_exceeded_without_recipient';
+    case StoreRequiresTaxId = 'store_requires_tax_id';
+    case OrderLineAmountExceedsColumn = 'order_line_amount_exceeds_column';
+    case OrderStatusUnknown = 'order_status_unknown';
+    case RefundNotSettled = 'refund_not_settled';
+    case ProtectedCustomerDataUnavailable = 'protected_customer_data_unavailable';
 }

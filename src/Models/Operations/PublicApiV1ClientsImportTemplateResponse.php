@@ -40,25 +40,26 @@ class PublicApiV1ClientsImportTemplateResponse
     public array $headers;
 
     /**
+     * CSV import template with a UTF-8 BOM, Spanish column headings and two example rows.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ClientsImportTemplateResponseBody $object
+     * @var ?string $res
      */
-    public ?PublicApiV1ClientsImportTemplateResponseBody $object = null;
+    public ?string $res = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ClientsImportTemplateResponseBody  $object
+     * @param  ?string  $res
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1ClientsImportTemplateResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $res = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->res = $res;
     }
 }

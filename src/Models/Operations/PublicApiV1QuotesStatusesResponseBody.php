@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1QuotesStatusesResponseBody - Complete public status catalog, with Spanish labels and color tokens. */
 class PublicApiV1QuotesStatusesResponseBody
 {
     /**
-     * A sales quote that can be converted to an invoice.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\Quote $data
+     * @var array<\Factuarea\Sdk\Models\Components\PublicDocumentStatus> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Quote')]
-    public Components\Quote $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PublicDocumentStatus>')]
+    public array $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Quote  $data
+     * @param  array<\Factuarea\Sdk\Models\Components\PublicDocumentStatus>  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Quote $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

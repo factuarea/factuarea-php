@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1ProformasStatusesResponseBody - Complete public status catalog, with Spanish labels and color tokens. */
 class PublicApiV1ProformasStatusesResponseBody
 {
     /**
-     * A proforma invoice that can be converted to a final invoice.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\Proforma $data
+     * @var array<\Factuarea\Sdk\Models\Components\PublicDocumentStatus> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Proforma')]
-    public Components\Proforma $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PublicDocumentStatus>')]
+    public array $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Proforma  $data
+     * @param  array<\Factuarea\Sdk\Models\Components\PublicDocumentStatus>  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Proforma $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

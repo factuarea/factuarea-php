@@ -9,23 +9,24 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1RecurringInvoicesLogsResponseBody - Cursor-paginated execution history for the recurring invoice. */
 class PublicApiV1RecurringInvoicesLogsResponseBody
 {
     /**
-     * A recurring invoice template that auto-generates invoices on a fixed cadence.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\RecurringInvoice $data
+     * @var array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLog> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoice')]
-    public Components\RecurringInvoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLog>')]
+    public array $data;
 
     /**
      *
-     * @var string $hasMore
+     * @var bool $hasMore
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('has_more')]
-    public string $hasMore;
+    public bool $hasMore;
 
     /**
      *
@@ -35,12 +36,12 @@ class PublicApiV1RecurringInvoicesLogsResponseBody
     public ?string $nextCursor;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoice  $data
-     * @param  string  $hasMore
+     * @param  array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLog>  $data
+     * @param  bool  $hasMore
      * @param  ?string  $nextCursor
      * @phpstan-pure
      */
-    public function __construct(Components\RecurringInvoice $data, string $hasMore, ?string $nextCursor = null)
+    public function __construct(array $data, bool $hasMore, ?string $nextCursor = null)
     {
         $this->data = $data;
         $this->hasMore = $hasMore;

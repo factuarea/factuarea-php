@@ -29,6 +29,15 @@ class UpdateQuoteRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateQuoteRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateQuoteRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?LocalDate $issuedOn
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('issued_on')]
@@ -52,6 +61,22 @@ class UpdateQuoteRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestLine>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $lines = null;
+
+    /**
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
 
     /**
      *
@@ -112,9 +137,12 @@ class UpdateQuoteRequest
 
     /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestRepriceStrategy  $repriceStrategy
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $validUntil
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestLine>  $lines
+     * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
      * @param  ?string  $notes
      * @param  ?string  $terms
      * @param  ?string  $externalId
@@ -123,12 +151,15 @@ class UpdateQuoteRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?LocalDate $validUntil = null, ?array $lines = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateQuoteRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?LocalDate $validUntil = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->issuedOn = $issuedOn;
         $this->validUntil = $validUntil;
         $this->lines = $lines;
+        $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
         $this->notes = $notes;
         $this->terms = $terms;
         $this->externalId = $externalId;

@@ -1,8 +1,10 @@
 # PublicApiV1SeriesActiveResponseBody
 
+Active document series, optionally filtered by document_type.
+
 
 ## Fields
 
-| Field                                                       | Type                                                        | Required                                                    | Description                                                 |
-| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| `data`                                                      | [Components\Series](../../Models/Components/Series.md)      | :heavy_check_mark:                                          | A document numbering series. Immutable per AEAT compliance. |
+| Field                                                         | Type                                                          | Required                                                      | Description                                                   |
+| ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
+| `data`                                                        | array<[Components\Series](../../Models/Components/Series.md)> | :heavy_check_mark:                                            | N/A                                                           |

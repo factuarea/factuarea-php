@@ -9,11 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * Producto es read-only EUR: solo se admite `EUR` (o ausencia/null).
- *
- * Cualquier otra moneda → 422 (antes se aceptaba-y-descartaba).
- */
+/** Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted. */
 enum CreateProductRequestCurrency: string
 {
     case Eur = 'EUR';

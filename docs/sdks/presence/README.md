@@ -14,7 +14,7 @@ Retrieve the live presence of a single employee by its `id` (UUID v7): the workd
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.presence.show" method="get" path="/presence/{employee}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.presence.show" method="get" path="/presence/{employee}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -27,7 +27,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -72,7 +72,7 @@ Return the live presence panel of your team for the Control Horario (time tracki
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.presence.live" method="get" path="/presence" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.presence.live" method="get" path="/presence" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -85,7 +85,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -118,7 +118,7 @@ if ($response->object !== null) {
 
 | Error Type          | Status Code         | Content Type        |
 | ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 422, 429  | application/json    |
+| Errors\Error        | 401, 403, 429       | application/json    |
 | Errors\Error        | 500                 | application/json    |
 | Errors\APIException | 4XX, 5XX            | \*/\*               |
 
@@ -128,7 +128,7 @@ List the office/remote presence declarations of your company with cursor-based p
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.presence.daily" method="get" path="/presence/daily" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.presence.daily" method="get" path="/presence/daily" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -142,7 +142,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

@@ -13,6 +13,16 @@ namespace Factuarea\Sdk\Models\Components;
 class ExportInvoicesExcelV1Request
 {
     /**
+     * List of invoice IDs (UUID v7 values) to export. If omitted, exports the set matching the filters.
+     *
+     * @var ?array<string> $invoiceIds
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_ids')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $invoiceIds = null;
+
+    /**
      * Invoice status to filter by (draft, sent, paid, overdue, cancelled, annulled, scheduled).
      *
      * @var ?\Factuarea\Sdk\Models\Components\ExportInvoicesExcelV1RequestStatus $status
@@ -88,16 +98,7 @@ class ExportInvoicesExcelV1Request
     public ?FileFormat $fileFormat = null;
 
     /**
-     * List of invoice IDs (UUID v7 values) to export. If omitted, exports the set matching the filters.
-     *
-     * @var ?array<string> $invoiceIds
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_ids')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $invoiceIds = null;
-
-    /**
+     * @param  ?array<string>  $invoiceIds
      * @param  ?\Factuarea\Sdk\Models\Components\ExportInvoicesExcelV1RequestStatus  $status
      * @param  ?\DateTime  $dateFrom
      * @param  ?\DateTime  $dateTo
@@ -106,11 +107,11 @@ class ExportInvoicesExcelV1Request
      * @param  ?string  $search
      * @param  ?\Factuarea\Sdk\Models\Components\ExportInvoicesExcelV1RequestFormat  $format
      * @param  ?\Factuarea\Sdk\Models\Components\FileFormat  $fileFormat
-     * @param  ?array<string>  $invoiceIds
      * @phpstan-pure
      */
-    public function __construct(?ExportInvoicesExcelV1RequestStatus $status = null, ?\DateTime $dateFrom = null, ?\DateTime $dateTo = null, ?string $clientId = null, ?string $seriesId = null, ?string $search = null, ?ExportInvoicesExcelV1RequestFormat $format = null, ?FileFormat $fileFormat = null, ?array $invoiceIds = null)
+    public function __construct(?array $invoiceIds = null, ?ExportInvoicesExcelV1RequestStatus $status = null, ?\DateTime $dateFrom = null, ?\DateTime $dateTo = null, ?string $clientId = null, ?string $seriesId = null, ?string $search = null, ?ExportInvoicesExcelV1RequestFormat $format = null, ?FileFormat $fileFormat = null)
     {
+        $this->invoiceIds = $invoiceIds;
         $this->status = $status;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
@@ -119,6 +120,5 @@ class ExportInvoicesExcelV1Request
         $this->search = $search;
         $this->format = $format;
         $this->fileFormat = $fileFormat;
-        $this->invoiceIds = $invoiceIds;
     }
 }

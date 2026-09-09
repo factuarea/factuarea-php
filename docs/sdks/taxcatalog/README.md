@@ -18,7 +18,7 @@ Every entry carries its `label` (and, in the two normative blocks, its `descript
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax-catalog.show" method="get" path="/tax-catalog" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax-catalog.show" method="get" path="/tax-catalog" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -31,7 +31,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

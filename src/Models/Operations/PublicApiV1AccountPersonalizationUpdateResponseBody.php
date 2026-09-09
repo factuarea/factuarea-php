@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1AccountPersonalizationUpdateResponseBody
 {
     /**
-     * Snapshot of the company, plan, developer addon status and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call.
+     * Snapshot of the company, plan, Developer API entitlement and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call.
      *
      * @var \Factuarea\Sdk\Models\Components\Account $data
      */

@@ -9,22 +9,22 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1InvoicesVerifactuCreateResponseBody - The newly created VeriFactu record. Transmission to AEAT is asynchronous. */
 class PublicApiV1InvoicesVerifactuCreateResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
      *
-     * @var \Factuarea\Sdk\Models\Components\Invoice $data
+     * @var ?\Factuarea\Sdk\Models\Components\VeriFactuRecord $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
-    public Components\Invoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\VeriFactuRecord|null')]
+    public ?Components\VeriFactuRecord $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  ?\Factuarea\Sdk\Models\Components\VeriFactuRecord  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(?Components\VeriFactuRecord $data = null)
     {
         $this->data = $data;
     }
