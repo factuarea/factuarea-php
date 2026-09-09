@@ -12,7 +12,7 @@ Return the consolidated time-tracking compliance panel for your whole managed po
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.gestoria.workforce_summary" method="get" path="/gestoria/workforce-summary" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.gestoria.workforce_summary" method="get" path="/gestoria/workforce-summary" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

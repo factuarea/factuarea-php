@@ -67,6 +67,8 @@ class Factuarea
 
     public Quotes $quotes;
 
+    public Automations $automations;
+
     public Companies $companies;
 
     public Verifactu $verifactu;
@@ -109,9 +111,13 @@ class Factuarea
 
     public MonthlyTimeRecordCloses $monthlyTimeRecordCloses;
 
+    public Stores $stores;
+
     public Account $account;
 
     public Employees $employees;
+
+    public PriceLists $priceLists;
 
     public WebhookEndpoints $webhookEndpoints;
 
@@ -151,6 +157,10 @@ class Factuarea
 
     public PayrollExportFormats $payrollExportFormats;
 
+    public Shopify $shopify;
+
+    public Woocommerce $woocommerce;
+
     /**
      * Returns a new instance of the SDK builder used to configure and create the SDK instance.
      *
@@ -169,6 +179,7 @@ class Factuarea
     ) {
         $this->proformas = new Proformas($this->sdkConfiguration);
         $this->quotes = new Quotes($this->sdkConfiguration);
+        $this->automations = new Automations($this->sdkConfiguration);
         $this->companies = new Companies($this->sdkConfiguration);
         $this->verifactu = new Verifactu($this->sdkConfiguration);
         $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
@@ -190,8 +201,10 @@ class Factuarea
         $this->faceSubmissions = new FaceSubmissions($this->sdkConfiguration);
         $this->timeEntries = new TimeEntries($this->sdkConfiguration);
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
+        $this->stores = new Stores($this->sdkConfiguration);
         $this->account = new Account($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
+        $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
@@ -211,6 +224,8 @@ class Factuarea
         $this->integrations = new Integrations($this->sdkConfiguration);
         $this->paymentMethods = new PaymentMethods($this->sdkConfiguration);
         $this->payrollExportFormats = new PayrollExportFormats($this->sdkConfiguration);
+        $this->shopify = new Shopify($this->sdkConfiguration);
+        $this->woocommerce = new Woocommerce($this->sdkConfiguration);
         $this->initHooks();
 
     }

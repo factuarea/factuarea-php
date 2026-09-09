@@ -10,7 +10,6 @@ namespace Factuarea\Sdk;
 
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -54,12 +53,13 @@ class Accounts
      * Disconnect a connected Stripe account without touching the others. The account is marked `disconnected` (its already-issued invoices and history are kept; later webhooks are recorded without processing). Responds 204 with no body. A missing account or one from another company returns 404.
      *
      * @param  string  $account
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingAccountsDisconnect(string $account, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectResponse
+    public function publicApiV1StripeAutoinvoicingAccountsDisconnect(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,6 +88,7 @@ class Accounts
         }
         $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectRequest(
             account: $account,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -128,7 +129,7 @@ class Accounts
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -410,14 +411,11 @@ class Accounts
      *
      * Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`). All fields are optional; omitted ones keep their value.
      *
-     * @param  string  $account
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequest  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingAccountsUpdate(string $account, ?Components\UpdateConnectedAccountRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateResponse
+    public function publicApiV1StripeAutoinvoicingAccountsUpdate(Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -444,12 +442,6 @@ class Accounts
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest(
-            account: $account,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest::class, $request);
         $urlOverride = null;

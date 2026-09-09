@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** How `stock` applies: `set` replaces the balance (default), `increase` adds, `decrease` subtracts. `add`/`subtract` are accepted aliases. A manual decrease below zero fails with 422. */
 enum UpdateProductStockRequestOperation: string
 {
     case Set = 'set';

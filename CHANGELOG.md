@@ -4,6 +4,32 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.3.0] — 2026-09-09
+
+Regenerated from the public OpenAPI spec published with Factuarea v1.15.26:
+**+57 operations, −0 operations** (470 operations over 386 paths, up from 413
+over 345). Nothing removed or renamed.
+
+### Added
+
+- **Automation engine** (`automations` module): `Catalog` (catalog and per-trigger
+  evaluable fields), `Rules` (create, list, show, update, delete, activate, pause,
+  dry run), `Versions` (sealed rule versions), `Runs` (run history and replay),
+  `Steps` (per-step history and replay) and `Usage` (monthly budget) — 18
+  operations.
+- E-commerce stores (WooCommerce/Shopify connections, orders), product options and
+  configurations, price-list resolution and the stock ledger — the remaining 39
+  operations published since 0.2.0.
+
+### Fixed
+
+- Regeneration no longer fails on the store listings: the spec declares
+  `x-speakeasy-pagination` only there, and the Speakeasy PHP generator emitted a
+  `next()` closure calling the request constructor with `starting_after` while the
+  model exposes `startingAfter` (PHPStan: *Unknown parameter $starting_after*). A
+  new overlay drops the extension so those listings paginate like every other one,
+  through the hand-written page iterator. See `docs/REGENERATION.md`.
+
 ## [0.2.0] — 2026-08-06
 
 Regenerated from the published OpenAPI spec: **+183 operations, −4 operations**

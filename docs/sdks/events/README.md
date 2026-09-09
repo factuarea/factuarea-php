@@ -13,7 +13,7 @@ List events in your event log with cursor-based pagination. Each event records s
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.events.list" method="get" path="/events" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.events.list" method="get" path="/events" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -27,7 +27,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -70,7 +70,7 @@ Retrieve a single event by its `id` (format `evt_<ulid>`, an opaque identifier).
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.events.show" method="get" path="/events/{event}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.events.show" method="get" path="/events/{event}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -83,7 +83,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

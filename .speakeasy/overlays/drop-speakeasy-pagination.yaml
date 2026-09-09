@@ -1,0 +1,19 @@
+overlay: 1.0.0
+info:
+  title: Drop x-speakeasy-pagination — the SDK paginates with its hand-written iterator
+  version: 1.0.0
+  # The public spec declares `x-speakeasy-pagination` (cursor on `starting_after`)
+  # only on the e-commerce store listings. The Speakeasy PHP generator turns that
+  # into a `next()` closure that re-calls the request constructor with the RAW
+  # parameter name (`starting_after: $nextCursor`) while the generated request
+  # model exposes it camelCased (`$startingAfter`), so PHPStan fails the
+  # generation with "Unknown parameter $starting_after" (Spec Sync run of
+  # 2026-09-09). Every other cursor-paginated listing of this SDK carries no
+  # extension and is iterated by the hand-written `src/Custom/` page iterator,
+  # which already understands `next_cursor`. Dropping the extension makes the
+  # store listings behave like the rest. It does NOT modify the pinned spec on
+  # disk; it is a generation input only. Remove once Speakeasy emits the
+  # camelCased argument (tracked in docs/REGENERATION.md).
+actions:
+  - target: $.paths[*][*].x-speakeasy-pagination
+    remove: true

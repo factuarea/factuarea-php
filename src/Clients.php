@@ -177,12 +177,13 @@ class Clients
      * Create up to 500 clients in one call, each entry a full client payload. With `dry_run=true` it validates every row without persisting and returns a per-row classification (`results[]`, including duplicate `external_id`/`tax_id` and a non-blocking AEAT census warning); with `dry_run=false` it creates only the valid rows and reports the rest in `failures[]`. Returns the `BulkCreateResult` shape.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkCreateClientsV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ClientsBulkCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ClientsBulkCreate(Components\BulkCreateClientsV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsBulkCreateResponse
+    public function publicApiV1ClientsBulkCreate(Components\BulkCreateClientsV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsBulkCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -210,6 +211,7 @@ class Clients
             ];
         }
         $request = new Operations\PublicApiV1ClientsBulkCreateRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -305,13 +307,13 @@ class Clients
      * Delete up to 200 clients in one request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`); clients with associated documents are reported in `failures`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteClientsRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ClientsBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ClientsBulkDelete(Components\BulkDeleteClientsRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsBulkDeleteResponse
+    public function publicApiV1ClientsBulkDelete(Components\BulkDeleteClientsRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -339,8 +341,8 @@ class Clients
             ];
         }
         $request = new Operations\PublicApiV1ClientsBulkDeleteRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -565,13 +567,13 @@ class Clients
      * Delete a client. Returns 422 if the client is referenced by any document (invoice, quote, etc.).
      *
      * @param  string  $client
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ClientsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ClientsDelete(string $client, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsDeleteResponse
+    public function publicApiV1ClientsDelete(string $client, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -641,7 +643,7 @@ class Clients
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -945,12 +947,13 @@ class Clients
      * Limits: file ≤10 MB and under 200 rows; a larger file returns 422 `client_import_too_large`.
      *
      * @param  \Factuarea\Sdk\Models\Components\ImportClientsV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ClientsImportResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ClientsImport(Components\ImportClientsV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsImportResponse
+    public function publicApiV1ClientsImport(Components\ImportClientsV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsImportResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -978,6 +981,7 @@ class Clients
             ];
         }
         $request = new Operations\PublicApiV1ClientsImportRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -1116,7 +1120,7 @@ class Clients
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'text/csv';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.clients.import_template', null, $this->sdkConfiguration->securitySource);
@@ -1138,20 +1142,17 @@ class Clients
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'text/csv')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ClientsImportTemplateResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1ClientsImportTemplateResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1ClientsImportTemplateResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    object: $obj);
-
-                return $response;
+                    res: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
@@ -1803,12 +1804,13 @@ class Clients
      * Check a third-party name + tax ID pair (the recipient of an invoice) against the AEAT census (VNifV2) to anticipate VeriFactu 1239 rejections before invoicing. Stateless and informational: nothing is persisted on the client. Fail-open — if AEAT is unreachable the call returns 200 with `status: unavailable`. Test keys (`fact_test_`) return deterministic statuses per magic NIF without contacting AEAT.
      *
      * @param  \Factuarea\Sdk\Models\Components\VerifyClientCensusRequest  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ClientsVerifyCensusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ClientsVerifyCensus(Components\VerifyClientCensusRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsVerifyCensusResponse
+    public function publicApiV1ClientsVerifyCensus(Components\VerifyClientCensusRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ClientsVerifyCensusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1836,6 +1838,7 @@ class Clients
             ];
         }
         $request = new Operations\PublicApiV1ClientsVerifyCensusRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,

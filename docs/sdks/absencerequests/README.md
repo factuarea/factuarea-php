@@ -15,7 +15,7 @@
 
 Approve a pending absence request (transition `pending` → `approved`), consuming the employee’s balance. No request body (an optional `note` is accepted). A reviewer cannot approve the request they themselves created (422). Returns the updated request.
 
-### Example Usage
+### Example Usage: approve
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.approve" method="post" path="/absence-requests/{absence_request}/approve" example="approve" -->
 ```php
@@ -31,7 +31,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -44,6 +44,42 @@ $request = new Operations\PublicApiV1AbsenceRequestsApproveRequest(
     body: new Components\ApproveAbsenceRequestRequest(
         note: 'Aprobada; saldo suficiente para el periodo solicitado.',
     ),
+);
+
+$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsApprove(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.approve" method="post" path="/absence-requests/{absence_request}/approve" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsenceRequestsApproveRequest(
+    absenceRequest: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->absenceRequests->publicApiV1AbsenceRequestsApprove(
@@ -79,7 +115,7 @@ Cancel an absence request. If it was approved, the consumed balance is released 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.cancel" method="post" path="/absence-requests/{absence_request}/cancel" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.cancel" method="post" path="/absence-requests/{absence_request}/cancel" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -92,7 +128,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -152,7 +188,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -192,7 +228,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -231,7 +267,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -270,7 +306,46 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAbsenceRequestRequest(
+    employeeId: '186e98b1-3b2d-4e72-bebc-39ad5c65fe0d',
+    absenceTypeId: 'ad6f0273-c95c-4f77-8c44-f550d9cf5fd8',
+    startDate: LocalDate::parse('2026-10-22'),
+    endDate: LocalDate::parse('2024-05-24'),
+);
+
+$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.create" method="post" path="/absence-requests" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -322,7 +397,7 @@ List your company’s absence requests with cursor-based pagination. Supports fi
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.list" method="get" path="/absence-requests" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.list" method="get" path="/absence-requests" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -336,7 +411,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -393,7 +468,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -432,7 +507,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -471,7 +546,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -510,7 +585,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -522,6 +597,45 @@ $request = new Operations\PublicApiV1AbsenceRequestsRejectRequest(
     xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\RejectAbsenceRequestRequest(
         reason: 'Coincide con el cierre trimestral; por favor, solicita otras fechas.',
+    ),
+);
+
+$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsReject(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/absence-requests/{absence_request}/reject" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsenceRequestsRejectRequest(
+    absenceRequest: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\RejectAbsenceRequestRequest(
+        reason: '<value>',
     ),
 );
 
@@ -558,7 +672,7 @@ Retrieve a single absence request by its `id` (UUID v7), including its type, dat
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.show" method="get" path="/absence-requests/{absence_request}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.show" method="get" path="/absence-requests/{absence_request}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -571,7 +685,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

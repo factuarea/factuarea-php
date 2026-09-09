@@ -60,13 +60,13 @@ class DeliveryNotes
      * Delete several delivery notes in a single request. The body takes an `ids` array of `uuid`s. Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` counts and a `failures` list (`id` + `error_code` + Spanish `error_message`) for those that could not be deleted (e.g. signed or invoiced). Supports `Idempotency-Key` for safe retries.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteDeliveryNotesRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkDelete(Components\BulkDeleteDeliveryNotesRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkDeleteResponse
+    public function publicApiV1DeliveryNotesBulkDelete(Components\BulkDeleteDeliveryNotesRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -94,8 +94,8 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkDeleteRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -190,12 +190,13 @@ class DeliveryNotes
      * Packages the PDFs of up to 50 delivery notes (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfDeliveryNotesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkPdf(Components\BulkPdfDeliveryNotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkPdfResponse
+    public function publicApiV1DeliveryNotesBulkPdf(Components\BulkPdfDeliveryNotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -223,6 +224,7 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkPdfRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -276,7 +278,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '413', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -315,12 +317,13 @@ class DeliveryNotes
      * Sends up to 200 delivery notes by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each delivery note that could not be sent (not found, non-sendable status or no resolvable recipient).
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkSendDeliveryNotesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkSend(Components\BulkSendDeliveryNotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkSendResponse
+    public function publicApiV1DeliveryNotesBulkSend(Components\BulkSendDeliveryNotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -348,6 +351,7 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkSendRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -443,12 +447,13 @@ class DeliveryNotes
      * Transition up to 50 delivery notes (by id) to a status from the closed set `[delivered, cancelled]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; delivery notes whose transition is rejected (not found or not transitionable) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusDeliveryNotesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkStatus(Components\BulkStatusDeliveryNotesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkStatusResponse
+    public function publicApiV1DeliveryNotesBulkStatus(Components\BulkStatusDeliveryNotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -476,6 +481,7 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkStatusRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -571,13 +577,13 @@ class DeliveryNotes
      * Transition a delivery note to the `cancelled` state. Canonical REST replacement for the deprecated `POST /change_status`. Returns 409 `invalid_status_transition` if the note cannot be cancelled (e.g. already invoiced). Supports `Idempotency-Key` for safe retries.
      *
      * @param  string  $deliveryNote
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesCancel(string $deliveryNote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesCancelResponse
+    public function publicApiV1DeliveryNotesCancel(string $deliveryNote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -947,12 +953,13 @@ class DeliveryNotes
      * Delete a delivery note. Only `draft` notes without an assigned number can be deleted; any other state returns 409 `invalid_status_transition`.
      *
      * @param  string  $deliveryNote
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesDelete(string $deliveryNote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesDeleteResponse
+    public function publicApiV1DeliveryNotesDelete(string $deliveryNote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -981,6 +988,7 @@ class DeliveryNotes
         }
         $request = new Operations\PublicApiV1DeliveryNotesDeleteRequest(
             deliveryNote: $deliveryNote,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -1021,7 +1029,7 @@ class DeliveryNotes
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2011,7 +2019,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

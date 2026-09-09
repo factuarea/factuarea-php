@@ -9,22 +9,22 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1ProductsSalesAnalyticsResponseBody - Sales quantities, revenue, monthly trend and recent activity for this product. */
 class PublicApiV1ProductsSalesAnalyticsResponseBody
 {
     /**
-     * A product in your catalog.
      *
-     * @var \Factuarea\Sdk\Models\Components\Product $data
+     * @var \Factuarea\Sdk\Models\Components\ProductSalesAnalytics $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Product')]
-    public Components\Product $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductSalesAnalytics')]
+    public Components\ProductSalesAnalytics $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Product  $data
+     * @param  \Factuarea\Sdk\Models\Components\ProductSalesAnalytics  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Product $data)
+    public function __construct(Components\ProductSalesAnalytics $data)
     {
         $this->data = $data;
     }

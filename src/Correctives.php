@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
-use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
@@ -52,12 +51,11 @@ class Correctives
      *
      * List the corrective invoices automatically generated from Stripe refunds (`charge.refunded`), with cursor-based pagination. The public `id` is the corrective invoice (UUID v7); `original_invoice_id` links to the original invoice, and `refund_id` is the originating gateway refund.
      *
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingCorrectivesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingCorrectivesList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingCorrectivesListResponse
+    public function publicApiV1StripeAutoinvoicingCorrectivesList(?Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingCorrectivesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,14 +82,12 @@ class Correctives
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest(
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/stripe-autoinvoicing/correctives');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -101,6 +97,7 @@ class Correctives
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.stripe_autoinvoicing.correctives.list', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {

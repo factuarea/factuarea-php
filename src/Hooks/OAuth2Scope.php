@@ -41,6 +41,10 @@ enum OAuth2Scope: string
 
     case ProductsDelete = 'products:delete';
 
+    case PriceListsRead = 'price_lists:read';
+
+    case PriceListsWrite = 'price_lists:write';
+
     case SuppliersRead = 'suppliers:read';
 
     case SuppliersWrite = 'suppliers:write';
@@ -165,6 +169,22 @@ enum OAuth2Scope: string
 
     case MoneiAutoinvoicingWrite = 'monei_autoinvoicing:write';
 
+    case WoocommerceStoreRead = 'woocommerce_store:read';
+
+    case WoocommerceStoreWrite = 'woocommerce_store:write';
+
+    case ShopifyStoreRead = 'shopify_store:read';
+
+    case ShopifyStoreWrite = 'shopify_store:write';
+
+    case PrestashopStoreRead = 'prestashop_store:read';
+
+    case PrestashopStoreWrite = 'prestashop_store:write';
+
+    case StoresRead = 'stores:read';
+
+    case StoresWrite = 'stores:write';
+
     case EmployeesRead = 'employees:read';
 
     case EmployeesWrite = 'employees:write';
@@ -200,6 +220,14 @@ enum OAuth2Scope: string
     case IntegrationEventsRead = 'integration_events:read';
 
     case IntegrationEventsWrite = 'integration_events:write';
+
+    case AutomationsRead = 'automations:read';
+
+    case AutomationsWrite = 'automations:write';
+
+    case AutomationsDelete = 'automations:delete';
+
+    case AutomationRunsRead = 'automation_runs:read';
 
     case Wildcard = '*';
 }

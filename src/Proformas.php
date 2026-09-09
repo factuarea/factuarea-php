@@ -174,13 +174,13 @@ class Proformas
      * Deletes up to 100 proformas in one call. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteProformasV1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkDelete(Components\BulkDeleteProformasV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkDeleteResponse
+    public function publicApiV1ProformasBulkDelete(Components\BulkDeleteProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,8 +208,8 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkDeleteRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -304,12 +304,13 @@ class Proformas
      * Packages the PDFs of up to 50 proformas (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfProformasV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkPdf(Components\BulkPdfProformasV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkPdfResponse
+    public function publicApiV1ProformasBulkPdf(Components\BulkPdfProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -337,6 +338,7 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkPdfRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -390,7 +392,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '413', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -429,12 +431,13 @@ class Proformas
      * Sends up to 200 proformas by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each proforma that could not be sent (not found, non-sendable status or no resolvable recipient).
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkSendProformasV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkSend(Components\BulkSendProformasV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkSendResponse
+    public function publicApiV1ProformasBulkSend(Components\BulkSendProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -462,6 +465,7 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkSendRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -557,12 +561,13 @@ class Proformas
      * Transition up to 50 proformas (by id) to a status from the closed set `[accepted, rejected]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; proformas whose transition is rejected (not found or not transitionable) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusProformasV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkStatus(Components\BulkStatusProformasV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkStatusResponse
+    public function publicApiV1ProformasBulkStatus(Components\BulkStatusProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -590,6 +595,7 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkStatusRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -936,12 +942,13 @@ class Proformas
      * Delete a proforma. Returns 422 if the proforma has been converted to an invoice.
      *
      * @param  string  $proforma
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasDelete(string $proforma, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasDeleteResponse
+    public function publicApiV1ProformasDelete(string $proforma, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -970,6 +977,7 @@ class Proformas
         }
         $request = new Operations\PublicApiV1ProformasDeleteRequest(
             proforma: $proforma,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -1010,7 +1018,7 @@ class Proformas
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1470,7 +1478,7 @@ class Proformas
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'application/pdf';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.proformas.pdf', null, $this->sdkConfiguration->securitySource);
@@ -1493,20 +1501,17 @@ class Proformas
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'application/pdf')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, 'string', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1ProformasPdfResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1ProformasPdfResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    string: $obj);
-
-                return $response;
+                    bytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }

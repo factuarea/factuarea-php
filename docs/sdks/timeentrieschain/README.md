@@ -12,7 +12,7 @@ Recompute the SHA-256 hash chain (`huella`) of your company time record ledger a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.chain.validate" method="get" path="/time-entries/chain/validate" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.chain.validate" method="get" path="/time-entries/chain/validate" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

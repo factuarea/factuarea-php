@@ -1,8 +1,10 @@
 # PublicApiV1ProformasStatusesResponseBody
 
+Complete public status catalog, with Spanish labels and color tokens.
+
 
 ## Fields
 
-| Field                                                        | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `data`                                                       | [Components\Proforma](../../Models/Components/Proforma.md)   | :heavy_check_mark:                                           | A proforma invoice that can be converted to a final invoice. |
+| Field                                                                                     | Type                                                                                      | Required                                                                                  | Description                                                                               |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `data`                                                                                    | array<[Components\PublicDocumentStatus](../../Models/Components/PublicDocumentStatus.md)> | :heavy_check_mark:                                                                        | N/A                                                                                       |

@@ -13,6 +13,38 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1VerifactuAeatAccessListRequest
 {
     /**
+     * Page cursor returned by the previous response.
+     *
+     * @var ?string $startingAfter
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=starting_after')]
+    public ?string $startingAfter = null;
+
+    /**
+     * Reverse cursor. Mutually exclusive with starting_after.
+     *
+     * @var ?string $endingBefore
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=ending_before')]
+    public ?string $endingBefore = null;
+
+    /**
+     * Optional date from filter.
+     *
+     * @var ?string $dateFrom
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date_from')]
+    public ?string $dateFrom = null;
+
+    /**
+     * Optional date to filter.
+     *
+     * @var ?string $dateTo
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date_to')]
+    public ?string $dateTo = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -29,13 +61,31 @@ class PublicApiV1VerifactuAeatAccessListRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * Maximum number of results.
+     *
+     * @var ?int $limit
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=limit')]
+    public ?int $limit = null;
+
+    /**
+     * @param  ?int  $limit
+     * @param  ?string  $startingAfter
+     * @param  ?string  $endingBefore
+     * @param  ?string  $dateFrom
+     * @param  ?string  $dateTo
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $dateFrom = null, ?string $dateTo = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
+        $this->startingAfter = $startingAfter;
+        $this->endingBefore = $endingBefore;
+        $this->dateFrom = $dateFrom;
+        $this->dateTo = $dateTo;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
+        $this->limit = $limit;
     }
 }

@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1VerifactuRecordsFindByCsvRequest
 {
     /**
+     *
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public PublicApiV1VerifactuRecordsFindByCsvRequestBody $body;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -29,22 +36,15 @@ class PublicApiV1VerifactuRecordsFindByCsvRequest
     public ?string $xActiveProfile = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Operations\FindRecordByAeatCsvV1Request $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public ?FindRecordByAeatCsvV1Request $body = null;
-
-    /**
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody  $body
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
-     * @param  ?\Factuarea\Sdk\Models\Operations\FindRecordByAeatCsvV1Request  $body
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?FindRecordByAeatCsvV1Request $body = null)
+    public function __construct(PublicApiV1VerifactuRecordsFindByCsvRequestBody $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
     {
+        $this->body = $body;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
-        $this->body = $body;
     }
 }

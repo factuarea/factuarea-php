@@ -1,4 +1,4 @@
-speakeasyVersion: 1.791.4
+speakeasyVersion: 1.796.4
 sources:
     Factuarea Public API:
         sourceNamespace: factuarea-public-api
@@ -15,7 +15,7 @@ targets:
         sourceRevisionDigest: sha256:644e6dea3d04a4e850ff2e91fc55235e8ff523a2d47db0629c899b9acd9d296c
         sourceBlobDigest: sha256:dadf3d82e11ae8e31df2d360fad1d9a933dc138492119616da301a2dc6044465
         codeSamplesNamespace: factuarea-public-api-php-code-samples
-        codeSamplesRevisionDigest: sha256:f3776fe0ca7dc43e067b45c6f48990074f786024b5bb624c8f760bacc51c70cb
+        codeSamplesRevisionDigest: sha256:2ec89d2f2306f0fdc0455029c66dfdb6d02c9ff9ddfb878e4a32f311c24d6b0c
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -25,6 +25,8 @@ workflow:
                 - location: spec/openapi.json
             overlays:
                 - location: .speakeasy/overlays/retry-status-code-casing.yaml
+                - location: .speakeasy/overlays/product-options-namespace.yaml
+                - location: .speakeasy/overlays/drop-speakeasy-pagination.yaml
             output: .speakeasy/out.openapi.yaml
             registry:
                 location: registry.speakeasyapi.dev/factuarea/factuarea/factuarea-public-api

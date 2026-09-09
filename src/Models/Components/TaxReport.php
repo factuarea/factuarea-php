@@ -111,6 +111,15 @@ class TaxReport
     public array $warnings;
 
     /**
+     * Stable machine-readable codes paired one-to-one (same index) with `warnings`. Branch on these instead of matching the Spanish text; unknown codes should fall back to the corresponding `warnings` entry.
+     *
+     * @var array<string> $warningCodes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warning_codes')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $warningCodes;
+
+    /**
      * Quarter (1-4) for Modelo 303; null for Modelo 347 (yearly). Backward compat, also available in `period.quarter`.
      *
      * @var ?int $periodQuarter
@@ -131,10 +140,11 @@ class TaxReport
      * @param  string  $generatedById
      * @param  string  $downloadUrl
      * @param  array<string>  $warnings
+     * @param  array<string>  $warningCodes
      * @param  ?int  $periodQuarter
      * @phpstan-pure
      */
-    public function __construct(string $id, TaxReportObject $object, TaxReportType $type, int $periodYear, TaxReportPeriod $period, TaxReportFormat $format, string $hash, int $sizeBytes, \DateTime $generatedAt, string $generatedById, string $downloadUrl, array $warnings, ?int $periodQuarter = null)
+    public function __construct(string $id, TaxReportObject $object, TaxReportType $type, int $periodYear, TaxReportPeriod $period, TaxReportFormat $format, string $hash, int $sizeBytes, \DateTime $generatedAt, string $generatedById, string $downloadUrl, array $warnings, array $warningCodes, ?int $periodQuarter = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -148,6 +158,7 @@ class TaxReport
         $this->generatedById = $generatedById;
         $this->downloadUrl = $downloadUrl;
         $this->warnings = $warnings;
+        $this->warningCodes = $warningCodes;
         $this->periodQuarter = $periodQuarter;
     }
 }

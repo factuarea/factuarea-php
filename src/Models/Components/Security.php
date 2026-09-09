@@ -13,13 +13,6 @@ class Security
 {
     /**
      *
-     * @var ?string $http
-     */
-    #[SpeakeasyMetadata('security:scheme=true,type=http,subtype=bearer,name=Authorization')]
-    public ?string $http = null;
-
-    /**
-     *
      * @var ?string $bearerAuth
      */
     #[SpeakeasyMetadata('security:scheme=true,type=http,subtype=bearer,name=Authorization')]
@@ -40,15 +33,13 @@ class Security
     public ?string $oAuth2 = null;
 
     /**
-     * @param  ?string  $http
      * @param  ?string  $bearerAuth
      * @param  ?string  $apiKeyAuth
      * @param  ?string  $oAuth2
      * @phpstan-pure
      */
-    public function __construct(?string $http = null, ?string $bearerAuth = null, ?string $apiKeyAuth = null, ?string $oAuth2 = null)
+    public function __construct(?string $bearerAuth = null, ?string $apiKeyAuth = null, ?string $oAuth2 = null)
     {
-        $this->http = $http;
         $this->bearerAuth = $bearerAuth;
         $this->apiKeyAuth = $apiKeyAuth;
         $this->oAuth2 = $oAuth2;

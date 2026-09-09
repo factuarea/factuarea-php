@@ -29,6 +29,15 @@ class UpdateProformaRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProformaRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?LocalDate $issuedOn
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('issued_on')]
@@ -44,6 +53,22 @@ class UpdateProformaRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestLine>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $lines = null;
+
+    /**
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
 
     /**
      *
@@ -177,8 +202,11 @@ class UpdateProformaRequest
 
     /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestRepriceStrategy  $repriceStrategy
      * @param  ?LocalDate  $issuedOn
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestLine>  $lines
+     * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
      * @param  ?LocalDate  $validUntil
      * @param  ?int  $validityDays
      * @param  ?string  $notes
@@ -196,11 +224,14 @@ class UpdateProformaRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?OperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?OperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->issuedOn = $issuedOn;
         $this->lines = $lines;
+        $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
         $this->validUntil = $validUntil;
         $this->validityDays = $validityDays;
         $this->notes = $notes;

@@ -40,6 +40,7 @@ class PublicApiV1ProductsSalesAnalyticsResponse
     public array $headers;
 
     /**
+     * Sales quantities, revenue, monthly trend and recent activity for this product.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSalesAnalyticsResponseBody $object
      */

@@ -17,6 +17,8 @@ enum CreateChildApiKeyV1RequestScope: string
     case ProductsRead = 'products:read';
     case ProductsWrite = 'products:write';
     case ProductsDelete = 'products:delete';
+    case PriceListsRead = 'price_lists:read';
+    case PriceListsWrite = 'price_lists:write';
     case SuppliersRead = 'suppliers:read';
     case SuppliersWrite = 'suppliers:write';
     case SuppliersDelete = 'suppliers:delete';
@@ -79,6 +81,14 @@ enum CreateChildApiKeyV1RequestScope: string
     case GocardlessAutoinvoicingWrite = 'gocardless_autoinvoicing:write';
     case MoneiAutoinvoicingRead = 'monei_autoinvoicing:read';
     case MoneiAutoinvoicingWrite = 'monei_autoinvoicing:write';
+    case WoocommerceStoreRead = 'woocommerce_store:read';
+    case WoocommerceStoreWrite = 'woocommerce_store:write';
+    case ShopifyStoreRead = 'shopify_store:read';
+    case ShopifyStoreWrite = 'shopify_store:write';
+    case PrestashopStoreRead = 'prestashop_store:read';
+    case PrestashopStoreWrite = 'prestashop_store:write';
+    case StoresRead = 'stores:read';
+    case StoresWrite = 'stores:write';
     case EmployeesRead = 'employees:read';
     case EmployeesWrite = 'employees:write';
     case EmployeesDelete = 'employees:delete';
@@ -97,5 +107,9 @@ enum CreateChildApiKeyV1RequestScope: string
     case EmailsRead = 'emails:read';
     case IntegrationEventsRead = 'integration_events:read';
     case IntegrationEventsWrite = 'integration_events:write';
+    case AutomationsRead = 'automations:read';
+    case AutomationsWrite = 'automations:write';
+    case AutomationsDelete = 'automations:delete';
+    case AutomationRunsRead = 'automation_runs:read';
     case Wildcard = '*';
 }

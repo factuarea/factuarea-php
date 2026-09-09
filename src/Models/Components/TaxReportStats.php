@@ -29,7 +29,7 @@ class TaxReportStats
     public int $totalReports;
 
     /**
-     * Report count by type.
+     * Report count by type. Covers every declaration type, so the three values add up to `total_reports`.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxReportStatsByType $byType
      */

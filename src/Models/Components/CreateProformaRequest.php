@@ -44,6 +44,23 @@ class CreateProformaRequest
 
     /**
      *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProformaRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProformaRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProformaRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?LocalDate $validUntil
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('valid_until')]
@@ -177,6 +194,8 @@ class CreateProformaRequest
      * @param  LocalDate  $issuedOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateProformaRequestLine>  $lines
      * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProformaRequestRepriceStrategy  $repriceStrategy
      * @param  ?LocalDate  $validUntil
      * @param  ?int  $validityDays
      * @param  ?string  $notes
@@ -194,12 +213,14 @@ class CreateProformaRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateProformaRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, LocalDate $issuedOn, array $lines, ?string $seriesId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $externalId = null, ?CreateProformaRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, LocalDate $issuedOn, array $lines, ?string $seriesId = null, ?string $priceListId = null, ?CreateProformaRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $externalId = null, ?CreateProformaRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->validUntil = $validUntil;
         $this->validityDays = $validityDays;
         $this->notes = $notes;

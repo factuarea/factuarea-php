@@ -1,0 +1,13 @@
+# Parameter
+
+
+## Fields
+
+| Field                                                                             | Type                                                                              | Required                                                                          | Description                                                                       |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `name`                                                                            | *string*                                                                          | :heavy_check_mark:                                                                | Key of the parameter inside the `parameters` object of the action.                |
+| `type`                                                                            | *string*                                                                          | :heavy_check_mark:                                                                | Type token of the parameter.                                                      |
+| `required`                                                                        | *bool*                                                                            | :heavy_check_mark:                                                                | Whether the action refuses to be created without this parameter.                  |
+| `allowedValues`                                                                   | array<*string*>                                                                   | :heavy_check_mark:                                                                | Closed set of accepted values, or an empty array when the parameter is free-form. |
+| `label`                                                                           | *string*                                                                          | :heavy_check_mark:                                                                | Human-readable name of the parameter, already translated.                         |
+| `description`                                                                     | *string*                                                                          | :heavy_check_mark:                                                                | What the parameter is for, already translated.                                    |

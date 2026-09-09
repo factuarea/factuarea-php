@@ -52,12 +52,11 @@ class VerifactuEvents
      *
      * List the VeriFactu SIF events of your company (alta/anulación transmissions, retries, AEAT responses) with cursor-based pagination.
      *
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuEventsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsListResponse
+    public function publicApiV1VerifactuEventsList(?Operations\PublicApiV1VerifactuEventsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,14 +83,12 @@ class VerifactuEvents
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1VerifactuEventsListRequest(
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/events');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1VerifactuEventsListRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -101,6 +98,7 @@ class VerifactuEvents
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.verifactu.events.list', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -174,13 +172,13 @@ class VerifactuEvents
      * Re-queue the AEAT transmission of a failed VeriFactu event. Returns 404 if the event does not exist, 422 `business_rule_violation` / `event_already_processed` if it was already accepted, and 422 `max_retries_exceeded` once the retry limit is reached.
      *
      * @param  string  $event
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuEventsRetryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuEventsRetry(string $event, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsRetryResponse
+    public function publicApiV1VerifactuEventsRetry(string $event, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuEventsRetryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -260,7 +258,7 @@ class VerifactuEvents
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

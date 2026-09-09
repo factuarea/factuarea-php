@@ -9,24 +9,18 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * UpdateProductStockRequest - Public REST API v1 — PUT /v1/products/{uuid}/stock.
- *
- *
- * Body: `{ stock: int, operation?: 'set'|'increase'|'decrease' }`.
- * `operation` defaults to `set` (replace). Accepts also `add` / `subtract`
- * as aliases for `increase` / `decrease` for ergonomics.
- */
 class UpdateProductStockRequest
 {
     /**
+     * Quantity for the operation, in the product base unit (up to 4 decimals).
      *
-     * @var int $stock
+     * @var float $stock
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
-    public int $stock;
+    public float $stock;
 
     /**
+     * How `stock` applies: `set` replaces the balance (default), `increase` adds, `decrease` subtracts. `add`/`subtract` are accepted aliases. A manual decrease below zero fails with 422.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateProductStockRequestOperation $operation
      */
@@ -36,13 +30,24 @@ class UpdateProductStockRequest
     public ?UpdateProductStockRequestOperation $operation = null;
 
     /**
-     * @param  int  $stock
+     * Optional variant of this product whose OWN balance receives the adjustment (the variant must belong to the product and manage its own stock). Absent → the product base stock.
+     *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
+
+    /**
+     * @param  float  $stock
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductStockRequestOperation  $operation
+     * @param  ?string  $variantId
      * @phpstan-pure
      */
-    public function __construct(int $stock, ?UpdateProductStockRequestOperation $operation = null)
+    public function __construct(float $stock, ?UpdateProductStockRequestOperation $operation = null, ?string $variantId = null)
     {
         $this->stock = $stock;
         $this->operation = $operation;
+        $this->variantId = $variantId;
     }
 }

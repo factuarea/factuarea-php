@@ -12,7 +12,7 @@ Lists the closed catalog of payment methods with their public `value` and locali
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.payment_methods.list" method="get" path="/payment-methods" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.payment_methods.list" method="get" path="/payment-methods" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

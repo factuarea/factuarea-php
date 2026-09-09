@@ -7,5 +7,5 @@ Create clients in bulk. `clients[]` holds up to 500 client payloads and `dry_run
 
 | Field                  | Type                   | Required               | Description            |
 | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| `dryRun`               | *?bool*                | :heavy_minus_sign:     | N/A                    |
 | `clients`              | array<array<*string*>> | :heavy_check_mark:     | N/A                    |
+| `dryRun`               | *?bool*                | :heavy_minus_sign:     | N/A                    |

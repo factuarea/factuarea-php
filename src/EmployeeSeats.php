@@ -52,13 +52,13 @@ class EmployeeSeats
      *
      * Cancel the per-employee billing add-on: the `employee-seats` subscription is cancelled at period end (the current month is already paid) and the per-employee coverage is purged. The plan subscription is never touched. Returns the resulting billing status, where `subscribed` stays `true` until the period ends.
      *
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsCancel(?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsCancelResponse
+    public function publicApiV1EmployeeSeatsCancel(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -137,7 +137,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -175,13 +175,13 @@ class EmployeeSeats
      *
      * Reconcile the seat quantity of the add-on to the real number of active employees (SET with `proration_behavior: none`, no invoice). Idempotent: when the quantity already matches it is a no-op. Returns the resulting billing status.
      *
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsChangeQuantityResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsChangeQuantity(?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsChangeQuantityResponse
+    public function publicApiV1EmployeeSeatsChangeQuantity(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsChangeQuantityResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -260,7 +260,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -547,13 +547,13 @@ class EmployeeSeats
      *
      * Opt in to the per-employee billing add-on: create the dedicated monthly `employee-seats` subscription with `quantity` set to the number of active employees, charging the first period with the payment method on file. The charge is atomic — with no payment method it returns 402 `employee_seat_payment_method_required` (the envelope carries `error.details.payment_setup_url`), and a declined charge returns 402 `employee_seat_charge_failed`; in both cases nothing is subscribed. Returns the resulting billing status.
      *
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsSubscribeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsSubscribe(?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsSubscribeResponse
+    public function publicApiV1EmployeeSeatsSubscribe(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsSubscribeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -632,7 +632,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

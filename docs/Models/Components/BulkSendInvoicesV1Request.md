@@ -7,9 +7,9 @@ Email several invoices in one request (queued), up to 200 per batch. `ids` is an
 
 | Field              | Type               | Required           | Description        |
 | ------------------ | ------------------ | ------------------ | ------------------ |
-| `subject`          | *?string*          | :heavy_minus_sign: | N/A                |
-| `message`          | *?string*          | :heavy_minus_sign: | N/A                |
-| `language`         | *?string*          | :heavy_minus_sign: | N/A                |
 | `ids`              | array<*string*>    | :heavy_check_mark: | N/A                |
 | `to`               | array<*string*>    | :heavy_minus_sign: | N/A                |
 | `cc`               | array<*string*>    | :heavy_minus_sign: | N/A                |
+| `subject`          | *?string*          | :heavy_minus_sign: | N/A                |
+| `message`          | *?string*          | :heavy_minus_sign: | N/A                |
+| `language`         | *?string*          | :heavy_minus_sign: | N/A                |

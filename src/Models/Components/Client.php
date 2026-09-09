@@ -141,6 +141,22 @@ class Client
     public ?string $dir3ProcessingUnit;
 
     /**
+     * UUID (v7) of the default price list assigned to the client.
+     *
+     * @var ?string $defaultPriceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('default_price_list_id')]
+    public ?string $defaultPriceListId;
+
+    /**
+     * Snapshot of the assigned default price-list name.
+     *
+     * @var ?string $defaultPriceListName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('default_price_list_name')]
+    public ?string $defaultPriceListName;
+
+    /**
      *
      * @var ?string $notes
      */
@@ -309,6 +325,8 @@ class Client
      * @param  ?string  $dir3AccountingOffice
      * @param  ?string  $dir3ManagingBody
      * @param  ?string  $dir3ProcessingUnit
+     * @param  ?string  $defaultPriceListId
+     * @param  ?string  $defaultPriceListName
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
@@ -328,7 +346,7 @@ class Client
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, ClientObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?ClientCoordinates $coordinates = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?ClientPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
+    public function __construct(string $id, ClientObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $defaultPriceListId = null, ?string $defaultPriceListName = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?ClientCoordinates $coordinates = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?ClientPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -346,6 +364,8 @@ class Client
         $this->dir3AccountingOffice = $dir3AccountingOffice;
         $this->dir3ManagingBody = $dir3ManagingBody;
         $this->dir3ProcessingUnit = $dir3ProcessingUnit;
+        $this->defaultPriceListId = $defaultPriceListId;
+        $this->defaultPriceListName = $defaultPriceListName;
         $this->notes = $notes;
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;

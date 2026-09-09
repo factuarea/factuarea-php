@@ -14,7 +14,7 @@
 
 Approve a pending correction request by its `id` (UUID v7), appending the resolving `correction_entry` linked to the original time entry. An optional `note` from the approver may be supplied. A request that is not pending returns 422 (already resolved), and approving your own request returns 422 (self-approval is forbidden). Returns 200 with the resolved correction.
 
-### Example Usage
+### Example Usage: approve
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.approve" method="post" path="/time-corrections/{time_correction}/approve" example="approve" -->
 ```php
@@ -30,7 +30,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -43,6 +43,42 @@ $request = new Operations\PublicApiV1TimeCorrectionsApproveRequest(
     body: new Components\ApproveTimeCorrectionRequest(
         note: 'Corrección verificada con el registro de acceso; se aprueba.',
     ),
+);
+
+$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsApprove(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.approve" method="post" path="/time-corrections/{time_correction}/approve" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TimeCorrectionsApproveRequest(
+    timeCorrection: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->timeCorrections->publicApiV1TimeCorrectionsApprove(
@@ -78,7 +114,7 @@ List the time entry correction requests of your company with cursor-based pagina
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.list" method="get" path="/time-corrections" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.list" method="get" path="/time-corrections" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -92,7 +128,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -148,7 +184,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -189,7 +225,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -227,7 +263,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -265,7 +301,45 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\RequestTimeCorrectionRequest(
+    timeEntryId: '4c593fb3-17cc-4190-9b75-e398204e90d7',
+    kind: Components\RequestTimeCorrectionRequestKind::RemoveEntry,
+    reason: '<value>',
+);
+
+$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.create" method="post" path="/time-corrections" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -330,7 +404,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -369,7 +443,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -408,7 +482,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -447,7 +521,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -459,6 +533,45 @@ $request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
     xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\RejectTimeCorrectionRequest(
         reason: 'La corrección no coincide con el registro de acceso al edificio.',
+    ),
+);
+
+$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsReject(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.reject" method="post" path="/time-corrections/{time_correction}/reject" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
+    timeCorrection: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\RejectTimeCorrectionRequest(
+        reason: '<value>',
     ),
 );
 
@@ -495,7 +608,7 @@ Retrieve a single correction request by its `id` (UUID v7), including its derive
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.show" method="get" path="/time-corrections/{time_correction}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.show" method="get" path="/time-corrections/{time_correction}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -508,7 +621,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

@@ -54,13 +54,13 @@ class Employees
      * Register a new employee for the authenticated company (resolved from the API key, never from the payload). `first_name`, `last_name`, `email`, `employment_type` (`full_time`/`part_time`), `contract_hours`, `hire_date` and `ccaa` are required; `tax_id` and `job_title` are optional. Returns the created employee with its generated `id` (UUID v7). Active employees count towards the workforce module seat billing.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateEmployeeRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesCreate(Components\CreateEmployeeRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesCreateResponse
+    public function publicApiV1EmployeesCreate(Components\CreateEmployeeRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,8 +88,8 @@ class Employees
             ];
         }
         $request = new Operations\PublicApiV1EmployeesCreateRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -551,13 +551,13 @@ class Employees
      * Reactivate an employee (transition `inactive` → `active`), clearing their `termination_date` and returning them to the active workforce. No request body. Returns 422 if the employee is already active.
      *
      * @param  string  $employee
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesReactivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesReactivate(string $employee, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesReactivateResponse
+    public function publicApiV1EmployeesReactivate(string $employee, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesReactivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -637,7 +637,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

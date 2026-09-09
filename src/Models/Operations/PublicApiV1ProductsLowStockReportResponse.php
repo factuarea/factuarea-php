@@ -40,6 +40,7 @@ class PublicApiV1ProductsLowStockReportResponse
     public array $headers;
 
     /**
+     * Products below their stock threshold. The response is a collection, without cursor pagination.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsLowStockReportResponseBody $object
      */

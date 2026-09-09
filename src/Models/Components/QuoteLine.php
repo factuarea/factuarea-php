@@ -86,11 +86,28 @@ class QuoteLine
     public float $total;
 
     /**
+     * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\QuoteLineOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\QuoteLineOption>')]
+    public array $options;
+
+    /**
      *
      * @var ?string $description
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
     public ?string $description;
+
+    /**
+     * Optional secondary description rendered below the line concept on document PDFs.
+     *
+     * @var ?string $additionalDescription
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('additional_description')]
+    public ?string $additionalDescription;
 
     /**
      *
@@ -99,6 +116,119 @@ class QuoteLine
     #[\Speakeasy\Serializer\Annotation\SerializedName('product')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductRef|null')]
     public ?ProductRef $product;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLineVariant $variant
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLineVariant|null')]
+    public ?QuoteLineVariant $variant;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLinePresentation $presentation
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLinePresentation|null')]
+    public ?QuoteLinePresentation $presentation;
+
+    /**
+     *
+     * @var ?string $itemKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
+    public ?string $itemKind;
+
+    /**
+     *
+     * @var ?string $commercialUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('commercial_unit_code')]
+    public ?string $commercialUnitCode;
+
+    /**
+     *
+     * @var ?string $baseUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_code')]
+    public ?string $baseUnitCode;
+
+    /**
+     *
+     * @var ?string $conversionFactor
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('conversion_factor')]
+    public ?string $conversionFactor;
+
+    /**
+     *
+     * @var ?string $baseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_quantity')]
+    public ?string $baseQuantity;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    public ?string $priceListId;
+
+    /**
+     *
+     * @var ?string $priceListName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_name')]
+    public ?string $priceListName;
+
+    /**
+     *
+     * @var ?string $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    public ?string $priceSource;
+
+    /**
+     *
+     * @var ?string $priceUnitCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
+    public ?string $priceUnitCode;
+
+    /**
+     * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLineConfiguration $configuration
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLineConfiguration|null')]
+    public ?QuoteLineConfiguration $configuration;
+
+    /**
+     * Monetary semantics of the resolved price: `per_base_unit` (product/variant own price, converted once by the presentation factor) or `per_commercial_unit` (presentation, combination or price-list entry, never converted). `null` on a line with no catalog price context.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLinePriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLinePriceSemantics|null')]
+    public ?QuoteLinePriceSemantics $priceSemantics;
+
+    /**
+     * Sum of the adjustments of the chosen option values, as a decimal string. Informational when an exact price already absorbed them.
+     *
+     * @var ?string $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    public ?string $priceAdjustmentTotal;
+
+    /**
+     * TRI-STATE, and `null` is NOT `false`. `true`: the resolved price already includes the option adjustments. `false`: they were added on top. `null`: it could not be determined — the assembler refuses such a line with 422 rather than risking charging the adjustments twice, so `null` only ever reaches a reader on a legacy line with no configurable options at all.
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    public ?bool $optionAdjustmentsAbsorbed;
 
     /**
      * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
@@ -121,12 +251,29 @@ class QuoteLine
      * @param  float  $subtotal
      * @param  float  $taxes
      * @param  float  $total
+     * @param  array<\Factuarea\Sdk\Models\Components\QuoteLineOption>  $options
      * @param  ?string  $description
+     * @param  ?string  $additionalDescription
      * @param  ?\Factuarea\Sdk\Models\Components\ProductRef  $product
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineVariant  $variant
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLinePresentation  $presentation
+     * @param  ?string  $itemKind
+     * @param  ?string  $commercialUnitCode
+     * @param  ?string  $baseUnitCode
+     * @param  ?string  $conversionFactor
+     * @param  ?string  $baseQuantity
+     * @param  ?string  $priceListId
+     * @param  ?string  $priceListName
+     * @param  ?string  $priceSource
+     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineConfiguration  $configuration
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLinePriceSemantics  $priceSemantics
+     * @param  ?string  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(QuoteLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, ?string $description = null, ?ProductRef $product = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(QuoteLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?QuoteLineVariant $variant = null, ?QuoteLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?QuoteLineConfiguration $configuration = null, ?QuoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -138,8 +285,25 @@ class QuoteLine
         $this->subtotal = $subtotal;
         $this->taxes = $taxes;
         $this->total = $total;
+        $this->options = $options;
         $this->description = $description;
+        $this->additionalDescription = $additionalDescription;
         $this->product = $product;
+        $this->variant = $variant;
+        $this->presentation = $presentation;
+        $this->itemKind = $itemKind;
+        $this->commercialUnitCode = $commercialUnitCode;
+        $this->baseUnitCode = $baseUnitCode;
+        $this->conversionFactor = $conversionFactor;
+        $this->baseQuantity = $baseQuantity;
+        $this->priceListId = $priceListId;
+        $this->priceListName = $priceListName;
+        $this->priceSource = $priceSource;
+        $this->priceUnitCode = $priceUnitCode;
+        $this->configuration = $configuration;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

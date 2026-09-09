@@ -12,7 +12,7 @@ List the closed catalog of event types Factuarea can emit to webhooks. Each entr
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.event_catalog.list" method="get" path="/event-catalog" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.event_catalog.list" method="get" path="/event-catalog" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

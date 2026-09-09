@@ -40,25 +40,26 @@ class PublicApiV1RecurringInvoicesPreviewResponse
     public array $headers;
 
     /**
+     * Upcoming dates. When expand=document is supplied, next_invoice includes the computed lines and totals without persisting an invoice.
      *
-     * @var \Factuarea\Sdk\Models\Operations\ResponseBody1|\Factuarea\Sdk\Models\Operations\ResponseBody2|null $oneOf
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewResponseBody $object
      */
-    public ResponseBody1|ResponseBody2|null $oneOf = null;
+    public ?PublicApiV1RecurringInvoicesPreviewResponseBody $object = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  \Factuarea\Sdk\Models\Operations\ResponseBody1|\Factuarea\Sdk\Models\Operations\ResponseBody2|null  $oneOf
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesPreviewResponseBody  $object
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ResponseBody1|ResponseBody2|null $oneOf = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1RecurringInvoicesPreviewResponseBody $object = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->oneOf = $oneOf;
+        $this->object = $object;
     }
 }

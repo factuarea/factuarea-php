@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1PurchaseInvoicesListPaymentsResponseBody - All payments for the purchase invoice, including reversed payments. An invoice without payments returns an empty collection. */
 class PublicApiV1PurchaseInvoicesListPaymentsResponseBody
 {
     /**
-     * An invoice received from a supplier.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoice $data
+     * @var array<\Factuarea\Sdk\Models\Components\PurchaseInvoicePayment> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoice')]
-    public Components\PurchaseInvoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PurchaseInvoicePayment>')]
+    public array $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoice  $data
+     * @param  array<\Factuarea\Sdk\Models\Components\PurchaseInvoicePayment>  $data
      * @phpstan-pure
      */
-    public function __construct(Components\PurchaseInvoice $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

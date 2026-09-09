@@ -8,23 +8,24 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
-
+use Factuarea\Sdk\Models\Components;
+/** PublicApiV1TaxReportsGenerate130ResponseBody - The generated Modelo 130 report, with its identifier for downloading the artifact. */
 class PublicApiV1TaxReportsGenerate130ResponseBody
 {
     /**
-     * $data
+     * A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/tax_reports/{uuid}/download`.
      *
-     * @var array<mixed> $data
+     * @var \Factuarea\Sdk\Models\Components\TaxReport $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<mixed>')]
-    public array $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TaxReport')]
+    public Components\TaxReport $data;
 
     /**
-     * @param  array<mixed>  $data
+     * @param  \Factuarea\Sdk\Models\Components\TaxReport  $data
      * @phpstan-pure
      */
-    public function __construct(array $data)
+    public function __construct(Components\TaxReport $data)
     {
         $this->data = $data;
     }

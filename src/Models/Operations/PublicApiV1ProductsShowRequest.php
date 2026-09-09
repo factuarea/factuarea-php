@@ -36,15 +36,28 @@ class PublicApiV1ProductsShowRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * Recursos anidados a incluir, separados por comas. Hoy solo
+     *
+     * `configurable_catalog`, que adjunta los grupos de opciones
+     * vendibles y las combinaciones comerciales del producto.
+     *
+     * @var ?string $include
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=include')]
+    public ?string $include = null;
+
+    /**
      * @param  string  $product
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
+     * @param  ?string  $include
      * @phpstan-pure
      */
-    public function __construct(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $include = null)
     {
         $this->product = $product;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
+        $this->include = $include;
     }
 }

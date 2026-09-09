@@ -13,6 +13,70 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TaxReportsHistoryRequest
 {
     /**
+     * Page cursor returned by the previous response.
+     *
+     * @var ?string $startingAfter
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=starting_after')]
+    public ?string $startingAfter = null;
+
+    /**
+     * Reverse cursor. Mutually exclusive with starting_after.
+     *
+     * @var ?string $endingBefore
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=ending_before')]
+    public ?string $endingBefore = null;
+
+    /**
+     * Optional type filter.
+     *
+     * @var ?string $type
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=type')]
+    public ?string $type = null;
+
+    /**
+     * Optional year filter.
+     *
+     * @var ?string $year
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=year')]
+    public ?string $year = null;
+
+    /**
+     * Optional quarter filter.
+     *
+     * @var ?string $quarter
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=quarter')]
+    public ?string $quarter = null;
+
+    /**
+     * Optional format filter.
+     *
+     * @var ?string $format
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=format')]
+    public ?string $format = null;
+
+    /**
+     * Optional generated after filter.
+     *
+     * @var ?string $generatedAfter
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=generated_after')]
+    public ?string $generatedAfter = null;
+
+    /**
+     * Optional generated before filter.
+     *
+     * @var ?string $generatedBefore
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=generated_before')]
+    public ?string $generatedBefore = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -29,13 +93,39 @@ class PublicApiV1TaxReportsHistoryRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * Maximum number of results.
+     *
+     * @var ?int $limit
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=limit')]
+    public ?int $limit = null;
+
+    /**
+     * @param  ?int  $limit
+     * @param  ?string  $startingAfter
+     * @param  ?string  $endingBefore
+     * @param  ?string  $type
+     * @param  ?string  $year
+     * @param  ?string  $quarter
+     * @param  ?string  $format
+     * @param  ?string  $generatedAfter
+     * @param  ?string  $generatedBefore
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $year = null, ?string $quarter = null, ?string $format = null, ?string $generatedAfter = null, ?string $generatedBefore = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
+        $this->startingAfter = $startingAfter;
+        $this->endingBefore = $endingBefore;
+        $this->type = $type;
+        $this->year = $year;
+        $this->quarter = $quarter;
+        $this->format = $format;
+        $this->generatedAfter = $generatedAfter;
+        $this->generatedBefore = $generatedBefore;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
+        $this->limit = $limit;
     }
 }

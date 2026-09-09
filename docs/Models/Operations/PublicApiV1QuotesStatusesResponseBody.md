@@ -1,8 +1,10 @@
 # PublicApiV1QuotesStatusesResponseBody
 
+Complete public status catalog, with Spanish labels and color tokens.
+
 
 ## Fields
 
-| Field                                                | Type                                                 | Required                                             | Description                                          |
-| ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
-| `data`                                               | [Components\Quote](../../Models/Components/Quote.md) | :heavy_check_mark:                                   | A sales quote that can be converted to an invoice.   |
+| Field                                                                                     | Type                                                                                      | Required                                                                                  | Description                                                                               |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `data`                                                                                    | array<[Components\PublicDocumentStatus](../../Models/Components/PublicDocumentStatus.md)> | :heavy_check_mark:                                                                        | N/A                                                                                       |

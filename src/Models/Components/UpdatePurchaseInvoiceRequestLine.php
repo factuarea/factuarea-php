@@ -13,6 +13,23 @@ class UpdatePurchaseInvoiceRequestLine
 {
     /**
      *
+     * @var ?float $quantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $quantity = null;
+
+    /**
+     * Per-line VAT rate (0–100). REQUIRED whenever `lines` is sent: a `PUT` replaces the whole set of lines, so omitting it would wipe the VAT the invoice already had. A purchase with no VAT is declared explicitly as `tax_rate: 0`.
+     *
+     * @var ?float $taxRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tax_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $taxRate = null;
+
+    /**
+     *
      * @var ?string $description
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
@@ -21,11 +38,11 @@ class UpdatePurchaseInvoiceRequestLine
 
     /**
      *
-     * @var ?float $quantity
+     * @var ?string $additionalDescription
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
+    #[\Speakeasy\Serializer\Annotation\SerializedName('additional_description')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $quantity = null;
+    public ?string $additionalDescription = null;
 
     /**
      *
@@ -37,11 +54,51 @@ class UpdatePurchaseInvoiceRequestLine
 
     /**
      *
-     * @var ?float $taxRate
+     * @var ?string $productId
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tax_rate')]
+    #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $taxRate = null;
+    public ?string $productId = null;
+
+    /**
+     *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
+
+    /**
+     *
+     * @var ?string $presentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationId = null;
+
+    /**
+     *
+     * @var ?string $supplierOfferId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offer_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $supplierOfferId = null;
+
+    /**
+     *
+     * @var ?float $confirmedBaseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('confirmed_base_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $confirmedBaseQuantity = null;
+
+    /**
+     *
+     * @var ?string $unit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('unit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $unit = null;
 
     /**
      * Per-line IRPF retention and deductible VAT. Same shape rules as create.
@@ -89,27 +146,125 @@ class UpdatePurchaseInvoiceRequestLine
     public ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
 
     /**
-     * @param  ?string  $description
+     *
+     * @var ?string $configurationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationUuid = null;
+
+    /**
+     * $options
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOption> $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOption>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $options = null;
+
+    /**
+     *
+     * @var ?string $configurationSignature
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_signature')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationSignature = null;
+
+    /**
+     *
+     * @var ?string $configurationName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_name')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationName = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSemantics|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null;
+
+    /**
+     *
+     * @var ?float $priceAdjustmentTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_adjustment_total')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $priceAdjustmentTotal = null;
+
+    /**
+     *
+     * @var ?bool $optionAdjustmentsAbsorbed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_adjustments_absorbed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $optionAdjustmentsAbsorbed = null;
+
+    /**
      * @param  ?float  $quantity
-     * @param  ?float  $unitPrice
      * @param  ?float  $taxRate
+     * @param  ?string  $description
+     * @param  ?string  $additionalDescription
+     * @param  ?float  $unitPrice
+     * @param  ?string  $productId
+     * @param  ?string  $variantId
+     * @param  ?string  $presentationId
+     * @param  ?string  $supplierOfferId
+     * @param  ?float  $confirmedBaseQuantity
+     * @param  ?string  $unit
      * @param  ?float  $retentionRate
      * @param  ?bool  $vatDeductible
      * @param  ?float  $surchargeRate
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestExemptionReason  $exemptionReason
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $configurationUuid
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOption>  $options
+     * @param  ?string  $configurationSignature
+     * @param  ?string  $configurationName
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource  $priceSource
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSemantics  $priceSemantics
+     * @param  ?float  $priceAdjustmentTotal
+     * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?float $taxRate = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(?float $quantity = null, ?float $taxRate = null, ?string $description = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
-        $this->description = $description;
         $this->quantity = $quantity;
-        $this->unitPrice = $unitPrice;
         $this->taxRate = $taxRate;
+        $this->description = $description;
+        $this->additionalDescription = $additionalDescription;
+        $this->unitPrice = $unitPrice;
+        $this->productId = $productId;
+        $this->variantId = $variantId;
+        $this->presentationId = $presentationId;
+        $this->supplierOfferId = $supplierOfferId;
+        $this->confirmedBaseQuantity = $confirmedBaseQuantity;
+        $this->unit = $unit;
         $this->retentionRate = $retentionRate;
         $this->vatDeductible = $vatDeductible;
         $this->surchargeRate = $surchargeRate;
         $this->exemptionReason = $exemptionReason;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->configurationUuid = $configurationUuid;
+        $this->options = $options;
+        $this->configurationSignature = $configurationSignature;
+        $this->configurationName = $configurationName;
+        $this->priceSource = $priceSource;
+        $this->priceSemantics = $priceSemantics;
+        $this->priceAdjustmentTotal = $priceAdjustmentTotal;
+        $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
     }
 }

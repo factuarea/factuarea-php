@@ -16,7 +16,7 @@ IMPORTANT — `last_status` and `last_sent_at` describe the hand-off to the OUTG
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.emails.indicators" method="get" path="/emails/indicators" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.emails.indicators" method="get" path="/emails/indicators" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -29,7 +29,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -80,7 +80,7 @@ IMPORTANT — `status` describes the hand-off to the OUTGOING SMTP SERVER, not r
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.emails.list" method="get" path="/emails" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.emails.list" method="get" path="/emails" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -94,7 +94,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -140,7 +140,7 @@ IMPORTANT — `status` describes the hand-off to the OUTGOING SMTP SERVER, not r
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.emails.show" method="get" path="/emails/{email}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.emails.show" method="get" path="/emails/{email}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -153,7 +153,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

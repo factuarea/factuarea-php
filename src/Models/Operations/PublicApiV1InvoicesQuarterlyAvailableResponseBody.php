@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1InvoicesQuarterlyAvailableResponseBody - Quarters with issued invoices and counts by invoice type. */
 class PublicApiV1InvoicesQuarterlyAvailableResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\Invoice $data
+     * @var array<\Factuarea\Sdk\Models\Components\AvailableInvoiceQuarter> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
-    public Components\Invoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\AvailableInvoiceQuarter>')]
+    public array $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  array<\Factuarea\Sdk\Models\Components\AvailableInvoiceQuarter>  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

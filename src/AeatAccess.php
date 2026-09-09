@@ -52,12 +52,11 @@ class AeatAccess
      *
      * Return the dissociated (anonymized) AEAT access ledger with cursor-based pagination. Third-party tax identifiers (NIF) are never exposed; the cursor uses the underlying record UUID v7 only for ordering.
      *
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuAeatAccessList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessListResponse
+    public function publicApiV1VerifactuAeatAccessList(?Operations\PublicApiV1VerifactuAeatAccessListRequest $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,14 +83,12 @@ class AeatAccess
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1VerifactuAeatAccessListRequest(
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/aeat-access/records');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1VerifactuAeatAccessListRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -101,6 +98,7 @@ class AeatAccess
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.verifactu.aeat_access.list', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {

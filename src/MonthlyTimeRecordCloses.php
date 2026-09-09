@@ -233,7 +233,7 @@ class MonthlyTimeRecordCloses
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.monthly_time_record_closes.export', null, $this->sdkConfiguration->securitySource);
@@ -256,20 +256,17 @@ class MonthlyTimeRecordCloses
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesExportResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1MonthlyTimeRecordClosesExportResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1MonthlyTimeRecordClosesExportResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    object: $obj);
-
-                return $response;
+                    bytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
@@ -480,7 +477,7 @@ class MonthlyTimeRecordCloses
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.monthly_time_record_closes.payroll_export', null, $this->sdkConfiguration->securitySource);
@@ -503,20 +500,17 @@ class MonthlyTimeRecordCloses
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    object: $obj);
-
-                return $response;
+                    bytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
@@ -807,13 +801,13 @@ class MonthlyTimeRecordCloses
      * Seal (digitally sign) a `closed` monthly time record register by the close `id` (UUID v7): it freezes a canonical SHA-256 digest of the close snapshot and a detached RSA-SHA256 signature made with the company certificate, so the register is tamper-evident and independently verifiable. A close that is not `closed` returns 422 in Spanish, a period already sealed returns 409 (one seal per close, no re-sealing), and a company without an active usable certificate returns 422. A close belonging to another company returns 404. Returns 201 with the seal (including its live verification state) and a `Location` header.
      *
      * @param  string  $monthlyTimeRecordClose
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesSealResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesSeal(string $monthlyTimeRecordClose, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesSealResponse
+    public function publicApiV1MonthlyTimeRecordClosesSeal(string $monthlyTimeRecordClose, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesSealResponse
     {
         $retryConfig = null;
         if ($options) {

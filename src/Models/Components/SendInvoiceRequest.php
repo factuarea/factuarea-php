@@ -29,22 +29,6 @@ class SendInvoiceRequest
     public ?string $to = null;
 
     /**
-     *
-     * @var ?string $subject
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('subject')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $subject = null;
-
-    /**
-     *
-     * @var ?string $body
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('body')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $body = null;
-
-    /**
      * $cc
      *
      * @var ?array<string> $cc
@@ -65,19 +49,35 @@ class SendInvoiceRequest
     public ?array $bcc = null;
 
     /**
+     *
+     * @var ?string $subject
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('subject')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $subject = null;
+
+    /**
+     *
+     * @var ?string $body
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('body')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $body = null;
+
+    /**
      * @param  ?string  $to
-     * @param  ?string  $subject
-     * @param  ?string  $body
      * @param  ?array<string>  $cc
      * @param  ?array<string>  $bcc
+     * @param  ?string  $subject
+     * @param  ?string  $body
      * @phpstan-pure
      */
-    public function __construct(?string $to = null, ?string $subject = null, ?string $body = null, ?array $cc = null, ?array $bcc = null)
+    public function __construct(?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null)
     {
         $this->to = $to;
-        $this->subject = $subject;
-        $this->body = $body;
         $this->cc = $cc;
         $this->bcc = $bcc;
+        $this->subject = $subject;
+        $this->body = $body;
     }
 }

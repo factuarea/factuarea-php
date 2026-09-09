@@ -70,6 +70,14 @@ class InvoicePaymentDetail
     public string $paymentMethodText;
 
     /**
+     * Whether the payment has been reverted. A reverted payment stays in the ledger but stops counting towards `paid_amount`, `pending_amount` and every treasury aggregate — read this flag, do not infer the state from absence.
+     *
+     * @var bool $isReversed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_reversed')]
+    public bool $isReversed;
+
+    /**
      * Payment reference/operation number. `null` if not provided.
      *
      * @var ?string $reference
@@ -84,6 +92,39 @@ class InvoicePaymentDetail
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('notes')]
     public ?string $notes;
+
+    /**
+     * When the payment was reverted (ISO 8601), or `null` while it is in force.
+     *
+     * @var ?\DateTime $reversedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reversed_at')]
+    public ?\DateTime $reversedAt;
+
+    /**
+     * Reason the payment was reverted, from the closed catalog. `null` while the payment is in force.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ReversalReason $reversalReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reversal_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ReversalReason|null')]
+    public ?ReversalReason $reversalReason;
+
+    /**
+     * Human-readable label of the reversal reason (Spanish), or `null`.
+     *
+     * @var ?string $reversalReasonText
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reversal_reason_text')]
+    public ?string $reversalReasonText;
+
+    /**
+     * Free-text remark recorded with the reversal (up to 500 characters), or `null`.
+     *
+     * @var ?string $reversalNote
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reversal_note')]
+    public ?string $reversalNote;
 
     /**
      * When the payment was recorded (ISO 8601), or `null`.
@@ -109,13 +150,18 @@ class InvoicePaymentDetail
      * @param  LocalDate  $paymentDate
      * @param  string  $paymentMethod
      * @param  string  $paymentMethodText
+     * @param  bool  $isReversed
      * @param  ?string  $reference
      * @param  ?string  $notes
+     * @param  ?\DateTime  $reversedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\ReversalReason  $reversalReason
+     * @param  ?string  $reversalReasonText
+     * @param  ?string  $reversalNote
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoicePaymentDetailObject $object, string $invoiceId, float $amount, LocalDate $paymentDate, string $paymentMethod, string $paymentMethodText, ?string $reference = null, ?string $notes = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, InvoicePaymentDetailObject $object, string $invoiceId, float $amount, LocalDate $paymentDate, string $paymentMethod, string $paymentMethodText, bool $isReversed, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?ReversalReason $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -124,8 +170,13 @@ class InvoicePaymentDetail
         $this->paymentDate = $paymentDate;
         $this->paymentMethod = $paymentMethod;
         $this->paymentMethodText = $paymentMethodText;
+        $this->isReversed = $isReversed;
         $this->reference = $reference;
         $this->notes = $notes;
+        $this->reversedAt = $reversedAt;
+        $this->reversalReason = $reversalReason;
+        $this->reversalReasonText = $reversalReasonText;
+        $this->reversalNote = $reversalNote;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
     }

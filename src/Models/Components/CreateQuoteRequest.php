@@ -51,6 +51,23 @@ class CreateQuoteRequest
 
     /**
      *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateQuoteRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateQuoteRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateQuoteRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?string $notes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('notes')]
@@ -121,6 +138,8 @@ class CreateQuoteRequest
      * @param  LocalDate  $validUntil
      * @param  array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestLine>  $lines
      * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateQuoteRequestRepriceStrategy  $repriceStrategy
      * @param  ?string  $notes
      * @param  ?string  $terms
      * @param  ?string  $externalId
@@ -130,13 +149,15 @@ class CreateQuoteRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, LocalDate $issuedOn, LocalDate $validUntil, array $lines, ?string $seriesId = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?CreateQuoteRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, LocalDate $issuedOn, LocalDate $validUntil, array $lines, ?string $seriesId = null, ?string $priceListId = null, ?CreateQuoteRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?CreateQuoteRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
         $this->validUntil = $validUntil;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->notes = $notes;
         $this->terms = $terms;
         $this->externalId = $externalId;

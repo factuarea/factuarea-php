@@ -55,10 +55,10 @@ class PublicApiV1HolidaysListRequest
     /**
      * Territorial scope of the holiday. Exact match on `scope`.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\Scope $scope
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListScope $scope
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=scope')]
-    public ?Scope $scope = null;
+    public ?PublicApiV1HolidaysListScope $scope = null;
 
     /**
      * Territorial scope of the holiday. Comma-separated list. Any of the values matches.
@@ -107,14 +107,14 @@ class PublicApiV1HolidaysListRequest
      * @param  ?int  $year
      * @param  ?string  $ccaa
      * @param  ?string  $ccaaIn
-     * @param  ?\Factuarea\Sdk\Models\Operations\Scope  $scope
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListScope  $scope
      * @param  ?string  $scopeIn
      * @param  ?\Factuarea\Sdk\Models\Operations\Source  $source
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?int $year = null, ?string $ccaa = null, ?string $ccaaIn = null, ?Scope $scope = null, ?string $scopeIn = null, ?Source $source = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?int $year = null, ?string $ccaa = null, ?string $ccaaIn = null, ?PublicApiV1HolidaysListScope $scope = null, ?string $scopeIn = null, ?Source $source = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;

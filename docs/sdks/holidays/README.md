@@ -14,7 +14,7 @@ List the public holidays visible to your company with cursor-based pagination: g
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.holidays.list" method="get" path="/holidays" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.holidays.list" method="get" path="/holidays" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -28,7 +28,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -71,7 +71,7 @@ Resolve the holidays that apply to a given autonomous community in a given year:
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.holidays.resolve" method="get" path="/holidays/resolve" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.holidays.resolve" method="get" path="/holidays/resolve" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -85,7 +85,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -132,7 +132,7 @@ Retrieve a single holiday by its `id` (UUID v7). A custom holiday belonging to a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.holidays.show" method="get" path="/holidays/{holiday}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.holidays.show" method="get" path="/holidays/{holiday}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -145,7 +145,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

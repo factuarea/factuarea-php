@@ -9,17 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1InvoicesVerifactuGetResponseBody - The invoice VeriFactu record, or null when no record exists, and the effective company activation flag. */
 class PublicApiV1InvoicesVerifactuGetResponseBody
 {
-    /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
-     *
-     * @var \Factuarea\Sdk\Models\Components\Invoice $data
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Invoice')]
-    public Components\Invoice $data;
-
     /**
      *
      * @var bool $verifactuEnabled
@@ -28,13 +20,21 @@ class PublicApiV1InvoicesVerifactuGetResponseBody
     public bool $verifactuEnabled;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\VeriFactuRecord $data
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\VeriFactuRecord|null')]
+    public ?Components\VeriFactuRecord $data;
+
+    /**
      * @param  bool  $verifactuEnabled
+     * @param  ?\Factuarea\Sdk\Models\Components\VeriFactuRecord  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data, bool $verifactuEnabled)
+    public function __construct(bool $verifactuEnabled, ?Components\VeriFactuRecord $data = null)
     {
-        $this->data = $data;
         $this->verifactuEnabled = $verifactuEnabled;
+        $this->data = $data;
     }
 }

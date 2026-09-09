@@ -22,6 +22,26 @@ class BulkSendQuotesV1Request
     public array $ids;
 
     /**
+     * $to
+     *
+     * @var ?array<string> $to
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('to')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $to = null;
+
+    /**
+     * $cc
+     *
+     * @var ?array<string> $cc
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cc')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $cc = null;
+
+    /**
      *
      * @var ?string $subject
      */
@@ -46,41 +66,21 @@ class BulkSendQuotesV1Request
     public ?string $language = null;
 
     /**
-     * $to
-     *
-     * @var ?array<string> $to
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('to')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $to = null;
-
-    /**
-     * $cc
-     *
-     * @var ?array<string> $cc
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('cc')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $cc = null;
-
-    /**
      * @param  array<string>  $ids
+     * @param  ?array<string>  $to
+     * @param  ?array<string>  $cc
      * @param  ?string  $subject
      * @param  ?string  $message
      * @param  ?string  $language
-     * @param  ?array<string>  $to
-     * @param  ?array<string>  $cc
      * @phpstan-pure
      */
-    public function __construct(array $ids, ?string $subject = null, ?string $message = null, ?string $language = null, ?array $to = null, ?array $cc = null)
+    public function __construct(array $ids, ?array $to = null, ?array $cc = null, ?string $subject = null, ?string $message = null, ?string $language = null)
     {
         $this->ids = $ids;
+        $this->to = $to;
+        $this->cc = $cc;
         $this->subject = $subject;
         $this->message = $message;
         $this->language = $language;
-        $this->to = $to;
-        $this->cc = $cc;
     }
 }

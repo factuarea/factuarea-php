@@ -21,4 +21,7 @@ enum Provider: string
     case Norma43 = 'norma43';
     case Norma19 = 'norma19';
     case Ubl = 'ubl';
+    case Woocommerce = 'woocommerce';
+    case Shopify = 'shopify';
+    case Prestashop = 'prestashop';
 }

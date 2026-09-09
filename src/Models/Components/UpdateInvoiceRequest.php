@@ -21,6 +21,15 @@ class UpdateInvoiceRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestRepriceStrategy $repriceStrategy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestRepriceStrategy|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     *
      * @var ?LocalDate $issuedOn
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('issued_on')]
@@ -44,6 +53,22 @@ class UpdateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $lines = null;
+
+    /**
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
+
+    /**
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $priceListId = null;
 
     /**
      *
@@ -96,9 +121,12 @@ class UpdateInvoiceRequest
 
     /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $dueOn
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>  $lines
+     * @param  ?string  $seriesId
+     * @param  ?string  $priceListId
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
@@ -106,12 +134,15 @@ class UpdateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
+        $this->repriceStrategy = $repriceStrategy;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
         $this->lines = $lines;
+        $this->seriesId = $seriesId;
+        $this->priceListId = $priceListId;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->metadata = $metadata;

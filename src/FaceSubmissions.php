@@ -10,7 +10,6 @@ namespace Factuarea\Sdk;
 
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -53,14 +52,11 @@ class FaceSubmissions
      *
      * Requests the cancellation (anulación 4200) of a FACe submission with a mandatory `reason`. Only allowed while the submission is in a cancellable state (`submitted`, `registered_rcf`, `accounted`); otherwise returns 422 `face_submission_not_cancellable`. The submission transitions to `cancellation_requested` until FACe confirms.
      *
-     * @param  \Factuarea\Sdk\Models\Components\CancelFaceSubmissionV1Request  $body
-     * @param  string  $faceSubmission
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1FaceSubmissionsCancelRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1FaceSubmissionsCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1FaceSubmissionsCancel(Components\CancelFaceSubmissionV1Request $body, string $faceSubmission, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1FaceSubmissionsCancelResponse
+    public function publicApiV1FaceSubmissionsCancel(Operations\PublicApiV1FaceSubmissionsCancelRequest $request, ?Options $options = null): Operations\PublicApiV1FaceSubmissionsCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,12 +83,6 @@ class FaceSubmissions
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1FaceSubmissionsCancelRequest(
-            faceSubmission: $faceSubmission,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/face-submissions/{faceSubmission}/cancel', Operations\PublicApiV1FaceSubmissionsCancelRequest::class, $request);
         $urlOverride = null;

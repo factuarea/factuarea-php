@@ -9,3 +9,4 @@
 | `BienInversion`    | bien_inversion     |
 | `Importacion`      | importacion        |
 | `Intracomunitaria` | intracomunitaria   |
+| `Isp`              | isp                |

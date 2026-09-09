@@ -21,7 +21,7 @@ class MonthlyCloseAbsenceBalance
     public string $absenceTypeName;
 
     /**
-     * Available days of that absence type, frozen at closing (decimal string).
+     * Available days of that absence type, frozen at closing. Rounded up to a whole day, like `AbsenceBalance.available_days` (decimal string).
      *
      * @var string $availableDays
      */

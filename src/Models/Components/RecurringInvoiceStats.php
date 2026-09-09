@@ -111,7 +111,7 @@ class RecurringInvoiceStats
     public array $nextScheduled;
 
     /**
-     * Estimated revenue from recurrences during the current month (EUR).
+     * Remaining scheduled template estimate from today through month end (EUR); it is not issued revenue, collections, or guaranteed cash.
      *
      * @var float $estimatedRevenueThisMonth
      */

@@ -22,11 +22,22 @@ class PublicApiV1InvoicesCorrectiveResponseBody
     public Components\Invoice $data;
 
     /**
+     * $warnings
+     *
+     * @var array<string> $warnings
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warnings')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $warnings;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  array<string>  $warnings
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(Components\Invoice $data, array $warnings)
     {
         $this->data = $data;
+        $this->warnings = $warnings;
     }
 }

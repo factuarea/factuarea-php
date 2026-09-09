@@ -175,12 +175,13 @@ class Quarterly
      * Builds a ZIP with all invoice PDFs of the given quarter. Returns ZIP metadata (path, processed counts, errors).
      *
      * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesQuarterlyDownloadZipResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesQuarterlyDownloadZip(Components\QuarterlyDownloadV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlyDownloadZipResponse
+    public function publicApiV1InvoicesQuarterlyDownloadZip(Components\QuarterlyDownloadV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlyDownloadZipResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,6 +209,7 @@ class Quarterly
             ];
         }
         $request = new Operations\PublicApiV1InvoicesQuarterlyDownloadZipRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -261,7 +263,7 @@ class Quarterly
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '413', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -300,13 +302,13 @@ class Quarterly
      * Generates the quarterly ZIP and emails it to the recipient, typically the tax accountant.
      *
      * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesQuarterlySendEmailResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesQuarterlySendEmail(Components\QuarterlyDownloadV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlySendEmailResponse
+    public function publicApiV1InvoicesQuarterlySendEmail(Components\QuarterlyDownloadV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesQuarterlySendEmailResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -334,8 +336,8 @@ class Quarterly
             ];
         }
         $request = new Operations\PublicApiV1InvoicesQuarterlySendEmailRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

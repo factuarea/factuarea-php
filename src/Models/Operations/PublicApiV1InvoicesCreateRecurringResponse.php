@@ -40,6 +40,7 @@ class PublicApiV1InvoicesCreateRecurringResponse
     public array $headers;
 
     /**
+     * The recurring invoice created from the source invoice.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateRecurringResponseBody $object
      */

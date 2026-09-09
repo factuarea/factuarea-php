@@ -9,22 +9,22 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1PurchaseInvoicesRegisterPaymentResponseBody - The newly registered purchase-invoice payment. */
 class PublicApiV1PurchaseInvoicesRegisterPaymentResponseBody
 {
     /**
-     * An invoice received from a supplier.
      *
-     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoice $data
+     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoicePayment $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoice')]
-    public Components\PurchaseInvoice $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoicePayment')]
+    public Components\PurchaseInvoicePayment $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoice  $data
+     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoicePayment  $data
      * @phpstan-pure
      */
-    public function __construct(Components\PurchaseInvoice $data)
+    public function __construct(Components\PurchaseInvoicePayment $data)
     {
         $this->data = $data;
     }

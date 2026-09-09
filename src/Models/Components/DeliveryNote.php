@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** DeliveryNote - A delivery note tracking goods delivered to a customer. */
+/** DeliveryNote - A delivery note tracking goods delivered to a customer. The delivery address fields, `transport_details` and `reference_number` are both accepted on write and returned here; `delivery_city`, `delivery_province` and `delivery_postal_code` are also filterable on `GET /v1/delivery_notes`. Empty strings are normalized to `null`. */
 class DeliveryNote
 {
     /**
@@ -76,6 +76,7 @@ class DeliveryNote
     public float $subtotal;
 
     /**
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var float $taxesTotal
      */
@@ -83,6 +84,31 @@ class DeliveryNote
     public float $taxesTotal;
 
     /**
+     * Output VAT (IVA repercutido) accrued by the document: sum of the VAT of its lines. This is the figure a Spanish Modelo 303 declares, and it is NOT recoverable from `taxes_total`, which nets the withholding out.
+     *
+     * @var float $totalVat
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
+    public float $totalVat;
+
+    /**
+     * Withholding (retención de IRPF) applied to the document: sum of the withholding of its lines, as a POSITIVE amount that SUBTRACTS from the total. This is the figure a Spanish Modelo 130/111 declares. It is ALREADY netted out inside `taxes_total`, so do not subtract it again.
+     *
+     * @var float $totalRetention
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
+    public float $totalRetention;
+
+    /**
+     * Equivalence surcharge (recargo de equivalencia) of the document: sum of the surcharge of its lines. It ADDS to the total exactly like VAT does, and is ALREADY included inside `taxes_total`.
+     *
+     * @var float $totalSurcharge
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
+    public float $totalSurcharge;
+
+    /**
+     * Total of the document. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the AGGREGATE one, specific to the sales-side families - `total = subtotal + taxes_total`. NEVER reconstruct it as `subtotal + taxes_total - total_retention`: `taxes_total` ALREADY has the withholding netted out, so that combination subtracts it twice and yields a false total (4,320.00 + 259.20 - 648.00 = 3,931.20 against a real 4,579.20).
      *
      * @var float $total
      */
@@ -124,6 +150,22 @@ class DeliveryNote
     public array $customFields;
 
     /**
+     * UUID of the price list selected for this document.
+     *
+     * @var ?string $priceListId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
+    public ?string $priceListId;
+
+    /**
+     * Price-list name snapshot frozen on the document.
+     *
+     * @var ?string $priceListName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_name')]
+    public ?string $priceListName;
+
+    /**
      *
      * @var ?LocalDate $issuedOn
      */
@@ -136,6 +178,46 @@ class DeliveryNote
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_date')]
     public ?LocalDate $deliveryDate;
+
+    /**
+     * Street of the delivery address recorded on the delivery note. `null` when not set.
+     *
+     * @var ?string $deliveryAddress
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_address')]
+    public ?string $deliveryAddress;
+
+    /**
+     * Town or city of the delivery address recorded on the delivery note. Filterable via `?delivery_city=` (also `[in]` and `[contains]`). `null` when not set.
+     *
+     * @var ?string $deliveryCity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_city')]
+    public ?string $deliveryCity;
+
+    /**
+     * Postal code of the delivery address recorded on the delivery note. Filterable via `?delivery_postal_code=`; the first two digits identify the Spanish province. `null` when not set.
+     *
+     * @var ?string $deliveryPostalCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_postal_code')]
+    public ?string $deliveryPostalCode;
+
+    /**
+     * Province of the delivery address recorded on the delivery note. Filterable via `?delivery_province=` (also `[in]` and `[contains]`). `null` when not set.
+     *
+     * @var ?string $deliveryProvince
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_province')]
+    public ?string $deliveryProvince;
+
+    /**
+     * Country of the delivery address recorded on the delivery note. Free text, not an ISO code. `null` when not set.
+     *
+     * @var ?string $deliveryCountry
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_country')]
+    public ?string $deliveryCountry;
 
     /**
      *
@@ -157,6 +239,14 @@ class DeliveryNote
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('signature_image_url')]
     public ?string $signatureImageUrl;
+
+    /**
+     * Free-text transport details of the delivery. `null` when not set.
+     *
+     * @var ?string $transportDetails
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('transport_details')]
+    public ?string $transportDetails;
 
     /**
      * License plate of the delivery vehicle.
@@ -209,6 +299,14 @@ class DeliveryNote
     public ?string $externalId;
 
     /**
+     * Commercial reference of the delivery note — usually the client's purchase order number, which an ERP uses to reconcile its orders against deliveries. `null` when not set.
+     *
+     * @var ?string $referenceNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reference_number')]
+    public ?string $referenceNumber;
+
+    /**
      * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
      *
      *
@@ -252,29 +350,41 @@ class DeliveryNote
      * @param  array<string>  $billingEmails
      * @param  float  $subtotal
      * @param  float  $taxesTotal
+     * @param  float  $totalVat
+     * @param  float  $totalRetention
+     * @param  float  $totalSurcharge
      * @param  float  $total
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\DeliveryNoteLine>  $lines
      * @param  array<string>  $tags
      * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
+     * @param  ?string  $priceListId
+     * @param  ?string  $priceListName
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $deliveryDate
+     * @param  ?string  $deliveryAddress
+     * @param  ?string  $deliveryCity
+     * @param  ?string  $deliveryPostalCode
+     * @param  ?string  $deliveryProvince
+     * @param  ?string  $deliveryCountry
      * @param  ?\DateTime  $signedAt
      * @param  ?string  $signedBy
      * @param  ?string  $signatureImageUrl
+     * @param  ?string  $transportDetails
      * @param  ?string  $vehiclePlate
      * @param  ?\Factuarea\Sdk\Models\Components\Driver  $driver
      * @param  ?\Factuarea\Sdk\Models\Components\Tracking  $tracking
      * @param  ?\Factuarea\Sdk\Models\Components\ReceivedBy  $receivedBy
      * @param  ?string  $notes
      * @param  ?string  $externalId
+     * @param  ?string  $referenceNumber
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $convertedToId
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, float $subtotal, float $taxesTotal, float $total, string $currency, array $lines, array $tags, array $customFields, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -285,22 +395,34 @@ class DeliveryNote
         $this->billingEmails = $billingEmails;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
+        $this->totalVat = $totalVat;
+        $this->totalRetention = $totalRetention;
+        $this->totalSurcharge = $totalSurcharge;
         $this->total = $total;
         $this->currency = $currency;
         $this->lines = $lines;
         $this->tags = $tags;
         $this->customFields = $customFields;
+        $this->priceListId = $priceListId;
+        $this->priceListName = $priceListName;
         $this->issuedOn = $issuedOn;
         $this->deliveryDate = $deliveryDate;
+        $this->deliveryAddress = $deliveryAddress;
+        $this->deliveryCity = $deliveryCity;
+        $this->deliveryPostalCode = $deliveryPostalCode;
+        $this->deliveryProvince = $deliveryProvince;
+        $this->deliveryCountry = $deliveryCountry;
         $this->signedAt = $signedAt;
         $this->signedBy = $signedBy;
         $this->signatureImageUrl = $signatureImageUrl;
+        $this->transportDetails = $transportDetails;
         $this->vehiclePlate = $vehiclePlate;
         $this->driver = $driver;
         $this->tracking = $tracking;
         $this->receivedBy = $receivedBy;
         $this->notes = $notes;
         $this->externalId = $externalId;
+        $this->referenceNumber = $referenceNumber;
         $this->metadata = $metadata;
         $this->convertedToId = $convertedToId;
         $this->createdAt = $createdAt;

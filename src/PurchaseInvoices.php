@@ -136,7 +136,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -175,13 +175,13 @@ class PurchaseInvoices
      * Delete up to 100 purchase invoices by UUID in a single request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeletePurchaseInvoicesRequest  $body
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesBulkDelete(Components\BulkDeletePurchaseInvoicesRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkDeleteResponse
+    public function publicApiV1PurchaseInvoicesBulkDelete(Components\BulkDeletePurchaseInvoicesRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,8 +209,8 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesBulkDeleteRequest(
-            body: $body,
             idempotencyKey: $idempotencyKey,
+            body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -305,12 +305,13 @@ class PurchaseInvoices
      * Transition up to 50 purchase invoices (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every invoice (never `now()`). Returns a `BulkPartialSuccessResult`; invoices that could not transition (not found or already paid) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1Request  $body
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesBulkStatus(Components\BulkStatusPurchaseInvoicesV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkStatusResponse
+    public function publicApiV1PurchaseInvoicesBulkStatus(Components\BulkStatusPurchaseInvoicesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -338,6 +339,7 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesBulkStatusRequest(
+            idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
@@ -430,7 +432,7 @@ class PurchaseInvoices
     /**
      * Create a purchase invoice
      *
-     * Record an invoice received from a supplier.
+     * Record an invoice received from a supplier. Catalog lines accept `product_id`, `variant_id`, `presentation_id`, `supplier_offer_id` and an optional `confirmed_base_quantity`. When `supplier_offer_id` is provided, the supplier cost, purchase unit and base-unit conversion are frozen in the invoice line snapshot; `unit_price` may be omitted. Creating the invoice as `pending` registers the inbound stock once. A `draft` invoice does not affect stock until it is later marked as paid.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequest  $body
      * @param  ?string  $idempotencyKey
@@ -563,13 +565,13 @@ class PurchaseInvoices
      * Delete a purchase invoice.
      *
      * @param  string  $purchaseInvoice
-     * @param  ?string  $idempotencyKey
+     * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesDelete(string $purchaseInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesDeleteResponse
+    public function publicApiV1PurchaseInvoicesDelete(string $purchaseInvoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -639,7 +641,7 @@ class PurchaseInvoices
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -790,7 +792,7 @@ class PurchaseInvoices
     /**
      * Download the original purchase invoice file
      *
-     * Stream the original PDF attached to the purchase invoice when it was uploaded. Returns 404 if no attachment is present.
+     * Stream the original file attached to the purchase invoice when it was uploaded — a PDF or a scanned image (`image/jpeg`, `image/png`), the formats accepted on upload. Returns 404 if no attachment is present.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -838,7 +840,7 @@ class PurchaseInvoices
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'application/pdf;q=1, image/jpeg;q=0.7, image/png;q=0';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.purchase_invoices.file', null, $this->sdkConfiguration->securitySource);
@@ -860,20 +862,39 @@ class PurchaseInvoices
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+            if (Utils\Utils::matchContentType($contentType, 'application/pdf')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFileResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1PurchaseInvoicesFileResponse(
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1PurchaseInvoicesFileResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    object: $obj);
+                    twoHundredApplicationPdfBytes: $obj);
+            } elseif (Utils\Utils::matchContentType($contentType, 'image/jpeg')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-                return $response;
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1PurchaseInvoicesFileResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    twoHundredImageJpegBytes: $obj);
+            } elseif (Utils\Utils::matchContentType($contentType, 'image/png')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1PurchaseInvoicesFileResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    twoHundredImagePngBytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
@@ -1283,7 +1304,7 @@ class PurchaseInvoices
     /**
      * Mark purchase invoice as paid
      *
-     * Record payment of a purchase invoice. Sets `paid_at` to the current timestamp.
+     * Record payment of a purchase invoice using the optional `paid_on` date. When a draft invoice contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending invoice has already registered them, so marking it as paid never duplicates stock.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidResponse
@@ -1570,7 +1591,7 @@ class PurchaseInvoices
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['Accept'] = 'application/pdf';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.purchase_invoices.payment_receipt', null, $this->sdkConfiguration->securitySource);
@@ -1592,13 +1613,20 @@ class PurchaseInvoices
 
         $statusCode = $httpResponse->getStatusCode();
         if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+            if (Utils\Utils::matchContentType($contentType, 'application/pdf')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-            return new Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse(
-                statusCode: $statusCode,
-                contentType: $contentType,
-                rawResponse: $httpResponse
-            );
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    bytes: $obj);
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);

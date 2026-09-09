@@ -14,4 +14,4 @@ convention. The controller normalizes it to `photo`.
 
 | Field                                                | Type                                                 | Required                                             | Description                                          |
 | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
-| `image`                                              | [Components\Image](../../Models/Components/Image.md) | :heavy_check_mark:                                   | N/A                                                  |
+| `image`                                              | [Components\Image](../../Models/Components/Image.md) | :heavy_check_mark:                                   | Maximum file size: 3072 kilobytes.                   |

@@ -174,13 +174,11 @@ class Series
      *
      * Return the audit timeline for a series combining its own domain events (creation, archive/unarchive, default changes, number consumption). Paginated with a page-number cursor (`starting_after` is the next page number).
      *
-     * @param  string  $series
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActivitiesRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActivitiesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesActivities(string $series, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesActivitiesResponse
+    public function publicApiV1SeriesActivities(Operations\PublicApiV1SeriesActivitiesRequest $request, ?Options $options = null): Operations\PublicApiV1SeriesActivitiesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -207,15 +205,12 @@ class Series
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1SeriesActivitiesRequest(
-            series: $series,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}/activities', Operations\PublicApiV1SeriesActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1SeriesActivitiesRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -225,6 +220,7 @@ class Series
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.series.activities', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -680,12 +676,13 @@ class Series
      *
      * Return the default numbering series for the given document type (invoice, quote, proforma, delivery_note). Returns 404 when no default is configured.
      *
+     * @param  \Factuarea\Sdk\Models\Operations\DocumentType  $documentType
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesDefault(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesDefaultResponse
+    public function publicApiV1SeriesDefault(Operations\DocumentType $documentType, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesDefaultResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -713,6 +710,7 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesDefaultRequest(
+            documentType: $documentType,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -720,6 +718,8 @@ class Series
         $url = Utils\Utils::generateUrl($baseUrl, '/series/default');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1SeriesDefaultRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -729,6 +729,7 @@ class Series
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.series.default', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {

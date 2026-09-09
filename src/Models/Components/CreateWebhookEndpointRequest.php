@@ -46,6 +46,16 @@ class CreateWebhookEndpointRequest
     public ?string $description = null;
 
     /**
+     * $ipAllowlist
+     *
+     * @var ?array<string> $ipAllowlist
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('ip_allowlist')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $ipAllowlist = null;
+
+    /**
      *
      * @var ?string $apiVersion
      */
@@ -75,35 +85,25 @@ class CreateWebhookEndpointRequest
     public ?int $timeoutSeconds = null;
 
     /**
-     * $ipAllowlist
-     *
-     * @var ?array<string> $ipAllowlist
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('ip_allowlist')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $ipAllowlist = null;
-
-    /**
      * @param  string  $url
      * @param  array<\Factuarea\Sdk\Models\Components\CreateWebhookEndpointRequestEnabledEvent>  $enabledEvents
      * @param  ?array<string, string>  $customHeaders
      * @param  ?string  $description
+     * @param  ?array<string>  $ipAllowlist
      * @param  ?string  $apiVersion
      * @param  ?array<string, string>  $metadata
      * @param  ?int  $timeoutSeconds
-     * @param  ?array<string>  $ipAllowlist
      * @phpstan-pure
      */
-    public function __construct(string $url, array $enabledEvents, ?array $customHeaders = null, ?string $description = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null, ?array $ipAllowlist = null)
+    public function __construct(string $url, array $enabledEvents, ?array $customHeaders = null, ?string $description = null, ?array $ipAllowlist = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null)
     {
         $this->url = $url;
         $this->enabledEvents = $enabledEvents;
         $this->customHeaders = $customHeaders;
         $this->description = $description;
+        $this->ipAllowlist = $ipAllowlist;
         $this->apiVersion = $apiVersion;
         $this->metadata = $metadata;
         $this->timeoutSeconds = $timeoutSeconds;
-        $this->ipAllowlist = $ipAllowlist;
     }
 }

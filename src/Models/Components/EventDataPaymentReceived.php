@@ -13,13 +13,13 @@ namespace Factuarea\Sdk\Models\Components;
 class EventDataPaymentReceived
 {
     /**
-     * Snapshot of a received payment captured at emission time. Payments have no dedicated v1 endpoint; this shape only appears inside `payment.*` events.
+     * A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/invoices/{id}/payments`.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventPaymentSnapshot $object
+     * @var \Factuarea\Sdk\Models\Components\InvoicePaymentDetail $object
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventPaymentSnapshot')]
-    public EventPaymentSnapshot $object;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoicePaymentDetail')]
+    public InvoicePaymentDetail $object;
 
     /**
      *
@@ -30,10 +30,10 @@ class EventDataPaymentReceived
 
     /**
      * @param  string  $type
-     * @param  \Factuarea\Sdk\Models\Components\EventPaymentSnapshot  $object
+     * @param  \Factuarea\Sdk\Models\Components\InvoicePaymentDetail  $object
      * @phpstan-pure
      */
-    public function __construct(EventPaymentSnapshot $object, string $type = 'payment.received')
+    public function __construct(InvoicePaymentDetail $object, string $type = 'payment.received')
     {
         $this->object = $object;
         $this->type = $type;

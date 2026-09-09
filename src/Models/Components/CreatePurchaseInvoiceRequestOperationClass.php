@@ -16,4 +16,5 @@ enum CreatePurchaseInvoiceRequestOperationClass: string
     case BienInversion = 'bien_inversion';
     case Importacion = 'importacion';
     case Intracomunitaria = 'intracomunitaria';
+    case Isp = 'isp';
 }

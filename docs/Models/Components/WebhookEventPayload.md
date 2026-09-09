@@ -698,6 +698,15 @@ Components\WebhookEventPayloadProductUpdated $value = /* values here */
 Components\WebhookEventPayloadPaymentReceived $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadPaymentReversed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPaymentReversed
+*/
+Components\WebhookEventPayloadPaymentReversed $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadTaxMetadataChanged`
 
 ```php
@@ -939,5 +948,86 @@ Components\WebhookEventPayloadAbsenceRejected $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadMonthlyRegisterClosed
 */
 Components\WebhookEventPayloadMonthlyRegisterClosed $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRuleActivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRuleActivated
+*/
+Components\WebhookEventPayloadAutomationRuleActivated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRulePaused`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRulePaused
+*/
+Components\WebhookEventPayloadAutomationRulePaused $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRuleAutoPaused`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRuleAutoPaused
+*/
+Components\WebhookEventPayloadAutomationRuleAutoPaused $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRunStarted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRunStarted
+*/
+Components\WebhookEventPayloadAutomationRunStarted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRunCompleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRunCompleted
+*/
+Components\WebhookEventPayloadAutomationRunCompleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRunFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRunFailed
+*/
+Components\WebhookEventPayloadAutomationRunFailed $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadAutomationRunStepDeadLettered`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadAutomationRunStepDeadLettered
+*/
+Components\WebhookEventPayloadAutomationRunStepDeadLettered $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadOrderInvoiced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadOrderInvoiced
+*/
+Components\WebhookEventPayloadOrderInvoiced $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadOrderRefunded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadOrderRefunded
+*/
+Components\WebhookEventPayloadOrderRefunded $value = /* values here */
 ```
 

@@ -698,6 +698,15 @@ Components\EventDataProductUpdated $value = /* values here */
 Components\EventDataPaymentReceived $value = /* values here */
 ```
 
+### `Components\EventDataPaymentReversed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPaymentReversed
+*/
+Components\EventDataPaymentReversed $value = /* values here */
+```
+
 ### `Components\EventDataTaxMetadataChanged`
 
 ```php
@@ -939,5 +948,86 @@ Components\EventDataAbsenceRejected $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataMonthlyRegisterClosed
 */
 Components\EventDataMonthlyRegisterClosed $value = /* values here */
+```
+
+### `Components\EventDataAutomationRuleActivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRuleActivated
+*/
+Components\EventDataAutomationRuleActivated $value = /* values here */
+```
+
+### `Components\EventDataAutomationRulePaused`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRulePaused
+*/
+Components\EventDataAutomationRulePaused $value = /* values here */
+```
+
+### `Components\EventDataAutomationRuleAutoPaused`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRuleAutoPaused
+*/
+Components\EventDataAutomationRuleAutoPaused $value = /* values here */
+```
+
+### `Components\EventDataAutomationRunStarted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRunStarted
+*/
+Components\EventDataAutomationRunStarted $value = /* values here */
+```
+
+### `Components\EventDataAutomationRunCompleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRunCompleted
+*/
+Components\EventDataAutomationRunCompleted $value = /* values here */
+```
+
+### `Components\EventDataAutomationRunFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRunFailed
+*/
+Components\EventDataAutomationRunFailed $value = /* values here */
+```
+
+### `Components\EventDataAutomationRunStepDeadLettered`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataAutomationRunStepDeadLettered
+*/
+Components\EventDataAutomationRunStepDeadLettered $value = /* values here */
+```
+
+### `Components\EventDataOrderInvoiced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataOrderInvoiced
+*/
+Components\EventDataOrderInvoiced $value = /* values here */
+```
+
+### `Components\EventDataOrderRefunded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataOrderRefunded
+*/
+Components\EventDataOrderRefunded $value = /* values here */
 ```
 

@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Addon - State of the `developer_api` addon for this company. */
+/** Addon - Developer API entitlement derived from the company plan. The `addon` property name is retained for backwards compatibility. */
 class Addon
 {
     /**
-     * true when the addon is currently usable (paid or within grace period).
+     * true when the company plan includes Developer API access.
      *
      * @var bool $active
      */
@@ -21,7 +21,7 @@ class Addon
     public bool $active;
 
     /**
-     * true when the subscription lapsed but the grace period is still open.
+     * Legacy compatibility field. The plan-based entitlement does not grant an add-on grace period.
      *
      * @var bool $inGrace
      */
@@ -29,7 +29,7 @@ class Addon
     public bool $inGrace;
 
     /**
-     * Grace period cutoff (ISO 8601) when `in_grace=true`; null otherwise.
+     * Legacy compatibility field. Always null for the canonical plan-based entitlement.
      *
      * @var ?\DateTime $expiresAt
      */

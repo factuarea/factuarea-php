@@ -11,6 +11,8 @@
 | `ProductsRead`                 | products:read                  |
 | `ProductsWrite`                | products:write                 |
 | `ProductsDelete`               | products:delete                |
+| `PriceListsRead`               | price_lists:read               |
+| `PriceListsWrite`              | price_lists:write              |
 | `SuppliersRead`                | suppliers:read                 |
 | `SuppliersWrite`               | suppliers:write                |
 | `SuppliersDelete`              | suppliers:delete               |
@@ -73,6 +75,14 @@
 | `GocardlessAutoinvoicingWrite` | gocardless_autoinvoicing:write |
 | `MoneiAutoinvoicingRead`       | monei_autoinvoicing:read       |
 | `MoneiAutoinvoicingWrite`      | monei_autoinvoicing:write      |
+| `WoocommerceStoreRead`         | woocommerce_store:read         |
+| `WoocommerceStoreWrite`        | woocommerce_store:write        |
+| `ShopifyStoreRead`             | shopify_store:read             |
+| `ShopifyStoreWrite`            | shopify_store:write            |
+| `PrestashopStoreRead`          | prestashop_store:read          |
+| `PrestashopStoreWrite`         | prestashop_store:write         |
+| `StoresRead`                   | stores:read                    |
+| `StoresWrite`                  | stores:write                   |
 | `EmployeesRead`                | employees:read                 |
 | `EmployeesWrite`               | employees:write                |
 | `EmployeesDelete`              | employees:delete               |
@@ -91,4 +101,8 @@
 | `EmailsRead`                   | emails:read                    |
 | `IntegrationEventsRead`        | integration_events:read        |
 | `IntegrationEventsWrite`       | integration_events:write       |
+| `AutomationsRead`              | automations:read               |
+| `AutomationsWrite`             | automations:write              |
+| `AutomationsDelete`            | automations:delete             |
+| `AutomationRunsRead`           | automation_runs:read           |
 | `Wildcard`                     | *                              |
