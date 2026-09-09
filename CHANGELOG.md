@@ -4,6 +4,15 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [Unreleased]
+
+Regenerated from the Factuarea public OpenAPI spec after the variant stock
+contract change: `UpdateProductVariantRequest.stock` no longer declares
+`minimum: 0`. Send the current balance to leave it untouched (it may be negative
+when delivered documents ran ahead of the incoming stock); any other value is a
+manual set and must still be `>= 0` (422 otherwise). `CreateProductVariantRequest`
+keeps `minimum: 0`. No operations added, removed or renamed.
+
 ## [0.3.0] — 2026-09-09
 
 Regenerated from the public OpenAPI spec published with Factuarea v1.15.26:

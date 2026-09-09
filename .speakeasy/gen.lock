@@ -6,9 +6,9 @@ management:
   generationVersion: 2.935.1
   releaseVersion: 0.3.0
 persistentEdits:
-  generation_id: 8025600d-40a9-4fd2-9eb4-4d3f4e496638
-  pristine_commit_hash: 6244aac8499c70581e56a51b2e4ba1758659a2f8
-  pristine_tree_hash: 205aa34e13c34466d239b6d0dfec0161c615fd7b
+  generation_id: 79dba6d5-dbcb-4e12-b49a-0c33b88a4d6f
+  pristine_commit_hash: c9ddfc694596ad530fce11798cc50f4e9e0b8cf2
+  pristine_tree_hash: 9d612f347accf46963665fab0a4bb8739c74dc95
 features:
   php:
     constsAndDefaults: 0.2.2
@@ -4186,8 +4186,8 @@ trackedFiles:
     pristine_git_object: e6d4a11374df066e129ffa775dac99288cc5e816
   docs/Models/Components/UpdateProductVariantRequest.md:
     id: b32fd8852b56
-    last_write_checksum: sha1:59d4cff4baa2633a8b9831be470f62370c65051f
-    pristine_git_object: f2748605fc4dcffd623d3d3f2584add3275a34e8
+    last_write_checksum: sha1:2971458cf91ad87e78fe2c63fbb813297ad1a42b
+    pristine_git_object: cdc0aa042d2dbe015c9021a7fc638bd3925c2911
   docs/Models/Components/UpdateProformaPublicLinkRequest.md:
     id: 7b924c02b56b
     last_write_checksum: sha1:b5bdaee58d737402897bd0e88313bbefee093d62
@@ -15490,8 +15490,8 @@ trackedFiles:
     pristine_git_object: f15221acc2f3667125c0c8dbd8e90b3f48890e59
   src/Models/Components/UpdateProductVariantRequest.php:
     id: cbe42b89fc3f
-    last_write_checksum: sha1:81423aa991393710f494cf1c717c3d93009c4e4c
-    pristine_git_object: ed396138d13c7d0f64577135a7d33e8fe9ee9a76
+    last_write_checksum: sha1:f08bddd904c8271536681ca5700e47ff1899ae28
+    pristine_git_object: 9b353effb9cbf605157a4125cbde0ece874b21fd
   src/Models/Components/UpdateProformaPublicLinkRequest.php:
     id: e5c0a842aa7c
     last_write_checksum: sha1:e0ec210e0ebc73ffc8d8d6a27a8f7846975a32e8
