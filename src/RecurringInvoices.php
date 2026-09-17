@@ -1781,12 +1781,13 @@ class RecurringInvoices
      * Advance the recurring invoice to its following scheduled run without generating an invoice for the current cycle. The skipped occurrence is not counted against any occurrence limit. Cancelled or completed recurring invoices return 422.
      *
      * @param  string  $recurringInvoice
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesSkipResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1RecurringInvoicesSkip(string $recurringInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesSkipResponse
+    public function publicApiV1RecurringInvoicesSkip(string $recurringInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1RecurringInvoicesSkipResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1815,6 +1816,7 @@ class RecurringInvoices
         }
         $request = new Operations\PublicApiV1RecurringInvoicesSkipRequest(
             recurringInvoice: $recurringInvoice,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

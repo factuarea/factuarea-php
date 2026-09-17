@@ -5,17 +5,14 @@
 
 | Name                           | Value                          |
 | ------------------------------ | ------------------------------ |
-| `ClientsRead`                  | clients:read                   |
-| `ClientsWrite`                 | clients:write                  |
-| `ClientsDelete`                | clients:delete                 |
+| `ContactsRead`                 | contacts:read                  |
+| `ContactsWrite`                | contacts:write                 |
+| `ContactsDelete`               | contacts:delete                |
 | `ProductsRead`                 | products:read                  |
 | `ProductsWrite`                | products:write                 |
 | `ProductsDelete`               | products:delete                |
 | `PriceListsRead`               | price_lists:read               |
 | `PriceListsWrite`              | price_lists:write              |
-| `SuppliersRead`                | suppliers:read                 |
-| `SuppliersWrite`               | suppliers:write                |
-| `SuppliersDelete`              | suppliers:delete               |
 | `InvoicesRead`                 | invoices:read                  |
 | `InvoicesWrite`                | invoices:write                 |
 | `InvoicesDelete`               | invoices:delete                |

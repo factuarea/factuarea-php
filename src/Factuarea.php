@@ -89,15 +89,13 @@ class Factuarea
 
     public WorkSchedules $workSchedules;
 
-    public PurchaseInvoices $purchaseInvoices;
+    public Contacts $contacts;
 
-    public Clients $clients;
+    public PurchaseInvoices $purchaseInvoices;
 
     public DeliveryNotes $deliveryNotes;
 
     public Products $products;
-
-    public Suppliers $suppliers;
 
     public Taxes $taxes;
 
@@ -190,11 +188,10 @@ class Factuarea
         $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
         $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
+        $this->contacts = new Contacts($this->sdkConfiguration);
         $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
-        $this->clients = new Clients($this->sdkConfiguration);
         $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
         $this->products = new Products($this->sdkConfiguration);
-        $this->suppliers = new Suppliers($this->sdkConfiguration);
         $this->taxes = new Taxes($this->sdkConfiguration);
         $this->employeeInvitations = new EmployeeInvitations($this->sdkConfiguration);
         $this->employeeSeats = new EmployeeSeats($this->sdkConfiguration);

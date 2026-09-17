@@ -1,0 +1,11 @@
+# BusinessContactRole
+
+
+## Fields
+
+| Field                                                                                    | Type                                                                                     | Required                                                                                 | Description                                                                              |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `role`                                                                                   | [Components\BusinessContactRoleEnum](../../Models/Components/BusinessContactRoleEnum.md) | :heavy_check_mark:                                                                       | N/A                                                                                      |
+| `status`                                                                                 | [Components\BusinessContactStatus](../../Models/Components/BusinessContactStatus.md)     | :heavy_check_mark:                                                                       | N/A                                                                                      |
+| `assignedAt`                                                                             | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                            | :heavy_check_mark:                                                                       | N/A                                                                                      |
+| `deactivatedAt`                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                            | :heavy_check_mark:                                                                       | N/A                                                                                      |

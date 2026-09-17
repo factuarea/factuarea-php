@@ -40,11 +40,11 @@ class EmployeeInvitation
     /**
      * Always `employee` for this surface.
      *
-     * @var \Factuarea\Sdk\Models\Components\Role $role
+     * @var \Factuarea\Sdk\Models\Components\EmployeeInvitationRole $role
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('role')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Role')]
-    public Role $role;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EmployeeInvitationRole')]
+    public EmployeeInvitationRole $role;
 
     /**
      * Lifecycle status of the invitation: `pending` (awaiting acceptance), `accepted`, `canceled` or `expired`.
@@ -75,13 +75,13 @@ class EmployeeInvitation
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\EmployeeInvitationObject  $object
      * @param  string  $email
-     * @param  \Factuarea\Sdk\Models\Components\Role  $role
+     * @param  \Factuarea\Sdk\Models\Components\EmployeeInvitationRole  $role
      * @param  \Factuarea\Sdk\Models\Components\EmployeeInvitationStatus  $status
      * @param  ?\DateTime  $expiresAt
      * @param  ?\DateTime  $createdAt
      * @phpstan-pure
      */
-    public function __construct(string $id, EmployeeInvitationObject $object, string $email, Role $role, EmployeeInvitationStatus $status, ?\DateTime $expiresAt = null, ?\DateTime $createdAt = null)
+    public function __construct(string $id, EmployeeInvitationObject $object, string $email, EmployeeInvitationRole $role, EmployeeInvitationStatus $status, ?\DateTime $expiresAt = null, ?\DateTime $createdAt = null)
     {
         $this->id = $id;
         $this->object = $object;

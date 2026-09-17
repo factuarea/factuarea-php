@@ -79,6 +79,16 @@
 | `ClientUpdated`                      | client.updated                       |
 | `ClientDeleted`                      | client.deleted                       |
 | `ClientMetadataChanged`              | client.metadata_changed              |
+| `ContactCreated`                     | contact.created                      |
+| `ContactUpdated`                     | contact.updated                      |
+| `ContactArchived`                    | contact.archived                     |
+| `ContactRestored`                    | contact.restored                     |
+| `ContactRoleAssigned`                | contact.role.assigned                |
+| `ContactRoleActivated`               | contact.role.activated               |
+| `ContactRoleDeactivated`             | contact.role.deactivated             |
+| `ContactRoleRemoved`                 | contact.role.removed                 |
+| `ContactCustomerProfileUpdated`      | contact.customer_profile.updated     |
+| `ContactSupplierProfileUpdated`      | contact.supplier_profile.updated     |
 | `ProductCreated`                     | product.created                      |
 | `ProductUpdated`                     | product.updated                      |
 | `PaymentReceived`                    | payment.received                     |

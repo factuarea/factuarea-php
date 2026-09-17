@@ -671,6 +671,96 @@ Components\EventDataClientDeleted $value = /* values here */
 Components\EventDataClientMetadataChanged $value = /* values here */
 ```
 
+### `Components\EventDataContactCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactCreated
+*/
+Components\EventDataContactCreated $value = /* values here */
+```
+
+### `Components\EventDataContactUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactUpdated
+*/
+Components\EventDataContactUpdated $value = /* values here */
+```
+
+### `Components\EventDataContactArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactArchived
+*/
+Components\EventDataContactArchived $value = /* values here */
+```
+
+### `Components\EventDataContactRestored`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRestored
+*/
+Components\EventDataContactRestored $value = /* values here */
+```
+
+### `Components\EventDataContactRoleAssigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleAssigned
+*/
+Components\EventDataContactRoleAssigned $value = /* values here */
+```
+
+### `Components\EventDataContactRoleActivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleActivated
+*/
+Components\EventDataContactRoleActivated $value = /* values here */
+```
+
+### `Components\EventDataContactRoleDeactivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleDeactivated
+*/
+Components\EventDataContactRoleDeactivated $value = /* values here */
+```
+
+### `Components\EventDataContactRoleRemoved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleRemoved
+*/
+Components\EventDataContactRoleRemoved $value = /* values here */
+```
+
+### `Components\EventDataContactCustomerProfileUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactCustomerProfileUpdated
+*/
+Components\EventDataContactCustomerProfileUpdated $value = /* values here */
+```
+
+### `Components\EventDataContactSupplierProfileUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactSupplierProfileUpdated
+*/
+Components\EventDataContactSupplierProfileUpdated $value = /* values here */
+```
+
 ### `Components\EventDataProductCreated`
 
 ```php
