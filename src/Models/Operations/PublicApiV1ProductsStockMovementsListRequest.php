@@ -54,10 +54,10 @@ class PublicApiV1ProductsStockMovementsListRequest
     /**
      * `in` = entradas (delta positivo), `out` = salidas (delta negativo). Ausente = el ledger completo.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\Direction $direction
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListDirection $direction
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=direction')]
-    public ?Direction $direction = null;
+    public ?PublicApiV1ProductsStockMovementsListDirection $direction = null;
 
     /**
      * @param  string  $product
@@ -65,10 +65,10 @@ class PublicApiV1ProductsStockMovementsListRequest
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
-     * @param  ?\Factuarea\Sdk\Models\Operations\Direction  $direction
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListDirection  $direction
      * @phpstan-pure
      */
-    public function __construct(string $product, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?Direction $direction = null)
+    public function __construct(string $product, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?PublicApiV1ProductsStockMovementsListDirection $direction = null)
     {
         $this->product = $product;
         $this->limit = $limit;

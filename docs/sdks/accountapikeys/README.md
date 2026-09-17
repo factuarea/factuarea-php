@@ -29,7 +29,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -68,7 +68,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -107,7 +107,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -146,7 +146,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -211,7 +211,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -268,7 +268,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -326,7 +326,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -386,7 +386,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

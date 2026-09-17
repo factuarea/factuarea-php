@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
-use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -53,14 +51,11 @@ class Variants
      *
      * Create a variant under a product with its own SKU, barcode, optional price override and stock settings.
      *
-     * @param  \Factuarea\Sdk\Models\Components\CreateProductVariantRequest  $body
-     * @param  string  $product
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVariantsCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVariantsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsVariantsCreate(Components\CreateProductVariantRequest $body, string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsVariantsCreateResponse
+    public function publicApiV1ProductsVariantsCreate(Operations\PublicApiV1ProductsVariantsCreateRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsVariantsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,12 +82,6 @@ class Variants
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsVariantsCreateRequest(
-            product: $product,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/variants', Operations\PublicApiV1ProductsVariantsCreateRequest::class, $request);
         $urlOverride = null;

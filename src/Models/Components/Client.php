@@ -274,12 +274,12 @@ class Client
     /**
      * Preferred operation regime of the client for VAT / VeriFactu purposes.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\ClientPreferredOperationRegime $preferredOperationRegime
+     * @var ?\Factuarea\Sdk\Models\Components\PreferredOperationRegime $preferredOperationRegime
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('preferred_operation_regime')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ClientPreferredOperationRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PreferredOperationRegime|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?ClientPreferredOperationRegime $preferredOperationRegime = null;
+    public ?PreferredOperationRegime $preferredOperationRegime = null;
 
     /**
      *
@@ -340,13 +340,13 @@ class Client
      * @param  ?float  $defaultDiscount
      * @param  ?float  $defaultVatRate
      * @param  ?float  $defaultRetentionRate
-     * @param  ?\Factuarea\Sdk\Models\Components\ClientPreferredOperationRegime  $preferredOperationRegime
+     * @param  ?\Factuarea\Sdk\Models\Components\PreferredOperationRegime  $preferredOperationRegime
      * @param  ?\Factuarea\Sdk\Models\Components\AlternativeId  $alternativeId
      * @param  ?\Factuarea\Sdk\Models\Components\PaymentPreferences  $paymentPreferences
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, ClientObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $defaultPriceListId = null, ?string $defaultPriceListName = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?ClientCoordinates $coordinates = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?ClientPreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
+    public function __construct(string $id, ClientObject $object, string $name, Address $address, bool $accumulate347, bool $isActive, ?string $taxId = null, ?string $vatId = null, ?string $email = null, ?string $phone = null, ?array $billingEmails = null, ?bool $isSurchargeSubject = null, ?array $bankAccounts = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $defaultPriceListId = null, ?string $defaultPriceListName = null, ?string $notes = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $commercialName = null, ?string $fax = null, ?string $mobile = null, ?string $website = null, ?string $contactPerson = null, ?ClientCoordinates $coordinates = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?PreferredOperationRegime $preferredOperationRegime = null, ?AlternativeId $alternativeId = null, ?PaymentPreferences $paymentPreferences = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;

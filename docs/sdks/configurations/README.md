@@ -27,7 +27,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -84,7 +84,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -95,6 +95,42 @@ $body = new Components\PreviewCatalogConfigurationImpactRequest(
 
 $response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
     product: 'Luxurious Wooden Tuna',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/products/{product}/configurations/impact-preview" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewCatalogConfigurationImpactRequest(
+    configurations: [],
+);
+
+$response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
+    product: 'Ergonomic Concrete Soap',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01'),
     xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
@@ -120,7 +156,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
