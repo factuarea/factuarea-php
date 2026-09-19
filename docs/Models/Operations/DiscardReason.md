@@ -48,3 +48,5 @@ Typed reason why the event was discarded, from the closed catalogue.
 | `OrderStatusUnknown`                            | order_status_unknown                            |
 | `RefundNotSettled`                              | refund_not_settled                              |
 | `ProtectedCustomerDataUnavailable`              | protected_customer_data_unavailable             |
+| `StorefrontOrderPayment`                        | storefront_order_payment                        |
+| `InterposedOrderNotCreatable`                   | interposed_order_not_creatable                  |

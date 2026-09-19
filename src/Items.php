@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
-use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -510,14 +508,11 @@ class Items
      *
      * Create or update the unique price entry for a catalog target in this price list.
      *
-     * @param  \Factuarea\Sdk\Models\Components\UpsertPriceListItemRequest  $body
-     * @param  string  $priceList
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsItemsUpsertRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsItemsUpsertResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsItemsUpsert(Components\UpsertPriceListItemRequest $body, string $priceList, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsItemsUpsertResponse
+    public function publicApiV1PriceListsItemsUpsert(Operations\PublicApiV1PriceListsItemsUpsertRequest $request, ?Options $options = null): Operations\PublicApiV1PriceListsItemsUpsertResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -544,12 +539,6 @@ class Items
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
-            priceList: $priceList,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}/items', Operations\PublicApiV1PriceListsItemsUpsertRequest::class, $request);
         $urlOverride = null;

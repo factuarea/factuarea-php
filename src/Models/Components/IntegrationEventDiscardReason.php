@@ -53,4 +53,6 @@ enum IntegrationEventDiscardReason: string
     case OrderStatusUnknown = 'order_status_unknown';
     case RefundNotSettled = 'refund_not_settled';
     case ProtectedCustomerDataUnavailable = 'protected_customer_data_unavailable';
+    case StorefrontOrderPayment = 'storefront_order_payment';
+    case InterposedOrderNotCreatable = 'interposed_order_not_creatable';
 }

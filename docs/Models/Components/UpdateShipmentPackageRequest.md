@@ -1,0 +1,46 @@
+# UpdateShipmentPackageRequest
+
+Partial update of one package of the shipment of a delivery note.
+
+## What partial means here
+
+The six properties are optional and the body may arrive empty: a body with no
+properties changes nothing and is not an error. A property you do not send
+keeps the value it has; a property you send with `null` is REMOVED, which is
+how a weight entered by mistake is taken back. What tells those two apart is
+whether the KEY is present in the body, never the value it carries, and an
+empty string is read as the same order as `null`.
+
+## What this body accepts
+
+The same six properties as adding a package, with the same limits.
+`reference` is the label the carrier prints for this package, up to 60
+characters. `weight_kg` is in kilograms and `length_cm`, `width_cm` and
+`height_cm` are in centimetres, all four sent as numeric strings with at most
+eight whole digits and two decimals, which is what their storage holds; a
+value above that ceiling, or one carrying a third decimal, is rejected as a
+validation error naming the property at fault, before the shipment is touched.
+Zero is accepted and a negative value is not. `notes` is free internal text.
+
+## What this body does not accept
+
+The position of the package is not written here: it is the order inside the
+shipment, it belongs to the whole set and not to one package, and it is
+assigned when the package is added. The total weight of the shipment is not
+written either, because it is always the sum of its packages and never a
+stored value.
+
+A package that belongs to another delivery note, or to another company,
+answers exactly like one that does not exist.
+
+
+## Fields
+
+| Field                                                                                                                                                                                                                                      | Type                                                                                                                                                                                                                                       | Required                                                                                                                                                                                                                                   | Description                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `reference`                                                                                                                                                                                                                                | *?string*                                                                                                                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                                                                                         | Label the carrier prints for this package. Omitting it keeps the current one and `null` removes it — that difference is the whole point of this operation, so an update that only corrects the weight cannot wipe the label along the way. |
+| `weightKg`                                                                                                                                                                                                                                 | *?float*                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                         | Weight of the package in kilograms, with at most two decimals and up to 99999999.99. Omitting it keeps the current one and `null` removes it, which also takes it out of the total weight of the shipment.                                 |
+| `lengthCm`                                                                                                                                                                                                                                 | *?float*                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                         | Length of the package in centimetres, with the same limits and the same absent-versus-null rule.                                                                                                                                           |
+| `widthCm`                                                                                                                                                                                                                                  | *?float*                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                         | Width of the package in centimetres, with the same limits and the same absent-versus-null rule.                                                                                                                                            |
+| `heightCm`                                                                                                                                                                                                                                 | *?float*                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                         | Height of the package in centimetres, with the same limits and the same absent-versus-null rule.                                                                                                                                           |
+| `notes`                                                                                                                                                                                                                                    | *?string*                                                                                                                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                                                                                         | Free text about the package. Omitting it keeps the current one and `null` removes it.                                                                                                                                                      |

@@ -24,26 +24,26 @@ class Payments
     /**
      * Total amount collected (mirrors `paid_amount`).
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Outstanding balance pending collection (mirrors `pending_amount`).
      *
-     * @var float $pending
+     * @var string $pending
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending')]
-    public float $pending;
+    public string $pending;
 
     /**
      * @param  array<\Factuarea\Sdk\Models\Components\InvoicePaymentDetail>  $detail
-     * @param  float  $total
-     * @param  float  $pending
+     * @param  string  $total
+     * @param  string  $pending
      * @phpstan-pure
      */
-    public function __construct(array $detail, float $total, float $pending)
+    public function __construct(array $detail, string $total, string $pending)
     {
         $this->detail = $detail;
         $this->total = $total;

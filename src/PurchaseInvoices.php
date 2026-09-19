@@ -20,12 +20,15 @@ use Speakeasy\Serializer\DeserializationContext;
 class PurchaseInvoices
 {
     private SDKConfiguration $sdkConfiguration;
+    public MatchT $match;
+
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
+        $this->match = new MatchT($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -1026,7 +1029,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1784,14 +1787,11 @@ class PurchaseInvoices
      *
      * Record a partial (or total) payment against a purchase invoice and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the invoice issue date and today, and a cancelled invoice accepts no payments. Once the accumulated payments cover the total, the invoice settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
      *
-     * @param  \Factuarea\Sdk\Models\Components\RegisterPurchaseInvoicePaymentRequest  $body
-     * @param  string  $purchaseInvoice
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesRegisterPayment(Components\RegisterPurchaseInvoicePaymentRequest $body, string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse
+    public function publicApiV1PurchaseInvoicesRegisterPayment(Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest $request, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1818,12 +1818,6 @@ class PurchaseInvoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest(
-            purchaseInvoice: $purchaseInvoice,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/payments', Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest::class, $request);
         $urlOverride = null;

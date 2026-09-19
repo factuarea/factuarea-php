@@ -63,18 +63,18 @@ class ClientStats
     /**
      * Total amount invoiced to clients (EUR).
      *
-     * @var float $totalInvoiced
+     * @var string $totalInvoiced
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_invoiced')]
-    public float $totalInvoiced;
+    public string $totalInvoiced;
 
     /**
      * Total amount pending collection (EUR).
      *
-     * @var float $totalPending
+     * @var string $totalPending
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_pending')]
-    public float $totalPending;
+    public string $totalPending;
 
     /**
      * Clients with at least one invoice pending collection.
@@ -87,10 +87,10 @@ class ClientStats
     /**
      * Aggregate amount of invoices pending collection (EUR).
      *
-     * @var float $pendingInvoicesAmount
+     * @var string $pendingInvoicesAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_invoices_amount')]
-    public float $pendingInvoicesAmount;
+    public string $pendingInvoicesAmount;
 
     /**
      * Clientes nuevos creados durante el mes en curso.
@@ -111,10 +111,10 @@ class ClientStats
     /**
      * Average amount invoiced per client (EUR).
      *
-     * @var float $averagePerClient
+     * @var string $averagePerClient
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('average_per_client')]
-    public float $averagePerClient;
+    public string $averagePerClient;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\ClientStatsObject  $object
@@ -123,16 +123,16 @@ class ClientStats
      * @param  int  $withEmail
      * @param  int  $withPhone
      * @param  int  $withInvoices
-     * @param  float  $totalInvoiced
-     * @param  float  $totalPending
+     * @param  string  $totalInvoiced
+     * @param  string  $totalPending
      * @param  int  $withPendingInvoices
-     * @param  float  $pendingInvoicesAmount
+     * @param  string  $pendingInvoicesAmount
      * @param  int  $newThisMonth
      * @param  int  $inactiveClients
-     * @param  float  $averagePerClient
+     * @param  string  $averagePerClient
      * @phpstan-pure
      */
-    public function __construct(ClientStatsObject $object, int $total, int $active, int $withEmail, int $withPhone, int $withInvoices, float $totalInvoiced, float $totalPending, int $withPendingInvoices, float $pendingInvoicesAmount, int $newThisMonth, int $inactiveClients, float $averagePerClient)
+    public function __construct(ClientStatsObject $object, int $total, int $active, int $withEmail, int $withPhone, int $withInvoices, string $totalInvoiced, string $totalPending, int $withPendingInvoices, string $pendingInvoicesAmount, int $newThisMonth, int $inactiveClients, string $averagePerClient)
     {
         $this->object = $object;
         $this->total = $total;

@@ -46,17 +46,28 @@ class Update
     public ?string $variantId = null;
 
     /**
+     * Optional UUID of the warehouse each adjustment is booked to. When omitted, it is resolved from the product default and then from the company default warehouse.
+     *
+     * @var ?string $warehouseId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warehouse_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $warehouseId = null;
+
+    /**
      * @param  string  $productId
      * @param  float  $stock
      * @param  ?\Factuarea\Sdk\Models\Components\BulkUpdateProductStockRequestOperation  $operation
      * @param  ?string  $variantId
+     * @param  ?string  $warehouseId
      * @phpstan-pure
      */
-    public function __construct(string $productId, float $stock, ?BulkUpdateProductStockRequestOperation $operation = null, ?string $variantId = null)
+    public function __construct(string $productId, float $stock, ?BulkUpdateProductStockRequestOperation $operation = null, ?string $variantId = null, ?string $warehouseId = null)
     {
         $this->productId = $productId;
         $this->stock = $stock;
         $this->operation = $operation;
         $this->variantId = $variantId;
+        $this->warehouseId = $warehouseId;
     }
 }

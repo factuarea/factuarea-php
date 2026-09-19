@@ -40,10 +40,10 @@ class InvoicePaymentDetail
     /**
      * Payment amount.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Payment date (YYYY-MM-DD).
@@ -146,7 +146,7 @@ class InvoicePaymentDetail
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\InvoicePaymentDetailObject  $object
      * @param  string  $invoiceId
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  LocalDate  $paymentDate
      * @param  string  $paymentMethod
      * @param  string  $paymentMethodText
@@ -161,7 +161,7 @@ class InvoicePaymentDetail
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoicePaymentDetailObject $object, string $invoiceId, float $amount, LocalDate $paymentDate, string $paymentMethod, string $paymentMethodText, bool $isReversed, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?ReversalReason $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, InvoicePaymentDetailObject $object, string $invoiceId, string $amount, LocalDate $paymentDate, string $paymentMethod, string $paymentMethodText, bool $isReversed, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?ReversalReason $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

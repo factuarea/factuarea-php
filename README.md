@@ -210,6 +210,41 @@ The full, generated reference for all resources and operations lives in
 `operationId → method` mapping (e.g. `public-api.v1.invoices.mark_paid` →
 `$factuarea->invoices->publicApiV1InvoicesMarkPaid(...)`).
 
+### ERP and omnichannel families
+
+The 2026-09-18 regeneration added **184 operations** (470 → 654 over 532 paths)
+covering the order-to-cash and stock side of the platform, plus the buyer-facing
+storefront. They are reached from the client like any other family:
+
+| Family | Entry point | Operations |
+| --- | --- | --- |
+| Sales orders | `$factuarea->salesOrders` (`->lines`, `->buyer`, `->shippingAddress`) | 24 |
+| Purchase orders | `$factuarea->purchaseOrders` (`->lines`, `->receipts`) | 24 |
+| Reorder suggestions | `$factuarea->purchaseReorderSuggestions` | 2 |
+| Goods receipts | `$factuarea->goodsReceipts` (`->lines`) | 9 |
+| Warehouses | `$factuarea->warehouses` (`->locations`) | 14 |
+| Stock transfers | `$factuarea->stockTransfers` (`->lines`) | 12 |
+| Stock reservations | `$factuarea->stockReservations` | 7 |
+| Stock availability | `$factuarea->stockAvailability` (`->commitments`) | 4 |
+| Carriers | `$factuarea->carriers` | 6 |
+| Returns | `$factuarea->returns` (`->correctiveCandidates`) | 12 |
+| Storefront | `$factuarea->storefront` (`->products`, `->prices`, `->availability`, `->orders`, `->sessions`, `->categories`, `->catalogSelections`) | 23 |
+| Storefront credentials | `$factuarea->storefrontKeys` | 7 |
+| Contacts | `$factuarea->contacts` | 18 |
+
+Fulfilment extends the existing delivery-note family in place
+(`$factuarea->deliveryNotes->pickingList`, `->pickingQueue`, `->pickingLines`,
+`->packages`, `->shipment`, `->fulfilmentStatus`), so no new entry point is
+needed for it.
+
+Everything the rest of the SDK gives you applies unchanged to these families:
+listings page with the same `{data, has_more, next_cursor}` envelope and are
+iterated by [`PageIterator`](src/Custom/Pagination/PageIterator.php); mutating
+calls get an automatic `Idempotency-Key`; PDF downloads (sales order, purchase
+order, stock transfer, picking list, packing list, shipping label) return the
+body on `$response->bytes` with the untouched stream on
+`$response->rawResponse->getBody()`.
+
 ---
 
 ## Versioning
@@ -389,7 +424,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -423,6 +458,7 @@ This SDK supports the following security schemes globally:
 
 | Name         | Type   | Scheme       |
 | ------------ | ------ | ------------ |
+| `http`       | http   | HTTP Bearer  |
 | `bearerAuth` | http   | HTTP Bearer  |
 | `apiKeyAuth` | apiKey | API key      |
 | `oAuth2`     | oauth2 | OAuth2 token |
@@ -441,7 +477,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -567,6 +603,15 @@ if ($response->object !== null) {
 
 * [publicApiV1AutomationsUsageShow](docs/sdks/usage/README.md#publicapiv1automationsusageshow) - Retrieve automation usage
 
+### [Carriers](docs/sdks/carriers/README.md)
+
+* [publicApiV1CarriersCreate](docs/sdks/carriers/README.md#publicapiv1carrierscreate) - Create a carrier
+* [publicApiV1CarriersList](docs/sdks/carriers/README.md#publicapiv1carrierslist) - List all carriers
+* [publicApiV1CarriersDelete](docs/sdks/carriers/README.md#publicapiv1carriersdelete) - Delete a carrier
+* [publicApiV1CarriersShow](docs/sdks/carriers/README.md#publicapiv1carriersshow) - Retrieve a carrier
+* [publicApiV1CarriersUpdate](docs/sdks/carriers/README.md#publicapiv1carriersupdate) - Update a carrier
+* [publicApiV1CarriersFindByCode](docs/sdks/carriers/README.md#publicapiv1carriersfindbycode) - Find a carrier by code
+
 ### [Clients](docs/sdks/clients/README.md)
 
 * [publicApiV1ClientsBulkCreate](docs/sdks/clients/README.md#publicapiv1clientsbulkcreate) - Bulk create clients
@@ -607,6 +652,27 @@ if ($response->object !== null) {
 * [publicApiV1CompaniesApiKeysShow](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysshow) - Retrieve a child API key
 * [publicApiV1CompaniesApiKeysRotateSecret](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrotatesecret) - Rotate a child API key secret
 
+### [Contacts](docs/sdks/contacts/README.md)
+
+* [publicApiV1ContactsAssignContactRole](docs/sdks/contacts/README.md#publicapiv1contactsassigncontactrole) - Assign a contact role
+* [publicApiV1ContactsRemoveContactRole](docs/sdks/contacts/README.md#publicapiv1contactsremovecontactrole) - Remove a contact role
+* [publicApiV1ContactsBulkArchive](docs/sdks/contacts/README.md#publicapiv1contactsbulkarchive) - Archive contacts in bulk
+* [publicApiV1ContactsBulkChangeContactRoleStatus](docs/sdks/contacts/README.md#publicapiv1contactsbulkchangecontactrolestatus) - Change contact role status in bulk
+* [publicApiV1ContactsChangeContactRoleStatus](docs/sdks/contacts/README.md#publicapiv1contactschangecontactrolestatus) - Change a contact role status
+* [publicApiV1ContactsCreate](docs/sdks/contacts/README.md#publicapiv1contactscreate) - Create a contact
+* [publicApiV1ContactsList](docs/sdks/contacts/README.md#publicapiv1contactslist) - List contacts
+* [publicApiV1ContactsDelete](docs/sdks/contacts/README.md#publicapiv1contactsdelete) - Archive a contact
+* [publicApiV1ContactsShow](docs/sdks/contacts/README.md#publicapiv1contactsshow) - Retrieve a contact
+* [publicApiV1ContactsUpdate](docs/sdks/contacts/README.md#publicapiv1contactsupdate) - Update a contact
+* [publicApiV1ContactsOptions](docs/sdks/contacts/README.md#publicapiv1contactsoptions) - List contact filter options
+* [publicApiV1ContactsImport](docs/sdks/contacts/README.md#publicapiv1contactsimport) - Import contacts
+* [publicApiV1ContactsPreviewImport](docs/sdks/contacts/README.md#publicapiv1contactspreviewimport) - Preview a contact import
+* [publicApiV1ContactsRestore](docs/sdks/contacts/README.md#publicapiv1contactsrestore) - Restore an archived contact
+* [publicApiV1ContactsSearch](docs/sdks/contacts/README.md#publicapiv1contactssearch) - Search contacts
+* [publicApiV1ContactsUpdateBankAccounts](docs/sdks/contacts/README.md#publicapiv1contactsupdatebankaccounts) - Replace the bank accounts of a contact
+* [publicApiV1ContactsUpdateCustomerProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatecustomerprofile) - Update a customer profile
+* [publicApiV1ContactsUpdateSupplierProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatesupplierprofile) - Update a supplier profile
+
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
 * [publicApiV1DeliveryNotesBulkDelete](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkdelete) - Bulk delete delivery notes
@@ -621,18 +687,51 @@ if ($response->object !== null) {
 * [publicApiV1DeliveryNotesShow](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesshow) - Retrieve a delivery note
 * [publicApiV1DeliveryNotesUpdate](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesupdate) - Update a delivery note
 * [publicApiV1DeliveryNotesPdf](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotespdf) - Download delivery note PDF
+* [publicApiV1DeliveryNotesPackingList](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotespackinglist) - Download the packing list PDF
+* [publicApiV1DeliveryNotesShippingLabel](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesshippinglabel) - Download the shipping label PDF
 * [publicApiV1DeliveryNotesDuplicate](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesduplicate) - Duplicate a delivery note
 * [publicApiV1DeliveryNotesFindByExternalId](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesfindbyexternalid) - Find a delivery note by external ID
 * [publicApiV1DeliveryNotesStats](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstats) - Retrieve delivery note stats
 * [publicApiV1DeliveryNotesStatuses](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstatuses) - List delivery note statuses
+* [publicApiV1DeliveryNotesFulfilmentStatuses](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesfulfilmentstatuses) - List delivery note fulfilment statuses
 * [publicApiV1DeliveryNotesMarkDelivered](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesmarkdelivered) - Mark delivery note as delivered
 * [publicApiV1DeliveryNotesSend](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessend) - Send a delivery note
 * [publicApiV1DeliveryNotesSign](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessign) - Sign a delivery note
+
+#### [DeliveryNotes.FulfilmentStatus](docs/sdks/fulfilmentstatus/README.md)
+
+* [publicApiV1DeliveryNotesFulfilmentStatusTransition](docs/sdks/fulfilmentstatus/README.md#publicapiv1deliverynotesfulfilmentstatustransition) - Transition the fulfilment status of a delivery note
+
+#### [DeliveryNotes.Packages](docs/sdks/packages/README.md)
+
+* [publicApiV1DeliveryNotesPackagesCreate](docs/sdks/packages/README.md#publicapiv1deliverynotespackagescreate) - Add a package to a delivery note
+* [publicApiV1DeliveryNotesPackagesList](docs/sdks/packages/README.md#publicapiv1deliverynotespackageslist) - List the packages of a delivery note
+* [publicApiV1DeliveryNotesPackagesDelete](docs/sdks/packages/README.md#publicapiv1deliverynotespackagesdelete) - Delete a package of a delivery note
+* [publicApiV1DeliveryNotesPackagesUpdate](docs/sdks/packages/README.md#publicapiv1deliverynotespackagesupdate) - Update a package of a delivery note
+
+#### [DeliveryNotes.PickingLines](docs/sdks/pickinglines/README.md)
+
+* [publicApiV1DeliveryNotesPickingLinesPick](docs/sdks/pickinglines/README.md#publicapiv1deliverynotespickinglinespick) - Mark a picking line
+
+#### [DeliveryNotes.PickingList](docs/sdks/pickinglist/README.md)
+
+* [publicApiV1DeliveryNotesPickingListPdf](docs/sdks/pickinglist/README.md#publicapiv1deliverynotespickinglistpdf) - Download the picking list PDF
+* [publicApiV1DeliveryNotesPickingListOpen](docs/sdks/pickinglist/README.md#publicapiv1deliverynotespickinglistopen) - Open the picking list of a delivery note
+* [publicApiV1DeliveryNotesPickingListShow](docs/sdks/pickinglist/README.md#publicapiv1deliverynotespickinglistshow) - Retrieve the picking list of a delivery note
+
+#### [DeliveryNotes.PickingQueue](docs/sdks/pickingqueue/README.md)
+
+* [publicApiV1DeliveryNotesPickingQueueList](docs/sdks/pickingqueue/README.md#publicapiv1deliverynotespickingqueuelist) - List the delivery note picking queue
 
 #### [DeliveryNotes.PublicLink](docs/sdks/publiclink/README.md)
 
 * [publicApiV1DeliveryNotesPublicLinkGet](docs/sdks/publiclink/README.md#publicapiv1deliverynotespubliclinkget) - Retrieve a delivery note public link
 * [publicApiV1DeliveryNotesPublicLinkUpdate](docs/sdks/publiclink/README.md#publicapiv1deliverynotespubliclinkupdate) - Update a delivery note public link
+
+#### [DeliveryNotes.Shipment](docs/sdks/shipment/README.md)
+
+* [publicApiV1DeliveryNotesShipmentShow](docs/sdks/shipment/README.md#publicapiv1deliverynotesshipmentshow) - Retrieve the shipment of a delivery note
+* [publicApiV1DeliveryNotesShipmentUpdate](docs/sdks/shipment/README.md#publicapiv1deliverynotesshipmentupdate) - Update the shipment of a delivery note
 
 #### [DeliveryNotes.SignatureAudits](docs/sdks/signatureaudits/README.md)
 
@@ -692,6 +791,21 @@ if ($response->object !== null) {
 ### [Gestoria](docs/sdks/gestoria/README.md)
 
 * [publicApiV1GestoriaWorkforceSummary](docs/sdks/gestoria/README.md#publicapiv1gestoriaworkforcesummary) - Retrieve the consolidated workforce compliance overview
+
+### [GoodsReceipts](docs/sdks/goodsreceipts/README.md)
+
+* [publicApiV1GoodsReceiptsBulkStatus](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsbulkstatus) - Bulk change goods receipt status
+* [publicApiV1GoodsReceiptsCancel](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptscancel) - Cancel a goods receipt
+* [publicApiV1GoodsReceiptsStats](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsstats) - Retrieve goods receipt stats
+* [publicApiV1GoodsReceiptsStatuses](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsstatuses) - List goods receipt statuses
+* [publicApiV1GoodsReceiptsList](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptslist) - List all goods receipts
+* [publicApiV1GoodsReceiptsCreate](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptscreate) - Register a goods receipt
+* [publicApiV1GoodsReceiptsPost](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptspost) - Post a goods receipt
+* [publicApiV1GoodsReceiptsShow](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsshow) - Retrieve a goods receipt
+
+#### [GoodsReceipts.Lines](docs/sdks/goodsreceiptslines/README.md)
+
+* [publicApiV1GoodsReceiptsLinesList](docs/sdks/goodsreceiptslines/README.md#publicapiv1goodsreceiptslineslist) - List the lines of a goods receipt
 
 ### [Holidays](docs/sdks/holidays/README.md)
 
@@ -892,6 +1006,7 @@ if ($response->object !== null) {
 * [publicApiV1ProformasBulkSend](docs/sdks/proformas/README.md#publicapiv1proformasbulksend) - Bulk send proformas
 * [publicApiV1ProformasBulkStatus](docs/sdks/proformas/README.md#publicapiv1proformasbulkstatus) - Bulk change proforma status
 * [publicApiV1ProformasConvert](docs/sdks/proformas/README.md#publicapiv1proformasconvert) - Convert proforma to invoice
+* [publicApiV1ProformasConvertToSalesOrder](docs/sdks/proformas/README.md#publicapiv1proformasconverttosalesorder) - Convert proforma to sales order
 * [publicApiV1ProformasCreate](docs/sdks/proformas/README.md#publicapiv1proformascreate) - Create a proforma
 * [publicApiV1ProformasList](docs/sdks/proformas/README.md#publicapiv1proformaslist) - List all proformas
 * [publicApiV1ProformasDelete](docs/sdks/proformas/README.md#publicapiv1proformasdelete) - Delete a proforma
@@ -928,6 +1043,50 @@ if ($response->object !== null) {
 * [publicApiV1PurchaseInvoicesRegisterPayment](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesregisterpayment) - Register a purchase invoice payment
 * [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
 
+#### [PurchaseInvoices.Match](docs/sdks/match/README.md)
+
+* [publicApiV1PurchaseInvoicesMatchAccept](docs/sdks/match/README.md#publicapiv1purchaseinvoicesmatchaccept) - Accept the deviation of a purchase invoice match
+* [publicApiV1PurchaseInvoicesMatchLink](docs/sdks/match/README.md#publicapiv1purchaseinvoicesmatchlink) - Link a purchase invoice to a purchase order
+* [publicApiV1PurchaseInvoicesMatchReject](docs/sdks/match/README.md#publicapiv1purchaseinvoicesmatchreject) - Reject a purchase invoice match
+
+### [PurchaseOrders](docs/sdks/purchaseorders/README.md)
+
+* [publicApiV1PurchaseOrdersBulkCreate](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersbulkcreate) - Bulk create purchase orders
+* [publicApiV1PurchaseOrdersBulkDelete](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersbulkdelete) - Bulk delete purchase orders
+* [publicApiV1PurchaseOrdersBulkStatus](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersbulkstatus) - Bulk change purchase order status
+* [publicApiV1PurchaseOrdersCancel](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderscancel) - Cancel a purchase order
+* [publicApiV1PurchaseOrdersClose](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersclose) - Close a purchase order
+* [publicApiV1PurchaseOrdersConfirm](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersconfirm) - Confirm a purchase order
+* [publicApiV1PurchaseOrdersCreate](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderscreate) - Create a purchase order
+* [publicApiV1PurchaseOrdersList](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderslist) - List all purchase orders
+* [publicApiV1PurchaseOrdersDelete](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersdelete) - Delete a purchase order
+* [publicApiV1PurchaseOrdersShow](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersshow) - Retrieve a purchase order
+* [publicApiV1PurchaseOrdersUpdate](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersupdate) - Update a purchase order
+* [publicApiV1PurchaseOrdersPdf](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderspdf) - Download purchase order PDF
+* [publicApiV1PurchaseOrdersFindBySupplierReference](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersfindbysupplierreference) - Find a purchase order by supplier reference
+* [publicApiV1PurchaseOrdersMatch](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersmatch) - Retrieve the three-way match of a purchase order
+* [publicApiV1PurchaseOrdersStats](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersstats) - Retrieve purchase order stats
+* [publicApiV1PurchaseOrdersStatuses](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersstatuses) - List purchase order statuses
+* [publicApiV1PurchaseOrdersMarkAsSent](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersmarkassent) - Mark a purchase order as sent
+* [publicApiV1PurchaseOrdersSend](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderssend) - Send a purchase order to its supplier
+
+#### [PurchaseOrders.Lines](docs/sdks/purchaseorderslines/README.md)
+
+* [publicApiV1PurchaseOrdersLinesCreate](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslinescreate) - Add a line to a purchase order
+* [publicApiV1PurchaseOrdersLinesList](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslineslist) - List the lines of a purchase order
+* [publicApiV1PurchaseOrdersLinesDelete](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslinesdelete) - Delete a line of a purchase order
+* [publicApiV1PurchaseOrdersLinesUpdate](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslinesupdate) - Update a line of a purchase order
+
+#### [PurchaseOrders.Receipts](docs/sdks/receipts/README.md)
+
+* [publicApiV1PurchaseOrdersReceiptsList](docs/sdks/receipts/README.md#publicapiv1purchaseordersreceiptslist) - List the goods receipts of a purchase order
+* [publicApiV1PurchaseOrdersReceiptsCreate](docs/sdks/receipts/README.md#publicapiv1purchaseordersreceiptscreate) - Register a goods receipt for a purchase order
+
+### [PurchaseReorderSuggestions](docs/sdks/purchasereordersuggestions/README.md)
+
+* [publicApiV1PurchaseReorderSuggestionsAccept](docs/sdks/purchasereordersuggestions/README.md#publicapiv1purchasereordersuggestionsaccept) - Accept a reorder suggestion
+* [publicApiV1PurchaseReorderSuggestionsList](docs/sdks/purchasereordersuggestions/README.md#publicapiv1purchasereordersuggestionslist) - List reorder suggestions
+
 ### [Quotes](docs/sdks/quotes/README.md)
 
 * [publicApiV1QuotesAccept](docs/sdks/quotes/README.md#publicapiv1quotesaccept) - Accept a quote
@@ -936,6 +1095,7 @@ if ($response->object !== null) {
 * [publicApiV1QuotesBulkSend](docs/sdks/quotes/README.md#publicapiv1quotesbulksend) - Bulk send quotes
 * [publicApiV1QuotesBulkStatus](docs/sdks/quotes/README.md#publicapiv1quotesbulkstatus) - Bulk change quote status
 * [publicApiV1QuotesConvert](docs/sdks/quotes/README.md#publicapiv1quotesconvert) - Convert quote to invoice
+* [publicApiV1QuotesConvertToSalesOrder](docs/sdks/quotes/README.md#publicapiv1quotesconverttosalesorder) - Convert quote to sales order
 * [publicApiV1QuotesCreate](docs/sdks/quotes/README.md#publicapiv1quotescreate) - Create a quote
 * [publicApiV1QuotesList](docs/sdks/quotes/README.md#publicapiv1quoteslist) - List all quotes
 * [publicApiV1QuotesDelete](docs/sdks/quotes/README.md#publicapiv1quotesdelete) - Delete a quote
@@ -971,6 +1131,60 @@ if ($response->object !== null) {
 * [publicApiV1RecurringInvoicesResume](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesresume) - Resume recurring invoice
 * [publicApiV1RecurringInvoicesSkip](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesskip) - Skip the next recurring invoice generation
 
+### [Returns](docs/sdks/returns/README.md)
+
+* [publicApiV1ReturnsApprove](docs/sdks/returns/README.md#publicapiv1returnsapprove) - Approve a return
+* [publicApiV1ReturnsCreate](docs/sdks/returns/README.md#publicapiv1returnscreate) - Request a return
+* [publicApiV1ReturnsList](docs/sdks/returns/README.md#publicapiv1returnslist) - List all returns
+* [publicApiV1ReturnsDelete](docs/sdks/returns/README.md#publicapiv1returnsdelete) - Delete a return
+* [publicApiV1ReturnsShow](docs/sdks/returns/README.md#publicapiv1returnsshow) - Retrieve a return
+* [publicApiV1ReturnsUpdate](docs/sdks/returns/README.md#publicapiv1returnsupdate) - Update a return
+* [publicApiV1ReturnsStatuses](docs/sdks/returns/README.md#publicapiv1returnsstatuses) - List return statuses
+* [publicApiV1ReturnsReturnableLines](docs/sdks/returns/README.md#publicapiv1returnsreturnablelines) - List the returnable lines of a document
+* [publicApiV1ReturnsReceive](docs/sdks/returns/README.md#publicapiv1returnsreceive) - Receive a return
+* [publicApiV1ReturnsRefund](docs/sdks/returns/README.md#publicapiv1returnsrefund) - Refund a return
+* [publicApiV1ReturnsReject](docs/sdks/returns/README.md#publicapiv1returnsreject) - Reject a return
+
+#### [Returns.CorrectiveCandidates](docs/sdks/correctivecandidates/README.md)
+
+* [publicApiV1ReturnsCorrectiveCandidatesList](docs/sdks/correctivecandidates/README.md#publicapiv1returnscorrectivecandidateslist) - List the corrective invoice candidates of a return
+
+### [SalesOrders](docs/sdks/salesorders/README.md)
+
+* [publicApiV1SalesOrdersBulkCreate](docs/sdks/salesorders/README.md#publicapiv1salesordersbulkcreate) - Bulk create sales orders
+* [publicApiV1SalesOrdersBulkDelete](docs/sdks/salesorders/README.md#publicapiv1salesordersbulkdelete) - Bulk delete sales orders
+* [publicApiV1SalesOrdersBulkStatus](docs/sdks/salesorders/README.md#publicapiv1salesordersbulkstatus) - Bulk change sales order status
+* [publicApiV1SalesOrdersCancel](docs/sdks/salesorders/README.md#publicapiv1salesorderscancel) - Cancel a sales order
+* [publicApiV1SalesOrdersClose](docs/sdks/salesorders/README.md#publicapiv1salesordersclose) - Close a sales order
+* [publicApiV1SalesOrdersConfirm](docs/sdks/salesorders/README.md#publicapiv1salesordersconfirm) - Confirm a sales order
+* [publicApiV1SalesOrdersConvertToDeliveryNote](docs/sdks/salesorders/README.md#publicapiv1salesordersconverttodeliverynote) - Convert a sales order to a delivery note
+* [publicApiV1SalesOrdersConvertToInvoice](docs/sdks/salesorders/README.md#publicapiv1salesordersconverttoinvoice) - Convert a sales order to an invoice
+* [publicApiV1SalesOrdersCreate](docs/sdks/salesorders/README.md#publicapiv1salesorderscreate) - Create a sales order
+* [publicApiV1SalesOrdersList](docs/sdks/salesorders/README.md#publicapiv1salesorderslist) - List all sales orders
+* [publicApiV1SalesOrdersDelete](docs/sdks/salesorders/README.md#publicapiv1salesordersdelete) - Delete a sales order
+* [publicApiV1SalesOrdersShow](docs/sdks/salesorders/README.md#publicapiv1salesordersshow) - Retrieve a sales order
+* [publicApiV1SalesOrdersUpdate](docs/sdks/salesorders/README.md#publicapiv1salesordersupdate) - Update a sales order
+* [publicApiV1SalesOrdersPdf](docs/sdks/salesorders/README.md#publicapiv1salesorderspdf) - Download sales order PDF
+* [publicApiV1SalesOrdersFindByExternalId](docs/sdks/salesorders/README.md#publicapiv1salesordersfindbyexternalid) - Find a sales order by external id
+* [publicApiV1SalesOrdersStats](docs/sdks/salesorders/README.md#publicapiv1salesordersstats) - Retrieve sales order stats
+* [publicApiV1SalesOrdersStatuses](docs/sdks/salesorders/README.md#publicapiv1salesordersstatuses) - List sales order statuses
+* [publicApiV1SalesOrdersSend](docs/sdks/salesorders/README.md#publicapiv1salesorderssend) - Send a sales order
+
+#### [SalesOrders.Buyer](docs/sdks/buyer/README.md)
+
+* [publicApiV1SalesOrdersBuyerUpdate](docs/sdks/buyer/README.md#publicapiv1salesordersbuyerupdate) - Update the buyer of a sales order
+
+#### [SalesOrders.Lines](docs/sdks/salesorderslines/README.md)
+
+* [publicApiV1SalesOrdersLinesCreate](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslinescreate) - Add a line to a sales order
+* [publicApiV1SalesOrdersLinesList](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslineslist) - List the lines of a sales order
+* [publicApiV1SalesOrdersLinesDelete](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslinesdelete) - Delete a line of a sales order
+* [publicApiV1SalesOrdersLinesUpdate](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslinesupdate) - Update a line of a sales order
+
+#### [SalesOrders.ShippingAddress](docs/sdks/shippingaddress/README.md)
+
+* [publicApiV1SalesOrdersShippingAddressUpdate](docs/sdks/shippingaddress/README.md#publicapiv1salesordersshippingaddressupdate) - Update the shipping address of a sales order
+
 ### [Series](docs/sdks/series/README.md)
 
 * [publicApiV1SeriesArchive](docs/sdks/series/README.md#publicapiv1seriesarchive) - Archive a series
@@ -990,6 +1204,113 @@ if ($response->object !== null) {
 
 * [publicApiV1ShopifyStoresConnectionTest](docs/sdks/shopifystores/README.md#publicapiv1shopifystoresconnectiontest) - Test a Shopify store connection
 
+### [StockAvailability](docs/sdks/stockavailability/README.md)
+
+* [publicApiV1StockAvailabilityBatch](docs/sdks/stockavailability/README.md#publicapiv1stockavailabilitybatch) - Retrieve stock availability in batch
+* [publicApiV1StockAvailabilityList](docs/sdks/stockavailability/README.md#publicapiv1stockavailabilitylist) - List stock availability
+* [publicApiV1StockAvailabilityShow](docs/sdks/stockavailability/README.md#publicapiv1stockavailabilityshow) - Retrieve the stock availability of an article
+
+#### [StockAvailability.Commitments](docs/sdks/commitments/README.md)
+
+* [publicApiV1StockAvailabilityCommitmentsList](docs/sdks/commitments/README.md#publicapiv1stockavailabilitycommitmentslist) - List the commitments over an article
+
+### [StockReservations](docs/sdks/stockreservations/README.md)
+
+* [publicApiV1StockReservationsCreate](docs/sdks/stockreservations/README.md#publicapiv1stockreservationscreate) - Create a stock reservation
+* [publicApiV1StockReservationsList](docs/sdks/stockreservations/README.md#publicapiv1stockreservationslist) - List all stock reservations
+* [publicApiV1StockReservationsFindByHolder](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsfindbyholder) - Find the stock reservations of a holder
+* [publicApiV1StockReservationsStatuses](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsstatuses) - List stock reservation statuses
+* [publicApiV1StockReservationsRelease](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsrelease) - Release a stock reservation
+* [publicApiV1StockReservationsReleaseByHolder](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsreleasebyholder) - Release the stock reservations of a holder
+* [publicApiV1StockReservationsShow](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsshow) - Retrieve a stock reservation
+
+### [StockTransfers](docs/sdks/stocktransfers/README.md)
+
+* [publicApiV1StockTransfersCancel](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferscancel) - Cancel a stock transfer
+* [publicApiV1StockTransfersCreate](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferscreate) - Create a stock transfer
+* [publicApiV1StockTransfersList](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferslist) - List all stock transfers
+* [publicApiV1StockTransfersDispatch](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersdispatch) - Dispatch a stock transfer
+* [publicApiV1StockTransfersPdf](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferspdf) - Download stock transfer note PDF
+* [publicApiV1StockTransfersStatuses](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersstatuses) - List stock transfer statuses
+* [publicApiV1StockTransfersReceive](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersreceive) - Receive a stock transfer
+* [publicApiV1StockTransfersSend](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferssend) - Send a stock transfer note
+* [publicApiV1StockTransfersShow](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersshow) - Retrieve a stock transfer
+
+#### [StockTransfers.Lines](docs/sdks/stocktransferslines/README.md)
+
+* [publicApiV1StockTransfersLinesCreate](docs/sdks/stocktransferslines/README.md#publicapiv1stocktransferslinescreate) - Add a line to a stock transfer
+* [publicApiV1StockTransfersLinesList](docs/sdks/stocktransferslines/README.md#publicapiv1stocktransferslineslist) - List the lines of a stock transfer
+* [publicApiV1StockTransfersLinesDelete](docs/sdks/stocktransferslines/README.md#publicapiv1stocktransferslinesdelete) - Remove a line from a stock transfer
+
+### [Storefront.Availability](docs/sdks/availability/README.md)
+
+* [publicApiV1StorefrontAvailabilityBulkResolve](docs/sdks/availability/README.md#publicapiv1storefrontavailabilitybulkresolve) - Resolve storefront availability in bulk
+* [publicApiV1StorefrontAvailabilityShow](docs/sdks/availability/README.md#publicapiv1storefrontavailabilityshow) - Retrieve storefront availability
+
+### [Storefront.CatalogSelections](docs/sdks/catalogselections/README.md)
+
+* [publicApiV1StorefrontCatalogSelectionsResolve](docs/sdks/catalogselections/README.md#publicapiv1storefrontcatalogselectionsresolve) - Resolve a storefront catalog selection
+
+### [Storefront.Categories](docs/sdks/categories/README.md)
+
+* [publicApiV1StorefrontCategoriesList](docs/sdks/categories/README.md#publicapiv1storefrontcategorieslist) - List storefront categories
+
+### [Storefront.Orders](docs/sdks/orders/README.md)
+
+* [publicApiV1StorefrontOrdersConfirmPayment](docs/sdks/orders/README.md#publicapiv1storefrontordersconfirmpayment) - Confirm the payment of a storefront order
+* [publicApiV1StorefrontOrdersCreate](docs/sdks/orders/README.md#publicapiv1storefrontorderscreate) - Create a storefront order
+* [publicApiV1StorefrontOrdersShow](docs/sdks/orders/README.md#publicapiv1storefrontordersshow) - Retrieve a storefront order
+* [publicApiV1StorefrontOrdersTracking](docs/sdks/orders/README.md#publicapiv1storefrontorderstracking) - Retrieve the shipment tracking of a storefront order
+* [publicApiV1StorefrontOrdersCheckout](docs/sdks/orders/README.md#publicapiv1storefrontorderscheckout) - Start the checkout of a storefront order
+
+#### [Storefront.Orders.BuyerIdentity](docs/sdks/buyeridentity/README.md)
+
+* [publicApiV1StorefrontOrdersBuyerIdentityUpdate](docs/sdks/buyeridentity/README.md#publicapiv1storefrontordersbuyeridentityupdate) - Update the buyer fiscal identity of a storefront order
+
+### [Storefront.Prices](docs/sdks/prices/README.md)
+
+* [publicApiV1StorefrontPricesBulkResolve](docs/sdks/prices/README.md#publicapiv1storefrontpricesbulkresolve) - Resolve storefront prices in bulk
+* [publicApiV1StorefrontPricesResolve](docs/sdks/prices/README.md#publicapiv1storefrontpricesresolve) - Resolve a storefront price
+
+### [Storefront.Products](docs/sdks/storefrontproducts/README.md)
+
+* [publicApiV1StorefrontProductsList](docs/sdks/storefrontproducts/README.md#publicapiv1storefrontproductslist) - List storefront products
+* [publicApiV1StorefrontProductsSearch](docs/sdks/storefrontproducts/README.md#publicapiv1storefrontproductssearch) - Search storefront products
+* [publicApiV1StorefrontProductsShow](docs/sdks/storefrontproducts/README.md#publicapiv1storefrontproductsshow) - Retrieve a storefront product
+
+#### [Storefront.Products.Images](docs/sdks/images/README.md)
+
+* [publicApiV1StorefrontProductsImagesList](docs/sdks/images/README.md#publicapiv1storefrontproductsimageslist) - List the images of a storefront product
+
+#### [Storefront.Products.Presentations](docs/sdks/storefrontpresentations/README.md)
+
+* [publicApiV1StorefrontProductsPresentationsList](docs/sdks/storefrontpresentations/README.md#publicapiv1storefrontproductspresentationslist) - List the presentations of a storefront product
+
+#### [Storefront.Products.ProductOptions](docs/sdks/storefrontproductoptions/README.md)
+
+* [publicApiV1StorefrontProductsOptionsList](docs/sdks/storefrontproductoptions/README.md#publicapiv1storefrontproductsoptionslist) - List the options of a storefront product
+
+#### [Storefront.Products.Variants](docs/sdks/storefrontvariants/README.md)
+
+* [publicApiV1StorefrontProductsVariantsList](docs/sdks/storefrontvariants/README.md#publicapiv1storefrontproductsvariantslist) - List the variants of a storefront product
+
+### [Storefront.Sessions](docs/sdks/sessions/README.md)
+
+* [publicApiV1StorefrontSessionsCreate](docs/sdks/sessions/README.md#publicapiv1storefrontsessionscreate) - Create a cart session
+* [publicApiV1StorefrontSessionsRevalidate](docs/sdks/sessions/README.md#publicapiv1storefrontsessionsrevalidate) - Revalidate a cart session
+* [publicApiV1StorefrontSessionsShow](docs/sdks/sessions/README.md#publicapiv1storefrontsessionsshow) - Retrieve a cart session
+* [publicApiV1StorefrontSessionsUpdate](docs/sdks/sessions/README.md#publicapiv1storefrontsessionsupdate) - Update a cart session
+
+### [StorefrontKeys](docs/sdks/storefrontkeys/README.md)
+
+* [publicApiV1StorefrontKeysCreate](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeyscreate) - Create a publishable storefront key
+* [publicApiV1StorefrontKeysList](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeyslist) - List publishable storefront keys
+* [publicApiV1StorefrontKeysScopes](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysscopes) - List assignable storefront key scopes
+* [publicApiV1StorefrontKeysRevoke](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysrevoke) - Revoke a publishable storefront key
+* [publicApiV1StorefrontKeysRotateSecret](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysrotatesecret) - Rotate a storefront key secret
+* [publicApiV1StorefrontKeysShow](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysshow) - Retrieve a publishable storefront key
+* [publicApiV1StorefrontKeysUpdate](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysupdate) - Update a publishable storefront key
+
 ### [Stores](docs/sdks/stores/README.md)
 
 * [publicApiV1StoresCreate](docs/sdks/stores/README.md#publicapiv1storescreate) - Connect a store
@@ -997,6 +1318,11 @@ if ($response->object !== null) {
 * [publicApiV1StoresDisconnect](docs/sdks/stores/README.md#publicapiv1storesdisconnect) - Disconnect a store
 * [publicApiV1StoresShow](docs/sdks/stores/README.md#publicapiv1storesshow) - Retrieve a connected store
 * [publicApiV1StoresUpdate](docs/sdks/stores/README.md#publicapiv1storesupdate) - Update store settings
+
+#### [Stores.ProductLinks](docs/sdks/productlinks/README.md)
+
+* [publicApiV1StoresProductLinksList](docs/sdks/productlinks/README.md#publicapiv1storesproductlinkslist) - List the product links of a store
+* [publicApiV1StoresProductLinksShow](docs/sdks/productlinks/README.md#publicapiv1storesproductlinksshow) - Retrieve a product link of a store
 
 ### [StripeAutoinvoicing.Accounts](docs/sdks/accounts/README.md)
 
@@ -1153,6 +1479,26 @@ if ($response->object !== null) {
 
 * [publicApiV1VerifactuSettingsUpdate](docs/sdks/settings/README.md#publicapiv1verifactusettingsupdate) - Update VeriFactu settings
 
+### [Warehouses](docs/sdks/warehouses/README.md)
+
+* [publicApiV1WarehousesDelete](docs/sdks/warehouses/README.md#publicapiv1warehousesdelete) - Archive a warehouse
+* [publicApiV1WarehousesShow](docs/sdks/warehouses/README.md#publicapiv1warehousesshow) - Retrieve a warehouse
+* [publicApiV1WarehousesUpdate](docs/sdks/warehouses/README.md#publicapiv1warehousesupdate) - Update a warehouse
+* [publicApiV1WarehousesCreate](docs/sdks/warehouses/README.md#publicapiv1warehousescreate) - Create a warehouse
+* [publicApiV1WarehousesList](docs/sdks/warehouses/README.md#publicapiv1warehouseslist) - List all warehouses
+* [publicApiV1WarehousesFindByCode](docs/sdks/warehouses/README.md#publicapiv1warehousesfindbycode) - Find a warehouse by code
+* [publicApiV1WarehousesDefault](docs/sdks/warehouses/README.md#publicapiv1warehousesdefault) - Retrieve the default warehouse
+* [publicApiV1WarehousesStatuses](docs/sdks/warehouses/README.md#publicapiv1warehousesstatuses) - List warehouse statuses
+* [publicApiV1WarehousesMarkAsDefault](docs/sdks/warehouses/README.md#publicapiv1warehousesmarkasdefault) - Mark a warehouse as default
+
+#### [Warehouses.Locations](docs/sdks/locations/README.md)
+
+* [publicApiV1WarehousesLocationsDelete](docs/sdks/locations/README.md#publicapiv1warehouseslocationsdelete) - Archive a location of a warehouse
+* [publicApiV1WarehousesLocationsShow](docs/sdks/locations/README.md#publicapiv1warehouseslocationsshow) - Retrieve a location of a warehouse
+* [publicApiV1WarehousesLocationsUpdate](docs/sdks/locations/README.md#publicapiv1warehouseslocationsupdate) - Update a location of a warehouse
+* [publicApiV1WarehousesLocationsCreate](docs/sdks/locations/README.md#publicapiv1warehouseslocationscreate) - Create a location in a warehouse
+* [publicApiV1WarehousesLocationsList](docs/sdks/locations/README.md#publicapiv1warehouseslocationslist) - List the locations of a warehouse
+
 ### [WebhookEndpoints](docs/sdks/webhookendpoints/README.md)
 
 * [publicApiV1WebhookEndpointsCreate](docs/sdks/webhookendpoints/README.md#publicapiv1webhookendpointscreate) - Create a webhook endpoint
@@ -1211,7 +1557,7 @@ use Factuarea\Sdk\Utils\Retry;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1267,7 +1613,7 @@ $sdk = Sdk\Factuarea::builder()
   )
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1330,7 +1676,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1386,7 +1732,7 @@ $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

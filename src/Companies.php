@@ -804,13 +804,11 @@ class Companies
      *
      * List the companies managed by your master tenant with cursor-based pagination. By default only `active` and `inactive` companies are returned; pass `status` (`active`, `inactive`, `archived`) to filter — `status=archived` is the opt-in way to surface archived companies. Only your own children are ever returned.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus  $status
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesList(?Operations\PublicApiV1CompaniesListStatus $status = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesListResponse
+    public function publicApiV1CompaniesList(?Operations\PublicApiV1CompaniesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1CompaniesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -837,11 +835,6 @@ class Companies
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1CompaniesListRequest(
-            status: $status,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies');
         $urlOverride = null;

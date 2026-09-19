@@ -80,26 +80,26 @@ class PurchaseInvoiceStats
     /**
      * Total aggregate amount of all purchase invoices.
      *
-     * @var float $totalAmount
+     * @var string $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public float $totalAmount;
+    public string $totalAmount;
 
     /**
      * Total amount pending payment.
      *
-     * @var float $pendingAmount
+     * @var string $pendingAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_amount')]
-    public float $pendingAmount;
+    public string $pendingAmount;
 
     /**
      * Total amount already paid.
      *
-     * @var float $paidAmount
+     * @var string $paidAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('paid_amount')]
-    public float $paidAmount;
+    public string $paidAmount;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceStatsObject  $object
@@ -110,12 +110,12 @@ class PurchaseInvoiceStats
      * @param  int  $paid
      * @param  int  $cancelled
      * @param  int  $overdue
-     * @param  float  $totalAmount
-     * @param  float  $pendingAmount
-     * @param  float  $paidAmount
+     * @param  string  $totalAmount
+     * @param  string  $pendingAmount
+     * @param  string  $paidAmount
      * @phpstan-pure
      */
-    public function __construct(PurchaseInvoiceStatsObject $object, int $totalInvoices, array $byStatus, int $pending, int $draft, int $paid, int $cancelled, int $overdue, float $totalAmount, float $pendingAmount, float $paidAmount)
+    public function __construct(PurchaseInvoiceStatsObject $object, int $totalInvoices, array $byStatus, int $pending, int $draft, int $paid, int $cancelled, int $overdue, string $totalAmount, string $pendingAmount, string $paidAmount)
     {
         $this->object = $object;
         $this->totalInvoices = $totalInvoices;

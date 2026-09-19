@@ -152,12 +152,12 @@ class UpdateProformaRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\OperationRegime $operationRegime
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestOperationRegime $operationRegime
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('operation_regime')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\OperationRegime|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProformaRequestOperationRegime|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?OperationRegime $operationRegime = null;
+    public ?UpdateProformaRequestOperationRegime $operationRegime = null;
 
     /**
      *
@@ -217,14 +217,14 @@ class UpdateProformaRequest
      * @param  ?float  $shippingCost
      * @param  ?string  $deliveryTerms
      * @param  ?LocalDate  $estimatedDeliveryDate
-     * @param  ?\Factuarea\Sdk\Models\Components\OperationRegime  $operationRegime
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestOperationRegime  $operationRegime
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $tags
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?OperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?UpdateProformaRequestOperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->repriceStrategy = $repriceStrategy;

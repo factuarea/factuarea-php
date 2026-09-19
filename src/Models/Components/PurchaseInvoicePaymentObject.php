@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** String identifying the object type. Always `purchase_invoice_payment`. */
 enum PurchaseInvoicePaymentObject: string
 {
     case PurchaseInvoicePayment = 'purchase_invoice_payment';

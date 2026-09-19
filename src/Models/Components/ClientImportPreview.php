@@ -32,16 +32,16 @@ class ClientImportPreview
     /**
      * Per-row validation of the file. One item per data row, in file order.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Row> $rows
+     * @var array<\Factuarea\Sdk\Models\Components\ClientImportPreviewRow> $rows
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('rows')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Row>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ClientImportPreviewRow>')]
     public array $rows;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\ClientImportPreviewObject  $object
      * @param  int  $totalRows
-     * @param  array<\Factuarea\Sdk\Models\Components\Row>  $rows
+     * @param  array<\Factuarea\Sdk\Models\Components\ClientImportPreviewRow>  $rows
      * @phpstan-pure
      */
     public function __construct(ClientImportPreviewObject $object, int $totalRows, array $rows)

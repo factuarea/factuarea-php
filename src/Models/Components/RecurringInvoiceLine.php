@@ -29,10 +29,10 @@ class RecurringInvoiceLine
 
     /**
      *
-     * @var float $unitPrice
+     * @var string $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    public string $unitPrice;
 
     /**
      *
@@ -67,24 +67,24 @@ class RecurringInvoiceLine
 
     /**
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
      *
-     * @var float $taxes
+     * @var string $taxes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes')]
-    public float $taxes;
+    public string $taxes;
 
     /**
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
@@ -302,14 +302,14 @@ class RecurringInvoiceLine
     /**
      * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceLineObject  $object
      * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  string  $unitPrice
      * @param  float  $taxRate
      * @param  float  $retention
      * @param  float  $surcharge
      * @param  float  $discountPercent
-     * @param  float  $subtotal
-     * @param  float  $taxes
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $taxes
+     * @param  string  $total
      * @param  array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLineOption>  $options
      * @param  ?string  $description
      * @param  ?string  $exemptionReason
@@ -340,7 +340,7 @@ class RecurringInvoiceLine
      * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $additionalDescription = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(RecurringInvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $additionalDescription = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;

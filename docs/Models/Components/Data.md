@@ -1,0 +1,9 @@
+# Data
+
+
+## Fields
+
+| Field                                                                                                                | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `key`                                                                                                                | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | Code of the permission, which is the value that travels when a credential is issued (for example `storefront:read`). |
+| `label`                                                                                                              | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | Readable label of the permission, in Spanish, ready to display in a selector.                                        |
