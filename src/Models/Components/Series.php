@@ -42,7 +42,7 @@ class Series
     public string $name;
 
     /**
-     * invoice, quote, proforma, delivery_note, etc.
+     * Document type the series numbers. The public API accepts CREATING a series for `invoice`, `quote`, `delivery_note`, `proforma`, `sales_order` and `purchase_order`, whose default codes are `F`, `P`, `ALB`, `PRF`, `PED` and `PC`. A company may also hold series of types this API does not create, so read this field as an open value and not as a closed set.
      *
      * @var string $documentType
      */

@@ -1,0 +1,11 @@
+# DeliveryNoteCarrier
+
+The carrier of the MASTER referenced by this delivery note, or `null` when none is referenced — the key always travels, like `driver`, `tracking` and `received_by`. It does NOT replace `tracking.carrier`: that one is the free text that was typed before the master existed and it travels alongside the reference, which is what makes the migration to the master reversible.
+
+
+## Fields
+
+| Field                                                                                                          | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `id`                                                                                                           | *string*                                                                                                       | :heavy_check_mark:                                                                                             | Opaque identifier of the carrier, a UUID v7. The internal foreign key of the delivery note is never published. |
+| `name`                                                                                                         | *string*                                                                                                       | :heavy_check_mark:                                                                                             | Name of the carrier, ready to display.                                                                         |

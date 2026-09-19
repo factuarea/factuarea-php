@@ -671,6 +671,96 @@ Components\EventDataClientDeleted $value = /* values here */
 Components\EventDataClientMetadataChanged $value = /* values here */
 ```
 
+### `Components\EventDataContactCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactCreated
+*/
+Components\EventDataContactCreated $value = /* values here */
+```
+
+### `Components\EventDataContactUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactUpdated
+*/
+Components\EventDataContactUpdated $value = /* values here */
+```
+
+### `Components\EventDataContactArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactArchived
+*/
+Components\EventDataContactArchived $value = /* values here */
+```
+
+### `Components\EventDataContactRestored`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRestored
+*/
+Components\EventDataContactRestored $value = /* values here */
+```
+
+### `Components\EventDataContactRoleAssigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleAssigned
+*/
+Components\EventDataContactRoleAssigned $value = /* values here */
+```
+
+### `Components\EventDataContactRoleActivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleActivated
+*/
+Components\EventDataContactRoleActivated $value = /* values here */
+```
+
+### `Components\EventDataContactRoleDeactivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleDeactivated
+*/
+Components\EventDataContactRoleDeactivated $value = /* values here */
+```
+
+### `Components\EventDataContactRoleRemoved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactRoleRemoved
+*/
+Components\EventDataContactRoleRemoved $value = /* values here */
+```
+
+### `Components\EventDataContactCustomerProfileUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactCustomerProfileUpdated
+*/
+Components\EventDataContactCustomerProfileUpdated $value = /* values here */
+```
+
+### `Components\EventDataContactSupplierProfileUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataContactSupplierProfileUpdated
+*/
+Components\EventDataContactSupplierProfileUpdated $value = /* values here */
+```
+
 ### `Components\EventDataProductCreated`
 
 ```php
@@ -1013,6 +1103,15 @@ Components\EventDataAutomationRunFailed $value = /* values here */
 Components\EventDataAutomationRunStepDeadLettered $value = /* values here */
 ```
 
+### `Components\EventDataOrderReceived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataOrderReceived
+*/
+Components\EventDataOrderReceived $value = /* values here */
+```
+
 ### `Components\EventDataOrderInvoiced`
 
 ```php
@@ -1029,5 +1128,365 @@ Components\EventDataOrderInvoiced $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataOrderRefunded
 */
 Components\EventDataOrderRefunded $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderCreated
+*/
+Components\EventDataSalesOrderCreated $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderUpdated
+*/
+Components\EventDataSalesOrderUpdated $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderConfirmed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderConfirmed
+*/
+Components\EventDataSalesOrderConfirmed $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderPartiallyServed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderPartiallyServed
+*/
+Components\EventDataSalesOrderPartiallyServed $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderServed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderServed
+*/
+Components\EventDataSalesOrderServed $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderPartiallyInvoiced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderPartiallyInvoiced
+*/
+Components\EventDataSalesOrderPartiallyInvoiced $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderInvoiced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderInvoiced
+*/
+Components\EventDataSalesOrderInvoiced $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderCancelled
+*/
+Components\EventDataSalesOrderCancelled $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderClosed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderClosed
+*/
+Components\EventDataSalesOrderClosed $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderEmailSent
+*/
+Components\EventDataSalesOrderEmailSent $value = /* values here */
+```
+
+### `Components\EventDataSalesOrderEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataSalesOrderEmailFailed
+*/
+Components\EventDataSalesOrderEmailFailed $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderCreated
+*/
+Components\EventDataPurchaseOrderCreated $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderSent
+*/
+Components\EventDataPurchaseOrderSent $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderConfirmed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderConfirmed
+*/
+Components\EventDataPurchaseOrderConfirmed $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderPartiallyReceived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderPartiallyReceived
+*/
+Components\EventDataPurchaseOrderPartiallyReceived $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderReceived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderReceived
+*/
+Components\EventDataPurchaseOrderReceived $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderBilled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderBilled
+*/
+Components\EventDataPurchaseOrderBilled $value = /* values here */
+```
+
+### `Components\EventDataPurchaseOrderCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPurchaseOrderCancelled
+*/
+Components\EventDataPurchaseOrderCancelled $value = /* values here */
+```
+
+### `Components\EventDataGoodsReceiptCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataGoodsReceiptCreated
+*/
+Components\EventDataGoodsReceiptCreated $value = /* values here */
+```
+
+### `Components\EventDataGoodsReceiptPosted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataGoodsReceiptPosted
+*/
+Components\EventDataGoodsReceiptPosted $value = /* values here */
+```
+
+### `Components\EventDataGoodsReceiptCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataGoodsReceiptCancelled
+*/
+Components\EventDataGoodsReceiptCancelled $value = /* values here */
+```
+
+### `Components\EventDataWarehouseCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataWarehouseCreated
+*/
+Components\EventDataWarehouseCreated $value = /* values here */
+```
+
+### `Components\EventDataWarehouseUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataWarehouseUpdated
+*/
+Components\EventDataWarehouseUpdated $value = /* values here */
+```
+
+### `Components\EventDataWarehouseArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataWarehouseArchived
+*/
+Components\EventDataWarehouseArchived $value = /* values here */
+```
+
+### `Components\EventDataStockReservationCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataStockReservationCreated
+*/
+Components\EventDataStockReservationCreated $value = /* values here */
+```
+
+### `Components\EventDataStockReservationReleased`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataStockReservationReleased
+*/
+Components\EventDataStockReservationReleased $value = /* values here */
+```
+
+### `Components\EventDataStockReservationConsumed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataStockReservationConsumed
+*/
+Components\EventDataStockReservationConsumed $value = /* values here */
+```
+
+### `Components\EventDataStockTransferDispatched`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataStockTransferDispatched
+*/
+Components\EventDataStockTransferDispatched $value = /* values here */
+```
+
+### `Components\EventDataStockTransferReceived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataStockTransferReceived
+*/
+Components\EventDataStockTransferReceived $value = /* values here */
+```
+
+### `Components\EventDataStockTransferCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataStockTransferCancelled
+*/
+Components\EventDataStockTransferCancelled $value = /* values here */
+```
+
+### `Components\EventDataFulfilmentPrepared`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFulfilmentPrepared
+*/
+Components\EventDataFulfilmentPrepared $value = /* values here */
+```
+
+### `Components\EventDataFulfilmentHandedOver`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFulfilmentHandedOver
+*/
+Components\EventDataFulfilmentHandedOver $value = /* values here */
+```
+
+### `Components\EventDataFulfilmentInTransit`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFulfilmentInTransit
+*/
+Components\EventDataFulfilmentInTransit $value = /* values here */
+```
+
+### `Components\EventDataFulfilmentDelivered`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFulfilmentDelivered
+*/
+Components\EventDataFulfilmentDelivered $value = /* values here */
+```
+
+### `Components\EventDataFulfilmentFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataFulfilmentFailed
+*/
+Components\EventDataFulfilmentFailed $value = /* values here */
+```
+
+### `Components\EventDataReturnRequested`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataReturnRequested
+*/
+Components\EventDataReturnRequested $value = /* values here */
+```
+
+### `Components\EventDataReturnApproved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataReturnApproved
+*/
+Components\EventDataReturnApproved $value = /* values here */
+```
+
+### `Components\EventDataReturnReceived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataReturnReceived
+*/
+Components\EventDataReturnReceived $value = /* values here */
+```
+
+### `Components\EventDataReturnRefunded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataReturnRefunded
+*/
+Components\EventDataReturnRefunded $value = /* values here */
+```
+
+### `Components\EventDataReturnRejected`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataReturnRejected
+*/
+Components\EventDataReturnRejected $value = /* values here */
 ```
 

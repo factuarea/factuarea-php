@@ -86,17 +86,17 @@ class ProductVariant
 
     /**
      *
-     * @var ?float $basePriceOverride
+     * @var ?string $basePriceOverride
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base_price_override')]
-    public ?float $basePriceOverride;
+    public ?string $basePriceOverride;
 
     /**
      *
-     * @var ?float $unitCostOverride
+     * @var ?string $unitCostOverride
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_cost_override')]
-    public ?float $unitCostOverride;
+    public ?string $unitCostOverride;
 
     /**
      *
@@ -116,12 +116,12 @@ class ProductVariant
      * @param  bool  $active
      * @param  ?string  $sku
      * @param  ?string  $barcode
-     * @param  ?float  $basePriceOverride
-     * @param  ?float  $unitCostOverride
+     * @param  ?string  $basePriceOverride
+     * @param  ?string  $unitCostOverride
      * @param  ?string  $lowStockThreshold
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductVariantObject $object, string $productId, string $name, bool $manageStock, string $stock, array $specifications, bool $active, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?string $lowStockThreshold = null)
+    public function __construct(string $id, ProductVariantObject $object, string $productId, string $name, bool $manageStock, string $stock, array $specifications, bool $active, ?string $sku = null, ?string $barcode = null, ?string $basePriceOverride = null, ?string $unitCostOverride = null, ?string $lowStockThreshold = null)
     {
         $this->id = $id;
         $this->object = $object;

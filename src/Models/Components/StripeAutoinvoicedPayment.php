@@ -40,10 +40,10 @@ class StripeAutoinvoicedPayment
     /**
      * Charged amount in euros.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Date of the charge (YYYY-MM-DD).
@@ -137,7 +137,7 @@ class StripeAutoinvoicedPayment
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\StripeAutoinvoicedPaymentObject  $object
      * @param  string  $invoiceId
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  LocalDate  $paymentDate
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
@@ -151,7 +151,7 @@ class StripeAutoinvoicedPayment
      * @param  ?LocalDate  $periodEnd
      * @phpstan-pure
      */
-    public function __construct(string $id, StripeAutoinvoicedPaymentObject $object, string $invoiceId, float $amount, LocalDate $paymentDate, \DateTime $createdAt, \DateTime $updatedAt, ?string $clientId = null, ?string $invoiceNumber = null, ?string $clientName = null, ?string $stripeReference = null, ?string $subscriptionId = null, ?string $stripeInvoiceId = null, ?LocalDate $periodStart = null, ?LocalDate $periodEnd = null)
+    public function __construct(string $id, StripeAutoinvoicedPaymentObject $object, string $invoiceId, string $amount, LocalDate $paymentDate, \DateTime $createdAt, \DateTime $updatedAt, ?string $clientId = null, ?string $invoiceNumber = null, ?string $clientName = null, ?string $stripeReference = null, ?string $subscriptionId = null, ?string $stripeInvoiceId = null, ?LocalDate $periodStart = null, ?LocalDate $periodEnd = null)
     {
         $this->id = $id;
         $this->object = $object;

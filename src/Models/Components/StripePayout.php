@@ -48,26 +48,26 @@ class StripePayout
     /**
      * Net amount transferred to the bank account (gross minus fees), in the payout currency.
      *
-     * @var float $amountNet
+     * @var string $amountNet
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount_net')]
-    public float $amountNet;
+    public string $amountNet;
 
     /**
      * Total Stripe fees deducted from the payout.
      *
-     * @var float $feeTotal
+     * @var string $feeTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('fee_total')]
-    public float $feeTotal;
+    public string $feeTotal;
 
     /**
      * Gross amount before fees.
      *
-     * @var float $amountGross
+     * @var string $amountGross
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount_gross')]
-    public float $amountGross;
+    public string $amountGross;
 
     /**
      * ISO-4217 currency code of the payout.
@@ -124,9 +124,9 @@ class StripePayout
      * @param  \Factuarea\Sdk\Models\Components\StripePayoutObject  $object
      * @param  string  $connectedAccountId
      * @param  string  $stripePayoutId
-     * @param  float  $amountNet
-     * @param  float  $feeTotal
-     * @param  float  $amountGross
+     * @param  string  $amountNet
+     * @param  string  $feeTotal
+     * @param  string  $amountGross
      * @param  string  $currency
      * @param  LocalDate  $arrivalDate
      * @param  \Factuarea\Sdk\Models\Components\StripePayoutStatus  $status
@@ -135,7 +135,7 @@ class StripePayout
      * @param  ?string  $bankTransactionRef
      * @phpstan-pure
      */
-    public function __construct(string $id, StripePayoutObject $object, string $connectedAccountId, string $stripePayoutId, float $amountNet, float $feeTotal, float $amountGross, string $currency, LocalDate $arrivalDate, StripePayoutStatus $status, Composition $composition, ?\DateTime $reconciledAt = null, ?string $bankTransactionRef = null)
+    public function __construct(string $id, StripePayoutObject $object, string $connectedAccountId, string $stripePayoutId, string $amountNet, string $feeTotal, string $amountGross, string $currency, LocalDate $arrivalDate, StripePayoutStatus $status, Composition $composition, ?\DateTime $reconciledAt = null, ?string $bankTransactionRef = null)
     {
         $this->id = $id;
         $this->object = $object;

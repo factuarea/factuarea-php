@@ -1,5 +1,7 @@
 # PurchaseInvoicePaymentObject
 
+String identifying the object type. Always `purchase_invoice_payment`.
+
 
 ## Values
 

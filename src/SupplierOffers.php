@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk;
 
-use Brick\DateTime\LocalDate;
 use Factuarea\Sdk\Hooks\HookContext;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Options;
 use Factuarea\Sdk\Utils\Retry;
@@ -53,14 +51,11 @@ class SupplierOffers
      *
      * Create a tenant-scoped supplier offer for a product or one of its variants.
      *
-     * @param  \Factuarea\Sdk\Models\Components\CreateSupplierProductOfferRequest  $body
-     * @param  string  $product
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSupplierOffersCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSupplierOffersCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsSupplierOffersCreate(Components\CreateSupplierProductOfferRequest $body, string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsSupplierOffersCreateResponse
+    public function publicApiV1ProductsSupplierOffersCreate(Operations\PublicApiV1ProductsSupplierOffersCreateRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsSupplierOffersCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,12 +82,6 @@ class SupplierOffers
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-            product: $product,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/supplier-offers', Operations\PublicApiV1ProductsSupplierOffersCreateRequest::class, $request);
         $urlOverride = null;
@@ -408,14 +397,11 @@ class SupplierOffers
      *
      * Atomically mark this offer as preferred for its product and variant target. No request body is required.
      *
-     * @param  string  $product
-     * @param  string  $offer
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSupplierOffersPreferredRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSupplierOffersPreferredResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsSupplierOffersPreferred(string $product, string $offer, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsSupplierOffersPreferredResponse
+    public function publicApiV1ProductsSupplierOffersPreferred(Operations\PublicApiV1ProductsSupplierOffersPreferredRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsSupplierOffersPreferredResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -442,12 +428,6 @@ class SupplierOffers
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsSupplierOffersPreferredRequest(
-            product: $product,
-            offer: $offer,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/supplier-offers/{offer}/preferred', Operations\PublicApiV1ProductsSupplierOffersPreferredRequest::class, $request);
         $urlOverride = null;

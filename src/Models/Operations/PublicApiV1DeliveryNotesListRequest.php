@@ -197,6 +197,22 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $carrierCompanyContains = null;
 
     /**
+     * Reference the system that created the delivery note uses to identify it, unique per company. Exact match on `external_id`.
+     *
+     * @var ?string $externalId
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=external_id')]
+    public ?string $externalId = null;
+
+    /**
+     * Reference the system that created the delivery note uses to identify it, unique per company. Comma-separated list. Any of the values matches.
+     *
+     * @var ?string $externalIdIn
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=external_id[in]')]
+    public ?string $externalIdIn = null;
+
+    /**
      * Town or city of the delivery address recorded on the delivery note (e.g. `delivery_city=Alcoy`), never the client's address — to filter by client use `client_id`. Exact match on `delivery_city`.
      *
      * @var ?string $deliveryCity
@@ -285,6 +301,38 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $tagsIn = null;
 
     /**
+     * State of the PHYSICAL axis of the delivery note: `pending` (nothing prepared yet), `picking` (being prepared), `prepared` (ready to hand over), `handed_over` (the goods are with the carrier), `in_transit`, `delivered` (the recipient has them) and `failed` (the delivery attempt did not succeed). It is ORTHOGONAL to `status`, which is the commercial state of the document: a delivery note already `delivered` to the recipient may still be a draft commercially, and the word `delivered` means different things on each axis. A delivery note that never entered the physical cycle reads `pending`, so this filter never leaves one out for lack of a value. Exact match on `fulfilment_status`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListFulfilmentStatus $fulfilmentStatus
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=fulfilment_status')]
+    public ?PublicApiV1DeliveryNotesListFulfilmentStatus $fulfilmentStatus = null;
+
+    /**
+     * State of the PHYSICAL axis of the delivery note: `pending` (nothing prepared yet), `picking` (being prepared), `prepared` (ready to hand over), `handed_over` (the goods are with the carrier), `in_transit`, `delivered` (the recipient has them) and `failed` (the delivery attempt did not succeed). It is ORTHOGONAL to `status`, which is the commercial state of the document: a delivery note already `delivered` to the recipient may still be a draft commercially, and the word `delivered` means different things on each axis. A delivery note that never entered the physical cycle reads `pending`, so this filter never leaves one out for lack of a value. Comma-separated list. Any of the values matches.
+     *
+     * @var ?string $fulfilmentStatusIn
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=fulfilment_status[in]')]
+    public ?string $fulfilmentStatusIn = null;
+
+    /**
+     * Public ID of the carrier the shipment is assigned to, from your carrier master data. Do NOT confuse it with `carrier_company`, which is free text typed on the document itself and is filtered as text: this one names an entity you can also read, update and withdraw. A carrier that does not belong to the company in the path yields an EMPTY page, never a rejection, so the filter cannot be used to find out whether a carrier exists; a value that is not a public ID at all is rejected, because it cannot be anybody's carrier. Exact match on `carrier_id`.
+     *
+     * @var ?string $carrierId
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=carrier_id')]
+    public ?string $carrierId = null;
+
+    /**
+     * Public ID of the carrier the shipment is assigned to, from your carrier master data. Do NOT confuse it with `carrier_company`, which is free text typed on the document itself and is filtered as text: this one names an entity you can also read, update and withdraw. A carrier that does not belong to the company in the path yields an EMPTY page, never a rejection, so the filter cannot be used to find out whether a carrier exists; a value that is not a public ID at all is rejected, because it cannot be anybody's carrier. Comma-separated list. Any of the values matches.
+     *
+     * @var ?string $carrierIdIn
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=carrier_id[in]')]
+    public ?string $carrierIdIn = null;
+
+    /**
      * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `number`, `delivery_date`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListSort $sort
@@ -357,6 +405,8 @@ class PublicApiV1DeliveryNotesListRequest
      * @param  ?string  $vehiclePlateContains
      * @param  ?string  $carrierCompany
      * @param  ?string  $carrierCompanyContains
+     * @param  ?string  $externalId
+     * @param  ?string  $externalIdIn
      * @param  ?string  $deliveryCity
      * @param  ?string  $deliveryCityIn
      * @param  ?string  $deliveryCityContains
@@ -368,6 +418,10 @@ class PublicApiV1DeliveryNotesListRequest
      * @param  ?string  $deliveryPostalCodeContains
      * @param  ?string  $tags
      * @param  ?string  $tagsIn
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListFulfilmentStatus  $fulfilmentStatus
+     * @param  ?string  $fulfilmentStatusIn
+     * @param  ?string  $carrierId
+     * @param  ?string  $carrierIdIn
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListSort  $sort
      * @param  ?string  $search
      * @param  ?array<string, string>  $metadata
@@ -375,7 +429,7 @@ class PublicApiV1DeliveryNotesListRequest
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $deliveryDateGte = null, ?LocalDate $deliveryDateLte = null, ?LocalDate $deliveryDateGt = null, ?LocalDate $deliveryDateLt = null, ?bool $signed = null, ?string $number = null, ?string $numberContains = null, ?string $vehiclePlate = null, ?string $vehiclePlateContains = null, ?string $carrierCompany = null, ?string $carrierCompanyContains = null, ?string $deliveryCity = null, ?string $deliveryCityIn = null, ?string $deliveryCityContains = null, ?string $deliveryProvince = null, ?string $deliveryProvinceIn = null, ?string $deliveryProvinceContains = null, ?string $deliveryPostalCode = null, ?string $deliveryPostalCodeIn = null, ?string $deliveryPostalCodeContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1DeliveryNotesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $deliveryDateGte = null, ?LocalDate $deliveryDateLte = null, ?LocalDate $deliveryDateGt = null, ?LocalDate $deliveryDateLt = null, ?bool $signed = null, ?string $number = null, ?string $numberContains = null, ?string $vehiclePlate = null, ?string $vehiclePlateContains = null, ?string $carrierCompany = null, ?string $carrierCompanyContains = null, ?string $externalId = null, ?string $externalIdIn = null, ?string $deliveryCity = null, ?string $deliveryCityIn = null, ?string $deliveryCityContains = null, ?string $deliveryProvince = null, ?string $deliveryProvinceIn = null, ?string $deliveryProvinceContains = null, ?string $deliveryPostalCode = null, ?string $deliveryPostalCodeIn = null, ?string $deliveryPostalCodeContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1DeliveryNotesListFulfilmentStatus $fulfilmentStatus = null, ?string $fulfilmentStatusIn = null, ?string $carrierId = null, ?string $carrierIdIn = null, ?PublicApiV1DeliveryNotesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
@@ -400,6 +454,8 @@ class PublicApiV1DeliveryNotesListRequest
         $this->vehiclePlateContains = $vehiclePlateContains;
         $this->carrierCompany = $carrierCompany;
         $this->carrierCompanyContains = $carrierCompanyContains;
+        $this->externalId = $externalId;
+        $this->externalIdIn = $externalIdIn;
         $this->deliveryCity = $deliveryCity;
         $this->deliveryCityIn = $deliveryCityIn;
         $this->deliveryCityContains = $deliveryCityContains;
@@ -411,6 +467,10 @@ class PublicApiV1DeliveryNotesListRequest
         $this->deliveryPostalCodeContains = $deliveryPostalCodeContains;
         $this->tags = $tags;
         $this->tagsIn = $tagsIn;
+        $this->fulfilmentStatus = $fulfilmentStatus;
+        $this->fulfilmentStatusIn = $fulfilmentStatusIn;
+        $this->carrierId = $carrierId;
+        $this->carrierIdIn = $carrierIdIn;
         $this->sort = $sort;
         $this->search = $search;
         $this->metadata = $metadata;

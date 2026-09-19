@@ -139,6 +139,22 @@ class StockMovement
     public ?string $variantName;
 
     /**
+     * Warehouse the movement was booked to, `null` for a movement recorded before the physical axis existed. It is NOT replaced by the company default warehouse: attributing it would invent a fact about the past.
+     *
+     * @var ?string $warehouseId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warehouse_id')]
+    public ?string $warehouseId;
+
+    /**
+     * Name of that warehouse as the master has it, `null` in the same case. Travels next to the id so rows served from different warehouses are readable without resolving ids one by one.
+     *
+     * @var ?string $warehouseName
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warehouse_name')]
+    public ?string $warehouseName;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\StockMovementObject  $object
      * @param  string  $id
      * @param  string  $delta
@@ -155,9 +171,11 @@ class StockMovement
      * @param  ?string  $conversionFactor
      * @param  ?string  $variantId
      * @param  ?string  $variantName
+     * @param  ?string  $warehouseId
+     * @param  ?string  $warehouseName
      * @phpstan-pure
      */
-    public function __construct(StockMovementObject $object, string $id, string $delta, string $stockAfter, string $reason, SourceType $sourceType, \DateTime $occurredAt, string $baseUnitCode, ?string $sourceId = null, ?string $sourceLabel = null, ?string $performedBy = null, ?string $commercialQuantity = null, ?string $commercialUnitCode = null, ?string $conversionFactor = null, ?string $variantId = null, ?string $variantName = null)
+    public function __construct(StockMovementObject $object, string $id, string $delta, string $stockAfter, string $reason, SourceType $sourceType, \DateTime $occurredAt, string $baseUnitCode, ?string $sourceId = null, ?string $sourceLabel = null, ?string $performedBy = null, ?string $commercialQuantity = null, ?string $commercialUnitCode = null, ?string $conversionFactor = null, ?string $variantId = null, ?string $variantName = null, ?string $warehouseId = null, ?string $warehouseName = null)
     {
         $this->object = $object;
         $this->id = $id;
@@ -175,5 +193,7 @@ class StockMovement
         $this->conversionFactor = $conversionFactor;
         $this->variantId = $variantId;
         $this->variantName = $variantName;
+        $this->warehouseId = $warehouseId;
+        $this->warehouseName = $warehouseName;
     }
 }

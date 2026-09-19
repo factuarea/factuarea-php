@@ -29,6 +29,12 @@ namespace Factuarea\Sdk\Hooks;
 enum OAuth2Scope: string
 {
 
+    case ContactsRead = 'contacts:read';
+
+    case ContactsWrite = 'contacts:write';
+
+    case ContactsDelete = 'contacts:delete';
+
     case ClientsRead = 'clients:read';
 
     case ClientsWrite = 'clients:write';
@@ -143,6 +149,8 @@ enum OAuth2Scope: string
 
     case AccountWrite = 'account:write';
 
+    case AccountOwner = 'account:owner';
+
     case CompaniesRead = 'companies:read';
 
     case CompaniesWrite = 'companies:write';
@@ -228,6 +236,88 @@ enum OAuth2Scope: string
     case AutomationsDelete = 'automations:delete';
 
     case AutomationRunsRead = 'automation_runs:read';
+
+    case SalesOrdersRead = 'sales_orders:read';
+
+    case SalesOrdersWrite = 'sales_orders:write';
+
+    case SalesOrdersDelete = 'sales_orders:delete';
+
+    case SalesOrdersTransition = 'sales_orders:transition';
+
+    case SalesOrdersSend = 'sales_orders:send';
+
+    case PurchaseOrdersRead = 'purchase_orders:read';
+
+    case PurchaseOrdersWrite = 'purchase_orders:write';
+
+    case PurchaseOrdersDelete = 'purchase_orders:delete';
+
+    case PurchaseOrdersTransition = 'purchase_orders:transition';
+
+    case PurchaseOrdersSend = 'purchase_orders:send';
+
+    case GoodsReceiptsRead = 'goods_receipts:read';
+
+    case GoodsReceiptsWrite = 'goods_receipts:write';
+
+    case GoodsReceiptsTransition = 'goods_receipts:transition';
+
+    case WarehousesRead = 'warehouses:read';
+
+    case WarehousesWrite = 'warehouses:write';
+
+    case WarehousesDelete = 'warehouses:delete';
+
+    case StockReservationsRead = 'stock_reservations:read';
+
+    case StockReservationsWrite = 'stock_reservations:write';
+
+    case StockTransfersRead = 'stock_transfers:read';
+
+    case StockTransfersWrite = 'stock_transfers:write';
+
+    case StockTransfersTransition = 'stock_transfers:transition';
+
+    case CarriersRead = 'carriers:read';
+
+    case CarriersWrite = 'carriers:write';
+
+    case CarriersDelete = 'carriers:delete';
+
+    case ReturnsRead = 'returns:read';
+
+    case ReturnsWrite = 'returns:write';
+
+    case ReturnsTransition = 'returns:transition';
+
+    case FulfilmentRead = 'fulfilment:read';
+
+    case FulfilmentWrite = 'fulfilment:write';
+
+    case FulfilmentTransition = 'fulfilment:transition';
+
+    case StorefrontRead = 'storefront:read';
+
+    case StorefrontWrite = 'storefront:write';
+
+    case StorefrontKeysRead = 'storefront_keys:read';
+
+    case StorefrontKeysWrite = 'storefront_keys:write';
+
+    case StorefrontKeysDelete = 'storefront_keys:delete';
+
+    case MembersRead = 'members:read';
+
+    case MembersWrite = 'members:write';
+
+    case InvitationsRead = 'invitations:read';
+
+    case InvitationsWrite = 'invitations:write';
+
+    case ClaimTokensRead = 'claim_tokens:read';
+
+    case ClaimTokensWrite = 'claim_tokens:write';
 
     case Wildcard = '*';
 }

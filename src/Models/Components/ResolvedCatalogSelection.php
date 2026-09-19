@@ -115,10 +115,10 @@ class ResolvedCatalogSelection
     /**
      * Groups that still need a choice before the line can be confirmed.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\PendingOptionGroup> $pendingOptionGroups
+     * @var array<\Factuarea\Sdk\Models\Components\ResolvedCatalogSelectionPendingOptionGroup> $pendingOptionGroups
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_option_groups')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PendingOptionGroup>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ResolvedCatalogSelectionPendingOptionGroup>')]
     public array $pendingOptionGroups;
 
     /**
@@ -193,7 +193,7 @@ class ResolvedCatalogSelection
      * @param  array<\Factuarea\Sdk\Models\Components\CompatibleVariant>  $compatibleVariants
      * @param  array<\Factuarea\Sdk\Models\Components\CompatiblePresentation>  $compatiblePresentations
      * @param  array<\Factuarea\Sdk\Models\Components\CompatibleOptionGroup>  $compatibleOptionGroups
-     * @param  array<\Factuarea\Sdk\Models\Components\PendingOptionGroup>  $pendingOptionGroups
+     * @param  array<\Factuarea\Sdk\Models\Components\ResolvedCatalogSelectionPendingOptionGroup>  $pendingOptionGroups
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
      * @param  ?string  $configurationId

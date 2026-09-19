@@ -1,11 +1,39 @@
 overlay: 1.0.0
 info:
   title: Avoid the PHP runtime Options class when grouping product options
-  version: 1.0.0
+  version: 1.1.0
+  # MEASURED DEFECT. Speakeasy flattens nested PHP groups into root classes and
+  # disambiguates a collision between two sibling groups by prefixing the parent
+  # (`storefront.products.variants` correctly becomes `StorefrontVariants`), but
+  # it does NOT disambiguate against the imports it writes into the class itself.
+  # Every generated resource class carries `use Factuarea\Sdk\Utils\Options;`
+  # (the per-call request options), so a group whose last segment is `options`
+  # generates `class Options` in `Factuarea\Sdk` inside a file that already
+  # imports that short name, and PHP refuses to parse it:
+  #
+  #   Fatal error: Cannot declare class Factuarea\Sdk\Options because the name
+  #   is already in use in src/Options.php on line 19
+  #
+  # Reproduced on 2026-06-05 with `/products/{product}/options` and again on
+  # 2026-09-18 with the storefront listing below, on speakeasy 1.796.4: the
+  # generation completes and `php -l src/Options.php` exits 255.
+  #
+  # Both operations are therefore re-grouped to a `productOptions` leaf, which
+  # generates `ProductOptions` and `StorefrontProductOptions`. The HTTP path,
+  # the operation ID, the tags and the pinned public spec are unchanged: this is
+  # a generation input only.
+  #
+  # RETIRAL CONDITION: remove this overlay (and its `overlays:` entry in
+  # `.speakeasy/workflow.yaml`) once the Speakeasy PHP generator disambiguates a
+  # generated root class against the imports it writes into the same file — the
+  # check is that a regeneration with this overlay removed leaves
+  # `php -l src/Options.php` at exit 0. Tracked in docs/REGENERATION.md.
 actions:
-  # Speakeasy flattens nested PHP groups into root classes. products.options
-  # would generate Factuarea\Sdk\Options, which imports Utils\Options under
-  # the same short name and cannot be loaded. Keep the public spec unchanged.
   - target: $.paths['/products/{product}/options'].get
     update:
       x-speakeasy-group: products.productOptions
+  # Added 2026-09-18 with the ERP wave: the storefront catalogue publishes the
+  # same sub-resource for the buyer-facing surface and reproduces the same fatal.
+  - target: $.paths['/companies/{company}/storefront/products/{product}/options'].get
+    update:
+      x-speakeasy-group: storefront.products.productOptions

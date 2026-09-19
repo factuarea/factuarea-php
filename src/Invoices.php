@@ -1610,14 +1610,11 @@ class Invoices
      *
      * Create a recurring invoice template that reuses the lines, client, and series of an existing invoice, applying the cadence (frequency, start date, optional end date and limits) supplied in the body. Returns the new recurring invoice.
      *
-     * @param  \Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequest  $body
-     * @param  string  $invoice
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateRecurringRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateRecurringResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesCreateRecurring(Components\CreateRecurringFromInvoiceRequest $body, string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesCreateRecurringResponse
+    public function publicApiV1InvoicesCreateRecurring(Operations\PublicApiV1InvoicesCreateRecurringRequest $request, ?Options $options = null): Operations\PublicApiV1InvoicesCreateRecurringResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1644,12 +1641,6 @@ class Invoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1InvoicesCreateRecurringRequest(
-            invoice: $invoice,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/create-recurring', Operations\PublicApiV1InvoicesCreateRecurringRequest::class, $request);
         $urlOverride = null;
@@ -2333,7 +2324,7 @@ class Invoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2983,14 +2974,11 @@ class Invoices
      *
      * Register a partial (or full) payment against an invoice. The invoice transitions to `partially_paid` while the cumulative paid amount is below the total, and to `paid` once it reaches it. Returns 422 if the invoice is in a status that does not accept payments.
      *
-     * @param  \Factuarea\Sdk\Models\Components\RegisterInvoicePaymentRequest  $body
-     * @param  string  $invoice
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentsCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesPaymentsCreate(Components\RegisterInvoicePaymentRequest $body, string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesPaymentsCreateResponse
+    public function publicApiV1InvoicesPaymentsCreate(Operations\PublicApiV1InvoicesPaymentsCreateRequest $request, ?Options $options = null): Operations\PublicApiV1InvoicesPaymentsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -3017,12 +3005,6 @@ class Invoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1InvoicesPaymentsCreateRequest(
-            invoice: $invoice,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/payments', Operations\PublicApiV1InvoicesPaymentsCreateRequest::class, $request);
         $urlOverride = null;
@@ -4136,14 +4118,11 @@ class Invoices
      *
      * Limits: only an invoice in `scheduled` can be rescheduled — a `draft` (never scheduled) or an already issued invoice returns 422 — and the new `scheduled_for` must be strictly in the future (422 otherwise). Everything documented under `schedule` about what happens when the date arrives (number assigned at that moment, snapshots frozen, asynchronous VeriFactu *alta*, email only with `issue_and_send`, per-invoice retry on failure) applies unchanged to the new date.
      *
-     * @param  \Factuarea\Sdk\Models\Components\RescheduleInvoiceRequest  $body
-     * @param  string  $invoice
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesRescheduleRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesRescheduleResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesReschedule(Components\RescheduleInvoiceRequest $body, string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesRescheduleResponse
+    public function publicApiV1InvoicesReschedule(Operations\PublicApiV1InvoicesRescheduleRequest $request, ?Options $options = null): Operations\PublicApiV1InvoicesRescheduleResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -4170,12 +4149,6 @@ class Invoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1InvoicesRescheduleRequest(
-            invoice: $invoice,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/reschedule', Operations\PublicApiV1InvoicesRescheduleRequest::class, $request);
         $urlOverride = null;
@@ -4274,14 +4247,11 @@ class Invoices
      *
      * Limits: only a `draft` can be scheduled (any other status returns 422) and `scheduled_for` must be strictly in the future (422 otherwise). While it is still `scheduled` you can call `unschedule` to return it to `draft`, or `reschedule` to move only the date.
      *
-     * @param  \Factuarea\Sdk\Models\Components\ScheduleInvoiceRequest  $body
-     * @param  string  $invoice
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesScheduleRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesScheduleResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesSchedule(Components\ScheduleInvoiceRequest $body, string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesScheduleResponse
+    public function publicApiV1InvoicesSchedule(Operations\PublicApiV1InvoicesScheduleRequest $request, ?Options $options = null): Operations\PublicApiV1InvoicesScheduleResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -4308,12 +4278,6 @@ class Invoices
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1InvoicesScheduleRequest(
-            invoice: $invoice,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/schedule', Operations\PublicApiV1InvoicesScheduleRequest::class, $request);
         $urlOverride = null;
@@ -5281,12 +5245,13 @@ class Invoices
      * If you only want to move the date, use `PATCH /v1/invoices/{id}/reschedule` instead — it avoids the round trip through `draft` and the window in which the document is editable.
      *
      * @param  string  $invoice
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesUnscheduleResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesUnschedule(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesUnscheduleResponse
+    public function publicApiV1InvoicesUnschedule(string $invoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesUnscheduleResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -5315,6 +5280,7 @@ class Invoices
         }
         $request = new Operations\PublicApiV1InvoicesUnscheduleRequest(
             invoice: $invoice,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -5404,12 +5370,13 @@ class Invoices
      * Clear the delivery marker (`sent_at`) of a `sent` invoice while keeping its `sent` status. The correlative number and VeriFactu record stay intact — the invoice is not reverted to draft and remains immutable per AEAT. Use it to undo an accidental mark-as-sent. Idempotent: a no-op when `sent_at` is already null. **It does not touch stock:** undoing the delivery marker does NOT return any goods to the warehouse, because the movement was booked when the invoice was issued and not when it was marked as sent. To undo the sale itself — and with it its stock — void the invoice or issue a corrective one.
      *
      * @param  string  $invoice
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesUnsendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesUnsend(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesUnsendResponse
+    public function publicApiV1InvoicesUnsend(string $invoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesUnsendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -5438,6 +5405,7 @@ class Invoices
         }
         $request = new Operations\PublicApiV1InvoicesUnsendRequest(
             invoice: $invoice,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );

@@ -56,10 +56,10 @@ class StripeAutoinvoicedCorrective
     /**
      * Refunded amount in euros (the individual refund amount, not the cumulative).
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Scope of the correction: `total` (full annulment) or `partial` (a single negative line for the refunded amount).
@@ -84,12 +84,12 @@ class StripeAutoinvoicedCorrective
      * @param  string  $originalInvoiceId
      * @param  string  $refundId
      * @param  string  $provider
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  \Factuarea\Sdk\Models\Components\StripeAutoinvoicedCorrectiveCorrectionType  $correctionType
      * @param  \DateTime  $createdAt
      * @phpstan-pure
      */
-    public function __construct(string $id, StripeAutoinvoicedCorrectiveObject $object, string $originalInvoiceId, string $refundId, string $provider, float $amount, StripeAutoinvoicedCorrectiveCorrectionType $correctionType, \DateTime $createdAt)
+    public function __construct(string $id, StripeAutoinvoicedCorrectiveObject $object, string $originalInvoiceId, string $refundId, string $provider, string $amount, StripeAutoinvoicedCorrectiveCorrectionType $correctionType, \DateTime $createdAt)
     {
         $this->id = $id;
         $this->object = $object;

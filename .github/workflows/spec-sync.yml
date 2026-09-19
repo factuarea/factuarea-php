@@ -14,16 +14,46 @@ name: Spec sync
 #     Spec Dispatch` workflow, wired on 2026-08-06 (see docs/SPEC_SYNC.md).
 #   - workflow_dispatch — manual run from the Actions tab.
 #   - schedule — daily fallback so a missed dispatch is still picked up.
+#     PAUSED on 2026-09-18; the note below states the measurable condition
+#     that authorises putting it back.
 #
 # `schedule` restored 2026-08-06: published spec 345 paths vs 192 pinned, which
 # satisfies the `docs == prod` condition it was paused under on 2026-06-07.
+#
+# PAUSED schedule since 2026-09-18; reactivate when: the document published at $SPEC_URL declares the same number of operations as spec/openapi.json (654 on both sides once the ERP contract is deployed); count both with the jq of the compare step below.
+# `schedule` paused again 2026-09-18, while the ERP surface is regenerated
+# here: the document published at $SPEC_URL declares 470 operations over 386
+# paths, and this regeneration has re-pinned `spec/openapi.json` to a frozen
+# contract of 654 operations over 532 paths (+184). Until that contract is deployed, the published document is
+# the older one, so a scheduled run would read the regenerated SDK as drift
+# and open a PR that REMOVES the 184 new operations.
+#
+# Reactivation condition — measurable, and checkable by anyone without this
+# context: the spec published at $SPEC_URL declares the SAME number of
+# operations as the copy pinned in this repo (654 on both sides once the
+# regeneration has landed and the contract is deployed). Count both with the
+# same jq the compare step below uses:
+#
+#   jq '[.paths[] | to_entries[] | select(.key | IN("get","post","put","patch","delete"))] | length' spec/openapi.json
+#   curl -fsSL "https://docs.factuarea.com/api/openapi" \
+#     | jq '[.paths[] | to_entries[] | select(.key | IN("get","post","put","patch","delete"))] | length'
+#
+# Measured 2026-09-18: published 470, pinned 654 ⇒ different ⇒ stays paused.
+# Equal counts ⇒ restore the
+# trigger under `on:`, exactly as it was:
+#
+#   schedule:
+#     - cron: "17 6 * * *"
+#
+# Different counts ⇒ it stays paused. The workflow was NOT disabled from the
+# Actions UI: such a disable leaves no trace in the repo, is not reviewed in a
+# pull request and does not survive a restore. Reactivating is the repository
+# owner's decision.
 
 on:
   repository_dispatch:
     types: [spec-updated]
   workflow_dispatch:
-  schedule:
-    - cron: "17 6 * * *"
 
 permissions:
   contents: write

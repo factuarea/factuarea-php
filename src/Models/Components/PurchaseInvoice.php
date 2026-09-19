@@ -51,50 +51,50 @@ class PurchaseInvoice
 
     /**
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
      * VAT BORNE (IVA soportado) of this purchase invoice, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
      *
-     * @var float $taxesTotal
+     * @var string $taxesTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes_total')]
-    public float $taxesTotal;
+    public string $taxesTotal;
 
     /**
      * Same VAT amount as `taxes_total`, published under the name the concept carries in the other four document families, so that the explicit identity `total === subtotal + total_vat + total_surcharge − total_retention` holds across all five without knowing which resource produced the body.
      *
-     * @var float $totalVat
+     * @var string $totalVat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
-    public float $totalVat;
+    public string $totalVat;
 
     /**
      * Aggregated IRPF withholding of the lines (Σ retention_amount). Header invariant: `total === subtotal + taxes_total + total_surcharge − total_retention`.
      *
-     * @var float $totalRetention
+     * @var string $totalRetention
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
-    public float $totalRetention;
+    public string $totalRetention;
 
     /**
      * Aggregated equivalence surcharge of the lines (Σ surcharge_amount). It adds to the total exactly like VAT does, so it is part of the header invariant above.
      *
-     * @var float $totalSurcharge
+     * @var string $totalSurcharge
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
-    public float $totalSurcharge;
+    public string $totalSurcharge;
 
     /**
      * Total of the purchase invoice. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      *
@@ -106,27 +106,27 @@ class PurchaseInvoice
     /**
      * Amount already paid against this purchase invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
      *
-     * @var float $paidAmount
+     * @var string $paidAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('paid_amount')]
-    public float $paidAmount;
+    public string $paidAmount;
 
     /**
      * Outstanding balance pending payment for this purchase invoice (derived from the payment ledger).
      *
-     * @var float $pendingAmount
+     * @var string $pendingAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_amount')]
-    public float $pendingAmount;
+    public string $pendingAmount;
 
     /**
      * Derived payment status, NOT a persisted domain state (the model keeps 4 statuses). `overdue` derives from `pending` + `due_date < today` and prevails in presentation.
      *
-     * @var \Factuarea\Sdk\Models\Components\PaymentStatus $paymentStatus
+     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentStatus $paymentStatus
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('payment_status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PaymentStatus')]
-    public PaymentStatus $paymentStatus;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentStatus')]
+    public PurchaseInvoicePaymentStatus $paymentStatus;
 
     /**
      * Operation class for the input VAT of Modelo 303. Defaults to `corriente`. `isp` (domestic reverse charge, Art. 84.Uno.2 LIVA) and `intracomunitaria` are self-assessed: the buyer declares both the output VAT and the deductible input VAT.
@@ -243,10 +243,10 @@ class PurchaseInvoice
 
     /**
      *
-     * @var ?LocalDate $paidAt
+     * @var ?LocalDate $paidRecordedAt
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_at')]
-    public ?LocalDate $paidAt;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_recorded_at')]
+    public ?LocalDate $paidRecordedAt;
 
     /**
      *
@@ -345,16 +345,16 @@ class PurchaseInvoice
      * @param  bool  $isSimplified
      * @param  string  $status
      * @param  LocalDate  $issuedOn
-     * @param  float  $subtotal
-     * @param  float  $taxesTotal
-     * @param  float  $totalVat
-     * @param  float  $totalRetention
-     * @param  float  $totalSurcharge
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $taxesTotal
+     * @param  string  $totalVat
+     * @param  string  $totalRetention
+     * @param  string  $totalSurcharge
+     * @param  string  $total
      * @param  string  $currency
-     * @param  float  $paidAmount
-     * @param  float  $pendingAmount
-     * @param  \Factuarea\Sdk\Models\Components\PaymentStatus  $paymentStatus
+     * @param  string  $paidAmount
+     * @param  string  $pendingAmount
+     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentStatus  $paymentStatus
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceOperationClass  $operationClass
      * @param  bool  $exclude347
      * @param  bool  $isReverseCharge
@@ -369,7 +369,7 @@ class PurchaseInvoice
      * @param  ?\Factuarea\Sdk\Models\Components\SupplierRef  $supplier
      * @param  ?LocalDate  $receivedOn
      * @param  ?LocalDate  $dueOn
-     * @param  ?LocalDate  $paidAt
+     * @param  ?LocalDate  $paidRecordedAt
      * @param  ?string  $paymentMethod
      * @param  ?int  $paymentTermsDays
      * @param  mixed  $bankAccount
@@ -383,7 +383,7 @@ class PurchaseInvoice
      * @param  ?string  $notes
      * @phpstan-pure
      */
-    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, float $paidAmount, float $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
+    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $paidAmount, string $pendingAmount, PurchaseInvoicePaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidRecordedAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -414,7 +414,7 @@ class PurchaseInvoice
         $this->supplier = $supplier;
         $this->receivedOn = $receivedOn;
         $this->dueOn = $dueOn;
-        $this->paidAt = $paidAt;
+        $this->paidRecordedAt = $paidRecordedAt;
         $this->paymentMethod = $paymentMethod;
         $this->paymentTermsDays = $paymentTermsDays;
         $this->bankAccount = $bankAccount;

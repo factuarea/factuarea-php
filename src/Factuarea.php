@@ -65,6 +65,10 @@ class Factuarea
 
     public Proformas $proformas;
 
+    public PurchaseInvoices $purchaseInvoices;
+
+    public PurchaseReorderSuggestions $purchaseReorderSuggestions;
+
     public Quotes $quotes;
 
     public Automations $automations;
@@ -75,9 +79,19 @@ class Factuarea
 
     public RecurringInvoices $recurringInvoices;
 
+    public PurchaseOrders $purchaseOrders;
+
+    public SalesOrders $salesOrders;
+
+    public DeliveryNotes $deliveryNotes;
+
+    public StockTransfers $stockTransfers;
+
     public Invoices $invoices;
 
     public AbsenceRequests $absenceRequests;
+
+    public Returns $returns;
 
     public TimeCorrections $timeCorrections;
 
@@ -87,17 +101,23 @@ class Factuarea
 
     public Series $series;
 
+    public Warehouses $warehouses;
+
     public WorkSchedules $workSchedules;
 
-    public PurchaseInvoices $purchaseInvoices;
+    public Contacts $contacts;
+
+    public StockAvailability $stockAvailability;
 
     public Clients $clients;
-
-    public DeliveryNotes $deliveryNotes;
 
     public Products $products;
 
     public Suppliers $suppliers;
+
+    public Storefront $storefront;
+
+    public GoodsReceipts $goodsReceipts;
 
     public Taxes $taxes;
 
@@ -115,9 +135,15 @@ class Factuarea
 
     public Account $account;
 
+    public Carriers $carriers;
+
     public Employees $employees;
 
     public PriceLists $priceLists;
+
+    public StockReservations $stockReservations;
+
+    public StorefrontKeys $storefrontKeys;
 
     public WebhookEndpoints $webhookEndpoints;
 
@@ -178,23 +204,33 @@ class Factuarea
         public SDKConfiguration $sdkConfiguration,
     ) {
         $this->proformas = new Proformas($this->sdkConfiguration);
+        $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
+        $this->purchaseReorderSuggestions = new PurchaseReorderSuggestions($this->sdkConfiguration);
         $this->quotes = new Quotes($this->sdkConfiguration);
         $this->automations = new Automations($this->sdkConfiguration);
         $this->companies = new Companies($this->sdkConfiguration);
         $this->verifactu = new Verifactu($this->sdkConfiguration);
         $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
+        $this->purchaseOrders = new PurchaseOrders($this->sdkConfiguration);
+        $this->salesOrders = new SalesOrders($this->sdkConfiguration);
+        $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
+        $this->stockTransfers = new StockTransfers($this->sdkConfiguration);
         $this->invoices = new Invoices($this->sdkConfiguration);
         $this->absenceRequests = new AbsenceRequests($this->sdkConfiguration);
+        $this->returns = new Returns($this->sdkConfiguration);
         $this->timeCorrections = new TimeCorrections($this->sdkConfiguration);
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
         $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
+        $this->warehouses = new Warehouses($this->sdkConfiguration);
         $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
-        $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
+        $this->contacts = new Contacts($this->sdkConfiguration);
+        $this->stockAvailability = new StockAvailability($this->sdkConfiguration);
         $this->clients = new Clients($this->sdkConfiguration);
-        $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
         $this->products = new Products($this->sdkConfiguration);
         $this->suppliers = new Suppliers($this->sdkConfiguration);
+        $this->storefront = new Storefront($this->sdkConfiguration);
+        $this->goodsReceipts = new GoodsReceipts($this->sdkConfiguration);
         $this->taxes = new Taxes($this->sdkConfiguration);
         $this->employeeInvitations = new EmployeeInvitations($this->sdkConfiguration);
         $this->employeeSeats = new EmployeeSeats($this->sdkConfiguration);
@@ -203,8 +239,11 @@ class Factuarea
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->stores = new Stores($this->sdkConfiguration);
         $this->account = new Account($this->sdkConfiguration);
+        $this->carriers = new Carriers($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);
+        $this->stockReservations = new StockReservations($this->sdkConfiguration);
+        $this->storefrontKeys = new StorefrontKeys($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
