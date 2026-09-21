@@ -21,18 +21,22 @@ class PurchaseInvoiceLine
     public PurchaseInvoiceLineObject $object;
 
     /**
+     * Billed quantity. A measured purchase line (one carrying `purchase_measurement`) returns it as a 4-decimal STRING so no precision is lost; a legacy line keeps the numeric type it has always published.
      *
-     * @var float $quantity
+     * @var float|string $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
-    public float $quantity;
+    #[\Speakeasy\Serializer\Annotation\Type('float|string')]
+    public float|string $quantity;
 
     /**
+     * Cost per billed unit. Same typing rule as `quantity`: decimal string on a measured line, number on a legacy one.
      *
-     * @var float $unitPrice
+     * @var float|string $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    #[\Speakeasy\Serializer\Annotation\Type('float|string')]
+    public float|string $unitPrice;
 
     /**
      *
@@ -125,6 +129,15 @@ class PurchaseInvoiceLine
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('additional_description')]
     public ?string $additionalDescription;
+
+    /**
+     * Discount percentage applied to the line (0-100) BEFORE any tax. `subtotal` is already net of it, so `unit_price` multiplied by `quantity` does NOT equal `subtotal` on a discounted line. Default 0.
+     *
+     * @var ?float $discountPercent
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('discount_percent')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $discountPercent = null;
 
     /**
      *
@@ -241,6 +254,34 @@ class PurchaseInvoiceLine
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
+     * Zero-based ordinal of the line within this purchase invoice, in the stable read order. Send it back on create/update to keep a line matched to its historical counterpart (measures, units and frozen cost are preserved when the physical selection and the supplier do not change). It is NOT a primary key and it grants no access to any other document.
+     *
+     * @var ?int $sourceLineIndex
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_line_index')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $sourceLineIndex = null;
+
+    /**
+     * Real measured quantity in the base unit, as a decimal string, for a variable-measure presentation (weighed goods). `null` when the line does not require one. It is reconstructed from the stored base quantity, never recomputed against the live catalog.
+     *
+     * @var ?string $confirmedBaseQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('confirmed_base_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $confirmedBaseQuantity = null;
+
+    /**
+     * Measured-purchase block. `null` on a legacy or manual line, which keeps its previous `quantity` × `unit_price` semantics. On write only `package_quantity` and `cost_basis` are accepted; the remaining fields are DERIVED by the server and are never taken from the client.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePurchaseMeasurement $purchaseMeasurement
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('purchase_measurement')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePurchaseMeasurement|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?PurchaseInvoiceLinePurchaseMeasurement $purchaseMeasurement = null;
+
+    /**
      * LIVA exemption cause (E1–E6) or non-subjection cause (N1/N2) declared for this line, or null when the line does not declare one.
      *
      * @var ?string $exemptionReason
@@ -261,8 +302,8 @@ class PurchaseInvoiceLine
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceLineObject  $object
-     * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  float|string  $quantity
+     * @param  float|string  $unitPrice
      * @param  float  $taxRate
      * @param  float  $retentionRate
      * @param  float  $surchargeRate
@@ -275,6 +316,7 @@ class PurchaseInvoiceLine
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineOption>  $options
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
+     * @param  ?float  $discountPercent
      * @param  ?\Factuarea\Sdk\Models\Components\ProductRef  $product
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineVariant  $variant
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePresentation  $presentation
@@ -290,11 +332,14 @@ class PurchaseInvoiceLine
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?int  $sourceLineIndex
+     * @param  ?string  $confirmedBaseQuantity
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLinePurchaseMeasurement  $purchaseMeasurement
      * @param  ?string  $exemptionReason
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(PurchaseInvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $subtotal, float $taxes, float $retentionAmount, float $surchargeAmount, bool $vatDeductible, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?PurchaseInvoiceLineVariant $variant = null, ?PurchaseInvoiceLinePresentation $presentation = null, ?string $supplierOfferId = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?PurchaseInvoiceLineConfiguration $configuration = null, ?PurchaseInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(PurchaseInvoiceLineObject $object, float|string $quantity, float|string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $subtotal, float $taxes, float $retentionAmount, float $surchargeAmount, bool $vatDeductible, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?float $discountPercent = null, ?ProductRef $product = null, ?PurchaseInvoiceLineVariant $variant = null, ?PurchaseInvoiceLinePresentation $presentation = null, ?string $supplierOfferId = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?PurchaseInvoiceLineConfiguration $configuration = null, ?PurchaseInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?int $sourceLineIndex = null, ?string $confirmedBaseQuantity = null, ?PurchaseInvoiceLinePurchaseMeasurement $purchaseMeasurement = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -311,6 +356,7 @@ class PurchaseInvoiceLine
         $this->options = $options;
         $this->description = $description;
         $this->additionalDescription = $additionalDescription;
+        $this->discountPercent = $discountPercent;
         $this->product = $product;
         $this->variant = $variant;
         $this->presentation = $presentation;
@@ -326,6 +372,9 @@ class PurchaseInvoiceLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->sourceLineIndex = $sourceLineIndex;
+        $this->confirmedBaseQuantity = $confirmedBaseQuantity;
+        $this->purchaseMeasurement = $purchaseMeasurement;
         $this->exemptionReason = $exemptionReason;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }

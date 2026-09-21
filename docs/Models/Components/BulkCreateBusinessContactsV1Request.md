@@ -1,0 +1,11 @@
+# BulkCreateBusinessContactsV1Request
+
+Create canonical contacts in bulk. `contacts[]` holds up to 500 payloads with cumulative roles and directional profiles. `dry_run=true` validates every row without persisting; row errors do not abort the remaining contacts.
+
+
+## Fields
+
+| Field                                                                                                         | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `contacts`                                                                                                    | array<[Components\CreateBusinessContactV1Request](../../Models/Components/CreateBusinessContactV1Request.md)> | :heavy_check_mark:                                                                                            | N/A                                                                                                           |
+| `dryRun`                                                                                                      | *?bool*                                                                                                       | :heavy_minus_sign:                                                                                            | N/A                                                                                                           |

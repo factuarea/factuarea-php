@@ -54,12 +54,13 @@ class Stores
      * Connect an e-commerce store to your company. `integration_id` names the provider connection the store hangs from, and `external_store_id` is the identifier the provider gives the shop — unique per provider within your company, so a second store of the same provider and identifier is rejected with `store_already_connected`. Auto-invoicing is OFF unless you turn it on: connecting a store never starts issuing invoices by itself. `remote_base_url`, if given, is checked against the outbound policy of your company and rejected with `store_url_not_allowed` when it is not permitted.
      *
      * @param  \Factuarea\Sdk\Models\Components\ConnectStoreV1Request  $body
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StoresCreate(Components\ConnectStoreV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StoresCreateResponse
+    public function publicApiV1StoresCreate(Components\ConnectStoreV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StoresCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,6 +89,7 @@ class Stores
         }
         $request = new Operations\PublicApiV1StoresCreateRequest(
             body: $body,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -538,14 +540,11 @@ class Stores
      *
      * Update the settings of a connected store: its `name`, the series it numbers into (`series_id`; `null` falls back to the default series of your company), the simplified-invoice threshold, whether the buyer tax ID is required, whether prices already include taxes, whether paid orders are invoiced and emailed automatically, its `remote_base_url` and its `environment`. All fields are optional; omitted ones keep their value. Neither the provider nor the `external_store_id` can be changed: they are the identity of the store.
      *
-     * @param  string  $store
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateStoreV1Request  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StoresUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StoresUpdate(string $store, ?Components\UpdateStoreV1Request $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StoresUpdateResponse
+    public function publicApiV1StoresUpdate(Operations\PublicApiV1StoresUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1StoresUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -572,12 +571,6 @@ class Stores
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1StoresUpdateRequest(
-            store: $store,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/stores/{store}', Operations\PublicApiV1StoresUpdateRequest::class, $request);
         $urlOverride = null;

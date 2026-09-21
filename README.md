@@ -5,7 +5,7 @@
 [![Spec sync](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml/badge.svg)](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml)
 
 Official PHP SDK for the [Factuarea](https://factuarea.com) public API — invoicing,
-quotes, proformas, delivery notes, products, clients, suppliers, taxes, VeriFactu
+quotes, proformas, delivery notes, products, contacts, taxes, VeriFactu
 and webhooks for Spanish businesses.
 
 Type-safe, PSR-4, built on Guzzle, with automatic retries, automatic idempotency,
@@ -389,7 +389,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -423,6 +423,7 @@ This SDK supports the following security schemes globally:
 
 | Name         | Type   | Scheme       |
 | ------------ | ------ | ------------ |
+| `http`       | http   | HTTP Bearer  |
 | `bearerAuth` | http   | HTTP Bearer  |
 | `apiKeyAuth` | apiKey | API key      |
 | `oAuth2`     | oauth2 | OAuth2 token |
@@ -441,7 +442,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -567,24 +568,6 @@ if ($response->object !== null) {
 
 * [publicApiV1AutomationsUsageShow](docs/sdks/usage/README.md#publicapiv1automationsusageshow) - Retrieve automation usage
 
-### [Clients](docs/sdks/clients/README.md)
-
-* [publicApiV1ClientsBulkCreate](docs/sdks/clients/README.md#publicapiv1clientsbulkcreate) - Bulk create clients
-* [publicApiV1ClientsBulkDelete](docs/sdks/clients/README.md#publicapiv1clientsbulkdelete) - Delete multiple clients in bulk
-* [publicApiV1ClientsCreate](docs/sdks/clients/README.md#publicapiv1clientscreate) - Create a client
-* [publicApiV1ClientsList](docs/sdks/clients/README.md#publicapiv1clientslist) - List all clients
-* [publicApiV1ClientsDelete](docs/sdks/clients/README.md#publicapiv1clientsdelete) - Delete a client
-* [publicApiV1ClientsShow](docs/sdks/clients/README.md#publicapiv1clientsshow) - Retrieve a client
-* [publicApiV1ClientsUpdate](docs/sdks/clients/README.md#publicapiv1clientsupdate) - Update a client
-* [publicApiV1ClientsImportTemplate](docs/sdks/clients/README.md#publicapiv1clientsimporttemplate) - Download the client import template
-* [publicApiV1ClientsFindByExternalId](docs/sdks/clients/README.md#publicapiv1clientsfindbyexternalid) - Find a client by external ID
-* [publicApiV1ClientsFindByTaxId](docs/sdks/clients/README.md#publicapiv1clientsfindbytaxid) - Find a client by tax ID
-* [publicApiV1ClientsActivities](docs/sdks/clients/README.md#publicapiv1clientsactivities) - List client activity timeline
-* [publicApiV1ClientsStats](docs/sdks/clients/README.md#publicapiv1clientsstats) - Get client stats
-* [publicApiV1ClientsImport](docs/sdks/clients/README.md#publicapiv1clientsimport) - Import clients from a file
-* [publicApiV1ClientsSearch](docs/sdks/clients/README.md#publicapiv1clientssearch) - Search clients
-* [publicApiV1ClientsVerifyCensus](docs/sdks/clients/README.md#publicapiv1clientsverifycensus) - Verify a client against the AEAT census
-
 ### [Companies](docs/sdks/companies/README.md)
 
 * [publicApiV1CompaniesActivateBatch](docs/sdks/companies/README.md#publicapiv1companiesactivatebatch) - Activate several managed companies
@@ -606,6 +589,36 @@ if ($response->object !== null) {
 * [publicApiV1CompaniesApiKeysRevoke](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrevoke) - Revoke a child API key
 * [publicApiV1CompaniesApiKeysShow](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysshow) - Retrieve a child API key
 * [publicApiV1CompaniesApiKeysRotateSecret](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrotatesecret) - Rotate a child API key secret
+
+### [Contacts](docs/sdks/contacts/README.md)
+
+* [publicApiV1ContactsArchive](docs/sdks/contacts/README.md#publicapiv1contactsarchive) - Archive a contact
+* [publicApiV1ContactsAssignContactRole](docs/sdks/contacts/README.md#publicapiv1contactsassigncontactrole) - Assign a contact role
+* [publicApiV1ContactsRemoveContactRole](docs/sdks/contacts/README.md#publicapiv1contactsremovecontactrole) - Remove a contact role
+* [publicApiV1ContactsBulkArchive](docs/sdks/contacts/README.md#publicapiv1contactsbulkarchive) - Archive contacts in bulk
+* [publicApiV1ContactsBulkChangeContactRoleStatus](docs/sdks/contacts/README.md#publicapiv1contactsbulkchangecontactrolestatus) - Change contact role status in bulk
+* [publicApiV1ContactsBulkCreate](docs/sdks/contacts/README.md#publicapiv1contactsbulkcreate) - Create contacts in bulk
+* [publicApiV1ContactsBulkDelete](docs/sdks/contacts/README.md#publicapiv1contactsbulkdelete) - Delete contacts in bulk
+* [publicApiV1ContactsChangeContactRoleStatus](docs/sdks/contacts/README.md#publicapiv1contactschangecontactrolestatus) - Change a contact role status
+* [publicApiV1ContactsCreate](docs/sdks/contacts/README.md#publicapiv1contactscreate) - Create a contact
+* [publicApiV1ContactsList](docs/sdks/contacts/README.md#publicapiv1contactslist) - List contacts
+* [publicApiV1ContactsDelete](docs/sdks/contacts/README.md#publicapiv1contactsdelete) - Delete a contact
+* [publicApiV1ContactsShow](docs/sdks/contacts/README.md#publicapiv1contactsshow) - Retrieve a contact
+* [publicApiV1ContactsUpdate](docs/sdks/contacts/README.md#publicapiv1contactsupdate) - Update a contact
+* [publicApiV1ContactsImportTemplate](docs/sdks/contacts/README.md#publicapiv1contactsimporttemplate) - Download the contact import template
+* [publicApiV1ContactsFindByExternalId](docs/sdks/contacts/README.md#publicapiv1contactsfindbyexternalid) - Find a contact by external ID
+* [publicApiV1ContactsFindByTaxId](docs/sdks/contacts/README.md#publicapiv1contactsfindbytaxid) - Find a contact by tax ID
+* [publicApiV1ContactsActivities](docs/sdks/contacts/README.md#publicapiv1contactsactivities) - List contact activity
+* [publicApiV1ContactsOptions](docs/sdks/contacts/README.md#publicapiv1contactsoptions) - List contact filter options
+* [publicApiV1ContactsStats](docs/sdks/contacts/README.md#publicapiv1contactsstats) - Get contact statistics
+* [publicApiV1ContactsImport](docs/sdks/contacts/README.md#publicapiv1contactsimport) - Import contacts
+* [publicApiV1ContactsPreviewImport](docs/sdks/contacts/README.md#publicapiv1contactspreviewimport) - Preview a contact import
+* [publicApiV1ContactsRestore](docs/sdks/contacts/README.md#publicapiv1contactsrestore) - Restore an archived contact
+* [publicApiV1ContactsSearch](docs/sdks/contacts/README.md#publicapiv1contactssearch) - Search contacts
+* [publicApiV1ContactsUpdateBankAccounts](docs/sdks/contacts/README.md#publicapiv1contactsupdatebankaccounts) - Replace the bank accounts of a contact
+* [publicApiV1ContactsUpdateCustomerProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatecustomerprofile) - Update a customer profile
+* [publicApiV1ContactsUpdateSupplierProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatesupplierprofile) - Update a supplier profile
+* [publicApiV1ContactsVerifyCensus](docs/sdks/contacts/README.md#publicapiv1contactsverifycensus) - Verify a contact against the AEAT census
 
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
@@ -1018,22 +1031,6 @@ if ($response->object !== null) {
 
 * [publicApiV1StripeAutoinvoicingPaymentsList](docs/sdks/payments/README.md#publicapiv1stripeautoinvoicingpaymentslist) - List Stripe autoinvoiced charges
 
-### [Suppliers](docs/sdks/suppliers/README.md)
-
-* [publicApiV1SuppliersBulkDelete](docs/sdks/suppliers/README.md#publicapiv1suppliersbulkdelete) - Delete multiple suppliers in bulk
-* [publicApiV1SuppliersBulkStatus](docs/sdks/suppliers/README.md#publicapiv1suppliersbulkstatus) - Bulk change supplier active state
-* [publicApiV1SuppliersCreate](docs/sdks/suppliers/README.md#publicapiv1supplierscreate) - Create a supplier
-* [publicApiV1SuppliersList](docs/sdks/suppliers/README.md#publicapiv1supplierslist) - List all suppliers
-* [publicApiV1SuppliersDelete](docs/sdks/suppliers/README.md#publicapiv1suppliersdelete) - Delete a supplier
-* [publicApiV1SuppliersShow](docs/sdks/suppliers/README.md#publicapiv1suppliersshow) - Retrieve a supplier
-* [publicApiV1SuppliersUpdate](docs/sdks/suppliers/README.md#publicapiv1suppliersupdate) - Update a supplier
-* [publicApiV1SuppliersFindByExternalId](docs/sdks/suppliers/README.md#publicapiv1suppliersfindbyexternalid) - Find a supplier by external ID
-* [publicApiV1SuppliersFindByTaxId](docs/sdks/suppliers/README.md#publicapiv1suppliersfindbytaxid) - Find a supplier by tax ID
-* [publicApiV1SuppliersActivities](docs/sdks/suppliers/README.md#publicapiv1suppliersactivities) - List supplier activity timeline
-* [publicApiV1SuppliersStats](docs/sdks/suppliers/README.md#publicapiv1suppliersstats) - Get supplier stats
-* [publicApiV1SuppliersSearch](docs/sdks/suppliers/README.md#publicapiv1supplierssearch) - Search suppliers
-* [publicApiV1SuppliersToggleActive](docs/sdks/suppliers/README.md#publicapiv1supplierstoggleactive) - Toggle supplier active state
-
 ### [TaxCatalog](docs/sdks/taxcatalog/README.md)
 
 * [publicApiV1TaxCatalogShow](docs/sdks/taxcatalog/README.md#publicapiv1taxcatalogshow) - Retrieve the tax catalog
@@ -1211,7 +1208,7 @@ use Factuarea\Sdk\Utils\Retry;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1267,7 +1264,7 @@ $sdk = Sdk\Factuarea::builder()
   )
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1330,7 +1327,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1386,7 +1383,7 @@ $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
     ->setSecurity(
         new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+            http: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

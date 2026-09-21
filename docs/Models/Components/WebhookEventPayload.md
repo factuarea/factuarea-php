@@ -671,6 +671,105 @@ Components\WebhookEventPayloadClientDeleted $value = /* values here */
 Components\WebhookEventPayloadClientMetadataChanged $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadContactCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactCreated
+*/
+Components\WebhookEventPayloadContactCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactUpdated
+*/
+Components\WebhookEventPayloadContactUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactArchived
+*/
+Components\WebhookEventPayloadContactArchived $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactRestored`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactRestored
+*/
+Components\WebhookEventPayloadContactRestored $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactDeleted
+*/
+Components\WebhookEventPayloadContactDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactRoleAssigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactRoleAssigned
+*/
+Components\WebhookEventPayloadContactRoleAssigned $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactRoleActivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactRoleActivated
+*/
+Components\WebhookEventPayloadContactRoleActivated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactRoleDeactivated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactRoleDeactivated
+*/
+Components\WebhookEventPayloadContactRoleDeactivated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactRoleRemoved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactRoleRemoved
+*/
+Components\WebhookEventPayloadContactRoleRemoved $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactCustomerProfileUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactCustomerProfileUpdated
+*/
+Components\WebhookEventPayloadContactCustomerProfileUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadContactSupplierProfileUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadContactSupplierProfileUpdated
+*/
+Components\WebhookEventPayloadContactSupplierProfileUpdated $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadProductCreated`
 
 ```php

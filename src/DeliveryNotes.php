@@ -2299,14 +2299,11 @@ class DeliveryNotes
      *
      * Update a draft delivery note. Once signed or invoiced, the delivery note becomes immutable.
      *
-     * @param  string  $deliveryNote
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequest  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesUpdate(string $deliveryNote, ?Components\UpdateDeliveryNoteRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesUpdateResponse
+    public function publicApiV1DeliveryNotesUpdate(Operations\PublicApiV1DeliveryNotesUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1DeliveryNotesUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2333,12 +2330,6 @@ class DeliveryNotes
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1DeliveryNotesUpdateRequest(
-            deliveryNote: $deliveryNote,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesUpdateRequest::class, $request);
         $urlOverride = null;

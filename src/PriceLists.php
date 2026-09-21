@@ -57,12 +57,13 @@ class PriceLists
      * Create an active price list with a name unique within the authenticated company.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreatePriceListRequest  $body
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsCreate(Components\CreatePriceListRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsCreateResponse
+    public function publicApiV1PriceListsCreate(Components\CreatePriceListRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,6 +92,7 @@ class PriceLists
         }
         $request = new Operations\PublicApiV1PriceListsCreateRequest(
             body: $body,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -925,14 +927,11 @@ class PriceLists
      *
      * Update the name or lifecycle status of a price list.
      *
-     * @param  \Factuarea\Sdk\Models\Components\UpdatePriceListRequest  $body
-     * @param  string  $priceList
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsUpdate(Components\UpdatePriceListRequest $body, string $priceList, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsUpdateResponse
+    public function publicApiV1PriceListsUpdate(Operations\PublicApiV1PriceListsUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1PriceListsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -959,12 +958,6 @@ class PriceLists
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1PriceListsUpdateRequest(
-            priceList: $priceList,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}', Operations\PublicApiV1PriceListsUpdateRequest::class, $request);
         $urlOverride = null;
