@@ -62,6 +62,14 @@ class CreatePurchaseInvoiceRequest
 
     /**
      *
+     * @var ?string $sourcePurchaseInvoiceId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_purchase_invoice_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $sourcePurchaseInvoiceId = null;
+
+    /**
+     *
      * @var ?string $supplierId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_id')]
@@ -231,6 +239,7 @@ class CreatePurchaseInvoiceRequest
      * @param  ?bool  $isSimplified
      * @param  ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestStatus  $status
      * @param  ?bool  $exclude347
+     * @param  ?string  $sourcePurchaseInvoiceId
      * @param  ?string  $supplierId
      * @param  ?string  $expenseCategoryId
      * @param  ?string  $externalId
@@ -252,7 +261,7 @@ class CreatePurchaseInvoiceRequest
      * @param  ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOperationClass  $operationClass
      * @phpstan-pure
      */
-    public function __construct(string $externalInvoiceNumber, LocalDate $issuedOn, array $lines, ?bool $isSimplified = null, ?CreatePurchaseInvoiceRequestStatus $status = null, ?bool $exclude347 = null, ?string $supplierId = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?array $tags = null, ?array $customFields = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null)
+    public function __construct(string $externalInvoiceNumber, LocalDate $issuedOn, array $lines, ?bool $isSimplified = null, ?CreatePurchaseInvoiceRequestStatus $status = null, ?bool $exclude347 = null, ?string $sourcePurchaseInvoiceId = null, ?string $supplierId = null, ?string $expenseCategoryId = null, ?string $externalId = null, ?string $internalCode = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?string $notes = null, ?array $metadata = null, ?string $internalNotes = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?int $bankAccountId = null, ?string $expenseAccount = null, ?string $taxPeriod = null, ?array $tags = null, ?array $customFields = null, ?bool $isReverseCharge = null, ?float $deductiblePercentage = null, ?CreatePurchaseInvoiceRequestOperationClass $operationClass = null)
     {
         $this->externalInvoiceNumber = $externalInvoiceNumber;
         $this->issuedOn = $issuedOn;
@@ -260,6 +269,7 @@ class CreatePurchaseInvoiceRequest
         $this->isSimplified = $isSimplified;
         $this->status = $status;
         $this->exclude347 = $exclude347;
+        $this->sourcePurchaseInvoiceId = $sourcePurchaseInvoiceId;
         $this->supplierId = $supplierId;
         $this->expenseCategoryId = $expenseCategoryId;
         $this->externalId = $externalId;

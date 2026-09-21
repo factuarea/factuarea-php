@@ -2410,14 +2410,11 @@ class Quotes
      *
      * Update a draft quote. Once accepted/rejected/converted, the quote becomes immutable.
      *
-     * @param  string  $quote
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequest  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesUpdate(string $quote, ?Components\UpdateQuoteRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesUpdateResponse
+    public function publicApiV1QuotesUpdate(Operations\PublicApiV1QuotesUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1QuotesUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2444,12 +2441,6 @@ class Quotes
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1QuotesUpdateRequest(
-            quote: $quote,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}', Operations\PublicApiV1QuotesUpdateRequest::class, $request);
         $urlOverride = null;

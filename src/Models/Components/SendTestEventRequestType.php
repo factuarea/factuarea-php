@@ -85,6 +85,17 @@ enum SendTestEventRequestType: string
     case ClientUpdated = 'client.updated';
     case ClientDeleted = 'client.deleted';
     case ClientMetadataChanged = 'client.metadata_changed';
+    case ContactCreated = 'contact.created';
+    case ContactUpdated = 'contact.updated';
+    case ContactArchived = 'contact.archived';
+    case ContactRestored = 'contact.restored';
+    case ContactDeleted = 'contact.deleted';
+    case ContactRoleAssigned = 'contact.role.assigned';
+    case ContactRoleActivated = 'contact.role.activated';
+    case ContactRoleDeactivated = 'contact.role.deactivated';
+    case ContactRoleRemoved = 'contact.role.removed';
+    case ContactCustomerProfileUpdated = 'contact.customer_profile.updated';
+    case ContactSupplierProfileUpdated = 'contact.supplier_profile.updated';
     case ProductCreated = 'product.created';
     case ProductUpdated = 'product.updated';
     case PaymentReceived = 'payment.received';

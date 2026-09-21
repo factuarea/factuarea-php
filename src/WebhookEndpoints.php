@@ -913,14 +913,11 @@ class WebhookEndpoints
      *
      * Update a webhook endpoint (URL, description, enabled events, status, IP allowlist).
      *
-     * @param  string  $webhookEndpoint
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequest  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsUpdate(string $webhookEndpoint, ?Components\UpdateWebhookEndpointRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsUpdateResponse
+    public function publicApiV1WebhookEndpointsUpdate(Operations\PublicApiV1WebhookEndpointsUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -947,12 +944,6 @@ class WebhookEndpoints
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
-            webhookEndpoint: $webhookEndpoint,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsUpdateRequest::class, $request);
         $urlOverride = null;

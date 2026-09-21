@@ -30,11 +30,28 @@ class UpdatePurchaseInvoiceRequestLine
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('purchase_measurement')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPurchaseMeasurement|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null;
+
+    /**
+     *
      * @var ?string $description
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $description = null;
+
+    /**
+     *
+     * @var ?float $discountPercent
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('discount_percent')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $discountPercent = null;
 
     /**
      *
@@ -147,6 +164,23 @@ class UpdatePurchaseInvoiceRequestLine
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource $priceSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null;
+
+    /**
+     *
+     * @var ?int $sourceLineIndex
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_line_index')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $sourceLineIndex = null;
+
+    /**
+     *
      * @var ?string $configurationUuid
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
@@ -181,15 +215,6 @@ class UpdatePurchaseInvoiceRequestLine
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource $priceSource
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('price_source')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null;
-
-    /**
-     *
      * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_semantics')]
@@ -216,7 +241,9 @@ class UpdatePurchaseInvoiceRequestLine
     /**
      * @param  ?float  $quantity
      * @param  ?float  $taxRate
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPurchaseMeasurement  $purchaseMeasurement
      * @param  ?string  $description
+     * @param  ?float  $discountPercent
      * @param  ?string  $additionalDescription
      * @param  ?float  $unitPrice
      * @param  ?string  $productId
@@ -230,21 +257,24 @@ class UpdatePurchaseInvoiceRequestLine
      * @param  ?float  $surchargeRate
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestExemptionReason  $exemptionReason
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource  $priceSource
+     * @param  ?int  $sourceLineIndex
      * @param  ?string  $configurationUuid
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestOption>  $options
      * @param  ?string  $configurationSignature
      * @param  ?string  $configurationName
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSource  $priceSource
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSemantics  $priceSemantics
      * @param  ?float  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?float $taxRate = null, ?string $description = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(?float $quantity = null, ?float $taxRate = null, ?UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->taxRate = $taxRate;
+        $this->purchaseMeasurement = $purchaseMeasurement;
         $this->description = $description;
+        $this->discountPercent = $discountPercent;
         $this->additionalDescription = $additionalDescription;
         $this->unitPrice = $unitPrice;
         $this->productId = $productId;
@@ -258,11 +288,12 @@ class UpdatePurchaseInvoiceRequestLine
         $this->surchargeRate = $surchargeRate;
         $this->exemptionReason = $exemptionReason;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->priceSource = $priceSource;
+        $this->sourceLineIndex = $sourceLineIndex;
         $this->configurationUuid = $configurationUuid;
         $this->options = $options;
         $this->configurationSignature = $configurationSignature;
         $this->configurationName = $configurationName;
-        $this->priceSource = $priceSource;
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;

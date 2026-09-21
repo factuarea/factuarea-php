@@ -9,11 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Row - Validation outcome of a single data row, identified by its 1-based file `row` number (the header is row 1). */
 class Row
 {
     /**
-     * 1-based row number in the file (the header is row 1, so the first data row is 2).
      *
      * @var int $row
      */
@@ -21,44 +19,52 @@ class Row
     public int $row;
 
     /**
-     * Row outcome: `valid` (would be imported without error) or `error` (has blocking issues).
      *
-     * @var \Factuarea\Sdk\Models\Components\ClientImportPreviewStatus $status
+     * @var \Factuarea\Sdk\Models\Components\BusinessContactImportPreviewAction $action
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ClientImportPreviewStatus')]
-    public ClientImportPreviewStatus $status;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('action')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewAction')]
+    public BusinessContactImportPreviewAction $action;
 
     /**
-     * Per-field blocking issues of the row. Empty when the row is valid.
+     * $errors
      *
-     * @var array<\Factuarea\Sdk\Models\Components\FieldIssue> $errors
+     * @var array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewError> $errors
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('errors')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\FieldIssue>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewError>')]
     public array $errors;
 
     /**
-     * Per-field non-blocking warnings of the row. Always empty in preview (validate-only does not emit per-row warnings).
+     * $warnings
      *
-     * @var array<\Factuarea\Sdk\Models\Components\FieldIssue> $warnings
+     * @var array<\Factuarea\Sdk\Models\Components\Warning> $warnings
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('warnings')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\FieldIssue>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Warning>')]
     public array $warnings;
 
     /**
+     *
+     * @var ?string $targetUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('target_uuid')]
+    public ?string $targetUuid;
+
+    /**
      * @param  int  $row
-     * @param  \Factuarea\Sdk\Models\Components\ClientImportPreviewStatus  $status
-     * @param  array<\Factuarea\Sdk\Models\Components\FieldIssue>  $errors
-     * @param  array<\Factuarea\Sdk\Models\Components\FieldIssue>  $warnings
+     * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportPreviewAction  $action
+     * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewError>  $errors
+     * @param  array<\Factuarea\Sdk\Models\Components\Warning>  $warnings
+     * @param  ?string  $targetUuid
      * @phpstan-pure
      */
-    public function __construct(int $row, ClientImportPreviewStatus $status, array $errors, array $warnings)
+    public function __construct(int $row, BusinessContactImportPreviewAction $action, array $errors, array $warnings, ?string $targetUuid = null)
     {
         $this->row = $row;
-        $this->status = $status;
+        $this->action = $action;
         $this->errors = $errors;
         $this->warnings = $warnings;
+        $this->targetUuid = $targetUuid;
     }
 }

@@ -11,12 +11,6 @@ namespace Factuarea\Sdk\Models\Components;
 
 enum UpdatePurchaseInvoiceRequestPriceSource: string
 {
-    case PriceList = 'price_list';
-    case Configuration = 'configuration';
-    case Presentation = 'presentation';
-    case Variant = 'variant';
-    case Product = 'product';
     case Manual = 'manual';
     case SupplierOffer = 'supplier_offer';
-    case PackSnapshot = 'pack_snapshot';
 }

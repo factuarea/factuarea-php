@@ -29,11 +29,11 @@ namespace Factuarea\Sdk\Hooks;
 enum OAuth2Scope: string
 {
 
-    case ClientsRead = 'clients:read';
+    case ContactsRead = 'contacts:read';
 
-    case ClientsWrite = 'clients:write';
+    case ContactsWrite = 'contacts:write';
 
-    case ClientsDelete = 'clients:delete';
+    case ContactsDelete = 'contacts:delete';
 
     case ProductsRead = 'products:read';
 
@@ -44,12 +44,6 @@ enum OAuth2Scope: string
     case PriceListsRead = 'price_lists:read';
 
     case PriceListsWrite = 'price_lists:write';
-
-    case SuppliersRead = 'suppliers:read';
-
-    case SuppliersWrite = 'suppliers:write';
-
-    case SuppliersDelete = 'suppliers:delete';
 
     case InvoicesRead = 'invoices:read';
 

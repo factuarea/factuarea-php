@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateAccountPersonalizationRequest - Partial update of the account personalization; only the fields present in the body are applied. `language` is one of `es`, `en`, `ca`; `pdf_template` is a template slug; `accent_color` is a `#RRGGBB` hex color. Values outside the catalog return 422 with the accepted values. */
+/** UpdateAccountPersonalizationRequest - Partial update of the account personalization; only the fields present in the body are applied. `language` is one of `es`, `en`, `ca`; `pdf_template` is a template slug; `accent_color` is a `#RRGGBB` hex color. Values outside the catalog return 422 with the accepted values. Accent colors and advanced templates require the PDF editor; otherwise 403 feature_not_available_in_plan is returned without applying any field. */
 class UpdateAccountPersonalizationRequest
 {
     /**

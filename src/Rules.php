@@ -57,12 +57,13 @@ class Rules
      * Put an automation rule into service: from this point on, every event of its trigger is evaluated against its current version. Returns 200 with the rule already in its new state, so you do not need a second call to confirm it. Only a `draft` or a `paused` rule can be activated — activating one that is already active returns 422. Activation deliberately does not pre-check quota or budget; call `GET /v1/automations/usage` if you want to anticipate that.
      *
      * @param  string  $rule
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesActivate(string $rule, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesActivateResponse
+    public function publicApiV1AutomationsRulesActivate(string $rule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,6 +92,7 @@ class Rules
         }
         $request = new Operations\PublicApiV1AutomationsRulesActivateRequest(
             rule: $rule,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -180,12 +182,13 @@ class Rules
      * Create an automation rule out of three pieces: the trigger that puts it in motion, an optional condition tree evaluated against the triggering event, and the ordered list of actions it executes. The server assigns the `id` (UUID v7) and seals version 1 of the definition. New rules are created in `draft` and do not fire until you activate them with `POST /v1/automations/rules/{rule}/activate`. Omit `conditions` to run on every event of the trigger. The trigger must belong to the catalog visible to your company and every action must have a registered adapter; otherwise the call returns 422 and nothing is created.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAutomationRuleV1Request  $body
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesCreate(Components\CreateAutomationRuleV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesCreateResponse
+    public function publicApiV1AutomationsRulesCreate(Components\CreateAutomationRuleV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -214,6 +217,7 @@ class Rules
         }
         $request = new Operations\PublicApiV1AutomationsRulesCreateRequest(
             body: $body,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -676,12 +680,13 @@ class Rules
      * Stop an active automation rule from firing, without losing either its definition or its run history. Returns 200 with the rule already in its new state. Pausing does not touch the definition, so it seals no new version, and the rule can be activated again at any time. Only an `active` rule can be paused; anything else returns 422. Bear in mind the engine may also pause a rule on its own after several consecutive failures.
      *
      * @param  string  $rule
+     * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesPauseResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesPause(string $rule, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesPauseResponse
+    public function publicApiV1AutomationsRulesPause(string $rule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesPauseResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -710,6 +715,7 @@ class Rules
         }
         $request = new Operations\PublicApiV1AutomationsRulesPauseRequest(
             rule: $rule,
+            idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -921,14 +927,11 @@ class Rules
      *
      * Partially update an automation rule: omitted fields keep their value, and sending `""` in `description` clears it. Editing never mutates the previous definition — it seals a NEW version and bumps `current_version` — which is what keeps every past run readable against the exact definition it executed. The status is left untouched: editing an active rule leaves it active, running the new version from its next event onwards.
      *
-     * @param  string  $rule
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateAutomationRuleV1Request  $body
-     * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesUpdate(string $rule, ?Components\UpdateAutomationRuleV1Request $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesUpdateResponse
+    public function publicApiV1AutomationsRulesUpdate(Operations\PublicApiV1AutomationsRulesUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1AutomationsRulesUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -955,12 +958,6 @@ class Rules
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1AutomationsRulesUpdateRequest(
-            rule: $rule,
-            factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
-            body: $body,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesUpdateRequest::class, $request);
         $urlOverride = null;

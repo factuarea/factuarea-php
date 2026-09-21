@@ -40,15 +40,27 @@ class AccountPersonalizationTemplates
     public AccentColor $accentColor;
 
     /**
+     * Read-only document branding capabilities of the effective account.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PdfCapabilities $pdfCapabilities
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_capabilities')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PdfCapabilities|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?PdfCapabilities $pdfCapabilities = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\AccountPersonalizationTemplatesObject  $object
      * @param  array<\Factuarea\Sdk\Models\Components\Template>  $templates
      * @param  \Factuarea\Sdk\Models\Components\AccentColor  $accentColor
+     * @param  ?\Factuarea\Sdk\Models\Components\PdfCapabilities  $pdfCapabilities
      * @phpstan-pure
      */
-    public function __construct(AccountPersonalizationTemplatesObject $object, array $templates, AccentColor $accentColor)
+    public function __construct(AccountPersonalizationTemplatesObject $object, array $templates, AccentColor $accentColor, ?PdfCapabilities $pdfCapabilities = null)
     {
         $this->object = $object;
         $this->templates = $templates;
         $this->accentColor = $accentColor;
+        $this->pdfCapabilities = $pdfCapabilities;
     }
 }
