@@ -4,6 +4,61 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.4.0] — 2026-09-21
+
+Regenerated from the public OpenAPI spec that publishes contacts as the sole
+identity resource: **+27 operations, −28 operations** (469 operations, down from
+470). Customers and suppliers are now roles (`customer` / `supplier`) of a single
+contact identified by its tax ID; the public [Contact migration guide](https://docs.factuarea.com/guides/contact-migration)
+covers request fields, scopes and historical IDs. The default `Factuarea-Version`
+is unchanged.
+
+### Added
+
+- **`Contacts`** (27 operations): `publicApiV1ContactsList()`, `Search()`,
+  `Show()`, `Create()`, `Update()`, `Delete()` (archive), `Restore()`,
+  `Archive()`, `BulkArchive()`, `BulkCreate()`, `BulkDelete()`, `Options()`,
+  `Stats()`, `Activities()`, `Import()`, `ImportTemplate()`, `PreviewImport()`,
+  `FindByTaxId()`, `FindByExternalId()`, `VerifyCensus()`, `AssignContactRole()`,
+  `RemoveContactRole()`, `ChangeContactRoleStatus()`,
+  `BulkChangeContactRoleStatus()`, `UpdateCustomerProfile()`,
+  `UpdateSupplierProfile()` and `UpdateBankAccounts()`.
+
+### Removed — breaking
+
+The legacy `/v1/clients/*` and `/v1/suppliers/*` routes were retired from the
+public API on 2026-09-16, so the `Clients` and `Suppliers` SDKs are gone together
+with their models. Every operation has a `Contacts` replacement; where the legacy
+resource implied a role, filter the replacement with `roles: ["customer"]` or
+`roles: ["supplier"]`:
+
+- `Clients::publicApiV1ClientsList|Search|Show|Create|Update|Delete()` and
+  `Suppliers::publicApiV1SuppliersList|Search|Show|Create|Update|Delete()` →
+  `Contacts::publicApiV1ContactsList|Search|Show|Create|Update|Delete()`.
+- `Clients::publicApiV1ClientsStats()` / `Suppliers::publicApiV1SuppliersStats()` →
+  `Contacts::publicApiV1ContactsStats()`.
+- `Clients::publicApiV1ClientsActivities()` /
+  `Suppliers::publicApiV1SuppliersActivities()` →
+  `Contacts::publicApiV1ContactsActivities()`.
+- `Clients::publicApiV1ClientsBulkCreate()` → `Contacts::publicApiV1ContactsBulkCreate()`.
+- `Clients::publicApiV1ClientsBulkDelete()` / `Suppliers::publicApiV1SuppliersBulkDelete()` →
+  `Contacts::publicApiV1ContactsBulkDelete()`.
+- `Clients::publicApiV1ClientsImport()` / `ImportTemplate()` →
+  `Contacts::publicApiV1ContactsImport()` / `ImportTemplate()`.
+- `Clients::publicApiV1ClientsVerifyCensus()` → `Contacts::publicApiV1ContactsVerifyCensus()`.
+- `Clients::publicApiV1ClientsFindByTaxId()` / `Suppliers::publicApiV1SuppliersFindByTaxId()` →
+  `Contacts::publicApiV1ContactsFindByTaxId()`.
+- `Clients::publicApiV1ClientsFindByExternalId()` /
+  `Suppliers::publicApiV1SuppliersFindByExternalId()` →
+  `Contacts::publicApiV1ContactsFindByExternalId()`.
+- `Suppliers::publicApiV1SuppliersBulkStatus()` →
+  `Contacts::publicApiV1ContactsBulkChangeContactRoleStatus()`.
+- `Suppliers::publicApiV1SuppliersToggleActive()` →
+  `Contacts::publicApiV1ContactsChangeContactRoleStatus()`.
+
+Legacy client/supplier IDs are not contact UUIDs: resolve them through the
+migration guide instead of assuming equality.
+
 ## [0.3.1] — 2026-09-10
 
 Regenerated from the Factuarea public OpenAPI spec after the variant stock

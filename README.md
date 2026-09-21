@@ -5,7 +5,7 @@
 [![Spec sync](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml/badge.svg)](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml)
 
 Official PHP SDK for the [Factuarea](https://factuarea.com) public API — invoicing,
-quotes, proformas, delivery notes, products, clients, suppliers, taxes, VeriFactu
+quotes, proformas, delivery notes, products, contacts, taxes, VeriFactu
 and webhooks for Spanish businesses.
 
 Type-safe, PSR-4, built on Guzzle, with automatic retries, automatic idempotency,
