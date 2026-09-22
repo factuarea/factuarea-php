@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateProductRequestConfiguration
 {
     /**
+     * Public identifier (UUID v7) of the configuration. A new configuration sent with another UUID version is rejected with 422.
      *
      * @var string $id
      */

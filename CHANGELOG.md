@@ -61,6 +61,10 @@ off `/v1/companies/{company}/…` and the account surface off
 - **Parameter descriptions**: every path, query and header parameter now carries
   its description in the method docblocks and in `docs/`. Text only: no
   signature or type changes.
+- **UUID v7 ids for product options and configurations**: the `id` of every
+  option group, option value and configuration in `CreateProductRequest*` and
+  `UpdateProductRequest*` is documented as a UUID v7; the API rejects a new one
+  with another UUID version with 422. Text only: no signature or type changes.
 
 ## [0.4.0] — 2026-09-21
 

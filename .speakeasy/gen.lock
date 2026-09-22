@@ -6,9 +6,9 @@ management:
   generationVersion: 2.938.0
   releaseVersion: 0.5.0
 persistentEdits:
-  generation_id: 8a8591cd-b3ca-40b6-8437-7efdc459bc5f
-  pristine_commit_hash: 4f60f632c8faebe47b471c8700ecdf9a7cb34ed4
-  pristine_tree_hash: 289567f49a0bdb4b6c5bdfbf4d79a30d8a228dd7
+  generation_id: 020f9816-2e0c-4ef9-a339-747fbb052078
+  pristine_commit_hash: 7bbf5a298b6e4c9fdcf4b051b0fb0e27d08f599d
+  pristine_tree_hash: 5056c38625669658d435a3c5a95e0aa48ff2ec29
 features:
   php:
     constsAndDefaults: 0.2.2
@@ -1354,8 +1354,8 @@ trackedFiles:
     pristine_git_object: 78dcf072c74708f332c3a577b1b81695ca48bd7e
   docs/Models/Components/CreateProductRequestConfiguration.md:
     id: 42a1f51ceeb6
-    last_write_checksum: sha1:673368ac52c1f30c09c6000027bd60c97b0ce342
-    pristine_git_object: 4fbb5a5ee3b4f0fbf28e5c3b1858d4d95d38e715
+    last_write_checksum: sha1:44cd06d80a704eef4beb62923fbab1661cb82ca8
+    pristine_git_object: e7f5884e8b72b8fd9d6ed9628ed8bad0a2d7e95d
   docs/Models/Components/CreateProductRequestCurrency.md:
     id: 5603099e1557
     last_write_checksum: sha1:d0010932642aaa688d42918f3dc3fe7bdef369d0
@@ -1370,12 +1370,12 @@ trackedFiles:
     pristine_git_object: 97aafc6c5dd544d9bc0909340656890d68c8724e
   docs/Models/Components/CreateProductRequestOptionGroup.md:
     id: 446d04dabf1b
-    last_write_checksum: sha1:6f41e6248aea35db6e10b0d0775f09a0c04aa9f5
-    pristine_git_object: e63bb22b25c5bdb54fdf2f19e539268133700da2
+    last_write_checksum: sha1:e82f989d8266e10a94fbdba4bbed806543858ed4
+    pristine_git_object: 9a9952e4a31aac8349a72245cf100fe2ae013d2c
   docs/Models/Components/CreateProductRequestValue.md:
     id: 5e3fc862ca4a
-    last_write_checksum: sha1:06f31646aff1bf81d949c2d8e9003146526d6bd4
-    pristine_git_object: 479258ad3f32577d4a32697ccbb816ecdcff989d
+    last_write_checksum: sha1:7eed3a2950165ef89378128e9c42c2ec6c7b95b8
+    pristine_git_object: e572f89f29de243b3b12aef408a8b51968321fd3
   docs/Models/Components/CreateProductVariantRequest.md:
     id: ef83119cf605
     last_write_checksum: sha1:2015c1e498bcd3b3efbb4ed38f3646ffb90cd334
@@ -4466,8 +4466,8 @@ trackedFiles:
     pristine_git_object: 61ffbe3abbbdd9e633667584c43b249dd3c7422a
   docs/Models/Components/UpdateProductRequestConfiguration.md:
     id: 09cc5f901c70
-    last_write_checksum: sha1:82f0ba4c9e0c78eb4c83f69abe1d566704e81d1e
-    pristine_git_object: 5fd1c7d83aec3411ec0c6d1d9583ec84c92cfa3f
+    last_write_checksum: sha1:7c8402b0de32de0491375ed04e476247f0673952
+    pristine_git_object: a385519fb7c38b49bc6f0da1cedbe553486ba176
   docs/Models/Components/UpdateProductRequestCurrency.md:
     id: aa9add7db017
     last_write_checksum: sha1:5461da443fd2002cdd4d0befc5fae4474b9e2f68
@@ -4482,12 +4482,12 @@ trackedFiles:
     pristine_git_object: 176d09061d875bc07562333268bb9d63706a2cb1
   docs/Models/Components/UpdateProductRequestOptionGroup.md:
     id: ac99c124c132
-    last_write_checksum: sha1:e767a3cfa578f1c4daa14951cbdfea17935b8075
-    pristine_git_object: e3bcf7b60a56b557ac765f2dc32d118b20ddc7e8
+    last_write_checksum: sha1:873ae229381ae13ebd4c23be0c6c9cdc47a27548
+    pristine_git_object: 14d7c36c77dbfe06794a056b8428216870cb53ec
   docs/Models/Components/UpdateProductRequestValue.md:
     id: 5c461fbdef55
-    last_write_checksum: sha1:cb03ebc271f51f06f193c153b819b23099e427f3
-    pristine_git_object: f105f87b7a8d41b52e4aaae6119825294183f945
+    last_write_checksum: sha1:4f1cf0780be32b16aa57afacc4bded63d5b93f59
+    pristine_git_object: 51de34f24c2ed0372f7b2f5e434d54acee2d0c1c
   docs/Models/Components/UpdateProductStockRequest.md:
     id: 94df0b38ebb0
     last_write_checksum: sha1:cd56487a79315dc7bfbe8afe7226446034f94dec
@@ -13254,8 +13254,8 @@ trackedFiles:
     pristine_git_object: 483cb601ea6b9c784f2e854546f22542905b62b9
   src/Models/Components/CreateProductRequestConfiguration.php:
     id: ea390e5b958d
-    last_write_checksum: sha1:c83671af150366deb2ad67bf4a874c6c46200e86
-    pristine_git_object: 24bb181225a8c2e60aa255c2bea56d0fbc25a98a
+    last_write_checksum: sha1:9262c6db92e4df97fe3c7919b7a30d92f68668d7
+    pristine_git_object: fdca0f5e43549faf4f3e1bcaf62509076506bee3
   src/Models/Components/CreateProductRequestCurrency.php:
     id: 6ee2596684ed
     last_write_checksum: sha1:3bfddbb84b7d0c0720e5ea21cdb64df75740e1f9
@@ -13270,12 +13270,12 @@ trackedFiles:
     pristine_git_object: 4de79038132061c9320a2f8138f65ff488edd7e9
   src/Models/Components/CreateProductRequestOptionGroup.php:
     id: 2b14292464eb
-    last_write_checksum: sha1:b7cf4722259f2cc9354606ec6060ce8727d959a8
-    pristine_git_object: eb84df522fdd31517a935ad7be1b604fbcae2962
+    last_write_checksum: sha1:6cb791fdeaf163893a78229e18bcd1e811657711
+    pristine_git_object: 6e5cc7539bbcd6b6611023b05a007a4b74fa678e
   src/Models/Components/CreateProductRequestValue.php:
     id: 7a338296cb5b
-    last_write_checksum: sha1:c07a7dfeb200a29a650cbeeae58926ab30982b30
-    pristine_git_object: 37a5988d8a613f13fa3c062f6b7d274d13a5a803
+    last_write_checksum: sha1:a7e90d033b898348d146180b90f28f9405a08cb2
+    pristine_git_object: 8bfe0df5da45f0a5acf6810df9cccc2550adac04
   src/Models/Components/CreateProductVariantRequest.php:
     id: ec1064b75f82
     last_write_checksum: sha1:f26b72b70cd2d6caf81a9f162bdba223ccd89e08
@@ -16330,8 +16330,8 @@ trackedFiles:
     pristine_git_object: f4248231e561a13d296109440b89a2f751842e51
   src/Models/Components/UpdateProductRequestConfiguration.php:
     id: 0a85d53d3c37
-    last_write_checksum: sha1:e7c8314341b27777c33c3ac2abe955761a9ea768
-    pristine_git_object: 36fc69dca46bac16a9474010f0555b9d56295032
+    last_write_checksum: sha1:3c0728a76e7e69ad23804298b5d45336e7122c02
+    pristine_git_object: b98e86f394d6300e9510409d774bfe4a684c723e
   src/Models/Components/UpdateProductRequestCurrency.php:
     id: 1d5ace86059a
     last_write_checksum: sha1:e68c3b5eb64b0d136c1a28ccf5baba9d709f3668
@@ -16346,12 +16346,12 @@ trackedFiles:
     pristine_git_object: c09e94f9ec9c2b31f55c1739aa6c9f2645a08958
   src/Models/Components/UpdateProductRequestOptionGroup.php:
     id: 38aa15231b23
-    last_write_checksum: sha1:31d678262a2d93a5b504dfb4812ed9bd765f98bf
-    pristine_git_object: 7f45253f7d7279c03af71267bca3fcf8768d9dab
+    last_write_checksum: sha1:3a70e1b0ac2cc1585ed464cf05c730a8137c3849
+    pristine_git_object: cea0fb72846c487f52e55db4ec93963c2ea7dd6f
   src/Models/Components/UpdateProductRequestValue.php:
     id: f11fe1925b88
-    last_write_checksum: sha1:842b539807cd73a017c3ce89c079ac56deb0f96f
-    pristine_git_object: 883556ec794132d46f63048493025a92c6c8f750
+    last_write_checksum: sha1:9d05650d448dce4f5343996ebd56fa325668629d
+    pristine_git_object: b2a3fefcea94e320e40485e5117179688931554e
   src/Models/Components/UpdateProductStockRequest.php:
     id: 8fa4aab3302b
     last_write_checksum: sha1:63df9b2a6896d68cb9953aa5ec0aa848e35a6f9f

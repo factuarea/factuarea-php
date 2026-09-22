@@ -145894,6 +145894,7 @@ components:
               id:
                 type: "string"
                 format: "uuid"
+                description: "Public identifier (UUID v7) of the option group. A new group sent with another UUID version is rejected with 422."
               name:
                 type: "string"
                 maxLength: 120
@@ -145917,6 +145918,7 @@ components:
                     id:
                       type: "string"
                       format: "uuid"
+                      description: "Public identifier (UUID v7) of the option value. A new value sent with another UUID version is rejected with 422."
                     name:
                       type: "string"
                       maxLength: 120
@@ -145950,6 +145952,7 @@ components:
               id:
                 type: "string"
                 format: "uuid"
+                description: "Public identifier (UUID v7) of the configuration. A new configuration sent with another UUID version is rejected with 422."
               variant_id:
                 type:
                   - "string"
@@ -167156,6 +167159,7 @@ components:
               id:
                 type: "string"
                 format: "uuid"
+                description: "Public identifier (UUID v7) of the option group. A new group must be a UUID v7 (422 otherwise); an existing one keeps its identifier."
               name:
                 type: "string"
                 maxLength: 120
@@ -167179,6 +167183,7 @@ components:
                     id:
                       type: "string"
                       format: "uuid"
+                      description: "Public identifier (UUID v7) of the option value. A new value must be a UUID v7 (422 otherwise); an existing one keeps its identifier."
                     name:
                       type: "string"
                       maxLength: 120
@@ -167212,6 +167217,7 @@ components:
               id:
                 type: "string"
                 format: "uuid"
+                description: "Public identifier (UUID v7) of the configuration. A new configuration must be a UUID v7 (422 otherwise); an existing one keeps its identifier."
               variant_id:
                 type:
                   - "string"
