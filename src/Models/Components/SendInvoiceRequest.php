@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * SendInvoiceRequest - Public REST API v1 — POST /v1/companies/{company}/invoices/{uuid}/send.
+ * SendInvoiceRequest - Public REST API v1 — POST /v1/companies/{company}/invoices/{invoice}/send.
  *
  *
  * Optional body: `to` (string), `cc[]`, `bcc[]` (arrays of emails),

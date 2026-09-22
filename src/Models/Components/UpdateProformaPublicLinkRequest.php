@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * UpdateProformaPublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/proformas/{uuid}/public-link.
+ * UpdateProformaPublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/proformas/{proforma}/public-link.
  *
  *
  * `SchemaName` disambiguates the OpenAPI schema: Quote and Proforma declare

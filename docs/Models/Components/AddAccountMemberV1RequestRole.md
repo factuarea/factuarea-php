@@ -1,6 +1,6 @@
 # AddAccountMemberV1RequestRole
 
-Rol de membresía en ese NIF: owner, admin, member o employee.
+Membership role on that company: `owner`, `admin`, `member` or `employee`.
 
 
 ## Values

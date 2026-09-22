@@ -206,7 +206,7 @@ class Quote
     public ?\DateTime $rejectedAt;
 
     /**
-     * UUID (v7) of the invoice this quote was converted into, if any.
+     * UUID v7 of the invoice this quote was converted into, if any.
      *
      * @var ?string $convertedToId
      */

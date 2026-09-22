@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsActivitiesRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1ContactsActivitiesRequest
     public string $company;
 
     /**
-     * Public identifier (UUID v7) of the contact, as returned in `id` by its list and detail responses.
+     * Public identifier (UUID v7) of the contact.
      *
      * @var string $contact
      */
@@ -29,7 +29,7 @@ class PublicApiV1ContactsActivitiesRequest
     public string $contact;
 
     /**
-     * Only activity in these directions: `sales` (documents where the contact is your customer), `purchases` (documents where it is your supplier) and `relationship` (changes to the contact itself). Omit it to include all three.
+     * Only activity in these directions: `sales`, `purchases` or `relationship` (all three when omitted).
      *
      * @var array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection> $direction
      */
@@ -45,7 +45,7 @@ class PublicApiV1ContactsActivitiesRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Only activity about this kind of record: `contact` (the contact itself), `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice` or `contract`.
+     * Only activity about this kind of record: `contact`, `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice` or `contract`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\Category $category
      */

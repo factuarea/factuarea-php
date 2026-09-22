@@ -88,7 +88,7 @@ class ExportInvoicesExcelV1Request
     public ?ExportInvoicesExcelV1RequestFormat $format = null;
 
     /**
-     * Formato de fichero: xlsx o csv.
+     * File format: `xlsx` or `csv`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\FileFormat $fileFormat
      */

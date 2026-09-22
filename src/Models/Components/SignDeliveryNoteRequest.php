@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * SignDeliveryNoteRequest - Public REST API v1 — POST /v1/companies/{company}/delivery-notes/{uuid}/sign.
+ * SignDeliveryNoteRequest - Public REST API v1 — POST /v1/companies/{company}/delivery-notes/{delivery_note}/sign.
  *
  *
  * Optional body: `signed_by` (alias of `recipient_name`, BC invariant),

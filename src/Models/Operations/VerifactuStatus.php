@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** VeriFactu status of the invoice: `no_verifactu` (no VeriFactu record), `pending` (queued or submitted to the AEAT), `accepted` or `rejected` (rejected or failed). */
+/** VeriFactu status: `no_verifactu`, `pending`, `accepted` or `rejected`. */
 enum VerifactuStatus: string
 {
     case NoVerifactu = 'no_verifactu';

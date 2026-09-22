@@ -224,7 +224,7 @@ class Proforma
     public ?string $reference;
 
     /**
-     * UUID (v7) of the invoice this proforma was converted into, if applicable.
+     * UUID v7 of the invoice this proforma was converted into, if applicable.
      *
      * @var ?string $convertedToId
      */
@@ -256,7 +256,7 @@ class Proforma
     public ?int $paymentTermsDays;
 
     /**
-     * Condiciones de entrega en formato libre.
+     * Free-text delivery terms.
      *
      * @var ?string $deliveryTerms
      */

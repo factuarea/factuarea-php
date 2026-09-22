@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `total`, `number`, `valid_until`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending). */
+/** Sort order: `created`, `total`, `number`, `valid_until` ascending, or with a `-` prefix for descending (default `-created`). */
 enum PublicApiV1QuotesListSort: string
 {
     case Created = 'created';

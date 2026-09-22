@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateAccountPersonalizationRequest
 {
     /**
-     * Account issuing language (es, en or ca).
+     * Account issuing language: `es`, `en` or `ca`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateAccountPersonalizationRequestLanguage $language
      */

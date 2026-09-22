@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class InvoiceRecurring
 {
     /**
-     * UUID (v7) of the parent recurring invoice.
+     * UUID v7 of the parent recurring invoice.
      *
      * @var string $id
      */

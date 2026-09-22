@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1IntegrationsEventsListRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -77,7 +77,7 @@ class PublicApiV1IntegrationsEventsListRequest
     public ?\DateTime $createdAtLte = null;
 
     /**
-     * Cursor for forward pagination: pass back the `next_cursor` of the previous page. Treat it as opaque — unlike the rest of the v1 listings it is a numeric string, not a UUID v7. A malformed cursor returns 400.
+     * Cursor for forward pagination: the `next_cursor` of the previous page, an opaque numeric string (not a UUID v7). A malformed cursor returns 400.
      *
      * @var ?string $startingAfter
      */
@@ -93,7 +93,7 @@ class PublicApiV1IntegrationsEventsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Number of events to return. Integer between 1 and 100. Defaults to 25. A non-integer or out-of-range value returns 400.
+     * Number of events to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */

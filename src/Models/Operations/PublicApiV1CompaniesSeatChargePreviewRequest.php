@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesSeatChargePreviewRequest
 {
     /**
-     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
      * @var string $account
      */
@@ -21,7 +21,7 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public string $account;
 
     /**
-     * Public identifiers (UUID) of specific companies of your account to preview. When sent, the preview is coverage-aware: companies still covered by a paid seat cost nothing and only the uncovered ones are prorated. Omit it to preview `count` companies activated in bulk.
+     * Public identifiers (UUID v7) of the companies to preview; omit it to preview `count` companies.
      *
      * @var array<string> $companyIds
      */
@@ -37,7 +37,7 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Number of companies to preview activating in bulk. Integer between 1 and 1000. Defaults to 1. Used when `company_ids[]` is not sent.
+     * Number of companies to preview activating in bulk, between 1 and 1000 (default 1); used without `company_ids[]`.
      *
      * @var ?int $count
      */

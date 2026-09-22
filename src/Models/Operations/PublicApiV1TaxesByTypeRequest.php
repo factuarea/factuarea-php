@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TaxesByTypeRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -29,7 +29,7 @@ class PublicApiV1TaxesByTypeRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Tax type to list: `vat`, `retention`, `surcharge` or `other`. Defaults to `vat`.
+     * Tax type: `vat` (default), `retention`, `surcharge` or `other`.
      *
      * @var ?string $type
      */

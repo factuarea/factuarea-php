@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsSearchRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1ProductsSearchRequest
     public string $company;
 
     /**
-     * Search term (1 to 120 characters) matched against the product `sku` and `name`. Results are ranked: exact matches first, then prefix matches, then partial matches; up to 50 are returned.
+     * Search term (1 to 120 characters) over `sku` and `name`, ranked by exact, prefix and partial match (up to 50 results).
      *
      * @var string $q
      */

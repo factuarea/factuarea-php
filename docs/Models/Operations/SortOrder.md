@@ -1,6 +1,6 @@
 # SortOrder
 
-Sort direction by creation order: `asc` (default, oldest first) or `desc`.
+Sort direction by creation date: `asc` (default) or `desc`.
 
 
 ## Values

@@ -1,6 +1,6 @@
 # PublicApiV1ContactsOptionsCountryCode
 
-Only values from contacts in this country (ISO 3166-1 alpha-2 code, e.g. `ES`). Ignored when `field` is `country`.
+Only values from contacts in this country (ISO 3166-1 alpha-2); ignored when `field` is `country`.
 
 
 ## Values

@@ -13,7 +13,7 @@ use Brick\DateTime\LocalDate;
 class InvoiceCorrective
 {
     /**
-     * UUID (v7) of the original corrected invoice.
+     * UUID v7 of the original corrected invoice.
      *
      * @var ?string $originalId
      */
@@ -61,7 +61,7 @@ class InvoiceCorrective
     public ?string $correctionNature;
 
     /**
-     * Base imponible rectificada.
+     * Corrected taxable base.
      *
      * @var ?string $baseRectificada
      */
@@ -69,7 +69,7 @@ class InvoiceCorrective
     public ?string $baseRectificada;
 
     /**
-     * Cuota (IVA) rectificada.
+     * Corrected tax amount (VAT).
      *
      * @var ?string $cuotaRectificada
      */

@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AutomationsRulesListRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -45,7 +45,7 @@ class PublicApiV1AutomationsRulesListRequest
     public ?PublicApiV1AutomationsRulesListStatus $status = null;
 
     /**
-     * Trigger that puts the rule in motion, in `resource.action` form (for example `invoice.paid`). Discover the values visible to your company with `GET /v1/companies/{company}/automations/catalog`. Exact match on `trigger_type`.
+     * Trigger of the rule in `resource.action` form (e.g. `invoice.paid`), as listed by `GET /v1/companies/{company}/automations/catalog`. Exact match on `trigger_type`.
      *
      * @var ?string $triggerType
      */
@@ -109,7 +109,7 @@ class PublicApiV1AutomationsRulesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */

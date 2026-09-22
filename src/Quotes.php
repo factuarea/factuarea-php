@@ -1559,7 +1559,7 @@ class Quotes
     /**
      * Retrieve quote public link
      *
-     * Returns the shareable public URL of the quote (/d/{uuid}) along with its status, expiration, and the plan-allowed maximum extension days.
+     * Returns the shareable public URL of the quote along with its status, expiration, and the plan-allowed maximum extension days.
      *
      * @param  string  $company
      * @param  string  $quote
@@ -2043,7 +2043,7 @@ class Quotes
     /**
      * Retrieve a quote
      *
-     * Retrieve a sales quote by its `uuid`.
+     * Retrieve a sales quote by its `id`.
      *
      * @param  string  $company
      * @param  string  $quote

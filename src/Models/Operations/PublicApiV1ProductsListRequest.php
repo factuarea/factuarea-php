@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsListRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -189,7 +189,7 @@ class PublicApiV1ProductsListRequest
     public ?string $search = null;
 
     /**
-     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     * Metadata filter as `metadata[key]=value` (deepObject): pairs combine with AND, up to 50, keys matching `[A-Za-z0-9_.-]{1,64}`.
      *
      * @var ?array<string, string> $metadata
      */
@@ -205,7 +205,7 @@ class PublicApiV1ProductsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */

@@ -57,7 +57,7 @@ class DeliveryNotes
     /**
      * Bulk delete delivery notes
      *
-     * Delete several delivery notes in a single request. The body takes an `ids` array of `uuid`s. Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` counts and a `failures` list (`id` + `error_code` + Spanish `error_message`) for those that could not be deleted (e.g. signed or invoiced). Supports `Idempotency-Key` for safe retries.
+     * Delete several delivery notes in a single request. The body takes an `ids` array of delivery note identifiers (UUID v7). Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` counts and a `failures` list (`id` + `error_code` + Spanish `error_message`) for those that could not be deleted (e.g. signed or invoiced). Supports `Idempotency-Key` for safe retries.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteDeliveryNotesRequest  $body
      * @param  string  $company
@@ -1811,7 +1811,7 @@ class DeliveryNotes
     /**
      * Retrieve a delivery note
      *
-     * Retrieve a delivery note by its `uuid`.
+     * Retrieve a delivery note by its `id`.
      *
      * @param  string  $company
      * @param  string  $deliveryNote

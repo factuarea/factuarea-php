@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class AcceptAccountClaimTokenV1Request
 {
     /**
-     * Secreto EN CLARO del vale, tal como lo entregó la respuesta de su emisión.
+     * Plaintext secret of the claim token, exactly as its issuance response returned it.
      *
      * @var string $secret
      */

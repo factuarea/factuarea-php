@@ -29,7 +29,7 @@ class BulkPartialSuccessResultFailure
     public string $errorMessage;
 
     /**
-     * UUID (v7) of the existing resource that could not be processed. Present for bulk operations over existing resources (e.g. bulk-delete).
+     * UUID v7 of the existing resource that could not be processed. Present for bulk operations over existing resources (e.g. bulk-delete).
      *
      * @var ?string $id
      */

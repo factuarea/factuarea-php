@@ -28,7 +28,7 @@ class Invoice
     public InvoiceObject $object;
 
     /**
-     * Whether the invoice has a definitive number assigned. `false` for drafts (where `number` is `null`); becomes `true` after `POST /v1/companies/{company}/invoices/{uuid}/assign-real-number`, or automatically on send/payment.
+     * Whether the invoice has a definitive number assigned. `false` for drafts (where `number` is `null`); becomes `true` after `POST /v1/companies/{company}/invoices/{invoice}/assign-real-number`, or automatically on send/payment.
      *
      * @var bool $isNumberAssigned
      */
@@ -36,7 +36,7 @@ class Invoice
     public bool $isNumberAssigned;
 
     /**
-     * AEAT invoice type code: `F1` (ordinaria), `F2` (simplificada), `F3` (sustitutiva de simplificadas), `R1`–`R5` (rectificativa).
+     * AEAT invoice type code: `F1` (standard), `F2` (simplified), `F3` (replaces simplified invoices), `R1`–`R5` (corrective).
      *
      * @var string $type
      */
@@ -222,7 +222,7 @@ class Invoice
     public string $pendingAmount;
 
     /**
-     * Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/companies/{company}/invoices/{id}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/companies/{company}/invoices/{id}/payments`.
+     * Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/companies/{company}/invoices/{invoice}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/companies/{company}/invoices/{invoice}/payments`.
      *
      * @var \Factuarea\Sdk\Models\Components\Payments $payments
      */
@@ -419,7 +419,7 @@ class Invoice
     public ?string $channel;
 
     /**
-     * UUID (v7) of the connected store whose order produced this invoice, or `null` when it was not created from a store order. A store order is not a resource of its own on this API, so `channel` and `source_store_id` are the traceability from the order to the invoice.
+     * UUID v7 of the connected store whose order produced this invoice, or `null` when it was not created from a store order. A store order is not a resource of its own on this API, so `channel` and `source_store_id` are the traceability from the order to the invoice.
      *
      * @var ?string $sourceStoreId
      */

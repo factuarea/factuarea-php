@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CurrentQuarter - Trimestre fiscal en curso (UTC). */
+/** CurrentQuarter - Current fiscal quarter (UTC). */
 class CurrentQuarter
 {
     /**

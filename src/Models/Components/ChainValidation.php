@@ -61,7 +61,7 @@ class ChainValidation
     public \DateTime $validatedAt;
 
     /**
-     * UUID (v7) of the first invalid record, or `null` if the chain is intact.
+     * UUID v7 of the first invalid record, or `null` if the chain is intact.
      *
      * @var ?string $firstInvalidRecordId
      */

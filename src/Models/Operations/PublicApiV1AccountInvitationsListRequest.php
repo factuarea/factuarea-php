@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AccountInvitationsListRequest
 {
     /**
-     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
      * @var string $account
      */

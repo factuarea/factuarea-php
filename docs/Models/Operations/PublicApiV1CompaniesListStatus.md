@@ -1,6 +1,6 @@
 # PublicApiV1CompaniesListStatus
 
-Only companies in this status: `active`, `inactive` or `archived`. Without it, archived companies are hidden and only `active` and `inactive` ones are returned.
+Only companies in this status: `active`, `inactive` or `archived` (archived ones are hidden when omitted).
 
 
 ## Values

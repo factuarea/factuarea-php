@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Only values from contacts in this country (ISO 3166-1 alpha-2 code, e.g. `ES`). Ignored when `field` is `country`. */
+/** Only values from contacts in this country (ISO 3166-1 alpha-2); ignored when `field` is `country`. */
 enum PublicApiV1ContactsOptionsCountryCode: string
 {
     case Ad = 'AD';

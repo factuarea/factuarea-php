@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsStockMovementsListRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public string $company;
 
     /**
-     * Public identifier (UUID v7) of the product, as returned in `id` by its list and detail responses.
+     * Public identifier (UUID v7) of the product.
      *
      * @var string $product
      */
@@ -29,7 +29,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public string $product;
 
     /**
-     * Number of stock movements per page. Integer between 1 and 100. Defaults to 25.
+     * Number of stock movements per page, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -45,7 +45,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Cursor for forward pagination: pass the `id` of the last stock movement you already received; the page starts right after it.
+     * Cursor for forward pagination: the `id` of the last stock movement you received.
      *
      * @var ?string $startingAfter
      */
@@ -53,7 +53,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?string $startingAfter = null;
 
     /**
-     * `in` returns only incoming movements (positive quantity change) and `out` only outgoing ones (negative quantity change). Omit it to return the whole stock ledger.
+     * `in` returns only incoming movements and `out` only outgoing ones (all when omitted).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListDirection $direction
      */

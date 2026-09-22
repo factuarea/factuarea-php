@@ -1,6 +1,6 @@
 # PublicApiV1ProductsStockMovementsListDirection
 
-`in` returns only incoming movements (positive quantity change) and `out` only outgoing ones (negative quantity change). Omit it to return the whole stock ledger.
+`in` returns only incoming movements and `out` only outgoing ones (all when omitted).
 
 
 ## Values

@@ -1785,7 +1785,7 @@ class RecurringInvoices
     /**
      * Retrieve a recurring invoice
      *
-     * Retrieve a recurring invoice template by its `uuid`.
+     * Retrieve a recurring invoice template by its `id`.
      *
      * @param  string  $company
      * @param  string  $recurringInvoice

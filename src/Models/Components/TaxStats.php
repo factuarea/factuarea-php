@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxStats - Aggregated KPIs over the company tax catalog (includes global system taxes). Breakdown por `type` y por `external_reference` AEAT. */
+/** TaxStats - Aggregated KPIs over the company tax catalog (includes global system taxes). Breakdown by `type` and by AEAT `external_reference`. */
 class TaxStats
 {
     /**

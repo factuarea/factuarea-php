@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** InvoicePaymentDetail - A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/companies/{company}/invoices/{id}/payments`. */
+/** InvoicePaymentDetail - A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/companies/{company}/invoices/{invoice}/payments`. */
 class InvoicePaymentDetail
 {
     /**
-     * Opaque UUID (v7) of the payment.
+     * Opaque UUID v7 of the payment.
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class InvoicePaymentDetail
     public InvoicePaymentDetailObject $object;
 
     /**
-     * UUID (v7) of the invoice this payment belongs to.
+     * UUID v7 of the invoice this payment belongs to.
      *
      * @var string $invoiceId
      */

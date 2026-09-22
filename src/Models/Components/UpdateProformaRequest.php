@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
 /**
- * UpdateProformaRequest - Public REST API v1 — PATCH /v1/companies/{company}/proformas/{uuid}.
+ * UpdateProformaRequest - Public REST API v1 — PATCH /v1/companies/{company}/proformas/{proforma}.
  *
  *
  * Partial update: omitted fields are kept. Only allowed when

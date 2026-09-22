@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Nuevo rol de membresía en ese NIF: owner, admin, member o employee. */
+/** New membership role on that company: `owner`, `admin`, `member` or `employee`. */
 enum ChangeAccountMemberRoleV1RequestRole: string
 {
     case Owner = 'owner';

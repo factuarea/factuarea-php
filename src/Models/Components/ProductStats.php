@@ -21,7 +21,7 @@ class ProductStats
     public int $totalProducts;
 
     /**
-     * Productos marcados como activos.
+     * Products marked as active.
      *
      * @var int $activeProducts
      */
@@ -29,7 +29,7 @@ class ProductStats
     public int $activeProducts;
 
     /**
-     * Productos sin stock disponible (stock = 0).
+     * Products without available stock (stock = 0).
      *
      * @var int $outOfStockCount
      */

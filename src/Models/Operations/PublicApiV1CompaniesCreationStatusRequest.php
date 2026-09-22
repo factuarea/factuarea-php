@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesCreationStatusRequest
 {
     /**
-     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
      * @var string $account
      */
@@ -21,7 +21,7 @@ class PublicApiV1CompaniesCreationStatusRequest
     public string $account;
 
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */

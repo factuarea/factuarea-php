@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateAccountClaimTokenV1Request
 {
     /**
-     * Identificador público (uuid) del NIF de la cuenta que se cede con este vale.
+     * Public identifier (UUID v7) of the company of your account that this token gives away.
      *
      * @var string $companyId
      */
@@ -21,7 +21,7 @@ class CreateAccountClaimTokenV1Request
     public string $companyId;
 
     /**
-     * Caducidad PEDIDA para el vale, en ISO 8601. Opcional: sin ella se aplica el plazo por defecto. El techo lo aplica el producto.
+     * REQUESTED expiry of the claim token (ISO 8601). Optional: without it the default period applies, and the product enforces the ceiling.
      *
      * @var ?string $expiresAt
      */

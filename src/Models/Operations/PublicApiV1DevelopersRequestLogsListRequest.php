@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1DevelopersRequestLogsListRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public string $company;
 
     /**
-     * HTTP methods to filter by, either comma-separated (`?method=GET,POST`) or repeated (`?method[]=GET&method[]=POST`). Allowed values: GET, POST, PUT, PATCH, DELETE. Any other value returns 422 — the filter is never silently dropped.
+     * HTTP methods, comma-separated (`?method=GET,POST`) or repeated: `GET`, `POST`, `PUT`, `PATCH` or `DELETE`; any other value returns 422.
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\Method> $method
      */
@@ -29,7 +29,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?array $method = null;
 
     /**
-     * Status code ranges to filter by, either comma-separated (`?status_range=4xx,5xx`) or repeated (`?status_range[]=4xx&status_range[]=5xx`). Allowed values: 2xx, 3xx, 4xx, 5xx. Any other value returns 422. `only_errors=true` is shorthand for `4xx,5xx`, but an explicit `status_range` wins over it.
+     * Status code ranges, comma-separated (`?status_range=4xx,5xx`) or repeated: `2xx`, `3xx`, `4xx` or `5xx`; it wins over `only_errors=true` (shorthand for `4xx,5xx`).
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\StatusRange> $statusRange
      */
@@ -85,7 +85,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?Environment $environment = null;
 
     /**
-     * Cursor for forward pagination: pass back the `next_cursor` of the previous page. Treat it as opaque — unlike the rest of the v1 listings it is a numeric string, not a UUID v7, because request logs have no UUID. A malformed cursor returns 400.
+     * Cursor for forward pagination: the `next_cursor` of the previous page, an opaque numeric string (not a UUID v7). A malformed cursor returns 400.
      *
      * @var ?string $startingAfter
      */
@@ -101,7 +101,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Number of logs to return. Integer between 1 and 100. Defaults to 50 (wider than the rest of the v1 listings, which default to 25). A non-integer or out-of-range value returns 400.
+     * Number of logs to return, between 1 and 100 (default 50).
      *
      * @var ?int $limit
      */

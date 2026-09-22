@@ -171,7 +171,7 @@ class FaceSubmissions
     /**
      * Retrieve a FACe submission
      *
-     * Retrieves a FACe submission by its `id` (UUID). The `status` field reflects the latest known FACe processing state (`submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled`, `error`) — the system polls FACe periodically, so a plain GET is the way to track progress (there is no refresh endpoint in v1).
+     * Retrieves a FACe submission by its `id` (UUID v7). The `status` field reflects the latest known FACe processing state (`submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled`, `error`) — the system polls FACe periodically, so a plain GET is the way to track progress (there is no refresh endpoint in v1).
      *
      * @param  string  $company
      * @param  string  $faceSubmission

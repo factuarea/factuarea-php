@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class InviteAccountMemberV1Request
 {
     /**
-     * Identificador público (uuid) del NIF de la cuenta al que se invita.
+     * Public identifier (UUID v7) of the company of your account the person is invited to.
      *
      * @var string $companyId
      */
@@ -20,7 +20,7 @@ class InviteAccountMemberV1Request
     public string $companyId;
 
     /**
-     * Dirección de correo a la que se envía la invitación.
+     * Email address the invitation is sent to.
      *
      * @var string $email
      */
@@ -28,7 +28,7 @@ class InviteAccountMemberV1Request
     public string $email;
 
     /**
-     * Rol de membresía con el que entraría: owner, admin, member o employee.
+     * Membership role the person would join with: `owner`, `admin`, `member` or `employee`.
      *
      * @var \Factuarea\Sdk\Models\Components\InviteAccountMemberV1RequestRole $role
      */

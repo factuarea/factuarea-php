@@ -1903,7 +1903,7 @@ class PurchaseInvoices
     /**
      * Retrieve a purchase invoice
      *
-     * Retrieve a purchase invoice by its `uuid`.
+     * Retrieve a purchase invoice by its `id`.
      *
      * @param  string  $company
      * @param  string  $purchaseInvoice

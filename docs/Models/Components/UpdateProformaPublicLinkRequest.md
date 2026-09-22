@@ -1,6 +1,6 @@
 # UpdateProformaPublicLinkRequest
 
-Public REST API v1 — PATCH /v1/companies/{company}/proformas/{uuid}/public-link.
+Public REST API v1 — PATCH /v1/companies/{company}/proformas/{proforma}/public-link.
 
 `SchemaName` disambiguates the OpenAPI schema: Quote and Proforma declare
 structurally identical request bodies, so without a unique name they would

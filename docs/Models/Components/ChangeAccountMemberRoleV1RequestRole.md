@@ -1,6 +1,6 @@
 # ChangeAccountMemberRoleV1RequestRole
 
-Nuevo rol de membresía en ese NIF: owner, admin, member o employee.
+New membership role on that company: `owner`, `admin`, `member` or `employee`.
 
 
 ## Values

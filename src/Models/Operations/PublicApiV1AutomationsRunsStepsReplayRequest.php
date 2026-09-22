@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AutomationsRunsStepsReplayRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1AutomationsRunsStepsReplayRequest
     public string $company;
 
     /**
-     * Public identifier (UUID v7) of the automation run, as returned in `id` by its list and detail responses.
+     * Public identifier (UUID v7) of the automation run.
      *
      * @var string $run
      */
@@ -29,7 +29,7 @@ class PublicApiV1AutomationsRunsStepsReplayRequest
     public string $run;
 
     /**
-     * Index of the step within the run (an integer, not a UUID), as returned in `step_index` by `GET /v1/companies/{company}/automations/runs/{run}/steps`. It is not the position of the step in that list.
+     * Index (integer) of the step, as returned in `step_index` by the run steps list.
      *
      * @var string $stepIndex
      */

@@ -91,7 +91,7 @@ class CreateProductRequest
     public ?array $specifications = null;
 
     /**
-     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PATCH /v1/companies/{company}/products/{uuid}`, or move it with `PATCH /v1/companies/{company}/products/{uuid}/stock` (`set`/`increase`/`decrease`).
+     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PATCH /v1/companies/{company}/products/{product}`, or move it with `PATCH /v1/companies/{company}/products/{product}/stock` (`set`/`increase`/`decrease`).
      *
      * @var ?float $stock
      */

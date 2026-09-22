@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ChangeAccountMemberRoleV1Request
 {
     /**
-     * Identificador público (uuid) del NIF de la cuenta donde se cambia el rol.
+     * Public identifier (UUID v7) of the company of your account where the role changes.
      *
      * @var string $companyId
      */
@@ -20,7 +20,7 @@ class ChangeAccountMemberRoleV1Request
     public string $companyId;
 
     /**
-     * Nuevo rol de membresía en ese NIF: owner, admin, member o employee.
+     * New membership role on that company: `owner`, `admin`, `member` or `employee`.
      *
      * @var \Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole $role
      */

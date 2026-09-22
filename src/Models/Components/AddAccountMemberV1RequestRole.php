@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Rol de membresía en ese NIF: owner, admin, member o employee. */
+/** Membership role on that company: `owner`, `admin`, `member` or `employee`. */
 enum AddAccountMemberV1RequestRole: string
 {
     case Owner = 'owner';

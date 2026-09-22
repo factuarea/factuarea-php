@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsSearchRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1ContactsSearchRequest
     public string $company;
 
     /**
-     * Search term (2 to 255 characters) over the name, commercial name, tax identifiers, email and external ID of the contact, and its phone numbers when the term is numeric. Results are ranked: exact matches first, then prefix matches, then partial matches.
+     * Search term (2 to 255 characters), ranked by exact, prefix and partial match.
      *
      * @var string $q
      */
@@ -29,7 +29,7 @@ class PublicApiV1ContactsSearchRequest
     public string $q;
 
     /**
-     * Only contacts with these roles: `customer`, `supplier` or `lead`. Repeat the parameter or send a comma-separated list; combine it with `role_match` and `role_status`.
+     * Only contacts with these roles: `customer`, `supplier` or `lead` (repeat it or send a comma-separated list).
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles> $roles
      */
@@ -45,7 +45,7 @@ class PublicApiV1ContactsSearchRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * `any` (default) returns contacts with at least one of the requested `roles[]`; `all` requires every one of them.
+     * `any` (default) matches at least one of the `roles[]`; `all` requires all of them.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleMatch $roleMatch
      */
@@ -53,7 +53,7 @@ class PublicApiV1ContactsSearchRequest
     public ?PublicApiV1ContactsSearchRoleMatch $roleMatch = null;
 
     /**
-     * Only roles in this status: `active` or `inactive`. Applies to the requested `roles[]`, or to any role when none is requested.
+     * Only roles in this status: `active` or `inactive`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleStatus $roleStatus
      */
@@ -61,7 +61,7 @@ class PublicApiV1ContactsSearchRequest
     public ?PublicApiV1ContactsSearchRoleStatus $roleStatus = null;
 
     /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */

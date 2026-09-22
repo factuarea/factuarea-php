@@ -285,7 +285,7 @@ class Deliveries
     /**
      * Retrieve webhook delivery
      *
-     * Retrieve a single delivery attempt by its `uuid`, including the full event payload that was delivered.
+     * Retrieve a single delivery attempt by its `id`, including the full event payload that was delivered.
      *
      * @param  string  $company
      * @param  string  $webhookEndpoint

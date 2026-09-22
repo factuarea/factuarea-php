@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class VeriFactuRecord
 {
     /**
-     * UUID (v7) of the VeriFactu record.
+     * UUID v7 of the VeriFactu record.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class VeriFactuRecord
     public VeriFactuRecordObject $object;
 
     /**
-     * Tipo de registro (`alta` / `anulacion`).
+     * Record type: `alta` (registration) or `anulacion` (cancellation).
      *
      * @var string $type
      */

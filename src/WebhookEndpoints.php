@@ -668,7 +668,7 @@ class WebhookEndpoints
     /**
      * Retrieve a webhook endpoint
      *
-     * Retrieve a webhook endpoint by its `uuid`. The signing secret is never exposed in this representation.
+     * Retrieve a webhook endpoint by its `id`. The signing secret is never exposed in this representation.
      *
      * @param  string  $company
      * @param  string  $webhookEndpoint

@@ -1,6 +1,6 @@
 # Category
 
-Only activity about this kind of record: `contact` (the contact itself), `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice` or `contract`.
+Only activity about this kind of record: `contact`, `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice` or `contract`.
 
 
 ## Values

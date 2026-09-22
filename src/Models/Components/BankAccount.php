@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BankAccount - Cuenta bancaria de un cliente. El IBAN es obligatorio; el resto de campos son opcionales. */
+/** BankAccount - Bank account of a client. The IBAN is required; the other fields are optional. */
 class BankAccount
 {
     /**
@@ -21,7 +21,7 @@ class BankAccount
     public BankAccountObject $object;
 
     /**
-     * International Bank Account Number (IBAN), forma canónica normalizada sin espacios y en mayúsculas (ISO 13616, longitud total 15..34). En entrada se toleran espacios y minúsculas.
+     * International Bank Account Number (IBAN) in canonical form, without spaces and in uppercase (ISO 13616, 15 to 34 characters). Spaces and lowercase are accepted on input.
      *
      * @var string $iban
      */

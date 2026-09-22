@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class SetAccountMemberModuleAccessV1Request
 {
     /**
-     * Identificador público del NIF sobre el que se fija el nivel de acceso.
+     * Public identifier (UUID v7) of the company the access level is set on.
      *
      * @var string $companyId
      */
@@ -20,7 +20,7 @@ class SetAccountMemberModuleAccessV1Request
     public string $companyId;
 
     /**
-     * Mapa de sección a capacidades RETIRADAS. Obligatorio, y puede venir vacío.
+     * Map of section to WITHDRAWN capabilities. Required; it can be empty.
      *
      * @var array<array<\Factuarea\Sdk\Models\Components\SetAccountMemberModuleAccessV1RequestRestriction>> $restrictions
      */

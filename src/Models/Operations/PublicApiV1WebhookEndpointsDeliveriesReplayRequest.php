@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1WebhookEndpointsDeliveriesReplayRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1WebhookEndpointsDeliveriesReplayRequest
     public string $company;
 
     /**
-     * Public identifier (UUID v7) of the webhook endpoint, as returned in `id` by its list and detail responses.
+     * Public identifier (UUID v7) of the webhook endpoint.
      *
      * @var string $webhookEndpoint
      */
@@ -29,7 +29,7 @@ class PublicApiV1WebhookEndpointsDeliveriesReplayRequest
     public string $webhookEndpoint;
 
     /**
-     * Public identifier (UUID v7) of the webhook delivery, as returned in `id` by its list and detail responses.
+     * Public identifier (UUID v7) of the webhook delivery.
      *
      * @var string $delivery
      */

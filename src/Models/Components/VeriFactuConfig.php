@@ -62,7 +62,7 @@ class VeriFactuConfig
     public array $notificationEmails;
 
     /**
-     * Indica si hay un certificado activo configurado.
+     * Whether an active certificate is configured.
      *
      * @var bool $hasActiveCertificate
      */
@@ -78,7 +78,7 @@ class VeriFactuConfig
     public ?\DateTime $isLockedUntil;
 
     /**
-     * UUID (v7) of the active certificate, or `null` if there is none.
+     * UUID v7 of the active certificate, or `null` if there is none.
      *
      * @var ?string $activeCertificateId
      */

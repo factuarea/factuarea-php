@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * MarkDeliveredRequest - Public REST API v1 — POST /v1/companies/{company}/delivery-notes/{uuid}/mark-delivered.
+ * MarkDeliveredRequest - Public REST API v1 — POST /v1/companies/{company}/delivery-notes/{delivery_note}/mark-delivered.
  *
  *
  * REST sub-resource that transitions the delivery note `draft → delivered`. Optional

@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Store - A connected e-commerce store of your company. The public `id` is the store UUID (v7). `integration_id` is the UUID of the provider connection that backs it, and `external_store_id` is the identifier the provider gives to the shop — an opaque string, not a foreign key of ours. The settings decide how the orders of the store become invoices. */
+/** Store - A connected e-commerce store of your company. The public `id` is the store UUID v7. `integration_id` is the UUID of the provider connection that backs it, and `external_store_id` is the identifier the provider gives to the shop — an opaque string, not a foreign key of ours. The settings decide how the orders of the store become invoices. */
 class Store
 {
     /**
-     * UUID (v7) of the store. Public identity (KEY `id`).
+     * UUID v7 of the store. Public identity (KEY `id`).
      *
      * @var string $id
      */

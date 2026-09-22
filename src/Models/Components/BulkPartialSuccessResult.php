@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkPartialSuccessResult - Result of a bulk or import operation that reports per-resource status. `total` is how many rows/resources were processed (`successful + failed`), `successful` how many were applied (deleted, created or validated) and `failed` how many could not be processed. `failures[]` carries one item per failed row. Shape shared by every bulk endpoint of the public API (the `/v1/{resource}/bulk-delete` endpoints emit it today). Anchored integrators before `2026-09-01` keep receiving the previous `{object, deleted, failed[{id, reason}]}` shape via `Factuarea-Version`. */
+/** BulkPartialSuccessResult - Result of a bulk or import operation that reports per-resource status. `total` is how many rows/resources were processed (`successful + failed`), `successful` how many were applied (deleted, created or validated) and `failed` how many could not be processed. `failures[]` carries one item per failed row. Shape shared by every bulk endpoint of the public API (the bulk-delete endpoints emit it today). Anchored integrators before `2026-09-01` keep receiving the previous `{object, deleted, failed[{id, reason}]}` shape via `Factuarea-Version`. */
 class BulkPartialSuccessResult
 {
     /**

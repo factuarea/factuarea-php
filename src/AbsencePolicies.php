@@ -541,7 +541,7 @@ class AbsencePolicies
     /**
      * Create an absence policy
      *
-     * Create an absence policy for the authenticated company (resolved from the API key, never from the payload). `name`, `allowance_type` (`limited`/`unlimited`) and `accrual_method` (`annual`/`monthly`) are required; `allowance_days` is required and positive only when `allowance_type` is `limited`. `absence_type_ids` is the list of absence type UUIDs (v7) the policy covers (may be empty); a type belonging to another company returns 422. Returns the created policy with its generated `id` (UUID v7).
+     * Create an absence policy for the authenticated company (resolved from the API key, never from the payload). `name`, `allowance_type` (`limited`/`unlimited`) and `accrual_method` (`annual`/`monthly`) are required; `allowance_days` is required and positive only when `allowance_type` is `limited`. `absence_type_ids` is the list of public identifiers (UUID v7) of the absence types the policy covers (may be empty); a type belonging to another company returns 422. Returns the created policy with its generated `id` (UUID v7).
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsencePolicyRequest  $body
      * @param  string  $company

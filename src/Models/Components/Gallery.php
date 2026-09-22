@@ -28,7 +28,7 @@ class Gallery
     public string $url;
 
     /**
-     * MIME type de la imagen (e.g. `image/jpeg`).
+     * MIME type of the image (e.g. `image/jpeg`).
      *
      * @var string $contentType
      */

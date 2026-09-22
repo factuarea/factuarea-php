@@ -319,7 +319,7 @@ class DeliveryNote
     public ?array $metadata;
 
     /**
-     * UUID (v7) of the invoice this delivery note was converted into.
+     * UUID v7 of the invoice this delivery note was converted into.
      *
      * @var ?string $convertedToId
      */

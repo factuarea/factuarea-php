@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesListRequest
 {
     /**
-     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
      * @var string $account
      */
@@ -21,7 +21,7 @@ class PublicApiV1CompaniesListRequest
     public string $account;
 
     /**
-     * Fiscal tax number (NIF/CIF/NIE) of the company. A tax number outside the scope of the API key returns an EMPTY list, never a rejection: telling «not found» apart from «not yours» would turn this filter into a way to enumerate which companies exist on the platform. Exact match on `tax_id`.
+     * Tax ID (NIF/CIF/NIE) of the company. A tax ID outside the scope of your key returns an empty list, never an error. Exact match on `tax_id`.
      *
      * @var ?string $taxId
      */
@@ -29,7 +29,7 @@ class PublicApiV1CompaniesListRequest
     public ?string $taxId = null;
 
     /**
-     * Cursor for forward pagination. NON-STANDARD for this API: unlike the `starting_after` / `ending_before` lists, this endpoint takes a single `cursor`. Use the `id` of the last company on the previous page.
+     * Cursor for forward pagination (this list takes a single `cursor`, not `starting_after`/`ending_before`): the `id` of the last company on the previous page.
      *
      * @var ?string $cursor
      */
@@ -45,7 +45,7 @@ class PublicApiV1CompaniesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Only companies in this status: `active`, `inactive` or `archived`. Without it, archived companies are hidden and only `active` and `inactive` ones are returned.
+     * Only companies in this status: `active`, `inactive` or `archived` (archived ones are hidden when omitted).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus $status
      */
@@ -53,7 +53,7 @@ class PublicApiV1CompaniesListRequest
     public ?PublicApiV1CompaniesListStatus $status = null;
 
     /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */

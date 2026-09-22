@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1QuotesStatsResponseBody
 {
     /**
-     * Resumen agregado de los presupuestos de la empresa autenticada: total, importe acumulado, conteo por estado, expirados y convertidos a factura. Devuelto por `GET /v1/companies/{company}/quotes/stats`.
+     * Aggregated summary of the quotes of the company: total, accumulated amount, count by status, expired and converted to an invoice. Returned by `GET /v1/companies/{company}/quotes/stats`.
      *
      * @var \Factuarea\Sdk\Models\Components\QuoteStats $data
      */

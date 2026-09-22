@@ -1703,7 +1703,7 @@ class Products
     /**
      * Retrieve a product
      *
-     * Retrieve a product by its `uuid`.
+     * Retrieve a product by its `id`.
      *
      * @param  string  $company
      * @param  string  $product

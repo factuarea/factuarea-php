@@ -14,7 +14,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AccountMembersUpdateRequest
 {
     /**
-     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
      * @var string $account
      */
@@ -22,7 +22,7 @@ class PublicApiV1AccountMembersUpdateRequest
     public string $account;
 
     /**
-     * Public identifier (UUID v7) of the account member, as returned in `id` by the member list. It identifies the person, not the membership.
+     * Public identifier (UUID v7) of the account member.
      *
      * @var string $member
      */

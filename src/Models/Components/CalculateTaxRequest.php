@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CalculateTaxRequest - Public REST API v1 — POST /v1/companies/{company}/taxes/calculate.
- *
- *
- * Body: `{ base: float, taxes_id: string }`. `taxes_id` es la FK a la tabla
- * global `taxes` (valor UUID v7) — plural (D1), NUNCA `tax_id` (NIF/CIF fiscal).
- * Devuelve `{ base, tax_rate, tax_amount, total_amount, tax }`.
- */
+/** CalculateTaxRequest - Calculate a tax on a base amount. Body: `base` (number) and `taxes_id`, the public identifier (UUID v7) of the tax, never the tax ID of a company. Returns `base`, `tax_rate`, `tax_amount`, `total_amount` and `tax`. */
 class CalculateTaxRequest
 {
     /**

@@ -1,6 +1,6 @@
 # ResolvedCatalogPriceUnitSemantics
 
-Semántica del importe de la fuente ganadora. `per_base_unit` se convierte una vez por el factor de la presentación; `per_commercial_unit` nunca se convierte.
+Semantics of the amount of the winning source: `per_base_unit` is converted once by the presentation factor; `per_commercial_unit` is never converted.
 
 
 ## Values

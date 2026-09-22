@@ -1,6 +1,6 @@
 # PublicApiV1PriceListsItemsListStatus
 
-Lifecycle of the items to return: `active` (default, the current ones), `retired` (the history of items whose catalog target was deleted) or `all`.
+Items to return: `active` (default), `retired` or `all`.
 
 
 ## Values

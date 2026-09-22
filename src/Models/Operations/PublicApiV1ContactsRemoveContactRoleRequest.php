@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsRemoveContactRoleRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1ContactsRemoveContactRoleRequest
     public string $company;
 
     /**
-     * Public identifier (UUID v7) of the contact, as returned in `id` by its list and detail responses.
+     * Public identifier (UUID v7) of the contact.
      *
      * @var string $contact
      */
@@ -29,7 +29,7 @@ class PublicApiV1ContactsRemoveContactRoleRequest
     public string $contact;
 
     /**
-     * Contact role key: `customer`, `supplier` or `lead`.
+     * Contact role: `customer`, `supplier` or `lead`.
      *
      * @var string $rolePathParameter
      */
@@ -37,7 +37,7 @@ class PublicApiV1ContactsRemoveContactRoleRequest
     public string $rolePathParameter;
 
     /**
-     * Role to remove: `customer`, `supplier` or `lead`. It is always read from the `{role}` path segment, so you do not need to repeat it here; a value sent as a query parameter is ignored.
+     * Ignored: the role is always read from the `{role}` path segment.
      *
      * @var \Factuarea\Sdk\Models\Operations\Role $roleQueryParameter
      */

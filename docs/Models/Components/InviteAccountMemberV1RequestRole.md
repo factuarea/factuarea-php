@@ -1,6 +1,6 @@
 # InviteAccountMemberV1RequestRole
 
-Rol de membresía con el que entraría: owner, admin, member o employee.
+Membership role the person would join with: `owner`, `admin`, `member` or `employee`.
 
 
 ## Values

@@ -1,6 +1,6 @@
 # ConvertProformaRequest
 
-Public REST API v1 — POST /v1/companies/{company}/proformas/{uuid}/convert.
+Public REST API v1 — POST /v1/companies/{company}/proformas/{proforma}/convert.
 
 Required body: `target` ∈ {invoice}. Only conversion to invoice is
 supported — other targets (`proforma`, `delivery_note`) do NOT apply

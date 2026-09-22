@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** PurchaseInvoicePayment - A single payment recorded against a purchase invoice (payment ledger entry). Listed by `GET /v1/companies/{company}/purchase-invoices/{id}/payments` and returned by `POST` on the same path. */
+/** PurchaseInvoicePayment - A single payment recorded against a purchase invoice (payment ledger entry). Listed by `GET /v1/companies/{company}/purchase-invoices/{purchase_invoice}/payments` and returned by `POST` on the same path. */
 class PurchaseInvoicePayment
 {
     /**
-     * Opaque UUID (v7) of the payment.
+     * Opaque UUID v7 of the payment.
      *
      * @var string $id
      */

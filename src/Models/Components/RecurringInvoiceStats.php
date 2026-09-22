@@ -21,7 +21,7 @@ class RecurringInvoiceStats
     public RecurringInvoiceStatsObject $object;
 
     /**
-     * Total de recurrencias registradas.
+     * Total number of recurring invoices.
      *
      * @var int $total
      */
@@ -37,7 +37,7 @@ class RecurringInvoiceStats
     public int $active;
 
     /**
-     * Recurrencias pausadas (reanudables).
+     * Paused recurring invoices (they can be resumed).
      *
      * @var int $paused
      */
@@ -45,7 +45,7 @@ class RecurringInvoiceStats
     public int $paused;
 
     /**
-     * Recurrencias canceladas (estado terminal irreversible).
+     * Cancelled recurring invoices (final, irreversible status).
      *
      * @var int $cancelled
      */
@@ -85,7 +85,7 @@ class RecurringInvoiceStats
     public int $generatedThisMonth;
 
     /**
-     * Ejecuciones de recurrencia fallidas durante el mes en curso.
+     * Failed recurring invoice runs in the current month.
      *
      * @var int $failedThisMonth
      */

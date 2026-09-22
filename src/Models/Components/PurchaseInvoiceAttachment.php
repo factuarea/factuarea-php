@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** PurchaseInvoiceAttachment - Fichero adjunto (PDF/imagen) de la factura de compra. `null` cuando no hay adjunto. */
+/** PurchaseInvoiceAttachment - File attached to the purchase invoice (PDF or image), or `null` when there is none. */
 class PurchaseInvoiceAttachment
 {
     /**
@@ -37,7 +37,7 @@ class PurchaseInvoiceAttachment
     public int $sizeBytes;
 
     /**
-     * Relative download URL of the attachment (`/v1/companies/{company}/purchase-invoices/{id}/file`).
+     * Relative download URL of the attachment (`/v1/companies/{company}/purchase-invoices/{purchase_invoice}/file`).
      *
      * @var string $downloadUrl
      */

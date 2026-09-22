@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesListRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -205,7 +205,7 @@ class PublicApiV1InvoicesListRequest
     public ?string $number = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches invoices carrying ANY of the tags). Exact match on `tags`.
+     * Classification tag (lowercase slug); `tags[in]=a,b` matches invoices carrying ANY of the tags. Exact match on `tags`.
      *
      * @var ?string $tags
      */
@@ -213,7 +213,7 @@ class PublicApiV1InvoicesListRequest
     public ?string $tags = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches invoices carrying ANY of the tags). Comma-separated list. Any of the values matches.
+     * Classification tag (lowercase slug); `tags[in]=a,b` matches invoices carrying ANY of the tags. Comma-separated list. Any of the values matches.
      *
      * @var ?string $tagsIn
      */
@@ -253,7 +253,7 @@ class PublicApiV1InvoicesListRequest
     public ?LocalDate $paidOnLt = null;
 
     /**
-     * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `total`, `number`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending).
+     * Sort order: `created`, `total`, `number` ascending, or with a `-` prefix for descending (default `-created`).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesListSort $sort
      */
@@ -269,7 +269,7 @@ class PublicApiV1InvoicesListRequest
     public ?string $search = null;
 
     /**
-     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     * Metadata filter as `metadata[key]=value` (deepObject): pairs combine with AND, up to 50, keys matching `[A-Za-z0-9_.-]{1,64}`.
      *
      * @var ?array<string, string> $metadata
      */
@@ -285,7 +285,7 @@ class PublicApiV1InvoicesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Public identifier (UUID v7) of an original invoice: returns the corrective invoices that rectify it. An unknown identifier returns an empty page.
+     * Public identifier (UUID v7) of an original invoice, to list its corrective invoices.
      *
      * @var ?string $originalInvoiceId
      */
@@ -293,7 +293,7 @@ class PublicApiV1InvoicesListRequest
     public ?string $originalInvoiceId = null;
 
     /**
-     * VeriFactu status of the invoice: `no_verifactu` (no VeriFactu record), `pending` (queued or submitted to the AEAT), `accepted` or `rejected` (rejected or failed).
+     * VeriFactu status: `no_verifactu`, `pending`, `accepted` or `rejected`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\VerifactuStatus $verifactuStatus
      */
@@ -301,7 +301,7 @@ class PublicApiV1InvoicesListRequest
     public ?VerifactuStatus $verifactuStatus = null;
 
     /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */

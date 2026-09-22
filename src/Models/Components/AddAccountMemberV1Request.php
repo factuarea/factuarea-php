@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class AddAccountMemberV1Request
 {
     /**
-     * Identificador público (uuid) del NIF de la cuenta donde se da de alta a la persona.
+     * Public identifier (UUID v7) of the company of your account the person is added to.
      *
      * @var string $companyId
      */
@@ -20,7 +20,7 @@ class AddAccountMemberV1Request
     public string $companyId;
 
     /**
-     * Nombre completo de la persona.
+     * Full name of the person.
      *
      * @var string $name
      */
@@ -28,7 +28,7 @@ class AddAccountMemberV1Request
     public string $name;
 
     /**
-     * Dirección de correo de la persona; recibirá el correo de verificación.
+     * Email address of the person; the verification email is sent there.
      *
      * @var string $email
      */
@@ -36,7 +36,7 @@ class AddAccountMemberV1Request
     public string $email;
 
     /**
-     * Contraseña inicial, con la misma política que la aplicación web.
+     * Initial password, with the same policy as the web application.
      *
      * @var string $password
      */
@@ -44,7 +44,7 @@ class AddAccountMemberV1Request
     public string $password;
 
     /**
-     * Rol de membresía en ese NIF: owner, admin, member o employee.
+     * Membership role on that company: `owner`, `admin`, `member` or `employee`.
      *
      * @var \Factuarea\Sdk\Models\Components\AddAccountMemberV1RequestRole $role
      */

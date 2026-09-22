@@ -36,7 +36,7 @@ class Error1
     public string $message;
 
     /**
-     * Expected format hint (e.g. `YYYY-MM-DD`, `uuid`, `email`, `url`). Only present when the failure is a format error.
+     * Expected format hint, as emitted: `YYYY-MM-DD`, `UUID`, `email`, `URL`… Only present when the failure is a format error.
      *
      * @var ?string $expectedFormat
      */

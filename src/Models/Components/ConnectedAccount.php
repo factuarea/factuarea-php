@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ConnectedAccount - A connected Stripe account (Stripe Connect, multi-store) for your company. The public `id` is the account UUID (v7). `external_account_id` (`acct_xxx`) is the external Stripe id, not a foreign key. `series_id` is the UUID (v7) of the auto-invoicing document series (`null` means the company default series). The configuration fields are the effective per-account auto-invoicing settings. */
+/** ConnectedAccount - A connected Stripe account (Stripe Connect, multi-store) for your company. The public `id` is the account UUID v7. `external_account_id` (`acct_xxx`) is the external Stripe id, not a foreign key. `series_id` is the UUID v7 of the auto-invoicing document series (`null` means the company default series). The configuration fields are the effective per-account auto-invoicing settings. */
 class ConnectedAccount
 {
     /**
-     * UUID (v7) of the connected account. Public identity (KEY `id`).
+     * UUID v7 of the connected account. Public identity (KEY `id`).
      *
      * @var string $id
      */
@@ -103,7 +103,7 @@ class ConnectedAccount
     public ?string $externalAccountName;
 
     /**
-     * UUID (v7) of the document series used for invoices auto-created from this account. `null` means the company default series is used.
+     * UUID v7 of the document series used for invoices auto-created from this account. `null` means the company default series is used.
      *
      * @var ?string $seriesId
      */

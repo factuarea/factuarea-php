@@ -61,7 +61,7 @@ class TimeRecordChainValidation
     public \DateTime $validatedAt;
 
     /**
-     * UUID (v7) of the first invalid entry, or `null` if the chain is intact.
+     * UUID v7 of the first invalid entry, or `null` if the chain is intact.
      *
      * @var ?string $firstInvalidRecordId
      */

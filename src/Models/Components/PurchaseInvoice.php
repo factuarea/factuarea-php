@@ -273,7 +273,7 @@ class PurchaseInvoice
     public mixed $bankAccount;
 
     /**
-     * Cuenta contable de gasto asociada, o `null`.
+     * Associated expense ledger account, or `null`.
      *
      * @var ?string $expenseAccount
      */
@@ -281,7 +281,7 @@ class PurchaseInvoice
     public ?string $expenseAccount;
 
     /**
-     * UUID (v7) of the associated expense category, or `null`.
+     * UUID v7 of the associated expense category, or `null`.
      *
      * @var ?string $expenseCategoryId
      */

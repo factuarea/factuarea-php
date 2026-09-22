@@ -1559,7 +1559,7 @@ class Proformas
     /**
      * Retrieve proforma public link
      *
-     * Returns the shareable public URL of the proforma (/d/{uuid}) along with its status, expiration, and the plan-allowed maximum extension days.
+     * Returns the shareable public URL of the proforma along with its status, expiration, and the plan-allowed maximum extension days.
      *
      * @param  string  $company
      * @param  string  $proforma
@@ -2043,7 +2043,7 @@ class Proformas
     /**
      * Retrieve a proforma
      *
-     * Retrieve a proforma invoice by its `uuid`.
+     * Retrieve a proforma invoice by its `id`.
      *
      * @param  string  $company
      * @param  string  $proforma

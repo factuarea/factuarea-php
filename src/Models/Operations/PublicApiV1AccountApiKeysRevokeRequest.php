@@ -14,7 +14,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AccountApiKeysRevokeRequest
 {
     /**
-     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
      * @var string $account
      */
@@ -22,7 +22,7 @@ class PublicApiV1AccountApiKeysRevokeRequest
     public string $account;
 
     /**
-     * Public identifier (UUID v7) of the API key, as returned in `id` by its list and detail responses. The key making the request finds its own in `GET /v1/me` (`data.api_key.id`).
+     * Public identifier (UUID v7) of the API key.
      *
      * @var string $apiKey
      */

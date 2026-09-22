@@ -1647,7 +1647,7 @@ class Taxes
     /**
      * Retrieve a tax
      *
-     * Retrieve a tax rate by its `uuid`.
+     * Retrieve a tax rate by its `id`.
      *
      * @param  string  $company
      * @param  string  $tax

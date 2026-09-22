@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class EventDataPayoutReconciled
 {
     /**
-     * A Stripe payout ingested from `payout.paid`, together with its bank-reconciliation state. The public `id` is the payout UUID (v7). `connected_account_id` (`acct_xxx`) and `stripe_payout_id` (`po_xxx`) are external Stripe ids, not foreign keys. `bank_transaction_ref` is the UUID (v7) of the reconciled bank statement transaction (`null` while `status` is `ingested`). `composition` is the informative breakdown reported by Stripe (component charges + fees), referencing opaque Stripe ids — payouts are read-only on the public API; reconciliation happens in the dashboard.
+     * A Stripe payout ingested from `payout.paid`, together with its bank-reconciliation state. The public `id` is the payout UUID v7. `connected_account_id` (`acct_xxx`) and `stripe_payout_id` (`po_xxx`) are external Stripe ids, not foreign keys. `bank_transaction_ref` is the UUID v7 of the reconciled bank statement transaction (`null` while `status` is `ingested`). `composition` is the informative breakdown reported by Stripe (component charges + fees), referencing opaque Stripe ids — payouts are read-only on the public API; reconciliation happens in the dashboard.
      *
      * @var \Factuarea\Sdk\Models\Components\StripePayout $object
      */

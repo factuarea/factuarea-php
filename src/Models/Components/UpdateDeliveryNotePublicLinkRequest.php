@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * UpdateDeliveryNotePublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/delivery-notes/{uuid}/public-link.
+ * UpdateDeliveryNotePublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/delivery-notes/{delivery_note}/public-link.
  *
  *
  * Required body: `action` ∈ {revoke, activate, extend, reset}. `extend_days`

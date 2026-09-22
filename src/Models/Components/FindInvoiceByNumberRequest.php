@@ -41,7 +41,7 @@ class FindInvoiceByNumberRequest
     public ?int $year = null;
 
     /**
-     * Identificador de la serie que emitió la factura. Desambigua cuando dos series comparten número.
+     * Public identifier (UUID v7) of the series that issued the invoice; it tells apart two series that share a number.
      *
      * @var ?string $seriesId
      */

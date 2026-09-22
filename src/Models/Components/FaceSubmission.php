@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class FaceSubmission
 {
     /**
-     * UUID (v7) of the FACe submission.
+     * UUID v7 of the FACe submission.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class FaceSubmission
     public FaceSubmissionObject $object;
 
     /**
-     * UUID (v7) of the submitted invoice.
+     * UUID v7 of the submitted invoice.
      *
      * @var string $invoiceId
      */

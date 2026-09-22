@@ -59,7 +59,7 @@ class CreateApiKeyV1Request
     public ?CreateApiKeyV1RequestEnvironment $environment = null;
 
     /**
-     * Lista opcional de empresas (uuid) que la key alcanzará; si se omite, solo la empresa titular.
+     * Optional public identifiers (UUID v7) of the companies of your account the key will reach; when omitted, only the holder company.
      *
      * @var ?array<string> $scopedCompanyIds
      */

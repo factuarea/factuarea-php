@@ -13,7 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1EmailsIndicatorsRequest
 {
     /**
-     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
      *
      * @var string $company
      */
@@ -21,7 +21,7 @@ class PublicApiV1EmailsIndicatorsRequest
     public string $company;
 
     /**
-     * Documents to summarize: UUID v7 of each one, either comma-separated (`related_entity_ids=a,b,c`) or repeated. Required, maximum 100 per call — more returns 422. The type is not needed: a UUID v7 is globally unique, so the batch MAY mix invoices, quotes, pro formas, delivery notes, purchase invoices and recurring invoices. Ids without any email, and ids that do not belong to a document of your company, are OMITTED from the response instead of being reported as zero, so match the results back by `related_entity_id`.
+     * Public identifiers (UUID v7) of the documents to summarize, of any type, comma-separated or repeated (up to 100). Documents with no email, or not yours, are omitted from the response.
      *
      * @var array<string> $relatedEntityIds
      */

@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * SendProformaRequest - Public REST API v1 — POST /v1/companies/{company}/proformas/{uuid}/send.
+ * SendProformaRequest - Public REST API v1 — POST /v1/companies/{company}/proformas/{proforma}/send.
  *
  *
  * Optional body: `to` (string), `cc[]`, `bcc[]` (arrays of emails),

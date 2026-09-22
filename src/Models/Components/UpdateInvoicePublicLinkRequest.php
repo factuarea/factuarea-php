@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * UpdateInvoicePublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/invoices/{uuid}/public-link.
+ * UpdateInvoicePublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/invoices/{invoice}/public-link.
  *
  *
  * `SchemaName` sets a unique, clean OpenAPI schema name

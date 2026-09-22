@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * UpdateQuotePublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/quotes/{uuid}/public-link.
+ * UpdateQuotePublicLinkRequest - Public REST API v1 — PATCH /v1/companies/{company}/quotes/{quote}/public-link.
  *
  *
  * `SchemaName` disambiguates the OpenAPI schema: Quote and Proforma declare

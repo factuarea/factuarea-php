@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** `any` (default) returns contacts with at least one of the requested `roles[]`; `all` requires every one of them. */
+/** `any` (default) matches at least one of the `roles[]`; `all` requires all of them. */
 enum PublicApiV1ContactsSearchRoleMatch: string
 {
     case Any = 'any';

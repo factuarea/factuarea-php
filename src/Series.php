@@ -412,7 +412,7 @@ class Series
      *
      * - One entry per document type, with a `status` of `created`, `existing` or `no_default`.
      * - `no_default` means the type has active series but none marked as default — archiving the default demotes it without promoting a replacement — and the company still cannot issue that document.
-     * - Treat `no_default` as work still to do, not as success: the active series arrive in `candidates` and you resolve it with `POST /v1/companies/{company}/series/{id}/default`.
+     * - Treat `no_default` as work still to do, not as success: the active series arrive in `candidates` and you resolve it with `POST /v1/companies/{company}/series/{series}/default`.
      *
      * **Why it does not choose for you**
      *
@@ -1162,9 +1162,9 @@ class Series
     /**
      * Retrieve a series
      *
-     * Retrieve a series by its `uuid`.
+     * Retrieve a series by its `id`.
      *
-     * Series are **immutable** for fiscal compliance (AEAT VeriFactu — legal numbering continuity): `PUT`, `PATCH` and `DELETE` on `/v1/companies/{company}/series/{uuid}` return `405 Method Not Allowed` with `error.code = "series_immutable"` and header `Allow: GET, POST`. To "delete" a series use `POST /v1/companies/{company}/series/{uuid}/archive`; to change the numbering, create a new series and mark it as default.
+     * Series are **immutable** for fiscal compliance (AEAT VeriFactu — legal numbering continuity): `PUT`, `PATCH` and `DELETE` on `/v1/companies/{company}/series/{series}` return `405 Method Not Allowed` with `error.code = "series_immutable"` and header `Allow: GET, POST`. To "delete" a series use `POST /v1/companies/{company}/series/{series}/archive`; to change the numbering, create a new series and mark it as default.
      *
      * @param  string  $company
      * @param  string  $series

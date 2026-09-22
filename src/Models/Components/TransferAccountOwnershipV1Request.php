@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TransferAccountOwnershipV1Request
 {
     /**
-     * Identificador público (uuid) de la persona que pasa a ser titular de la cuenta.
+     * Public identifier (UUID v7) of the person who becomes the account owner.
      *
      * @var string $ownerUserId
      */

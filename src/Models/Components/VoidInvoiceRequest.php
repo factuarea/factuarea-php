@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * VoidInvoiceRequest - Public REST API v1 — POST /v1/companies/{company}/invoices/{uuid}/void.
+ * VoidInvoiceRequest - Public REST API v1 — POST /v1/companies/{company}/invoices/{invoice}/void.
  *
  *
  * Optional body: `reason` (string). If the API client does not send a

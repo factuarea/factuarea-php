@@ -180,15 +180,15 @@ class Invoices
     /**
      * Annul an invoice
      *
-     * Withdraw an issued invoice **with a documented reason**. `reason` is required here (3–500 characters); that is the only difference from `POST /v1/companies/{company}/invoices/{id}/void`, which performs exactly the same operation and persists a placeholder when you omit it. Prefer this endpoint whenever the reason has to be traceable — the text you send is kept in the invoice audit trail and, when the company is enrolled in VeriFactu, becomes the `motivo` of the AEAT cancellation record.
+     * Withdraw an issued invoice **with a documented reason**. `reason` is required here (3–500 characters); that is the only difference from `POST /v1/companies/{company}/invoices/{invoice}/void`, which performs exactly the same operation and persists a placeholder when you omit it. Prefer this endpoint whenever the reason has to be traceable — the text you send is kept in the invoice audit trail and, when the company is enrolled in VeriFactu, becomes the `motivo` of the AEAT cancellation record.
      *
      * The invoice moves to `annulled` and `voided_at` starts reporting when that happened. The status is terminal and the operation is **irreversible**: there is no transition back to `sent` or `draft`, and the correlative number of the series is neither released nor reused.
      *
      * **Effect on AEAT.** With VeriFactu enabled, annulling queues an *anulación* record to AEAT **asynchronously**: a `200` means the invoice is annulled in Factuarea, not that AEAT has already processed it — poll the invoice for its VeriFactu status. The original *alta* record is not deleted or rewritten; AEAT keeps both entries, the issuance and its cancellation. With VeriFactu inactive the annulment is purely internal and nothing is transmitted.
      *
-     * **Annul or correct?** Annulment withdraws the whole document and only works before payment; it produces no amending document, so it never restates an amount. A corrective (`POST /v1/companies/{company}/invoices/{id}/corrective`) creates a **new** invoice that amends the original and is the only path for an invoice that is already `paid` or that is only partly wrong.
+     * **Annul or correct?** Annulment withdraws the whole document and only works before payment; it produces no amending document, so it never restates an amount. A corrective (`POST /v1/companies/{company}/invoices/{invoice}/corrective`) creates a **new** invoice that amends the original and is the only path for an invoice that is already `paid` or that is only partly wrong.
      *
-     * Limits: only `sent` or `overdue` can be annulled. A `draft` is not annulled but deleted; `paid`, `cancelled` and `annulled` return 422. An invoice that **is** a corrective can never be annulled — issue a new corrective of the original instead. Use `GET /v1/companies/{company}/invoices/{id}/can-annul` to check eligibility, and whether a VeriFactu cancellation record will be created, before posting here.
+     * Limits: only `sent` or `overdue` can be annulled. A `draft` is not annulled but deleted; `paid`, `cancelled` and `annulled` return 422. An invoice that **is** a corrective can never be annulled — issue a new corrective of the original instead. Use `GET /v1/companies/{company}/invoices/{invoice}/can-annul` to check eligibility, and whether a VeriFactu cancellation record will be created, before posting here.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesAnnulRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesAnnulResponse
@@ -1224,7 +1224,7 @@ class Invoices
      *
      * **AEAT R code.** By default it is derived from `correction_reason`: `error_fundado` → R1, `concurso` → R2, `incobrable` → R3, everything else → R4; a corrective of a simplified (F2) invoice is always born R5 regardless of the reason. `correction_code` overrides that derivation, but is validated against the legal matrix — original F2 → only `R5`; original F1/F3 → only `R1`–`R4`. Any other combination returns 422 with the legal `allowed_values`.
      *
-     * Limits: `draft`, `overdue`, `cancelled` and `annulled` originals return 422 (an `overdue` invoice must be paid or voided first); a corrective can never itself be corrected — issue a new corrective of the original instead. List every corrective of an invoice with `GET /v1/companies/{company}/invoices/{id}/correctives`.
+     * Limits: `draft`, `overdue`, `cancelled` and `annulled` originals return 422 (an `overdue` invoice must be paid or voided first); a corrective can never itself be corrected — issue a new corrective of the original instead. List every corrective of an invoice with `GET /v1/companies/{company}/invoices/{invoice}/correctives`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCorrectiveRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCorrectiveResponse
@@ -1844,7 +1844,7 @@ class Invoices
     /**
      * Duplicate an invoice
      *
-     * Create a new draft invoice by copying the lines, client, and metadata from an existing invoice. The new invoice gets a fresh `uuid` and number.
+     * Create a new draft invoice by copying the lines, client, and metadata from an existing invoice. The new invoice gets a fresh `id` and number.
      *
      * @param  string  $company
      * @param  string  $invoice
@@ -1969,10 +1969,13 @@ class Invoices
     /**
      * Export invoices to a spreadsheet
      *
-     * Export a selection of invoices to a spreadsheet (`xlsx` or `csv`) and stream it back as an attachment. Narrow it with the filters (`invoice_ids[]`, `client_id`, `series_id`, `status`, `date_from`, `date_to`, `search`) or omit them to export everything. `format` picks the layout: `SUMMARY` (one row per invoice) or `ITEMS` (one row per line).
+     * Export a selection of invoices to a spreadsheet (`xlsx` or `csv`) and stream it back as an attachment. Narrow it with the filters of the body (`invoice_ids`, `client_id`, `series_id`, `status`, `date_from`, `date_to`, `search`) or omit them to export everything. `format` picks the layout: `SUMMARY` (one row per invoice) or `ITEMS` (one row per line).
      *
      * ```http
-     * GET /v1/companies/{company}/invoices/export?format=SUMMARY&status=paid&date_from=2026-01-01&date_to=2026-03-31
+     * POST /v1/companies/{company}/invoices/export/excel
+     * Content-Type: application/json
+     *
+     * {"format": "SUMMARY", "status": "paid", "date_from": "2026-01-01", "date_to": "2026-03-31"}
      * ```
      *
      * Limits: the selection is capped at 5,000 invoices; a wider one returns 422 `export_limit_exceeded`.
@@ -2232,7 +2235,7 @@ class Invoices
     /**
      * Find an invoice by external ID
      *
-     * Look up a single invoice by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Distinct from the fiscal number and the `uuid`. Returns the matching invoice or 404 `invoice_not_found` if no invoice uses that external_id within your company.
+     * Look up a single invoice by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Distinct from the fiscal number and the `id`. Returns the matching invoice or 404 `invoice_not_found` if no invoice uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindInvoiceByExternalIdRequest  $body
      * @param  string  $company
@@ -3222,7 +3225,7 @@ class Invoices
      *
      * A reverted payment stops counting towards `paid_amount`, `pending_amount` and every treasury aggregate, so the invoice goes **back into the collection circuit**: `overdue` if its due date has passed, `sent` otherwise, and it accepts a new payment again. That transition is derived from the ledger and can only originate here — the generic status-change endpoint cannot move an invoice out of `paid`.
      *
-     * **Refund or reversal?** Revert when the customer got their money back without the operation being reduced (returned direct debit, chargeback, booking mistake): the debt survives and you want to collect it. Issue a corrective invoice (`POST /v1/companies/{company}/invoices/{id}/corrective`) when the operation itself is reduced — that is where revenue actually decreases. Reverting never issues a corrective, and a returned receipt is not a bad-debt claim (art. 80.Cuatro LIVA has its own formal requirements).
+     * **Refund or reversal?** Revert when the customer got their money back without the operation being reduced (returned direct debit, chargeback, booking mistake): the debt survives and you want to collect it. Issue a corrective invoice (`POST /v1/companies/{company}/invoices/{invoice}/corrective`) when the operation itself is reduced — that is where revenue actually decreases. Reverting never issues a corrective, and a returned receipt is not a bad-debt claim (art. 80.Cuatro LIVA has its own formal requirements).
      *
      * Irreversible: there is no un-revert. To restate the collection, register a new payment.
      *
@@ -3739,7 +3742,7 @@ class Invoices
     /**
      * Retrieve invoice public link
      *
-     * Returns the shareable public URL of the invoice (/d/{uuid}) along with its status, expiration, and the plan-allowed maximum extension days.
+     * Returns the shareable public URL of the invoice along with its status, expiration, and the plan-allowed maximum extension days.
      *
      * @param  string  $company
      * @param  string  $invoice
@@ -4114,7 +4117,7 @@ class Invoices
      *
      * Move the issuance date of an already scheduled invoice. The invoice **stays `scheduled` throughout** — unlike `unschedule` followed by `schedule`, it never returns to `draft`, so it is never editable or deletable in between and there is no window in which the sweep could find it unscheduled.
      *
-     * **What you can change:** `scheduled_for`, and only that. `scheduled_action` is preserved — a schedule created as `issue_and_send` still emails the client at the new date, and one created as `draft` still does not. To change the action you have to `unschedule` and `schedule` again. The content of the invoice (lines, client, series, totals) is untouched by this call: use `PATCH /v1/companies/{company}/invoices/{id}` while it is still a draft for that.
+     * **What you can change:** `scheduled_for`, and only that. `scheduled_action` is preserved — a schedule created as `issue_and_send` still emails the client at the new date, and one created as `draft` still does not. To change the action you have to `unschedule` and `schedule` again. The content of the invoice (lines, client, series, totals) is untouched by this call: use `PATCH /v1/companies/{company}/invoices/{invoice}` while it is still a draft for that.
      *
      * Limits: only an invoice in `scheduled` can be rescheduled — a `draft` (never scheduled) or an already issued invoice returns 422 — and the new `scheduled_for` must be strictly in the future (422 otherwise). Everything documented under `schedule` about what happens when the date arrives (number assigned at that moment, snapshots frozen, asynchronous VeriFactu *alta*, email only with `issue_and_send`, per-invoice retry on failure) applies unchanged to the new date.
      *
@@ -4606,7 +4609,7 @@ class Invoices
     /**
      * Retrieve an invoice
      *
-     * Retrieve a sales invoice by its `uuid`.
+     * Retrieve a sales invoice by its `id`.
      *
      * @param  string  $company
      * @param  string  $invoice
@@ -5242,7 +5245,7 @@ class Invoices
      *
      * **Window of use.** It only applies while the invoice is `scheduled`. A `draft` that was never scheduled returns 422, and so does an invoice the sweep has already issued: from that instant on it is `sent`, it owns a definitive number and — where VeriFactu applies — an AEAT record, so the way back is no longer `unschedule` but `void`/`annul` to withdraw it (only while it is unpaid) or `corrective` to amend it. In practice the race is real: an invoice whose `scheduled_for` has just elapsed may already have been issued when your call lands.
      *
-     * If you only want to move the date, use `PATCH /v1/companies/{company}/invoices/{id}/reschedule` instead — it avoids the round trip through `draft` and the window in which the document is editable.
+     * If you only want to move the date, use `PATCH /v1/companies/{company}/invoices/{invoice}/reschedule` instead — it avoids the round trip through `draft` and the window in which the document is editable.
      *
      * @param  string  $company
      * @param  string  $invoice
@@ -5862,13 +5865,13 @@ class Invoices
      *
      * Withdraw an issued invoice. The invoice moves to `annulled`, `voided_at` starts reporting when that happened and the status is terminal: voiding is **irreversible** and there is no way back to `sent` or `draft`.
      *
-     * **Void or correct?** Void when the whole document should never have existed and has not been paid — the invoice is withdrawn as a whole and no amending document is produced. Issue a corrective (`POST /v1/companies/{company}/invoices/{id}/corrective`) when the invoice was already paid, or when only part of it is wrong (amount, recipient, partial return): a `paid` invoice can never be voided, and voiding never fixes a figure.
+     * **Void or correct?** Void when the whole document should never have existed and has not been paid — the invoice is withdrawn as a whole and no amending document is produced. Issue a corrective (`POST /v1/companies/{company}/invoices/{invoice}/corrective`) when the invoice was already paid, or when only part of it is wrong (amount, recipient, partial return): a `paid` invoice can never be voided, and voiding never fixes a figure.
      *
      * What voiding does **not** do: the correlative number of the series is neither released nor reused (the series counter only moves forward), the original invoice is not deleted, and its VeriFactu *alta* record is not withdrawn. When the company is enrolled in VeriFactu, an AEAT cancellation (*anulación*) record is queued **asynchronously** with your `reason` as its `motivo` — a `200` means the invoice is annulled on our side, not that AEAT has already processed the cancellation. With VeriFactu inactive the annulment is purely internal.
      *
-     * Limits: only an invoice in `sent` or `overdue` can be voided. A `draft` is not voidable (delete it instead), and `paid`, `cancelled` and `annulled` return 422. An invoice that **is** a corrective can never be voided — to undo a wrong corrective, issue a new corrective of the original. Note the inverse is allowed: having correctives does not block voiding the original. Call `GET /v1/companies/{company}/invoices/{id}/can-annul` first if you need to check eligibility without attempting the change.
+     * Limits: only an invoice in `sent` or `overdue` can be voided. A `draft` is not voidable (delete it instead), and `paid`, `cancelled` and `annulled` return 422. An invoice that **is** a corrective can never be voided — to undo a wrong corrective, issue a new corrective of the original. Note the inverse is allowed: having correctives does not block voiding the original. Call `GET /v1/companies/{company}/invoices/{invoice}/can-annul` first if you need to check eligibility without attempting the change.
      *
-     * `reason` is optional here and a placeholder is persisted when you omit it. `POST /v1/companies/{company}/invoices/{id}/annul` is the very same operation with `reason` required — prefer it whenever the reason must be documented.
+     * `reason` is optional here and a placeholder is persisted when you omit it. `POST /v1/companies/{company}/invoices/{invoice}/annul` is the very same operation with `reason` required — prefer it whenever the reason must be documented.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesVoidRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesVoidResponse
