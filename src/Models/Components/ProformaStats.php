@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ProformaStats - Aggregated summary of the proformas of the authenticated company: total, accumulated amount, breakdown by status (with count and amount), conversion-to-invoice ratio, those about to expire and average value. Returned by `GET /v1/proformas/stats`. */
+/** ProformaStats - Aggregated summary of the proformas of the authenticated company: total, accumulated amount, breakdown by status (with count and amount), conversion-to-invoice ratio, those about to expire and average value. Returned by `GET /v1/companies/{company}/proformas/stats`. */
 class ProformaStats
 {
     /**

@@ -53,12 +53,12 @@ class Taxes
      *
      * Return the active taxes available to your company, combining system-wide defaults plus company-specific definitions.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesActiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesActive(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesActiveResponse
+    public function publicApiV1TaxesActive(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesActiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,11 +86,11 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesActiveRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/active');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/active', Operations\PublicApiV1TaxesActiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -136,7 +136,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -174,13 +174,13 @@ class Taxes
      *
      * Return taxes filtered by category via the type query param (vat, retention, surcharge, other). Defaults to vat when omitted.
      *
+     * @param  string  $company
      * @param  ?string  $type
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesByTypeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesByType(?string $type = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesByTypeResponse
+    public function publicApiV1TaxesByType(string $company, ?string $type = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesByTypeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,12 +208,12 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesByTypeRequest(
+            company: $company,
             type: $type,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/by-type');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/by-type', Operations\PublicApiV1TaxesByTypeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -262,7 +262,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -301,12 +301,12 @@ class Taxes
      * Apply the referenced tax to a base amount and return the breakdown: base, tax_rate, tax_amount, total_amount and the full tax object.
      *
      * @param  \Factuarea\Sdk\Models\Components\CalculateTaxRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesCalculateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesCalculate(Components\CalculateTaxRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesCalculateResponse
+    public function publicApiV1TaxesCalculate(Components\CalculateTaxRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesCalculateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -334,12 +334,12 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesCalculateRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/calculate');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/calculate', Operations\PublicApiV1TaxesCalculateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -390,7 +390,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -429,12 +429,12 @@ class Taxes
      * Compute subtotal, VAT, surcharge, retention and grand total for an array of line items with quantity, price, discount and tax rates. Returns the document totals plus the per-line breakdown.
      *
      * @param  \Factuarea\Sdk\Models\Components\CalculateTotalsRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesCalculateTotalsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesCalculateTotals(Components\CalculateTotalsRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesCalculateTotalsResponse
+    public function publicApiV1TaxesCalculateTotals(Components\CalculateTotalsRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesCalculateTotalsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -462,12 +462,12 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesCalculateTotalsRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/calculate-totals');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/calculate-totals', Operations\PublicApiV1TaxesCalculateTotalsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -518,7 +518,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -557,13 +557,13 @@ class Taxes
      * Register a new tax with name, unique code, type (vat, retention, surcharge or other), rate and scope (sale, purchase or both). The ISO-2 country code is required.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTaxRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesCreate(Components\CreateTaxRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesCreateResponse
+    public function publicApiV1TaxesCreate(Components\CreateTaxRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -591,13 +591,13 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes', Operations\PublicApiV1TaxesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -648,7 +648,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -686,13 +686,13 @@ class Taxes
      *
      * Return the configured default taxes (vat, retention, surcharge) for the given document type, scoped to your company. Each slot is either a Tax or null when no default is configured.
      *
+     * @param  string  $company
      * @param  string  $docType
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesDefaultsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesDefaults(string $docType, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesDefaultsResponse
+    public function publicApiV1TaxesDefaults(string $company, string $docType, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesDefaultsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -720,12 +720,12 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesDefaultsRequest(
+            company: $company,
             docType: $docType,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/defaults/{docType}', Operations\PublicApiV1TaxesDefaultsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/defaults/{docType}', Operations\PublicApiV1TaxesDefaultsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -809,14 +809,14 @@ class Taxes
      *
      * Delete a tax. Fails with 409 if the tax is referenced by existing documents. System taxes (is_system=true) cannot be deleted.
      *
+     * @param  string  $company
      * @param  string  $tax
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesDelete(string $tax, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesDeleteResponse
+    public function publicApiV1TaxesDelete(string $company, string $tax, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -844,13 +844,13 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesDeleteRequest(
+            company: $company,
             tax: $tax,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}', Operations\PublicApiV1TaxesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}', Operations\PublicApiV1TaxesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -924,12 +924,12 @@ class Taxes
      *
      * Return the taxes available for purchase documents (supplier invoices).
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesForPurchasesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesForPurchases(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesForPurchasesResponse
+    public function publicApiV1TaxesForPurchases(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesForPurchasesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -957,11 +957,11 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesForPurchasesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/for-purchases');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/for-purchases', Operations\PublicApiV1TaxesForPurchasesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1007,7 +1007,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1045,12 +1045,12 @@ class Taxes
      *
      * Return the taxes available for sales documents (invoices, quotes, proformas, delivery notes).
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesForSalesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesForSales(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesForSalesResponse
+    public function publicApiV1TaxesForSales(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesForSalesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1078,11 +1078,11 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesForSalesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/for-sales');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/for-sales', Operations\PublicApiV1TaxesForSalesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1128,7 +1128,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1166,13 +1166,13 @@ class Taxes
      *
      * Return whether the tax is referenced by existing documents. Useful for safe-deletion checks before calling DELETE.
      *
+     * @param  string  $company
      * @param  string  $tax
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesIsInUseResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesIsInUse(string $tax, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesIsInUseResponse
+    public function publicApiV1TaxesIsInUse(string $company, string $tax, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesIsInUseResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1200,12 +1200,12 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesIsInUseRequest(
+            company: $company,
             tax: $tax,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}/is-in-use', Operations\PublicApiV1TaxesIsInUseRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}/is-in-use', Operations\PublicApiV1TaxesIsInUseRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1289,11 +1289,11 @@ class Taxes
      *
      * List the tax rates available to your company (Spanish IVA, IRPF, recargo, etc.).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TaxesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesList(?Operations\PublicApiV1TaxesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1TaxesListResponse
+    public function publicApiV1TaxesList(Operations\PublicApiV1TaxesListRequest $request, ?Options $options = null): Operations\PublicApiV1TaxesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1321,7 +1321,7 @@ class Taxes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes', Operations\PublicApiV1TaxesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1370,7 +1370,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1408,14 +1408,14 @@ class Taxes
      *
      * Promote a tax to the system-wide default for its category (vat, retention or surcharge). If another tax was the default for the same type it is demoted automatically.
      *
+     * @param  string  $company
      * @param  string  $tax
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesSetDefaultResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesSetDefault(string $tax, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesSetDefaultResponse
+    public function publicApiV1TaxesSetDefault(string $company, string $tax, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesSetDefaultResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1443,13 +1443,13 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesSetDefaultRequest(
+            company: $company,
             tax: $tax,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}/set-default', Operations\PublicApiV1TaxesSetDefaultRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}/set-default', Operations\PublicApiV1TaxesSetDefaultRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1565,7 +1565,7 @@ class Taxes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}/set-default/{docType}', Operations\PublicApiV1TaxesSetDefaultForDocumentRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}/set-default/{docType}', Operations\PublicApiV1TaxesSetDefaultForDocumentRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1574,7 +1574,7 @@ class Taxes
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.taxes.set_default_for_document', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -1649,13 +1649,13 @@ class Taxes
      *
      * Retrieve a tax rate by its `uuid`.
      *
+     * @param  string  $company
      * @param  string  $tax
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesShow(string $tax, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesShowResponse
+    public function publicApiV1TaxesShow(string $company, string $tax, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1683,12 +1683,12 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesShowRequest(
+            company: $company,
             tax: $tax,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}', Operations\PublicApiV1TaxesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}', Operations\PublicApiV1TaxesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1772,12 +1772,12 @@ class Taxes
      *
      * Aggregated KPIs for the tax rates available to your company: total tax count, active count, and breakdown by type (vat, retention, surcharge, other). Returned as `{ "data": TaxStats }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesStatsResponse
+    public function publicApiV1TaxesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1805,11 +1805,11 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/stats', Operations\PublicApiV1TaxesStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1855,7 +1855,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1893,14 +1893,14 @@ class Taxes
      *
      * Flip a tax between active and inactive. Inactive taxes are hidden from selectors but stay available for already-issued documents.
      *
+     * @param  string  $company
      * @param  string  $tax
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesToggleResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaxesToggle(string $tax, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaxesToggleResponse
+    public function publicApiV1TaxesToggle(string $company, string $tax, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaxesToggleResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1928,13 +1928,13 @@ class Taxes
             ];
         }
         $request = new Operations\PublicApiV1TaxesToggleRequest(
+            company: $company,
             tax: $tax,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}/toggle', Operations\PublicApiV1TaxesToggleRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}/toggle', Operations\PublicApiV1TaxesToggleRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2050,7 +2050,7 @@ class Taxes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/taxes/{tax}', Operations\PublicApiV1TaxesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/taxes/{tax}', Operations\PublicApiV1TaxesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2063,7 +2063,7 @@ class Taxes
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.taxes.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

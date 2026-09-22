@@ -52,13 +52,13 @@ class PublicLink
      *
      * Return the public share link state of a delivery note: `url` (absolute, ready to send to the client), `enabled`, `expires_at` (`null` = unlimited), and `max_days` (plan-enforced maximum when extending the link).
      *
+     * @param  string  $company
      * @param  string  $deliveryNote
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPublicLinkGetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesPublicLinkGet(string $deliveryNote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPublicLinkGetResponse
+    public function publicApiV1DeliveryNotesPublicLinkGet(string $company, string $deliveryNote, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPublicLinkGetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,12 +86,12 @@ class PublicLink
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesPublicLinkGetRequest(
+            company: $company,
             deliveryNote: $deliveryNote,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/public-link', Operations\PublicApiV1DeliveryNotesPublicLinkGetRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/public-link', Operations\PublicApiV1DeliveryNotesPublicLinkGetRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -207,7 +207,7 @@ class PublicLink
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/public-link', Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/public-link', Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -221,7 +221,7 @@ class PublicLink
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.delivery_notes.public_link.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

@@ -13,7 +13,7 @@ List the steps of a single run in execution order, with cursor-based pagination.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.runs.steps.list" method="get" path="/automations/runs/{run}/steps" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.runs.steps.list" method="get" path="/companies/{company}/automations/runs/{run}/steps" -->
 ```php
 declare(strict_types=1);
 
@@ -33,9 +33,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AutomationsRunsStepsListRequest(
+    company: 'Hegmann, Bartoletti and Leffler',
     run: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->automations->runs->steps->publicApiV1AutomationsRunsStepsList(
@@ -71,11 +71,11 @@ Rearm a single parked step, leaving its siblings untouched with their state, the
 
 CAREFUL — the step EXECUTES FOR REAL: it sends email, delivers webhooks and calls third parties. This is not an inert retry, so confirm with the account owner before calling it.
 
-`step_index` is the index published by `GET /v1/automations/runs/{run}/steps`, not the position of the action in the rule definition. The response is 202 — accepted and queued, not finished — with the run id and the index that was rearmed. An index outside the range of the run returns 404, exactly like a run that is not yours, so probing indices reveals nothing.
+`step_index` is the index published by `GET /v1/companies/{company}/automations/runs/{run}/steps`, not the position of the action in the rule definition. The response is 202 — accepted and queued, not finished — with the run id and the index that was rearmed. An index outside the range of the run returns 404, exactly like a run that is not yours, so probing indices reveals nothing.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.runs.steps.replay" method="post" path="/automations/runs/{run}/steps/{step_index}/replay" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.runs.steps.replay" method="post" path="/companies/{company}/automations/runs/{run}/steps/{step_index}/replay" -->
 ```php
 declare(strict_types=1);
 
@@ -95,11 +95,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AutomationsRunsStepsReplayRequest(
+    company: 'Fahey LLC',
     run: '<value>',
     stepIndex: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->automations->runs->steps->publicApiV1AutomationsRunsStepsReplay(

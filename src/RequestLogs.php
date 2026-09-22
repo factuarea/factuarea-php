@@ -52,11 +52,11 @@ class RequestLogs
      *
      * Inspect the requests your own integration has made against this API, newest first, so you can debug it without opening a support ticket: what you called, what came back, how long it took and, when a call failed, the error it returned. Scoped to the authenticated company. Rows are purged after 30 days, so this is a debugging window, not an audit trail.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DevelopersRequestLogsList(?Operations\PublicApiV1DevelopersRequestLogsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1DevelopersRequestLogsListResponse
+    public function publicApiV1DevelopersRequestLogsList(Operations\PublicApiV1DevelopersRequestLogsListRequest $request, ?Options $options = null): Operations\PublicApiV1DevelopersRequestLogsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class RequestLogs
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/developers/request-logs');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/request-logs', Operations\PublicApiV1DevelopersRequestLogsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class RequestLogs
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,13 +171,13 @@ class RequestLogs
      *
      * Retrieve a single request of your own integration by the `request_id` the API returned in the `X-Request-Id` header of that response — the identifier you already have in hand when a call misbehaved, and the one to quote in a support request. It is an opaque `req_…` string, not a UUID v7. The body carries the same fields as the listing.
      *
+     * @param  string  $company
      * @param  string  $requestId
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DevelopersRequestLogsShow(string $requestId, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DevelopersRequestLogsShowResponse
+    public function publicApiV1DevelopersRequestLogsShow(string $company, string $requestId, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DevelopersRequestLogsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -205,12 +205,12 @@ class RequestLogs
             ];
         }
         $request = new Operations\PublicApiV1DevelopersRequestLogsShowRequest(
+            company: $company,
             requestId: $requestId,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/developers/request-logs/{request_id}', Operations\PublicApiV1DevelopersRequestLogsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/request-logs/{request_id}', Operations\PublicApiV1DevelopersRequestLogsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

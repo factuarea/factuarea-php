@@ -16,7 +16,7 @@ Soft-delete a price entry from the list while historical document snapshots rema
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.delete" method="delete" path="/price-lists/{priceList}/items/{item}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.delete" method="delete" path="/companies/{company}/price-lists/{priceList}/items/{item}" -->
 ```php
 declare(strict_types=1);
 
@@ -36,11 +36,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsDeleteRequest(
+    company: 'Armstrong Group',
     priceList: '<value>',
     item: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->priceLists->items->publicApiV1PriceListsItemsDelete(
@@ -76,7 +76,7 @@ List the product, variant and presentation prices configured in a price list.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.list" method="get" path="/price-lists/{priceList}/items" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.list" method="get" path="/companies/{company}/price-lists/{priceList}/items" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -96,9 +96,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsListRequest(
+    company: 'Smith, Ruecker and Gulgowski',
     priceList: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->priceLists->items->publicApiV1PriceListsItemsList(
@@ -134,7 +134,7 @@ Create or update the unique price entry for a catalog target in this price list.
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/price-lists/{priceList}/items" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/companies/{company}/price-lists/{priceList}/items" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -154,10 +154,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
+    company: 'Leannon, Boehm and Nolan',
     priceList: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpsertPriceListItemRequest(
         productId: '26de84ec-0a42-4323-9bfb-1bc6264d89a2',
         unitPrice: 4921.67,
@@ -175,7 +175,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/price-lists/{priceList}/items" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/companies/{company}/price-lists/{priceList}/items" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -195,10 +195,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
+    company: 'Wilderman - Ruecker',
     priceList: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpsertPriceListItemRequest(
         productId: '26de84ec-0a42-4323-9bfb-1bc6264d89a2',
         unitPrice: 4921.67,
@@ -239,7 +239,7 @@ Permanently destroy a retired price entry: its historical amount, its retirement
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.purge_retired" method="post" path="/price-lists/{priceList}/items/{item}/purge" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.purge_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/purge" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -259,11 +259,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsPurgeRetiredRequest(
+    company: 'Ledner and Sons',
     priceList: '<value>',
     item: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\PurgeRetiredPriceListItemRequest(
         confirm: Components\Confirm::One,
     ),
@@ -302,7 +302,7 @@ Create a NEW active price entry from a retired one, pointing it at a live catalo
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/price-lists/{priceList}/items/{item}/reassign" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/reassign" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -322,11 +322,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsReassignRetiredRequest(
+    company: 'Steuber LLC',
     priceList: '<value>',
     item: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ReassignRetiredPriceListItemRequest(
         productId: '79ba691d-62f7-4026-94b0-676285c7b17e',
         unitPrice: 9135.26,
@@ -344,7 +344,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/price-lists/{priceList}/items/{item}/reassign" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/reassign" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -364,11 +364,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsItemsReassignRetiredRequest(
+    company: 'Macejkovic, Jakubowski and Kshlerin',
     priceList: '<value>',
     item: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ReassignRetiredPriceListItemRequest(
         productId: '79ba691d-62f7-4026-94b0-676285c7b17e',
         unitPrice: 9135.26,

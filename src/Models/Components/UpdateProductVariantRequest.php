@@ -26,7 +26,7 @@ class UpdateProductVariantRequest
     public bool $manageStock;
 
     /**
-     * Own balance of the variant, in the product base unit (up to 4 decimals). Send the current balance to leave it untouched — it may be negative when delivered documents ran ahead of the incoming stock. Any other value is a manual set and must be `>= 0` (422 otherwise); to move the balance use `PUT /v1/products/{uuid}/stock` with `variant_id`.
+     * Own balance of the variant, in the product base unit (up to 4 decimals). Send the current balance to leave it untouched — it may be negative when delivered documents ran ahead of the incoming stock. Any other value is a manual set and must be `>= 0` (422 otherwise); to move the balance use `PATCH /v1/companies/{company}/products/{uuid}/stock` with `variant_id`.
      *
      * @var float $stock
      */

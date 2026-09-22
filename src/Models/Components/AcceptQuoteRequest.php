@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
 /**
- * AcceptQuoteRequest - Public REST API v1 — POST /v1/quotes/{uuid}/accept.
+ * AcceptQuoteRequest - Public REST API v1 — POST /v1/companies/{company}/quotes/{uuid}/accept.
  *
  *
  * Optional body: `accepted_on` (date, defaults to today), `notes`.

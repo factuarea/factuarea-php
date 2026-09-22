@@ -1,6 +1,6 @@
 # TimeRecordChainValidation
 
-Result of recomputing and verifying the SHA-256 hash chain (`huella`) of your company time record ledger without mutating data. Returned by `GET /v1/time-entries/chain/validate`. Fingerprints are never exposed.
+Result of recomputing and verifying the SHA-256 hash chain (`huella`) of your company time record ledger without mutating data. Returned by `GET /v1/companies/{company}/time-entries/chain/validate`. Fingerprints are never exposed.
 
 
 ## Fields

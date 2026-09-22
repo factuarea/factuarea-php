@@ -1,6 +1,6 @@
 # SimplifiedInvoiceEligibilityV1Request
 
-Public REST API v1 — POST /v1/invoices/simplified-eligibility.
+Public REST API v1 — POST /v1/companies/{company}/invoices/simplified-eligibility.
 
 Checks whether an invoice with a given `total` amount (and, optionally,
 client data) can be issued as simplified (F2) or must be issued as a

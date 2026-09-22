@@ -137,6 +137,8 @@ enum OAuth2Scope: string
 
     case AccountWrite = 'account:write';
 
+    case AccountOwner = 'account:owner';
+
     case CompaniesRead = 'companies:read';
 
     case CompaniesWrite = 'companies:write';
@@ -222,6 +224,18 @@ enum OAuth2Scope: string
     case AutomationsDelete = 'automations:delete';
 
     case AutomationRunsRead = 'automation_runs:read';
+
+    case MembersRead = 'members:read';
+
+    case MembersWrite = 'members:write';
+
+    case InvitationsRead = 'invitations:read';
+
+    case InvitationsWrite = 'invitations:write';
+
+    case ClaimTokensRead = 'claim_tokens:read';
+
+    case ClaimTokensWrite = 'claim_tokens:write';
 
     case Wildcard = '*';
 }

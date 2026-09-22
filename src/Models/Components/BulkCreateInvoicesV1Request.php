@@ -15,10 +15,10 @@ class BulkCreateInvoicesV1Request
     /**
      * $invoices
      *
-     * @var array<array<string>> $invoices
+     * @var array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequest> $invoices
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('invoices')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<array<string>>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequest>')]
     public array $invoices;
 
     /**
@@ -30,7 +30,7 @@ class BulkCreateInvoicesV1Request
     public ?bool $dryRun = null;
 
     /**
-     * @param  array<array<string>>  $invoices
+     * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequest>  $invoices
      * @param  ?bool  $dryRun
      * @phpstan-pure
      */

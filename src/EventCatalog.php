@@ -53,11 +53,10 @@ class EventCatalog
      * List the closed catalog of event types Factuarea can emit to webhooks. Each entry exposes its `name`, `category`, a description and a `status`: `available` types are emitted today and subscribable via `enabled_events`; `coming_soon` types are reserved for a future release and not yet subscribable (passing one in `enabled_events` returns 422).
      *
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EventCatalogListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EventCatalogList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EventCatalogListResponse
+    public function publicApiV1EventCatalogList(?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EventCatalogListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,7 +85,6 @@ class EventCatalog
         }
         $request = new Operations\PublicApiV1EventCatalogListRequest(
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/event-catalog');

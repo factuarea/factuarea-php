@@ -109,7 +109,7 @@ class Products
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/activities', Operations\PublicApiV1ProductsActivitiesRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/activities', Operations\PublicApiV1ProductsActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -197,13 +197,13 @@ class Products
      * Delete up to 200 products in one request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`); products included in packs are reported in `failures`. Decrements the plan usage counter accordingly.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteProductsRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsBulkDelete(Components\BulkDeleteProductsRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkDeleteResponse
+    public function publicApiV1ProductsBulkDelete(Components\BulkDeleteProductsRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -231,13 +231,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsBulkDeleteRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/bulk-delete');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/bulk-delete', Operations\PublicApiV1ProductsBulkDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -288,7 +288,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -327,13 +327,13 @@ class Products
      * Move up to 50 products (by id) to the target `new_status` (`active` or `inactive`). Idempotent with respect to the target: a product already in the requested state counts as `successful` without flipping. Returns a `BulkPartialSuccessResult`; products not found come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusProductsV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsBulkStatus(Components\BulkStatusProductsV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkStatusResponse
+    public function publicApiV1ProductsBulkStatus(Components\BulkStatusProductsV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -361,13 +361,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsBulkStatusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/bulk-status');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/bulk-status', Operations\PublicApiV1ProductsBulkStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -418,7 +418,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -457,13 +457,13 @@ class Products
      * Apply a stock operation to multiple products in one request (up to 500). UUIDs that do not belong to your company are ignored silently.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkUpdateProductStockRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsBulkUpdateStockResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsBulkUpdateStock(Components\BulkUpdateProductStockRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkUpdateStockResponse
+    public function publicApiV1ProductsBulkUpdateStock(Components\BulkUpdateProductStockRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkUpdateStockResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -491,13 +491,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsBulkUpdateStockRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/bulk-update-stock');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/bulk-update-stock', Operations\PublicApiV1ProductsBulkUpdateStockRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -548,7 +548,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -587,13 +587,13 @@ class Products
      * Create a new product in your catalog.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateProductRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsCreate(Components\CreateProductRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsCreateResponse
+    public function publicApiV1ProductsCreate(Components\CreateProductRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -621,13 +621,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products', Operations\PublicApiV1ProductsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -678,7 +678,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -716,14 +716,14 @@ class Products
      *
      * Delete a product. Returns 422 if the product is referenced by any document line.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsDelete(string $product, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsDeleteResponse
+    public function publicApiV1ProductsDelete(string $company, string $product, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -751,13 +751,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsDeleteRequest(
+            company: $company,
             product: $product,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}', Operations\PublicApiV1ProductsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}', Operations\PublicApiV1ProductsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -832,12 +832,12 @@ class Products
      * Look up a single product by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Orthogonal to the catalog `sku`. Returns the matching product or 404 if no product uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindProductByExternalIdRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsFindByExternalIdResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsFindByExternalId(Components\FindProductByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsFindByExternalIdResponse
+    public function publicApiV1ProductsFindByExternalId(Components\FindProductByExternalIdRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsFindByExternalIdResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -865,12 +865,12 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsFindByExternalIdRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/find-by-external-id');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/find-by-external-id', Operations\PublicApiV1ProductsFindByExternalIdRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -921,7 +921,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -960,12 +960,12 @@ class Products
      * Look up a single product by its `sku` (sent in the JSON body). Returns the matching product or 404 if no product uses that SKU within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindProductBySkuRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsFindBySkuResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsFindBySku(Components\FindProductBySkuRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsFindBySkuResponse
+    public function publicApiV1ProductsFindBySku(Components\FindProductBySkuRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsFindBySkuResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -993,12 +993,12 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsFindBySkuRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/find-by-sku');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/find-by-sku', Operations\PublicApiV1ProductsFindBySkuRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1087,11 +1087,11 @@ class Products
      *
      * List products in your catalog with cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsList(?Operations\PublicApiV1ProductsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1ProductsListResponse
+    public function publicApiV1ProductsList(Operations\PublicApiV1ProductsListRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1119,7 +1119,7 @@ class Products
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products', Operations\PublicApiV1ProductsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1168,7 +1168,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1206,12 +1206,12 @@ class Products
      *
      * Return products whose current stock is below their configured low-stock threshold. Useful for inventory alerts.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsLowStockReportResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsLowStockReport(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsLowStockReportResponse
+    public function publicApiV1ProductsLowStockReport(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsLowStockReportResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1239,11 +1239,11 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsLowStockReportRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/low-stock-report');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/low-stock-report', Operations\PublicApiV1ProductsLowStockReportRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1289,7 +1289,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1325,16 +1325,16 @@ class Products
     /**
      * Resolve a catalog selection
      *
-     * Resolve a partial or complete catalog selection (variant, presentation and option values) into the combination that would actually be sold, together with its price, the compatible variants, presentations and option groups still open, and the groups still pending a choice. It is a READ and persists nothing: the verb is POST because `options` is a nested list of group/value pairs that does not fit in a query string without inventing a syntax — the same reason as `POST /v1/price-lists/resolve`, and the reason it is classified as a read for rate-limiting purposes. An ambiguous or incomplete selection is NOT an error here: it comes back as `200` with its `status`, its `reason_code` and `pending_option_groups`, because this endpoint exists to BUILD the line; the 422 belongs to whoever confirms it. What is a bad request is sending two values of the same group, which returns 422.
+     * Resolve a partial or complete catalog selection (variant, presentation and option values) into the combination that would actually be sold, together with its price, the compatible variants, presentations and option groups still open, and the groups still pending a choice. It is a READ and persists nothing: the verb is POST because `options` is a nested list of group/value pairs that does not fit in a query string without inventing a syntax — the same reason as `POST /v1/companies/{company}/price-lists/resolve`, and the reason it is classified as a read for rate-limiting purposes. An ambiguous or incomplete selection is NOT an error here: it comes back as `200` with its `status`, its `reason_code` and `pending_option_groups`, because this endpoint exists to BUILD the line; the 422 belongs to whoever confirms it. What is a bad request is sending two values of the same group, which returns 422.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  ?\Factuarea\Sdk\Models\Components\ResolveCatalogSelectionRequest  $body
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsResolveSelectionResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsResolveSelection(string $product, ?Components\ResolveCatalogSelectionRequest $body = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsResolveSelectionResponse
+    public function publicApiV1ProductsResolveSelection(string $company, string $product, ?Components\ResolveCatalogSelectionRequest $body = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsResolveSelectionResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1362,13 +1362,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsResolveSelectionRequest(
+            company: $company,
             product: $product,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
             body: $body,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/resolve-selection', Operations\PublicApiV1ProductsResolveSelectionRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/resolve-selection', Operations\PublicApiV1ProductsResolveSelectionRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1456,13 +1456,13 @@ class Products
      *
      * Return units sold, revenue, invoice count, month-over-month delta, monthly trend for the last 6 months, last buyer and recent activity feed for a single product.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSalesAnalyticsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsSalesAnalytics(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsSalesAnalyticsResponse
+    public function publicApiV1ProductsSalesAnalytics(string $company, string $product, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsSalesAnalyticsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1490,12 +1490,12 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsSalesAnalyticsRequest(
+            company: $company,
             product: $product,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/sales-analytics', Operations\PublicApiV1ProductsSalesAnalyticsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/sales-analytics', Operations\PublicApiV1ProductsSalesAnalyticsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1579,13 +1579,13 @@ class Products
      *
      * Search products by free-text query against `name` and `sku`. Capped at 50 results.
      *
+     * @param  string  $company
      * @param  string  $q
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSearchResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsSearch(string $q, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsSearchResponse
+    public function publicApiV1ProductsSearch(string $company, string $q, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsSearchResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1613,12 +1613,12 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsSearchRequest(
+            company: $company,
             q: $q,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/search');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/search', Operations\PublicApiV1ProductsSearchRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1667,7 +1667,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1705,14 +1705,14 @@ class Products
      *
      * Retrieve a product by its `uuid`.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  ?string  $include
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsShow(string $product, ?string $include = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsShowResponse
+    public function publicApiV1ProductsShow(string $company, string $product, ?string $include = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1740,13 +1740,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsShowRequest(
+            company: $company,
             product: $product,
             include: $include,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}', Operations\PublicApiV1ProductsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}', Operations\PublicApiV1ProductsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1833,12 +1833,12 @@ class Products
      *
      * Aggregated KPIs for your product catalog: total product count, active count, count below the low-stock threshold, accumulated stock value, and totals by category. Returned as `{ "data": ProductStats }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsStatsResponse
+    public function publicApiV1ProductsStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1866,11 +1866,11 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/stats', Operations\PublicApiV1ProductsStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1916,7 +1916,7 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1954,14 +1954,14 @@ class Products
      *
      * Flip a product between active and inactive. Inactive products are hidden from line-item selectors on new documents.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsToggleActiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsToggleActive(string $product, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsToggleActiveResponse
+    public function publicApiV1ProductsToggleActive(string $company, string $product, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsToggleActiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1989,13 +1989,13 @@ class Products
             ];
         }
         $request = new Operations\PublicApiV1ProductsToggleActiveRequest(
+            company: $company,
             product: $product,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/toggle-active', Operations\PublicApiV1ProductsToggleActiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/toggle-active', Operations\PublicApiV1ProductsToggleActiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2111,7 +2111,7 @@ class Products
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}', Operations\PublicApiV1ProductsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}', Operations\PublicApiV1ProductsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2124,7 +2124,7 @@ class Products
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.products.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -2231,7 +2231,7 @@ class Products
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/stock', Operations\PublicApiV1ProductsUpdateStockRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/stock', Operations\PublicApiV1ProductsUpdateStockRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2245,7 +2245,7 @@ class Products
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.products.update_stock', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

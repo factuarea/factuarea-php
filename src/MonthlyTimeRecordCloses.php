@@ -54,13 +54,13 @@ class MonthlyTimeRecordCloses
      * Freeze the immutable monthly close of the time record register for a finished `(year, month)`: it snapshots each active employee’s balance totals and absence breakdown/balances (reusing the balance contract, never recomputing) and locks the period against retroactive entries and corrections. `year` and `month` (1-12) are required. A month that has not ended yet returns 422 in Spanish; a period already closed returns 409. Reopening a previously reopened period re-closes it, keeping its original `id`. Returns 201 with the created close and a `Location` header.
      *
      * @param  \Factuarea\Sdk\Models\Components\CloseMonthlyTimeRecordRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesCreate(Components\CloseMonthlyTimeRecordRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesCreateResponse
+    public function publicApiV1MonthlyTimeRecordClosesCreate(Components\CloseMonthlyTimeRecordRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes', Operations\PublicApiV1MonthlyTimeRecordClosesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -145,7 +145,7 @@ class MonthlyTimeRecordCloses
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -183,14 +183,14 @@ class MonthlyTimeRecordCloses
      *
      * Download the daily time record of a closed period as a spreadsheet in the `rdley_8_2019` format, read from the locked, tamper-evident ledger (append-only entries + hash chain) of the period. `format` is optional and defaults to `rdley_8_2019`; a format outside the catalog returns 422. A period without a close returns 404. The response is a binary file download.
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesExportFormat  $format
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesExportResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesExport(string $monthlyTimeRecordClose, ?Operations\PublicApiV1MonthlyTimeRecordClosesExportFormat $format = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesExportResponse
+    public function publicApiV1MonthlyTimeRecordClosesExport(string $company, string $monthlyTimeRecordClose, ?Operations\PublicApiV1MonthlyTimeRecordClosesExportFormat $format = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesExportResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -218,13 +218,13 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesExportRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             format: $format,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}/export', Operations\PublicApiV1MonthlyTimeRecordClosesExportRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/export', Operations\PublicApiV1MonthlyTimeRecordClosesExportRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -308,11 +308,11 @@ class MonthlyTimeRecordCloses
      *
      * List the monthly closes of the time record register of your company with cursor-based pagination, ordered by period descending. Supports filtering by `year`. Each item exposes its status (`closed`/`reopened`), period bounds and employee count.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesList(?Operations\PublicApiV1MonthlyTimeRecordClosesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesListResponse
+    public function publicApiV1MonthlyTimeRecordClosesList(Operations\PublicApiV1MonthlyTimeRecordClosesListRequest $request, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -340,7 +340,7 @@ class MonthlyTimeRecordCloses
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes', Operations\PublicApiV1MonthlyTimeRecordClosesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -389,7 +389,7 @@ class MonthlyTimeRecordCloses
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -427,14 +427,14 @@ class MonthlyTimeRecordCloses
      *
      * Download the payroll incidents file of a closed month in the format of a Spanish payroll software (`a3` for A3 Wolters Kluwer, `sage` for Sage, `nominasol` for NominaSOL), read from the frozen snapshot of the monthly close without recomputation. Each row is one employee with their fiscal identity (tax ID and name), worked vs expected minutes, overtime, balance and the approved absences broken down by type. `format` is optional and defaults to `a3`; a format outside the catalog returns 422. A period without a close returns 404. The response is a binary spreadsheet download.
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportFormat  $format
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesPayrollExport(string $monthlyTimeRecordClose, ?Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportFormat $format = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportResponse
+    public function publicApiV1MonthlyTimeRecordClosesPayrollExport(string $company, string $monthlyTimeRecordClose, ?Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportFormat $format = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -462,13 +462,13 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             format: $format,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}/payroll-export', Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/payroll-export', Operations\PublicApiV1MonthlyTimeRecordClosesPayrollExportRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -552,14 +552,14 @@ class MonthlyTimeRecordCloses
      *
      * Reopen a `closed` monthly close by its `id` (UUID v7) — an audited recovery of an erroneous close that re-enables writes for the period. The close keeps its `id`; its status becomes `reopened`. A close that cannot be reopened returns 422 in Spanish, and one belonging to another company returns 404. Returns 200 with the reopened close.
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesReopenResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesReopen(string $monthlyTimeRecordClose, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesReopenResponse
+    public function publicApiV1MonthlyTimeRecordClosesReopen(string $company, string $monthlyTimeRecordClose, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesReopenResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -587,13 +587,13 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesReopenRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}/reopen', Operations\PublicApiV1MonthlyTimeRecordClosesReopenRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/reopen', Operations\PublicApiV1MonthlyTimeRecordClosesReopenRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -677,13 +677,13 @@ class MonthlyTimeRecordCloses
      *
      * Return the monthly report of a closed period by the close `id` (UUID v7), read from the frozen snapshot without recomputation, so the totals never drift from the sheet at the moment of closing. It holds the company aggregate totals and one row per employee with totals, absence breakdown and balances, and the daily detail. Totals are in minutes. A period without a close returns 404. A computed resource: it exposes `close_id`, never an `id` of its own.
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesReportResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesReport(string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesReportResponse
+    public function publicApiV1MonthlyTimeRecordClosesReport(string $company, string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesReportResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -711,12 +711,12 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesReportRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}/report', Operations\PublicApiV1MonthlyTimeRecordClosesReportRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/report', Operations\PublicApiV1MonthlyTimeRecordClosesReportRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -800,14 +800,14 @@ class MonthlyTimeRecordCloses
      *
      * Seal (digitally sign) a `closed` monthly time record register by the close `id` (UUID v7): it freezes a canonical SHA-256 digest of the close snapshot and a detached RSA-SHA256 signature made with the company certificate, so the register is tamper-evident and independently verifiable. A close that is not `closed` returns 422 in Spanish, a period already sealed returns 409 (one seal per close, no re-sealing), and a company without an active usable certificate returns 422. A close belonging to another company returns 404. Returns 201 with the seal (including its live verification state) and a `Location` header.
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesSealResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesSeal(string $monthlyTimeRecordClose, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesSealResponse
+    public function publicApiV1MonthlyTimeRecordClosesSeal(string $company, string $monthlyTimeRecordClose, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesSealResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -835,13 +835,13 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesSealRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}/seal', Operations\PublicApiV1MonthlyTimeRecordClosesSealRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/seal', Operations\PublicApiV1MonthlyTimeRecordClosesSealRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -925,13 +925,13 @@ class MonthlyTimeRecordCloses
      *
      * Retrieve the digital seal of a monthly time record register by the close `id` (UUID v7), together with its verification state recomputed live against the current snapshot: `verified` is `true` when the snapshot and the signature are intact, otherwise `verification_reason` explains the mismatch (`snapshot_mismatch`, `signature_invalid` or `certificate_unreadable`). The seal exposes its digest, signature and signing certificate so a third party can verify it. A close without a seal — or belonging to another company — returns 404 `monthly_register_signature_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesSealShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesSealShow(string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesSealShowResponse
+    public function publicApiV1MonthlyTimeRecordClosesSealShow(string $company, string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesSealShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -959,12 +959,12 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesSealShowRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}/seal', Operations\PublicApiV1MonthlyTimeRecordClosesSealShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/seal', Operations\PublicApiV1MonthlyTimeRecordClosesSealShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1048,13 +1048,13 @@ class MonthlyTimeRecordCloses
      *
      * Retrieve a single monthly close by its `id` (UUID v7). A close belonging to another company returns 404 `monthly_time_record_close_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1MonthlyTimeRecordClosesShow(string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesShowResponse
+    public function publicApiV1MonthlyTimeRecordClosesShow(string $company, string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1MonthlyTimeRecordClosesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1082,12 +1082,12 @@ class MonthlyTimeRecordCloses
             ];
         }
         $request = new Operations\PublicApiV1MonthlyTimeRecordClosesShowRequest(
+            company: $company,
             monthlyTimeRecordClose: $monthlyTimeRecordClose,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/monthly-time-record-closes/{monthly_time_record_close}', Operations\PublicApiV1MonthlyTimeRecordClosesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/monthly-time-record-closes/{monthly_time_record_close}', Operations\PublicApiV1MonthlyTimeRecordClosesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

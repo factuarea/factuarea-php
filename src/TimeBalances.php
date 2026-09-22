@@ -84,7 +84,7 @@ class TimeBalances
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-balances/employee/{employee}', Operations\PublicApiV1TimeBalancesEmployeeRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-balances/employee/{employee}', Operations\PublicApiV1TimeBalancesEmployeeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -171,14 +171,14 @@ class TimeBalances
      *
      * Return the live monthly time sheet of an employee for the open (in-progress) period: expected vs worked minutes, the balance and overtime per day, and the monthly totals. `employee_id` (UUID v7) is required; `month` (`YYYY-MM`) defaults to the current month. The sheet is recomputed on every request from the immutable ledger, so a just-recorded clock entry is reflected without closing the month. Expected minutes discount public holidays and approved absences. Totals are in minutes. A computed resource: it exposes `employee_id`, never an `id`.
      *
+     * @param  string  $company
      * @param  string  $employeeId
      * @param  ?string  $month
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeBalancesMonthlySheetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeBalancesMonthlySheet(string $employeeId, ?string $month = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeBalancesMonthlySheetResponse
+    public function publicApiV1TimeBalancesMonthlySheet(string $company, string $employeeId, ?string $month = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeBalancesMonthlySheetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -206,13 +206,13 @@ class TimeBalances
             ];
         }
         $request = new Operations\PublicApiV1TimeBalancesMonthlySheetRequest(
+            company: $company,
             employeeId: $employeeId,
             month: $month,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-balances/monthly-sheet');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-balances/monthly-sheet', Operations\PublicApiV1TimeBalancesMonthlySheetRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -261,19 +261,7 @@ class TimeBalances
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['404'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -311,13 +299,13 @@ class TimeBalances
      *
      * Return the team time balance summary (manager view) for a month: one row per active employee with their expected, worked, balance and overtime minutes. `month` (`YYYY-MM`) defaults to the current month. Only active employees with a schedule are included. Totals are in minutes. A computed resource with no `id`.
      *
+     * @param  string  $company
      * @param  ?string  $month
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeBalancesTeamSummaryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeBalancesTeamSummary(?string $month = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeBalancesTeamSummaryResponse
+    public function publicApiV1TimeBalancesTeamSummary(string $company, ?string $month = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeBalancesTeamSummaryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -345,12 +333,12 @@ class TimeBalances
             ];
         }
         $request = new Operations\PublicApiV1TimeBalancesTeamSummaryRequest(
+            company: $company,
             month: $month,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-balances/team-summary');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-balances/team-summary', Operations\PublicApiV1TimeBalancesTeamSummaryRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -399,7 +387,7 @@ class TimeBalances
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

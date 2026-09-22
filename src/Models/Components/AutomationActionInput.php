@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class AutomationActionInput
 {
     /**
-     * Kind of action to run. Must be one of the action types `GET /v1/automations/catalog` reports as registered.
+     * Kind of action to run. Must be one of the action types `GET /v1/companies/{company}/automations/catalog` reports as registered.
      *
      * @var \Factuarea\Sdk\Models\Components\AutomationActionInputType $type
      */
@@ -31,7 +31,7 @@ class AutomationActionInput
     public ?int $order = null;
 
     /**
-     * Parameters of the action, whose accepted keys depend on `type`. The schema of each action type is published by `GET /v1/automations/catalog`.
+     * Parameters of the action, whose accepted keys depend on `type`. The schema of each action type is published by `GET /v1/companies/{company}/automations/catalog`.
      *
      * @var ?array<string, mixed> $parameters
      */

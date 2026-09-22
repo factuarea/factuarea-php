@@ -1,6 +1,6 @@
 # TaxCalculation
 
-Resultado de aplicar un tax a un importe base. Devuelto por `POST /v1/taxes/calculate`.
+Resultado de aplicar un tax a un importe base. Devuelto por `POST /v1/companies/{company}/taxes/calculate`.
 
 
 ## Fields

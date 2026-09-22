@@ -83,7 +83,7 @@ class ProductOptions
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/options', Operations\PublicApiV1ProductsOptionsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/options', Operations\PublicApiV1ProductsOptionsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 

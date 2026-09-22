@@ -52,11 +52,11 @@ class Presence
      *
      * List the office/remote presence declarations of your company with cursor-based pagination. Supports filtering by `employee_id` (UUID v7), by exact day (`date`) or by date range (`from`/`to`, `YYYY-MM-DD`). Each record is one employee’s declared work location for one day. Read-only over the public API — declarations are made from the app (SPA-only).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PresenceDailyRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PresenceDailyRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PresenceDailyResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PresenceDaily(?Operations\PublicApiV1PresenceDailyRequest $request = null, ?Options $options = null): Operations\PublicApiV1PresenceDailyResponse
+    public function publicApiV1PresenceDaily(Operations\PublicApiV1PresenceDailyRequest $request, ?Options $options = null): Operations\PublicApiV1PresenceDailyResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class Presence
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/presence/daily');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/presence/daily', Operations\PublicApiV1PresenceDailyRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class Presence
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,12 +171,12 @@ class Presence
      *
      * Return the live presence panel of your team for the Control Horario (time tracking) module: one `employee_presence` item per active employee, with the workday state derived from the immutable time record ledger (`working`/`paused`/`finished`/`away`), the late-arrival flag (first clock-in vs planned start) and the office/remote location declared today. A computed read-only resource: each item exposes the employee UUID v7 as its `id`, never a presence record id. No filters or pagination.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PresenceLiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PresenceLive(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PresenceLiveResponse
+    public function publicApiV1PresenceLive(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PresenceLiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -204,11 +204,11 @@ class Presence
             ];
         }
         $request = new Operations\PublicApiV1PresenceLiveRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/presence');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/presence', Operations\PublicApiV1PresenceLiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -254,7 +254,7 @@ class Presence
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -292,13 +292,13 @@ class Presence
      *
      * Retrieve the live presence of a single employee by its `id` (UUID v7): the workday state derived from the ledger, the late-arrival flag and the office/remote location declared today. An employee that does not exist or belongs to another company returns 404 `employee_presence_not_found` (anti-enumeration). A computed resource: it exposes the employee UUID v7 as its `id`.
      *
+     * @param  string  $company
      * @param  string  $employee
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PresenceShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PresenceShow(string $employee, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PresenceShowResponse
+    public function publicApiV1PresenceShow(string $company, string $employee, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PresenceShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -326,12 +326,12 @@ class Presence
             ];
         }
         $request = new Operations\PublicApiV1PresenceShowRequest(
+            company: $company,
             employee: $employee,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/presence/{employee}', Operations\PublicApiV1PresenceShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/presence/{employee}', Operations\PublicApiV1PresenceShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

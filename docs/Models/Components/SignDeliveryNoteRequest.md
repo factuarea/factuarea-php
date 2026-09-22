@@ -1,6 +1,6 @@
 # SignDeliveryNoteRequest
 
-Public REST API v1 — POST /v1/delivery_notes/{uuid}/sign.
+Public REST API v1 — POST /v1/companies/{company}/delivery-notes/{uuid}/sign.
 
 Optional body: `signed_by` (alias of `recipient_name`, BC invariant),
 `recipient_dni` (BC invariant — Spanish DNI/NIE, required by

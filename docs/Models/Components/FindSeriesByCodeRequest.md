@@ -1,6 +1,6 @@
 # FindSeriesByCodeRequest
 
-Public REST API v1 — POST /v1/series/find-by-code.
+Public REST API v1 — POST /v1/companies/{company}/series/find-by-code.
 
 Looks up a series by its `code` (normalized to uppercase in the handler)
 within the authenticated company. The `code` travels in the JSON body (not in

@@ -29,10 +29,10 @@ class InvoiceLine
 
     /**
      *
-     * @var float $unitPrice
+     * @var string $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    public string $unitPrice;
 
     /**
      *
@@ -66,24 +66,24 @@ class InvoiceLine
 
     /**
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
      *
-     * @var float $taxes
+     * @var string $taxes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes')]
-    public float $taxes;
+    public string $taxes;
 
     /**
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
@@ -317,14 +317,14 @@ class InvoiceLine
     /**
      * @param  \Factuarea\Sdk\Models\Components\InvoiceLineObject  $object
      * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  string  $unitPrice
      * @param  float  $taxRate
      * @param  float  $retentionRate
      * @param  float  $surchargeRate
      * @param  float  $discountPercent
-     * @param  float  $subtotal
-     * @param  float  $taxes
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $taxes
+     * @param  string  $total
      * @param  array<\Factuarea\Sdk\Models\Components\InvoiceLineOption>  $options
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
@@ -355,7 +355,7 @@ class InvoiceLine
      * @param  ?string  $exemptionReasonText
      * @phpstan-pure
      */
-    public function __construct(InvoiceLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?InvoiceLineVariant $variant = null, ?InvoiceLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?InvoiceLineConfiguration $configuration = null, ?InvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
+    public function __construct(InvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?InvoiceLineVariant $variant = null, ?InvoiceLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?InvoiceLineConfiguration $configuration = null, ?InvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;

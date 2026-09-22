@@ -15,7 +15,7 @@ Create a commercial presentation for a product with its unit and conversion data
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/products/{product}/presentations" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -35,10 +35,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    product: 'Refined Metal Cheese',
+    company: 'Gerhold - Collins',
+    product: 'Modern Fresh Tuna',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateProductPresentationRequest(
         name: '<value>',
         mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
@@ -56,7 +56,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/products/{product}/presentations" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -76,10 +76,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    product: 'Refined Wooden Hat',
+    company: 'Waelchi, Kuhn and Rutherford',
+    product: 'Licensed Cotton Table',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateProductPresentationRequest(
         name: '<value>',
         mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
@@ -120,7 +120,7 @@ List the commercial presentations configured for a product, including unit, conv
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.list" method="get" path="/products/{product}/presentations" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.list" method="get" path="/companies/{company}/products/{product}/presentations" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -140,9 +140,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsListRequest(
-    product: 'Elegant Rubber Fish',
+    company: 'Rempel - Jacobi',
+    product: 'Gorgeous Steel Shirt',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->presentations->publicApiV1ProductsPresentationsList(
@@ -178,7 +178,7 @@ Retire a commercial presentation from the product catalog while historical docum
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.delete" method="delete" path="/products/{product}/presentations/{presentation}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.delete" method="delete" path="/companies/{company}/products/{product}/presentations/{presentation}" -->
 ```php
 declare(strict_types=1);
 
@@ -198,11 +198,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsDeleteRequest(
-    product: 'Fantastic Wooden Shirt',
+    company: 'VonRueden - Roob',
+    product: 'Intelligent Concrete Shoes',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->presentations->publicApiV1ProductsPresentationsDelete(
@@ -238,7 +238,7 @@ Update the selected commercial presentation while preserving tenant and product 
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="put" path="/products/{product}/presentations/{presentation}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -258,11 +258,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    product: 'Electronic Cotton Tuna',
+    company: 'Hermiston - Hoeger',
+    product: 'Bespoke Metal Salad',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateProductPresentationRequest(
         name: '<value>',
         mode: Components\UpdateProductPresentationRequestMode::Fixed,
@@ -280,7 +280,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="put" path="/products/{product}/presentations/{presentation}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -300,11 +300,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    product: 'Luxurious Rubber Chair',
+    company: 'Pacocha Group',
+    product: 'Electronic Cotton Tuna',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateProductPresentationRequest(
         name: '<value>',
         mode: Components\UpdateProductPresentationRequestMode::Fixed,

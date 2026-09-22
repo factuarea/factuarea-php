@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesListRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
      *
      * @var ?string $startingAfter
@@ -213,6 +220,38 @@ class PublicApiV1InvoicesListRequest
     public ?string $tagsIn = null;
 
     /**
+     * Payment date. INPUT parameter that keeps its name; the equivalent OUTPUT key is `paid_date`. Greater than or equal to the given value.
+     *
+     * @var ?LocalDate $paidOnGte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=paid_on[gte],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $paidOnGte = null;
+
+    /**
+     * Payment date. INPUT parameter that keeps its name; the equivalent OUTPUT key is `paid_date`. Less than or equal to the given value.
+     *
+     * @var ?LocalDate $paidOnLte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=paid_on[lte],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $paidOnLte = null;
+
+    /**
+     * Payment date. INPUT parameter that keeps its name; the equivalent OUTPUT key is `paid_date`. Strictly greater than the given value.
+     *
+     * @var ?LocalDate $paidOnGt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=paid_on[gt],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $paidOnGt = null;
+
+    /**
+     * Payment date. INPUT parameter that keeps its name; the equivalent OUTPUT key is `paid_date`. Strictly less than the given value.
+     *
+     * @var ?LocalDate $paidOnLt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=paid_on[lt],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $paidOnLt = null;
+
+    /**
      * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `total`, `number`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesListSort $sort
@@ -245,14 +284,6 @@ class PublicApiV1InvoicesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      *
      * @var ?string $originalInvoiceId
      */
@@ -275,6 +306,7 @@ class PublicApiV1InvoicesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -301,17 +333,21 @@ class PublicApiV1InvoicesListRequest
      * @param  ?string  $number
      * @param  ?string  $tags
      * @param  ?string  $tagsIn
+     * @param  ?LocalDate  $paidOnGte
+     * @param  ?LocalDate  $paidOnLte
+     * @param  ?LocalDate  $paidOnGt
+     * @param  ?LocalDate  $paidOnLt
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesListSort  $sort
      * @param  ?string  $search
      * @param  ?array<string, string>  $metadata
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $originalInvoiceId
      * @param  ?\Factuarea\Sdk\Models\Operations\VerifactuStatus  $verifactuStatus
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $dueOnGte = null, ?LocalDate $dueOnLte = null, ?LocalDate $dueOnGt = null, ?LocalDate $dueOnLt = null, ?float $totalGte = null, ?float $totalLte = null, ?float $totalGt = null, ?float $totalLt = null, ?string $currency = null, ?string $currencyIn = null, ?string $number = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1InvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $originalInvoiceId = null, ?VerifactuStatus $verifactuStatus = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $dueOnGte = null, ?LocalDate $dueOnLte = null, ?LocalDate $dueOnGt = null, ?LocalDate $dueOnLt = null, ?float $totalGte = null, ?float $totalLte = null, ?float $totalGt = null, ?float $totalLt = null, ?string $currency = null, ?string $currencyIn = null, ?string $number = null, ?string $tags = null, ?string $tagsIn = null, ?LocalDate $paidOnGte = null, ?LocalDate $paidOnLte = null, ?LocalDate $paidOnGt = null, ?LocalDate $paidOnLt = null, ?PublicApiV1InvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $originalInvoiceId = null, ?VerifactuStatus $verifactuStatus = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->status = $status;
@@ -337,11 +373,14 @@ class PublicApiV1InvoicesListRequest
         $this->number = $number;
         $this->tags = $tags;
         $this->tagsIn = $tagsIn;
+        $this->paidOnGte = $paidOnGte;
+        $this->paidOnLte = $paidOnLte;
+        $this->paidOnGt = $paidOnGt;
+        $this->paidOnLt = $paidOnLt;
         $this->sort = $sort;
         $this->search = $search;
         $this->metadata = $metadata;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->originalInvoiceId = $originalInvoiceId;
         $this->verifactuStatus = $verifactuStatus;
         $this->limit = $limit;

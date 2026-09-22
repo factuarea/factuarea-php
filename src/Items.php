@@ -83,7 +83,7 @@ class Items
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}/items/{item}', Operations\PublicApiV1PriceListsItemsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}/items/{item}', Operations\PublicApiV1PriceListsItemsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -189,7 +189,7 @@ class Items
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}/items', Operations\PublicApiV1PriceListsItemsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}/items', Operations\PublicApiV1PriceListsItemsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -308,7 +308,7 @@ class Items
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}/items/{item}/purge', Operations\PublicApiV1PriceListsItemsPurgeRetiredRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}/items/{item}/purge', Operations\PublicApiV1PriceListsItemsPurgeRetiredRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -419,7 +419,7 @@ class Items
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}/items/{item}/reassign', Operations\PublicApiV1PriceListsItemsReassignRetiredRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}/items/{item}/reassign', Operations\PublicApiV1PriceListsItemsReassignRetiredRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -540,7 +540,7 @@ class Items
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}/items', Operations\PublicApiV1PriceListsItemsUpsertRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}/items', Operations\PublicApiV1PriceListsItemsUpsertRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');

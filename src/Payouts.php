@@ -52,11 +52,11 @@ class Payouts
      *
      * List the Stripe payouts ingested for your company, with cursor-based pagination. Each exposes the net/fees/gross amounts, currency, arrival date, reconciliation `status` (`ingested`/`reconciled`) and an informative `composition`. Filter by `status` and arrival-date window. Payouts are read-only; bank reconciliation happens in the dashboard.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PayoutsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PayoutsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PayoutsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PayoutsList(?Operations\PublicApiV1PayoutsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1PayoutsListResponse
+    public function publicApiV1PayoutsList(Operations\PublicApiV1PayoutsListRequest $request, ?Options $options = null): Operations\PublicApiV1PayoutsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class Payouts
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/payouts');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/payouts', Operations\PublicApiV1PayoutsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class Payouts
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,13 +171,13 @@ class Payouts
      *
      * Retrieve a Stripe payout by its `id` (UUID v7). Returns the amounts, currency, arrival date, reconciliation state (`bank_transaction_ref` once reconciled) and the informative `composition` of component charges. Returns 404 if the payout does not exist or belongs to another company.
      *
+     * @param  string  $company
      * @param  string  $payout
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PayoutsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PayoutsShow(string $payout, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PayoutsShowResponse
+    public function publicApiV1PayoutsShow(string $company, string $payout, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PayoutsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -205,12 +205,12 @@ class Payouts
             ];
         }
         $request = new Operations\PublicApiV1PayoutsShowRequest(
+            company: $company,
             payout: $payout,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/payouts/{payout}', Operations\PublicApiV1PayoutsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/payouts/{payout}', Operations\PublicApiV1PayoutsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

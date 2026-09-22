@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ChainValidation - Result of recomputing and verifying the VeriFactu hash chain (`huella`) of your company without mutating data. Returned by `GET /v1/verifactu/chain/validate`. */
+/** ChainValidation - Result of recomputing and verifying the VeriFactu hash chain (`huella`) of your company without mutating data. Returned by `GET /v1/companies/{company}/verifactu/chain/validate`. */
 class ChainValidation
 {
     /**

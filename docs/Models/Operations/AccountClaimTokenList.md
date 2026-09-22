@@ -1,0 +1,12 @@
+# AccountClaimTokenList
+
+Cursor-paginated list of account claim tokens (`{ data, has_more, next_cursor }`). The plaintext secret never appears here.
+
+
+## Fields
+
+| Field                                                                               | Type                                                                                | Required                                                                            | Description                                                                         | Example                                                                             |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `data`                                                                              | array<[Components\AccountClaimToken](../../Models/Components/AccountClaimToken.md)> | :heavy_check_mark:                                                                  | Page of claim tokens.                                                               |                                                                                     |
+| `hasMore`                                                                           | *bool*                                                                              | :heavy_check_mark:                                                                  | `true` when more claim tokens exist beyond this page.                               | false                                                                               |
+| `nextCursor`                                                                        | *string*                                                                            | :heavy_check_mark:                                                                  | Opaque cursor for the next page, or `null` when `has_more` is `false`.              | null                                                                                |

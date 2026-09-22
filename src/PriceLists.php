@@ -57,13 +57,13 @@ class PriceLists
      * Create an active price list with a name unique within the authenticated company.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreatePriceListRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsCreate(Components\CreatePriceListRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsCreateResponse
+    public function publicApiV1PriceListsCreate(Components\CreatePriceListRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PriceListsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,13 +91,13 @@ class PriceLists
             ];
         }
         $request = new Operations\PublicApiV1PriceListsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists', Operations\PublicApiV1PriceListsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -148,7 +148,7 @@ class PriceLists
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -186,14 +186,14 @@ class PriceLists
      *
      * Soft-delete an unassigned price list. Historical document price snapshots remain unchanged.
      *
+     * @param  string  $company
      * @param  string  $priceList
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsDelete(string $priceList, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsDeleteResponse
+    public function publicApiV1PriceListsDelete(string $company, string $priceList, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PriceListsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -221,13 +221,13 @@ class PriceLists
             ];
         }
         $request = new Operations\PublicApiV1PriceListsDeleteRequest(
+            company: $company,
             priceList: $priceList,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}', Operations\PublicApiV1PriceListsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}', Operations\PublicApiV1PriceListsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -301,11 +301,11 @@ class PriceLists
      *
      * List tenant price lists with pagination and optional status or search filters.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsList(?Operations\PublicApiV1PriceListsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1PriceListsListResponse
+    public function publicApiV1PriceListsList(Operations\PublicApiV1PriceListsListRequest $request, ?Options $options = null): Operations\PublicApiV1PriceListsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,7 +333,7 @@ class PriceLists
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists', Operations\PublicApiV1PriceListsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -420,14 +420,14 @@ class PriceLists
      *
      * Return a compact list of active price lists suitable for selectors.
      *
+     * @param  string  $company
      * @param  ?string  $search
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsOptionsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsOptions(?string $search = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsOptionsResponse
+    public function publicApiV1PriceListsOptions(string $company, ?string $search = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PriceListsOptionsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -455,13 +455,13 @@ class PriceLists
             ];
         }
         $request = new Operations\PublicApiV1PriceListsOptionsRequest(
+            company: $company,
             search: $search,
             limit: $limit,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/options');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/options', Operations\PublicApiV1PriceListsOptionsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -510,7 +510,7 @@ class PriceLists
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -549,12 +549,12 @@ class PriceLists
      * Resolve the effective catalog price for a complete catalog selection — product, optional variant, optional presentation, optional commercial combination (`configuration_id`), its canonical `selection_signature` and the chosen `option_value_ids` — under an optional price list. The combination and its signature are NOT mutually exclusive here: a real selection carries both, because the signature is derived from the combination. What is rejected is repeating the cross the combination already identifies (`variant_id` / `presentation_id`). No amount is ever accepted in the payload: every own price and every option adjustment comes from the catalog, so a caller cannot price its own line. The response carries the breakdown (`unit_semantics`, `source_amount`, `option_adjustment_total`, `option_adjustments_absorbed`) so a double charge is detectable from the preview — `source` alone cannot tell a price-list entry that ABSORBS the option adjustments from a legacy one that ADDS them, and both say `price_list`.
      *
      * @param  \Factuarea\Sdk\Models\Components\ResolveCatalogPriceRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsResolveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsResolve(Components\ResolveCatalogPriceRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsResolveResponse
+    public function publicApiV1PriceListsResolve(Components\ResolveCatalogPriceRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PriceListsResolveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -582,12 +582,12 @@ class PriceLists
             ];
         }
         $request = new Operations\PublicApiV1PriceListsResolveRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/resolve');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/resolve', Operations\PublicApiV1PriceListsResolveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -638,7 +638,7 @@ class PriceLists
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -674,15 +674,15 @@ class PriceLists
     /**
      * Resolve many catalog prices
      *
-     * Reprice a whole document in one request: resolve the effective price of up to 100 catalog selections and compare each with the unit price the line has frozen today (`current_unit_price`), returning `changed` and `difference`. It is a READ and persists nothing; the verb is POST because the list of selections, with their combinations and option values, does not fit in a query string — the same reason as `POST /v1/price-lists/resolve`. Each selection carries exactly what the document line assembler will see, so the previewed amount is the one the line will freeze. A target that cannot be resolved is attributed to ITS index (`targets.<n>`) instead of failing the whole batch: with forty lines, knowing WHICH one is the whole point.
+     * Reprice a whole document in one request: resolve the effective price of up to 100 catalog selections and compare each with the unit price the line has frozen today (`current_unit_price`), returning `changed` and `difference`. It is a READ and persists nothing; the verb is POST because the list of selections, with their combinations and option values, does not fit in a query string — the same reason as `POST /v1/companies/{company}/price-lists/resolve`. Each selection carries exactly what the document line assembler will see, so the previewed amount is the one the line will freeze. A target that cannot be resolved is attributed to ITS index (`targets.<n>`) instead of failing the whole batch: with forty lines, knowing WHICH one is the whole point.
      *
      * @param  \Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsResolveManyResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsResolveMany(Components\ResolveManyCatalogPricesRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsResolveManyResponse
+    public function publicApiV1PriceListsResolveMany(Components\ResolveManyCatalogPricesRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PriceListsResolveManyResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -710,12 +710,12 @@ class PriceLists
             ];
         }
         $request = new Operations\PublicApiV1PriceListsResolveManyRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/resolve-many');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/resolve-many', Operations\PublicApiV1PriceListsResolveManyRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -766,7 +766,7 @@ class PriceLists
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -804,13 +804,13 @@ class PriceLists
      *
      * Retrieve one tenant-scoped price list by public UUID together with its assignment summary.
      *
+     * @param  string  $company
      * @param  string  $priceList
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PriceListsShow(string $priceList, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PriceListsShowResponse
+    public function publicApiV1PriceListsShow(string $company, string $priceList, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PriceListsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -838,12 +838,12 @@ class PriceLists
             ];
         }
         $request = new Operations\PublicApiV1PriceListsShowRequest(
+            company: $company,
             priceList: $priceList,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}', Operations\PublicApiV1PriceListsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}', Operations\PublicApiV1PriceListsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -959,7 +959,7 @@ class PriceLists
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/price-lists/{priceList}', Operations\PublicApiV1PriceListsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/price-lists/{priceList}', Operations\PublicApiV1PriceListsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -973,7 +973,7 @@ class PriceLists
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.price-lists.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

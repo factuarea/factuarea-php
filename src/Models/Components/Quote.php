@@ -67,50 +67,50 @@ class Quote
 
     /**
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
      * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
-     * @var float $taxesTotal
+     * @var string $taxesTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes_total')]
-    public float $taxesTotal;
+    public string $taxesTotal;
 
     /**
      * Sum of VAT (IVA) across all lines.
      *
-     * @var float $totalVat
+     * @var string $totalVat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
-    public float $totalVat;
+    public string $totalVat;
 
     /**
      * Sum of withholding (IRPF/retention) across all lines.
      *
-     * @var float $totalRetention
+     * @var string $totalRetention
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
-    public float $totalRetention;
+    public string $totalRetention;
 
     /**
      * Sum of equivalence surcharge (recargo de equivalencia) across all lines.
      *
-     * @var float $totalSurcharge
+     * @var string $totalSurcharge
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
-    public float $totalSurcharge;
+    public string $totalSurcharge;
 
     /**
      * Total of the document. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the AGGREGATE one, specific to the sales-side families - `total = subtotal + taxes_total`. NEVER reconstruct it as `subtotal + taxes_total - total_retention`: `taxes_total` ALREADY has the withholding netted out, so that combination subtracts it twice and yields a false total (4,320.00 + 259.20 - 648.00 = 3,931.20 against a real 4,579.20).
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      *
@@ -272,12 +272,12 @@ class Quote
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
      * @param  string  $status
      * @param  LocalDate  $issuedOn
-     * @param  float  $subtotal
-     * @param  float  $taxesTotal
-     * @param  float  $totalVat
-     * @param  float  $totalRetention
-     * @param  float  $totalSurcharge
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $taxesTotal
+     * @param  string  $totalVat
+     * @param  string  $totalRetention
+     * @param  string  $totalSurcharge
+     * @param  string  $total
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\QuoteLine>  $lines
      * @param  array<string>  $tags
@@ -299,7 +299,7 @@ class Quote
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;

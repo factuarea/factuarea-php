@@ -13,7 +13,7 @@ Return the time tracking configuration of your company: the overtime computation
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.show" method="get" path="/time-tracking-settings" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.show" method="get" path="/companies/{company}/time-tracking-settings" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -34,8 +34,8 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsShow(
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    company: 'Beier - Harris',
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -46,10 +46,10 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -59,7 +59,7 @@ if ($response->object !== null) {
 
 | Error Type          | Status Code         | Content Type        |
 | ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 429       | application/json    |
+| Errors\Error        | 401, 403, 404, 429  | application/json    |
 | Errors\Error        | 500                 | application/json    |
 | Errors\APIException | 4XX, 5XX            | \*/\*               |
 
@@ -67,87 +67,9 @@ if ($response->object !== null) {
 
 Create or update the time tracking configuration of your company: `overtime_basis` (`weekly`/`daily`), the optional daily/weekly overtime thresholds in minutes (`null` derives them from the schedule), the rounding `overtime_tolerance_minutes`, and the clock-in reminder toggle and grace minutes. A negative threshold or tolerance returns 422 in Spanish. Returns the updated settings with `id` = UUID v7 of the row.
 
-### Example Usage: api_key_revoked
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="put" path="/time-tracking-settings" example="api_key_revoked" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UpdateTimeTrackingSettingsRequest(
-    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
-    overtimeToleranceMinutes: 290077,
-    clockInReminderEnabled: false,
-    clockInReminderGraceMinutes: 469595,
-);
-
-$response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: invalid_api_key
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="put" path="/time-tracking-settings" example="invalid_api_key" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UpdateTimeTrackingSettingsRequest(
-    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
-    overtimeToleranceMinutes: 290077,
-    clockInReminderEnabled: false,
-    clockInReminderGraceMinutes: 469595,
-);
-
-$response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="put" path="/time-tracking-settings" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="patch" path="/companies/{company}/time-tracking-settings" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -166,17 +88,17 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\UpdateTimeTrackingSettingsRequest(
-    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
-    overtimeToleranceMinutes: 290077,
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Weekly,
+    overtimeToleranceMinutes: 110541,
     clockInReminderEnabled: false,
-    clockInReminderGraceMinutes: 469595,
+    clockInReminderGraceMinutes: 982652,
 );
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
+    company: 'Franey, Roberts and Osinski',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -186,7 +108,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: settings
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="put" path="/time-tracking-settings" example="settings" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="patch" path="/companies/{company}/time-tracking-settings" example="settings" -->
 ```php
 declare(strict_types=1);
 
@@ -214,10 +136,10 @@ $body = new Components\UpdateTimeTrackingSettingsRequest(
 );
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
+    company: 'Greenfelder LLC',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -227,7 +149,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="put" path="/time-tracking-settings" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="patch" path="/companies/{company}/time-tracking-settings" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -246,17 +168,17 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\UpdateTimeTrackingSettingsRequest(
-    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
-    overtimeToleranceMinutes: 290077,
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Weekly,
+    overtimeToleranceMinutes: 110541,
     clockInReminderEnabled: false,
-    clockInReminderGraceMinutes: 469595,
+    clockInReminderGraceMinutes: 982652,
 );
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
+    company: 'Runolfsson - Reichert',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -267,12 +189,12 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                           | [Components\UpdateTimeTrackingSettingsRequest](../../Models/Components/UpdateTimeTrackingSettingsRequest.md)                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                                            | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                             |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\UpdateTimeTrackingSettingsRequest](../../Models/Components/UpdateTimeTrackingSettingsRequest.md)                                                                                                                                                                                                                                                                 | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                             | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                        | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -280,8 +202,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 409, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 /**
- * UploadProductVideoRequest - Public REST API v1 — POST /v1/products/{uuid}/video.
+ * UploadProductVideoRequest - Public REST API v1 — POST /v1/companies/{company}/products/{uuid}/video.
  *
  *
  * Multipart upload: campo `video` (mp4/mov/avi/webm, max 50 MB).

@@ -1,0 +1,9 @@
+# ChangeAccountMemberRoleV1Request
+
+
+## Fields
+
+| Field                                                                                                              | Type                                                                                                               | Required                                                                                                           | Description                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `companyId`                                                                                                        | *string*                                                                                                           | :heavy_check_mark:                                                                                                 | Identificador público (uuid) del NIF de la cuenta donde se cambia el rol.                                          |
+| `role`                                                                                                             | [Components\ChangeAccountMemberRoleV1RequestRole](../../Models/Components/ChangeAccountMemberRoleV1RequestRole.md) | :heavy_check_mark:                                                                                                 | Nuevo rol de membresía en ese NIF: owner, admin, member o employee.                                                |

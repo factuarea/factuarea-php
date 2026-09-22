@@ -65,10 +65,10 @@ class Store
     /**
      * Order total, in EUROS, up to which the store issues a simplified invoice (F2). Capped at 3000.00, the legal maximum. Defaults to 400.00, the general legal limit.
      *
-     * @var float $simplifiedThreshold
+     * @var string $simplifiedThreshold
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('simplified_threshold')]
-    public float $simplifiedThreshold;
+    public string $simplifiedThreshold;
 
     /**
      * Whether the buyer tax ID is required for an order to be invoiced. Defaults to `false`: a retail store sells to consumers who do not provide one.
@@ -143,7 +143,7 @@ class Store
      * @param  \Factuarea\Sdk\Models\Components\StoreProvider  $provider
      * @param  string  $externalStoreId
      * @param  string  $name
-     * @param  float  $simplifiedThreshold
+     * @param  string  $simplifiedThreshold
      * @param  bool  $requireTaxId
      * @param  bool  $pricesIncludeTax
      * @param  bool  $autoinvoicingEnabled
@@ -154,7 +154,7 @@ class Store
      * @param  ?\DateTime  $connectedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, StoreObject $object, string $integrationId, StoreProvider $provider, string $externalStoreId, string $name, float $simplifiedThreshold, bool $requireTaxId, bool $pricesIncludeTax, bool $autoinvoicingEnabled, bool $autosendEnabled, StoreEnvironment $environment, StoreStatus $status, ?string $remoteBaseUrl = null, ?\DateTime $connectedAt = null)
+    public function __construct(string $id, StoreObject $object, string $integrationId, StoreProvider $provider, string $externalStoreId, string $name, string $simplifiedThreshold, bool $requireTaxId, bool $pricesIncludeTax, bool $autoinvoicingEnabled, bool $autosendEnabled, StoreEnvironment $environment, StoreStatus $status, ?string $remoteBaseUrl = null, ?\DateTime $connectedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

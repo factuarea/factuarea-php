@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * CalculateTaxRequest - Public REST API v1 — POST /v1/taxes/calculate.
+ * CalculateTaxRequest - Public REST API v1 — POST /v1/companies/{company}/taxes/calculate.
  *
  *
  * Body: `{ base: float, taxes_id: string }`. `taxes_id` es la FK a la tabla

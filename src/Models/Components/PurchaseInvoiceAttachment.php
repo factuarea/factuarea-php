@@ -37,7 +37,7 @@ class PurchaseInvoiceAttachment
     public int $sizeBytes;
 
     /**
-     * Relative download URL of the attachment (`/v1/purchase_invoices/{id}/file`).
+     * Relative download URL of the attachment (`/v1/companies/{company}/purchase-invoices/{id}/file`).
      *
      * @var string $downloadUrl
      */

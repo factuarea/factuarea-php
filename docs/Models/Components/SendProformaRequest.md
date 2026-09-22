@@ -1,6 +1,6 @@
 # SendProformaRequest
 
-Public REST API v1 — POST /v1/proformas/{uuid}/send.
+Public REST API v1 — POST /v1/companies/{company}/proformas/{uuid}/send.
 
 Optional body: `to` (string), `cc[]`, `bcc[]` (arrays of emails),
 `subject` (max 200), `body` (string). The controller performs the

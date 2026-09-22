@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1EmailsIndicatorsRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Documents to summarize: UUID v7 of each one, either comma-separated (`related_entity_ids=a,b,c`) or repeated. Required, maximum 100 per call — more returns 422. The type is not needed: a UUID v7 is globally unique, so the batch MAY mix invoices, quotes, pro formas, delivery notes, purchase invoices and recurring invoices. Ids without any email, and ids that do not belong to a document of your company, are OMITTED from the response instead of being reported as zero, so match the results back by `related_entity_id`.
      *
      * @var array<string> $relatedEntityIds
@@ -37,25 +44,17 @@ class PublicApiV1EmailsIndicatorsRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * @param  string  $company
      * @param  array<string>  $relatedEntityIds
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmailsIndicatorsRelatedEntityType  $relatedEntityType
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(array $relatedEntityIds, ?PublicApiV1EmailsIndicatorsRelatedEntityType $relatedEntityType = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $company, array $relatedEntityIds, ?PublicApiV1EmailsIndicatorsRelatedEntityType $relatedEntityType = null, ?LocalDate $factuareaVersion = null)
     {
+        $this->company = $company;
         $this->relatedEntityIds = $relatedEntityIds;
         $this->relatedEntityType = $relatedEntityType;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
     }
 }

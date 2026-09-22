@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Payments - Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/invoices/{id}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/invoices/{id}/payments`. */
+/** Payments - Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/companies/{company}/invoices/{id}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/companies/{company}/invoices/{id}/payments`. */
 class Payments
 {
     /**
@@ -24,26 +24,26 @@ class Payments
     /**
      * Total amount collected (mirrors `paid_amount`).
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Outstanding balance pending collection (mirrors `pending_amount`).
      *
-     * @var float $pending
+     * @var string $pending
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending')]
-    public float $pending;
+    public string $pending;
 
     /**
      * @param  array<\Factuarea\Sdk\Models\Components\InvoicePaymentDetail>  $detail
-     * @param  float  $total
-     * @param  float  $pending
+     * @param  string  $total
+     * @param  string  $pending
      * @phpstan-pure
      */
-    public function __construct(array $detail, float $total, float $pending)
+    public function __construct(array $detail, string $total, string $pending)
     {
         $this->detail = $detail;
         $this->total = $total;

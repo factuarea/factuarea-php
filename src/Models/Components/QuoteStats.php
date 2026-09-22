@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** QuoteStats - Resumen agregado de los presupuestos de la empresa autenticada: total, importe acumulado, conteo por estado, expirados y convertidos a factura. Devuelto por `GET /v1/quotes/stats`. */
+/** QuoteStats - Resumen agregado de los presupuestos de la empresa autenticada: total, importe acumulado, conteo por estado, expirados y convertidos a factura. Devuelto por `GET /v1/companies/{company}/quotes/stats`. */
 class QuoteStats
 {
     /**

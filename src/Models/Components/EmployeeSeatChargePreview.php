@@ -94,7 +94,7 @@ class EmployeeSeatChargePreview
     public bool $isFirstSeat;
 
     /**
-     * true when the seat WILL actually be billed: the very same predicate the hiring/reactivation gate uses (live paid plan, company not in sandbox) and the same field `GET /employee-seats` exposes. When false the operation never charges (enterprise by contract, trial, sandbox or live mode off) even though `amount` is computed — do not present it as a payment, and do not ask for confirmation of a charge that will not happen. Independent of the 0-amount branches: it can be true together with `already_covered` (the plan does bill seats, but THIS operation is free).
+     * true when the seat WILL actually be billed: the very same predicate the hiring/reactivation gate uses (live paid plan, company not in sandbox) and the same field `GET /v1/accounts/{account}/employee-seats` exposes. When false the operation never charges (enterprise by contract, trial, sandbox or live mode off) even though `amount` is computed — do not present it as a payment, and do not ask for confirmation of a charge that will not happen. Independent of the 0-amount branches: it can be true together with `already_covered` (the plan does bill seats, but THIS operation is free).
      *
      * @var bool $seatsBillable
      */

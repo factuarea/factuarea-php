@@ -50,14 +50,14 @@ class Gestoria
     /**
      * Retrieve the consolidated workforce compliance overview
      *
-     * Return the consolidated time-tracking compliance panel for your whole managed portfolio: one row per `active` managed company, each projected from that company's latest monthly close without recomputation — whether the current (last closable) period is closed, its status (`closed`/`reopened`), the last closed period (`last_closed_year`/`last_closed_month`), and the aggregated `total_balance_minutes`, `total_overtime_minutes` and `employee_count`. Master-scoped: the portfolio is resolved from your API key, never from the payload, and only your own children appear. Unlike the per-company `X-Active-Profile` endpoints, this aggregates across children in a single call. Returned as `{ "data": [ConsolidatedWorkforce, ...] }`.
+     * Return the consolidated time-tracking compliance panel for your whole managed portfolio: one row per `active` managed company, each projected from that company's latest monthly close without recomputation — whether the current (last closable) period is closed, its status (`closed`/`reopened`), the last closed period (`last_closed_year`/`last_closed_month`), and the aggregated `total_balance_minutes`, `total_overtime_minutes` and `employee_count`. Master-scoped: the portfolio is resolved from your API key, never from the payload, and only your own children appear. Unlike the per-company endpoints, which name a single managed company in the `{company}` path segment, this aggregates across children in one call. Returned as `{ "data": [ConsolidatedWorkforce, ...] }`.
      *
+     * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1GestoriaWorkforceSummaryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1GestoriaWorkforceSummary(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1GestoriaWorkforceSummaryResponse
+    public function publicApiV1GestoriaWorkforceSummary(string $account, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1GestoriaWorkforceSummaryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +85,11 @@ class Gestoria
             ];
         }
         $request = new Operations\PublicApiV1GestoriaWorkforceSummaryRequest(
+            account: $account,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/gestoria/workforce-summary');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/gestoria/workforce-summary', Operations\PublicApiV1GestoriaWorkforceSummaryRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -135,7 +135,7 @@ class Gestoria
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

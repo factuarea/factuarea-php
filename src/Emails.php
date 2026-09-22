@@ -54,14 +54,14 @@ class Emails
      *
      * IMPORTANT — `last_status` and `last_sent_at` describe the hand-off to the OUTGOING SMTP SERVER, not real delivery: a `sent` email may still bounce afterwards without the platform observing it.
      *
+     * @param  string  $company
      * @param  array<string>  $relatedEntityIds
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmailsIndicatorsRelatedEntityType  $relatedEntityType
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmailsIndicatorsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmailsIndicators(array $relatedEntityIds, ?Operations\PublicApiV1EmailsIndicatorsRelatedEntityType $relatedEntityType = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmailsIndicatorsResponse
+    public function publicApiV1EmailsIndicators(string $company, array $relatedEntityIds, ?Operations\PublicApiV1EmailsIndicatorsRelatedEntityType $relatedEntityType = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmailsIndicatorsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -89,13 +89,13 @@ class Emails
             ];
         }
         $request = new Operations\PublicApiV1EmailsIndicatorsRequest(
+            company: $company,
             relatedEntityIds: $relatedEntityIds,
             relatedEntityType: $relatedEntityType,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/emails/indicators');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/emails/indicators', Operations\PublicApiV1EmailsIndicatorsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -144,7 +144,7 @@ class Emails
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -184,11 +184,11 @@ class Emails
      *
      * IMPORTANT — `status` describes the hand-off to the OUTGOING SMTP SERVER, not real delivery: `sent` means the outgoing mail server accepted the message, not that the recipient received it.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmailsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmailsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmailsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmailsList(?Operations\PublicApiV1EmailsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1EmailsListResponse
+    public function publicApiV1EmailsList(Operations\PublicApiV1EmailsListRequest $request, ?Options $options = null): Operations\PublicApiV1EmailsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -216,7 +216,7 @@ class Emails
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/emails');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/emails', Operations\PublicApiV1EmailsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -265,7 +265,7 @@ class Emails
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -305,13 +305,13 @@ class Emails
      *
      * IMPORTANT — `status` describes the hand-off to the OUTGOING SMTP SERVER, not real delivery: `sent` means the outgoing mail server accepted the message, not that the recipient received it.
      *
+     * @param  string  $company
      * @param  string  $email
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmailsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmailsShow(string $email, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmailsShowResponse
+    public function publicApiV1EmailsShow(string $company, string $email, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmailsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -339,12 +339,12 @@ class Emails
             ];
         }
         $request = new Operations\PublicApiV1EmailsShowRequest(
+            company: $company,
             email: $email,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/emails/{email}', Operations\PublicApiV1EmailsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/emails/{email}', Operations\PublicApiV1EmailsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

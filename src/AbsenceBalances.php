@@ -52,11 +52,11 @@ class AbsenceBalances
      *
      * List your company’s absence balances with cursor-based pagination. Each balance is the accrued, carried-over and consumed days of one employee for one absence type in a given year, with the resulting `available_days`. Supports filtering by `employee_id` (UUID v7), `absence_type_id` (UUID v7) and `year`. Ledger amounts are exact decimal strings; `available_days` is rounded up to a whole day.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceBalancesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceBalancesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceBalancesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceBalancesList(?Operations\PublicApiV1AbsenceBalancesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1AbsenceBalancesListResponse
+    public function publicApiV1AbsenceBalancesList(Operations\PublicApiV1AbsenceBalancesListRequest $request, ?Options $options = null): Operations\PublicApiV1AbsenceBalancesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class AbsenceBalances
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-balances');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-balances', Operations\PublicApiV1AbsenceBalancesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class AbsenceBalances
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,13 +171,13 @@ class AbsenceBalances
      *
      * Retrieve a single absence balance by its `id` (UUID v7), including its accrued, carried-over, consumed and available days for the employee, absence type and year. A balance belonging to another company returns 404 `absence_balance_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $absenceBalance
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceBalancesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceBalancesShow(string $absenceBalance, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceBalancesShowResponse
+    public function publicApiV1AbsenceBalancesShow(string $company, string $absenceBalance, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceBalancesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -205,12 +205,12 @@ class AbsenceBalances
             ];
         }
         $request = new Operations\PublicApiV1AbsenceBalancesShowRequest(
+            company: $company,
             absenceBalance: $absenceBalance,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-balances/{absence_balance}', Operations\PublicApiV1AbsenceBalancesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-balances/{absence_balance}', Operations\PublicApiV1AbsenceBalancesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

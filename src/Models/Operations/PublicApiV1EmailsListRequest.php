@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1EmailsListRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Delivery status to filter by (queued, sending, sent, failed). Reflects hand-off to the outgoing SMTP server, not real inbox delivery.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmailsListStatus $status
@@ -85,14 +92,6 @@ class PublicApiV1EmailsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      * Number of emails to return. Integer between 1 and 100. Defaults to 25. A non-integer or out-of-range value returns 400.
      *
      * @var ?int $limit
@@ -101,6 +100,7 @@ class PublicApiV1EmailsListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmailsListStatus  $status
      * @param  ?string  $recipientEmail
      * @param  ?string  $relatedEntityId
@@ -111,11 +111,11 @@ class PublicApiV1EmailsListRequest
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?PublicApiV1EmailsListStatus $status = null, ?string $recipientEmail = null, ?string $relatedEntityId = null, ?PublicApiV1EmailsListRelatedEntityType $relatedEntityType = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?string $search = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?PublicApiV1EmailsListStatus $status = null, ?string $recipientEmail = null, ?string $relatedEntityId = null, ?PublicApiV1EmailsListRelatedEntityType $relatedEntityType = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?string $search = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->status = $status;
         $this->recipientEmail = $recipientEmail;
         $this->relatedEntityId = $relatedEntityId;
@@ -125,7 +125,6 @@ class PublicApiV1EmailsListRequest
         $this->search = $search;
         $this->startingAfter = $startingAfter;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

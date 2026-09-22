@@ -73,12 +73,12 @@ class Verifactu
      *
      * Return the VeriFactu configuration of your company (mode, environment, enrollment status). The certificate password is never exposed. Returned as `{ "data": VeriFactuConfig }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuConfigResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuConfig(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuConfigResponse
+    public function publicApiV1VerifactuConfig(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuConfigResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -106,11 +106,11 @@ class Verifactu
             ];
         }
         $request = new Operations\PublicApiV1VerifactuConfigRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/config');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/config', Operations\PublicApiV1VerifactuConfigRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -156,7 +156,7 @@ class Verifactu
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -194,11 +194,11 @@ class Verifactu
      *
      * Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. Returned as `{ "data": VeriFactuStats }`.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuStats(?Operations\PublicApiV1VerifactuStatsRequest $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
+    public function publicApiV1VerifactuStats(Operations\PublicApiV1VerifactuStatsRequest $request, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -226,7 +226,7 @@ class Verifactu
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/stats', Operations\PublicApiV1VerifactuStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -275,7 +275,7 @@ class Verifactu
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

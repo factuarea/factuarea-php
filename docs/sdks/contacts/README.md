@@ -34,11 +34,11 @@
 
 ## publicApiV1ContactsArchive
 
-Archive a contact: a reversible removal that parks it out of the day-to-day operations while keeping it fully readable. Archiving is ALWAYS allowed — invoices, contracts or supplier offers referencing the contact never block it — and it is idempotent: archiving an already archived contact returns 200 and keeps the first `archived_at`. The contact keeps its identity, its roles with their status, the directional profiles, the bank accounts, the legacy aliases and every document, stays retrievable by `id` with `is_archived: true`, and can be brought back with `PUT /contacts/{contact}/restore`. It requires `contacts:delete`, like the other two removals, because it takes the contact out of the operation. To make the contact disappear from the application instead, use `DELETE /contacts/{contact}`. A UUID owned by another company returns the same 404 `contact_not_found` as an unknown UUID.
+Archive a contact: a reversible removal that parks it out of the day-to-day operations while keeping it fully readable. Archiving is ALWAYS allowed — invoices, contracts or supplier offers referencing the contact never block it — and it is idempotent: archiving an already archived contact returns 200 and keeps the first `archived_at`. The contact keeps its identity, its roles with their status, the directional profiles, the bank accounts, the legacy aliases and every document, stays retrievable by `id` with `is_archived: true`, and can be brought back with `PATCH /companies/{company}/contacts/{contact}/restore`. It requires `contacts:delete`, like the other two removals, because it takes the contact out of the operation. To make the contact disappear from the application instead, use `DELETE /companies/{company}/contacts/{contact}`. A UUID owned by another company returns the same 404 `contact_not_found` as an unknown UUID.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.archive" method="post" path="/contacts/{contact}/archive" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.archive" method="post" path="/companies/{company}/contacts/{contact}/archive" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -59,10 +59,10 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->contacts->publicApiV1ContactsArchive(
+    company: 'Pollich, Schiller and Kovacek',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -73,12 +73,12 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `contact`                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                                            | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                             |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `contact`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                             | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                        | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -96,9 +96,9 @@ if ($response->object !== null) {
 
 Assign `customer`, `supplier`, or `lead` to a contact without changing its other roles. Assigning an already-present role is idempotent and returns the canonical contact.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/companies/{company}/contacts/{contact}/roles/{role}" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -118,11 +118,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    company: 'Grimes, Smith and Hills',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ContactRoleV1Request(
         role: Components\ContactRoleV1RequestRole::Lead,
     ),
@@ -136,9 +136,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/companies/{company}/contacts/{contact}/roles/{role}" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -158,11 +158,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    company: 'Haley Inc',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ContactRoleV1Request(
         role: Components\ContactRoleV1RequestRole::Lead,
     ),
@@ -176,9 +176,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/companies/{company}/contacts/{contact}/roles/{role}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -198,11 +198,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    company: 'Schroeder - Walker',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ContactRoleV1Request(
         role: Components\ContactRoleV1RequestRole::Lead,
     ),
@@ -218,7 +218,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/companies/{company}/contacts/{contact}/roles/{role}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -238,11 +238,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    company: 'Shanahan - Goodwin',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ContactRoleV1Request(
         role: Components\ContactRoleV1RequestRole::Lead,
     ),
@@ -281,7 +281,7 @@ Remove one role and its directional profile only when it has no historical or ac
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.remove_contact_role" method="delete" path="/contacts/{contact}/roles/{role}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.remove_contact_role" method="delete" path="/companies/{company}/contacts/{contact}/roles/{role}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -301,12 +301,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsRemoveContactRoleRequest(
+    company: 'Lang, Aufderhar and Jerde',
     contact: '<value>',
-    rolePathParameter: 'lead',
+    rolePathParameter: 'supplier',
     roleQueryParameter: Operations\Role::Lead,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsRemoveContactRole(
@@ -338,11 +338,11 @@ if ($response->object !== null) {
 
 ## publicApiV1ContactsBulkArchive
 
-Archive up to 500 contacts by `ids` with partial success. Archiving is always allowed and reversible: every contact keeps its identity, history, aliases and documents, stays retrievable with `is_archived: true` and can be brought back one by one with `PUT /contacts/{contact}/restore`. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. To make the contacts disappear from the application instead, use `POST /contacts/bulk-delete`.
+Archive up to 500 contacts by `ids` with partial success. Archiving is always allowed and reversible: every contact keeps its identity, history, aliases and documents, stays retrievable with `is_archived: true` and can be brought back one by one with `PATCH /companies/{company}/contacts/{contact}/restore`. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. To make the contacts disappear from the application instead, use `POST /companies/{company}/contacts/bulk-delete`.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/companies/{company}/contacts/bulk/archive" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -368,10 +368,10 @@ $body = new Components\BulkArchiveBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    company: 'Rippin, Kautzer and Barton',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -379,9 +379,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/companies/{company}/contacts/bulk/archive" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -407,10 +407,10 @@ $body = new Components\BulkArchiveBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    company: 'Beatty, Swift and Hahn',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -418,9 +418,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/companies/{company}/contacts/bulk/archive" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -446,10 +446,10 @@ $body = new Components\BulkArchiveBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    company: 'Zemlak, Jast and Herman',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -459,7 +459,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/companies/{company}/contacts/bulk/archive" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -485,10 +485,10 @@ $body = new Components\BulkArchiveBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    company: 'King - Spinka',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -501,10 +501,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\BulkArchiveBusinessContactsV1Request](../../Models/Components/BulkArchiveBusinessContactsV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -512,19 +512,19 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsBulkChangeContactRoleStatus
 
 Set one customer, supplier or fiscal lead role to `active` or `inactive` for up to 500 contact `ids`, with partial success per UUID. The operation never changes the other commercial roles or user RBAC.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/companies/{company}/contacts/bulk/status" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -553,10 +553,10 @@ $body = new Components\BulkChangeContactRoleStatusV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    company: 'Wilkinson - Wiegand',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -564,9 +564,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/companies/{company}/contacts/bulk/status" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -595,10 +595,10 @@ $body = new Components\BulkChangeContactRoleStatusV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    company: 'Denesik LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -606,9 +606,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/companies/{company}/contacts/bulk/status" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -637,10 +637,10 @@ $body = new Components\BulkChangeContactRoleStatusV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    company: 'Wisozk LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -650,7 +650,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/companies/{company}/contacts/bulk/status" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -679,10 +679,10 @@ $body = new Components\BulkChangeContactRoleStatusV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    company: 'Predovic - Hand',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -695,10 +695,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\BulkChangeContactRoleStatusV1Request](../../Models/Components/BulkChangeContactRoleStatusV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -706,19 +706,19 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsBulkCreate
 
-Create or upsert up to 500 canonical contacts. Each row accepts the same identity, cumulative roles and directional profiles as `POST /contacts`. With `dry_run=true`, validate every row without persisting and return its classification.
+Create or upsert up to 500 canonical contacts. Each row accepts the same identity, cumulative roles and directional profiles as `POST /companies/{company}/contacts`. With `dry_run=true`, validate every row without persisting and return its classification.
 
 ### Example Usage: dry_run
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="dry_run" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/companies/{company}/contacts/bulk-create" example="dry_run" -->
 ```php
 declare(strict_types=1);
 
@@ -755,10 +755,10 @@ $body = new Components\BulkCreateBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkCreate(
+    company: 'Spinka Group',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -766,9 +766,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_format
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/companies/{company}/contacts/bulk-create" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -805,110 +805,10 @@ $body = new Components\BulkCreateBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkCreate(
+    company: 'Bartoletti, Abshire and Collier',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: parameter_invalid_range
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="parameter_invalid_range" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkCreateBusinessContactsV1Request(
-    contacts: [
-        new Components\CreateBusinessContactV1Request(
-            name: 'Distribuciones Ejemplo SL',
-            kind: Components\CreateBusinessContactV1RequestKind::Company,
-            taxId: 'B12345674',
-            address: new Components\CreateBusinessContactV1RequestAddress(
-                line1: 'Calle Mayor',
-                countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
-            ),
-            roles: [
-                Components\CreateBusinessContactV1RequestRole::Customer,
-                Components\CreateBusinessContactV1RequestRole::Supplier,
-            ],
-        ),
-    ],
-);
-
-$response = $sdk->contacts->publicApiV1ContactsBulkCreate(
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: parameter_unknown
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="parameter_unknown" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkCreateBusinessContactsV1Request(
-    contacts: [
-        new Components\CreateBusinessContactV1Request(
-            name: 'Distribuciones Ejemplo SL',
-            kind: Components\CreateBusinessContactV1RequestKind::Company,
-            taxId: 'B12345674',
-            address: new Components\CreateBusinessContactV1RequestAddress(
-                line1: 'Calle Mayor',
-                countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
-            ),
-            roles: [
-                Components\CreateBusinessContactV1RequestRole::Customer,
-                Components\CreateBusinessContactV1RequestRole::Supplier,
-            ],
-        ),
-    ],
-);
-
-$response = $sdk->contacts->publicApiV1ContactsBulkCreate(
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -918,7 +818,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/companies/{company}/contacts/bulk-create" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -955,10 +855,10 @@ $body = new Components\BulkCreateBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkCreate(
+    company: 'Rosenbaum - Jacobson',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -971,10 +871,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\BulkCreateBusinessContactsV1Request](../../Models/Components/BulkCreateBusinessContactsV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -982,19 +882,19 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsBulkDelete
 
-Delete up to 500 contacts by `ids` with partial success, applying to each one the same soft delete as `DELETE /contacts/{contact}`: the contact disappears from every read surface while its identity, roles, aliases and documents are preserved, and its fiscal identity and `external_id` are released so they can be registered again. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`, already deleted contacts included), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. The deletion is irreversible through the API; for a reversible bulk removal use `POST /contacts/bulk/archive`.
+Delete up to 500 contacts by `ids` with partial success, applying to each one the same soft delete as `DELETE /companies/{company}/contacts/{contact}`: the contact disappears from every read surface while its identity, roles, aliases and documents are preserved, and its fiscal identity and `external_id` are released so they can be registered again. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`, already deleted contacts included), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. The deletion is irreversible through the API; for a reversible bulk removal use `POST /companies/{company}/contacts/bulk/archive`.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/companies/{company}/contacts/bulk-delete" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1019,10 +919,10 @@ $body = new Components\BulkDeleteBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    company: 'Deckow - Schultz',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1030,9 +930,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/companies/{company}/contacts/bulk-delete" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1057,10 +957,10 @@ $body = new Components\BulkDeleteBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    company: 'Hessel - O\'Hara',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1068,9 +968,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/companies/{company}/contacts/bulk-delete" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1095,10 +995,10 @@ $body = new Components\BulkDeleteBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    company: 'Koss - Volkman',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1108,7 +1008,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/companies/{company}/contacts/bulk-delete" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1133,10 +1033,10 @@ $body = new Components\BulkDeleteBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    company: 'Dooley - Reynolds',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1149,10 +1049,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\BulkDeleteBusinessContactsV1Request](../../Models/Components/BulkDeleteBusinessContactsV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -1160,19 +1060,19 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsChangeContactRoleStatus
 
 Set one commercial role to `active` or `inactive`. The other role and the platform RBAC role of every user remain unchanged.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="patch" path="/companies/{company}/contacts/{contact}/roles/{role}/status" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1192,11 +1092,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    company: 'Cremin Inc',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ChangeContactRoleStatusV1Request(
         role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
         status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
@@ -1211,9 +1111,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="patch" path="/companies/{company}/contacts/{contact}/roles/{role}/status" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1233,11 +1133,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    company: 'O\'Hara - Greenfelder',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ChangeContactRoleStatusV1Request(
         role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
         status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
@@ -1252,9 +1152,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="patch" path="/companies/{company}/contacts/{contact}/roles/{role}/status" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1274,11 +1174,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    company: 'Walter Inc',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ChangeContactRoleStatusV1Request(
         role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
         status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
@@ -1295,7 +1195,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="patch" path="/companies/{company}/contacts/{contact}/roles/{role}/status" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1315,11 +1215,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    company: 'Monahan and Sons',
     contact: '<value>',
     role: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\ChangeContactRoleStatusV1Request(
         role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
         status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
@@ -1357,9 +1257,55 @@ if ($response->object !== null) {
 
 Create one canonical commercial contact with no assigned relationship or any cumulative combination of `customer`, `supplier` and `lead`. The response uses `id` with the generated UUID v7 and includes the common identity plus the directional profiles when applicable. A repeated `Idempotency-Key` replays the original response without duplicating the contact; an existing `external_id` is updated idempotently within the authenticated company.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/companies/{company}/contacts" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateBusinessContactV1Request(
+    name: 'Distribuciones Ejemplo SL',
+    kind: Components\CreateBusinessContactV1RequestKind::Company,
+    taxId: 'B12345674',
+    address: new Components\CreateBusinessContactV1RequestAddress(
+        line1: 'Calle Mayor',
+        countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
+    ),
+    roles: [
+        Components\CreateBusinessContactV1RequestRole::Customer,
+        Components\CreateBusinessContactV1RequestRole::Supplier,
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsCreate(
+    company: 'Hayes Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: company_with_customer_and_supplier_roles
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="company_with_customer_and_supplier_roles" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/companies/{company}/contacts" example="company_with_customer_and_supplier_roles" -->
 ```php
 declare(strict_types=1);
 
@@ -1380,7 +1326,7 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateBusinessContactV1Request(
     name: 'Talleres Mediterráneo S.L.',
     kind: Components\CreateBusinessContactV1RequestKind::Company,
-    taxId: 'B66778895',
+    taxId: 'B66778899',
     commercialName: 'Talleres Med',
     email: 'facturacion@talleresmed.es',
     phone: '961112233',
@@ -1392,10 +1338,10 @@ $body = new Components\CreateBusinessContactV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsCreate(
+    company: 'Johns, Herman and Bradtke',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1403,9 +1349,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/companies/{company}/contacts" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1438,10 +1384,10 @@ $body = new Components\CreateBusinessContactV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsCreate(
+    company: 'Schiller, Walter and Goodwin',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1449,9 +1395,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/companies/{company}/contacts" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1484,56 +1430,10 @@ $body = new Components\CreateBusinessContactV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsCreate(
+    company: 'Kiehn - Lubowitz',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: parameter_unknown
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="parameter_unknown" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateBusinessContactV1Request(
-    name: 'Distribuciones Ejemplo SL',
-    kind: Components\CreateBusinessContactV1RequestKind::Company,
-    taxId: 'B12345674',
-    address: new Components\CreateBusinessContactV1RequestAddress(
-        line1: 'Calle Mayor',
-        countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
-    ),
-    roles: [
-        Components\CreateBusinessContactV1RequestRole::Customer,
-        Components\CreateBusinessContactV1RequestRole::Supplier,
-    ],
-);
-
-$response = $sdk->contacts->publicApiV1ContactsCreate(
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1543,7 +1443,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/companies/{company}/contacts" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1576,10 +1476,10 @@ $body = new Components\CreateBusinessContactV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsCreate(
+    company: 'Littel LLC',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1590,12 +1490,12 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                           | [Components\CreateBusinessContactV1Request](../../Models/Components/CreateBusinessContactV1Request.md)                                                                                                                                                                                                                                                                                           | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              | {<br/>"name": "Distribuciones Ejemplo SL",<br/>"kind": "company",<br/>"roles": [<br/>"customer",<br/>"supplier"<br/>],<br/>"tax_id": "B12345674",<br/>"address": {<br/>"line_1": "Calle Mayor",<br/>"country_code": "ES"<br/>}<br/>}                                                                                                                                                             |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                                            | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                             |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\CreateBusinessContactV1Request](../../Models/Components/CreateBusinessContactV1Request.md)                                                                                                                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          | {<br/>"name": "Distribuciones Ejemplo SL",<br/>"kind": "company",<br/>"roles": [<br/>"customer",<br/>"supplier"<br/>],<br/>"tax_id": "B12345674",<br/>"address": {<br/>"line_1": "Calle Mayor",<br/>"country_code": "ES"<br/>}<br/>}                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                             | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                        | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -1603,11 +1503,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsList
 
@@ -1615,7 +1515,7 @@ List canonical contacts with cursor pagination. Filter by `roles` (`customer`, `
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.list" method="get" path="/contacts" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.list" method="get" path="/companies/{company}/contacts" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1635,8 +1535,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsListRequest(
+    company: 'Leuschke - Labadie',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsList(
@@ -1660,19 +1560,19 @@ if ($response->businessContactList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ContactsDelete
 
-Delete a contact. It is a soft delete: the contact disappears from every read surface — list, search, options and selectors, stats, export, activities and its own detail, which answers 404 `contact_not_found` from then on — while nothing is physically removed. Its identity, roles, directional profiles, bank accounts, legacy aliases and every invoice, quote, delivery note or purchase invoice that references it are preserved exactly as they were, and those documents keep showing their customer or supplier data. Deleting releases the fiscal identity and the `external_id`, so the same tax ID or external ID can be registered again as a different contact. A deleted contact can no longer be used in new documents, not even through its legacy alias. The operation is irreversible through the API — `PUT /contacts/{contact}/restore` only unarchives — and deleting an unknown, foreign or already deleted UUID returns 404 `contact_not_found`. For a reversible removal that keeps the contact readable, use `POST /contacts/{contact}/archive` instead. It emits the `contact.deleted` webhook event.
+Delete a contact. It is a soft delete: the contact disappears from every read surface — list, search, options and selectors, stats, export, activities and its own detail, which answers 404 `contact_not_found` from then on — while nothing is physically removed. Its identity, roles, directional profiles, bank accounts, legacy aliases and every invoice, quote, delivery note or purchase invoice that references it are preserved exactly as they were, and those documents keep showing their customer or supplier data. Deleting releases the fiscal identity and the `external_id`, so the same tax ID or external ID can be registered again as a different contact. A deleted contact can no longer be used in new documents, not even through its legacy alias. The operation is irreversible through the API — `PATCH /companies/{company}/contacts/{contact}/restore` only unarchives — and deleting an unknown, foreign or already deleted UUID returns 404 `contact_not_found`. For a reversible removal that keeps the contact readable, use `POST /companies/{company}/contacts/{contact}/archive` instead. It emits the `contact.deleted` webhook event.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.delete" method="delete" path="/contacts/{contact}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.delete" method="delete" path="/companies/{company}/contacts/{contact}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1693,10 +1593,10 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->contacts->publicApiV1ContactsDelete(
+    company: 'Monahan - Hackett',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1709,10 +1609,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `contact`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -1732,7 +1632,7 @@ Retrieve a canonical contact by `id` (UUID v7), including its common identity, r
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.show" method="get" path="/contacts/{contact}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.show" method="get" path="/companies/{company}/contacts/{contact}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1753,9 +1653,9 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->contacts->publicApiV1ContactsShow(
+    company: 'Swaniawski Inc',
     contact: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1766,11 +1666,11 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `contact`                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `contact`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -1788,9 +1688,9 @@ if ($response->object !== null) {
 
 Update only the common identity and contact fields. Roles and directional profiles have explicit endpoints so changing customer data can never overwrite supplier defaults. A duplicate fiscal identity or external ID returns 409.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="patch" path="/companies/{company}/contacts/{contact}" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1810,10 +1710,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateRequest(
+    company: 'Armstrong - Kuphal',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactV1Request(
         metadata: [
             'erp_code' => 'IVA-GEN',
@@ -1830,9 +1730,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="patch" path="/companies/{company}/contacts/{contact}" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1852,10 +1752,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateRequest(
+    company: 'Gutmann Inc',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactV1Request(
         metadata: [
             'erp_code' => 'IVA-GEN',
@@ -1872,9 +1772,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="patch" path="/companies/{company}/contacts/{contact}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1894,10 +1794,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateRequest(
+    company: 'Hills, Treutel and Feeney',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactV1Request(
         metadata: [
             'erp_code' => 'IVA-GEN',
@@ -1916,7 +1816,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="patch" path="/companies/{company}/contacts/{contact}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -1936,10 +1836,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateRequest(
+    company: 'Renner Group',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactV1Request(
         metadata: [
             'erp_code' => 'IVA-GEN',
@@ -1977,11 +1877,11 @@ if ($response->object !== null) {
 
 ## publicApiV1ContactsImportTemplate
 
-Download the CSV template accepted by `POST /contacts/import`, including canonical identity, role and directional-profile headers. The response is a UTF-8 CSV attachment and contains no company data.
+Download the CSV template accepted by `POST /companies/{company}/contacts/import`, including canonical identity, role and directional-profile headers. The response is a UTF-8 CSV attachment and contains no company data.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import_template" method="get" path="/contacts/import/template" example="template" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import_template" method="get" path="/companies/{company}/contacts/import/template" example="template" -->
 ```php
 declare(strict_types=1);
 
@@ -2002,8 +1902,8 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->contacts->publicApiV1ContactsImportTemplate(
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    company: 'Rempel - Kovacek',
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2014,10 +1914,10 @@ if ($response->res !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -2025,19 +1925,19 @@ if ($response->res !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 400, 401, 403, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1ContactsFindByExternalId
 
 Resolve one canonical contact by its integration `external_id` within the authenticated company. Returns 404 `contact_not_found` when the reference is unknown.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/companies/{company}/contacts/find-by-external-id" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -2060,9 +1960,9 @@ $body = new Components\FindBusinessContactByExternalIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    company: 'Dickens LLC',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2070,9 +1970,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/companies/{company}/contacts/find-by-external-id" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2095,9 +1995,9 @@ $body = new Components\FindBusinessContactByExternalIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    company: 'Heller - Johns',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2105,9 +2005,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/companies/{company}/contacts/find-by-external-id" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2130,9 +2030,9 @@ $body = new Components\FindBusinessContactByExternalIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    company: 'Altenwerth, Flatley and Botsford',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2142,7 +2042,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/companies/{company}/contacts/find-by-external-id" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2165,9 +2065,9 @@ $body = new Components\FindBusinessContactByExternalIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    company: 'O\'Conner - Steuber',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2178,11 +2078,11 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                           | [Components\FindBusinessContactByExternalIdV1Request](../../Models/Components/FindBusinessContactByExternalIdV1Request.md)                                                                                                                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\FindBusinessContactByExternalIdV1Request](../../Models/Components/FindBusinessContactByExternalIdV1Request.md)                                                                                                                                                                                                                                                   | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -2190,19 +2090,19 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsFindByTaxId
 
 Resolve one canonical contact by Spanish tax identifier within the authenticated company. The result includes all cumulative roles, so integrations do not need separate client and supplier lookups.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/companies/{company}/contacts/find-by-tax-id" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -2225,9 +2125,9 @@ $body = new Components\FindBusinessContactByTaxIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    company: 'Dibbert Inc',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2235,9 +2135,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/companies/{company}/contacts/find-by-tax-id" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2260,9 +2160,9 @@ $body = new Components\FindBusinessContactByTaxIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    company: 'McGlynn - Nitzsche',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2270,9 +2170,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/companies/{company}/contacts/find-by-tax-id" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2295,9 +2195,9 @@ $body = new Components\FindBusinessContactByTaxIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    company: 'Schoen, Balistreri and Mertz',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2307,7 +2207,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/companies/{company}/contacts/find-by-tax-id" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2330,9 +2230,9 @@ $body = new Components\FindBusinessContactByTaxIdV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    company: 'Bashirian LLC',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2343,11 +2243,11 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                           | [Components\FindBusinessContactByTaxIdV1Request](../../Models/Components/FindBusinessContactByTaxIdV1Request.md)                                                                                                                                                                                                                                                                                 | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\FindBusinessContactByTaxIdV1Request](../../Models/Components/FindBusinessContactByTaxIdV1Request.md)                                                                                                                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -2355,11 +2255,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ContactsActivities
 
@@ -2367,7 +2267,7 @@ List the combined contact timeline with cursor pagination. Filter by `direction`
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.activities" method="get" path="/contacts/{contact}/activities" example="timeline" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.activities" method="get" path="/companies/{company}/contacts/{contact}/activities" example="timeline" -->
 ```php
 declare(strict_types=1);
 
@@ -2387,12 +2287,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsActivitiesRequest(
+    company: 'Huel LLC',
     contact: '<value>',
-    direction: [
-        Operations\PublicApiV1ContactsActivitiesDirection::Purchases,
-    ],
+    direction: [],
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsActivities(
@@ -2424,11 +2322,11 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1ContactsOptions
 
-Retrieve selectable values for contact forms and filters. Required `field` accepts `country` (the ISO country catalogue), `country_code` (countries present in the authenticated company), `province`, `city` or `tag`. For existing contact values, narrow results with `search` (maximum 100 characters), `country_code` and `province`; `limit` defaults to 50 and accepts 1–250. These values are tenant-scoped. The `country` field always returns the complete ISO catalogue, without applying search or limit. Example: `GET /contacts/options?field=city&country_code=ES&province=Murcia&limit=50`. Requires `contacts:read` and the canonical contacts rollout; this read does not create catalogue values.
+Retrieve selectable values for contact forms and filters. Required `field` accepts `country` (the ISO country catalogue), `country_code` (countries present in the authenticated company), `province`, `city` or `tag`. For existing contact values, narrow results with `search` (maximum 100 characters), `country_code` and `province`; `limit` defaults to 50 and accepts 1–250. These values are tenant-scoped. The `country` field always returns the complete ISO catalogue, without applying search or limit. Example: `GET /companies/{company}/contacts/options?field=city&country_code=ES&province=Murcia&limit=50`. Requires `contacts:read` and the canonical contacts rollout; this read does not create catalogue values.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.options" method="get" path="/contacts/options" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.options" method="get" path="/companies/{company}/contacts/options" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2448,9 +2346,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsOptionsRequest(
-    field: Operations\Field::Tag,
+    company: 'Stiedemann, Wyman and Durgan',
+    field: Operations\Field::City,
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsOptions(
@@ -2474,11 +2372,11 @@ if ($response->businessContactOptionsResource !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ContactsStats
 
@@ -2486,7 +2384,7 @@ Return aggregate counts for unique canonical contacts and their cumulative custo
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.stats" method="get" path="/contacts/stats" example="contact_stats" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.stats" method="get" path="/companies/{company}/contacts/stats" example="contact_stats" -->
 ```php
 declare(strict_types=1);
 
@@ -2507,8 +2405,8 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->contacts->publicApiV1ContactsStats(
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    company: 'Heaney, Bergstrom and Welch',
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2519,10 +2417,10 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -2530,18 +2428,18 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 400, 401, 403, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1ContactsImport
 
 Import canonical contacts from CSV with target roles, explicit field mapping, conflict strategy and optional `dry_run`. Returns per-row classifications; large imports may return 202 when queued.
 
 ```bash
-curl -X POST https://api.factuarea.com/v1/contacts/import \
+curl -X POST https://api.factuarea.com/v1/companies/{company}/contacts/import \
   -F file=@contacts.csv \
   -F 'target_roles[]=customer' \
   -F 'target_roles[]=supplier' \
@@ -2551,9 +2449,9 @@ curl -X POST https://api.factuarea.com/v1/contacts/import \
 
 Limits: the file accepts CSV, TXT, XLSX or XLS up to 10 MB; `target_roles` accepts at most three distinct roles. Use the preview endpoint before importing. A queued import returns `202`.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/companies/{company}/contacts/import" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -2584,10 +2482,10 @@ $body = new Components\ImportBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsImport(
+    company: 'Zemlak LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2595,9 +2493,9 @@ if ($response->twoHundredApplicationJsonObject !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/companies/{company}/contacts/import" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2628,10 +2526,10 @@ $body = new Components\ImportBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsImport(
+    company: 'Towne - Feest',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2639,9 +2537,9 @@ if ($response->twoHundredApplicationJsonObject !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/companies/{company}/contacts/import" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2672,10 +2570,10 @@ $body = new Components\ImportBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsImport(
+    company: 'Kemmer, Kunde and Boehm',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2685,7 +2583,7 @@ if ($response->twoHundredApplicationJsonObject !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/companies/{company}/contacts/import" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2716,10 +2614,10 @@ $body = new Components\ImportBusinessContactsV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsImport(
+    company: 'Ebert - Huels',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2732,10 +2630,10 @@ if ($response->twoHundredApplicationJsonObject !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\ImportBusinessContactsV1Request](../../Models/Components/ImportBusinessContactsV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -2743,19 +2641,19 @@ if ($response->twoHundredApplicationJsonObject !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsPreviewImport
 
 Validate a CSV contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/companies/{company}/contacts/import/preview" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -2786,10 +2684,10 @@ $body = new Components\PreviewBusinessContactImportV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    company: 'King - Gleichner',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2797,9 +2695,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/companies/{company}/contacts/import/preview" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2830,10 +2728,10 @@ $body = new Components\PreviewBusinessContactImportV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    company: 'Kozey, Hartmann and Klocko',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2841,9 +2739,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/companies/{company}/contacts/import/preview" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2874,10 +2772,10 @@ $body = new Components\PreviewBusinessContactImportV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    company: 'Steuber LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2887,7 +2785,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/companies/{company}/contacts/import/preview" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2918,10 +2816,10 @@ $body = new Components\PreviewBusinessContactImportV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    company: 'Anderson - Quigley',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2934,10 +2832,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\PreviewBusinessContactImportV1Request](../../Models/Components/PreviewBusinessContactImportV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -2945,11 +2843,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ContactsRestore
 
@@ -2957,7 +2855,7 @@ Undo the archival of a contact: it clears the archive mark and touches nothing e
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.restore" method="put" path="/contacts/{contact}/restore" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.restore" method="patch" path="/companies/{company}/contacts/{contact}/restore" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2978,10 +2876,10 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->contacts->publicApiV1ContactsRestore(
+    company: 'Beatty Inc',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -2992,12 +2890,12 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `contact`                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                                            | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                             |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `contact`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                             | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).                                                        | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -3017,7 +2915,7 @@ Search contacts by name, fiscal identity, email, phone, mobile or external ID, o
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.search" method="get" path="/contacts/search" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.search" method="get" path="/companies/{company}/contacts/search" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -3037,9 +2935,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsSearchRequest(
+    company: 'Towne, Zboncak and Howell',
     q: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsSearch(
@@ -3063,19 +2961,19 @@ if ($response->businessContactList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ContactsUpdateBankAccounts
 
 Replace the ENTIRE set of bank accounts of the contact. There is no way to add or drop a single account, because the invariants belong to the set — at most one default collection account and one default payment account, no repeated IBAN once normalized, and an account marked as default must accept that use — and checking them one by one would force the contact through invalid intermediate states. That is why `bank_accounts` is required: an empty list deletes every account, and omitting the key is a 422, never a silent "leave them as they are". A set identical to the current one writes nothing and emits no event. Bank accounts can never be edited from the identity update, which rejects the field like roles and directional profiles.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="patch" path="/companies/{company}/contacts/{contact}/bank-accounts" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -3095,10 +2993,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    company: 'Reichel, Ritchie and Lakin',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactBankAccountsV1Request(
         bankAccounts: [],
     ),
@@ -3112,9 +3010,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_invalid_range
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="parameter_invalid_range" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="patch" path="/companies/{company}/contacts/{contact}/bank-accounts" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -3134,10 +3032,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    company: 'Steuber, Connelly and Senger',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactBankAccountsV1Request(
         bankAccounts: [],
     ),
@@ -3151,9 +3049,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: parameter_unknown
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="parameter_unknown" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="patch" path="/companies/{company}/contacts/{contact}/bank-accounts" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -3173,10 +3071,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    company: 'Rippin and Sons',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactBankAccountsV1Request(
         bankAccounts: [],
     ),
@@ -3192,7 +3090,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="patch" path="/companies/{company}/contacts/{contact}/bank-accounts" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -3212,10 +3110,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    company: 'Langworth and Sons',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateBusinessContactBankAccountsV1Request(
         bankAccounts: [],
     ),
@@ -3254,7 +3152,7 @@ Update sales, collection, tax and DIR3 defaults for the customer role. Supplier 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_customer_profile" method="put" path="/contacts/{contact}/customer-profile" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_customer_profile" method="patch" path="/companies/{company}/contacts/{contact}/customer-profile" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -3274,10 +3172,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateCustomerProfileRequest(
+    company: 'Carter - Hayes',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsUpdateCustomerProfile(
@@ -3313,7 +3211,7 @@ Update purchase, payment and tax defaults for the supplier role. Customer defaul
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_supplier_profile" method="put" path="/contacts/{contact}/supplier-profile" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_supplier_profile" method="patch" path="/companies/{company}/contacts/{contact}/supplier-profile" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -3333,10 +3231,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ContactsUpdateSupplierProfileRequest(
+    company: 'Effertz - Dooley',
     contact: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->contacts->publicApiV1ContactsUpdateSupplierProfile(
@@ -3370,9 +3268,9 @@ if ($response->object !== null) {
 
 Verify a name and Spanish tax identifier against the AEAT census before issuing a document. The operation is stateless and fail-open: AEAT outages return `status: unavailable` rather than a server error.
 
-### Example Usage: parameter_invalid_format
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/contacts/census-verification" example="parameter_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/companies/{company}/contacts/census-verification" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -3396,84 +3294,10 @@ $body = new Components\VerifyBusinessContactCensusV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsVerifyCensus(
+    company: 'Dare Group',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: parameter_invalid_range
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/contacts/census-verification" example="parameter_invalid_range" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\VerifyBusinessContactCensusV1Request(
-    taxId: '<id>',
-    name: '<value>',
-);
-
-$response = $sdk->contacts->publicApiV1ContactsVerifyCensus(
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: parameter_unknown
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/contacts/census-verification" example="parameter_unknown" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\VerifyBusinessContactCensusV1Request(
-    taxId: '<id>',
-    name: '<value>',
-);
-
-$response = $sdk->contacts->publicApiV1ContactsVerifyCensus(
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -3483,7 +3307,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/contacts/census-verification" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/companies/{company}/contacts/census-verification" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -3507,10 +3331,10 @@ $body = new Components\VerifyBusinessContactCensusV1Request(
 );
 
 $response = $sdk->contacts->publicApiV1ContactsVerifyCensus(
+    company: 'Ferry, Lehner and Bartell',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -3523,10 +3347,10 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [Components\VerifyBusinessContactCensusV1Request](../../Models/Components/VerifyBusinessContactCensusV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -3534,8 +3358,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |

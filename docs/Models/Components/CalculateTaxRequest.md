@@ -1,6 +1,6 @@
 # CalculateTaxRequest
 
-Public REST API v1 — POST /v1/taxes/calculate.
+Public REST API v1 — POST /v1/companies/{company}/taxes/calculate.
 
 Body: `{ base: float, taxes_id: string }`. `taxes_id` es la FK a la tabla
 global `taxes` (valor UUID v7) — plural (D1), NUNCA `tax_id` (NIF/CIF fiscal).

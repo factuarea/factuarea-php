@@ -1,6 +1,6 @@
 # VeriFactuConfig
 
-VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/verifactu/config` and `PUT /v1/verifactu/settings`. The certificate password is never exposed.
+VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/companies/{company}/verifactu/config` and `PATCH /v1/companies/{company}/verifactu/settings`. The certificate password is never exposed.
 
 
 ## Fields

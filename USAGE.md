@@ -7,7 +7,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -17,18 +16,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Stroman, Welch and Rogahn',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {

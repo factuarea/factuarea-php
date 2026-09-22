@@ -85,7 +85,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/accept', Operations\PublicApiV1ProformasAcceptRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/accept', Operations\PublicApiV1ProformasAcceptRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -174,13 +174,13 @@ class Proformas
      * Deletes up to 100 proformas in one call. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteProformasV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkDelete(Components\BulkDeleteProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkDeleteResponse
+    public function publicApiV1ProformasBulkDelete(Components\BulkDeleteProformasV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,13 +208,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkDeleteRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/bulk-delete');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/bulk-delete', Operations\PublicApiV1ProformasBulkDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -265,7 +265,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -304,13 +304,13 @@ class Proformas
      * Packages the PDFs of up to 50 proformas (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfProformasV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkPdf(Components\BulkPdfProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkPdfResponse
+    public function publicApiV1ProformasBulkPdf(Components\BulkPdfProformasV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -338,13 +338,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkPdfRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/bulk-pdf');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/bulk-pdf', Operations\PublicApiV1ProformasBulkPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -431,13 +431,13 @@ class Proformas
      * Sends up to 200 proformas by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each proforma that could not be sent (not found, non-sendable status or no resolvable recipient).
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkSendProformasV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkSend(Components\BulkSendProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkSendResponse
+    public function publicApiV1ProformasBulkSend(Components\BulkSendProformasV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -465,13 +465,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkSendRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/bulk-send');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/bulk-send', Operations\PublicApiV1ProformasBulkSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -522,7 +522,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -561,13 +561,13 @@ class Proformas
      * Transition up to 50 proformas (by id) to a status from the closed set `[accepted, rejected]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; proformas whose transition is rejected (not found or not transitionable) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusProformasV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasBulkStatus(Components\BulkStatusProformasV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkStatusResponse
+    public function publicApiV1ProformasBulkStatus(Components\BulkStatusProformasV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -595,13 +595,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasBulkStatusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/bulk-status');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/bulk-status', Operations\PublicApiV1ProformasBulkStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -652,7 +652,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -722,7 +722,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/convert', Operations\PublicApiV1ProformasConvertRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/convert', Operations\PublicApiV1ProformasConvertRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -812,13 +812,13 @@ class Proformas
      * Create a new proforma invoice in `draft` status. Proformas can later be converted to final invoices.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateProformaRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasCreate(Components\CreateProformaRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasCreateResponse
+    public function publicApiV1ProformasCreate(Components\CreateProformaRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -846,13 +846,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas', Operations\PublicApiV1ProformasCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -903,7 +903,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -941,14 +941,14 @@ class Proformas
      *
      * Delete a proforma. Returns 422 if the proforma has been converted to an invoice.
      *
+     * @param  string  $company
      * @param  string  $proforma
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasDelete(string $proforma, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasDeleteResponse
+    public function publicApiV1ProformasDelete(string $company, string $proforma, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -976,13 +976,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasDeleteRequest(
+            company: $company,
             proforma: $proforma,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}', Operations\PublicApiV1ProformasDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}', Operations\PublicApiV1ProformasDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1056,14 +1056,14 @@ class Proformas
      *
      * Create a new draft proforma by copying lines, client, and metadata from an existing proforma.
      *
+     * @param  string  $company
      * @param  string  $proforma
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasDuplicateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasDuplicate(string $proforma, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasDuplicateResponse
+    public function publicApiV1ProformasDuplicate(string $company, string $proforma, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasDuplicateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1091,13 +1091,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasDuplicateRequest(
+            company: $company,
             proforma: $proforma,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/duplicate', Operations\PublicApiV1ProformasDuplicateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/duplicate', Operations\PublicApiV1ProformasDuplicateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1182,12 +1182,12 @@ class Proformas
      * Look up a single proforma by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Returns the matching proforma or 404 `proforma_not_found` if no proforma uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindProformaByExternalIdRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasFindByExternalIdResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasFindByExternalId(Components\FindProformaByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasFindByExternalIdResponse
+    public function publicApiV1ProformasFindByExternalId(Components\FindProformaByExternalIdRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasFindByExternalIdResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1215,12 +1215,12 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasFindByExternalIdRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/find-by-external-id');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/find-by-external-id', Operations\PublicApiV1ProformasFindByExternalIdRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1271,7 +1271,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1309,11 +1309,11 @@ class Proformas
      *
      * List your proforma invoices with cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProformasListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasList(?Operations\PublicApiV1ProformasListRequest $request = null, ?Options $options = null): Operations\PublicApiV1ProformasListResponse
+    public function publicApiV1ProformasList(Operations\PublicApiV1ProformasListRequest $request, ?Options $options = null): Operations\PublicApiV1ProformasListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1341,7 +1341,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas', Operations\PublicApiV1ProformasListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1390,7 +1390,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1428,14 +1428,14 @@ class Proformas
      *
      * Download the PDF representation of a proforma.
      *
+     * @param  string  $company
      * @param  string  $proforma
      * @param  ?string  $download
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasPdf(string $proforma, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasPdfResponse
+    public function publicApiV1ProformasPdf(string $company, string $proforma, ?string $download = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1463,13 +1463,13 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasPdfRequest(
+            company: $company,
             proforma: $proforma,
             download: $download,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/pdf', Operations\PublicApiV1ProformasPdfRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/pdf', Operations\PublicApiV1ProformasPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1561,13 +1561,13 @@ class Proformas
      *
      * Returns the shareable public URL of the proforma (/d/{uuid}) along with its status, expiration, and the plan-allowed maximum extension days.
      *
+     * @param  string  $company
      * @param  string  $proforma
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasPublicLinkGetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasPublicLinkGet(string $proforma, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasPublicLinkGetResponse
+    public function publicApiV1ProformasPublicLinkGet(string $company, string $proforma, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasPublicLinkGetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1595,12 +1595,12 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasPublicLinkGetRequest(
+            company: $company,
             proforma: $proforma,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/public-link', Operations\PublicApiV1ProformasPublicLinkGetRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/public-link', Operations\PublicApiV1ProformasPublicLinkGetRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1716,7 +1716,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/public-link', Operations\PublicApiV1ProformasPublicLinkUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/public-link', Operations\PublicApiV1ProformasPublicLinkUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1730,7 +1730,7 @@ class Proformas
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.proformas.public_link_update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -1837,7 +1837,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/reject', Operations\PublicApiV1ProformasRejectRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/reject', Operations\PublicApiV1ProformasRejectRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1957,7 +1957,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}/send', Operations\PublicApiV1ProformasSendRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}/send', Operations\PublicApiV1ProformasSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2045,13 +2045,13 @@ class Proformas
      *
      * Retrieve a proforma invoice by its `uuid`.
      *
+     * @param  string  $company
      * @param  string  $proforma
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasShow(string $proforma, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasShowResponse
+    public function publicApiV1ProformasShow(string $company, string $proforma, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2079,12 +2079,12 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasShowRequest(
+            company: $company,
             proforma: $proforma,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}', Operations\PublicApiV1ProformasShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}', Operations\PublicApiV1ProformasShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2168,12 +2168,12 @@ class Proformas
      *
      * Aggregated KPIs for the authenticated company: total proforma count and amount, count per status, expired count, and count converted to invoice. Returned as `{ "data": ProformaStats }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasStatsResponse
+    public function publicApiV1ProformasStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2201,11 +2201,11 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/stats', Operations\PublicApiV1ProformasStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2251,7 +2251,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2289,12 +2289,12 @@ class Proformas
      *
      * Returns the closed catalog of proforma statuses with their public `value`, localized `label`, and UI `color`. Use it to populate filters or status pickers instead of hard-coding values.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasStatusesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProformasStatuses(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProformasStatusesResponse
+    public function publicApiV1ProformasStatuses(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProformasStatusesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2322,11 +2322,11 @@ class Proformas
             ];
         }
         $request = new Operations\PublicApiV1ProformasStatusesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/statuses');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/statuses', Operations\PublicApiV1ProformasStatusesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2372,7 +2372,7 @@ class Proformas
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2442,7 +2442,7 @@ class Proformas
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/proformas/{proforma}', Operations\PublicApiV1ProformasUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/proformas/{proforma}', Operations\PublicApiV1ProformasUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2455,7 +2455,7 @@ class Proformas
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.proformas.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * FindInvoiceByNumberRequest - Public REST API v1 — POST /v1/invoices/find-by-number.
+ * FindInvoiceByNumberRequest - Public REST API v1 — POST /v1/companies/{company}/invoices/find-by-number.
  *
  *
  * Body: `number` (invoice number, required) plus TWO optional discriminators,

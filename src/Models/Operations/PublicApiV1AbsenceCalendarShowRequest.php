@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AbsenceCalendarShowRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Calendar year (4 digits).
      *
      * @var int $year
@@ -37,14 +44,6 @@ class PublicApiV1AbsenceCalendarShowRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      * Employee ID (UUID v7) to limit the calendar to a single employee (optional).
      *
      * @var ?string $employeeId
@@ -53,19 +52,19 @@ class PublicApiV1AbsenceCalendarShowRequest
     public ?string $employeeId = null;
 
     /**
+     * @param  string  $company
      * @param  int  $year
      * @param  int  $month
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $employeeId
      * @phpstan-pure
      */
-    public function __construct(int $year, int $month, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $employeeId = null)
+    public function __construct(string $company, int $year, int $month, ?LocalDate $factuareaVersion = null, ?string $employeeId = null)
     {
+        $this->company = $company;
         $this->year = $year;
         $this->month = $month;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->employeeId = $employeeId;
     }
 }

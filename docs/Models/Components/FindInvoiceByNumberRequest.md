@@ -1,6 +1,6 @@
 # FindInvoiceByNumberRequest
 
-Public REST API v1 — POST /v1/invoices/find-by-number.
+Public REST API v1 — POST /v1/companies/{company}/invoices/find-by-number.
 
 Body: `number` (invoice number, required) plus TWO optional discriminators,
 because a number repeats for two independent reasons:

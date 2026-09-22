@@ -57,13 +57,13 @@ class TimeEntries
      * Clock the start of an employee’s workday, opening a new work span. `employee_id` (UUID v7) and `source` (`web`/`mobile`) are required; `occurred_at` defaults to the server time. Valid only when the employee is not already clocked in; an invalid transition returns 422 in Spanish. Returns 201 with the created `clock_in` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\ClockActionRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesClockInResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesClockIn(Components\ClockActionRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesClockInResponse
+    public function publicApiV1TimeEntriesClockIn(Components\ClockActionRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesClockInResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,13 +91,13 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesClockInRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/clock-in');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/clock-in', Operations\PublicApiV1TimeEntriesClockInRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -148,7 +148,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -187,13 +187,13 @@ class TimeEntries
      * Clock the end of the employee’s current work span (from `working` or `paused`). `employee_id` (UUID v7) and `source` are required. Valid only when a span is open; an invalid transition returns 422 in Spanish. Returns 201 with the created `clock_out` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\ClockActionRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesClockOutResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesClockOut(Components\ClockActionRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesClockOutResponse
+    public function publicApiV1TimeEntriesClockOut(Components\ClockActionRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesClockOutResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -221,13 +221,13 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesClockOutRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/clock-out');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/clock-out', Operations\PublicApiV1TimeEntriesClockOutRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -278,7 +278,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -316,13 +316,13 @@ class TimeEntries
      *
      * Return the derived state of an employee’s current workday (`not_started`/`working`/`paused`/`finished`), reconstructed from the open work span in the immutable ledger — there is no session table. `employee_id` (UUID v7) is required as a query parameter.
      *
+     * @param  string  $company
      * @param  string  $employeeId
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesCurrentResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesCurrent(string $employeeId, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesCurrentResponse
+    public function publicApiV1TimeEntriesCurrent(string $company, string $employeeId, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesCurrentResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -350,12 +350,12 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesCurrentRequest(
+            company: $company,
             employeeId: $employeeId,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/current');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/current', Operations\PublicApiV1TimeEntriesCurrentRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -404,7 +404,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -442,11 +442,11 @@ class TimeEntries
      *
      * List the time entries of your company with cursor-based pagination, ordered by `occurred_at`. Supports filtering by `employee_id` (UUID v7), a date range (`from`/`to`) and `entry_type` (`clock_in`/`pause_start`/`pause_end`/`clock_out`).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesList(?Operations\PublicApiV1TimeEntriesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesListResponse
+    public function publicApiV1TimeEntriesList(Operations\PublicApiV1TimeEntriesListRequest $request, ?Options $options = null): Operations\PublicApiV1TimeEntriesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -474,7 +474,7 @@ class TimeEntries
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries', Operations\PublicApiV1TimeEntriesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -523,7 +523,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -562,13 +562,13 @@ class TimeEntries
      * Record a past work span for an employee (a retroactive manual entry). `employee_id` (UUID v7), `started_at`, `ended_at` and a `reason` are required; optional `pauses` add pause intervals. The entries are stored with `is_retroactive: true` and `source: manual`, and one audit log entry is written. `ended_at` before `started_at`, or a missing reason, returns 422 in Spanish. Returns 201 with the created span’s `clock_out` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\RecordManualTimeEntryRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesManualResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesManual(Components\RecordManualTimeEntryRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesManualResponse
+    public function publicApiV1TimeEntriesManual(Components\RecordManualTimeEntryRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesManualResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -596,13 +596,13 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesManualRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/manual');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/manual', Operations\PublicApiV1TimeEntriesManualRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -653,7 +653,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -692,13 +692,13 @@ class TimeEntries
      * Start a pause in the employee’s current work span. `employee_id` (UUID v7) and `source` are required. Valid only when the employee is `working`; an invalid transition returns 422 in Spanish. Returns 201 with the created `pause_start` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\ClockActionRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesPauseResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesPause(Components\ClockActionRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesPauseResponse
+    public function publicApiV1TimeEntriesPause(Components\ClockActionRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesPauseResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -726,13 +726,13 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesPauseRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/pause');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/pause', Operations\PublicApiV1TimeEntriesPauseRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -783,7 +783,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -822,13 +822,13 @@ class TimeEntries
      * Resume the employee’s workday after a pause. `employee_id` (UUID v7) and `source` are required. Valid only when the employee is `paused`; an invalid transition returns 422 in Spanish. Returns 201 with the created `pause_end` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\ClockActionRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesResumeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesResume(Components\ClockActionRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesResumeResponse
+    public function publicApiV1TimeEntriesResume(Components\ClockActionRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesResumeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -856,13 +856,13 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesResumeRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/resume');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/resume', Operations\PublicApiV1TimeEntriesResumeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -913,7 +913,7 @@ class TimeEntries
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -951,13 +951,13 @@ class TimeEntries
      *
      * Retrieve a single time entry by its `id` (UUID v7). An entry belonging to another company returns 404 `time_record_entry_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $timeEntry
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeEntriesShow(string $timeEntry, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesShowResponse
+    public function publicApiV1TimeEntriesShow(string $company, string $timeEntry, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeEntriesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -985,12 +985,12 @@ class TimeEntries
             ];
         }
         $request = new Operations\PublicApiV1TimeEntriesShowRequest(
+            company: $company,
             timeEntry: $timeEntry,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-entries/{time_entry}', Operations\PublicApiV1TimeEntriesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-entries/{time_entry}', Operations\PublicApiV1TimeEntriesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

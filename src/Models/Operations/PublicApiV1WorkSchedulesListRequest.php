@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1WorkSchedulesListRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
      *
      * @var ?string $startingAfter
@@ -77,14 +84,6 @@ class PublicApiV1WorkSchedulesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -93,6 +92,7 @@ class PublicApiV1WorkSchedulesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -102,11 +102,11 @@ class PublicApiV1WorkSchedulesListRequest
      * @param  ?string  $modeIn
      * @param  ?string  $search
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?PublicApiV1WorkSchedulesListStatus $status = null, ?string $statusIn = null, ?Mode $mode = null, ?string $modeIn = null, ?string $search = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?PublicApiV1WorkSchedulesListStatus $status = null, ?string $statusIn = null, ?Mode $mode = null, ?string $modeIn = null, ?string $search = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->status = $status;
@@ -115,7 +115,6 @@ class PublicApiV1WorkSchedulesListRequest
         $this->modeIn = $modeIn;
         $this->search = $search;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

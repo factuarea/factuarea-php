@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkDeleteInvoicesV1Request - Public REST API v1 — DELETE /v1/invoices/bulk. */
+/** BulkDeleteInvoicesV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/bulk-delete. */
 class BulkDeleteInvoicesV1Request
 {
     /**

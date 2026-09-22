@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class EventDataPaymentReversed
 {
     /**
-     * A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/invoices/{id}/payments`.
+     * A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/companies/{company}/invoices/{id}/payments`.
      *
      * @var \Factuarea\Sdk\Models\Components\InvoicePaymentDetail $object
      */

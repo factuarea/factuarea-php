@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxCalculation - Resultado de aplicar un tax a un importe base. Devuelto por `POST /v1/taxes/calculate`. */
+/** TaxCalculation - Resultado de aplicar un tax a un importe base. Devuelto por `POST /v1/companies/{company}/taxes/calculate`. */
 class TaxCalculation
 {
     /**

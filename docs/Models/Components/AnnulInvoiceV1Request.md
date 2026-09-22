@@ -1,6 +1,6 @@
 # AnnulInvoiceV1Request
 
-Public REST API v1 — POST /v1/invoices/{uuid}/annul.
+Public REST API v1 — POST /v1/companies/{company}/invoices/{uuid}/annul.
 
 Body: `reason` (string, required, max. 500). The reason is persisted
 on the Invoice aggregate and included in the VeriFactu cancellation record

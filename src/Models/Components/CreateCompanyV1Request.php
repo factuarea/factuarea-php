@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateCompanyV1Request - Register a managed child company under your master tenant. `name` and `tax_id` are required; the rest of the profile (business name, fiscal address, contact details) is optional. `tax_id` is validated as a Spanish tax ID (NIF/CIF/NIE) and must be unique among the companies you manage; `country_aeat_zone` is derived from the postal code. */
+/** CreateCompanyV1Request - Register a tax ID (NIF) in your account. `name` and `tax_id` are required; the rest of the profile (business name, fiscal address, contact details) is optional. `tax_id` is validated as a Spanish tax ID (NIF/CIF/NIE) and must be unique within your account; `country_aeat_zone` is derived from the postal code. The new company joins your account and is adopted into the scope of the calling key, so you can operate on it right away; it is NOT linked to any accounting-firm hierarchy. A tax ID already registered in another account is rejected and has to be claimed instead. */
 class CreateCompanyV1Request
 {
     /**
-     * Trade name of the child company (1-255 characters).
+     * Trade name of the company registered under this tax ID (1-255 characters).
      *
      * @var string $name
      */
@@ -21,7 +21,7 @@ class CreateCompanyV1Request
     public string $name;
 
     /**
-     * Spanish tax identifier (NIF, CIF or NIE). Immutable after creation.
+     * Spanish tax identifier (NIF, CIF or NIE). Immutable after creation and unique within your account.
      *
      * @var string $taxId
      */
@@ -29,7 +29,7 @@ class CreateCompanyV1Request
     public string $taxId;
 
     /**
-     * Legal/registered business name of the child company.
+     * Legal/registered business name.
      *
      * @var ?string $businessName
      */
@@ -83,7 +83,7 @@ class CreateCompanyV1Request
     public ?string $country = null;
 
     /**
-     * Contact email of the child company.
+     * Contact email.
      *
      * @var ?string $email
      */

@@ -1,6 +1,6 @@
 # ChainValidation
 
-Result of recomputing and verifying the VeriFactu hash chain (`huella`) of your company without mutating data. Returned by `GET /v1/verifactu/chain/validate`.
+Result of recomputing and verifying the VeriFactu hash chain (`huella`) of your company without mutating data. Returned by `GET /v1/companies/{company}/verifactu/chain/validate`.
 
 
 ## Fields

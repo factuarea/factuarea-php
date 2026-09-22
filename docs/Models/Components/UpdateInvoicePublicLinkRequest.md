@@ -1,6 +1,6 @@
 # UpdateInvoicePublicLinkRequest
 
-Public REST API v1 — PUT /v1/invoices/{uuid}/public-link.
+Public REST API v1 — PATCH /v1/companies/{company}/invoices/{uuid}/public-link.
 
 `SchemaName` sets a unique, clean OpenAPI schema name
 (`UpdateInvoicePublicLinkRequest`), consistent with Quote/Proforma/DeliveryNote

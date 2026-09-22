@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsListRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
      *
      * @var ?string $startingAfter
@@ -197,14 +204,6 @@ class PublicApiV1ProductsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -213,6 +212,7 @@ class PublicApiV1ProductsListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -237,11 +237,11 @@ class PublicApiV1ProductsListRequest
      * @param  ?string  $search
      * @param  ?array<string, string>  $metadata
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $sku = null, ?string $skuIn = null, ?string $skuContains = null, ?string $name = null, ?string $nameContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?float $priceGte = null, ?float $priceLte = null, ?float $priceGt = null, ?float $priceLt = null, ?bool $inStock = null, ?bool $lowStock = null, ?string $tag = null, ?string $tagIn = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $sku = null, ?string $skuIn = null, ?string $skuContains = null, ?string $name = null, ?string $nameContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?float $priceGte = null, ?float $priceLte = null, ?float $priceGt = null, ?float $priceLt = null, ?bool $inStock = null, ?bool $lowStock = null, ?string $tag = null, ?string $tagIn = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->sku = $sku;
@@ -265,7 +265,6 @@ class PublicApiV1ProductsListRequest
         $this->search = $search;
         $this->metadata = $metadata;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

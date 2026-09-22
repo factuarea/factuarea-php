@@ -15,13 +15,20 @@ class PublicApiV1PurchaseInvoicesUpdateRequest
 {
     /**
      *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     *
      * @var string $purchaseInvoice
      */
     #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=purchase_invoice')]
     public string $purchaseInvoice;
 
     /**
-     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).
+     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).
      *
      * @var ?string $idempotencyKey
      */
@@ -37,14 +44,6 @@ class PublicApiV1PurchaseInvoicesUpdateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequest $body
      */
@@ -52,19 +51,19 @@ class PublicApiV1PurchaseInvoicesUpdateRequest
     public ?Components\UpdatePurchaseInvoiceRequest $body = null;
 
     /**
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $purchaseInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Components\UpdatePurchaseInvoiceRequest $body = null)
+    public function __construct(string $company, string $purchaseInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Components\UpdatePurchaseInvoiceRequest $body = null)
     {
+        $this->company = $company;
         $this->purchaseInvoice = $purchaseInvoice;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->body = $body;
     }
 }

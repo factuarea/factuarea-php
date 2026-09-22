@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
 /**
- * UpdateDeliveryNoteRequest - Public REST API v1 — PUT /v1/delivery_notes/{uuid}.
+ * UpdateDeliveryNoteRequest - Public REST API v1 — PATCH /v1/companies/{company}/delivery-notes/{uuid}.
  *
  *
  * Partial update: omitted fields are kept. Only allowed when

@@ -14,6 +14,13 @@ class PublicApiV1ProductsShowRequest
 {
     /**
      *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     *
      * @var string $product
      */
     #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=product')]
@@ -28,14 +35,6 @@ class PublicApiV1ProductsShowRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      * Recursos anidados a incluir, separados por comas. Hoy solo
      *
      * `configurable_catalog`, que adjunta los grupos de opciones
@@ -47,17 +46,17 @@ class PublicApiV1ProductsShowRequest
     public ?string $include = null;
 
     /**
+     * @param  string  $company
      * @param  string  $product
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $include
      * @phpstan-pure
      */
-    public function __construct(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $include = null)
+    public function __construct(string $company, string $product, ?LocalDate $factuareaVersion = null, ?string $include = null)
     {
+        $this->company = $company;
         $this->product = $product;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->include = $include;
     }
 }

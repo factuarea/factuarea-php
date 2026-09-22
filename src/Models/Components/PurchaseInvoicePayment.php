@@ -9,9 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
+/** PurchaseInvoicePayment - A single payment recorded against a purchase invoice (payment ledger entry). Listed by `GET /v1/companies/{company}/purchase-invoices/{id}/payments` and returned by `POST` on the same path. */
 class PurchaseInvoicePayment
 {
     /**
+     * Opaque UUID (v7) of the payment.
      *
      * @var string $id
      */
@@ -19,6 +21,7 @@ class PurchaseInvoicePayment
     public string $id;
 
     /**
+     * String identifying the object type. Always `purchase_invoice_payment`.
      *
      * @var \Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentObject $object
      */
@@ -27,20 +30,23 @@ class PurchaseInvoicePayment
     public PurchaseInvoicePaymentObject $object;
 
     /**
+     * Payment amount as a string with two decimal places (Stripe-style).
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
+     * Payment date (YYYY-MM-DD). Renamed from `paid_on`, which is no longer emitted; the INPUT field of `POST` keeps the old name on purpose.
      *
-     * @var LocalDate $paidOn
+     * @var LocalDate $paidDate
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_on')]
-    public LocalDate $paidOn;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_date')]
+    public LocalDate $paidDate;
 
     /**
+     * Payment method (backing value of the Shared enum `PaymentMethod`, e.g. `bank_transfer`).
      *
      * @var string $paymentMethod
      */
@@ -48,6 +54,7 @@ class PurchaseInvoicePayment
     public string $paymentMethod;
 
     /**
+     * Whether the payment has been reverted. A reverted payment stays in the ledger but stops counting towards `paid_amount`/`pending_amount` — read this flag, do not infer the state from absence.
      *
      * @var bool $isReversed
      */
@@ -55,6 +62,7 @@ class PurchaseInvoicePayment
     public bool $isReversed;
 
     /**
+     * When the payment was recorded (ISO 8601).
      *
      * @var \DateTime $createdAt
      */
@@ -62,6 +70,7 @@ class PurchaseInvoicePayment
     public \DateTime $createdAt;
 
     /**
+     * Internal bank account the payment was settled into, or `null`.
      *
      * @var ?int $bankAccountId
      */
@@ -69,6 +78,7 @@ class PurchaseInvoicePayment
     public ?int $bankAccountId;
 
     /**
+     * Payment reference/operation number. `null` if not provided.
      *
      * @var ?string $reference
      */
@@ -76,6 +86,7 @@ class PurchaseInvoicePayment
     public ?string $reference;
 
     /**
+     * Internal notes for the payment. `null` if not provided.
      *
      * @var ?string $notes
      */
@@ -83,6 +94,7 @@ class PurchaseInvoicePayment
     public ?string $notes;
 
     /**
+     * When the payment was reverted (ISO 8601), or `null` while it is in force.
      *
      * @var ?\DateTime $reversedAt
      */
@@ -90,6 +102,7 @@ class PurchaseInvoicePayment
     public ?\DateTime $reversedAt;
 
     /**
+     * Reason the payment was reverted, from the closed catalog. `null` while the payment is in force.
      *
      * @var ?string $reversalReason
      */
@@ -97,6 +110,7 @@ class PurchaseInvoicePayment
     public ?string $reversalReason;
 
     /**
+     * Human-readable label of the reversal reason (Spanish), or `null`.
      *
      * @var ?string $reversalReasonText
      */
@@ -104,6 +118,7 @@ class PurchaseInvoicePayment
     public ?string $reversalReasonText;
 
     /**
+     * Free-text remark recorded with the reversal, or `null`.
      *
      * @var ?string $reversalNote
      */
@@ -113,8 +128,8 @@ class PurchaseInvoicePayment
     /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentObject  $object
-     * @param  float  $amount
-     * @param  LocalDate  $paidOn
+     * @param  string  $amount
+     * @param  LocalDate  $paidDate
      * @param  string  $paymentMethod
      * @param  bool  $isReversed
      * @param  \DateTime  $createdAt
@@ -127,12 +142,12 @@ class PurchaseInvoicePayment
      * @param  ?string  $reversalNote
      * @phpstan-pure
      */
-    public function __construct(string $id, PurchaseInvoicePaymentObject $object, float $amount, LocalDate $paidOn, string $paymentMethod, bool $isReversed, \DateTime $createdAt, ?int $bankAccountId = null, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?string $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null)
+    public function __construct(string $id, PurchaseInvoicePaymentObject $object, string $amount, LocalDate $paidDate, string $paymentMethod, bool $isReversed, \DateTime $createdAt, ?int $bankAccountId = null, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?string $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->amount = $amount;
-        $this->paidOn = $paidOn;
+        $this->paidDate = $paidDate;
         $this->paymentMethod = $paymentMethod;
         $this->isReversed = $isReversed;
         $this->createdAt = $createdAt;

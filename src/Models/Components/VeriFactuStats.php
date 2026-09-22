@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuStats - Resumen agregado de los registros VeriFactu de la empresa autenticada: conteos por estado y desglose por tipo. Devuelto por `GET /v1/verifactu/stats`. */
+/** VeriFactuStats - Resumen agregado de los registros VeriFactu de la empresa autenticada: conteos por estado y desglose por tipo. Devuelto por `GET /v1/companies/{company}/verifactu/stats`. */
 class VeriFactuStats
 {
     /**

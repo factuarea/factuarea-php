@@ -84,7 +84,7 @@ class Deliveries
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/deliveries', Operations\PublicApiV1WebhookEndpointsDeliveriesListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries', Operations\PublicApiV1WebhookEndpointsDeliveriesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -203,7 +203,7 @@ class Deliveries
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}/replay', Operations\PublicApiV1WebhookEndpointsDeliveriesReplayRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries/{delivery}/replay', Operations\PublicApiV1WebhookEndpointsDeliveriesReplayRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -287,14 +287,14 @@ class Deliveries
      *
      * Retrieve a single delivery attempt by its `uuid`, including the full event payload that was delivered.
      *
+     * @param  string  $company
      * @param  string  $webhookEndpoint
      * @param  string  $delivery
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeliveriesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsDeliveriesShow(string $webhookEndpoint, string $delivery, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeliveriesShowResponse
+    public function publicApiV1WebhookEndpointsDeliveriesShow(string $company, string $webhookEndpoint, string $delivery, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeliveriesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -322,13 +322,13 @@ class Deliveries
             ];
         }
         $request = new Operations\PublicApiV1WebhookEndpointsDeliveriesShowRequest(
+            company: $company,
             webhookEndpoint: $webhookEndpoint,
             delivery: $delivery,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/deliveries/{delivery}', Operations\PublicApiV1WebhookEndpointsDeliveriesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries/{delivery}', Operations\PublicApiV1WebhookEndpointsDeliveriesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

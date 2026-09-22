@@ -1,6 +1,6 @@
 # UpdateProformaRequest
 
-Public REST API v1 — PUT /v1/proformas/{uuid}.
+Public REST API v1 — PATCH /v1/companies/{company}/proformas/{uuid}.
 
 Partial update: omitted fields are kept. Only allowed when
 the proforma is in `draft` status (the controller maps the

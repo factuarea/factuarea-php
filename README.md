@@ -384,7 +384,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -394,18 +393,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Stroman, Welch and Rogahn',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -437,7 +430,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -447,18 +439,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Stroman, Welch and Rogahn',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -515,17 +501,47 @@ if ($response->object !== null) {
 
 ### [Account](docs/sdks/account/README.md)
 
-* [publicApiV1AccountShow](docs/sdks/account/README.md#publicapiv1accountshow) - Retrieve account details
 * [publicApiV1AccountBilling](docs/sdks/account/README.md#publicapiv1accountbilling) - Retrieve account billing details
+* [publicApiV1AccountUsage](docs/sdks/account/README.md#publicapiv1accountusage) - Retrieve account usage for the current period
+* [publicApiV1AccountShow](docs/sdks/account/README.md#publicapiv1accountshow) - Retrieve the calling credential
 * [publicApiV1AccountVerifyCensus](docs/sdks/account/README.md#publicapiv1accountverifycensus) - Verify account against the AEAT census
 
-#### [Account.ApiKeys](docs/sdks/accountapikeys/README.md)
+#### [Account.ApiKeys](docs/sdks/apikeys/README.md)
 
-* [publicApiV1AccountApiKeysCreate](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
-* [publicApiV1AccountApiKeysList](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
-* [publicApiV1AccountApiKeysRevoke](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
-* [publicApiV1AccountApiKeysRotateSecret](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
-* [publicApiV1AccountApiKeysShow](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
+* [publicApiV1AccountApiKeysCreate](docs/sdks/apikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
+* [publicApiV1AccountApiKeysList](docs/sdks/apikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
+* [publicApiV1AccountApiKeysRevoke](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
+* [publicApiV1AccountApiKeysRotateSecret](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
+* [publicApiV1AccountApiKeysShow](docs/sdks/apikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
+
+#### [Account.ClaimTokens](docs/sdks/claimtokens/README.md)
+
+* [publicApiV1AccountClaimTokensAccept](docs/sdks/claimtokens/README.md#publicapiv1accountclaimtokensaccept) - Accept a claim token
+* [publicApiV1AccountClaimTokensCreate](docs/sdks/claimtokens/README.md#publicapiv1accountclaimtokenscreate) - Issue a claim token for a tax ID
+* [publicApiV1AccountClaimTokensList](docs/sdks/claimtokens/README.md#publicapiv1accountclaimtokenslist) - List issued claim tokens
+
+#### [Account.Invitations](docs/sdks/invitations/README.md)
+
+* [publicApiV1AccountInvitationsCancel](docs/sdks/invitations/README.md#publicapiv1accountinvitationscancel) - Cancel an account member invitation
+* [publicApiV1AccountInvitationsCreate](docs/sdks/invitations/README.md#publicapiv1accountinvitationscreate) - Send an account member invitation
+* [publicApiV1AccountInvitationsList](docs/sdks/invitations/README.md#publicapiv1accountinvitationslist) - List account invitations
+* [publicApiV1AccountInvitationsResend](docs/sdks/invitations/README.md#publicapiv1accountinvitationsresend) - Resend an account member invitation
+
+#### [Account.Members](docs/sdks/members/README.md)
+
+* [publicApiV1AccountMembersCreate](docs/sdks/members/README.md#publicapiv1accountmemberscreate) - Add a member to an account NIF
+* [publicApiV1AccountMembersList](docs/sdks/members/README.md#publicapiv1accountmemberslist) - List account members
+* [publicApiV1AccountMembersUpdate](docs/sdks/members/README.md#publicapiv1accountmembersupdate) - Change an account member role
+* [publicApiV1AccountMembersDelete](docs/sdks/members/README.md#publicapiv1accountmembersdelete) - Remove a member from an account NIF
+
+##### [Account.Members.ModuleAccess](docs/sdks/moduleaccess/README.md)
+
+* [publicApiV1AccountMembersModuleAccessShow](docs/sdks/moduleaccess/README.md#publicapiv1accountmembersmoduleaccessshow) - Retrieve a member module access level
+* [publicApiV1AccountMembersModuleAccessUpdate](docs/sdks/moduleaccess/README.md#publicapiv1accountmembersmoduleaccessupdate) - Set a member module access level
+
+#### [Account.Owner](docs/sdks/owner/README.md)
+
+* [publicApiV1AccountOwnerTransfer](docs/sdks/owner/README.md#publicapiv1accountownertransfer) - Transfer account ownership
 
 #### [Account.Personalization](docs/sdks/personalization/README.md)
 
@@ -572,23 +588,16 @@ if ($response->object !== null) {
 
 * [publicApiV1CompaniesActivateBatch](docs/sdks/companies/README.md#publicapiv1companiesactivatebatch) - Activate several managed companies
 * [publicApiV1CompaniesActivate](docs/sdks/companies/README.md#publicapiv1companiesactivate) - Activate a managed company
-* [publicApiV1CompaniesCreate](docs/sdks/companies/README.md#publicapiv1companiescreate) - Create a managed company
-* [publicApiV1CompaniesList](docs/sdks/companies/README.md#publicapiv1companieslist) - List your managed companies
 * [publicApiV1CompaniesDeactivate](docs/sdks/companies/README.md#publicapiv1companiesdeactivate) - Deactivate a managed company
 * [publicApiV1CompaniesDelete](docs/sdks/companies/README.md#publicapiv1companiesdelete) - Archive a managed company
 * [publicApiV1CompaniesShow](docs/sdks/companies/README.md#publicapiv1companiesshow) - Retrieve a managed company
 * [publicApiV1CompaniesUpdate](docs/sdks/companies/README.md#publicapiv1companiesupdate) - Update a managed company
 * [publicApiV1CompaniesCreationStatus](docs/sdks/companies/README.md#publicapiv1companiescreationstatus) - Retrieve the creation status of a managed company
+* [publicApiV1CompaniesIssuingReadiness](docs/sdks/companies/README.md#publicapiv1companiesissuingreadiness) - Check whether a portfolio NIF can issue
 * [publicApiV1CompaniesSeatChargePreview](docs/sdks/companies/README.md#publicapiv1companiesseatchargepreview) - Preview the seat charge of adding a company
+* [publicApiV1CompaniesList](docs/sdks/companies/README.md#publicapiv1companieslist) - List your managed companies
+* [publicApiV1CompaniesCreate](docs/sdks/companies/README.md#publicapiv1companiescreate) - Create a managed company
 * [publicApiV1CompaniesVerifyCreation](docs/sdks/companies/README.md#publicapiv1companiesverifycreation) - Verify the creation of a managed company
-
-#### [Companies.ApiKeys](docs/sdks/companiesapikeys/README.md)
-
-* [publicApiV1CompaniesApiKeysCreate](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeyscreate) - Create a child API key
-* [publicApiV1CompaniesApiKeysList](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeyslist) - List child API keys
-* [publicApiV1CompaniesApiKeysRevoke](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrevoke) - Revoke a child API key
-* [publicApiV1CompaniesApiKeysShow](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysshow) - Retrieve a child API key
-* [publicApiV1CompaniesApiKeysRotateSecret](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrotatesecret) - Rotate a child API key secret
 
 ### [Contacts](docs/sdks/contacts/README.md)
 
@@ -968,6 +977,7 @@ if ($response->object !== null) {
 
 * [publicApiV1RecurringInvoicesActivate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesactivate) - Activate recurring invoice
 * [publicApiV1RecurringInvoicesBulkDelete](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkdelete) - Bulk delete recurring invoices
+* [publicApiV1RecurringInvoicesBulkStatus](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkstatus) - Bulk change recurring invoice status
 * [publicApiV1RecurringInvoicesCancel](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescancel) - Cancel recurring invoice
 * [publicApiV1RecurringInvoicesCreate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescreate) - Create a recurring invoice
 * [publicApiV1RecurringInvoicesList](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoiceslist) - List all recurring invoices
@@ -1202,7 +1212,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Retry;
 
 $sdk = Sdk\Factuarea::builder()
@@ -1213,18 +1222,11 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request,
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Stroman, Welch and Rogahn',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
     options: Utils\Options->builder()->setRetryConfig(
         new Retry\RetryConfigBackoff(
             initialInterval: 1,
@@ -1233,6 +1235,7 @@ $response = $sdk->proformas->publicApiV1ProformasAccept(
             maxElapsedTime:  100,
             retryConnectionErrors: false,
         ))->build()
+
 );
 
 if ($response->object !== null) {
@@ -1249,7 +1252,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Retry;
 
 $sdk = Sdk\Factuarea::builder()
@@ -1269,18 +1271,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Stroman, Welch and Rogahn',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -1303,13 +1299,13 @@ By default an API error will raise a `Errors\APIException` exception, which has 
 | `$rawResponse` | *?\Psr\Http\Message\ResponseInterface*  | The raw HTTP response |
 | `$body`        | *string*                                | The response content  |
 
-When custom error responses are specified for an operation, the SDK may also throw their associated exception. You can refer to respective *Errors* tables in SDK docs for more details on possible exception types for each operation. For example, the `publicApiV1ProformasAccept` method throws the following exceptions:
+When custom error responses are specified for an operation, the SDK may also throw their associated exception. You can refer to respective *Errors* tables in SDK docs for more details on possible exception types for each operation. For example, the `publicApiV1AccountBilling` method throws the following exceptions:
 
-| Error Type          | Status Code                  | Content Type     |
-| ------------------- | ---------------------------- | ---------------- |
-| Errors\Error        | 401, 403, 404, 409, 422, 429 | application/json |
-| Errors\Error        | 500                          | application/json |
-| Errors\APIException | 4XX, 5XX                     | \*/\*            |
+| Error Type          | Status Code        | Content Type     |
+| ------------------- | ------------------ | ---------------- |
+| Errors\Error        | 401, 403, 404, 429 | application/json |
+| Errors\Error        | 500                | application/json |
+| Errors\APIException | 4XX, 5XX           | \*/\*            |
 
 ### Example
 
@@ -1322,7 +1318,6 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Errors;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -1333,18 +1328,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 try {
-    $request = new Operations\PublicApiV1ProformasAcceptRequest(
-        proforma: '<value>',
-        idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-        factuareaVersion: LocalDate::parse('2026-06-01'),
-        xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-        body: new Components\AcceptProformaRequest(
-            reason: 'Cliente confirma pedido por telefono',
-        ),
-    );
+    $response = $sdk->account->publicApiV1AccountBilling(
+        company: 'Stroman, Welch and Rogahn',
+        factuareaVersion: LocalDate::parse('2026-06-01')
 
-    $response = $sdk->proformas->publicApiV1ProformasAccept(
-        request: $request
     );
 
     if ($response->object !== null) {
@@ -1377,7 +1364,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
@@ -1388,18 +1374,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Stroman, Welch and Rogahn',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {

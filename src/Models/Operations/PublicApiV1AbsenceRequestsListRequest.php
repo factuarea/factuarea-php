@@ -13,6 +13,13 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AbsenceRequestsListRequest
 {
     /**
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
      *
      * @var ?string $startingAfter
@@ -35,14 +42,6 @@ class PublicApiV1AbsenceRequestsListRequest
      */
     #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
     public ?LocalDate $factuareaVersion = null;
-
-    /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
 
     /**
      * Employee ID (UUID v7) to filter requests by.
@@ -93,11 +92,11 @@ class PublicApiV1AbsenceRequestsListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $employeeId
      * @param  ?string  $absenceTypeId
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsListStatus  $status
@@ -105,12 +104,12 @@ class PublicApiV1AbsenceRequestsListRequest
      * @param  ?LocalDate  $to
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $employeeId = null, ?string $absenceTypeId = null, ?PublicApiV1AbsenceRequestsListStatus $status = null, ?LocalDate $from = null, ?LocalDate $to = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?LocalDate $factuareaVersion = null, ?string $employeeId = null, ?string $absenceTypeId = null, ?PublicApiV1AbsenceRequestsListStatus $status = null, ?LocalDate $from = null, ?LocalDate $to = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->employeeId = $employeeId;
         $this->absenceTypeId = $absenceTypeId;
         $this->status = $status;

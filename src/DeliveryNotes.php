@@ -60,13 +60,13 @@ class DeliveryNotes
      * Delete several delivery notes in a single request. The body takes an `ids` array of `uuid`s. Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` counts and a `failures` list (`id` + `error_code` + Spanish `error_message`) for those that could not be deleted (e.g. signed or invoiced). Supports `Idempotency-Key` for safe retries.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteDeliveryNotesRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkDelete(Components\BulkDeleteDeliveryNotesRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkDeleteResponse
+    public function publicApiV1DeliveryNotesBulkDelete(Components\BulkDeleteDeliveryNotesRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -94,13 +94,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkDeleteRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/bulk-delete');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/bulk-delete', Operations\PublicApiV1DeliveryNotesBulkDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -151,7 +151,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -190,13 +190,13 @@ class DeliveryNotes
      * Packages the PDFs of up to 50 delivery notes (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfDeliveryNotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkPdf(Components\BulkPdfDeliveryNotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkPdfResponse
+    public function publicApiV1DeliveryNotesBulkPdf(Components\BulkPdfDeliveryNotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -224,13 +224,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkPdfRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/bulk-pdf');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/bulk-pdf', Operations\PublicApiV1DeliveryNotesBulkPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -317,13 +317,13 @@ class DeliveryNotes
      * Sends up to 200 delivery notes by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each delivery note that could not be sent (not found, non-sendable status or no resolvable recipient).
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkSendDeliveryNotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkSend(Components\BulkSendDeliveryNotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkSendResponse
+    public function publicApiV1DeliveryNotesBulkSend(Components\BulkSendDeliveryNotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -351,13 +351,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkSendRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/bulk-send');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/bulk-send', Operations\PublicApiV1DeliveryNotesBulkSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -408,7 +408,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -447,13 +447,13 @@ class DeliveryNotes
      * Transition up to 50 delivery notes (by id) to a status from the closed set `[delivered, cancelled]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; delivery notes whose transition is rejected (not found or not transitionable) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusDeliveryNotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesBulkStatus(Components\BulkStatusDeliveryNotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkStatusResponse
+    public function publicApiV1DeliveryNotesBulkStatus(Components\BulkStatusDeliveryNotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -481,13 +481,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesBulkStatusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/bulk-status');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/bulk-status', Operations\PublicApiV1DeliveryNotesBulkStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -538,7 +538,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -576,14 +576,14 @@ class DeliveryNotes
      *
      * Transition a delivery note to the `cancelled` state. Canonical REST replacement for the deprecated `POST /change_status`. Returns 409 `invalid_status_transition` if the note cannot be cancelled (e.g. already invoiced). Supports `Idempotency-Key` for safe retries.
      *
+     * @param  string  $company
      * @param  string  $deliveryNote
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesCancel(string $deliveryNote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesCancelResponse
+    public function publicApiV1DeliveryNotesCancel(string $company, string $deliveryNote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -611,13 +611,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesCancelRequest(
+            company: $company,
             deliveryNote: $deliveryNote,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/cancel', Operations\PublicApiV1DeliveryNotesCancelRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/cancel', Operations\PublicApiV1DeliveryNotesCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -733,7 +733,7 @@ class DeliveryNotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/convert', Operations\PublicApiV1DeliveryNotesConvertRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/convert', Operations\PublicApiV1DeliveryNotesConvertRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -823,13 +823,13 @@ class DeliveryNotes
      * Create a new delivery note (albarán) in `draft` status. Delivery notes track goods shipped to a customer and can later be converted to invoices.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateDeliveryNoteRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesCreate(Components\CreateDeliveryNoteRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesCreateResponse
+    public function publicApiV1DeliveryNotesCreate(Components\CreateDeliveryNoteRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -857,13 +857,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes', Operations\PublicApiV1DeliveryNotesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -914,7 +914,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -952,14 +952,14 @@ class DeliveryNotes
      *
      * Delete a delivery note. Only `draft` notes without an assigned number can be deleted; any other state returns 409 `invalid_status_transition`.
      *
+     * @param  string  $company
      * @param  string  $deliveryNote
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesDelete(string $deliveryNote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesDeleteResponse
+    public function publicApiV1DeliveryNotesDelete(string $company, string $deliveryNote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -987,13 +987,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesDeleteRequest(
+            company: $company,
             deliveryNote: $deliveryNote,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1067,14 +1067,14 @@ class DeliveryNotes
      *
      * Create a new draft delivery note by copying lines, client, and metadata.
      *
+     * @param  string  $company
      * @param  string  $deliveryNote
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesDuplicateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesDuplicate(string $deliveryNote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesDuplicateResponse
+    public function publicApiV1DeliveryNotesDuplicate(string $company, string $deliveryNote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesDuplicateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1102,13 +1102,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesDuplicateRequest(
+            company: $company,
             deliveryNote: $deliveryNote,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/duplicate', Operations\PublicApiV1DeliveryNotesDuplicateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/duplicate', Operations\PublicApiV1DeliveryNotesDuplicateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1193,12 +1193,12 @@ class DeliveryNotes
      * Look up a single delivery note by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Returns the matching delivery note or 404 `delivery_note_not_found` if no delivery note uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindDeliveryNoteByExternalIdRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesFindByExternalIdResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesFindByExternalId(Components\FindDeliveryNoteByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesFindByExternalIdResponse
+    public function publicApiV1DeliveryNotesFindByExternalId(Components\FindDeliveryNoteByExternalIdRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesFindByExternalIdResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1226,12 +1226,12 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesFindByExternalIdRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/find-by-external-id');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/find-by-external-id', Operations\PublicApiV1DeliveryNotesFindByExternalIdRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1282,7 +1282,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1320,11 +1320,11 @@ class DeliveryNotes
      *
      * List your delivery notes with cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesList(?Operations\PublicApiV1DeliveryNotesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesListResponse
+    public function publicApiV1DeliveryNotesList(Operations\PublicApiV1DeliveryNotesListRequest $request, ?Options $options = null): Operations\PublicApiV1DeliveryNotesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1352,7 +1352,7 @@ class DeliveryNotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes', Operations\PublicApiV1DeliveryNotesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1401,7 +1401,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1471,7 +1471,7 @@ class DeliveryNotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/mark-delivered', Operations\PublicApiV1DeliveryNotesMarkDeliveredRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/mark-delivered', Operations\PublicApiV1DeliveryNotesMarkDeliveredRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1559,14 +1559,14 @@ class DeliveryNotes
      *
      * Download the PDF representation of a delivery note. Returns the binary PDF stream (`application/pdf`). Pass `?download=1` for `Content-Disposition: attachment` (file download); otherwise it is served `inline`. The response carries an `ETag`; resend it via `If-None-Match` to receive `304 Not Modified` when the document is unchanged.
      *
+     * @param  string  $company
      * @param  string  $deliveryNote
      * @param  ?string  $download
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesPdf(string $deliveryNote, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPdfResponse
+    public function publicApiV1DeliveryNotesPdf(string $company, string $deliveryNote, ?string $download = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1594,13 +1594,13 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesPdfRequest(
+            company: $company,
             deliveryNote: $deliveryNote,
             download: $download,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/pdf', Operations\PublicApiV1DeliveryNotesPdfRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/pdf', Operations\PublicApiV1DeliveryNotesPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1724,7 +1724,7 @@ class DeliveryNotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/send', Operations\PublicApiV1DeliveryNotesSendRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/send', Operations\PublicApiV1DeliveryNotesSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1813,13 +1813,13 @@ class DeliveryNotes
      *
      * Retrieve a delivery note by its `uuid`.
      *
+     * @param  string  $company
      * @param  string  $deliveryNote
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesShow(string $deliveryNote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesShowResponse
+    public function publicApiV1DeliveryNotesShow(string $company, string $deliveryNote, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1847,12 +1847,12 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesShowRequest(
+            company: $company,
             deliveryNote: $deliveryNote,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1968,7 +1968,7 @@ class DeliveryNotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}/sign', Operations\PublicApiV1DeliveryNotesSignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}/sign', Operations\PublicApiV1DeliveryNotesSignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2057,12 +2057,12 @@ class DeliveryNotes
      *
      * Return aggregated KPIs for your delivery notes: total count, accumulated amount, per-status breakdown, count pending signature, and count converted to invoice this month.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesStatsResponse
+    public function publicApiV1DeliveryNotesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2090,11 +2090,11 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/stats', Operations\PublicApiV1DeliveryNotesStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2140,7 +2140,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2178,12 +2178,12 @@ class DeliveryNotes
      *
      * List the closed catalog of delivery note statuses (`draft`, `delivered`, `invoiced`, `cancelled`) with their public labels and colors. Use it to populate filters or status pickers instead of hard-coding values. The response `data` is an array of `{ value, label, color }` items.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesStatusesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1DeliveryNotesStatuses(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesStatusesResponse
+    public function publicApiV1DeliveryNotesStatuses(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1DeliveryNotesStatusesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2211,11 +2211,11 @@ class DeliveryNotes
             ];
         }
         $request = new Operations\PublicApiV1DeliveryNotesStatusesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/statuses');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/statuses', Operations\PublicApiV1DeliveryNotesStatusesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2261,7 +2261,7 @@ class DeliveryNotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2331,7 +2331,7 @@ class DeliveryNotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/delivery_notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/delivery-notes/{delivery_note}', Operations\PublicApiV1DeliveryNotesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2344,7 +2344,7 @@ class DeliveryNotes
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.delivery_notes.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

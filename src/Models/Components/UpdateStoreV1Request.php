@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * UpdateStoreV1Request - Public REST API v1 — PUT /v1/stores/{store}.
+ * UpdateStoreV1Request - Public REST API v1 — PATCH /v1/companies/{company}/stores/{store}.
  *
  *
  * Partial update of the settings of a connected store: every field is optional

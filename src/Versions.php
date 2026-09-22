@@ -88,7 +88,7 @@ class Versions
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}/versions', Operations\PublicApiV1AutomationsRulesVersionsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}/versions', Operations\PublicApiV1AutomationsRulesVersionsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -175,14 +175,14 @@ class Versions
      *
      * Retrieve one frozen version of the definition of a rule by its version number — an ordinal, not a UUID. Unlike the listing, an unknown pair of rule and version returns 404. A version keeps resolving after its rule has been deleted, which is what lets the detail of an old run explain the definition it started from.
      *
+     * @param  string  $company
      * @param  string  $rule
      * @param  string  $version
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesVersionsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesVersionsShow(string $rule, string $version, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesVersionsShowResponse
+    public function publicApiV1AutomationsRulesVersionsShow(string $company, string $rule, string $version, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesVersionsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -210,13 +210,13 @@ class Versions
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesVersionsShowRequest(
+            company: $company,
             rule: $rule,
             version: $version,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}/versions/{version}', Operations\PublicApiV1AutomationsRulesVersionsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}/versions/{version}', Operations\PublicApiV1AutomationsRulesVersionsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

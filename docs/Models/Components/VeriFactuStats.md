@@ -1,6 +1,6 @@
 # VeriFactuStats
 
-Resumen agregado de los registros VeriFactu de la empresa autenticada: conteos por estado y desglose por tipo. Devuelto por `GET /v1/verifactu/stats`.
+Resumen agregado de los registros VeriFactu de la empresa autenticada: conteos por estado y desglose por tipo. Devuelto por `GET /v1/companies/{company}/verifactu/stats`.
 
 
 ## Fields

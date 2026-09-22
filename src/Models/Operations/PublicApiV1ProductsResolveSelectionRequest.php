@@ -15,6 +15,13 @@ class PublicApiV1ProductsResolveSelectionRequest
 {
     /**
      *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     *
      * @var string $product
      */
     #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=product')]
@@ -29,14 +36,6 @@ class PublicApiV1ProductsResolveSelectionRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      *
      * @var ?\Factuarea\Sdk\Models\Components\ResolveCatalogSelectionRequest $body
      */
@@ -44,17 +43,17 @@ class PublicApiV1ProductsResolveSelectionRequest
     public ?Components\ResolveCatalogSelectionRequest $body = null;
 
     /**
+     * @param  string  $company
      * @param  string  $product
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?\Factuarea\Sdk\Models\Components\ResolveCatalogSelectionRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Components\ResolveCatalogSelectionRequest $body = null)
+    public function __construct(string $company, string $product, ?LocalDate $factuareaVersion = null, ?Components\ResolveCatalogSelectionRequest $body = null)
     {
+        $this->company = $company;
         $this->product = $product;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->body = $body;
     }
 }

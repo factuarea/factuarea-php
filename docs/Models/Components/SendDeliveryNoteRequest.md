@@ -1,6 +1,6 @@
 # SendDeliveryNoteRequest
 
-Public REST API v1 — POST /v1/delivery_notes/{uuid}/send.
+Public REST API v1 — POST /v1/companies/{company}/delivery-notes/{uuid}/send.
 
 Required body: `email`. Optional: `subject`, `message` (max 2000 chars),
 `template_id` (catalog id of the email template).

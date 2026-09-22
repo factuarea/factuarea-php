@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxTotalsLine - Calculated breakdown of a single line within `POST /v1/taxes/calculate-totals`. */
+/** TaxTotalsLine - Calculated breakdown of a single line within `POST /v1/companies/{company}/taxes/calculate-totals`. */
 class TaxTotalsLine
 {
     /**

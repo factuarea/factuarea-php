@@ -10,9 +10,9 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * SendInvoiceReminderV1Request - Public REST API v1 — POST /v1/invoices/{uuid}/send-reminder
+ * SendInvoiceReminderV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/{uuid}/send-reminder
  *
- * and POST /v1/invoices/{uuid}/reminder-preview (same fields).
+ * and POST /v1/companies/{company}/invoices/{uuid}/reminder-preview (same fields).
  *
  * All fields are optional — without overrides the handler uses the
  * canonical payment reminder template.

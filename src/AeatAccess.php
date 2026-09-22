@@ -52,11 +52,11 @@ class AeatAccess
      *
      * Return the dissociated (anonymized) AEAT access ledger with cursor-based pagination. Third-party tax identifiers (NIF) are never exposed; the cursor uses the underlying record UUID v7 only for ordering.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuAeatAccessList(?Operations\PublicApiV1VerifactuAeatAccessListRequest $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessListResponse
+    public function publicApiV1VerifactuAeatAccessList(Operations\PublicApiV1VerifactuAeatAccessListRequest $request, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class AeatAccess
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/aeat-access/records');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/aeat-access/records', Operations\PublicApiV1VerifactuAeatAccessListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class AeatAccess
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,13 +171,13 @@ class AeatAccess
      *
      * Retrieve a single dissociated AEAT access record by its `id` (UUID v7). Returns 404 if the record does not exist or belongs to another company.
      *
+     * @param  string  $company
      * @param  string  $record
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuAeatAccessShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuAeatAccessShow(string $record, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessShowResponse
+    public function publicApiV1VerifactuAeatAccessShow(string $company, string $record, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuAeatAccessShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -205,12 +205,12 @@ class AeatAccess
             ];
         }
         $request = new Operations\PublicApiV1VerifactuAeatAccessShowRequest(
+            company: $company,
             record: $record,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/aeat-access/records/{record}', Operations\PublicApiV1VerifactuAeatAccessShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/aeat-access/records/{record}', Operations\PublicApiV1VerifactuAeatAccessShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

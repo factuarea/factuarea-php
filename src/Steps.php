@@ -83,7 +83,7 @@ class Steps
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/runs/{run}/steps', Operations\PublicApiV1AutomationsRunsStepsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/runs/{run}/steps', Operations\PublicApiV1AutomationsRunsStepsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -172,7 +172,7 @@ class Steps
      *
      * CAREFUL — the step EXECUTES FOR REAL: it sends email, delivers webhooks and calls third parties. This is not an inert retry, so confirm with the account owner before calling it.
      *
-     * `step_index` is the index published by `GET /v1/automations/runs/{run}/steps`, not the position of the action in the rule definition. The response is 202 — accepted and queued, not finished — with the run id and the index that was rearmed. An index outside the range of the run returns 404, exactly like a run that is not yours, so probing indices reveals nothing.
+     * `step_index` is the index published by `GET /v1/companies/{company}/automations/runs/{run}/steps`, not the position of the action in the rule definition. The response is 202 — accepted and queued, not finished — with the run id and the index that was rearmed. An index outside the range of the run returns 404, exactly like a run that is not yours, so probing indices reveals nothing.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsStepsReplayRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsStepsReplayResponse
@@ -206,7 +206,7 @@ class Steps
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/runs/{run}/steps/{step_index}/replay', Operations\PublicApiV1AutomationsRunsStepsReplayRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/runs/{run}/steps/{step_index}/replay', Operations\PublicApiV1AutomationsRunsStepsReplayRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

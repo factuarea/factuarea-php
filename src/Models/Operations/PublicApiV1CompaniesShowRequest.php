@@ -13,6 +13,19 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesShowRequest
 {
     /**
+     * Identificador público de la cuenta, YA resuelto y comparado
+     *
+     *                           contra la cuenta de la credencial por el middleware del eje
+     *                           de cuenta. Aquí no se vuelve a resolver: repetir la búsqueda
+     *                           abriría una segunda fuente de verdad del sujeto.
+     *
+     * @var string $account
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=account')]
+    public string $account;
+
+    /**
+     * Identificador público del NIF consultado (UUID v7).
      *
      * @var string $company
      */
@@ -28,23 +41,15 @@ class PublicApiV1CompaniesShowRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * @param  string  $account
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(string $company, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $account, string $company, ?LocalDate $factuareaVersion = null)
     {
+        $this->account = $account;
         $this->company = $company;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
     }
 }

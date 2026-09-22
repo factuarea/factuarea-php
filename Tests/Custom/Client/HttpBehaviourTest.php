@@ -27,6 +27,13 @@ use Psr\Http\Message\RequestInterface;
  */
 final class HttpBehaviourTest extends TestCase
 {
+    /**
+     * Company axis of the v1 contract: every company resource hangs off
+     * `/v1/companies/{company}/…`, so the identifier is a required argument of
+     * the generated method, not something the credential resolves in silence.
+     */
+    private const COMPANY = '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a01';
+
     /** @var list<array{request: RequestInterface}> */
     private array $history = [];
 
@@ -123,6 +130,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
             $this->fail('Expected a typed ErrorThrowable.');
@@ -149,6 +157,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
             $this->fail('Expected a typed ErrorThrowable.');
@@ -183,6 +192,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
         } catch (ErrorThrowable) {
@@ -214,6 +224,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
         } catch (ErrorThrowable) {

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ApiRequestLog
 {
     /**
-     * Opaque identifier of the request (`req_` + ULID), the same value returned in the `X-Request-Id` response header of that call. It is the identity of this resource — quote it in support requests and use it in `GET /v1/developers/request-logs/{request_id}`. Deliberately NOT a UUID v7: request logs are ephemeral rows, not domain resources.
+     * Opaque identifier of the request (`req_` + ULID), the same value returned in the `X-Request-Id` response header of that call. It is the identity of this resource — quote it in support requests and use it in `GET /v1/companies/{company}/request-logs/{request_id}`. Deliberately NOT a UUID v7: request logs are ephemeral rows, not domain resources.
      *
      * @var string $requestId
      */

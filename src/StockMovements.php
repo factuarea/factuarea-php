@@ -83,7 +83,7 @@ class StockMovements
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/stock-movements', Operations\PublicApiV1ProductsStockMovementsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/stock-movements', Operations\PublicApiV1ProductsStockMovementsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 

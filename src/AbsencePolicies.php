@@ -53,14 +53,14 @@ class AbsencePolicies
      *
      * Archive an absence policy (transition `active` → `archived`), retiring it from use while preserving it. No request body. Returns 422 if it is already archived. Reversible via unarchive.
      *
+     * @param  string  $company
      * @param  string  $absencePolicy
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesArchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsencePoliciesArchive(string $absencePolicy, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesArchiveResponse
+    public function publicApiV1AbsencePoliciesArchive(string $company, string $absencePolicy, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesArchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class AbsencePolicies
             ];
         }
         $request = new Operations\PublicApiV1AbsencePoliciesArchiveRequest(
+            company: $company,
             absencePolicy: $absencePolicy,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}/archive', Operations\PublicApiV1AbsencePoliciesArchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}/archive', Operations\PublicApiV1AbsencePoliciesArchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -210,7 +210,7 @@ class AbsencePolicies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}/assign', Operations\PublicApiV1AbsencePoliciesAssignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}/assign', Operations\PublicApiV1AbsencePoliciesAssignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -299,13 +299,13 @@ class AbsencePolicies
      *
      * List the employees assigned to this absence policy (their `employee_id` UUID v7 and name), as a flat list under `{ "data": [ … ] }`.
      *
+     * @param  string  $company
      * @param  string  $absencePolicy
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesAssignmentsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsencePoliciesAssignments(string $absencePolicy, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesAssignmentsResponse
+    public function publicApiV1AbsencePoliciesAssignments(string $company, string $absencePolicy, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesAssignmentsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,12 +333,12 @@ class AbsencePolicies
             ];
         }
         $request = new Operations\PublicApiV1AbsencePoliciesAssignmentsRequest(
+            company: $company,
             absencePolicy: $absencePolicy,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}/assignments', Operations\PublicApiV1AbsencePoliciesAssignmentsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}/assignments', Operations\PublicApiV1AbsencePoliciesAssignmentsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -454,7 +454,7 @@ class AbsencePolicies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}/carryover', Operations\PublicApiV1AbsencePoliciesCarryoverRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}/carryover', Operations\PublicApiV1AbsencePoliciesCarryoverRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -544,13 +544,13 @@ class AbsencePolicies
      * Create an absence policy for the authenticated company (resolved from the API key, never from the payload). `name`, `allowance_type` (`limited`/`unlimited`) and `accrual_method` (`annual`/`monthly`) are required; `allowance_days` is required and positive only when `allowance_type` is `limited`. `absence_type_ids` is the list of absence type UUIDs (v7) the policy covers (may be empty); a type belonging to another company returns 422. Returns the created policy with its generated `id` (UUID v7).
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsencePolicyRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsencePoliciesCreate(Components\CreateAbsencePolicyRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesCreateResponse
+    public function publicApiV1AbsencePoliciesCreate(Components\CreateAbsencePolicyRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -578,13 +578,13 @@ class AbsencePolicies
             ];
         }
         $request = new Operations\PublicApiV1AbsencePoliciesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies', Operations\PublicApiV1AbsencePoliciesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -635,7 +635,7 @@ class AbsencePolicies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -673,11 +673,11 @@ class AbsencePolicies
      *
      * List your company’s absence policies with cursor-based pagination. Supports filtering by `status` (`active`/`archived`) and `accrual_method` (`annual`/`monthly`), plus free-text `search` over the policy name.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsencePoliciesList(?Operations\PublicApiV1AbsencePoliciesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesListResponse
+    public function publicApiV1AbsencePoliciesList(Operations\PublicApiV1AbsencePoliciesListRequest $request, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -705,7 +705,7 @@ class AbsencePolicies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies', Operations\PublicApiV1AbsencePoliciesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -754,7 +754,7 @@ class AbsencePolicies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -792,13 +792,13 @@ class AbsencePolicies
      *
      * Retrieve a single absence policy by its `id` (UUID v7), including the UUIDs of its associated absence types and the count of assigned employees. A policy belonging to another company returns 404 `absence_policy_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $absencePolicy
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsencePoliciesShow(string $absencePolicy, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesShowResponse
+    public function publicApiV1AbsencePoliciesShow(string $company, string $absencePolicy, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -826,12 +826,12 @@ class AbsencePolicies
             ];
         }
         $request = new Operations\PublicApiV1AbsencePoliciesShowRequest(
+            company: $company,
             absencePolicy: $absencePolicy,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}', Operations\PublicApiV1AbsencePoliciesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}', Operations\PublicApiV1AbsencePoliciesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -915,14 +915,14 @@ class AbsencePolicies
      *
      * Unarchive an absence policy (transition `archived` → `active`), returning it to use. No request body. Returns 422 if it is already active.
      *
+     * @param  string  $company
      * @param  string  $absencePolicy
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesUnarchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsencePoliciesUnarchive(string $absencePolicy, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesUnarchiveResponse
+    public function publicApiV1AbsencePoliciesUnarchive(string $company, string $absencePolicy, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsencePoliciesUnarchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -950,13 +950,13 @@ class AbsencePolicies
             ];
         }
         $request = new Operations\PublicApiV1AbsencePoliciesUnarchiveRequest(
+            company: $company,
             absencePolicy: $absencePolicy,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}/unarchive', Operations\PublicApiV1AbsencePoliciesUnarchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}/unarchive', Operations\PublicApiV1AbsencePoliciesUnarchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1072,7 +1072,7 @@ class AbsencePolicies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}/unassign', Operations\PublicApiV1AbsencePoliciesUnassignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}/unassign', Operations\PublicApiV1AbsencePoliciesUnassignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1193,7 +1193,7 @@ class AbsencePolicies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-policies/{absence_policy}', Operations\PublicApiV1AbsencePoliciesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-policies/{absence_policy}', Operations\PublicApiV1AbsencePoliciesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1206,7 +1206,7 @@ class AbsencePolicies
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.absence-policies.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

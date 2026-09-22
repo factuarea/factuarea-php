@@ -14,6 +14,13 @@ class PublicApiV1ProductsSupplierOffersListRequest
 {
     /**
      *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     *
      * @var string $product
      */
     #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=product')]
@@ -63,14 +70,6 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      *
      * @var ?string $startingAfter
      */
@@ -78,6 +77,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?string $startingAfter = null;
 
     /**
+     * @param  string  $company
      * @param  string  $product
      * @param  ?string  $supplierId
      * @param  ?string  $variantId
@@ -85,12 +85,12 @@ class PublicApiV1ProductsSupplierOffersListRequest
      * @param  ?bool  $preferred
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(string $product, ?string $supplierId = null, ?string $variantId = null, ?Availability $availability = null, ?bool $preferred = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null)
+    public function __construct(string $company, string $product, ?string $supplierId = null, ?string $variantId = null, ?Availability $availability = null, ?bool $preferred = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
     {
+        $this->company = $company;
         $this->product = $product;
         $this->supplierId = $supplierId;
         $this->variantId = $variantId;
@@ -98,7 +98,6 @@ class PublicApiV1ProductsSupplierOffersListRequest
         $this->preferred = $preferred;
         $this->limit = $limit;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;
     }
 }

@@ -51,14 +51,14 @@ class Personalization
     /**
      * List available personalization templates
      *
-     * List the PDF templates available for the account's plan (plan-aware) plus the accepted format for the `accent_color`. Use it to discover which `pdf_template` slugs and colors can be set via `PATCH /v1/account/personalization`.
+     * List the PDF templates available for the account's plan (plan-aware) plus the accepted format for the `accent_color`. Use it to discover which `pdf_template` slugs and colors can be set via `PATCH /v1/companies/{company}/personalization`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountPersonalizationTemplatesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountPersonalizationTemplates(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountPersonalizationTemplatesResponse
+    public function publicApiV1AccountPersonalizationTemplates(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountPersonalizationTemplatesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,11 +86,11 @@ class Personalization
             ];
         }
         $request = new Operations\PublicApiV1AccountPersonalizationTemplatesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/account/personalization/templates');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/personalization/templates', Operations\PublicApiV1AccountPersonalizationTemplatesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -136,7 +136,7 @@ class Personalization
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -174,14 +174,14 @@ class Personalization
      *
      * Set the invoice-emission language, PDF template and accent color of the company in one partial update; omitted fields keep their value. `language` is one of `es`, `en`, `ca`; `pdf_template` is a slug from the `PdfTemplate` catalog; `accent_color` is a `#RRGGBB` hex color. Returns the updated `Account` resource.
      *
+     * @param  string  $company
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateAccountPersonalizationRequest  $body
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountPersonalizationUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountPersonalizationUpdate(?Components\UpdateAccountPersonalizationRequest $body = null, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountPersonalizationUpdateResponse
+    public function publicApiV1AccountPersonalizationUpdate(string $company, ?Components\UpdateAccountPersonalizationRequest $body = null, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountPersonalizationUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,13 +209,13 @@ class Personalization
             ];
         }
         $request = new Operations\PublicApiV1AccountPersonalizationUpdateRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
             body: $body,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/account/personalization');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/personalization', Operations\PublicApiV1AccountPersonalizationUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -265,7 +265,7 @@ class Personalization
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

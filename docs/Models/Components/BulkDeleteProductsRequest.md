@@ -1,6 +1,6 @@
 # BulkDeleteProductsRequest
 
-Public REST API v1 — POST /v1/products/bulk-delete.
+Public REST API v1 — POST /v1/companies/{company}/products/bulk-delete.
 
 Body: `{ ids: string[] }`. Accepts between 1 and 200 IDs (UUID v7). Tenant
 membership validation is performed by the Handler (filtered by company_id);
