@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesStatsRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -28,6 +29,7 @@ class PublicApiV1InvoicesStatsRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Start of the period to aggregate, compared against the invoice issue date (`YYYY-MM-DD`, inclusive). Omit it for no lower bound.
      *
      * @var ?LocalDate $dateFrom
      */
@@ -35,6 +37,7 @@ class PublicApiV1InvoicesStatsRequest
     public ?LocalDate $dateFrom = null;
 
     /**
+     * End of the period to aggregate, compared against the invoice issue date (`YYYY-MM-DD`, inclusive). Omit it for no upper bound.
      *
      * @var ?LocalDate $dateTo
      */

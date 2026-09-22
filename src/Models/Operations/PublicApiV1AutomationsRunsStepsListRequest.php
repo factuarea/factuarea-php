@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AutomationsRunsStepsListRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1AutomationsRunsStepsListRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the automation run, as returned in `id` by its list and detail responses.
      *
      * @var string $run
      */
@@ -27,7 +29,7 @@ class PublicApiV1AutomationsRunsStepsListRequest
     public string $run;
 
     /**
-     * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -35,7 +37,7 @@ class PublicApiV1AutomationsRunsStepsListRequest
     public ?string $startingAfter = null;
 
     /**
-     * Cursor for backward pagination. Use the `uuid` of the first object on the current page.
+     * Cursor for backward pagination: pass the `id` of the first object on the current page.
      *
      * @var ?string $endingBefore
      */

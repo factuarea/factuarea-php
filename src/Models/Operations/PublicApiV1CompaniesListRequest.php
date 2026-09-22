@@ -13,11 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesListRequest
 {
     /**
-     * Identificador público de la cuenta, YA resuelto y comparado
-     *
-     *                           contra la cuenta de la credencial por el middleware del eje
-     *                           de cuenta. Aquí no se vuelve a resolver: repetir la búsqueda
-     *                           abriría una segunda fuente de verdad del sujeto.
+     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
      *
      * @var string $account
      */
@@ -49,7 +45,7 @@ class PublicApiV1CompaniesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Filtrar por estado del vínculo de gestoría. Sin filtro se ocultan las archivadas (solo `active` e `inactive`).
+     * Only companies in this status: `active`, `inactive` or `archived`. Without it, archived companies are hidden and only `active` and `inactive` ones are returned.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus $status
      */

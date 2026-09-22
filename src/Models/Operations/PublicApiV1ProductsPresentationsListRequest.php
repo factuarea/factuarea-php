@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsPresentationsListRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1ProductsPresentationsListRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the product, as returned in `id` by its list and detail responses.
      *
      * @var string $product
      */
@@ -27,6 +29,7 @@ class PublicApiV1ProductsPresentationsListRequest
     public string $product;
 
     /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
      */
@@ -34,6 +37,7 @@ class PublicApiV1ProductsPresentationsListRequest
     public ?int $limit = null;
 
     /**
+     * When `true`, return only active items; omit it (or send `false`) to include inactive ones too.
      *
      * @var ?bool $active
      */
@@ -49,6 +53,7 @@ class PublicApiV1ProductsPresentationsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */

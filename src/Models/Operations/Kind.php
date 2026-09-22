@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Contact kind: `person` (an individual) or `company` (a legal entity). */
 enum Kind: string
 {
     case Person = 'person';

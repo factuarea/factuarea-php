@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PriceListsItemsListRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1PriceListsItemsListRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the price list, as returned in `id` by its list and detail responses.
      *
      * @var string $priceList
      */
@@ -27,6 +29,7 @@ class PublicApiV1PriceListsItemsListRequest
     public string $priceList;
 
     /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
      */
@@ -42,6 +45,7 @@ class PublicApiV1PriceListsItemsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -49,6 +53,7 @@ class PublicApiV1PriceListsItemsListRequest
     public ?string $startingAfter = null;
 
     /**
+     * Partial, case-insensitive match against the name of the priced product, variant, presentation or configuration (up to 120 characters).
      *
      * @var ?string $search
      */
@@ -56,6 +61,7 @@ class PublicApiV1PriceListsItemsListRequest
     public ?string $search = null;
 
     /**
+     * Lifecycle of the items to return: `active` (default, the current ones), `retired` (the history of items whose catalog target was deleted) or `all`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsItemsListStatus $status
      */

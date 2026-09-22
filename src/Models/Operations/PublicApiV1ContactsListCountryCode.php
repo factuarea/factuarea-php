@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** ISO 3166-1 alpha-2 country code (e.g. `ES`); exact match. */
 enum PublicApiV1ContactsListCountryCode: string
 {
     case Ad = 'AD';

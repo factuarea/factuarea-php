@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1DevelopersRequestLogsShowRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1DevelopersRequestLogsShowRequest
     public string $company;
 
     /**
+     * Identifier of the logged request (`req_…`, not a UUID), as returned in the `X-Request-Id` response header and in `request_id` by the request log list. Request logs are kept for 30 days.
      *
      * @var string $requestId
      */

@@ -13,10 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AccountInvitationsResendRequest
 {
     /**
-     * Identificador público de la cuenta, YA resuelto y comparado
-     *
-     *                           contra la cuenta de la credencial por el middleware del eje
-     *                           de cuenta. Aquí no se vuelve a resolver.
+     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
      *
      * @var string $account
      */
@@ -24,9 +21,7 @@ class PublicApiV1AccountInvitationsResendRequest
     public string $account;
 
     /**
-     * Identificador público opaco de la invitación. NO se
-     *
-     *                              resuelve aquí: lo localiza el manejador dentro del ámbito.
+     * Public identifier (UUID v7) of the account invitation, as returned in `id` by its list and detail responses.
      *
      * @var string $invitation
      */

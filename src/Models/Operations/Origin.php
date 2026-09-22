@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Only payments of this origin: `subscription` (subscription billing cycles) or `oneshot` (one-off charges). */
 enum Origin: string
 {
     case Subscription = 'subscription';

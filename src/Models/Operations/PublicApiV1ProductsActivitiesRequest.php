@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsActivitiesRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1ProductsActivitiesRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the product, as returned in `id` by its list and detail responses.
      *
      * @var string $product
      */
@@ -35,6 +37,7 @@ class PublicApiV1ProductsActivitiesRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Number of activity entries per page. Integer between 1 and 200. Defaults to 50.
      *
      * @var ?int $perPage
      */
@@ -42,6 +45,7 @@ class PublicApiV1ProductsActivitiesRequest
     public ?int $perPage = null;
 
     /**
+     * Page number to return, starting at 1.
      *
      * @var ?int $page
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Estado de la invitación por el que filtrar: pending, accepted, canceled o expired. */
+/** Only invitations in this status: `pending`, `accepted`, `canceled` or `expired`. */
 enum PublicApiV1AccountInvitationsListStatus: string
 {
     case Pending = 'pending';

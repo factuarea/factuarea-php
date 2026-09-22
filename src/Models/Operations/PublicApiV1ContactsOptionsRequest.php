@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsOptionsRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -36,6 +37,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Narrows the returned values by partial match (up to 100 characters). Ignored when `field` is `country`.
      *
      * @var ?string $search
      */
@@ -43,6 +45,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?string $search = null;
 
     /**
+     * Only values from contacts in this country (ISO 3166-1 alpha-2 code, e.g. `ES`). Ignored when `field` is `country`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsOptionsCountryCode $countryCode
      */
@@ -50,6 +53,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?PublicApiV1ContactsOptionsCountryCode $countryCode = null;
 
     /**
+     * Only values from contacts in this province (exact match). Ignored when `field` is `country`.
      *
      * @var ?string $province
      */
@@ -57,6 +61,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?string $province = null;
 
     /**
+     * Maximum number of values to return. Integer between 1 and 250. Defaults to 50. Ignored when `field` is `country`.
      *
      * @var ?int $limit
      */

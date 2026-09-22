@@ -13,11 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AccountClaimTokensListRequest
 {
     /**
-     * Identificador público de la cuenta, YA resuelto y comparado
-     *
-     *                           contra la cuenta de la credencial por el middleware del eje
-     *                           de cuenta. Es el PRIMER parámetro escalar y el único de esta
-     *                           operación; aquí no se vuelve a resolver.
+     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
      *
      * @var string $account
      */
@@ -25,7 +21,7 @@ class PublicApiV1AccountClaimTokensListRequest
     public string $account;
 
     /**
-     * Estado del vale por el que filtrar: active, expired o consumed.
+     * Only claim tokens in this status: `active`, `expired` or `consumed`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensListStatus $status
      */

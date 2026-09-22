@@ -13,10 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AccountUsageRequest
 {
     /**
-     * Identificador público de la cuenta, YA resuelto y comparado
-     *
-     *                           contra la cuenta de la credencial por el middleware del eje
-     *                           de cuenta. Es el PRIMER y ÚNICO escalar de la firma.
+     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
      *
      * @var string $account
      */

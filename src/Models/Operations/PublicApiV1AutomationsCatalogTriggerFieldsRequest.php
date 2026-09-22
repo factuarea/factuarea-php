@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AutomationsCatalogTriggerFieldsRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1AutomationsCatalogTriggerFieldsRequest
     public string $company;
 
     /**
+     * Trigger key: a dotted event name such as `invoice.created`, as listed by the automation catalog (`GET /v1/companies/{company}/automations/catalog`).
      *
      * @var string $trigger
      */

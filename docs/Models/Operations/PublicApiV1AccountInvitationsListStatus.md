@@ -1,6 +1,6 @@
 # PublicApiV1AccountInvitationsListStatus
 
-Estado de la invitación por el que filtrar: pending, accepted, canceled o expired.
+Only invitations in this status: `pending`, `accepted`, `canceled` or `expired`.
 
 
 ## Values

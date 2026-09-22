@@ -58,6 +58,9 @@ off `/v1/companies/{company}/…` and the account surface off
   `/v1/accounts/{account}/…`.
 - `Companies::publicApiV1CompaniesIssuingReadiness()` and
   `RecurringInvoices::publicApiV1RecurringInvoicesBulkStatus()`.
+- **Parameter descriptions**: every path, query and header parameter now carries
+  its description in the method docblocks and in `docs/`. Text only: no
+  signature or type changes.
 
 ## [0.4.0] — 2026-09-21
 

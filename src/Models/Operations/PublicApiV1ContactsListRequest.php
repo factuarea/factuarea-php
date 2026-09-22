@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsListRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,7 +21,7 @@ class PublicApiV1ContactsListRequest
     public string $company;
 
     /**
-     * $roles
+     * Only contacts with these roles: `customer`, `supplier`, `lead` or `unassigned` (no role at all). Repeat the parameter or send a comma-separated list; combine it with `role_match` and `role_status`.
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoles> $roles
      */
@@ -28,7 +29,7 @@ class PublicApiV1ContactsListRequest
     public ?array $roles = null;
 
     /**
-     * $tags
+     * Only contacts carrying ALL these tags (case-insensitive). Repeat the parameter or send a comma-separated list; up to 50 tags.
      *
      * @var ?array<string> $tags
      */
@@ -36,7 +37,7 @@ class PublicApiV1ContactsListRequest
     public ?array $tags = null;
 
     /**
-     * $metadata
+     * Filter by metadata as `metadata[key]=value` (exact match); when several pairs are sent, all of them must match. Up to 20 pairs.
      *
      * @var ?array<string> $metadata
      */
@@ -52,6 +53,7 @@ class PublicApiV1ContactsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
      */
@@ -59,6 +61,7 @@ class PublicApiV1ContactsListRequest
     public ?int $limit = null;
 
     /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -66,6 +69,7 @@ class PublicApiV1ContactsListRequest
     public ?string $startingAfter = null;
 
     /**
+     * Free-text search (up to 255 characters): partial, case-insensitive match against the name, commercial name, tax identifiers, email and external ID of the contact, and against its phone numbers when the term is numeric. Combined with the other filters (AND).
      *
      * @var ?string $search
      */
@@ -73,6 +77,7 @@ class PublicApiV1ContactsListRequest
     public ?string $search = null;
 
     /**
+     * `any` (default) returns contacts with at least one of the requested `roles[]`; `all` requires every one of them.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoleMatch $roleMatch
      */
@@ -80,6 +85,7 @@ class PublicApiV1ContactsListRequest
     public ?PublicApiV1ContactsListRoleMatch $roleMatch = null;
 
     /**
+     * Only roles in this status: `active` or `inactive`. Applies to the requested `roles[]`, or to any role when none is requested.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoleStatus $roleStatus
      */
@@ -87,6 +93,7 @@ class PublicApiV1ContactsListRequest
     public ?PublicApiV1ContactsListRoleStatus $roleStatus = null;
 
     /**
+     * Contact kind: `person` (an individual) or `company` (a legal entity).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\Kind $kind
      */
@@ -94,6 +101,7 @@ class PublicApiV1ContactsListRequest
     public ?Kind $kind = null;
 
     /**
+     * Exact match on any tax identifier of the contact: its tax ID (NIF/NIE/CIF), its EU VAT number or its alternative identification document.
      *
      * @var ?string $fiscalIdentity
      */
@@ -101,6 +109,7 @@ class PublicApiV1ContactsListRequest
     public ?string $fiscalIdentity = null;
 
     /**
+     * Exact match on `external_id`, the identifier you assigned in your own system.
      *
      * @var ?string $externalId
      */
@@ -108,6 +117,7 @@ class PublicApiV1ContactsListRequest
     public ?string $externalId = null;
 
     /**
+     * `true` returns only archived contacts and `false` only the ones not archived. Omit it to return both.
      *
      * @var ?bool $isArchived
      */
@@ -115,7 +125,7 @@ class PublicApiV1ContactsListRequest
     public ?bool $isArchived = null;
 
     /**
-     * Coincidencia exacta de ciudad y provincia; país ISO 3166-1 alpha-2 exacto.
+     * City name; exact match (surrounding and repeated whitespace is ignored).
      *
      * @var ?string $city
      */
@@ -123,6 +133,7 @@ class PublicApiV1ContactsListRequest
     public ?string $city = null;
 
     /**
+     * Province name; exact match (surrounding and repeated whitespace is ignored).
      *
      * @var ?string $province
      */
@@ -130,6 +141,7 @@ class PublicApiV1ContactsListRequest
     public ?string $province = null;
 
     /**
+     * ISO 3166-1 alpha-2 country code (e.g. `ES`); exact match.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListCountryCode $countryCode
      */
@@ -137,6 +149,7 @@ class PublicApiV1ContactsListRequest
     public ?PublicApiV1ContactsListCountryCode $countryCode = null;
 
     /**
+     * `true` returns only contacts with an email address and `false` only the ones without it.
      *
      * @var ?bool $hasEmail
      */
@@ -144,7 +157,7 @@ class PublicApiV1ContactsListRequest
     public ?bool $hasEmail = null;
 
     /**
-     * Verdadero si hay teléfono fijo O móvil; falso si ambos están vacíos.
+     * `true` returns only contacts with a landline or mobile phone number and `false` only the ones with neither.
      *
      * @var ?bool $hasPhone
      */
@@ -152,6 +165,7 @@ class PublicApiV1ContactsListRequest
     public ?bool $hasPhone = null;
 
     /**
+     * Only records created on or after this date (`YYYY-MM-DD`, inclusive).
      *
      * @var ?LocalDate $createdFrom
      */
@@ -159,6 +173,7 @@ class PublicApiV1ContactsListRequest
     public ?LocalDate $createdFrom = null;
 
     /**
+     * Only records created on or before this date (`YYYY-MM-DD`, inclusive). Must not be earlier than `created_from`.
      *
      * @var ?LocalDate $createdTo
      */
@@ -166,6 +181,7 @@ class PublicApiV1ContactsListRequest
     public ?LocalDate $createdTo = null;
 
     /**
+     * Sort direction by creation order: `asc` (default, oldest first) or `desc`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\SortOrder $sortOrder
      */

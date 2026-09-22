@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsShowRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1ProductsShowRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the product, as returned in `id` by its list and detail responses.
      *
      * @var string $product
      */
@@ -35,10 +37,7 @@ class PublicApiV1ProductsShowRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Recursos anidados a incluir, separados por comas. Hoy solo
-     *
-     * `configurable_catalog`, que adjunta los grupos de opciones
-     * vendibles y las combinaciones comerciales del producto.
+     * Comma-separated list of related data to embed in the product (up to 200 characters). Currently only `configurable_catalog`, which adds the sellable option groups and the commercial combinations of the product.
      *
      * @var ?string $include
      */

@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsSupplierOffersListRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the product, as returned in `id` by its list and detail responses.
      *
      * @var string $product
      */
@@ -27,6 +29,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public string $product;
 
     /**
+     * Supplier ID (UUID v7). Exact match on `supplier_id`.
      *
      * @var ?string $supplierId
      */
@@ -34,6 +37,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?string $supplierId = null;
 
     /**
+     * Only records for this product variant (UUID v7).
      *
      * @var ?string $variantId
      */
@@ -41,6 +45,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?string $variantId = null;
 
     /**
+     * Only offers with this availability: `available`, `unavailable`, `unknown`, `seasonal` or `store_dependent`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\Availability $availability
      */
@@ -48,6 +53,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?Availability $availability = null;
 
     /**
+     * `true` returns only the preferred offer and `false` only the ones not preferred.
      *
      * @var ?bool $preferred
      */
@@ -55,6 +61,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?bool $preferred = null;
 
     /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
      */
@@ -70,6 +77,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */

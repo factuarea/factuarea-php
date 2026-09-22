@@ -1,6 +1,6 @@
 # PublicApiV1AccountClaimTokensListStatus
 
-Estado del vale por el que filtrar: active, expired o consumed.
+Only claim tokens in this status: `active`, `expired` or `consumed`.
 
 
 ## Values

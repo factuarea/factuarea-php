@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PriceListsOptionsRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1PriceListsOptionsRequest
     public string $company;
 
     /**
+     * Partial match against the price list name (up to 120 characters).
      *
      * @var ?string $search
      */
@@ -27,6 +29,7 @@ class PublicApiV1PriceListsOptionsRequest
     public ?string $search = null;
 
     /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 50.
      *
      * @var ?int $limit
      */

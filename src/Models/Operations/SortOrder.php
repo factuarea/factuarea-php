@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Sort direction by creation order: `asc` (default, oldest first) or `desc`. */
 enum SortOrder: string
 {
     case Asc = 'asc';

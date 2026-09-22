@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1VerifactuRecordsActivitiesRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1VerifactuRecordsActivitiesRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the VeriFactu billing record, as returned in `id` by its list and detail responses.
      *
      * @var string $record
      */

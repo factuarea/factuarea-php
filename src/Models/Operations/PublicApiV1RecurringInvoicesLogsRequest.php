@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1RecurringInvoicesLogsRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1RecurringInvoicesLogsRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the recurring invoice, as returned in `id` by its list and detail responses.
      *
      * @var string $recurringInvoice
      */
@@ -27,7 +29,7 @@ class PublicApiV1RecurringInvoicesLogsRequest
     public string $recurringInvoice;
 
     /**
-     * Default `'25'` (string) por consistencia OpenAPI/Spectral.
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?string $limit
      */
@@ -35,6 +37,7 @@ class PublicApiV1RecurringInvoicesLogsRequest
     public ?string $limit = null;
 
     /**
+     * Opaque pagination cursor: pass the `next_cursor` value returned by the previous page.
      *
      * @var ?string $cursor
      */
@@ -50,6 +53,7 @@ class PublicApiV1RecurringInvoicesLogsRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Page size. Alias of `limit` (integer between 1 and 100, defaults to 25).
      *
      * @var ?string $perPage
      */

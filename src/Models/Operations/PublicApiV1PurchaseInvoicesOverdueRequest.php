@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseInvoicesOverdueRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,10 +21,7 @@ class PublicApiV1PurchaseInvoicesOverdueRequest
     public string $company;
 
     /**
-     * Default `'25'` (string) por consistencia OpenAPI: Scramble infiere
-     *
-     *  schema.type=string para `request->input()` y el default debe ser
-     *  string (Spectral rechaza `default: 25` int con `type: string`).
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?string $limit
      */
@@ -31,6 +29,7 @@ class PublicApiV1PurchaseInvoicesOverdueRequest
     public ?string $limit = null;
 
     /**
+     * Opaque pagination cursor. NON-STANDARD for this API: unlike the cursor lists (`starting_after`/`ending_before`), this endpoint wraps an offset paginator, so the cursor encodes the next page number. Use the `next_cursor` value returned by the previous page.
      *
      * @var ?string $cursor
      */
@@ -46,6 +45,7 @@ class PublicApiV1PurchaseInvoicesOverdueRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Page size. Alias of `limit` (integer between 1 and 100, defaults to 25).
      *
      * @var ?string $perPage
      */

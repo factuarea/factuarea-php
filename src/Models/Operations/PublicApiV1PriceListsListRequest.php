@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PriceListsListRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1PriceListsListRequest
     public string $company;
 
     /**
+     * Page number (starting at 1) for page-based navigation. Ignored when `starting_after` is sent, which takes precedence.
      *
      * @var ?int $page
      */
@@ -27,6 +29,7 @@ class PublicApiV1PriceListsListRequest
     public ?int $page = null;
 
     /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 20.
      *
      * @var ?int $limit
      */
@@ -34,6 +37,7 @@ class PublicApiV1PriceListsListRequest
     public ?int $limit = null;
 
     /**
+     * Partial match against the price list name (up to 120 characters).
      *
      * @var ?string $search
      */
@@ -41,6 +45,7 @@ class PublicApiV1PriceListsListRequest
     public ?string $search = null;
 
     /**
+     * Only price lists in this status: `active` or `inactive`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsListStatus $status
      */
@@ -56,6 +61,7 @@ class PublicApiV1PriceListsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */

@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1AutomationsRulesVersionsShowRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1AutomationsRulesVersionsShowRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the automation rule, as returned in `id` by its list and detail responses.
      *
      * @var string $rule
      */
@@ -27,6 +29,7 @@ class PublicApiV1AutomationsRulesVersionsShowRequest
     public string $rule;
 
     /**
+     * Version number of the rule (an integer, not a UUID), as returned in `version` by `GET /v1/companies/{company}/automations/rules/{rule}/versions`.
      *
      * @var string $version
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** `in` = entradas (delta positivo), `out` = salidas (delta negativo). Ausente = el ledger completo. */
+/** `in` returns only incoming movements (positive quantity change) and `out` only outgoing ones (negative quantity change). Omit it to return the whole stock ledger. */
 enum PublicApiV1ProductsStockMovementsListDirection: string
 {
     case In = 'in';

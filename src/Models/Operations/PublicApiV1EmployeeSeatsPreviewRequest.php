@@ -13,10 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1EmployeeSeatsPreviewRequest
 {
     /**
-     * Identificador público de la cuenta, YA resuelto y comparado
-     *
-     *                           contra la cuenta de la credencial por el middleware del eje
-     *                           de cuenta. Aquí no se vuelve a resolver.
+     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
      *
      * @var string $account
      */
@@ -24,7 +21,7 @@ class PublicApiV1EmployeeSeatsPreviewRequest
     public string $account;
 
     /**
-     * $employeeIds
+     * Public identifiers (UUID v7) of specific employees to preview. When sent, the preview is coverage-aware: employees still covered by a paid seat cost nothing and only the uncovered ones are prorated. Omit it to preview `count` employees activated in bulk.
      *
      * @var ?array<string> $employeeIds
      */

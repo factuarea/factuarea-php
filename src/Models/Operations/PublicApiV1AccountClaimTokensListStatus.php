@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Estado del vale por el que filtrar: active, expired o consumed. */
+/** Only claim tokens in this status: `active`, `expired` or `consumed`. */
 enum PublicApiV1AccountClaimTokensListStatus: string
 {
     case Active = 'active';

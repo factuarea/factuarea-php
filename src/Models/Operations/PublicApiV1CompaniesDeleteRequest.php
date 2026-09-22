@@ -13,11 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesDeleteRequest
 {
     /**
-     * Identificador público de la cuenta, YA resuelto y comparado
-     *
-     *                           contra la cuenta de la credencial por el middleware del eje
-     *                           de cuenta. Aquí no se vuelve a resolver: repetir la búsqueda
-     *                           abriría una segunda fuente de verdad del sujeto.
+     * Public identifier (UUID) of the account your credential belongs to; read it from `GET /v1/me` (`data.account.id`). Any other value returns 404 `account_not_found`.
      *
      * @var string $account
      */
@@ -25,7 +21,7 @@ class PublicApiV1CompaniesDeleteRequest
     public string $account;
 
     /**
-     * Identificador público de la empresa HIJA (UUID v7).
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Lifecycle of the items to return: `active` (default, the current ones), `retired` (the history of items whose catalog target was deleted) or `all`. */
 enum PublicApiV1PriceListsItemsListStatus: string
 {
     case Active = 'active';

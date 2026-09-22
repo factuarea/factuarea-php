@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1DeliveryNotesSignatureAuditsForgetRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1DeliveryNotesSignatureAuditsForgetRequest
     public string $company;
 
     /**
+     * Numeric identifier (an integer, not a UUID) of the delivery-note signature audit record whose personal data is erased.
      *
      * @var string $auditId
      */

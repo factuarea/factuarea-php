@@ -13,6 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1RecurringInvoicesPreviewRequest
 {
     /**
+     * Public identifier (UUID) of the company the request acts on. It must be in your credential's scope; read it from `GET /v1/me` (`data.scope[].id`). Never the tax ID.
      *
      * @var string $company
      */
@@ -20,6 +21,7 @@ class PublicApiV1RecurringInvoicesPreviewRequest
     public string $company;
 
     /**
+     * Public identifier (UUID v7) of the recurring invoice, as returned in `id` by its list and detail responses.
      *
      * @var string $recurringInvoice
      */
@@ -27,6 +29,7 @@ class PublicApiV1RecurringInvoicesPreviewRequest
     public string $recurringInvoice;
 
     /**
+     * Number of upcoming occurrences to preview. Integer between 1 and 36. Defaults to 5; larger values are capped at 36.
      *
      * @var ?string $count
      */
@@ -34,6 +37,7 @@ class PublicApiV1RecurringInvoicesPreviewRequest
     public ?string $count = null;
 
     /**
+     * Set to `document` to also return `next_invoice`, a full preview of the next invoice the template will generate.
      *
      * @var ?string $expand
      */
