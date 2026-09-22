@@ -52,13 +52,13 @@ class InvoicesFaceSubmissions
      *
      * Lists the FACe submission history of an invoice (flat array, newest included). Returns `data: []` when the invoice has never been submitted.
      *
+     * @param  string  $company
      * @param  string  $invoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesFaceSubmissionsList(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsListResponse
+    public function publicApiV1InvoicesFaceSubmissionsList(string $company, string $invoice, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,12 +86,12 @@ class InvoicesFaceSubmissions
             ];
         }
         $request = new Operations\PublicApiV1InvoicesFaceSubmissionsListRequest(
+            company: $company,
             invoice: $invoice,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/face-submissions', Operations\PublicApiV1InvoicesFaceSubmissionsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/invoices/{invoice}/face-submissions', Operations\PublicApiV1InvoicesFaceSubmissionsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -175,14 +175,14 @@ class InvoicesFaceSubmissions
      *
      * Submit an issued invoice to FACe (the Spanish B2G entry point). Requires the client's three DIR3 codes and an active signing certificate; the FacturaE 3.2.2 XML is signed XAdES-EPES and presented to FACe, returning the registry number. No request body — the DIR3 codes are read from the client. Test keys simulate the submission without contacting FACe.
      *
+     * @param  string  $company
      * @param  string  $invoice
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesFaceSubmissionsSubmit(string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
+    public function publicApiV1InvoicesFaceSubmissionsSubmit(string $company, string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -210,13 +210,13 @@ class InvoicesFaceSubmissions
             ];
         }
         $request = new Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest(
+            company: $company,
             invoice: $invoice,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/face-submissions', Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/invoices/{invoice}/face-submissions', Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

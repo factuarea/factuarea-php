@@ -1,6 +1,6 @@
 # AcceptQuoteRequest
 
-Public REST API v1 — POST /v1/quotes/{uuid}/accept.
+Public REST API v1 — POST /v1/companies/{company}/quotes/{quote}/accept.
 
 Optional body: `accepted_on` (date, defaults to today), `notes`.
 The controller performs the cross-field validation for `quote_expired`

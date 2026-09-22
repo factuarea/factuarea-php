@@ -38,7 +38,7 @@ class AutomationRuleVersion
     public string $automationRuleId;
 
     /**
-     * Version number, monotonically increasing within the rule. It is what `automation_run.rule_version` points at, and what you pass to `GET /v1/automations/rules/{rule}/versions/{version}`.
+     * Version number, monotonically increasing within the rule. It is what `automation_run.rule_version` points at, and what you pass to `GET /v1/companies/{company}/automations/rules/{rule}/versions/{version}`.
      *
      * @var int $version
      */

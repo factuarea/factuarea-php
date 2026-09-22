@@ -51,11 +51,11 @@ class Correctives
      *
      * List the corrective invoices automatically generated from Stripe refunds (`charge.refunded`), with cursor-based pagination. The public `id` is the corrective invoice (UUID v7); `original_invoice_id` links to the original invoice, and `refund_id` is the originating gateway refund.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingCorrectivesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingCorrectivesList(?Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingCorrectivesListResponse
+    public function publicApiV1StripeAutoinvoicingCorrectivesList(Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest $request, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingCorrectivesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -83,7 +83,7 @@ class Correctives
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stripe-autoinvoicing/correctives');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stripe-autoinvoicing/correctives', Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -132,7 +132,7 @@ class Correctives
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

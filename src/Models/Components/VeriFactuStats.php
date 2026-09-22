@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuStats - Resumen agregado de los registros VeriFactu de la empresa autenticada: conteos por estado y desglose por tipo. Devuelto por `GET /v1/verifactu/stats`. */
+/** VeriFactuStats - Aggregated summary of the VeriFactu records of the company: counts by status and breakdown by type. Returned by `GET /v1/companies/{company}/verifactu/stats`. */
 class VeriFactuStats
 {
     /**
@@ -21,7 +21,7 @@ class VeriFactuStats
     public VeriFactuStatsObject $object;
 
     /**
-     * Total de registros VeriFactu.
+     * Total number of VeriFactu records.
      *
      * @var int $totalRecords
      */
@@ -61,7 +61,7 @@ class VeriFactuStats
     public int $rejected;
 
     /**
-     * Registros en estado de error.
+     * Records in error status.
      *
      * @var int $error
      */

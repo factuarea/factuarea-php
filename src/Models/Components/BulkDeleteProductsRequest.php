@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * BulkDeleteProductsRequest - Public REST API v1 — POST /v1/products/bulk-delete.
+ * BulkDeleteProductsRequest - Public REST API v1 — POST /v1/companies/{company}/products/bulk-delete.
  *
  *
  * Body: `{ ids: string[] }`. Accepts between 1 and 200 IDs (UUID v7). Tenant

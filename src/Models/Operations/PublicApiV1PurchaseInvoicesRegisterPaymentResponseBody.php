@@ -13,6 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1PurchaseInvoicesRegisterPaymentResponseBody
 {
     /**
+     * A single payment recorded against a purchase invoice (payment ledger entry). Listed by `GET /v1/companies/{company}/purchase-invoices/{purchase_invoice}/payments` and returned by `POST` on the same path.
      *
      * @var \Factuarea\Sdk\Models\Components\PurchaseInvoicePayment $data
      */

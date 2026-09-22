@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * SimplifiedInvoiceEligibilityV1Request - Public REST API v1 — POST /v1/invoices/simplified-eligibility.
+ * SimplifiedInvoiceEligibilityV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/simplified-eligibility.
  *
  *
  * Checks whether an invoice with a given `total` amount (and, optionally,

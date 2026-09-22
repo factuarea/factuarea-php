@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1DeliveryNotesListRequest
 {
     /**
-     * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -21,7 +29,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $startingAfter = null;
 
     /**
-     * Cursor for backward pagination. Use the `uuid` of the first object on the current page.
+     * Cursor for backward pagination: pass the `id` of the first object on the current page.
      *
      * @var ?string $endingBefore
      */
@@ -29,7 +37,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $endingBefore = null;
 
     /**
-     * Public delivery note status: `draft`, `sent`, `signed`, `invoiced`, `cancelled` (the same values returned by the resource `status` field). `sent` and `signed` filter by the internal delivered state (with/without signature); use the `signed` filter as well to distinguish them precisely. Exact match on `status`.
+     * Status: `draft`, `sent`, `signed`, `invoiced` or `cancelled`; `sent` and `signed` both match delivered notes (use the `signed` filter to split them). Exact match on `status`.
      *
      * @var ?string $status
      */
@@ -37,7 +45,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $status = null;
 
     /**
-     * Public delivery note status: `draft`, `sent`, `signed`, `invoiced`, `cancelled` (the same values returned by the resource `status` field). `sent` and `signed` filter by the internal delivered state (with/without signature); use the `signed` filter as well to distinguish them precisely. Comma-separated list. Any of the values matches.
+     * Status: `draft`, `sent`, `signed`, `invoiced` or `cancelled`; `sent` and `signed` both match delivered notes (use the `signed` filter to split them). Comma-separated list. Any of the values matches.
      *
      * @var ?string $statusIn
      */
@@ -197,7 +205,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $carrierCompanyContains = null;
 
     /**
-     * Town or city of the delivery address recorded on the delivery note (e.g. `delivery_city=Alcoy`), never the client's address — to filter by client use `client_id`. Exact match on `delivery_city`.
+     * Town or city of the delivery address (not the client address). Exact match on `delivery_city`.
      *
      * @var ?string $deliveryCity
      */
@@ -205,7 +213,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryCity = null;
 
     /**
-     * Town or city of the delivery address recorded on the delivery note (e.g. `delivery_city=Alcoy`), never the client's address — to filter by client use `client_id`. Comma-separated list. Any of the values matches.
+     * Town or city of the delivery address (not the client address). Comma-separated list. Any of the values matches.
      *
      * @var ?string $deliveryCityIn
      */
@@ -213,7 +221,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryCityIn = null;
 
     /**
-     * Town or city of the delivery address recorded on the delivery note (e.g. `delivery_city=Alcoy`), never the client's address — to filter by client use `client_id`. Partial case-insensitive match (`LIKE %term%`) on `delivery_city`.
+     * Town or city of the delivery address (not the client address). Partial case-insensitive match (`LIKE %term%`) on `delivery_city`.
      *
      * @var ?string $deliveryCityContains
      */
@@ -221,7 +229,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryCityContains = null;
 
     /**
-     * Province of the delivery address recorded on the delivery note (e.g. `delivery_province[in]=Alicante,Valencia`), never the client's address — to filter by client use `client_id`. Exact match on `delivery_province`.
+     * Province of the delivery address (not the client address). Exact match on `delivery_province`.
      *
      * @var ?string $deliveryProvince
      */
@@ -229,7 +237,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryProvince = null;
 
     /**
-     * Province of the delivery address recorded on the delivery note (e.g. `delivery_province[in]=Alicante,Valencia`), never the client's address — to filter by client use `client_id`. Comma-separated list. Any of the values matches.
+     * Province of the delivery address (not the client address). Comma-separated list. Any of the values matches.
      *
      * @var ?string $deliveryProvinceIn
      */
@@ -237,7 +245,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryProvinceIn = null;
 
     /**
-     * Province of the delivery address recorded on the delivery note (e.g. `delivery_province[in]=Alicante,Valencia`), never the client's address — to filter by client use `client_id`. Partial case-insensitive match (`LIKE %term%`) on `delivery_province`.
+     * Province of the delivery address (not the client address). Partial case-insensitive match (`LIKE %term%`) on `delivery_province`.
      *
      * @var ?string $deliveryProvinceContains
      */
@@ -245,7 +253,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryProvinceContains = null;
 
     /**
-     * Postal code of the delivery address recorded on the delivery note, never the client's address. The first two digits identify the Spanish province, so `delivery_postal_code[contains]=03` narrows the list down to one province. Exact match on `delivery_postal_code`.
+     * Postal code of the delivery address (not the client address); its first two digits identify the province. Exact match on `delivery_postal_code`.
      *
      * @var ?string $deliveryPostalCode
      */
@@ -253,7 +261,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryPostalCode = null;
 
     /**
-     * Postal code of the delivery address recorded on the delivery note, never the client's address. The first two digits identify the Spanish province, so `delivery_postal_code[contains]=03` narrows the list down to one province. Comma-separated list. Any of the values matches.
+     * Postal code of the delivery address (not the client address); its first two digits identify the province. Comma-separated list. Any of the values matches.
      *
      * @var ?string $deliveryPostalCodeIn
      */
@@ -261,7 +269,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryPostalCodeIn = null;
 
     /**
-     * Postal code of the delivery address recorded on the delivery note, never the client's address. The first two digits identify the Spanish province, so `delivery_postal_code[contains]=03` narrows the list down to one province. Partial case-insensitive match (`LIKE %term%`) on `delivery_postal_code`.
+     * Postal code of the delivery address (not the client address); its first two digits identify the province. Partial case-insensitive match (`LIKE %term%`) on `delivery_postal_code`.
      *
      * @var ?string $deliveryPostalCodeContains
      */
@@ -269,7 +277,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $deliveryPostalCodeContains = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches delivery notes carrying ANY of the tags). Exact match on `tags`.
+     * Classification tag (lowercase slug); `tags[in]=a,b` matches delivery notes carrying ANY of the tags. Exact match on `tags`.
      *
      * @var ?string $tags
      */
@@ -277,7 +285,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $tags = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches delivery notes carrying ANY of the tags). Comma-separated list. Any of the values matches.
+     * Classification tag (lowercase slug); `tags[in]=a,b` matches delivery notes carrying ANY of the tags. Comma-separated list. Any of the values matches.
      *
      * @var ?string $tagsIn
      */
@@ -285,7 +293,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $tagsIn = null;
 
     /**
-     * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `number`, `delivery_date`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending).
+     * Sort order: `created`, `number`, `delivery_date` ascending, or with a `-` prefix for descending (default `-created`).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesListSort $sort
      */
@@ -301,7 +309,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?string $search = null;
 
     /**
-     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     * Metadata filter as `metadata[key]=value` (deepObject): pairs combine with AND, up to 50, keys matching `[A-Za-z0-9_.-]{1,64}`.
      *
      * @var ?array<string, string> $metadata
      */
@@ -317,15 +325,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -333,6 +333,7 @@ class PublicApiV1DeliveryNotesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -372,11 +373,11 @@ class PublicApiV1DeliveryNotesListRequest
      * @param  ?string  $search
      * @param  ?array<string, string>  $metadata
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $deliveryDateGte = null, ?LocalDate $deliveryDateLte = null, ?LocalDate $deliveryDateGt = null, ?LocalDate $deliveryDateLt = null, ?bool $signed = null, ?string $number = null, ?string $numberContains = null, ?string $vehiclePlate = null, ?string $vehiclePlateContains = null, ?string $carrierCompany = null, ?string $carrierCompanyContains = null, ?string $deliveryCity = null, ?string $deliveryCityIn = null, ?string $deliveryCityContains = null, ?string $deliveryProvince = null, ?string $deliveryProvinceIn = null, ?string $deliveryProvinceContains = null, ?string $deliveryPostalCode = null, ?string $deliveryPostalCodeIn = null, ?string $deliveryPostalCodeContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1DeliveryNotesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $deliveryDateGte = null, ?LocalDate $deliveryDateLte = null, ?LocalDate $deliveryDateGt = null, ?LocalDate $deliveryDateLt = null, ?bool $signed = null, ?string $number = null, ?string $numberContains = null, ?string $vehiclePlate = null, ?string $vehiclePlateContains = null, ?string $carrierCompany = null, ?string $carrierCompanyContains = null, ?string $deliveryCity = null, ?string $deliveryCityIn = null, ?string $deliveryCityContains = null, ?string $deliveryProvince = null, ?string $deliveryProvinceIn = null, ?string $deliveryProvinceContains = null, ?string $deliveryPostalCode = null, ?string $deliveryPostalCodeIn = null, ?string $deliveryPostalCodeContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1DeliveryNotesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->status = $status;
@@ -415,7 +416,6 @@ class PublicApiV1DeliveryNotesListRequest
         $this->search = $search;
         $this->metadata = $metadata;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

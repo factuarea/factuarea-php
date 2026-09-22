@@ -1,6 +1,6 @@
 # SendQuoteRequest
 
-Public REST API v1 — POST /v1/quotes/{uuid}/send.
+Public REST API v1 — POST /v1/companies/{company}/quotes/{quote}/send.
 
 Optional body: `to` (string), `cc[]`, `bcc[]` (arrays of emails),
 `subject` (max 200), `body` (string). The controller performs the

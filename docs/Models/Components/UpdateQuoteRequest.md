@@ -1,6 +1,6 @@
 # UpdateQuoteRequest
 
-Public REST API v1 — PUT /v1/quotes/{uuid}.
+Public REST API v1 — PATCH /v1/companies/{company}/quotes/{quote}.
 
 Partial update: omitted fields are kept. Only allowed when
 the quote is in `draft` status (the controller maps the

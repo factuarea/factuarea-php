@@ -57,13 +57,13 @@ class WebhookEndpoints
      * Create a webhook endpoint that receives event notifications via HTTPS callbacks. The signing `secret` is returned **once** in this response and never again — store it securely.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateWebhookEndpointRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsCreate(Components\CreateWebhookEndpointRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsCreateResponse
+    public function publicApiV1WebhookEndpointsCreate(Components\CreateWebhookEndpointRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,13 +91,13 @@ class WebhookEndpoints
             ];
         }
         $request = new Operations\PublicApiV1WebhookEndpointsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints', Operations\PublicApiV1WebhookEndpointsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -148,7 +148,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -186,14 +186,14 @@ class WebhookEndpoints
      *
      * Delete a webhook endpoint. In-flight deliveries are not cancelled but no new deliveries are queued.
      *
+     * @param  string  $company
      * @param  string  $webhookEndpoint
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsDelete(string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeleteResponse
+    public function publicApiV1WebhookEndpointsDelete(string $company, string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -221,13 +221,13 @@ class WebhookEndpoints
             ];
         }
         $request = new Operations\PublicApiV1WebhookEndpointsDeleteRequest(
+            company: $company,
             webhookEndpoint: $webhookEndpoint,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -301,11 +301,11 @@ class WebhookEndpoints
      *
      * List your webhook endpoints with cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsList(?Operations\PublicApiV1WebhookEndpointsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsListResponse
+    public function publicApiV1WebhookEndpointsList(Operations\PublicApiV1WebhookEndpointsListRequest $request, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,7 +333,7 @@ class WebhookEndpoints
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints', Operations\PublicApiV1WebhookEndpointsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -382,7 +382,7 @@ class WebhookEndpoints
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -418,16 +418,16 @@ class WebhookEndpoints
     /**
      * Ping webhook endpoint
      *
-     * Send a test event (`webhook.ping`) to the endpoint to verify it is reachable and the signature handshake works. The synthetic delivery appears in `GET /webhook_endpoints/{webhook_endpoint}/deliveries`.
+     * Send a test event (`webhook.ping`) to the endpoint to verify it is reachable and the signature handshake works. The synthetic delivery appears in `GET /companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries`.
      *
+     * @param  string  $company
      * @param  string  $webhookEndpoint
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsPingResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsPing(string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsPingResponse
+    public function publicApiV1WebhookEndpointsPing(string $company, string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsPingResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -455,13 +455,13 @@ class WebhookEndpoints
             ];
         }
         $request = new Operations\PublicApiV1WebhookEndpointsPingRequest(
+            company: $company,
             webhookEndpoint: $webhookEndpoint,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/ping', Operations\PublicApiV1WebhookEndpointsPingRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}/ping', Operations\PublicApiV1WebhookEndpointsPingRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -545,14 +545,14 @@ class WebhookEndpoints
      *
      * Rotate the signing secret of a webhook endpoint. The new secret is returned **once** in this response. The previous secret remains valid for a 24-hour grace period (see `previous_secret_valid_until`) to allow zero-downtime rotation.
      *
+     * @param  string  $company
      * @param  string  $webhookEndpoint
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsRotateSecret(string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
+    public function publicApiV1WebhookEndpointsRotateSecret(string $company, string $webhookEndpoint, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsRotateSecretResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -580,13 +580,13 @@ class WebhookEndpoints
             ];
         }
         $request = new Operations\PublicApiV1WebhookEndpointsRotateSecretRequest(
+            company: $company,
             webhookEndpoint: $webhookEndpoint,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/rotate_secret', Operations\PublicApiV1WebhookEndpointsRotateSecretRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}/rotate-secret', Operations\PublicApiV1WebhookEndpointsRotateSecretRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -668,15 +668,15 @@ class WebhookEndpoints
     /**
      * Retrieve a webhook endpoint
      *
-     * Retrieve a webhook endpoint by its `uuid`. The signing secret is never exposed in this representation.
+     * Retrieve a webhook endpoint by its `id`. The signing secret is never exposed in this representation.
      *
+     * @param  string  $company
      * @param  string  $webhookEndpoint
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WebhookEndpointsShow(string $webhookEndpoint, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsShowResponse
+    public function publicApiV1WebhookEndpointsShow(string $company, string $webhookEndpoint, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WebhookEndpointsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -704,12 +704,12 @@ class WebhookEndpoints
             ];
         }
         $request = new Operations\PublicApiV1WebhookEndpointsShowRequest(
+            company: $company,
             webhookEndpoint: $webhookEndpoint,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -791,7 +791,7 @@ class WebhookEndpoints
     /**
      * Send a test event
      *
-     * Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the delivered envelope. Unlike `ping` (a synthetic `webhook.ping`), this records a real `Event` (visible in `GET /events`) and queues a signed, retried `WebhookDelivery`. Optionally pass `type` to choose which subscribed event to simulate. The delivery reaches only this endpoint.
+     * Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the delivered envelope. Unlike `ping` (a synthetic `webhook.ping`), this records a real `Event` (visible in `GET /companies/{company}/events`) and queues a signed, retried `WebhookDelivery`. Optionally pass `type` to choose which subscribed event to simulate. The delivery reaches only this endpoint.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventResponse
@@ -825,7 +825,7 @@ class WebhookEndpoints
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}/test_event', Operations\PublicApiV1WebhookEndpointsTestEventRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}/test-event', Operations\PublicApiV1WebhookEndpointsTestEventRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -945,7 +945,7 @@ class WebhookEndpoints
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/webhook_endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/webhook-endpoints/{webhook_endpoint}', Operations\PublicApiV1WebhookEndpointsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -958,7 +958,7 @@ class WebhookEndpoints
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.webhook_endpoints.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

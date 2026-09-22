@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * FindProductBySkuRequest - Public REST API v1 — POST /v1/products/find-by-sku.
+ * FindProductBySkuRequest - Public REST API v1 — POST /v1/companies/{company}/products/find-by-sku.
  *
  *
  * Looks up a product by its `sku` within the authenticated company. The `sku`

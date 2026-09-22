@@ -1,5 +1,7 @@
 # PublicApiV1PriceListsItemsListStatus
 
+Items to return: `active` (default), `retired` or `all`.
+
 
 ## Values
 

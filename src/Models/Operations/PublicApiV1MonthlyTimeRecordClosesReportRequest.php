@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1MonthlyTimeRecordClosesReportRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the monthly time-record close.
      *
      * @var string $monthlyTimeRecordClose
      */
@@ -28,23 +37,15 @@ class PublicApiV1MonthlyTimeRecordClosesReportRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $company, string $monthlyTimeRecordClose, ?LocalDate $factuareaVersion = null)
     {
+        $this->company = $company;
         $this->monthlyTimeRecordClose = $monthlyTimeRecordClose;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
     }
 }

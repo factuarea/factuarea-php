@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * ConvertProformaRequest - Public REST API v1 — POST /v1/proformas/{uuid}/convert.
+ * ConvertProformaRequest - Public REST API v1 — POST /v1/companies/{company}/proformas/{proforma}/convert.
  *
  *
  * Required body: `target` ∈ {invoice}. Only conversion to invoice is

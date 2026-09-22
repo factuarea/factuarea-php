@@ -51,16 +51,16 @@ class Configurations
     /**
      * Preview the impact of restricting a catalog
      *
-     * Compute what would be lost if the commercial combinations of a product were replaced by the proposed ones, and mint the `impact_token` that confirms THAT exact change. It is a READ and persists nothing — asking twice over the same catalog returns the same token — but it requires `products:write`, because the only thing its answer does is authorise a destructive write. Send `configurations` as the COMPLETE list of combinations that would remain ACTIVE (an empty list means "retire the allow-list", which returns the product to the cartesian cross), plus `variant_ids`/`presentation_ids` enumerating what SURVIVES on each axis — omitting a key means "that axis is untouched", which is not the same as an empty list. The answer says whether the change needs confirmation at all (`requires_confirmation`), which crosses stop being sellable, and which negotiated prices would be retired and from which price lists. The token is a fingerprint of the current catalog AND of the set of prices at stake, not a credential: if either changes before you confirm, the confirmation is rejected and you ask for a fresh preview. Send it back as `impact_token` when emptying `configurations` on `PATCH /v1/products/{id}`, or when deleting the variant or presentation whose removal would leave the product with no declared combination.
+     * Compute what would be lost if the commercial combinations of a product were replaced by the proposed ones, and mint the `impact_token` that confirms THAT exact change. It is a READ and persists nothing — asking twice over the same catalog returns the same token — but it requires `products:write`, because the only thing its answer does is authorise a destructive write. Send `configurations` as the COMPLETE list of combinations that would remain ACTIVE (an empty list means "retire the allow-list", which returns the product to the cartesian cross), plus `variant_ids`/`presentation_ids` enumerating what SURVIVES on each axis — omitting a key means "that axis is untouched", which is not the same as an empty list. The answer says whether the change needs confirmation at all (`requires_confirmation`), which crosses stop being sellable, and which negotiated prices would be retired and from which price lists. The token is a fingerprint of the current catalog AND of the set of prices at stake, not a credential: if either changes before you confirm, the confirmation is rejected and you ask for a fresh preview. Send it back as `impact_token` when emptying `configurations` on `PATCH /v1/companies/{company}/products/{product}`, or when deleting the variant or presentation whose removal would leave the product with no declared combination.
      *
      * @param  \Factuarea\Sdk\Models\Components\PreviewCatalogConfigurationImpactRequest  $body
+     * @param  string  $company
      * @param  string  $product
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsConfigurationsImpactPreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsConfigurationsImpactPreview(Components\PreviewCatalogConfigurationImpactRequest $body, string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsConfigurationsImpactPreviewResponse
+    public function publicApiV1ProductsConfigurationsImpactPreview(Components\PreviewCatalogConfigurationImpactRequest $body, string $company, string $product, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsConfigurationsImpactPreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class Configurations
             ];
         }
         $request = new Operations\PublicApiV1ProductsConfigurationsImpactPreviewRequest(
+            company: $company,
             product: $product,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/configurations/impact-preview', Operations\PublicApiV1ProductsConfigurationsImpactPreviewRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/configurations/impact-preview', Operations\PublicApiV1ProductsConfigurationsImpactPreviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -215,7 +215,7 @@ class Configurations
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/configurations', Operations\PublicApiV1ProductsConfigurationsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/configurations', Operations\PublicApiV1ProductsConfigurationsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 

@@ -4,6 +4,68 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.5.0] — 2026-09-22
+
+Regenerated from the **company-axis** contract: every company resource now hangs
+off `/v1/companies/{company}/…` and the account surface off
+`/v1/accounts/{account}/…`. **481 operations** in **396 paths** (up from 469 in
+387): **+17 / −5**. The default `Factuarea-Version` is unchanged.
+
+### Changed — breaking
+
+- **Every company operation gains a required `$company` argument.** The company
+  stops being inferred in silence from the credential and travels in the URL,
+  where it is visible, logged and auditable. Methods that stayed positional take
+  it right after the body; methods past the four-parameter threshold take it on
+  their request object.
+
+  ```php
+  // Before
+  $sdk->invoices->publicApiV1InvoicesList();
+
+  // Now
+  $sdk->invoices->publicApiV1InvoicesList(company: $companyId);
+  ```
+
+  The value is the company **`id`** — the one `publicApiV1AccountShow()` returns
+  in `data.scope[].id` — never its tax ID or its name.
+
+- **The identity operation moves from `/v1/account` to `/v1/me`.**
+  `$sdk->account->publicApiV1AccountShow()` keeps its name and now answers on
+  `/v1/me`, returning the credential's scope (`data.scope[]`) alongside its API
+  key.
+
+- **`X-Active-Profile` is retired.** The contract no longer declares it, so the
+  `$xActiveProfile` parameter is gone from every signature. The axis segment
+  replaces it: what used to be an ambient header is now part of the resource.
+
+- **Amounts travel as decimal strings** and updates use `PATCH`, in step with the
+  same single breaking window: see
+  https://docs.factuarea.com/docs/changelog/axis-and-payload-breaking-window
+
+### Removed — breaking
+
+- The five API-key operations move from the company to the **account** axis:
+  `$sdk->companies->apiKeys->publicApiV1CompaniesApiKeys{List,Create,Show,Revoke,RotateSecret}()`
+  → `$sdk->account->apiKeys->publicApiV1AccountApiKeys{List,Create,Show,Revoke,RotateSecret}()`
+  on `/v1/accounts/{account}/api-keys`. A key reaches a portfolio, not one
+  company.
+
+### Added
+
+- **The account axis (15 operations)**: members and their module access,
+  invitations, claim tokens, owner transfer and usage, under
+  `/v1/accounts/{account}/…`.
+- `Companies::publicApiV1CompaniesIssuingReadiness()` and
+  `RecurringInvoices::publicApiV1RecurringInvoicesBulkStatus()`.
+- **Parameter descriptions**: every path, query and header parameter now carries
+  its description in the method docblocks and in `docs/`. Text only: no
+  signature or type changes.
+- **UUID v7 ids for product options and configurations**: the `id` of every
+  option group, option value and configuration in `CreateProductRequest*` and
+  `UpdateProductRequest*` is documented as a UUID v7; the API rejects a new one
+  with another UUID version with 422. Text only: no signature or type changes.
+
 ## [0.4.0] — 2026-09-21
 
 Regenerated from the public OpenAPI spec that publishes contacts as the sole

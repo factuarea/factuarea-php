@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AutomationRunStep - One step of a run: an action of the frozen rule definition together with its outcome. It is the same document that `GET /v1/automations/runs/{run}/steps` returns as `AutomationStepRun`, inlined here so a run is readable in one call. */
+/** AutomationRunStep - One step of a run: an action of the frozen rule definition together with its outcome. It is the same document that `GET /v1/companies/{company}/automations/runs/{run}/steps` returns as `AutomationStepRun`, inlined here so a run is readable in one call. */
 class AutomationRunStep
 {
     /**
@@ -30,7 +30,7 @@ class AutomationRunStep
     public AutomationRunObjectAutomationStepRun $object;
 
     /**
-     * Zero-based position of the step inside its run, unique within the run. It is the identity of the step: it is what `automation_run.step_dead_lettered` publishes as `data.step_index`, and what `POST /v1/automations/runs/{run}/steps/{step_index}/replay` takes.
+     * Zero-based position of the step inside its run, unique within the run. It is the identity of the step: it is what `automation_run.step_dead_lettered` publishes as `data.step_index`, and what `POST /v1/companies/{company}/automations/runs/{run}/steps/{step_index}/replay` takes.
      *
      * @var int $stepIndex
      */

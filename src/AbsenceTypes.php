@@ -53,14 +53,14 @@ class AbsenceTypes
      *
      * Archive an absence type (transition `active` → `archived`), retiring it from use while preserving it. No request body. Returns 422 if it is already archived. Reversible via unarchive.
      *
+     * @param  string  $company
      * @param  string  $absenceType
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesArchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceTypesArchive(string $absenceType, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesArchiveResponse
+    public function publicApiV1AbsenceTypesArchive(string $company, string $absenceType, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesArchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class AbsenceTypes
             ];
         }
         $request = new Operations\PublicApiV1AbsenceTypesArchiveRequest(
+            company: $company,
             absenceType: $absenceType,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-types/{absence_type}/archive', Operations\PublicApiV1AbsenceTypesArchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-types/{absence_type}/archive', Operations\PublicApiV1AbsenceTypesArchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -179,13 +179,13 @@ class AbsenceTypes
      * Create an absence type for the authenticated company (resolved from the API key, never from the payload). `name`, `is_paid`, `requires_approval`, `measurement_unit` (`days`/`hours`), `color` (hex `#RRGGBB`) and `visibility` (`everyone`/`managers_only`) are all required. Returns the created type with its generated `id` (UUID v7).
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsenceTypeRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceTypesCreate(Components\CreateAbsenceTypeRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesCreateResponse
+    public function publicApiV1AbsenceTypesCreate(Components\CreateAbsenceTypeRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -213,13 +213,13 @@ class AbsenceTypes
             ];
         }
         $request = new Operations\PublicApiV1AbsenceTypesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-types');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-types', Operations\PublicApiV1AbsenceTypesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -270,7 +270,7 @@ class AbsenceTypes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -308,11 +308,11 @@ class AbsenceTypes
      *
      * List your company’s absence types with cursor-based pagination. Supports filtering by `status` (`active`/`archived`) and `measurement_unit` (`days`/`hours`), plus free-text `search` over the type name.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceTypesList(?Operations\PublicApiV1AbsenceTypesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesListResponse
+    public function publicApiV1AbsenceTypesList(Operations\PublicApiV1AbsenceTypesListRequest $request, ?Options $options = null): Operations\PublicApiV1AbsenceTypesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -340,7 +340,7 @@ class AbsenceTypes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-types');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-types', Operations\PublicApiV1AbsenceTypesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -389,7 +389,7 @@ class AbsenceTypes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -427,13 +427,13 @@ class AbsenceTypes
      *
      * Retrieve a single absence type by its `id` (UUID v7). A type belonging to another company returns 404 `absence_type_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $absenceType
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceTypesShow(string $absenceType, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesShowResponse
+    public function publicApiV1AbsenceTypesShow(string $company, string $absenceType, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -461,12 +461,12 @@ class AbsenceTypes
             ];
         }
         $request = new Operations\PublicApiV1AbsenceTypesShowRequest(
+            company: $company,
             absenceType: $absenceType,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-types/{absence_type}', Operations\PublicApiV1AbsenceTypesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-types/{absence_type}', Operations\PublicApiV1AbsenceTypesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -550,14 +550,14 @@ class AbsenceTypes
      *
      * Unarchive an absence type (transition `archived` → `active`), returning it to use. No request body. Returns 422 if it is already active.
      *
+     * @param  string  $company
      * @param  string  $absenceType
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesUnarchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceTypesUnarchive(string $absenceType, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesUnarchiveResponse
+    public function publicApiV1AbsenceTypesUnarchive(string $company, string $absenceType, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceTypesUnarchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -585,13 +585,13 @@ class AbsenceTypes
             ];
         }
         $request = new Operations\PublicApiV1AbsenceTypesUnarchiveRequest(
+            company: $company,
             absenceType: $absenceType,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-types/{absence_type}/unarchive', Operations\PublicApiV1AbsenceTypesUnarchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-types/{absence_type}/unarchive', Operations\PublicApiV1AbsenceTypesUnarchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -707,7 +707,7 @@ class AbsenceTypes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-types/{absence_type}', Operations\PublicApiV1AbsenceTypesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-types/{absence_type}', Operations\PublicApiV1AbsenceTypesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -720,7 +720,7 @@ class AbsenceTypes
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.absence-types.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

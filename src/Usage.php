@@ -52,12 +52,12 @@ class Usage
      *
      * Read how many automation runs the company has consumed in the current period, the quota of its plan (`limit: null` means unlimited), the instant the counter resets and the consumption percentage at which the account is warned. It takes no parameters: the period, the limit and the reset instant come from the same policy that stops runs, never recomputed here. Use it to anticipate running out of budget — activating a rule deliberately does not pre-check the quota. The number published is the counter the engine enforces, not a sum over the run history, so purging history never moves it.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsUsageShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsUsageShow(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsUsageShowResponse
+    public function publicApiV1AutomationsUsageShow(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsUsageShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +85,11 @@ class Usage
             ];
         }
         $request = new Operations\PublicApiV1AutomationsUsageShowRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/usage');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/usage', Operations\PublicApiV1AutomationsUsageShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -135,7 +135,7 @@ class Usage
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

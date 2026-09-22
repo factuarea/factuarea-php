@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** VeriFactu status: `no_verifactu`, `pending`, `accepted` or `rejected`. */
 enum VerifactuStatus: string
 {
     case NoVerifactu = 'no_verifactu';

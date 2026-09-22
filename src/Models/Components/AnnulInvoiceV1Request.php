@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * AnnulInvoiceV1Request - Public REST API v1 — POST /v1/invoices/{uuid}/annul.
+ * AnnulInvoiceV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/{invoice}/annul.
  *
  *
  * Body: `reason` (string, required, max. 500). The reason is persisted

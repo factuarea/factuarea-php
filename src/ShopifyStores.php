@@ -52,14 +52,14 @@ class ShopifyStores
      *
      * Test the connection with one connected Shopify store and return the diagnosis. The check asks the Admin GraphQL API for the shop with the stored access token and writes nothing, neither in the shop nor in Factuarea. It answers 200 with `reachable`, `credential_accepted`, the plan the shop reports, the pinned Admin API version this connector speaks (`api_version`, ours and not something the shop reports), the date that version is supported until (`supported_until`), the instant of the check and, when something went wrong, a `failure_code` — `shopify_store_unreachable` (the shop did not answer, or the query cost budget was exhausted), `shopify_credentials_rejected` (the shop answered and refused the token), `shopify_api_version_expired` (the pinned version is no longer served) or `store_url_not_allowed` (your company has not authorised that destination). Those are outcomes of a check that ran, not failures of the API, which is why they travel inside a 200 instead of as an error status. Watch `supported_until`: when an Admin API version expires Shopify does not fail, it answers 200 with the fields of another version, so the breakage is silent. The endpoint is a `POST` because it makes an outbound call to the merchant shop, so it consumes third-party resources and requires an `Idempotency-Key` header. A missing store or one from another company returns 404 `store_not_found`.
      *
+     * @param  string  $company
      * @param  string  $store
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ShopifyStoresConnectionTestResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ShopifyStoresConnectionTest(string $store, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ShopifyStoresConnectionTestResponse
+    public function publicApiV1ShopifyStoresConnectionTest(string $company, string $store, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ShopifyStoresConnectionTestResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,13 +87,13 @@ class ShopifyStores
             ];
         }
         $request = new Operations\PublicApiV1ShopifyStoresConnectionTestRequest(
+            company: $company,
             store: $store,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/shopify/stores/{store}/connection-test', Operations\PublicApiV1ShopifyStoresConnectionTestRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/shopify/stores/{store}/connection-test', Operations\PublicApiV1ShopifyStoresConnectionTestRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

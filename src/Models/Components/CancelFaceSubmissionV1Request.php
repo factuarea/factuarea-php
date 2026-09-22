@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * CancelFaceSubmissionV1Request - Public REST API v1 — POST /v1/face-submissions/{faceSubmission}/cancel.
+ * CancelFaceSubmissionV1Request - Public REST API v1 — POST /v1/companies/{company}/face-submissions/{faceSubmission}/cancel.
  *
  *
  * The cancellation reason (`reason`) is required: it travels to the FACe

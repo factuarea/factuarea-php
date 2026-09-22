@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** MIME type de la imagen. */
+/** MIME type of the image. */
 enum ContentType: string
 {
     case ImageJpeg = 'image/jpeg';

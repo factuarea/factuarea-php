@@ -10,9 +10,9 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * SendInvoiceReminderV1Request - Public REST API v1 — POST /v1/invoices/{uuid}/send-reminder
+ * SendInvoiceReminderV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/{invoice}/send-reminder
  *
- * and POST /v1/invoices/{uuid}/reminder-preview (same fields).
+ * and POST /v1/companies/{company}/invoices/{invoice}/reminder-preview (same fields).
  *
  * All fields are optional — without overrides the handler uses the
  * canonical payment reminder template.
@@ -47,7 +47,7 @@ class SendInvoiceReminderV1Request
     public ?string $message = null;
 
     /**
-     * Direcciones en copia.
+     * Carbon copy addresses.
      *
      * @var ?array<string> $cc
      */
@@ -57,7 +57,7 @@ class SendInvoiceReminderV1Request
     public ?array $cc = null;
 
     /**
-     * Direcciones en copia oculta.
+     * Blind carbon copy addresses.
      *
      * @var ?array<string> $bcc
      */

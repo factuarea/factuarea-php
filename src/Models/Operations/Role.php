@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Ignored: the role is always read from the `{role}` path segment. */
 enum Role: string
 {
     case Customer = 'customer';

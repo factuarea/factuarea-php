@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class VeriFactuRecord
 {
     /**
-     * UUID (v7) of the VeriFactu record.
+     * UUID v7 of the VeriFactu record.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class VeriFactuRecord
     public VeriFactuRecordObject $object;
 
     /**
-     * Tipo de registro (`alta` / `anulacion`).
+     * Record type: `alta` (registration) or `anulacion` (cancellation).
      *
      * @var string $type
      */
@@ -63,10 +63,10 @@ class VeriFactuRecord
     /**
      * Total amount of the associated invoice.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Transmission status (pending, submitted, accepted, rejected, error).
@@ -146,7 +146,7 @@ class VeriFactuRecord
      * @param  string  $invoiceType
      * @param  string  $invoiceNumber
      * @param  string  $date
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  string  $status
      * @param  string  $huella
      * @param  string  $environment
@@ -158,7 +158,7 @@ class VeriFactuRecord
      * @param  ?\DateTime  $transmittedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, float $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null)
+    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, string $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

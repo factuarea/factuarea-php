@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** RecurringInvoiceStats - Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/recurring_invoices/stats`. */
+/** RecurringInvoiceStats - Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/companies/{company}/recurring-invoices/stats`. */
 class RecurringInvoiceStats
 {
     /**
@@ -21,7 +21,7 @@ class RecurringInvoiceStats
     public RecurringInvoiceStatsObject $object;
 
     /**
-     * Total de recurrencias registradas.
+     * Total number of recurring invoices.
      *
      * @var int $total
      */
@@ -37,7 +37,7 @@ class RecurringInvoiceStats
     public int $active;
 
     /**
-     * Recurrencias pausadas (reanudables).
+     * Paused recurring invoices (they can be resumed).
      *
      * @var int $paused
      */
@@ -45,7 +45,7 @@ class RecurringInvoiceStats
     public int $paused;
 
     /**
-     * Recurrencias canceladas (estado terminal irreversible).
+     * Cancelled recurring invoices (final, irreversible status).
      *
      * @var int $cancelled
      */
@@ -85,7 +85,7 @@ class RecurringInvoiceStats
     public int $generatedThisMonth;
 
     /**
-     * Ejecuciones de recurrencia fallidas durante el mes en curso.
+     * Failed recurring invoice runs in the current month.
      *
      * @var int $failedThisMonth
      */
@@ -113,10 +113,10 @@ class RecurringInvoiceStats
     /**
      * Remaining scheduled template estimate from today through month end (EUR); it is not issued revenue, collections, or guaranteed cash.
      *
-     * @var float $estimatedRevenueThisMonth
+     * @var string $estimatedRevenueThisMonth
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('estimated_revenue_this_month')]
-    public float $estimatedRevenueThisMonth;
+    public string $estimatedRevenueThisMonth;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceStatsObject  $object
@@ -131,10 +131,10 @@ class RecurringInvoiceStats
      * @param  int  $failedThisMonth
      * @param  array<string, int>  $frequencyBreakdown
      * @param  array<\Factuarea\Sdk\Models\Components\NextScheduled>  $nextScheduled
-     * @param  float  $estimatedRevenueThisMonth
+     * @param  string  $estimatedRevenueThisMonth
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceStatsObject $object, int $total, int $active, int $paused, int $cancelled, int $completed, int $dueToday, int $dueThisWeek, int $generatedThisMonth, int $failedThisMonth, array $frequencyBreakdown, array $nextScheduled, float $estimatedRevenueThisMonth)
+    public function __construct(RecurringInvoiceStatsObject $object, int $total, int $active, int $paused, int $cancelled, int $completed, int $dueToday, int $dueThisWeek, int $generatedThisMonth, int $failedThisMonth, array $frequencyBreakdown, array $nextScheduled, string $estimatedRevenueThisMonth)
     {
         $this->object = $object;
         $this->total = $total;

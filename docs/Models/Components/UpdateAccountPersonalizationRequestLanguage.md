@@ -1,6 +1,6 @@
 # UpdateAccountPersonalizationRequestLanguage
 
-Account issuing language (es, en or ca).
+Account issuing language: `es`, `en` or `ca`.
 
 
 ## Values

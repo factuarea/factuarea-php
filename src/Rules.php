@@ -54,16 +54,16 @@ class Rules
     /**
      * Activate an automation rule
      *
-     * Put an automation rule into service: from this point on, every event of its trigger is evaluated against its current version. Returns 200 with the rule already in its new state, so you do not need a second call to confirm it. Only a `draft` or a `paused` rule can be activated — activating one that is already active returns 422. Activation deliberately does not pre-check quota or budget; call `GET /v1/automations/usage` if you want to anticipate that.
+     * Put an automation rule into service: from this point on, every event of its trigger is evaluated against its current version. Returns 200 with the rule already in its new state, so you do not need a second call to confirm it. Only a `draft` or a `paused` rule can be activated — activating one that is already active returns 422. Activation deliberately does not pre-check quota or budget; call `GET /v1/companies/{company}/automations/usage` if you want to anticipate that.
      *
+     * @param  string  $company
      * @param  string  $rule
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesActivate(string $rule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesActivateResponse
+    public function publicApiV1AutomationsRulesActivate(string $company, string $rule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,13 +91,13 @@ class Rules
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesActivateRequest(
+            company: $company,
             rule: $rule,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}/activate', Operations\PublicApiV1AutomationsRulesActivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}/activate', Operations\PublicApiV1AutomationsRulesActivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -179,16 +179,16 @@ class Rules
     /**
      * Create an automation rule
      *
-     * Create an automation rule out of three pieces: the trigger that puts it in motion, an optional condition tree evaluated against the triggering event, and the ordered list of actions it executes. The server assigns the `id` (UUID v7) and seals version 1 of the definition. New rules are created in `draft` and do not fire until you activate them with `POST /v1/automations/rules/{rule}/activate`. Omit `conditions` to run on every event of the trigger. The trigger must belong to the catalog visible to your company and every action must have a registered adapter; otherwise the call returns 422 and nothing is created.
+     * Create an automation rule out of three pieces: the trigger that puts it in motion, an optional condition tree evaluated against the triggering event, and the ordered list of actions it executes. The server assigns the `id` (UUID v7) and seals version 1 of the definition. New rules are created in `draft` and do not fire until you activate them with `POST /v1/companies/{company}/automations/rules/{rule}/activate`. Omit `conditions` to run on every event of the trigger. The trigger must belong to the catalog visible to your company and every action must have a registered adapter; otherwise the call returns 422 and nothing is created.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAutomationRuleV1Request  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesCreate(Components\CreateAutomationRuleV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesCreateResponse
+    public function publicApiV1AutomationsRulesCreate(Components\CreateAutomationRuleV1Request $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -216,13 +216,13 @@ class Rules
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules', Operations\PublicApiV1AutomationsRulesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -273,7 +273,7 @@ class Rules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -311,14 +311,14 @@ class Rules
      *
      * Delete an automation rule. The deletion is logical: the rule stops existing for the API and stops firing, while its sealed versions and its run history are preserved so past executions remain auditable. Returns 204 with no body and is not reversible through this API. A second delete of the same rule returns 404, exactly as a rule of another company does.
      *
+     * @param  string  $company
      * @param  string  $rule
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesDelete(string $rule, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesDeleteResponse
+    public function publicApiV1AutomationsRulesDelete(string $company, string $rule, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -346,13 +346,13 @@ class Rules
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesDeleteRequest(
+            company: $company,
             rule: $rule,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -431,13 +431,13 @@ class Rules
      * A condition that cannot be evaluated is not an HTTP error: it comes back as `condition_error` with 200, because seeing exactly that is what the dry run is for. A step a guardrail would cut short in production comes back as non-executable with its typed reason, never as a success.
      *
      * @param  \Factuarea\Sdk\Models\Components\DryRunAutomationRuleV1Request  $body
+     * @param  string  $company
      * @param  string  $rule
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesDryRunResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesDryRun(Components\DryRunAutomationRuleV1Request $body, string $rule, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesDryRunResponse
+    public function publicApiV1AutomationsRulesDryRun(Components\DryRunAutomationRuleV1Request $body, string $company, string $rule, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesDryRunResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -465,13 +465,13 @@ class Rules
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesDryRunRequest(
+            company: $company,
             rule: $rule,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}/dry_run', Operations\PublicApiV1AutomationsRulesDryRunRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}/dry-run', Operations\PublicApiV1AutomationsRulesDryRunRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -560,11 +560,11 @@ class Rules
      *
      * List the automation rules of the authenticated company with cursor-based pagination. Filter by `status`, by `trigger_type` or by creation window (`created[gte]`, `created[lte]`, …), and search by name with `search`. Pages are ordered by `id` ascending — a unique, monotonic key — so a rule created while you are paginating never shifts or duplicates a row. Only your own rules are ever returned, and a cursor issued for another company yields an empty page rather than someone else's data.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesList(?Operations\PublicApiV1AutomationsRulesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesListResponse
+    public function publicApiV1AutomationsRulesList(Operations\PublicApiV1AutomationsRulesListRequest $request, ?Options $options = null): Operations\PublicApiV1AutomationsRulesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -592,7 +592,7 @@ class Rules
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules', Operations\PublicApiV1AutomationsRulesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -641,7 +641,7 @@ class Rules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -679,14 +679,14 @@ class Rules
      *
      * Stop an active automation rule from firing, without losing either its definition or its run history. Returns 200 with the rule already in its new state. Pausing does not touch the definition, so it seals no new version, and the rule can be activated again at any time. Only an `active` rule can be paused; anything else returns 422. Bear in mind the engine may also pause a rule on its own after several consecutive failures.
      *
+     * @param  string  $company
      * @param  string  $rule
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesPauseResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesPause(string $rule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesPauseResponse
+    public function publicApiV1AutomationsRulesPause(string $company, string $rule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesPauseResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -714,13 +714,13 @@ class Rules
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesPauseRequest(
+            company: $company,
             rule: $rule,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}/pause', Operations\PublicApiV1AutomationsRulesPauseRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}/pause', Operations\PublicApiV1AutomationsRulesPauseRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -804,13 +804,13 @@ class Rules
      *
      * Retrieve a single automation rule by its `id` (UUID v7), with its current definition and the number of the version currently in force. A rule of another company returns 404 `automation_rule_not_found`, indistinguishable from one that never existed (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $rule
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRulesShow(string $rule, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesShowResponse
+    public function publicApiV1AutomationsRulesShow(string $company, string $rule, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRulesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -838,12 +838,12 @@ class Rules
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRulesShowRequest(
+            company: $company,
             rule: $rule,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -959,7 +959,7 @@ class Rules
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/rules/{rule}', Operations\PublicApiV1AutomationsRulesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -972,7 +972,7 @@ class Rules
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.automations.rules.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsStockMovementsListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the product.
      *
      * @var string $product
      */
@@ -20,7 +29,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public string $product;
 
     /**
-     * Máximo de movimientos por página (1-100, por defecto 25).
+     * Number of stock movements per page, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -36,15 +45,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Id del último movimiento ya recibido; la página empieza justo después.
+     * Cursor for forward pagination: the `id` of the last stock movement you received.
      *
      * @var ?string $startingAfter
      */
@@ -52,7 +53,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?string $startingAfter = null;
 
     /**
-     * `in` = entradas (delta positivo), `out` = salidas (delta negativo). Ausente = el ledger completo.
+     * `in` returns only incoming movements and `out` only outgoing ones (all when omitted).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListDirection $direction
      */
@@ -60,20 +61,20 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?PublicApiV1ProductsStockMovementsListDirection $direction = null;
 
     /**
+     * @param  string  $company
      * @param  string  $product
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListDirection  $direction
      * @phpstan-pure
      */
-    public function __construct(string $product, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?PublicApiV1ProductsStockMovementsListDirection $direction = null)
+    public function __construct(string $company, string $product, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null, ?PublicApiV1ProductsStockMovementsListDirection $direction = null)
     {
+        $this->company = $company;
         $this->product = $product;
         $this->limit = $limit;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;
         $this->direction = $direction;
     }

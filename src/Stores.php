@@ -54,13 +54,13 @@ class Stores
      * Connect an e-commerce store to your company. `integration_id` names the provider connection the store hangs from, and `external_store_id` is the identifier the provider gives the shop — unique per provider within your company, so a second store of the same provider and identifier is rejected with `store_already_connected`. Auto-invoicing is OFF unless you turn it on: connecting a store never starts issuing invoices by itself. `remote_base_url`, if given, is checked against the outbound policy of your company and rejected with `store_url_not_allowed` when it is not permitted.
      *
      * @param  \Factuarea\Sdk\Models\Components\ConnectStoreV1Request  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StoresCreate(Components\ConnectStoreV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StoresCreateResponse
+    public function publicApiV1StoresCreate(Components\ConnectStoreV1Request $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StoresCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class Stores
             ];
         }
         $request = new Operations\PublicApiV1StoresCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stores');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stores', Operations\PublicApiV1StoresCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -145,7 +145,7 @@ class Stores
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -183,14 +183,14 @@ class Stores
      *
      * Disconnect a store: the link is closed and its credential destroyed, so reconnecting it means authorising again at the provider. The invoices it already produced are kept — under VeriFactu a document is never deleted — and later deliveries from that store are recorded without being processed. Because the operation is irreversible, it requires an `Idempotency-Key` header. Responds 204 with no body; a missing store or one from another company returns 404.
      *
+     * @param  string  $company
      * @param  string  $store
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresDisconnectResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StoresDisconnect(string $store, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StoresDisconnectResponse
+    public function publicApiV1StoresDisconnect(string $company, string $store, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StoresDisconnectResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -218,13 +218,13 @@ class Stores
             ];
         }
         $request = new Operations\PublicApiV1StoresDisconnectRequest(
+            company: $company,
             store: $store,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stores/{store}', Operations\PublicApiV1StoresDisconnectRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stores/{store}', Operations\PublicApiV1StoresDisconnectRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -298,11 +298,11 @@ class Stores
      *
      * List the e-commerce stores connected to your company, across every provider. Each exposes its `id` (UUID v7), the `integration_id` of the provider connection it hangs from, its `provider`, the `external_store_id` the provider gave the shop, and the settings that decide how its orders become invoices (`simplified_threshold`, `require_tax_id`, `prices_include_tax`, `autoinvoicing_enabled`, `autosend_enabled`), plus `environment`, `status` and `connected_at`. Cursor paginated (`limit`, `starting_after`, `ending_before`).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1StoresIndexRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StoresIndexRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresIndexResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StoresIndex(?Operations\PublicApiV1StoresIndexRequest $request = null, ?Options $options = null): Operations\PublicApiV1StoresIndexResponse
+    public function publicApiV1StoresIndex(Operations\PublicApiV1StoresIndexRequest $request, ?Options $options = null): Operations\PublicApiV1StoresIndexResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -330,7 +330,7 @@ class Stores
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stores');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stores', Operations\PublicApiV1StoresIndexRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -379,7 +379,7 @@ class Stores
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -417,13 +417,13 @@ class Stores
      *
      * Retrieve a connected store by its `id` (UUID v7). Returns the provider connection it hangs from, the identifier the provider gave the shop and its full invoicing configuration. Returns 404 if the store does not exist or belongs to another company — the two answers are identical on purpose, so the endpoint never reveals whether a store of another company exists.
      *
+     * @param  string  $company
      * @param  string  $store
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StoresShow(string $store, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StoresShowResponse
+    public function publicApiV1StoresShow(string $company, string $store, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StoresShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -451,12 +451,12 @@ class Stores
             ];
         }
         $request = new Operations\PublicApiV1StoresShowRequest(
+            company: $company,
             store: $store,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stores/{store}', Operations\PublicApiV1StoresShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stores/{store}', Operations\PublicApiV1StoresShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -572,7 +572,7 @@ class Stores
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stores/{store}', Operations\PublicApiV1StoresUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stores/{store}', Operations\PublicApiV1StoresUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -585,7 +585,7 @@ class Stores
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.stores.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

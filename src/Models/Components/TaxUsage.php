@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxUsage - Desglose del uso de un tax across bounded contexts. Permite decidir si es seguro borrar o desactivar un tax (`in_use=false` ⇒ delete seguro). */
+/** TaxUsage - Where a tax is in use, broken down by document type. It tells whether the tax can be safely deleted or deactivated (`in_use=false` means it can be deleted). */
 class TaxUsage
 {
     /**
@@ -21,7 +21,7 @@ class TaxUsage
     public TaxUsageObject $object;
 
     /**
-     * UUID (v7) of the requested tax.
+     * UUID v7 of the requested tax.
      *
      * @var string $taxesId
      */
@@ -29,7 +29,7 @@ class TaxUsage
     public string $taxesId;
 
     /**
-     * true si `total_count > 0`.
+     * `true` when `total_count > 0`.
      *
      * @var bool $inUse
      */

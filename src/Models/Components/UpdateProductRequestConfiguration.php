@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateProductRequestConfiguration
 {
     /**
+     * Public identifier (UUID v7) of the configuration. A new configuration must be a UUID v7 (422 otherwise); an existing one keeps its identifier.
      *
      * @var string $id
      */

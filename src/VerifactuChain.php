@@ -50,14 +50,14 @@ class VerifactuChain
     /**
      * Validate the VeriFactu hash chain
      *
-     * Recompute the VeriFactu hash chain (`huella`) for your company and compare it against the persisted values without mutating data. Returns whether the chain is intact and, if not, the first corrupted record. Rate-limited to 1 request/minute and rejected with 422 `dataset_too_large` for datasets over 50,000 records.
+     * Recompute the VeriFactu hash chain (`huella`) for your company and compare it against the persisted values without mutating data. Returns whether the chain is intact and, if not, the first corrupted record. Rate-limited to 1 request per minute per credential and company (never shared across companies, credentials or routes) and rejected with 422 `dataset_too_large` for datasets over 50,000 records.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuChainValidateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuChainValidate(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuChainValidateResponse
+    public function publicApiV1VerifactuChainValidate(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuChainValidateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +85,11 @@ class VerifactuChain
             ];
         }
         $request = new Operations\PublicApiV1VerifactuChainValidateRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/chain/validate');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/chain/validate', Operations\PublicApiV1VerifactuChainValidateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -135,7 +135,7 @@ class VerifactuChain
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

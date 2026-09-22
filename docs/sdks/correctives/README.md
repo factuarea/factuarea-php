@@ -12,7 +12,7 @@ List the corrective invoices automatically generated from Stripe refunds (`charg
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.correctives.list" method="get" path="/stripe-autoinvoicing/correctives" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.correctives.list" method="get" path="/companies/{company}/stripe-autoinvoicing/correctives" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,10 +32,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1StripeAutoinvoicingCorrectivesListRequest(
+    company: 'Larson, Hickle and Wisoky',
     startingAfter: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a42',
     endingBefore: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a42',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->stripeAutoinvoicing->correctives->publicApiV1StripeAutoinvoicingCorrectivesList(
@@ -59,8 +59,8 @@ if ($response->paginatedList !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 422, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |

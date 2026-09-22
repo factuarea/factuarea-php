@@ -1,5 +1,7 @@
 # Kind
 
+Contact kind: `person` or `company`.
+
 
 ## Values
 

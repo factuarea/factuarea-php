@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ResolvedCatalogPricePreview - Una línea del repricing: el precio que resuelve hoy la selección, el que la línea tiene congelado y la diferencia entre los dos. */
+/** ResolvedCatalogPricePreview - One repricing line: the price the selection resolves to today, the price frozen on the line and the difference between them. */
 class ResolvedCatalogPricePreview
 {
     /**
@@ -21,7 +21,7 @@ class ResolvedCatalogPricePreview
     public ResolvedCatalogPricePreviewObject $object;
 
     /**
-     * Posición de la selección en `targets`. Es lo que empareja cada precio con su línea sin depender del orden de la respuesta.
+     * Position of the selection in `targets`; it matches each price with its line regardless of the order of the response.
      *
      * @var int $index
      */
@@ -114,7 +114,7 @@ class ResolvedCatalogPricePreview
     public ?string $priceListName;
 
     /**
-     * Semántica del importe de la fuente ganadora. `per_base_unit` se convierte una vez por el factor de la presentación; `per_commercial_unit` nunca se convierte.
+     * Semantics of the amount of the winning source: `per_base_unit` is converted once by the presentation factor; `per_commercial_unit` is never converted.
      *
      * @var ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPricePreviewUnitSemantics $unitSemantics
      */
@@ -123,7 +123,7 @@ class ResolvedCatalogPricePreview
     public ?ResolvedCatalogPricePreviewUnitSemantics $unitSemantics;
 
     /**
-     * Importe de la fuente ganadora, ya convertido a `price_unit` y ANTES de los ajustes de opción: `source_amount + option_adjustment_total = unit_price`.
+     * Amount of the winning source, already converted to `price_unit` and BEFORE option adjustments: `source_amount + option_adjustment_total = unit_price`.
      *
      * @var ?string $sourceAmount
      */
@@ -131,7 +131,7 @@ class ResolvedCatalogPricePreview
     public ?string $sourceAmount;
 
     /**
-     * Suma de los ajustes de los valores de opción elegidos, por unidad comercial.
+     * Sum of the adjustments of the chosen option values, per commercial unit.
      *
      * @var ?string $optionAdjustmentTotal
      */
@@ -139,7 +139,7 @@ class ResolvedCatalogPricePreview
     public ?string $optionAdjustmentTotal;
 
     /**
-     * Si la fuente ganadora ya incluía los ajustes de opción. `null` significa que el resolvedor no se pronunció, nunca `false`.
+     * Whether the winning source already included the option adjustments; `null` means the resolver did not say, never `false`.
      *
      * @var ?bool $optionAdjustmentsAbsorbed
      */
@@ -147,7 +147,7 @@ class ResolvedCatalogPricePreview
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
-     * Precio unitario que la línea tiene congelado hoy, tal y como se envió.
+     * Unit price currently frozen on the line, as it was sent.
      *
      * @var ?string $currentUnitPrice
      */
@@ -155,7 +155,7 @@ class ResolvedCatalogPricePreview
     public ?string $currentUnitPrice;
 
     /**
-     * `null` cuando no se envió `current_unit_price`: sin él no hay nada que comparar.
+     * `null` when `current_unit_price` was not sent: without it there is nothing to compare.
      *
      * @var ?bool $changed
      */
@@ -163,7 +163,7 @@ class ResolvedCatalogPricePreview
     public ?bool $changed;
 
     /**
-     * `unit_price - current_unit_price`. `null` cuando no se envió `current_unit_price`.
+     * `unit_price - current_unit_price`, or `null` when `current_unit_price` was not sent.
      *
      * @var ?string $difference
      */

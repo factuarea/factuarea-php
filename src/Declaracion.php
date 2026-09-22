@@ -52,12 +52,12 @@ class Declaracion
      *
      * Return the current (latest) version of the producer-level VeriFactu Declaración Responsable. Read-only: the declaration is global to the producer of the system (Factuarea), not per-company. Returns 404 `declaracion_not_found` if none has been published.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuDeclaracionCurrentResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuDeclaracionCurrent(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionCurrentResponse
+    public function publicApiV1VerifactuDeclaracionCurrent(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionCurrentResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +85,11 @@ class Declaracion
             ];
         }
         $request = new Operations\PublicApiV1VerifactuDeclaracionCurrentRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/declaracion-responsable');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/declaracion-responsable', Operations\PublicApiV1VerifactuDeclaracionCurrentRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -135,7 +135,7 @@ class Declaracion
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -173,12 +173,12 @@ class Declaracion
      *
      * Return every version of the producer-level VeriFactu Declaración Responsable (the SIF compliance declaration issued by Factuarea), ordered by `version` descending. Read-only: the declaration is global to the producer of the system, not per-company.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuDeclaracionHistoryResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuDeclaracionHistory(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionHistoryResponse
+    public function publicApiV1VerifactuDeclaracionHistory(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuDeclaracionHistoryResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -206,11 +206,11 @@ class Declaracion
             ];
         }
         $request = new Operations\PublicApiV1VerifactuDeclaracionHistoryRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/declaracion-responsable/history');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/declaracion-responsable/history', Operations\PublicApiV1VerifactuDeclaracionHistoryRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -256,7 +256,7 @@ class Declaracion
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

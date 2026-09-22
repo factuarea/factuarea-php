@@ -52,11 +52,11 @@ class Holidays
      *
      * List the public holidays visible to your company with cursor-based pagination: global reference holidays (national and per autonomous community, seeded and read-only) plus your custom local holidays. Supports filtering by `year`, `ccaa` (ISO 3166-2:ES autonomous community), `scope` (`national`/`autonomic`/`local`) and `source` (`reference` for seeded rows, `custom` for your own).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1HolidaysList(?Operations\PublicApiV1HolidaysListRequest $request = null, ?Options $options = null): Operations\PublicApiV1HolidaysListResponse
+    public function publicApiV1HolidaysList(Operations\PublicApiV1HolidaysListRequest $request, ?Options $options = null): Operations\PublicApiV1HolidaysListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class Holidays
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/holidays');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/holidays', Operations\PublicApiV1HolidaysListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class Holidays
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,14 +171,14 @@ class Holidays
      *
      * Resolve the holidays that apply to a given autonomous community in a given year: national holidays, the autonomic holidays of that `ccaa`, and your custom local holidays, merged into a single flat list under `{ "data": [Holiday, …] }`. Both `ccaa` (ISO 3166-2:ES) and `year` are required; an invalid community code or an out-of-range year returns 422.
      *
+     * @param  string  $company
      * @param  \Factuarea\Sdk\Models\Operations\Ccaa  $ccaa
      * @param  int  $year
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysResolveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1HolidaysResolve(Operations\Ccaa $ccaa, int $year, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1HolidaysResolveResponse
+    public function publicApiV1HolidaysResolve(string $company, Operations\Ccaa $ccaa, int $year, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1HolidaysResolveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -206,13 +206,13 @@ class Holidays
             ];
         }
         $request = new Operations\PublicApiV1HolidaysResolveRequest(
+            company: $company,
             ccaa: $ccaa,
             year: $year,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/holidays/resolve');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/holidays/resolve', Operations\PublicApiV1HolidaysResolveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -261,7 +261,7 @@ class Holidays
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -299,13 +299,13 @@ class Holidays
      *
      * Retrieve a single holiday by its `id` (UUID v7). A custom holiday belonging to another company returns 404 `holiday_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $holiday
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1HolidaysShow(string $holiday, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1HolidaysShowResponse
+    public function publicApiV1HolidaysShow(string $company, string $holiday, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1HolidaysShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,12 +333,12 @@ class Holidays
             ];
         }
         $request = new Operations\PublicApiV1HolidaysShowRequest(
+            company: $company,
             holiday: $holiday,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/holidays/{holiday}', Operations\PublicApiV1HolidaysShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/holidays/{holiday}', Operations\PublicApiV1HolidaysShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

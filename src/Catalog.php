@@ -50,14 +50,14 @@ class Catalog
     /**
      * Retrieve the automation catalog
      *
-     * Everything you need to build a valid automation rule without guessing: the triggers visible to your company, the closed set of condition operators and combinators, and the actions that have a registered adapter together with the JSON schema of their parameters. Visibility follows the plan and the modules of the company, so two accounts can legitimately see different catalogs. The response is deterministic — two consecutive calls with nothing changed return exactly the same body — and its labels are translated according to the `Accept-Language` header, defaulting to Spanish. The evaluable fields of each trigger are NOT included here: they are served per trigger by `GET /v1/automations/catalog/triggers/{trigger}/fields`, which is what keeps this call from weighing hundreds of kilobytes.
+     * Everything you need to build a valid automation rule without guessing: the triggers visible to your company, the closed set of condition operators and combinators, and the actions that have a registered adapter together with the JSON schema of their parameters. Visibility follows the plan and the modules of the company, so two accounts can legitimately see different catalogs. The response is deterministic — two consecutive calls with nothing changed return exactly the same body — and its labels are translated according to the `Accept-Language` header, defaulting to Spanish. The evaluable fields of each trigger are NOT included here: they are served per trigger by `GET /v1/companies/{company}/automations/catalog/triggers/{trigger}/fields`, which is what keeps this call from weighing hundreds of kilobytes.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsCatalogShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsCatalogShow(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsCatalogShowResponse
+    public function publicApiV1AutomationsCatalogShow(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsCatalogShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +85,11 @@ class Catalog
             ];
         }
         $request = new Operations\PublicApiV1AutomationsCatalogShowRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/catalog');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/catalog', Operations\PublicApiV1AutomationsCatalogShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -135,7 +135,7 @@ class Catalog
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -173,13 +173,13 @@ class Catalog
      *
      * List the fields you can write conditions against for a single trigger: where to read each one inside the triggering event, its type, the translated label of that type and the operators it accepts. It is the companion of the catalog, split into its own operation because serving the fields of every trigger at once would weigh hundreds of kilobytes per call. A trigger outside the catalog visible to your company returns 404 — whether the name does not exist, its module is not in your plan, or it is admin-only — so this endpoint cannot be used to probe what an account has contracted. A visible trigger whose event type publishes no evaluable fields returns 422.
      *
+     * @param  string  $company
      * @param  string  $trigger
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsCatalogTriggerFieldsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsCatalogTriggerFields(string $trigger, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsCatalogTriggerFieldsResponse
+    public function publicApiV1AutomationsCatalogTriggerFields(string $company, string $trigger, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsCatalogTriggerFieldsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -207,12 +207,12 @@ class Catalog
             ];
         }
         $request = new Operations\PublicApiV1AutomationsCatalogTriggerFieldsRequest(
+            company: $company,
             trigger: $trigger,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/catalog/triggers/{trigger}/fields', Operations\PublicApiV1AutomationsCatalogTriggerFieldsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/catalog/triggers/{trigger}/fields', Operations\PublicApiV1AutomationsCatalogTriggerFieldsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

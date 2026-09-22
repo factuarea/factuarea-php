@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1MonthlyTimeRecordClosesListRequest
 {
     /**
-     * Opaque pagination cursor. NON-STANDARD for this API: unlike the cursor lists (`starting_after`/`ending_before`), this endpoint wraps an offset paginator, so the cursor encodes the next page number. Use the `next_cursor` value returned by the previous page.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Pagination cursor (it encodes the next page number): the `next_cursor` of the previous page.
      *
      * @var ?string $cursor
      */
@@ -37,15 +45,7 @@ class PublicApiV1MonthlyTimeRecordClosesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Page size. Alias of `limit` (integer between 1 and 100, defaults to 25).
+     * Page size, alias of `limit` (1 to 100, default 25).
      *
      * @var ?int $perPage
      */
@@ -53,7 +53,7 @@ class PublicApiV1MonthlyTimeRecordClosesListRequest
     public ?int $perPage = null;
 
     /**
-     * Page size. Integer between 1 and 100. Defaults to 25. Alias of `per_page`; if both are sent, `limit` wins.
+     * Page size, between 1 and 100 (default 25); alias of `per_page` (`limit` wins when both are sent).
      *
      * @var ?int $limit
      */
@@ -61,20 +61,20 @@ class PublicApiV1MonthlyTimeRecordClosesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $perPage
      * @param  ?int  $limit
      * @param  ?string  $cursor
      * @param  ?int  $year
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $cursor = null, ?int $year = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $perPage = 25, ?int $limit = 25)
+    public function __construct(string $company, ?string $cursor = null, ?int $year = null, ?LocalDate $factuareaVersion = null, ?int $perPage = 25, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->cursor = $cursor;
         $this->year = $year;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->perPage = $perPage;
         $this->limit = $limit;
     }

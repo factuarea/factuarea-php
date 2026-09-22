@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 /**
- * UploadProductGalleryImageRequest - Public REST API v1 — POST /v1/products/{uuid}/gallery.
+ * UploadProductGalleryImageRequest - Public REST API v1 — POST /v1/companies/{company}/products/{product}/gallery.
  *
  *
  * Multipart upload: `photo` or `image` (alias) field — jpeg/png/jpg/gif/webp,

@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * CalculateTotalsRequest - Public REST API v1 — POST /v1/taxes/calculate-totals.
+ * CalculateTotalsRequest - Public REST API v1 — POST /v1/companies/{company}/taxes/calculate-totals.
  *
  *
  * Body: `{ lines: [{ quantity, unit_price, discount?, vat_rate?,

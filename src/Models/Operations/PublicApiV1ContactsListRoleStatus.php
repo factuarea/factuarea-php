@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Only roles in this status: `active` or `inactive`. */
 enum PublicApiV1ContactsListRoleStatus: string
 {
     case Active = 'active';

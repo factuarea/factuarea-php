@@ -24,7 +24,8 @@ namespace Factuarea\Sdk\Hooks;
  * - **How to rotate**: rotate an API key from the Factuarea portal (or via the self-service `account:write` endpoints). Rotation issues a brand-new secret and returns it **once** — store it immediately, it is never shown again.
  * - **Grace window (dual-secret)**: after a rotation the previous secret keeps working for a **24-hour grace window**, so you can roll out the new secret with zero downtime. During that window both the new and the previous secret are accepted; once the window expires the previous secret is rejected and purged.
  * - **When to rotate**: on a regular schedule (e.g. every 90 days), whenever a teammate with access leaves, and **immediately** if a secret is ever exposed in logs, source control or a public client.
- * - Secrets are bound to a single company (tenant) and MUST NEVER be embedded in browsers, mobile apps or any public client — keep them server-side only.
+ * - **What a key reaches**: an API key belongs to one account and operates only on the companies (tax IDs) in its scope, fixed when the key is issued; `GET /v1/me` returns the account (`data.account.id`) and that scope (`data.scope[]`). The company each request acts on travels in the path, `/v1/companies/{company}/…`, and must be in the scope.
+ * - Secrets MUST NEVER be embedded in browsers, mobile apps or any public client — keep them server-side only.
  */
 enum OAuth2Scope: string
 {
@@ -137,6 +138,8 @@ enum OAuth2Scope: string
 
     case AccountWrite = 'account:write';
 
+    case AccountOwner = 'account:owner';
+
     case CompaniesRead = 'companies:read';
 
     case CompaniesWrite = 'companies:write';
@@ -222,6 +225,18 @@ enum OAuth2Scope: string
     case AutomationsDelete = 'automations:delete';
 
     case AutomationRunsRead = 'automation_runs:read';
+
+    case MembersRead = 'members:read';
+
+    case MembersWrite = 'members:write';
+
+    case InvitationsRead = 'invitations:read';
+
+    case InvitationsWrite = 'invitations:write';
+
+    case ClaimTokensRead = 'claim_tokens:read';
+
+    case ClaimTokensWrite = 'claim_tokens:write';
 
     case Wildcard = '*';
 }

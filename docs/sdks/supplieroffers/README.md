@@ -16,7 +16,7 @@ Create a tenant-scoped supplier offer for a product or one of its variants.
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/products/{product}/supplier-offers" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -36,10 +36,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    product: 'Incredible Concrete Cheese',
+    company: 'Braun Inc',
+    product: 'Elegant Rubber Hat',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateSupplierProductOfferRequest(
         supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
         purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
@@ -58,7 +58,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/products/{product}/supplier-offers" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -78,10 +78,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    product: 'Elegant Fresh Bike',
+    company: 'Friesen - Casper',
+    product: 'Incredible Concrete Cheese',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateSupplierProductOfferRequest(
         supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
         purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
@@ -123,7 +123,7 @@ List supplier offers for a product, optionally filtered by variant, supplier, av
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.list" method="get" path="/products/{product}/supplier-offers" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.list" method="get" path="/companies/{company}/products/{product}/supplier-offers" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -143,9 +143,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersListRequest(
-    product: 'Refined Metal Shoes',
+    company: 'Legros, Shields and Bailey',
+    product: 'Rustic Granite Shoes',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersList(
@@ -181,7 +181,7 @@ Retire a supplier offer from the active catalog without changing historical purc
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.delete" method="delete" path="/products/{product}/supplier-offers/{offer}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.delete" method="delete" path="/companies/{company}/products/{product}/supplier-offers/{offer}" -->
 ```php
 declare(strict_types=1);
 
@@ -201,11 +201,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersDeleteRequest(
-    product: 'Rustic Rubber Hat',
+    company: 'Pouros, Kulas and Kuvalis',
+    product: 'Rustic Wooden Table',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersDelete(
@@ -241,7 +241,7 @@ Update cost, unit conversion, availability or activation data of a supplier offe
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="put" path="/products/{product}/supplier-offers/{offer}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -261,11 +261,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    product: 'Generic Wooden Mouse',
+    company: 'Haag - Beer',
+    product: 'Unbranded Soft Towels',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateSupplierProductOfferRequest(
         supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
         purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
@@ -284,7 +284,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="put" path="/products/{product}/supplier-offers/{offer}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -304,11 +304,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    product: 'Intelligent Soft Salad',
+    company: 'Sanford LLC',
+    product: 'Generic Wooden Mouse',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateSupplierProductOfferRequest(
         supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
         purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
@@ -350,7 +350,7 @@ Atomically mark this offer as preferred for its product and variant target. No r
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.preferred" method="post" path="/products/{product}/supplier-offers/{offer}/preferred" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.preferred" method="post" path="/companies/{company}/products/{product}/supplier-offers/{offer}/preferred" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -370,11 +370,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersPreferredRequest(
-    product: 'Ergonomic Frozen Salad',
+    company: 'Hayes - Purdy',
+    product: 'Electronic Bronze Table',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersPreferred(

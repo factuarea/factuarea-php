@@ -53,14 +53,14 @@ class EmployeeInvitations
      *
      * Cancel a pending employee invitation identified by its `id` (UUID v7); it transitions to `canceled` and can no longer be accepted. Returns 204 on success, 422 if the invitation was already accepted, and 404 if it does not exist in your company.
      *
+     * @param  string  $company
      * @param  string  $invitation
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeInvitationsCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeInvitationsCancel(string $invitation, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsCancelResponse
+    public function publicApiV1EmployeeInvitationsCancel(string $company, string $invitation, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class EmployeeInvitations
             ];
         }
         $request = new Operations\PublicApiV1EmployeeInvitationsCancelRequest(
+            company: $company,
             invitation: $invitation,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-invitations/{invitation}', Operations\PublicApiV1EmployeeInvitationsCancelRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-invitations/{invitation}', Operations\PublicApiV1EmployeeInvitationsCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -168,12 +168,12 @@ class EmployeeInvitations
      *
      * List the employee invitations of your company. Only invitations with role `employee` are returned; user/admin invitations from the user-management surface are excluded. Each item exposes its opaque `id` (UUID v7), `email`, `status` (`pending`/`accepted`/`canceled`/`expired`) and expiry.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeInvitationsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeInvitationsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsListResponse
+    public function publicApiV1EmployeeInvitationsList(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -201,11 +201,11 @@ class EmployeeInvitations
             ];
         }
         $request = new Operations\PublicApiV1EmployeeInvitationsListRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-invitations');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-invitations', Operations\PublicApiV1EmployeeInvitationsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -251,7 +251,7 @@ class EmployeeInvitations
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -289,14 +289,14 @@ class EmployeeInvitations
      *
      * Resend a pending employee invitation identified by its `id` (UUID v7), regenerating its token and expiry and re-sending the invitation email. Returns 422 if the invitation was already accepted or canceled, and 404 if it does not exist in your company.
      *
+     * @param  string  $company
      * @param  string  $invitation
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeInvitationsResendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeInvitationsResend(string $invitation, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsResendResponse
+    public function publicApiV1EmployeeInvitationsResend(string $company, string $invitation, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsResendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -324,13 +324,13 @@ class EmployeeInvitations
             ];
         }
         $request = new Operations\PublicApiV1EmployeeInvitationsResendRequest(
+            company: $company,
             invitation: $invitation,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-invitations/{invitation}/resend', Operations\PublicApiV1EmployeeInvitationsResendRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-invitations/{invitation}/resend', Operations\PublicApiV1EmployeeInvitationsResendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -415,13 +415,13 @@ class EmployeeInvitations
      * Invite a person to join your company as an employee (Control Horario portal). Only `email` is required — the `employee` role is fixed by the server, never taken from the payload. The invited person receives an email with an acceptance link. Inviting an email that already belongs to a company user, or one that already has a pending invitation, returns 422. Employee invitations do not consume the plan `users` seat limit.
      *
      * @param  \Factuarea\Sdk\Models\Components\SendEmployeeInvitationRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeInvitationsSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeInvitationsSend(Components\SendEmployeeInvitationRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsSendResponse
+    public function publicApiV1EmployeeInvitationsSend(Components\SendEmployeeInvitationRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeInvitationsSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -449,13 +449,13 @@ class EmployeeInvitations
             ];
         }
         $request = new Operations\PublicApiV1EmployeeInvitationsSendRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-invitations');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-invitations', Operations\PublicApiV1EmployeeInvitationsSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -506,7 +506,7 @@ class EmployeeInvitations
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

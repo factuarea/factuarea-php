@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Kind of action to run. Must be one of the action types `GET /v1/automations/catalog` reports as registered. */
+/** Kind of action to run. Must be one of the action types `GET /v1/companies/{company}/automations/catalog` reports as registered. */
 enum AutomationActionInputType: string
 {
     case NotifyInApp = 'notify_in_app';

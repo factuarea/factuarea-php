@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * BulkUpdateProductStockRequest - Public REST API v1 — POST /v1/products/bulk-update-stock.
+ * BulkUpdateProductStockRequest - Public REST API v1 — POST /v1/companies/{company}/products/bulk-update-stock.
  *
  *
  * Body: `{ updates: [{ product_id: string, stock: numeric-string, operation?: 'set'|'add'|'subtract', variant_id?: uuid }] }`.

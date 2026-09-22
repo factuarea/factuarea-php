@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ProductActivity
 {
     /**
-     * Tipo de evento de dominio (p. ej. `product.updated`, `invoice.created`).
+     * Domain event type (e.g. `product.updated`, `invoice.created`).
      *
      * @var string $eventType
      */

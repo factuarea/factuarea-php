@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1DevelopersRequestLogsListRequest
 {
     /**
-     * HTTP methods to filter by, either comma-separated (`?method=GET,POST`) or repeated (`?method[]=GET&method[]=POST`). Allowed values: GET, POST, PUT, PATCH, DELETE. Any other value returns 422 — the filter is never silently dropped.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * HTTP methods, comma-separated (`?method=GET,POST`) or repeated: `GET`, `POST`, `PUT`, `PATCH` or `DELETE`; any other value returns 422.
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\Method> $method
      */
@@ -21,7 +29,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?array $method = null;
 
     /**
-     * Status code ranges to filter by, either comma-separated (`?status_range=4xx,5xx`) or repeated (`?status_range[]=4xx&status_range[]=5xx`). Allowed values: 2xx, 3xx, 4xx, 5xx. Any other value returns 422. `only_errors=true` is shorthand for `4xx,5xx`, but an explicit `status_range` wins over it.
+     * Status code ranges, comma-separated (`?status_range=4xx,5xx`) or repeated: `2xx`, `3xx`, `4xx` or `5xx`; it wins over `only_errors=true` (shorthand for `4xx,5xx`).
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\StatusRange> $statusRange
      */
@@ -77,7 +85,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?Environment $environment = null;
 
     /**
-     * Cursor for forward pagination: pass back the `next_cursor` of the previous page. Treat it as opaque — unlike the rest of the v1 listings it is a numeric string, not a UUID v7, because request logs have no UUID. A malformed cursor returns 400.
+     * Cursor for forward pagination: the `next_cursor` of the previous page, an opaque numeric string (not a UUID v7). A malformed cursor returns 400.
      *
      * @var ?string $startingAfter
      */
@@ -93,15 +101,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Number of logs to return. Integer between 1 and 100. Defaults to 50 (wider than the rest of the v1 listings, which default to 25). A non-integer or out-of-range value returns 400.
+     * Number of logs to return, between 1 and 100 (default 50).
      *
      * @var ?int $limit
      */
@@ -109,6 +109,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?array<\Factuarea\Sdk\Models\Operations\Method>  $method
      * @param  ?array<\Factuarea\Sdk\Models\Operations\StatusRange>  $statusRange
      * @param  ?bool  $onlyErrors
@@ -120,11 +121,11 @@ class PublicApiV1DevelopersRequestLogsListRequest
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?array $method = null, ?array $statusRange = null, ?bool $onlyErrors = null, ?string $apiKeyPrefix = null, ?string $pathSearch = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?Environment $environment = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 50)
+    public function __construct(string $company, ?array $method = null, ?array $statusRange = null, ?bool $onlyErrors = null, ?string $apiKeyPrefix = null, ?string $pathSearch = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?Environment $environment = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?int $limit = 50)
     {
+        $this->company = $company;
         $this->method = $method;
         $this->statusRange = $statusRange;
         $this->onlyErrors = $onlyErrors;
@@ -135,7 +136,6 @@ class PublicApiV1DevelopersRequestLogsListRequest
         $this->environment = $environment;
         $this->startingAfter = $startingAfter;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

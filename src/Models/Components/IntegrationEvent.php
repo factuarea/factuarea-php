@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class IntegrationEvent
 {
     /**
-     * UUID v7 of the event. Use it in `GET /v1/integrations/events/{event}` and in the replay operation.
+     * UUID v7 of the event. Use it in `GET /v1/companies/{company}/integrations/events/{event}` and in the replay operation.
      *
      * @var string $id
      */
@@ -72,7 +72,7 @@ class IntegrationEvent
     public bool $isActionable;
 
     /**
-     * CONTRACT of the replay operation: when it is `true`, `POST /v1/integrations/events/{event}/replay` does not answer 422. It is the conjunction of three conditions — the event is parked, it still holds its content, and its discard reason admits reprocessing — evaluated by the same handler that guards the replay. It turns to `false` on its own once the 30-day retention window purges the content, even though the event stays parked.
+     * CONTRACT of the replay operation: when it is `true`, `POST /v1/companies/{company}/integrations/events/{event}/replay` does not answer 422. It is the conjunction of three conditions — the event is parked, it still holds its content, and its discard reason admits reprocessing — evaluated by the same handler that guards the replay. It turns to `false` on its own once the 30-day retention window purges the content, even though the event stays parked.
      *
      * @var bool $isReplayable
      */

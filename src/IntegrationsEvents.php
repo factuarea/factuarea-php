@@ -52,11 +52,11 @@ class IntegrationsEvents
      *
      * Browse everything the payment gateways have sent to Factuarea. This is the inbox to open when a charge did not generate its invoice: every discarded event carries a typed `discard_reason` and whether it can be reprocessed. Newest first, and scoped to the authenticated company. The raw content of the event is never returned.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1IntegrationsEventsList(?Operations\PublicApiV1IntegrationsEventsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsListResponse
+    public function publicApiV1IntegrationsEventsList(Operations\PublicApiV1IntegrationsEventsListRequest $request, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class IntegrationsEvents
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/integrations/events');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/integrations/events', Operations\PublicApiV1IntegrationsEventsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class IntegrationsEvents
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -185,17 +185,17 @@ class IntegrationsEvents
      *
      * - `202` means accepted and queued, **not** completed.
      * - The body returns the event as it stands now, not the outcome of the retry.
-     * - The outcome appears as a NEW event in the inbox — poll `GET /v1/integrations/events` to see how it ended.
+     * - The outcome appears as a NEW event in the inbox — poll `GET /v1/companies/{company}/integrations/events` to see how it ended.
      * - It never duplicates invoices: the replay goes through the same idempotency check as the original attempt.
      *
+     * @param  string  $company
      * @param  string  $event
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsReplayResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1IntegrationsEventsReplay(string $event, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsReplayResponse
+    public function publicApiV1IntegrationsEventsReplay(string $company, string $event, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsReplayResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -223,13 +223,13 @@ class IntegrationsEvents
             ];
         }
         $request = new Operations\PublicApiV1IntegrationsEventsReplayRequest(
+            company: $company,
             event: $event,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/integrations/events/{event}/replay', Operations\PublicApiV1IntegrationsEventsReplayRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/integrations/events/{event}/replay', Operations\PublicApiV1IntegrationsEventsReplayRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -313,13 +313,13 @@ class IntegrationsEvents
      *
      * Retrieve one integration event by its id, typically after finding it in the listing, to know exactly why a charge did not produce its invoice and what to do next. On top of the listing fields, the detail adds `recommended_action`, one imperative sentence with the next step, and `is_replayable`, which tells you whether the replay operation would accept the event.
      *
+     * @param  string  $company
      * @param  string  $event
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1IntegrationsEventsShow(string $event, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsShowResponse
+    public function publicApiV1IntegrationsEventsShow(string $company, string $event, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1IntegrationsEventsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -347,12 +347,12 @@ class IntegrationsEvents
             ];
         }
         $request = new Operations\PublicApiV1IntegrationsEventsShowRequest(
+            company: $company,
             event: $event,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/integrations/events/{event}', Operations\PublicApiV1IntegrationsEventsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/integrations/events/{event}', Operations\PublicApiV1IntegrationsEventsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

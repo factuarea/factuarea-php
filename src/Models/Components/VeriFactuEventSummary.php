@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuEventSummary - Resumen agregado de los eventos del SIF de la empresa: total y desglose por tipo y por estado. Devuelto por `GET /v1/verifactu/events/summary`. */
+/** VeriFactuEventSummary - Aggregated summary of the invoicing system (SIF) events of the company: total and breakdown by type and by status. Returned by `GET /v1/companies/{company}/verifactu/events/summary`. */
 class VeriFactuEventSummary
 {
     /**
@@ -21,7 +21,7 @@ class VeriFactuEventSummary
     public VeriFactuEventSummaryObject $object;
 
     /**
-     * Total de eventos registrados.
+     * Total number of recorded events.
      *
      * @var int $totalEvents
      */

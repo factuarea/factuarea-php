@@ -55,11 +55,11 @@ class Runs
      *
      * Browse the history of automation runs of the authenticated company with cursor-based pagination, filtering by `status`, by `automation_rule_id` or by creation window. It takes the dedicated `automation_runs:read` scope rather than the one that reads rules, because a run carries inside it the frozen `data.object` of the event that triggered it — amounts, recipients, action results — and that is granted separately. Pages are ordered by `id` ascending, so the history reads oldest first; walk it with `ending_before` to go the other way.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRunsList(?Operations\PublicApiV1AutomationsRunsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1AutomationsRunsListResponse
+    public function publicApiV1AutomationsRunsList(Operations\PublicApiV1AutomationsRunsListRequest $request, ?Options $options = null): Operations\PublicApiV1AutomationsRunsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,7 +87,7 @@ class Runs
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/runs');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/runs', Operations\PublicApiV1AutomationsRunsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -136,7 +136,7 @@ class Runs
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -176,16 +176,16 @@ class Runs
      *
      * CAREFUL — the rearmed steps EXECUTE FOR REAL: they send email, deliver webhooks and call third parties. This is not an inert retry, so confirm with the account owner before calling it.
      *
-     * Only steps parked with a replayable reason are rearmed; a run still in flight, or one that finished cleanly, is rejected with 422 `automation_replay_not_allowed`. The response is 202 — accepted and queued, NOT finished — and its body carries only the id of the run, deliberately without a `status`, because "queued" is not one of the run statuses and a client typing it against the enum would break. Check the outcome with `GET /v1/automations/runs/{run}` or, more cheaply, with its steps. Calling it twice does not duplicate the effect: the engine rechecks the state of each step inside its own lock.
+     * Only steps parked with a replayable reason are rearmed; a run still in flight, or one that finished cleanly, is rejected with 422 `automation_replay_not_allowed`. The response is 202 — accepted and queued, NOT finished — and its body carries only the id of the run, deliberately without a `status`, because "queued" is not one of the run statuses and a client typing it against the enum would break. Check the outcome with `GET /v1/companies/{company}/automations/runs/{run}` or, more cheaply, with its steps. Calling it twice does not duplicate the effect: the engine rechecks the state of each step inside its own lock.
      *
+     * @param  string  $company
      * @param  string  $run
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsReplayResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRunsReplay(string $run, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRunsReplayResponse
+    public function publicApiV1AutomationsRunsReplay(string $company, string $run, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRunsReplayResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -213,13 +213,13 @@ class Runs
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRunsReplayRequest(
+            company: $company,
             run: $run,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/runs/{run}/replay', Operations\PublicApiV1AutomationsRunsReplayRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/runs/{run}/replay', Operations\PublicApiV1AutomationsRunsReplayRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -303,13 +303,13 @@ class Runs
      *
      * Retrieve one run with its two frozen snapshots — the version of the definition it executed and the `data.object` of the triggering event — plus its steps in execution order. Those snapshots are what keep a run from weeks ago readable after its rule has moved on several versions and the triggering event has aged out. A run of another company returns 404 `automation_run_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $run
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AutomationsRunsShow(string $run, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AutomationsRunsShowResponse
+    public function publicApiV1AutomationsRunsShow(string $company, string $run, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AutomationsRunsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -337,12 +337,12 @@ class Runs
             ];
         }
         $request = new Operations\PublicApiV1AutomationsRunsShowRequest(
+            company: $company,
             run: $run,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/automations/runs/{run}', Operations\PublicApiV1AutomationsRunsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/automations/runs/{run}', Operations\PublicApiV1AutomationsRunsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

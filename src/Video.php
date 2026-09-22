@@ -52,14 +52,14 @@ class Video
      *
      * Delete the video associated with the product and release the storage. Idempotent: returns 204 even when no video was attached.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVideoDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsVideoDelete(string $product, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDeleteResponse
+    public function publicApiV1ProductsVideoDelete(string $company, string $product, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,13 +87,13 @@ class Video
             ];
         }
         $request = new Operations\PublicApiV1ProductsVideoDeleteRequest(
+            company: $company,
             product: $product,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/video', Operations\PublicApiV1ProductsVideoDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/video', Operations\PublicApiV1ProductsVideoDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -167,13 +167,13 @@ class Video
      *
      * Stream the raw binary of the product video. Returns 404 if the product has no video or the file is not on disk.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsVideoDownloadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsVideoDownload(string $product, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDownloadResponse
+    public function publicApiV1ProductsVideoDownload(string $company, string $product, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsVideoDownloadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -201,12 +201,12 @@ class Video
             ];
         }
         $request = new Operations\PublicApiV1ProductsVideoDownloadRequest(
+            company: $company,
             product: $product,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/video/download', Operations\PublicApiV1ProductsVideoDownloadRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/video/download', Operations\PublicApiV1ProductsVideoDownloadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -319,7 +319,7 @@ class Video
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/video', Operations\PublicApiV1ProductsVideoUploadRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/video', Operations\PublicApiV1ProductsVideoUploadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'multipart');

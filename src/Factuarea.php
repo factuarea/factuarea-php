@@ -63,6 +63,8 @@ class Factuarea
         'https://api.factuarea.com/v1',
     ];
 
+    public Account $account;
+
     public Proformas $proformas;
 
     public Quotes $quotes;
@@ -110,8 +112,6 @@ class Factuarea
     public MonthlyTimeRecordCloses $monthlyTimeRecordCloses;
 
     public Stores $stores;
-
-    public Account $account;
 
     public Employees $employees;
 
@@ -175,6 +175,7 @@ class Factuarea
     public function __construct(
         public SDKConfiguration $sdkConfiguration,
     ) {
+        $this->account = new Account($this->sdkConfiguration);
         $this->proformas = new Proformas($this->sdkConfiguration);
         $this->quotes = new Quotes($this->sdkConfiguration);
         $this->automations = new Automations($this->sdkConfiguration);
@@ -199,7 +200,6 @@ class Factuarea
         $this->timeEntries = new TimeEntries($this->sdkConfiguration);
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->stores = new Stores($this->sdkConfiguration);
-        $this->account = new Account($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);

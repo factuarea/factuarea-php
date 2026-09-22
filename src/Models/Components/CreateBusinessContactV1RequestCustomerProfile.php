@@ -20,10 +20,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?bool $surchargeSubject = null;
 
     /**
-     * Resolver `any`: estas reglas las consumen la SPA (usuario en sesión) y
-     *
-     * la v1 (API key sin usuario autenticado). Con `exists` —resolver
-     * `auth_user`— la v1 respondía 500 al recibir una tarifa.
+     * Public identifier (UUID v7) of an active price list of your company applied by default to this customer, or `null`.
      *
      * @var ?string $defaultPriceListUuid
      */

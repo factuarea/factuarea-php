@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TimeRecordChainValidation - Result of recomputing and verifying the SHA-256 hash chain (`huella`) of your company time record ledger without mutating data. Returned by `GET /v1/time-entries/chain/validate`. Fingerprints are never exposed. */
+/** TimeRecordChainValidation - Result of recomputing and verifying the SHA-256 hash chain (`huella`) of your company time record ledger without mutating data. Returned by `GET /v1/companies/{company}/time-entries/chain/validate`. Fingerprints are never exposed. */
 class TimeRecordChainValidation
 {
     /**
@@ -61,7 +61,7 @@ class TimeRecordChainValidation
     public \DateTime $validatedAt;
 
     /**
-     * UUID (v7) of the first invalid entry, or `null` if the chain is intact.
+     * UUID v7 of the first invalid entry, or `null` if the chain is intact.
      *
      * @var ?string $firstInvalidRecordId
      */

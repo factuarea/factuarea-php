@@ -98,10 +98,10 @@ class SupplierProductOffer
 
     /**
      *
-     * @var ?float $unitCost
+     * @var ?string $unitCost
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_cost')]
-    public ?float $unitCost;
+    public ?string $unitCost;
 
     /**
      *
@@ -130,12 +130,12 @@ class SupplierProductOffer
      * @param  bool  $active
      * @param  ?string  $variantId
      * @param  ?string  $supplierSku
-     * @param  ?float  $unitCost
+     * @param  ?string  $unitCost
      * @param  ?string  $minimumQuantity
      * @param  ?int  $leadTimeDays
      * @phpstan-pure
      */
-    public function __construct(string $id, SupplierProductOfferObject $object, string $productId, string $supplierId, string $purchaseUnit, string $conversionFactor, string $currency, string $availability, bool $preferred, bool $active, ?string $variantId = null, ?string $supplierSku = null, ?float $unitCost = null, ?string $minimumQuantity = null, ?int $leadTimeDays = null)
+    public function __construct(string $id, SupplierProductOfferObject $object, string $productId, string $supplierId, string $purchaseUnit, string $conversionFactor, string $currency, string $availability, bool $preferred, bool $active, ?string $variantId = null, ?string $supplierSku = null, ?string $unitCost = null, ?string $minimumQuantity = null, ?int $leadTimeDays = null)
     {
         $this->id = $id;
         $this->object = $object;

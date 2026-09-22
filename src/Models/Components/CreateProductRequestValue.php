@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateProductRequestValue
 {
     /**
+     * Public identifier (UUID v7) of the option value. A new value sent with another UUID version is rejected with 422.
      *
      * @var string $id
      */

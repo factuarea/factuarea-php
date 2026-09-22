@@ -90,6 +90,35 @@ final class SpecSyncTriggersTest extends TestCase
         ));
     }
 
+    public function test_the_pause_note_states_a_checkable_procedure_not_an_operation_count(): void
+    {
+        $note = self::pauseNoteFor(self::workflow(), 'schedule');
+
+        $this->assertNotSame('', $note, 'No pause note found for `schedule`.');
+
+        // A condition written as "N operations on both sides" goes stale the day
+        // the contract changes, and then nobody can act on it. The criterion has
+        // to survive any count — canonical identity of the published and the
+        // pinned document — and to name the procedure that decides it, because
+        // two digests taken with different procedures are not comparable.
+        $this->assertDoesNotMatchRegularExpression(
+            '/\b\d{2,}\s+operations?\b/',
+            $note,
+            'The reactivation condition promises a fixed number of operations. That number is a '.
+            'snapshot of one contract, not a criterion: it goes stale on the next spec change and '.
+            'leaves the trigger paused forever. State the criterion instead (the published document '.
+            'and the pinned copy are canonically identical) and name the procedure that checks it.',
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/canonically identical/i',
+            $note,
+            'The reactivation condition does not state canonical identity between the published '.
+            'document and the copy pinned in this repo. Both receivers carry the same condition '.
+            'word for word; keep them in step.',
+        );
+    }
+
     public function test_a_restored_trigger_drops_its_pause_note(): void
     {
         $source = self::workflow();
@@ -103,6 +132,37 @@ final class SpecSyncTriggersTest extends TestCase
             'the evidence that its condition was met, and the date it was met.',
             implode(', ', $stale),
         ));
+    }
+
+    /**
+     * The pause note of a trigger: the `# PAUSED <trigger> …` line plus the
+     * comment lines it wraps onto, up to the first empty comment line. Prose
+     * written above the note is deliberately out: the note is what a reader
+     * acts on.
+     */
+    private static function pauseNoteFor(string $source, string $trigger): string
+    {
+        $note = [];
+
+        foreach (explode("\n", $source) as $line) {
+            $line = trim($line);
+
+            if ($note === []) {
+                if (preg_match(self::PAUSE_NOTE, $line, $found) === 1 && $found[1] === $trigger) {
+                    $note[] = $line;
+                }
+
+                continue;
+            }
+
+            if (preg_match('/^#\s*\S/', $line) !== 1) {
+                break;
+            }
+
+            $note[] = $line;
+        }
+
+        return implode("\n", $note);
     }
 
     private static function workflow(): string

@@ -52,11 +52,11 @@ class Events
      *
      * List events in your event log with cursor-based pagination. Each event records something that happened in your account (an invoice was paid, a quote accepted, …) and is the same object delivered to your webhook endpoints. Supports filtering by `type[in]` and `created[gte|lte]`.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EventsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EventsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EventsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EventsList(?Operations\PublicApiV1EventsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1EventsListResponse
+    public function publicApiV1EventsList(Operations\PublicApiV1EventsListRequest $request, ?Options $options = null): Operations\PublicApiV1EventsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class Events
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/events');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/events', Operations\PublicApiV1EventsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class Events
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,13 +171,13 @@ class Events
      *
      * Retrieve a single event by its `id` (format `evt_<ulid>`, an opaque identifier). Useful for auditing and replaying webhook payloads. Returns `404 not_found` if the event does not exist or belongs to another company.
      *
+     * @param  string  $company
      * @param  string  $event
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EventsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EventsShow(string $event, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EventsShowResponse
+    public function publicApiV1EventsShow(string $company, string $event, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EventsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -205,12 +205,12 @@ class Events
             ];
         }
         $request = new Operations\PublicApiV1EventsShowRequest(
+            company: $company,
             event: $event,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/events/{event}', Operations\PublicApiV1EventsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/events/{event}', Operations\PublicApiV1EventsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

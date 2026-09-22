@@ -1,6 +1,6 @@
 # UpdateQuotePublicLinkRequest
 
-Public REST API v1 — PUT /v1/quotes/{uuid}/public-link.
+Public REST API v1 — PATCH /v1/companies/{company}/quotes/{quote}/public-link.
 
 `SchemaName` disambiguates the OpenAPI schema: Quote and Proforma declare
 structurally identical request bodies, so without a unique name they would

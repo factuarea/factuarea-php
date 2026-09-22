@@ -1,6 +1,6 @@
 # UpdateStoreV1Request
 
-Public REST API v1 — PUT /v1/stores/{store}.
+Public REST API v1 — PATCH /v1/companies/{company}/stores/{store}.
 
 Partial update of the settings of a connected store: every field is optional
 and a field you do not send keeps its current value. The identity of the

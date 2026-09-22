@@ -1,6 +1,6 @@
 # AutomationActionInputType
 
-Kind of action to run. Must be one of the action types `GET /v1/automations/catalog` reports as registered.
+Kind of action to run. Must be one of the action types `GET /v1/companies/{company}/automations/catalog` reports as registered.
 
 
 ## Values

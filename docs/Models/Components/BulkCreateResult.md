@@ -1,6 +1,6 @@
 # BulkCreateResult
 
-Result of a bulk invoice creation (`POST /v1/invoices/bulk-create`). `dry_run` reports the mode. In validate-only mode (`dry_run=true`) `results[]` carries the per-row classification `{index, status, errors[], warnings[]}` and nothing is persisted; in create mode (`dry_run=false`) only valid rows are created and `failures[]` carries the rows that were not created (identified by `index`). `total = successful + failed`.
+Result of a bulk invoice creation (`POST /v1/companies/{company}/invoices/bulk-create`). `dry_run` reports the mode. In validate-only mode (`dry_run=true`) `results[]` carries the per-row classification `{index, status, errors[], warnings[]}` and nothing is persisted; in create mode (`dry_run=false`) only valid rows are created and `failures[]` carries the rows that were not created (identified by `index`). `total = successful + failed`.
 
 
 ## Fields

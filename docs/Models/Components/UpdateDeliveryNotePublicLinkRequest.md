@@ -1,6 +1,6 @@
 # UpdateDeliveryNotePublicLinkRequest
 
-Public REST API v1 — PUT /v1/delivery_notes/{uuid}/public-link.
+Public REST API v1 — PATCH /v1/companies/{company}/delivery-notes/{delivery_note}/public-link.
 
 Required body: `action` ∈ {revoke, activate, extend, reset}. `extend_days`
 is required when `action=extend`.

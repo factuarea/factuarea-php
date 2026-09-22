@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseInvoicesPendingRequest
 {
     /**
-     * Default `'25'` (string) por consistencia OpenAPI/Spectral.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?string $limit
      */
@@ -21,6 +29,7 @@ class PublicApiV1PurchaseInvoicesPendingRequest
     public ?string $limit = null;
 
     /**
+     * Pagination cursor (it encodes the next page number): the `next_cursor` of the previous page.
      *
      * @var ?string $cursor
      */
@@ -36,14 +45,7 @@ class PublicApiV1PurchaseInvoicesPendingRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Page size, alias of `limit` (1 to 100, default 25).
      *
      * @var ?string $perPage
      */
@@ -51,19 +53,19 @@ class PublicApiV1PurchaseInvoicesPendingRequest
     public ?string $perPage = null;
 
     /**
+     * @param  string  $company
      * @param  ?string  $perPage
      * @param  ?string  $limit
      * @param  ?string  $cursor
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $limit = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $perPage = '25')
+    public function __construct(string $company, ?string $limit = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?string $perPage = '25')
     {
+        $this->company = $company;
         $this->limit = $limit;
         $this->cursor = $cursor;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->perPage = $perPage;
     }
 }

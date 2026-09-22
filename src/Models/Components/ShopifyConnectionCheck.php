@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** ShopifyConnectionCheck - The outcome of testing the connection with one of your connected Shopify stores. The public `id` is the UUID (v7) of the STORE that was tested, so you can tell which shop this diagnosis is about. Nothing is stored: this resource is a diagnosis, not a record. Read `reachable` and `credential_accepted` together — `reachable: false` means the shop did not answer, while `reachable: true` with `credential_accepted: false` means it answered and rejected the access token — and read `failure_code` for the concrete cause, which is what tells «your token is no longer valid» apart from «the Admin API version we speak has expired». */
+/** ShopifyConnectionCheck - The outcome of testing the connection with one of your connected Shopify stores. The public `id` is the UUID v7 of the STORE that was tested, so you can tell which shop this diagnosis is about. Nothing is stored: this resource is a diagnosis, not a record. Read `reachable` and `credential_accepted` together — `reachable: false` means the shop did not answer, while `reachable: true` with `credential_accepted: false` means it answered and rejected the access token — and read `failure_code` for the concrete cause, which is what tells «your token is no longer valid» apart from «the Admin API version we speak has expired». */
 class ShopifyConnectionCheck
 {
     /**
-     * UUID (v7) of the store that was tested. Public identity (KEY `id`).
+     * UUID v7 of the store that was tested. Public identity (KEY `id`).
      *
      * @var string $id
      */

@@ -199,7 +199,7 @@ class Product
     public bool $isLowStock;
 
     /**
-     * Indica si hay stock disponible (> 0).
+     * Whether there is stock available (> 0).
      *
      * @var bool $isInStock
      */

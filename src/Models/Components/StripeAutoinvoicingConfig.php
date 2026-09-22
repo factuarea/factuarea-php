@@ -95,7 +95,7 @@ class StripeAutoinvoicingConfig
     public bool $subscriptionAutoinvoicingEnabled;
 
     /**
-     * UUID (v7) of the document series used for auto-created invoices. `null` means the company default series is used.
+     * UUID v7 of the document series used for auto-created invoices. `null` means the company default series is used.
      *
      * @var ?string $seriesId
      */

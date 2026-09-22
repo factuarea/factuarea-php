@@ -1,5 +1,7 @@
 # Origin
 
+Only payments of this origin: `subscription` or `oneshot`.
+
 
 ## Values
 

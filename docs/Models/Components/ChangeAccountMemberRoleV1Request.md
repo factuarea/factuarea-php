@@ -1,0 +1,9 @@
+# ChangeAccountMemberRoleV1Request
+
+
+## Fields
+
+| Field                                                                                                              | Type                                                                                                               | Required                                                                                                           | Description                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `companyId`                                                                                                        | *string*                                                                                                           | :heavy_check_mark:                                                                                                 | Public identifier (UUID v7) of the company of your account where the role changes.                                 |
+| `role`                                                                                                             | [Components\ChangeAccountMemberRoleV1RequestRole](../../Models/Components/ChangeAccountMemberRoleV1RequestRole.md) | :heavy_check_mark:                                                                                                 | New membership role on that company: `owner`, `admin`, `member` or `employee`.                                     |

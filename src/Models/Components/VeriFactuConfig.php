@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuConfig - VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/verifactu/config` and `PUT /v1/verifactu/settings`. The certificate password is never exposed. */
+/** VeriFactuConfig - VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/companies/{company}/verifactu/config` and `PATCH /v1/companies/{company}/verifactu/settings`. The certificate password is never exposed. */
 class VeriFactuConfig
 {
     /**
@@ -62,7 +62,7 @@ class VeriFactuConfig
     public array $notificationEmails;
 
     /**
-     * Indica si hay un certificado activo configurado.
+     * Whether an active certificate is configured.
      *
      * @var bool $hasActiveCertificate
      */
@@ -78,7 +78,7 @@ class VeriFactuConfig
     public ?\DateTime $isLockedUntil;
 
     /**
-     * UUID (v7) of the active certificate, or `null` if there is none.
+     * UUID v7 of the active certificate, or `null` if there is none.
      *
      * @var ?string $activeCertificateId
      */

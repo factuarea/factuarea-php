@@ -1,14 +1,6 @@
 # SendDeliveryNoteRequest
 
-Public REST API v1 — POST /v1/delivery_notes/{uuid}/send.
-
-Required body: `email`. Optional: `subject`, `message` (max 2000 chars),
-`template_id` (catalog id of the email template).
-
-`template_id` is the integer identifier of the global system table
-`templates` (shared catalog, without `company_id` or `uuid` column). It is
-validated against the PK `id`, like the internal SPA endpoint. That is why
-it does NOT follow the public UUID convention of the other FKs.
+Email a delivery note. Required: `email`. Optional: `subject`, `message` (up to 2,000 characters) and `template_id`, the integer identifier of an email template of the global catalog (a shared system catalog, so it is not a UUID v7).
 
 
 ## Fields

@@ -84,7 +84,7 @@ class FaceSubmissions
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/face-submissions/{faceSubmission}/cancel', Operations\PublicApiV1FaceSubmissionsCancelRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/face-submissions/{faceSubmission}/cancel', Operations\PublicApiV1FaceSubmissionsCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -171,15 +171,15 @@ class FaceSubmissions
     /**
      * Retrieve a FACe submission
      *
-     * Retrieves a FACe submission by its `id` (UUID). The `status` field reflects the latest known FACe processing state (`submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled`, `error`) — the system polls FACe periodically, so a plain GET is the way to track progress (there is no refresh endpoint in v1).
+     * Retrieves a FACe submission by its `id` (UUID v7). The `status` field reflects the latest known FACe processing state (`submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled`, `error`) — the system polls FACe periodically, so a plain GET is the way to track progress (there is no refresh endpoint in v1).
      *
+     * @param  string  $company
      * @param  string  $faceSubmission
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1FaceSubmissionsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1FaceSubmissionsShow(string $faceSubmission, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1FaceSubmissionsShowResponse
+    public function publicApiV1FaceSubmissionsShow(string $company, string $faceSubmission, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1FaceSubmissionsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -207,12 +207,12 @@ class FaceSubmissions
             ];
         }
         $request = new Operations\PublicApiV1FaceSubmissionsShowRequest(
+            company: $company,
             faceSubmission: $faceSubmission,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/face-submissions/{faceSubmission}', Operations\PublicApiV1FaceSubmissionsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/face-submissions/{faceSubmission}', Operations\PublicApiV1FaceSubmissionsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

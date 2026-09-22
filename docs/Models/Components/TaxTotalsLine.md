@@ -1,6 +1,6 @@
 # TaxTotalsLine
 
-Calculated breakdown of a single line within `POST /v1/taxes/calculate-totals`.
+Calculated breakdown of a single line within `POST /v1/companies/{company}/taxes/calculate-totals`.
 
 
 ## Fields

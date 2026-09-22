@@ -1,5 +1,7 @@
 # SortOrder
 
+Sort direction by creation date: `asc` (default) or `desc`.
+
 
 ## Values
 

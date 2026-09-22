@@ -85,7 +85,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/accept', Operations\PublicApiV1QuotesAcceptRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/accept', Operations\PublicApiV1QuotesAcceptRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -174,13 +174,13 @@ class Quotes
      * Deletes up to 100 quotes in one call. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteQuotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkDelete(Components\BulkDeleteQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkDeleteResponse
+    public function publicApiV1QuotesBulkDelete(Components\BulkDeleteQuotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,13 +208,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkDeleteRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/bulk-delete');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/bulk-delete', Operations\PublicApiV1QuotesBulkDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -265,7 +265,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -304,13 +304,13 @@ class Quotes
      * Packages the PDFs of up to 50 quotes (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkPdfQuotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkPdf(Components\BulkPdfQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkPdfResponse
+    public function publicApiV1QuotesBulkPdf(Components\BulkPdfQuotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -338,13 +338,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkPdfRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/bulk-pdf');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/bulk-pdf', Operations\PublicApiV1QuotesBulkPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -431,13 +431,13 @@ class Quotes
      * Sends up to 200 quotes by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each quote that could not be sent (not found, terminal status or no resolvable recipient).
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkSendQuotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkSendResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkSend(Components\BulkSendQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkSendResponse
+    public function publicApiV1QuotesBulkSend(Components\BulkSendQuotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkSendResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -465,13 +465,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkSendRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/bulk-send');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/bulk-send', Operations\PublicApiV1QuotesBulkSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -522,7 +522,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -561,13 +561,13 @@ class Quotes
      * Transition up to 50 quotes (by id) to a status from the closed set `[approved, rejected]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; quotes whose transition is rejected (not found or not transitionable) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesBulkStatus(Components\BulkStatusQuotesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkStatusResponse
+    public function publicApiV1QuotesBulkStatus(Components\BulkStatusQuotesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -595,13 +595,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesBulkStatusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/bulk-status');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/bulk-status', Operations\PublicApiV1QuotesBulkStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -652,7 +652,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -722,7 +722,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/convert', Operations\PublicApiV1QuotesConvertRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/convert', Operations\PublicApiV1QuotesConvertRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -809,16 +809,16 @@ class Quotes
     /**
      * Create a quote
      *
-     * Create a new sales quote in `draft` status. Quotes can later be converted to invoices via `POST /quotes/{quote}/convert`.
+     * Create a new sales quote in `draft` status. Quotes can later be converted to invoices via `POST /v1/companies/{company}/quotes/{quote}/convert`.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateQuoteRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesCreate(Components\CreateQuoteRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesCreateResponse
+    public function publicApiV1QuotesCreate(Components\CreateQuoteRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -846,13 +846,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes', Operations\PublicApiV1QuotesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -903,7 +903,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -941,14 +941,14 @@ class Quotes
      *
      * Delete a quote. Returns 422 if the quote has been converted to an invoice.
      *
+     * @param  string  $company
      * @param  string  $quote
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesDelete(string $quote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesDeleteResponse
+    public function publicApiV1QuotesDelete(string $company, string $quote, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -976,13 +976,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesDeleteRequest(
+            company: $company,
             quote: $quote,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}', Operations\PublicApiV1QuotesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}', Operations\PublicApiV1QuotesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1056,14 +1056,14 @@ class Quotes
      *
      * Create a new draft quote by copying the lines, client, and metadata from an existing quote.
      *
+     * @param  string  $company
      * @param  string  $quote
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesDuplicateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesDuplicate(string $quote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesDuplicateResponse
+    public function publicApiV1QuotesDuplicate(string $company, string $quote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesDuplicateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1091,13 +1091,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesDuplicateRequest(
+            company: $company,
             quote: $quote,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/duplicate', Operations\PublicApiV1QuotesDuplicateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/duplicate', Operations\PublicApiV1QuotesDuplicateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1182,12 +1182,12 @@ class Quotes
      * Look up a single quote by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Returns the matching quote or 404 `quote_not_found` if no quote uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindQuoteByExternalIdRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesFindByExternalIdResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesFindByExternalId(Components\FindQuoteByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesFindByExternalIdResponse
+    public function publicApiV1QuotesFindByExternalId(Components\FindQuoteByExternalIdRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesFindByExternalIdResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1215,12 +1215,12 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesFindByExternalIdRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/find-by-external-id');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/find-by-external-id', Operations\PublicApiV1QuotesFindByExternalIdRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1271,7 +1271,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1309,11 +1309,11 @@ class Quotes
      *
      * List your sales quotes with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `issued_on[gte|lte]`.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1QuotesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesList(?Operations\PublicApiV1QuotesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1QuotesListResponse
+    public function publicApiV1QuotesList(Operations\PublicApiV1QuotesListRequest $request, ?Options $options = null): Operations\PublicApiV1QuotesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1341,7 +1341,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes', Operations\PublicApiV1QuotesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1390,7 +1390,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1428,14 +1428,14 @@ class Quotes
      *
      * Download the PDF representation of a quote.
      *
+     * @param  string  $company
      * @param  string  $quote
      * @param  ?string  $download
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesPdfResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesPdf(string $quote, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesPdfResponse
+    public function publicApiV1QuotesPdf(string $company, string $quote, ?string $download = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesPdfResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1463,13 +1463,13 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesPdfRequest(
+            company: $company,
             quote: $quote,
             download: $download,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/pdf', Operations\PublicApiV1QuotesPdfRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/pdf', Operations\PublicApiV1QuotesPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1559,15 +1559,15 @@ class Quotes
     /**
      * Retrieve quote public link
      *
-     * Returns the shareable public URL of the quote (/d/{uuid}) along with its status, expiration, and the plan-allowed maximum extension days.
+     * Returns the shareable public URL of the quote along with its status, expiration, and the plan-allowed maximum extension days.
      *
+     * @param  string  $company
      * @param  string  $quote
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesPublicLinkGetResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesPublicLinkGet(string $quote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesPublicLinkGetResponse
+    public function publicApiV1QuotesPublicLinkGet(string $company, string $quote, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesPublicLinkGetResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1595,12 +1595,12 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesPublicLinkGetRequest(
+            company: $company,
             quote: $quote,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/public-link', Operations\PublicApiV1QuotesPublicLinkGetRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/public-link', Operations\PublicApiV1QuotesPublicLinkGetRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1716,7 +1716,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/public-link', Operations\PublicApiV1QuotesPublicLinkUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/public-link', Operations\PublicApiV1QuotesPublicLinkUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1730,7 +1730,7 @@ class Quotes
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.quotes.public_link_update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -1837,7 +1837,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/reject', Operations\PublicApiV1QuotesRejectRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/reject', Operations\PublicApiV1QuotesRejectRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1957,7 +1957,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}/send', Operations\PublicApiV1QuotesSendRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}/send', Operations\PublicApiV1QuotesSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2043,15 +2043,15 @@ class Quotes
     /**
      * Retrieve a quote
      *
-     * Retrieve a sales quote by its `uuid`.
+     * Retrieve a sales quote by its `id`.
      *
+     * @param  string  $company
      * @param  string  $quote
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesShow(string $quote, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesShowResponse
+    public function publicApiV1QuotesShow(string $company, string $quote, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2079,12 +2079,12 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesShowRequest(
+            company: $company,
             quote: $quote,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}', Operations\PublicApiV1QuotesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}', Operations\PublicApiV1QuotesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2168,12 +2168,12 @@ class Quotes
      *
      * Aggregated KPIs for the authenticated company: total quote count and amount, count per status, expired count, and converted count. Returned as `{ "data": QuoteStats }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesStatsResponse
+    public function publicApiV1QuotesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2201,11 +2201,11 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/stats', Operations\PublicApiV1QuotesStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2251,7 +2251,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2289,12 +2289,12 @@ class Quotes
      *
      * Returns the canonical list of quote statuses available in the API along with their human-readable label and UI color. Useful for building dropdowns and filters.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesStatusesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1QuotesStatuses(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1QuotesStatusesResponse
+    public function publicApiV1QuotesStatuses(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1QuotesStatusesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2322,11 +2322,11 @@ class Quotes
             ];
         }
         $request = new Operations\PublicApiV1QuotesStatusesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/statuses');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/statuses', Operations\PublicApiV1QuotesStatusesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2372,7 +2372,7 @@ class Quotes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2442,7 +2442,7 @@ class Quotes
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/quotes/{quote}', Operations\PublicApiV1QuotesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/quotes/{quote}', Operations\PublicApiV1QuotesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2455,7 +2455,7 @@ class Quotes
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.quotes.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

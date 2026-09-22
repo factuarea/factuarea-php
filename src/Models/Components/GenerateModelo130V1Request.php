@@ -61,10 +61,7 @@ class GenerateModelo130V1Request
     public ?int $pagosFraccionadosAnterioresOverrideCentimos = null;
 
     /**
-     * [13] Rendimiento neto del EJERCICIO ANTERIOR (base de la minoración
-     *
-     * del art. 110.3.c RIRPF). SIN `min:0`: el ejercicio anterior puede
-     * haber cerrado en pérdidas y un valor negativo es fiscalmente válido.
+     * Box [13]: net income of the PREVIOUS fiscal year, in cents (base of the reduction of art. 110.3.c RIRPF). It can be negative, because that year may have closed with a loss.
      *
      * @var ?int $rendimientoNetoEjercicioAnteriorCentimos
      */

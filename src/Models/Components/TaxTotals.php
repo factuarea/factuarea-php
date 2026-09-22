@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxTotals - Aggregated totals of a set of lines. Returned by `POST /v1/taxes/calculate-totals`. Total formula: `subtotal + total_vat + total_surcharge − total_retention`. */
+/** TaxTotals - Aggregated totals of a set of lines. Returned by `POST /v1/companies/{company}/taxes/calculate-totals`. Total formula: `subtotal + total_vat + total_surcharge − total_retention`. */
 class TaxTotals
 {
     /**

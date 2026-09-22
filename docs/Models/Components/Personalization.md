@@ -1,6 +1,6 @@
 # Personalization
 
-Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/account/personalization`.
+Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/companies/{company}/personalization`.
 
 
 ## Fields

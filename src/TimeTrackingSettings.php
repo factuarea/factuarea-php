@@ -53,12 +53,12 @@ class TimeTrackingSettings
      *
      * Return the time tracking configuration of your company: the overtime computation basis (`weekly`/`daily`) and thresholds, the rounding tolerance and the forgotten-clock-in reminder settings. If your company has not configured it yet, the defaults are returned with `id: null` — the first update materialises the row.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeTrackingSettingsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeTrackingSettingsShow(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeTrackingSettingsShowResponse
+    public function publicApiV1TimeTrackingSettingsShow(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeTrackingSettingsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,11 +86,11 @@ class TimeTrackingSettings
             ];
         }
         $request = new Operations\PublicApiV1TimeTrackingSettingsShowRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-tracking-settings');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-tracking-settings', Operations\PublicApiV1TimeTrackingSettingsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -136,7 +136,7 @@ class TimeTrackingSettings
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -175,13 +175,13 @@ class TimeTrackingSettings
      * Create or update the time tracking configuration of your company: `overtime_basis` (`weekly`/`daily`), the optional daily/weekly overtime thresholds in minutes (`null` derives them from the schedule), the rounding `overtime_tolerance_minutes`, and the clock-in reminder toggle and grace minutes. A negative threshold or tolerance returns 422 in Spanish. Returns the updated settings with `id` = UUID v7 of the row.
      *
      * @param  \Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeTrackingSettingsUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeTrackingSettingsUpdate(Components\UpdateTimeTrackingSettingsRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeTrackingSettingsUpdateResponse
+    public function publicApiV1TimeTrackingSettingsUpdate(Components\UpdateTimeTrackingSettingsRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeTrackingSettingsUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,13 +209,13 @@ class TimeTrackingSettings
             ];
         }
         $request = new Operations\PublicApiV1TimeTrackingSettingsUpdateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-tracking-settings');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-tracking-settings', Operations\PublicApiV1TimeTrackingSettingsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -229,7 +229,7 @@ class TimeTrackingSettings
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.time_tracking_settings.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -266,7 +266,7 @@ class TimeTrackingSettings
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

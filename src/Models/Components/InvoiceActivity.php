@@ -21,7 +21,7 @@ class InvoiceActivity
     public InvoiceActivityObject $object;
 
     /**
-     * Tipo de evento de dominio (p. ej. `invoice.created`, `invoice.paid`).
+     * Domain event type (e.g. `invoice.created`, `invoice.paid`).
      *
      * @var string $eventType
      */

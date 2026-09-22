@@ -54,13 +54,13 @@ class Employees
      * Register a new employee for the authenticated company (resolved from the API key, never from the payload). `first_name`, `last_name`, `email`, `employment_type` (`full_time`/`part_time`), `contract_hours`, `hire_date` and `ccaa` are required; `tax_id` and `job_title` are optional. Returns the created employee with its generated `id` (UUID v7). Active employees count towards the workforce module seat billing.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateEmployeeRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesCreate(Components\CreateEmployeeRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesCreateResponse
+    public function publicApiV1EmployeesCreate(Components\CreateEmployeeRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class Employees
             ];
         }
         $request = new Operations\PublicApiV1EmployeesCreateRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees', Operations\PublicApiV1EmployeesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -145,7 +145,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -215,7 +215,7 @@ class Employees
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees/{employee}/deactivate', Operations\PublicApiV1EmployeesDeactivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees/{employee}/deactivate', Operations\PublicApiV1EmployeesDeactivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -304,12 +304,12 @@ class Employees
      * Look up an employee by their `external_id` (sent in the JSON body), the integration key that maps them to a record in a third-party system (ERP/CRM/HR). Distinct from the fiscal `tax_id`. Returns the matching employee or 404 if no employee uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindEmployeeByExternalIdRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesFindByExternalIdResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesFindByExternalId(Components\FindEmployeeByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesFindByExternalIdResponse
+    public function publicApiV1EmployeesFindByExternalId(Components\FindEmployeeByExternalIdRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeesFindByExternalIdResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -337,12 +337,12 @@ class Employees
             ];
         }
         $request = new Operations\PublicApiV1EmployeesFindByExternalIdRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees/find-by-external-id');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees/find-by-external-id', Operations\PublicApiV1EmployeesFindByExternalIdRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -393,7 +393,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -431,11 +431,11 @@ class Employees
      *
      * List the employees of your company with cursor-based pagination. Supports filtering by `status` (`active`/`inactive`), `employment_type` (`full_time`/`part_time`) and `ccaa`, plus free-text `search` over name and email.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesList(?Operations\PublicApiV1EmployeesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1EmployeesListResponse
+    public function publicApiV1EmployeesList(Operations\PublicApiV1EmployeesListRequest $request, ?Options $options = null): Operations\PublicApiV1EmployeesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -463,7 +463,7 @@ class Employees
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees', Operations\PublicApiV1EmployeesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -512,7 +512,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -550,14 +550,14 @@ class Employees
      *
      * Reactivate an employee (transition `inactive` → `active`), clearing their `termination_date` and returning them to the active workforce. No request body. Returns 422 if the employee is already active.
      *
+     * @param  string  $company
      * @param  string  $employee
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesReactivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesReactivate(string $employee, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesReactivateResponse
+    public function publicApiV1EmployeesReactivate(string $company, string $employee, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeesReactivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -585,13 +585,13 @@ class Employees
             ];
         }
         $request = new Operations\PublicApiV1EmployeesReactivateRequest(
+            company: $company,
             employee: $employee,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees/{employee}/reactivate', Operations\PublicApiV1EmployeesReactivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees/{employee}/reactivate', Operations\PublicApiV1EmployeesReactivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -675,13 +675,13 @@ class Employees
      *
      * Retrieve a single employee by its `id` (UUID v7). An employee belonging to another company returns 404 `employee_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $employee
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesShow(string $employee, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesShowResponse
+    public function publicApiV1EmployeesShow(string $company, string $employee, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -709,12 +709,12 @@ class Employees
             ];
         }
         $request = new Operations\PublicApiV1EmployeesShowRequest(
+            company: $company,
             employee: $employee,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees/{employee}', Operations\PublicApiV1EmployeesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees/{employee}', Operations\PublicApiV1EmployeesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -798,12 +798,12 @@ class Employees
      *
      * Aggregated KPIs for your workforce: total employee count, active and inactive counts, and a breakdown by working-hours arrangement (`full_time`/`part_time`). Deactivated employees count in `total`/`inactive` but not as active seats. Returned as `{ "data": EmployeeStats }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeesStatsResponse
+    public function publicApiV1EmployeesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -831,11 +831,11 @@ class Employees
             ];
         }
         $request = new Operations\PublicApiV1EmployeesStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees/stats', Operations\PublicApiV1EmployeesStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -881,7 +881,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -951,7 +951,7 @@ class Employees
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employees/{employee}', Operations\PublicApiV1EmployeesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employees/{employee}', Operations\PublicApiV1EmployeesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -964,7 +964,7 @@ class Employees
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.employees.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);

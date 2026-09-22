@@ -1,5 +1,7 @@
 # PublicApiV1ContactsListCountryCode
 
+ISO 3166-1 alpha-2 country code (e.g. `ES`), exact match.
+
 
 ## Values
 

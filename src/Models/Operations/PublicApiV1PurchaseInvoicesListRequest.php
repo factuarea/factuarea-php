@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseInvoicesListRequest
 {
     /**
-     * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -21,7 +29,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $startingAfter = null;
 
     /**
-     * Cursor for backward pagination. Use the `uuid` of the first object on the current page.
+     * Cursor for backward pagination: pass the `id` of the first object on the current page.
      *
      * @var ?string $endingBefore
      */
@@ -189,7 +197,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $externalInvoiceNumberContains = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches purchase invoices carrying ANY of the tags). Exact match on `tags`.
+     * Classification tag (lowercase slug); `tags[in]=a,b` matches purchase invoices carrying ANY of the tags. Exact match on `tags`.
      *
      * @var ?string $tags
      */
@@ -197,7 +205,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $tags = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches purchase invoices carrying ANY of the tags). Comma-separated list. Any of the values matches.
+     * Classification tag (lowercase slug); `tags[in]=a,b` matches purchase invoices carrying ANY of the tags. Comma-separated list. Any of the values matches.
      *
      * @var ?string $tagsIn
      */
@@ -205,7 +213,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $tagsIn = null;
 
     /**
-     * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `total`, `issued_on`, `due_on`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending).
+     * Sort order: `created`, `total`, `issued_on`, `due_on` ascending, or with a `-` prefix for descending (default `-created`).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListSort $sort
      */
@@ -221,7 +229,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $search = null;
 
     /**
-     * Filter by metadata key/value pairs using the deepObject syntax `metadata[key]=value`. Multiple pairs are combined with AND. Each key must match `[A-Za-z0-9_.-]{1,64}`; a maximum of 50 pairs is allowed (more → 422).
+     * Metadata filter as `metadata[key]=value` (deepObject): pairs combine with AND, up to 50, keys matching `[A-Za-z0-9_.-]{1,64}`.
      *
      * @var ?array<string, string> $metadata
      */
@@ -237,15 +245,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -253,6 +253,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -282,11 +283,11 @@ class PublicApiV1PurchaseInvoicesListRequest
      * @param  ?string  $search
      * @param  ?array<string, string>  $metadata
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $supplierId = null, ?string $supplierIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $issuedOnGte = null, ?LocalDate $issuedOnLte = null, ?LocalDate $issuedOnGt = null, ?LocalDate $issuedOnLt = null, ?float $totalGte = null, ?float $totalLte = null, ?float $totalGt = null, ?float $totalLt = null, ?string $currency = null, ?string $currencyIn = null, ?string $externalInvoiceNumber = null, ?string $externalInvoiceNumberContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1PurchaseInvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $supplierId = null, ?string $supplierIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $issuedOnGte = null, ?LocalDate $issuedOnLte = null, ?LocalDate $issuedOnGt = null, ?LocalDate $issuedOnLt = null, ?float $totalGte = null, ?float $totalLte = null, ?float $totalGt = null, ?float $totalLt = null, ?string $currency = null, ?string $currencyIn = null, ?string $externalInvoiceNumber = null, ?string $externalInvoiceNumberContains = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1PurchaseInvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->status = $status;
@@ -315,7 +316,6 @@ class PublicApiV1PurchaseInvoicesListRequest
         $this->search = $search;
         $this->metadata = $metadata;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

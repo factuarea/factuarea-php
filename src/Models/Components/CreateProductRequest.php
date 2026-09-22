@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateProductRequest - Create a product in your catalog. Required: `name` and `price`. Optional: `sku` (unique per company), `description`, `tags`, `stock` (initial quantity), `low_stock_threshold`, `manage_stock`, `currency` (`EUR` only — any other code returns 422), `tax_rate_id`, `is_active`, `metadata` and `external_id`. Stock changes after creation are made through `PUT /v1/products/{product}/stock`, not through this endpoint. */
+/** CreateProductRequest - Create a product in your catalog. Required: `name` and `price`. Optional: `sku` (unique per company), `description`, `tags`, `stock` (initial quantity), `low_stock_threshold`, `manage_stock`, `currency` (`EUR` only — any other code returns 422), `tax_rate_id`, `is_active`, `metadata` and `external_id`. Stock changes after creation are made through `PATCH /v1/companies/{company}/products/{product}/stock`, not through this endpoint. */
 class CreateProductRequest
 {
     /**
@@ -91,7 +91,7 @@ class CreateProductRequest
     public ?array $specifications = null;
 
     /**
-     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PUT /v1/products/{uuid}`, or move it with `PUT /v1/products/{uuid}/stock` (`set`/`increase`/`decrease`).
+     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PATCH /v1/companies/{company}/products/{product}`, or move it with `PATCH /v1/companies/{company}/products/{product}/stock` (`set`/`increase`/`decrease`).
      *
      * @var ?float $stock
      */

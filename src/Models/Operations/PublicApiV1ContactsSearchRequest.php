@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsSearchRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Search term (2 to 255 characters), ranked by exact, prefix and partial match.
      *
      * @var string $q
      */
@@ -20,7 +29,7 @@ class PublicApiV1ContactsSearchRequest
     public string $q;
 
     /**
-     * $roles
+     * Only contacts with these roles: `customer`, `supplier` or `lead` (repeat it or send a comma-separated list).
      *
      * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles> $roles
      */
@@ -36,14 +45,7 @@ class PublicApiV1ContactsSearchRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * `any` (default) matches at least one of the `roles[]`; `all` requires all of them.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleMatch $roleMatch
      */
@@ -51,6 +53,7 @@ class PublicApiV1ContactsSearchRequest
     public ?PublicApiV1ContactsSearchRoleMatch $roleMatch = null;
 
     /**
+     * Only roles in this status: `active` or `inactive`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleStatus $roleStatus
      */
@@ -58,6 +61,7 @@ class PublicApiV1ContactsSearchRequest
     public ?PublicApiV1ContactsSearchRoleStatus $roleStatus = null;
 
     /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -65,6 +69,7 @@ class PublicApiV1ContactsSearchRequest
     public ?int $limit = null;
 
     /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -72,22 +77,22 @@ class PublicApiV1ContactsSearchRequest
     public ?string $startingAfter = null;
 
     /**
+     * @param  string  $company
      * @param  string  $q
      * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles>  $roles
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleMatch  $roleMatch
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleStatus  $roleStatus
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(string $q, ?array $roles = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1ContactsSearchRoleMatch $roleMatch = null, ?PublicApiV1ContactsSearchRoleStatus $roleStatus = null, ?int $limit = null, ?string $startingAfter = null)
+    public function __construct(string $company, string $q, ?array $roles = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsSearchRoleMatch $roleMatch = null, ?PublicApiV1ContactsSearchRoleStatus $roleStatus = null, ?int $limit = null, ?string $startingAfter = null)
     {
+        $this->company = $company;
         $this->q = $q;
         $this->roles = $roles;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->roleMatch = $roleMatch;
         $this->roleStatus = $roleStatus;
         $this->limit = $limit;

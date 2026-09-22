@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1TaxesCalculateTotalsResponseBody
 {
     /**
-     * Aggregated totals of a set of lines. Returned by `POST /v1/taxes/calculate-totals`. Total formula: `subtotal + total_vat + total_surcharge − total_retention`.
+     * Aggregated totals of a set of lines. Returned by `POST /v1/companies/{company}/taxes/calculate-totals`. Total formula: `subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxTotals $data
      */

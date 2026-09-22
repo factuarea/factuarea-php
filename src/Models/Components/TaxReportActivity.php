@@ -21,7 +21,7 @@ class TaxReportActivity
     public TaxReportActivityObject $object;
 
     /**
-     * Tipo de evento de dominio (p. ej. `tax_report.generated`).
+     * Domain event type (e.g. `tax_report.generated`).
      *
      * @var string $eventType
      */

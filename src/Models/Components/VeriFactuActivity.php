@@ -21,7 +21,7 @@ class VeriFactuActivity
     public VeriFactuActivityObject $object;
 
     /**
-     * Tipo de evento de dominio (p. ej. `verifactu.record_created`, `verifactu.transmission_accepted`).
+     * Domain event type (e.g. `verifactu.record_created`, `verifactu.transmission_accepted`).
      *
      * @var string $eventType
      */

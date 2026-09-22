@@ -13,6 +13,14 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsOptionsRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * country = ISO catalogue for forms; country_code = countries present in this tenant.
      *
      * @var \Factuarea\Sdk\Models\Operations\Field $field
@@ -29,14 +37,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Partial match on the returned values (up to 100 characters); ignored when `field` is `country`.
      *
      * @var ?string $search
      */
@@ -44,6 +45,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?string $search = null;
 
     /**
+     * Only values from contacts in this country (ISO 3166-1 alpha-2); ignored when `field` is `country`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsOptionsCountryCode $countryCode
      */
@@ -51,6 +53,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?PublicApiV1ContactsOptionsCountryCode $countryCode = null;
 
     /**
+     * Only values from contacts in this province; ignored when `field` is `country`.
      *
      * @var ?string $province
      */
@@ -58,6 +61,7 @@ class PublicApiV1ContactsOptionsRequest
     public ?string $province = null;
 
     /**
+     * Maximum number of values, between 1 and 250 (default 50); ignored when `field` is `country`.
      *
      * @var ?int $limit
      */
@@ -65,20 +69,20 @@ class PublicApiV1ContactsOptionsRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  \Factuarea\Sdk\Models\Operations\Field  $field
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $search
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsOptionsCountryCode  $countryCode
      * @param  ?string  $province
      * @param  ?int  $limit
      * @phpstan-pure
      */
-    public function __construct(Field $field, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $search = null, ?PublicApiV1ContactsOptionsCountryCode $countryCode = null, ?string $province = null, ?int $limit = null)
+    public function __construct(string $company, Field $field, ?LocalDate $factuareaVersion = null, ?string $search = null, ?PublicApiV1ContactsOptionsCountryCode $countryCode = null, ?string $province = null, ?int $limit = null)
     {
+        $this->company = $company;
         $this->field = $field;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->search = $search;
         $this->countryCode = $countryCode;
         $this->province = $province;

@@ -30,13 +30,12 @@ class PurchaseInvoiceLine
     public float|string $quantity;
 
     /**
-     * Cost per billed unit. Same typing rule as `quantity`: decimal string on a measured line, number on a legacy one.
+     * Cost per billed unit, always a decimal STRING. On a measured line (one carrying `purchase_measurement`) it keeps the 4-decimal scale of the snapshot (e.g. `"7.4000"`) so no precision is lost; on a legacy or manual line it is the 2-decimal money string shared by every amount of the line (e.g. `"100.00"`).
      *
-     * @var float|string $unitPrice
+     * @var string $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    #[\Speakeasy\Serializer\Annotation\Type('float|string')]
-    public float|string $unitPrice;
+    public string $unitPrice;
 
     /**
      *
@@ -63,33 +62,33 @@ class PurchaseInvoiceLine
 
     /**
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
      *
-     * @var float $taxes
+     * @var string $taxes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes')]
-    public float $taxes;
+    public string $taxes;
 
     /**
      * Withholding amount of the line (`subtotal * retention_rate / 100`). The line total follows `subtotal + taxes − retention_amount + surcharge_amount`.
      *
-     * @var float $retentionAmount
+     * @var string $retentionAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('retention_amount')]
-    public float $retentionAmount;
+    public string $retentionAmount;
 
     /**
      * Equivalence surcharge amount of the line (`subtotal * surcharge_rate / 100`). Default 0.
      *
-     * @var float $surchargeAmount
+     * @var string $surchargeAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_amount')]
-    public float $surchargeAmount;
+    public string $surchargeAmount;
 
     /**
      * Whether the line VAT is deductible. It does not change the amount paid, but a `false` line is excluded from the deductible input VAT of Modelo 303 (boxes [28]-[37]).
@@ -101,10 +100,10 @@ class PurchaseInvoiceLine
 
     /**
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
@@ -303,16 +302,16 @@ class PurchaseInvoiceLine
     /**
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceLineObject  $object
      * @param  float|string  $quantity
-     * @param  float|string  $unitPrice
+     * @param  string  $unitPrice
      * @param  float  $taxRate
      * @param  float  $retentionRate
      * @param  float  $surchargeRate
-     * @param  float  $subtotal
-     * @param  float  $taxes
-     * @param  float  $retentionAmount
-     * @param  float  $surchargeAmount
+     * @param  string  $subtotal
+     * @param  string  $taxes
+     * @param  string  $retentionAmount
+     * @param  string  $surchargeAmount
      * @param  bool  $vatDeductible
-     * @param  float  $total
+     * @param  string  $total
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineOption>  $options
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
@@ -339,7 +338,7 @@ class PurchaseInvoiceLine
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(PurchaseInvoiceLineObject $object, float|string $quantity, float|string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $subtotal, float $taxes, float $retentionAmount, float $surchargeAmount, bool $vatDeductible, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?float $discountPercent = null, ?ProductRef $product = null, ?PurchaseInvoiceLineVariant $variant = null, ?PurchaseInvoiceLinePresentation $presentation = null, ?string $supplierOfferId = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?PurchaseInvoiceLineConfiguration $configuration = null, ?PurchaseInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?int $sourceLineIndex = null, ?string $confirmedBaseQuantity = null, ?PurchaseInvoiceLinePurchaseMeasurement $purchaseMeasurement = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(PurchaseInvoiceLineObject $object, float|string $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, string $subtotal, string $taxes, string $retentionAmount, string $surchargeAmount, bool $vatDeductible, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?float $discountPercent = null, ?ProductRef $product = null, ?PurchaseInvoiceLineVariant $variant = null, ?PurchaseInvoiceLinePresentation $presentation = null, ?string $supplierOfferId = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?PurchaseInvoiceLineConfiguration $configuration = null, ?PurchaseInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?int $sourceLineIndex = null, ?string $confirmedBaseQuantity = null, ?PurchaseInvoiceLinePurchaseMeasurement $purchaseMeasurement = null, ?string $exemptionReason = null, ?PurchaseInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;

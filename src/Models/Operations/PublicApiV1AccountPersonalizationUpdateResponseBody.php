@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1AccountPersonalizationUpdateResponseBody
 {
     /**
-     * Snapshot of the company, plan, Developer API entitlement and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call.
+     * Snapshot of the company, plan, Developer API entitlement, personalization and metadata of the API key used to make the request. To introspect the calling credential and its scope of tax IDs, use `GET /v1/me` instead, which returns the `Me` resource.
      *
      * @var \Factuarea\Sdk\Models\Components\Account $data
      */

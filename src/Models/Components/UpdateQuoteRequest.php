@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
 /**
- * UpdateQuoteRequest - Public REST API v1 — PUT /v1/quotes/{uuid}.
+ * UpdateQuoteRequest - Public REST API v1 — PATCH /v1/companies/{company}/quotes/{quote}.
  *
  *
  * Partial update: omitted fields are kept. Only allowed when

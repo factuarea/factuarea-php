@@ -1,6 +1,6 @@
 # AutomationCatalog
 
-Everything you need to build a valid automation rule without guessing: the triggers your company can listen to, the operators and combinators its conditions accept, and the actions it can run with their parameter schemas. Deterministic: two consecutive calls with no configuration change return exactly the same body, so it is safe to cache and diff. It deliberately does NOT include the evaluable fields of every trigger (that would be hundreds of kilobytes) — ask `GET /v1/automations/catalog/triggers/{trigger}/fields` for the one you picked.
+Everything you need to build a valid automation rule without guessing: the triggers your company can listen to, the operators and combinators its conditions accept, and the actions it can run with their parameter schemas. Deterministic: two consecutive calls with no configuration change return exactly the same body, so it is safe to cache and diff. It deliberately does NOT include the evaluable fields of every trigger (that would be hundreds of kilobytes) — ask `GET /v1/companies/{company}/automations/catalog/triggers/{trigger}/fields` for the one you picked.
 
 
 ## Fields

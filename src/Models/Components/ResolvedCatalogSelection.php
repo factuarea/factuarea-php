@@ -157,7 +157,7 @@ class ResolvedCatalogSelection
     public ?string $configurationSignature;
 
     /**
-     * Own FINAL price of the resolved combination, per commercial unit. This is CONTEXT, not the final price of the line: the full precedence (exact price-list entry, combination, presentation, variant, product) is resolved by `POST /v1/price-lists/resolve`.
+     * Own FINAL price of the resolved combination, per commercial unit. This is CONTEXT, not the final price of the line: the full precedence (exact price-list entry, combination, presentation, variant, product) is resolved by `POST /v1/companies/{company}/price-lists/resolve`.
      *
      * @var ?string $configurationPrice
      */

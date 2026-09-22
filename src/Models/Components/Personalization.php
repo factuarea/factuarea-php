@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Personalization - Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/account/personalization`. */
+/** Personalization - Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/companies/{company}/personalization`. */
 class Personalization
 {
     /**

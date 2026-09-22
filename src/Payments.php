@@ -52,13 +52,13 @@ class Payments
      *
      * List the Stripe charges that generated an invoice (flows A and B plus subscription cycles), with cursor-based pagination. The generated invoice and client are returned as `invoice_id`/`client_id`. Subscription-cycle charges also expose `subscription_id` (external `sub_xxx`), `stripe_invoice_id` and the billed period. Filter by `origin` (`subscription`/`oneshot`).
      *
+     * @param  string  $company
      * @param  ?\Factuarea\Sdk\Models\Operations\Origin  $origin
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingPaymentsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingPaymentsList(?Operations\Origin $origin = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingPaymentsListResponse
+    public function publicApiV1StripeAutoinvoicingPaymentsList(string $company, ?Operations\Origin $origin = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingPaymentsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,12 +86,12 @@ class Payments
             ];
         }
         $request = new Operations\PublicApiV1StripeAutoinvoicingPaymentsListRequest(
+            company: $company,
             origin: $origin,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/stripe-autoinvoicing/payments');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stripe-autoinvoicing/payments', Operations\PublicApiV1StripeAutoinvoicingPaymentsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -140,7 +140,7 @@ class Payments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

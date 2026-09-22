@@ -12,7 +12,7 @@ use Brick\DateTime\LocalDate;
 class NextScheduled
 {
     /**
-     * UUID (v7) de la recurrencia.
+     * Public identifier (UUID v7) of the recurring invoice.
      *
      * @var ?string $id
      */

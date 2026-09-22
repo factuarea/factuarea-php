@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * ConnectStoreV1Request - Public REST API v1 — POST /v1/stores.
+ * ConnectStoreV1Request - Public REST API v1 — POST /v1/companies/{company}/stores.
  *
  *
  * Connect an e-commerce store to your company. Required: `integration_id` (the

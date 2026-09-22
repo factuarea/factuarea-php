@@ -1,6 +1,6 @@
 # UpdateDeliveryNoteRequest
 
-Public REST API v1 — PUT /v1/delivery_notes/{uuid}.
+Public REST API v1 — PATCH /v1/companies/{company}/delivery-notes/{delivery_note}.
 
 Partial update: omitted fields are kept. Only allowed when
 the delivery note is in `draft` status (the controller maps the

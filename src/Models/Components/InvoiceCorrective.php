@@ -13,7 +13,7 @@ use Brick\DateTime\LocalDate;
 class InvoiceCorrective
 {
     /**
-     * UUID (v7) of the original corrected invoice.
+     * UUID v7 of the original corrected invoice.
      *
      * @var ?string $originalId
      */
@@ -61,20 +61,20 @@ class InvoiceCorrective
     public ?string $correctionNature;
 
     /**
-     * Base imponible rectificada.
+     * Corrected taxable base.
      *
-     * @var ?float $baseRectificada
+     * @var ?string $baseRectificada
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base_rectificada')]
-    public ?float $baseRectificada;
+    public ?string $baseRectificada;
 
     /**
-     * Cuota (IVA) rectificada.
+     * Corrected tax amount (VAT).
      *
-     * @var ?float $cuotaRectificada
+     * @var ?string $cuotaRectificada
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('cuota_rectificada')]
-    public ?float $cuotaRectificada;
+    public ?string $cuotaRectificada;
 
     /**
      * AEAT corrective invoice type code (`R1`–`R5`) frozen at issuance from the VeriFactu record. `null` if not resolved.
@@ -92,12 +92,12 @@ class InvoiceCorrective
      * @param  ?string  $correctionReason
      * @param  ?string  $correctionType
      * @param  ?string  $correctionNature
-     * @param  ?float  $baseRectificada
-     * @param  ?float  $cuotaRectificada
+     * @param  ?string  $baseRectificada
+     * @param  ?string  $cuotaRectificada
      * @param  ?\Factuarea\Sdk\Models\Components\CorrectionAeatType  $correctionAeatType
      * @phpstan-pure
      */
-    public function __construct(?string $originalId = null, ?string $originalNumber = null, ?LocalDate $originalDate = null, ?string $correctionReason = null, ?string $correctionType = null, ?string $correctionNature = null, ?float $baseRectificada = null, ?float $cuotaRectificada = null, ?CorrectionAeatType $correctionAeatType = null)
+    public function __construct(?string $originalId = null, ?string $originalNumber = null, ?LocalDate $originalDate = null, ?string $correctionReason = null, ?string $correctionType = null, ?string $correctionNature = null, ?string $baseRectificada = null, ?string $cuotaRectificada = null, ?CorrectionAeatType $correctionAeatType = null)
     {
         $this->originalId = $originalId;
         $this->originalNumber = $originalNumber;

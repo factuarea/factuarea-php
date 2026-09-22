@@ -21,7 +21,7 @@ class InvoiceActivityPerformedBy
     public InvoiceActivityType $type;
 
     /**
-     * UUID (v7) of the actor: the user when `type=user`, or the API key when `type=api_key`.
+     * UUID v7 of the actor: the user when `type=user`, or the API key when `type=api_key`.
      *
      * @var string $id
      */

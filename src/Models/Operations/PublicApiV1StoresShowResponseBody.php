@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1StoresShowResponseBody
 {
     /**
-     * A connected e-commerce store of your company. The public `id` is the store UUID (v7). `integration_id` is the UUID of the provider connection that backs it, and `external_store_id` is the identifier the provider gives to the shop — an opaque string, not a foreign key of ours. The settings decide how the orders of the store become invoices.
+     * A connected e-commerce store of your company. The public `id` is the store UUID v7. `integration_id` is the UUID of the provider connection that backs it, and `external_store_id` is the identifier the provider gives to the shop — an opaque string, not a foreign key of ours. The settings decide how the orders of the store become invoices.
      *
      * @var \Factuarea\Sdk\Models\Components\Store $data
      */

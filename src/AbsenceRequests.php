@@ -85,7 +85,7 @@ class AbsenceRequests
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-requests/{absence_request}/approve', Operations\PublicApiV1AbsenceRequestsApproveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-requests/{absence_request}/approve', Operations\PublicApiV1AbsenceRequestsApproveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -173,14 +173,14 @@ class AbsenceRequests
      *
      * Cancel an absence request. If it was approved, the consumed balance is released back. No request body. A request belonging to another company returns 404 `absence_request_not_found` (anti-enumeration). Returns the updated request.
      *
+     * @param  string  $company
      * @param  string  $absenceRequest
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceRequestsCancel(string $absenceRequest, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsCancelResponse
+    public function publicApiV1AbsenceRequestsCancel(string $company, string $absenceRequest, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,13 +208,13 @@ class AbsenceRequests
             ];
         }
         $request = new Operations\PublicApiV1AbsenceRequestsCancelRequest(
+            company: $company,
             absenceRequest: $absenceRequest,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-requests/{absence_request}/cancel', Operations\PublicApiV1AbsenceRequestsCancelRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-requests/{absence_request}/cancel', Operations\PublicApiV1AbsenceRequestsCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -299,13 +299,13 @@ class AbsenceRequests
      * Create an absence request for the authenticated company (resolved from the API key, never from the payload). `employee_id` (UUID v7) is required — an API key acts as a system, so the target employee must be given. `absence_type_id` (UUID v7) and the `start_date`/`end_date` range (`YYYY-MM-DD`, end on or after start) are required; `note` is optional. The requested amount is computed in working days minus the applicable public holidays. If the absence type does not require approval it is auto-approved and consumes the balance. Returns the created request with its generated `id` (UUID v7).
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsenceRequestRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceRequestsCreate(Components\CreateAbsenceRequestRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsCreateResponse
+    public function publicApiV1AbsenceRequestsCreate(Components\CreateAbsenceRequestRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,13 +333,13 @@ class AbsenceRequests
             ];
         }
         $request = new Operations\PublicApiV1AbsenceRequestsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-requests');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-requests', Operations\PublicApiV1AbsenceRequestsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -390,7 +390,7 @@ class AbsenceRequests
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -428,11 +428,11 @@ class AbsenceRequests
      *
      * List your company’s absence requests with cursor-based pagination. Supports filtering by `employee_id` (UUID v7), `absence_type_id` (UUID v7), `status` (`pending`/`approved`/`rejected`/`cancelled`) and by date range (`from`/`to`, `YYYY-MM-DD`).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceRequestsList(?Operations\PublicApiV1AbsenceRequestsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsListResponse
+    public function publicApiV1AbsenceRequestsList(Operations\PublicApiV1AbsenceRequestsListRequest $request, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -460,7 +460,7 @@ class AbsenceRequests
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-requests');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-requests', Operations\PublicApiV1AbsenceRequestsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -509,7 +509,7 @@ class AbsenceRequests
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -579,7 +579,7 @@ class AbsenceRequests
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-requests/{absence_request}/reject', Operations\PublicApiV1AbsenceRequestsRejectRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-requests/{absence_request}/reject', Operations\PublicApiV1AbsenceRequestsRejectRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -668,13 +668,13 @@ class AbsenceRequests
      *
      * Retrieve a single absence request by its `id` (UUID v7), including its type, date range, requested amount, lifecycle status and review fields. A request belonging to another company returns 404 `absence_request_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $absenceRequest
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AbsenceRequestsShow(string $absenceRequest, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsShowResponse
+    public function publicApiV1AbsenceRequestsShow(string $company, string $absenceRequest, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AbsenceRequestsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -702,12 +702,12 @@ class AbsenceRequests
             ];
         }
         $request = new Operations\PublicApiV1AbsenceRequestsShowRequest(
+            company: $company,
             absenceRequest: $absenceRequest,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/absence-requests/{absence_request}', Operations\PublicApiV1AbsenceRequestsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/absence-requests/{absence_request}', Operations\PublicApiV1AbsenceRequestsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));

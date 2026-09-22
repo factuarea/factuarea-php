@@ -20,15 +20,12 @@ use Speakeasy\Serializer\DeserializationContext;
 class Companies
 {
     private SDKConfiguration $sdkConfiguration;
-    public CompaniesApiKeys $apiKeys;
-
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
-        $this->apiKeys = new CompaniesApiKeys($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -56,14 +53,14 @@ class Companies
      *
      * Reactivate a previously deactivated (`inactive`) managed company. Activation is gated by an atomic per-seat charge — in live mode the prorated seat is charged synchronously and the company only becomes `active` if the charge succeeds. No payment method on file returns 402, and a plan without the gestoría module returns 403. Trial, enterprise and test keys skip the charge.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesActivate(string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateResponse
+    public function publicApiV1CompaniesActivate(string $account, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,13 +88,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesActivateRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/activate', Operations\PublicApiV1CompaniesActivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/activate', Operations\PublicApiV1CompaniesActivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -182,13 +179,13 @@ class Companies
      * Reactivate several deactivated (`inactive`) managed companies in one operation, charging the combined prorated seats in a single invoice. Pass `company_ids`. The gate is atomic: every company is validated (ownership and `inactive` status) before any charge, so if one is invalid the whole batch is rejected without charging or activating any.
      *
      * @param  \Factuarea\Sdk\Models\Components\ActivateCompaniesBatchV1Request  $body
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateBatchResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesActivateBatch(Components\ActivateCompaniesBatchV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateBatchResponse
+    public function publicApiV1CompaniesActivateBatch(Components\ActivateCompaniesBatchV1Request $body, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateBatchResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -216,13 +213,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesActivateBatchRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/activate');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/activate', Operations\PublicApiV1CompaniesActivateBatchRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -273,7 +270,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -309,16 +306,16 @@ class Companies
     /**
      * Create a managed company
      *
-     * Register a new managed company (a child sub-account) under your master tenant — the gestoría model. `name` and `tax_id` are required, and `tax_id` must be unique among the companies you manage (a duplicate returns 409). In live mode the prorated per-seat charge gates creation: with no payment method on file or a failed charge the call returns 402 and nothing is created. Use `GET /v1/companies/seat-charge-preview` to anticipate the cost; test keys skip the charge.
+     * Register a new managed company (a child sub-account) under your master tenant — the gestoría model. `name` and `tax_id` are required, and `tax_id` must be unique among the companies you manage (a duplicate returns 409). In live mode the prorated per-seat charge gates creation: with no payment method on file or a failed charge the call returns 402 and nothing is created. Use `GET /v1/accounts/{account}/companies/seat-charge-preview` to anticipate the cost; test keys skip the charge.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateCompanyV1Request  $body
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesCreate(Components\CreateCompanyV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreateResponse
+    public function publicApiV1CompaniesCreate(Components\CreateCompanyV1Request $body, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -346,13 +343,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesCreateRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies', Operations\PublicApiV1CompaniesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -403,7 +400,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -441,13 +438,13 @@ class Companies
      *
      * Poll the provisioning lifecycle of a managed company. Returns `provisioning_status` (`pending`, `awaiting_payment`, `provisioning`, `active`, `failed`). `payment_setup_url` is present only while `awaiting_payment` and points to the master tenant's payment-method onboarding; `failed_reason` is present only when provisioning has `failed`. Test keys move the child to `active` directly.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesCreationStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesCreationStatus(string $company, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreationStatusResponse
+    public function publicApiV1CompaniesCreationStatus(string $account, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreationStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -475,12 +472,12 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesCreationStatusRequest(
+            account: $account,
             company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/creation-status', Operations\PublicApiV1CompaniesCreationStatusRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/creation-status', Operations\PublicApiV1CompaniesCreationStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -564,14 +561,14 @@ class Companies
      *
      * Deactivate a managed company, moving it from `active` to `inactive`: it becomes non-operational but its data is preserved and the change is reversible (reactivate it later by paying its seat). No charge is applied; instead a prorated seat credit is emitted best-effort for the unused time.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesDeactivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesDeactivate(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeactivateResponse
+    public function publicApiV1CompaniesDeactivate(string $account, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeactivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -599,13 +596,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesDeactivateRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/deactivate', Operations\PublicApiV1CompaniesDeactivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/deactivate', Operations\PublicApiV1CompaniesDeactivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -689,14 +686,14 @@ class Companies
      *
      * Archive a managed company, moving it to the `archived` status so it no longer accepts operations. The underlying company row and its history are preserved. Archiving may be blocked by business rules (returns 422 `business_rule_violation`). A company not managed by your master tenant returns 404.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesDelete(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeleteResponse
+    public function publicApiV1CompaniesDelete(string $account, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -724,13 +721,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesDeleteRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}', Operations\PublicApiV1CompaniesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}', Operations\PublicApiV1CompaniesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -800,17 +797,17 @@ class Companies
     }
 
     /**
-     * List your managed companies
+     * Check whether a portfolio NIF can issue
      *
-     * List the companies managed by your master tenant with cursor-based pagination. By default only `active` and `inactive` companies are returned; pass `status` (`active`, `inactive`, `archived`) to filter — `status=archived` is the opt-in way to surface archived companies. Only your own children are ever returned.
+     * Check whether one of the NIFs within your credential scope is ready to ISSUE invoices, as a FISCAL and module state: a `can_issue` verdict, a closed list of `blockers`, and the signals it was composed from (census status, default series, fiscal profile, operability, missing modules). This is a NEUTRAL read: it never inspects or reports subscription, plan, tier, quota, usage or price, and it never answers with a payment-required state. `{company}` names the NIF being CHECKED, not the company that owns the data, and membership is decided by the credential scope alone. A NIF that does not exist, belongs to another account, falls outside your scope, or carries a malformed identifier all return the SAME 404 `profile_not_found` — never a 403 — so the answer cannot be used to census NIFs by difference.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus  $status
+     * @param  string  $account
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
-     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListResponse
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesIssuingReadinessResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesList(?Operations\PublicApiV1CompaniesListStatus $status = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesListResponse
+    public function publicApiV1CompaniesIssuingReadiness(string $account, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesIssuingReadinessResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -837,13 +834,129 @@ class Companies
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1CompaniesListRequest(
-            status: $status,
+        $request = new Operations\PublicApiV1CompaniesIssuingReadinessRequest(
+            account: $account,
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/issuing-readiness', Operations\PublicApiV1CompaniesIssuingReadinessRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.companies.issuing_readiness', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesIssuingReadinessResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1CompaniesIssuingReadinessResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * List your managed companies
+     *
+     * List the companies managed by your master tenant with cursor-based pagination. By default only `active` and `inactive` companies are returned; pass `status` (`active`, `inactive`, `archived`) to filter — `status=archived` is the opt-in way to surface archived companies. Only your own children are ever returned.
+     *
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListRequest  $request
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1CompaniesList(Operations\PublicApiV1CompaniesListRequest $request, ?Options $options = null): Operations\PublicApiV1CompaniesListResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies', Operations\PublicApiV1CompaniesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -892,7 +1005,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -930,14 +1043,14 @@ class Companies
      *
      * Preview the prorated per-seat amount for adding or activating managed companies, computed from the master tenant's Stripe upcoming invoice, without charging. Use `count` (≥1) to preview a batch, or `company_ids` for a coverage-aware preview: companies still covered for the current period cost `0` (`already_covered: true`). `amount` is in the currency's minor units; `requires_payment_method` is `true` when no payment method is on file.
      *
+     * @param  string  $account
      * @param  array<string>  $companyIds
      * @param  ?int  $count
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesSeatChargePreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesSeatChargePreview(array $companyIds, ?int $count = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesSeatChargePreviewResponse
+    public function publicApiV1CompaniesSeatChargePreview(string $account, array $companyIds, ?int $count = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesSeatChargePreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -965,13 +1078,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesSeatChargePreviewRequest(
+            account: $account,
             companyIds: $companyIds,
             count: $count,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/seat-charge-preview');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/seat-charge-preview', Operations\PublicApiV1CompaniesSeatChargePreviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1020,7 +1133,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1058,13 +1171,13 @@ class Companies
      *
      * Retrieve a single managed company by its `id` (UUID v7). A company not managed by your master tenant returns 404 `company_not_found` (anti-enumeration).
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesShow(string $company, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesShowResponse
+    public function publicApiV1CompaniesShow(string $account, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1092,12 +1205,12 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesShowRequest(
+            account: $account,
             company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}', Operations\PublicApiV1CompaniesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}', Operations\PublicApiV1CompaniesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1213,7 +1326,7 @@ class Companies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}', Operations\PublicApiV1CompaniesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}', Operations\PublicApiV1CompaniesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1301,14 +1414,14 @@ class Companies
      *
      * Reconcile and advance the provisioning of a managed company against the master tenant's subscription. No request body; idempotent. While `awaiting_payment`, once the master has a payment method on file the child is charged the prorated seat and moves to `active`; otherwise it stays `awaiting_payment` with no error. Returns the creation-status resource.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesVerifyCreationResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesVerifyCreation(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesVerifyCreationResponse
+    public function publicApiV1CompaniesVerifyCreation(string $account, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesVerifyCreationResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1336,13 +1449,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesVerifyCreationRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verify-creation', Operations\PublicApiV1CompaniesVerifyCreationRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/verify-creation', Operations\PublicApiV1CompaniesVerifyCreationRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
