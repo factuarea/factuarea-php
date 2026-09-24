@@ -17,6 +17,7 @@
 * [publicApiV1PurchaseInvoicesPaymentReceipt](#publicapiv1purchaseinvoicespaymentreceipt) - Download a purchase invoice payment receipt
 * [publicApiV1PurchaseInvoicesFindByExternalId](#publicapiv1purchaseinvoicesfindbyexternalid) - Find a purchase invoice by external ID
 * [publicApiV1PurchaseInvoicesStats](#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
+* [publicApiV1PurchaseInvoicesExpenseCategories](#publicapiv1purchaseinvoicesexpensecategories) - List purchase invoice expense categories
 * [publicApiV1PurchaseInvoicesOverdue](#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
 * [publicApiV1PurchaseInvoicesPending](#publicapiv1purchaseinvoicespending) - List pending purchase invoices
 * [publicApiV1PurchaseInvoicesListPayments](#publicapiv1purchaseinvoiceslistpayments) - List purchase invoice payments
@@ -1551,6 +1552,62 @@ if ($response->object !== null) {
 ### Response
 
 **[?Operations\PublicApiV1PurchaseInvoicesStatsResponse](../../Models/Operations/PublicApiV1PurchaseInvoicesStatsResponse.md)**
+
+### Errors
+
+| Error Type          | Status Code         | Content Type        |
+| ------------------- | ------------------- | ------------------- |
+| Errors\Error        | 401, 403, 429       | application/json    |
+| Errors\Error        | 500                 | application/json    |
+| Errors\APIException | 4XX, 5XX            | \*/\*               |
+
+## publicApiV1PurchaseInvoicesExpenseCategories
+
+List the expense categories available to your company. Use the returned `id` as the scanner review field `expense_category`. The complete catalog is returned in `data`, without pagination.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.expense_categories" method="get" path="/purchase_invoices/expense_categories" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesExpenseCategories(
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
+| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesResponse](../../Models/Operations/PublicApiV1PurchaseInvoicesExpenseCategoriesResponse.md)**
 
 ### Errors
 

@@ -1,0 +1,9 @@
+# SavePurchaseScanReviewV1RequestOperationClass
+
+
+## Fields
+
+| Field                                                                                           | Type                                                                                            | Required                                                                                        | Description                                                                                     |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `value`                                                                                         | *string*                                                                                        | :heavy_check_mark:                                                                              | N/A                                                                                             |
+| `issueCodes`                                                                                    | array<[Components\OperationClassIssueCode](../../Models/Components/OperationClassIssueCode.md)> | :heavy_minus_sign:                                                                              | N/A                                                                                             |

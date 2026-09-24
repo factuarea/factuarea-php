@@ -935,11 +935,30 @@ if ($response->object !== null) {
 * [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download a purchase invoice payment receipt
 * [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find a purchase invoice by external ID
 * [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
+* [publicApiV1PurchaseInvoicesExpenseCategories](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesexpensecategories) - List purchase invoice expense categories
 * [publicApiV1PurchaseInvoicesOverdue](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
 * [publicApiV1PurchaseInvoicesPending](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespending) - List pending purchase invoices
 * [publicApiV1PurchaseInvoicesListPayments](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslistpayments) - List purchase invoice payments
 * [publicApiV1PurchaseInvoicesRegisterPayment](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesregisterpayment) - Register a purchase invoice payment
 * [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
+
+### [PurchaseScanEmails](docs/sdks/purchasescanemails/README.md)
+
+* [publicApiV1PurchaseScanEmailsList](docs/sdks/purchasescanemails/README.md#publicapiv1purchasescanemailslist) - List purchase scanner emails
+
+### [PurchaseScans](docs/sdks/purchasescans/README.md)
+
+* [publicApiV1PurchaseScansArchive](docs/sdks/purchasescans/README.md#publicapiv1purchasescansarchive) - Archive a purchase scan
+* [publicApiV1PurchaseScansShow](docs/sdks/purchasescans/README.md#publicapiv1purchasescansshow) - Retrieve a purchase scan
+* [publicApiV1PurchaseScansConvert](docs/sdks/purchasescans/README.md#publicapiv1purchasescansconvert) - Create the purchase invoice from a scan
+* [publicApiV1PurchaseScansSource](docs/sdks/purchasescans/README.md#publicapiv1purchasescanssource) - Download the original document
+* [publicApiV1PurchaseScansStats](docs/sdks/purchasescans/README.md#publicapiv1purchasescansstats) - Get purchase scanner stats
+* [publicApiV1PurchaseScansDuplicateResolution](docs/sdks/purchasescans/README.md#publicapiv1purchasescansduplicateresolution) - Resolve a duplicate purchase scan
+* [publicApiV1PurchaseScansRestore](docs/sdks/purchasescans/README.md#publicapiv1purchasescansrestore) - Restore an archived purchase scan
+* [publicApiV1PurchaseScansRetry](docs/sdks/purchasescans/README.md#publicapiv1purchasescansretry) - Retry a failed purchase scan
+* [publicApiV1PurchaseScansReview](docs/sdks/purchasescans/README.md#publicapiv1purchasescansreview) - Save the review of a purchase scan
+* [publicApiV1PurchaseScansList](docs/sdks/purchasescans/README.md#publicapiv1purchasescanslist) - List purchase scans
+* [publicApiV1PurchaseScansCreate](docs/sdks/purchasescans/README.md#publicapiv1purchasescanscreate) - Upload documents to the purchase scanner
 
 ### [Quotes](docs/sdks/quotes/README.md)
 
@@ -968,6 +987,7 @@ if ($response->object !== null) {
 
 * [publicApiV1RecurringInvoicesActivate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesactivate) - Activate recurring invoice
 * [publicApiV1RecurringInvoicesBulkDelete](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkdelete) - Bulk delete recurring invoices
+* [publicApiV1RecurringInvoicesBulkStatus](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkstatus) - Bulk change recurring invoice status
 * [publicApiV1RecurringInvoicesCancel](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescancel) - Cancel recurring invoice
 * [publicApiV1RecurringInvoicesCreate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescreate) - Create a recurring invoice
 * [publicApiV1RecurringInvoicesList](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoiceslist) - List all recurring invoices

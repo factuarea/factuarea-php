@@ -1,0 +1,10 @@
+# PurchaseScanUploadBatchLastError
+
+
+## Fields
+
+| Field                                                                                            | Type                                                                                             | Required                                                                                         | Description                                                                                      |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `code`                                                                                           | [Components\PurchaseScanUploadBatchCode](../../Models/Components/PurchaseScanUploadBatchCode.md) | :heavy_check_mark:                                                                               | N/A                                                                                              |
+| `recoverable`                                                                                    | *bool*                                                                                           | :heavy_check_mark:                                                                               | N/A                                                                                              |
+| `message`                                                                                        | *string*                                                                                         | :heavy_check_mark:                                                                               | N/A                                                                                              |
