@@ -62,7 +62,7 @@ class TimeBalance
     public int $totalWorkedMinutes;
 
     /**
-     * Period balance in minutes (worked − expected).
+     * Period balance in minutes as the sum of the daily balances. Days without a schedule in effect or outside the employment period add 0, so it can differ from worked − expected when minutes were clocked on those days.
      *
      * @var int $totalBalanceMinutes
      */
@@ -78,7 +78,7 @@ class TimeBalance
     public int $totalOvertimeMinutes;
 
     /**
-     * Daily breakdown of the period.
+     * Daily breakdown of the period. Each day includes `is_unscheduled` and `is_outside_employment`.
      *
      * @var array<\Factuarea\Sdk\Models\Components\DayBalance> $days
      */
