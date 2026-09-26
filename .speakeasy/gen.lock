@@ -6,9 +6,9 @@ management:
   generationVersion: 2.941.0
   releaseVersion: 0.4.0
 persistentEdits:
-  generation_id: 7d8ef384-4088-421e-a876-9f85dd35c690
-  pristine_commit_hash: 0e844312e7af60aa56e50e2571665a3bb19d1d4a
-  pristine_tree_hash: 7a223685ed5db680a1e7b65ef394e56713b0bcdf
+  generation_id: 9a48d58f-9d2a-4ec3-a50a-e4e779005af6
+  pristine_commit_hash: ea556aee0e0d4577ef73b3478a25fe574234b6e2
+  pristine_tree_hash: 1ae24d777506c97f03b720f8dec671d4fb47374b
 features:
   php:
     constsAndDefaults: 0.2.2
@@ -12495,8 +12495,8 @@ trackedFiles:
     pristine_git_object: fbbab9530988e5a6450ccdd4524e4dcc1f5bd55d
   docs/sdks/contacts/README.md:
     id: 4174fb287a81
-    last_write_checksum: sha1:6a5beef9e586249ca31edeb5754b1980cb747b60
-    pristine_git_object: 8264135af8c98774a876a42e0bf3ee08bc4c2af1
+    last_write_checksum: sha1:882855b7a8e2366938fe06a8eaac24b23a0dda8f
+    pristine_git_object: bc865e43b89a40bf21b23c12b53b9a59187eaba8
   docs/sdks/correctives/README.md:
     id: ac76f66bec89
     last_write_checksum: sha1:a45acdb6324a241bffd434155117ddde712e72bc
@@ -31928,7 +31928,7 @@ examples:
           Factuarea-Version: "2026-06-01"
           X-Active-Profile: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c"
       requestBody:
-        application/json: {"name": "Talleres Mediterráneo S.L.", "kind": "company", "tax_id": "B66778899", "commercial_name": "Talleres Med", "email": "facturacion@talleresmed.es", "phone": "961112233", "external_id": "ERP-CONTACT-0042", "roles": ["customer", "supplier"]}
+        application/json: {"name": "Talleres Mediterráneo S.L.", "kind": "company", "tax_id": "B66778895", "commercial_name": "Talleres Med", "email": "facturacion@talleresmed.es", "phone": "961112233", "external_id": "ERP-CONTACT-0042", "roles": ["customer", "supplier"]}
       responses:
         "200":
           application/json: {"data": {"id": "0198f4d1-a492-7e05-9a35-000000000001", "object": "contact", "kind": "company", "name": "Distribuciones Ejemplo SL", "business_name": "Distribuciones Ejemplo SL", "commercial_name": "Ejemplo", "tax_id": "B12345674", "vat_id": null, "alternative_id": null, "address": {"line1": "Calle Mayor", "line2": null, "number": "10", "floor": null, "door": null, "staircase": null, "city": "Madrid", "province": "Madrid", "postal_code": "28013", "country": "ES"}, "contact_person": "Ana García", "email": "administracion@example.com", "phone": "+34910000000", "mobile": null, "fax": null, "website": "https://example.com", "billing_emails": ["facturas@example.com"], "tags": ["distribuidor"], "coordinates": null, "notes": null, "metadata": {"erp_id": "CONTACT-42"}, "accumulate_347": true, "external_id": "CONTACT-42", "roles": [{"role": "customer", "status": "active", "assigned_at": "2026-08-29T10:00:00+00:00", "deactivated_at": null}, {"role": "supplier", "status": "active", "assigned_at": "2026-08-29T10:00:00+00:00", "deactivated_at": null}], "bank_accounts": [], "customer_profile": null, "supplier_profile": null, "financial_summary": {"sales": {"invoiced_amount": 1210, "collected_amount": 800, "receivable_amount": 410, "currency": "EUR"}, "purchases": {"purchased_amount": 605, "paid_amount": 400, "payable_amount": 205, "currency": "EUR"}}, "latest_activity": null, "is_archived": false, "archived_at": null, "created_at": "2026-08-29T10:00:00+00:00", "updated_at": "2026-08-29T10:00:00+00:00"}}

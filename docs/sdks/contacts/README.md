@@ -2076,7 +2076,7 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateBusinessContactV1Request(
     name: 'Talleres Mediterráneo S.L.',
     kind: Components\CreateBusinessContactV1RequestKind::Company,
-    taxId: 'B66778899',
+    taxId: 'B66778895',
     commercialName: 'Talleres Med',
     email: 'facturacion@talleresmed.es',
     phone: '961112233',

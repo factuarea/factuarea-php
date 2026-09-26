@@ -20,7 +20,7 @@ ever unavailable.
 The golden rule (design D5): **regeneration must never overwrite hand-written
 code.** Speakeasy only writes files it tracks in `.speakeasy/gen.lock`. Anything
 under `src/Custom/` and `Tests/` is untracked and therefore safe. The hand-written
-runtime (webhook verifier, idempotency hook, page iterator, client factory) lives
+runtime (webhook verifier, idempotency client, page iterator, client factory) lives
 entirely in `src/Custom/` for this reason.
 
 ---
@@ -30,7 +30,7 @@ entirely in `src/Custom/` for this reason.
 `spec/openapi.json` is a copy of the Factuarea public OpenAPI document, pinned to
 the reviewed contract of `factuarea-app` PR **#1010**
 (`backend/public/docs/openapi-public.json`, OpenAPI 3.1, 483 operations).
-The pinned file SHA-256 is `bab124475f7a657bc1f8076bf92a530fb9aa40e72985e9f5db22ed004dc6c114`. It is
+The pinned file SHA-256 is `0cd483a3541b21d0d53ac19e3ea008adf00da418923f4d10b48e59c260889654`. It is
 committed so the SDK is fully reproducible from this repo alone.
 
 To update the SDK to a newer API version, replace `spec/openapi.json` with the new
@@ -149,7 +149,7 @@ hand-written `src/Custom/` layer is generator-independent and keeps working.
 3. Keep `src/Custom/` intact and re-point its imports if the generated namespace
    for `Security`, hooks or the client builder changes. The custom helpers depend
    only on:
-   - PSR-7 `RequestInterface` / `ResponseInterface` (idempotency hook, page iterator),
+   - PSR-7 `RequestInterface` / `ResponseInterface` (idempotency client, page iterator),
    - PHP's `hash_hmac` / `hash_equals` (webhook verifier),
    so most of the runtime survives a generator change untouched. Only
    `src/Custom/FactuareaClient.php` (which references the generated builder and

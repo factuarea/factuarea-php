@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Tests\Custom\PurchaseScans;
 
-use Factuarea\Sdk\Custom\Idempotency\IdempotencyHook;
+use Factuarea\Sdk\Custom\Idempotency\IdempotencyClient;
 use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
@@ -43,14 +43,13 @@ final class PurchaseScansSourceTest extends TestCase
         $this->history = [];
         $stack = HandlerStack::create($mock);
         $stack->push(Middleware::history($this->history));
-        $guzzle = new Client(['handler' => $stack]);
+        $guzzle = new IdempotencyClient(new Client(['handler' => $stack]));
 
         $sdk = Factuarea::builder()
             ->setSecurity(new Security(bearerAuth: 'fact_test_secret123'))
             ->setClient($guzzle)
             ->build();
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
-        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new IdempotencyHook());
 
         return $sdk;
     }
