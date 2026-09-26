@@ -172,7 +172,7 @@ class PurchaseScans
     /**
      * Create the expense from a scan
      *
-     * Create exactly one draft expense from a reviewed scan and link it. Responds `200` on the first call and on replays, returning the same linked invoice. Requires `expected_version` and that no blocking issue remains; otherwise `422`.
+     * Create exactly one draft expense from a reviewed scan and link it. Responds `200` on the first call and on replays, returning the same linked expense. Requires `expected_version` and that no blocking issue remains; otherwise `422`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansConvertRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansConvertResponse

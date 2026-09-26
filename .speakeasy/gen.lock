@@ -6,9 +6,9 @@ management:
   generationVersion: 2.941.0
   releaseVersion: 0.4.0
 persistentEdits:
-  generation_id: 9635b18e-8882-4d1a-8711-6b96ed6dd8ea
-  pristine_commit_hash: a8ace8942e767906affdc489c8c8d5f4ed7682df
-  pristine_tree_hash: bbc5e081cb07a95f2e3f7af5dfac92d8625ad1af
+  generation_id: b1626f38-4f40-4ce9-be55-d62b48ef6d1e
+  pristine_commit_hash: 7cc3413ed59621e07aa1e6c962c06c0e3c848548
+  pristine_tree_hash: cf3f3a16989c3120c3152ec26d094ca343a1ede4
 features:
   php:
     constsAndDefaults: 0.2.2
@@ -12631,8 +12631,8 @@ trackedFiles:
     pristine_git_object: f0725118beb19ad923378e2515969e47bb6c141d
   docs/sdks/purchasescans/README.md:
     id: eafc1e4a4dec
-    last_write_checksum: sha1:a90fecfd43597ac55bfd9409d9fffd4a8f1ed226
-    pristine_git_object: 0983481cffd95ab5dea4fc0b3c420c442325b1bb
+    last_write_checksum: sha1:fa7112d07e3c70b55195886c344c8050a44e4167
+    pristine_git_object: d01261551505639b445cfcb27b7af3c367902077
   docs/sdks/quarterly/README.md:
     id: 86a4af0589f5
     last_write_checksum: sha1:eea26b66bf5cad30f098258faea4b5b921ab6f61
@@ -25415,8 +25415,8 @@ trackedFiles:
     pristine_git_object: d0dc3b78c855d7257a539c95b0e9dff156ecf63f
   src/PurchaseScans.php:
     id: f3dfb4300c13
-    last_write_checksum: sha1:74429e6f38e13450e8d3de71d7381a78b207b1f0
-    pristine_git_object: 89b5acbee30eec0ce161702ac982ef0e6e9ed517
+    last_write_checksum: sha1:e67f2e73effdb406d4cec49a7fa6e059416600ad
+    pristine_git_object: 97aa238a176031d31c8ac3bd8306c2cbfb02b7ad
   src/Quarterly.php:
     id: 04a68e561e8d
     last_write_checksum: sha1:ce2c40dfbf0c1d81b0e4207e526cab049a8fcb4b
