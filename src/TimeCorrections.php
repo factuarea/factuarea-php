@@ -51,7 +51,7 @@ class TimeCorrections
     /**
      * Approve a time entry correction
      *
-     * Approve a pending correction request by its `id` (UUID v7), appending the resolving `correction_entry` linked to the original time entry. An optional `note` from the approver may be supplied. A request that is not pending returns 422 (already resolved), and approving your own request returns 422 (self-approval is forbidden). Returns 200 with the resolved correction.
+     * Approve a pending correction request by its `id` (UUID v7), appending the resolving `correction_entry` linked to the original time entry. An optional `note` from the approver may be supplied. A request that is not pending returns 422 (already resolved), and approving your own request returns 422 (self-approval is forbidden). Approval checks the employment period again: if the corrected entry falls outside it (for example because `hire_date` was changed after the request), it returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period`, the request stays pending and the ledger is unchanged. Returns 200 with the resolved correction.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsApproveRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsApproveResponse
@@ -171,7 +171,7 @@ class TimeCorrections
     /**
      * Request a time entry correction
      *
-     * Request the correction of a time entry (RD-ley 8/2019). `time_entry_id` (UUID v7 of the entry to correct), `kind` (`add_missing_entry`/`adjust_time`/`remove_entry`), a `reason` and the `proposed` values are required. A correction is a new append-only entry that references the original entry without mutating it (analogous to a corrective invoice); the workflow stays `pending` until a manager approves or rejects it. Returns 201 with the created request and a `Location` header.
+     * Request the correction of a time entry (RD-ley 8/2019). `time_entry_id` (UUID v7 of the entry to correct), `kind` (`add_missing_entry`/`adjust_time`/`remove_entry`), a `reason` and the `proposed` values are required. A correction is a new append-only entry that references the original entry without mutating it (analogous to a corrective invoice); the workflow stays `pending` until a manager approves or rejects it. An `add_missing_entry` or `adjust_time` correction whose proposed time falls outside the employee’s employment period (before `hire_date` or after `termination_date`) returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` and no request is created; `remove_entry` is never blocked by this rule. Returns 201 with the created request and a `Location` header.
      *
      * @param  \Factuarea\Sdk\Models\Components\RequestTimeCorrectionRequest  $body
      * @param  ?string  $idempotencyKey
