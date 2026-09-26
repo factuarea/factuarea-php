@@ -66,31 +66,25 @@ final class PurchaseScansUploadTest extends TestCase
 
     private function successEnvelope(): string
     {
-        return (string) json_encode([
-            'data' => [
-                'accepted' => [
-                    [
-                        'id' => '019e0000-0000-7000-8000-000000000042',
-                        'version' => 1,
-                        'source' => 'api',
-                        'status' => 'queued',
-                        'original_filename' => 'factura-1.pdf',
-                        'mime_type' => 'application/pdf',
-                        'received_at' => '2026-09-12T10:30:00Z',
-                    ],
-                    [
-                        'id' => '019e0000-0000-7000-8000-000000000043',
-                        'version' => 1,
-                        'source' => 'api',
-                        'status' => 'queued',
-                        'original_filename' => 'factura-2.pdf',
-                        'mime_type' => 'application/pdf',
-                        'received_at' => '2026-09-12T10:30:00Z',
-                    ],
-                ],
-                'rejected' => [],
-            ],
-        ]);
+        $spec = json_decode(
+            (string) file_get_contents(__DIR__.'/../../../spec/openapi.json'),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+        $envelope = $spec['paths']['/purchase_scans']['post']['responses']['202']
+            ['content']['application/json']['examples']['success']['value'];
+        $first = $envelope['data']['accepted'][0];
+        $first['original_filename'] = 'factura-1.pdf';
+        $first['item_index'] = 0;
+        $second = $first;
+        $second['id'] = '019e0000-0000-7000-8000-000000000043';
+        $second['original_filename'] = 'factura-2.pdf';
+        $second['item_index'] = 1;
+        $envelope['data']['accepted'] = [$first, $second];
+        $envelope['data']['rejected'] = [];
+        $envelope['data']['idempotent_replay'] = false;
+
+        return json_encode($envelope, JSON_THROW_ON_ERROR);
     }
 
     public function test_uploads_two_files_under_the_frozen_field_name_with_an_idempotency_key(): void
