@@ -1,0 +1,9 @@
+# SavePurchaseScanReviewV1RequestExemptionReason3
+
+
+## Fields
+
+| Field                                                                                               | Type                                                                                                | Required                                                                                            | Description                                                                                         |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `value`                                                                                             | [Components\ExemptionReasonValue3](../../Models/Components/ExemptionReasonValue3.md)                | :heavy_check_mark:                                                                                  | N/A                                                                                                 |
+| `issueCodes`                                                                                        | array<[Components\ExemptionReasonIssueCode3](../../Models/Components/ExemptionReasonIssueCode3.md)> | :heavy_minus_sign:                                                                                  | N/A                                                                                                 |

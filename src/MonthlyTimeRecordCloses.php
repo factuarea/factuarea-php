@@ -51,7 +51,7 @@ class MonthlyTimeRecordCloses
     /**
      * Close a monthly time record
      *
-     * Freeze the immutable monthly close of the time record register for a finished `(year, month)`: it snapshots each active employee’s balance totals and absence breakdown/balances (reusing the balance contract, never recomputing) and locks the period against retroactive entries and corrections. `year` and `month` (1-12) are required. A month that has not ended yet returns 422 in Spanish; a period already closed returns 409. Reopening a previously reopened period re-closes it, keeping its original `id`. Returns 201 with the created close and a `Location` header.
+     * Freeze the immutable monthly close of the time record register for a finished `(year, month)`: it snapshots, for every employee whose employment period overlaps the month (hired on or before its last day and not terminated before its first day, whatever their current status), the balance totals and absence breakdown/balances (reusing the balance contract, never recomputing) and locks the period against retroactive entries and corrections. `year` and `month` (1-12) are required. A month that has not ended yet returns 422 in Spanish; a period already closed returns 409. Reopening a previously reopened period re-closes it, keeping its original `id`. Returns 201 with the created close and a `Location` header.
      *
      * @param  \Factuarea\Sdk\Models\Components\CloseMonthlyTimeRecordRequest  $body
      * @param  ?string  $idempotencyKey

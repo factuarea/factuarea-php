@@ -87,6 +87,8 @@ class Factuarea
 
     public Contacts $contacts;
 
+    public PurchaseScans $purchaseScans;
+
     public Series $series;
 
     public WorkSchedules $workSchedules;
@@ -155,6 +157,8 @@ class Factuarea
 
     public PayrollExportFormats $payrollExportFormats;
 
+    public PurchaseScanEmails $purchaseScanEmails;
+
     public Shopify $shopify;
 
     public Woocommerce $woocommerce;
@@ -187,6 +191,7 @@ class Factuarea
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
         $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->contacts = new Contacts($this->sdkConfiguration);
+        $this->purchaseScans = new PurchaseScans($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
         $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
         $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
@@ -221,6 +226,7 @@ class Factuarea
         $this->integrations = new Integrations($this->sdkConfiguration);
         $this->paymentMethods = new PaymentMethods($this->sdkConfiguration);
         $this->payrollExportFormats = new PayrollExportFormats($this->sdkConfiguration);
+        $this->purchaseScanEmails = new PurchaseScanEmails($this->sdkConfiguration);
         $this->shopify = new Shopify($this->sdkConfiguration);
         $this->woocommerce = new Woocommerce($this->sdkConfiguration);
         $this->initHooks();
