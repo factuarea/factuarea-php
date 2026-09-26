@@ -922,25 +922,25 @@ if ($response->object !== null) {
 
 ### [PurchaseInvoices](docs/sdks/purchaseinvoices/README.md)
 
-* [publicApiV1PurchaseInvoicesAttachFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesattachfile) - Attach a file to a purchase invoice
-* [publicApiV1PurchaseInvoicesBulkDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkdelete) - Bulk delete purchase invoices
-* [publicApiV1PurchaseInvoicesBulkStatus](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkstatus) - Bulk change purchase invoice status
-* [publicApiV1PurchaseInvoicesCreate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicescreate) - Create a purchase invoice
-* [publicApiV1PurchaseInvoicesList](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslist) - List all purchase invoices
-* [publicApiV1PurchaseInvoicesDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdelete) - Delete a purchase invoice
-* [publicApiV1PurchaseInvoicesShow](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesshow) - Retrieve a purchase invoice
-* [publicApiV1PurchaseInvoicesUpdate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesupdate) - Update a purchase invoice
-* [publicApiV1PurchaseInvoicesDeleteFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdeletefile) - Remove a purchase invoice file
-* [publicApiV1PurchaseInvoicesFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfile) - Download the original purchase invoice file
-* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download a purchase invoice payment receipt
-* [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find a purchase invoice by external ID
-* [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
-* [publicApiV1PurchaseInvoicesExpenseCategories](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesexpensecategories) - List purchase invoice expense categories
-* [publicApiV1PurchaseInvoicesOverdue](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
-* [publicApiV1PurchaseInvoicesPending](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespending) - List pending purchase invoices
-* [publicApiV1PurchaseInvoicesListPayments](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslistpayments) - List purchase invoice payments
-* [publicApiV1PurchaseInvoicesRegisterPayment](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesregisterpayment) - Register a purchase invoice payment
-* [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
+* [publicApiV1PurchaseInvoicesAttachFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesattachfile) - Attach a file to an expense
+* [publicApiV1PurchaseInvoicesBulkDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkdelete) - Bulk delete expenses
+* [publicApiV1PurchaseInvoicesBulkStatus](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkstatus) - Bulk change expense status
+* [publicApiV1PurchaseInvoicesCreate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicescreate) - Create an expense
+* [publicApiV1PurchaseInvoicesList](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslist) - List all expenses
+* [publicApiV1PurchaseInvoicesDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdelete) - Delete an expense
+* [publicApiV1PurchaseInvoicesShow](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesshow) - Retrieve an expense
+* [publicApiV1PurchaseInvoicesUpdate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesupdate) - Update an expense
+* [publicApiV1PurchaseInvoicesDeleteFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdeletefile) - Remove an expense file
+* [publicApiV1PurchaseInvoicesFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfile) - Download the original expense file
+* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download an expense payment receipt
+* [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find an expense by external ID
+* [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get expense stats
+* [publicApiV1PurchaseInvoicesExpenseCategories](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesexpensecategories) - List expense categories
+* [publicApiV1PurchaseInvoicesOverdue](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesoverdue) - List overdue expenses
+* [publicApiV1PurchaseInvoicesPending](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespending) - List pending expenses
+* [publicApiV1PurchaseInvoicesListPayments](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslistpayments) - List expense payments
+* [publicApiV1PurchaseInvoicesRegisterPayment](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesregisterpayment) - Register an expense payment
+* [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark expense as paid
 
 ### [PurchaseScanEmails](docs/sdks/purchasescanemails/README.md)
 
@@ -950,7 +950,7 @@ if ($response->object !== null) {
 
 * [publicApiV1PurchaseScansArchive](docs/sdks/purchasescans/README.md#publicapiv1purchasescansarchive) - Archive a purchase scan
 * [publicApiV1PurchaseScansShow](docs/sdks/purchasescans/README.md#publicapiv1purchasescansshow) - Retrieve a purchase scan
-* [publicApiV1PurchaseScansConvert](docs/sdks/purchasescans/README.md#publicapiv1purchasescansconvert) - Create the purchase invoice from a scan
+* [publicApiV1PurchaseScansConvert](docs/sdks/purchasescans/README.md#publicapiv1purchasescansconvert) - Create the expense from a scan
 * [publicApiV1PurchaseScansSource](docs/sdks/purchasescans/README.md#publicapiv1purchasescanssource) - Download the original document
 * [publicApiV1PurchaseScansStats](docs/sdks/purchasescans/README.md#publicapiv1purchasescansstats) - Get purchase scanner stats
 * [publicApiV1PurchaseScansDuplicateResolution](docs/sdks/purchasescans/README.md#publicapiv1purchasescansduplicateresolution) - Resolve a duplicate purchase scan

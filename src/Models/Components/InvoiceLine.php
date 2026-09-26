@@ -278,7 +278,7 @@ class InvoiceLine
     public ?string $aeatTaxCode = null;
 
     /**
-     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (≤100 chars). REQUIRED on a `SUPLIDO` line (a disbursement without its supporting reference is rejected with 422) and `null` on a normal line. Free text on purpose: the receipt of a public body is rarely registered as a purchase invoice.
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (≤100 chars). REQUIRED on a `SUPLIDO` line (a disbursement without its supporting reference is rejected with 422) and `null` on a normal line. Free text on purpose: the receipt of a public body is rarely registered as an expense.
      *
      * @var ?string $sourceInvoiceReference
      */
@@ -287,7 +287,7 @@ class InvoiceLine
     public ?string $sourceInvoiceReference = null;
 
     /**
-     * Optional traceability of a `SUPLIDO` line: IDs (UUID v7) of your own purchase invoices that back the disbursement. `null` when the line carries no traceability — never `[]`, so "no traceability" cannot be confused with "empty list". A purchase invoice of another company is rejected with 422.
+     * Optional traceability of a `SUPLIDO` line: IDs (UUID v7) of your own expenses that back the disbursement. `null` when the line carries no traceability — never `[]`, so "no traceability" cannot be confused with "empty list". An expense of another company is rejected with 422.
      *
      * @var ?array<string> $sourceInvoiceIds
      */

@@ -49,9 +49,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Attach a file to a purchase invoice
+     * Attach a file to an expense
      *
-     * Upload the original PDF document for a purchase invoice as `multipart/form-data`. Replaces any previously attached file. Returns the updated purchase invoice.
+     * Upload the original PDF document for an expense as `multipart/form-data`. Replaces any previously attached file. Returns the updated expense.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesAttachFileRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesAttachFileResponse
@@ -170,9 +170,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Bulk delete purchase invoices
+     * Bulk delete expenses
      *
-     * Delete up to 100 purchase invoices by UUID in a single request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
+     * Delete up to 100 expenses by UUID in a single request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeletePurchaseInvoicesRequest  $body
      * @param  string  $idempotencyKey
@@ -300,9 +300,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Bulk change purchase invoice status
+     * Bulk change expense status
      *
-     * Transition up to 50 purchase invoices (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every invoice (never `now()`). Returns a `BulkPartialSuccessResult`; invoices that could not transition (not found or already paid) come back in `failures[]`.
+     * Transition up to 50 expenses (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every invoice (never `now()`). Returns a `BulkPartialSuccessResult`; invoices that could not transition (not found or already paid) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1Request  $body
      * @param  string  $idempotencyKey
@@ -430,7 +430,7 @@ class PurchaseInvoices
     }
 
     /**
-     * Create a purchase invoice
+     * Create an expense
      *
      * Record an invoice received from a supplier. Catalog lines accept `product_id`, `variant_id`, `presentation_id`, `supplier_offer_id` and an optional `confirmed_base_quantity`. When `supplier_offer_id` is provided, the supplier cost, purchase unit and base-unit conversion are frozen in the invoice line snapshot; `unit_price` may be omitted. Creating the invoice as `pending` registers the inbound stock once. A `draft` invoice does not affect stock until it is later marked as paid.
      *
@@ -560,9 +560,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Delete a purchase invoice
+     * Delete an expense
      *
-     * Delete a purchase invoice.
+     * Delete an expense.
      *
      * @param  string  $purchaseInvoice
      * @param  string  $idempotencyKey
@@ -675,9 +675,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Remove a purchase invoice file
+     * Remove an expense file
      *
-     * Delete the original file attached to a purchase invoice and release its storage. Idempotent: succeeds even when no file was attached.
+     * Delete the original file attached to an expense and release its storage. Idempotent: succeeds even when no file was attached.
      *
      * @param  string  $purchaseInvoice
      * @param  ?string  $idempotencyKey
@@ -790,7 +790,7 @@ class PurchaseInvoices
     }
 
     /**
-     * List purchase invoice expense categories
+     * List expense categories
      *
      * List the expense categories available to your company. Use the returned `id` as the scanner review field `expense_category`. The complete catalog is returned in `data`, without pagination.
      *
@@ -911,9 +911,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Download the original purchase invoice file
+     * Download the original expense file
      *
-     * Stream the original file attached to the purchase invoice when it was uploaded — a PDF or a scanned image (`image/jpeg`, `image/png`), the formats accepted on upload. Returns 404 if no attachment is present.
+     * Stream the original file attached to the expense when it was uploaded — a PDF or a scanned image (`image/jpeg`, `image/png`), the formats accepted on upload. Returns 404 if no attachment is present.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -1053,9 +1053,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Find a purchase invoice by external ID
+     * Find an expense by external ID
      *
-     * Look up a single purchase invoice by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Orthogonal to the supplier-provided `external_invoice_number` (the vendor's fiscal number). Returns the matching purchase invoice or 404 `purchase_invoice_not_found` if none uses that external_id within your company.
+     * Look up a single expense by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Orthogonal to the supplier-provided `external_invoice_number` (the vendor's fiscal number). Returns the matching expense or 404 `purchase_invoice_not_found` if none uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindPurchaseInvoiceByExternalIdRequest  $body
      * @param  ?LocalDate  $factuareaVersion
@@ -1181,9 +1181,9 @@ class PurchaseInvoices
     }
 
     /**
-     * List all purchase invoices
+     * List all expenses
      *
-     * List purchase invoices received from suppliers with cursor-based pagination.
+     * List expenses recorded from suppliers with cursor-based pagination.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListResponse
@@ -1300,9 +1300,9 @@ class PurchaseInvoices
     }
 
     /**
-     * List purchase invoice payments
+     * List expense payments
      *
-     * Return the full payment ledger of a purchase invoice as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single invoice is bounded, so the complete set is returned without cursor pagination. An invoice with no payments returns an empty array, never a `404`; a `404` here means the invoice does not exist or belongs to another company.
+     * Return the full payment ledger of an expense as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single invoice is bounded, so the complete set is returned without cursor pagination. An invoice with no payments returns an empty array, never a `404`; a `404` here means the invoice does not exist or belongs to another company.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -1423,9 +1423,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Mark purchase invoice as paid
+     * Mark expense as paid
      *
-     * Record payment of a purchase invoice using the optional `paid_on` date. When a draft invoice contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending invoice has already registered them, so marking it as paid never duplicates stock.
+     * Record payment of an expense using the optional `paid_on` date. When a draft expense contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending expense has already registered them, so marking it as paid never duplicates stock.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidResponse
@@ -1543,9 +1543,9 @@ class PurchaseInvoices
     }
 
     /**
-     * List overdue purchase invoices
+     * List overdue expenses
      *
-     * Return purchase invoices whose due date has passed and are still unpaid.
+     * Return expenses whose due date has passed and are still unpaid.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesOverdueRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesOverdueResponse
@@ -1662,9 +1662,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Download a purchase invoice payment receipt
+     * Download an expense payment receipt
      *
-     * Stream the PDF payment receipt for a paid purchase invoice. Returns 409 if the invoice has not been paid yet.
+     * Stream the PDF payment receipt for a paid expense. Returns 409 if the invoice has not been paid yet.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -1782,9 +1782,9 @@ class PurchaseInvoices
     }
 
     /**
-     * List pending purchase invoices
+     * List pending expenses
      *
-     * Return purchase invoices in pending payment status, paginated.
+     * Return expenses in pending payment status, paginated.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPendingRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPendingResponse
@@ -1901,9 +1901,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Register a purchase invoice payment
+     * Register an expense payment
      *
-     * Record a partial (or total) payment against a purchase invoice and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the invoice issue date and today, and a cancelled invoice accepts no payments. Once the accumulated payments cover the total, the invoice settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
+     * Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the invoice issue date and today, and a cancelled invoice accepts no payments. Once the accumulated payments cover the total, the invoice settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse
@@ -2022,9 +2022,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Retrieve a purchase invoice
+     * Retrieve an expense
      *
-     * Retrieve a purchase invoice by its `uuid`.
+     * Retrieve an expense by its `uuid`.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -2145,9 +2145,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Get purchase invoice stats
+     * Get expense stats
      *
-     * Aggregated KPIs for your purchase invoices: total count and amount, counts per status, pending and overdue totals, and amounts by supplier. Returned as `{ "data": PurchaseInvoiceStats }`.
+     * Aggregated KPIs for your expenses: total count and amount, counts per status, pending and overdue totals, and amounts by supplier. Returned as `{ "data": PurchaseInvoiceStats }`.
      *
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
@@ -2266,9 +2266,9 @@ class PurchaseInvoices
     }
 
     /**
-     * Update a purchase invoice
+     * Update an expense
      *
-     * Update a purchase invoice.
+     * Update an expense.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesUpdateResponse

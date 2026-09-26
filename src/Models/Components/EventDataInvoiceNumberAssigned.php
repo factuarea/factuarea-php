@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class EventDataInvoiceNumberAssigned
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * An invoice (compliant with Spanish AEAT VeriFactu).
      *
      * @var \Factuarea\Sdk\Models\Components\Invoice $object
      */

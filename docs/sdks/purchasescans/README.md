@@ -6,7 +6,7 @@
 
 * [publicApiV1PurchaseScansArchive](#publicapiv1purchasescansarchive) - Archive a purchase scan
 * [publicApiV1PurchaseScansShow](#publicapiv1purchasescansshow) - Retrieve a purchase scan
-* [publicApiV1PurchaseScansConvert](#publicapiv1purchasescansconvert) - Create the purchase invoice from a scan
+* [publicApiV1PurchaseScansConvert](#publicapiv1purchasescansconvert) - Create the expense from a scan
 * [publicApiV1PurchaseScansSource](#publicapiv1purchasescanssource) - Download the original document
 * [publicApiV1PurchaseScansStats](#publicapiv1purchasescansstats) - Get purchase scanner stats
 * [publicApiV1PurchaseScansDuplicateResolution](#publicapiv1purchasescansduplicateresolution) - Resolve a duplicate purchase scan
@@ -197,7 +197,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansShow
 
-Retrieve a purchase scan by its public `id` (UUID v7): evidence-first extraction (value, confidence and page/bounding-box evidence per field and line), issues, duplicate match, attempts, linked purchase invoice and `available_actions`. The current `version` is required by every mutation.
+Retrieve a purchase scan by its public `id` (UUID v7): evidence-first extraction (value, confidence and page/bounding-box evidence per field and line), issues, duplicate match, attempts, linked expense and `available_actions`. The current `version` is required by every mutation.
 
 ### Example Usage
 
@@ -255,7 +255,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansConvert
 
-Create exactly one draft purchase invoice from a reviewed scan and link it. Responds `200` on the first call and on replays, returning the same linked invoice. Requires `expected_version` and that no blocking issue remains; otherwise `422`.
+Create exactly one draft expense from a reviewed scan and link it. Responds `200` on the first call and on replays, returning the same linked invoice. Requires `expected_version` and that no blocking issue remains; otherwise `422`.
 
 ### Example Usage: api_key_revoked
 
@@ -549,7 +549,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansDuplicateResolution
 
-Resolve a scan in `duplicate` status with `resolution` = `link_existing` (link the existing purchase invoice) or `archive`. Duplicate overrides require an authorised user in the Factuarea app; they are not available through the public API or MCP. Requires `expected_version`. Accepts `Idempotency-Key`.
+Resolve a scan in `duplicate` status with `resolution` = `link_existing` (link the existing expense) or `archive`. Duplicate overrides require an authorised user in the Factuarea app; they are not available through the public API or MCP. Requires `expected_version`. Accepts `Idempotency-Key`.
 
 ### Example Usage: api_key_revoked
 

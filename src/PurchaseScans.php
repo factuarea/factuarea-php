@@ -170,9 +170,9 @@ class PurchaseScans
     }
 
     /**
-     * Create the purchase invoice from a scan
+     * Create the expense from a scan
      *
-     * Create exactly one draft purchase invoice from a reviewed scan and link it. Responds `200` on the first call and on replays, returning the same linked invoice. Requires `expected_version` and that no blocking issue remains; otherwise `422`.
+     * Create exactly one draft expense from a reviewed scan and link it. Responds `200` on the first call and on replays, returning the same linked invoice. Requires `expected_version` and that no blocking issue remains; otherwise `422`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansConvertRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansConvertResponse
@@ -435,7 +435,7 @@ class PurchaseScans
     /**
      * Resolve a duplicate purchase scan
      *
-     * Resolve a scan in `duplicate` status with `resolution` = `link_existing` (link the existing purchase invoice) or `archive`. Duplicate overrides require an authorised user in the Factuarea app; they are not available through the public API or MCP. Requires `expected_version`. Accepts `Idempotency-Key`.
+     * Resolve a scan in `duplicate` status with `resolution` = `link_existing` (link the existing expense) or `archive`. Duplicate overrides require an authorised user in the Factuarea app; they are not available through the public API or MCP. Requires `expected_version`. Accepts `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansDuplicateResolutionResponse
@@ -1038,7 +1038,7 @@ class PurchaseScans
     /**
      * Retrieve a purchase scan
      *
-     * Retrieve a purchase scan by its public `id` (UUID v7): evidence-first extraction (value, confidence and page/bounding-box evidence per field and line), issues, duplicate match, attempts, linked purchase invoice and `available_actions`. The current `version` is required by every mutation.
+     * Retrieve a purchase scan by its public `id` (UUID v7): evidence-first extraction (value, confidence and page/bounding-box evidence per field and line), issues, duplicate match, attempts, linked expense and `available_actions`. The current `version` is required by every mutation.
      *
      * @param  string  $purchaseScan
      * @param  ?LocalDate  $factuareaVersion

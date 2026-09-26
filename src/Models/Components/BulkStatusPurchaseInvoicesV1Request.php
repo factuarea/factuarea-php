@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkStatusPurchaseInvoicesV1Request - Transition several purchase invoices to `new_status` (`paid`) in one request, up to 50 per batch. `ids` is an array of purchase-invoice UUIDs; `payment_date` is required and cannot be in the future. Every transition passes the document state guard, and invoices that cannot transition are returned under `failures[]`. */
+/** BulkStatusPurchaseInvoicesV1Request - Transition several expenses to `new_status` (`paid`) in one request, up to 50 per batch. `ids` is an array of purchase-invoice UUIDs; `payment_date` is required and cannot be in the future. Every transition passes the document state guard, and invoices that cannot transition are returned under `failures[]`. */
 class BulkStatusPurchaseInvoicesV1Request
 {
     /**
