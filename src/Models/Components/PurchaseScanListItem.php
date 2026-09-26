@@ -78,7 +78,7 @@ class PurchaseScanListItem
     public PurchaseScanListItemUploadedBy $uploadedBy;
 
     /**
-     * Incidencias pendientes de revisar.
+     * Number of issues still pending review: one per field, supplier identity counted once, 0 before the first extraction.
      *
      * @var int $issueCount
      */
@@ -176,6 +176,22 @@ class PurchaseScanListItem
     public ?PurchaseScanListItemLastError $lastError;
 
     /**
+     * When set, the scan is waiting for the company daily OCR quota to reset; it will be retried automatically.
+     *
+     * @var ?\DateTime $deferredUntil
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deferred_until')]
+    public ?\DateTime $deferredUntil;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseScanListItemDeferredReason $deferredReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deferred_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseScanListItemDeferredReason|null')]
+    public ?PurchaseScanListItemDeferredReason $deferredReason;
+
+    /**
      * @param  string  $id
      * @param  int  $version
      * @param  \Factuarea\Sdk\Models\Components\PurchaseScanListItemSource  $source
@@ -198,9 +214,11 @@ class PurchaseScanListItem
      * @param  ?string  $total
      * @param  ?string  $purchaseInvoiceId
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanListItemLastError  $lastError
+     * @param  ?\DateTime  $deferredUntil
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanListItemDeferredReason  $deferredReason
      * @phpstan-pure
      */
-    public function __construct(string $id, int $version, PurchaseScanListItemSource $source, PurchaseScanListItemStatus $status, string $originalFilename, string $mimeType, int $pageCount, \DateTime $receivedAt, PurchaseScanListItemUploadedBy $uploadedBy, int $issueCount, array $availableActions, DocumentKind $documentKind, FileKind $fileKind, SupplierLinkState $supplierLinkState, ?string $supplierId = null, ?string $supplierName = null, ?string $documentNumber = null, ?LocalDate $issueDate = null, ?string $currency = null, ?string $total = null, ?string $purchaseInvoiceId = null, ?PurchaseScanListItemLastError $lastError = null)
+    public function __construct(string $id, int $version, PurchaseScanListItemSource $source, PurchaseScanListItemStatus $status, string $originalFilename, string $mimeType, int $pageCount, \DateTime $receivedAt, PurchaseScanListItemUploadedBy $uploadedBy, int $issueCount, array $availableActions, DocumentKind $documentKind, FileKind $fileKind, SupplierLinkState $supplierLinkState, ?string $supplierId = null, ?string $supplierName = null, ?string $documentNumber = null, ?LocalDate $issueDate = null, ?string $currency = null, ?string $total = null, ?string $purchaseInvoiceId = null, ?PurchaseScanListItemLastError $lastError = null, ?\DateTime $deferredUntil = null, ?PurchaseScanListItemDeferredReason $deferredReason = null)
     {
         $this->id = $id;
         $this->version = $version;
@@ -224,5 +242,7 @@ class PurchaseScanListItem
         $this->total = $total;
         $this->purchaseInvoiceId = $purchaseInvoiceId;
         $this->lastError = $lastError;
+        $this->deferredUntil = $deferredUntil;
+        $this->deferredReason = $deferredReason;
     }
 }

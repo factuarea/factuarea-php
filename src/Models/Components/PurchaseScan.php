@@ -78,7 +78,7 @@ class PurchaseScan
     public PurchaseScanUploadedBy $uploadedBy;
 
     /**
-     * Incidencias pendientes de revisar.
+     * Number of issues still pending review: one per field, supplier identity counted once, 0 before the first extraction.
      *
      * @var int $issueCount
      */
@@ -158,7 +158,7 @@ class PurchaseScan
     public array $issues;
 
     /**
-     * $attempts
+     * The 50 most recent processing attempts, newest first. `attempts_total` holds how many there are in all.
      *
      * @var array<\Factuarea\Sdk\Models\Components\PurchaseScanAttempt> $attempts
      */
@@ -167,13 +167,29 @@ class PurchaseScan
     public array $attempts;
 
     /**
-     * $audit
+     * Total number of processing attempts, including those not listed in `attempts`.
+     *
+     * @var int $attemptsTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('attempts_total')]
+    public int $attemptsTotal;
+
+    /**
+     * The 50 most recent audit events, newest first. `audit_total` holds how many there are in all.
      *
      * @var array<\Factuarea\Sdk\Models\Components\PurchaseScanAudit> $audit
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('audit')]
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PurchaseScanAudit>')]
     public array $audit;
+
+    /**
+     * Total number of audit events, including those not listed in `audit`.
+     *
+     * @var int $auditTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('audit_total')]
+    public int $auditTotal;
 
     /**
      * Whether the original file is still retained. It does not depend on the API key permissions: `download_source` can be missing from `available_actions` while this is true.
@@ -327,6 +343,22 @@ class PurchaseScan
     public ?PurchaseScanLastError $lastError;
 
     /**
+     * When set, the scan is waiting for the company daily OCR quota to reset; it will be retried automatically.
+     *
+     * @var ?\DateTime $deferredUntil
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deferred_until')]
+    public ?\DateTime $deferredUntil;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PurchaseScanDeferredReason $deferredReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deferred_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseScanDeferredReason|null')]
+    public ?PurchaseScanDeferredReason $deferredReason;
+
+    /**
      *
      * @var ?int $extractionRevision
      */
@@ -386,7 +418,9 @@ class PurchaseScan
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseScanLine>  $lines
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseScanIssue>  $issues
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseScanAttempt>  $attempts
+     * @param  int  $attemptsTotal
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseScanAudit>  $audit
+     * @param  int  $auditTotal
      * @param  bool  $sourceRetained
      * @param  \Factuarea\Sdk\Models\Components\PurchaseScanReviewFields  $reviewFields
      * @param  \Factuarea\Sdk\Models\Components\PurchaseScanAutomation  $automation
@@ -408,6 +442,8 @@ class PurchaseScan
      * @param  ?string  $total
      * @param  ?string  $purchaseInvoiceId
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanLastError  $lastError
+     * @param  ?\DateTime  $deferredUntil
+     * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanDeferredReason  $deferredReason
      * @param  ?int  $extractionRevision
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanDuplicate  $duplicate
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanLinkedPurchaseInvoice  $linkedPurchaseInvoice
@@ -415,7 +451,7 @@ class PurchaseScan
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanConversionReadiness  $conversionReadiness
      * @phpstan-pure
      */
-    public function __construct(string $id, int $version, PurchaseScanSource $source, PurchaseScanStatus $status, string $originalFilename, string $mimeType, int $pageCount, \DateTime $receivedAt, PurchaseScanUploadedBy $uploadedBy, int $issueCount, array $availableActions, int $fileRevision, int $bytes, \DateTime $updatedAt, PurchaseScanPreview $preview, PurchaseScanReview $review, PurchaseScanExtraction $extraction, array $lines, array $issues, array $attempts, array $audit, bool $sourceRetained, PurchaseScanReviewFields $reviewFields, PurchaseScanAutomation $automation, bool $canSaveReview, bool $canConvert, bool $canLinkExisting, bool $canOverrideDuplicate, bool $canRetry, bool $canReplaceSource, bool $canArchive, bool $canRestore, bool $canDownloadSource, bool $canViewPurchaseInvoice, ?string $supplierId = null, ?string $supplierName = null, ?string $documentNumber = null, ?LocalDate $issueDate = null, ?string $currency = null, ?string $total = null, ?string $purchaseInvoiceId = null, ?PurchaseScanLastError $lastError = null, ?int $extractionRevision = null, ?PurchaseScanDuplicate $duplicate = null, ?PurchaseScanLinkedPurchaseInvoice $linkedPurchaseInvoice = null, ?PurchaseScanSupplierResolution $supplierResolution = null, ?PurchaseScanConversionReadiness $conversionReadiness = null)
+    public function __construct(string $id, int $version, PurchaseScanSource $source, PurchaseScanStatus $status, string $originalFilename, string $mimeType, int $pageCount, \DateTime $receivedAt, PurchaseScanUploadedBy $uploadedBy, int $issueCount, array $availableActions, int $fileRevision, int $bytes, \DateTime $updatedAt, PurchaseScanPreview $preview, PurchaseScanReview $review, PurchaseScanExtraction $extraction, array $lines, array $issues, array $attempts, int $attemptsTotal, array $audit, int $auditTotal, bool $sourceRetained, PurchaseScanReviewFields $reviewFields, PurchaseScanAutomation $automation, bool $canSaveReview, bool $canConvert, bool $canLinkExisting, bool $canOverrideDuplicate, bool $canRetry, bool $canReplaceSource, bool $canArchive, bool $canRestore, bool $canDownloadSource, bool $canViewPurchaseInvoice, ?string $supplierId = null, ?string $supplierName = null, ?string $documentNumber = null, ?LocalDate $issueDate = null, ?string $currency = null, ?string $total = null, ?string $purchaseInvoiceId = null, ?PurchaseScanLastError $lastError = null, ?\DateTime $deferredUntil = null, ?PurchaseScanDeferredReason $deferredReason = null, ?int $extractionRevision = null, ?PurchaseScanDuplicate $duplicate = null, ?PurchaseScanLinkedPurchaseInvoice $linkedPurchaseInvoice = null, ?PurchaseScanSupplierResolution $supplierResolution = null, ?PurchaseScanConversionReadiness $conversionReadiness = null)
     {
         $this->id = $id;
         $this->version = $version;
@@ -437,7 +473,9 @@ class PurchaseScan
         $this->lines = $lines;
         $this->issues = $issues;
         $this->attempts = $attempts;
+        $this->attemptsTotal = $attemptsTotal;
         $this->audit = $audit;
+        $this->auditTotal = $auditTotal;
         $this->sourceRetained = $sourceRetained;
         $this->reviewFields = $reviewFields;
         $this->automation = $automation;
@@ -459,6 +497,8 @@ class PurchaseScan
         $this->total = $total;
         $this->purchaseInvoiceId = $purchaseInvoiceId;
         $this->lastError = $lastError;
+        $this->deferredUntil = $deferredUntil;
+        $this->deferredReason = $deferredReason;
         $this->extractionRevision = $extractionRevision;
         $this->duplicate = $duplicate;
         $this->linkedPurchaseInvoice = $linkedPurchaseInvoice;

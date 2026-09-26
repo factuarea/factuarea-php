@@ -541,11 +541,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 422, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1PurchaseScansDuplicateResolution
 
@@ -732,7 +732,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansRestore
 
-Return an archived scan to its previous state. Check `available_actions` before reviewing or converting; restoring does not recover a purged original. Requires `expected_version`. Accepts `Idempotency-Key`.
+Return an archived scan to its previous restorable state; interrupted processing resumes from `queued`, and interrupted automatic conversion returns to `needs_review`. Check `available_actions` before reviewing or converting; restoring does not recover a purged original. Requires `expected_version`. Accepts `Idempotency-Key`.
 
 ### Example Usage: api_key_revoked
 
@@ -1090,7 +1090,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansReview
 
-Persist the human corrections of a scan in `needs_review`: supplier, fiscal header, lines and notes, each field marked as verified. Requires `expected_version`; a stale version responds `409` and the latest version must be reloaded. Returns the updated scan.
+Persist the human corrections of a scan in `needs_review`: supplier, fiscal header, lines and notes, each field marked as verified. Requires `expected_version`; a stale version responds `409` and the latest version must be reloaded. Returns the updated scan. Malformed payloads return `422` before version comparison.
 
 ### Example Usage: api_key_revoked
 
@@ -1265,7 +1265,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansList
 
-List the documents received by the purchase scanner (upload, API or mailbox) with their lifecycle status, extraction issues and `available_actions`. Filter by `status`, `source` and date range; cursor-based pagination.
+List the documents received by the purchase scanner (upload, API or mailbox) with their lifecycle status, extraction issues and `available_actions`. Use `filter[status]`, `filter[source]` and the documented date/range filters; cursor-based pagination.
 
 ### Example Usage
 
@@ -1314,11 +1314,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 422, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1PurchaseScansCreate
 

@@ -9,9 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-enum SavePurchaseScanReviewV1RequestValue3: string
+enum PurchaseScanListItemDeferredReason: string
 {
-    case Iva = 'iva';
-    case Igic = 'igic';
-    case Ipsi = 'ipsi';
+    case OcrDailyQuotaReached = 'ocr_daily_quota_reached';
 }

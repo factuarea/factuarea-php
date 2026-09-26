@@ -13,10 +13,11 @@ class SavePurchaseScanReviewV1RequestExemptionReason2
 {
     /**
      *
-     * @var ?string $value
+     * @var ?\Factuarea\Sdk\Models\Components\ExemptionReasonValue2 $value
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('value')]
-    public ?string $value;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ExemptionReasonValue2|null')]
+    public ?ExemptionReasonValue2 $value;
 
     /**
      * $issueCodes
@@ -29,11 +30,11 @@ class SavePurchaseScanReviewV1RequestExemptionReason2
     public ?array $issueCodes = null;
 
     /**
-     * @param  ?string  $value
+     * @param  ?\Factuarea\Sdk\Models\Components\ExemptionReasonValue2  $value
      * @param  ?array<\Factuarea\Sdk\Models\Components\ExemptionReasonIssueCode2>  $issueCodes
      * @phpstan-pure
      */
-    public function __construct(?string $value = null, ?array $issueCodes = null)
+    public function __construct(?ExemptionReasonValue2 $value = null, ?array $issueCodes = null)
     {
         $this->value = $value;
         $this->issueCodes = $issueCodes;

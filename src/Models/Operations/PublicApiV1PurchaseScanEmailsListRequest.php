@@ -36,6 +36,13 @@ class PublicApiV1PurchaseScanEmailsListRequest
 
     /**
      *
+     * @var ?string $resultQueryParameter1
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=result')]
+    public ?string $resultQueryParameter1 = null;
+
+    /**
+     *
      * @var ?LocalDate $createdGte
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=created[gte],dateTimeFormat=Y-m-d')]
@@ -47,13 +54,6 @@ class PublicApiV1PurchaseScanEmailsListRequest
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=created[lte],dateTimeFormat=Y-m-d')]
     public ?LocalDate $createdLte = null;
-
-    /**
-     *
-     * @var ?string $resultQueryParameter1
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=result')]
-    public ?string $resultQueryParameter1 = null;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -82,22 +82,22 @@ class PublicApiV1PurchaseScanEmailsListRequest
      * @param  ?int  $limit
      * @param  ?string  $search
      * @param  ?array<\Factuarea\Sdk\Models\Operations\Result>  $resultQueryParameter
+     * @param  ?string  $resultQueryParameter1
      * @param  ?LocalDate  $createdGte
      * @param  ?LocalDate  $createdLte
-     * @param  ?string  $resultQueryParameter1
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(?int $limit = null, ?string $search = null, ?array $resultQueryParameter = null, ?LocalDate $createdGte = null, ?LocalDate $createdLte = null, ?string $resultQueryParameter1 = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null)
+    public function __construct(?int $limit = null, ?string $search = null, ?array $resultQueryParameter = null, ?string $resultQueryParameter1 = null, ?LocalDate $createdGte = null, ?LocalDate $createdLte = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null)
     {
         $this->limit = $limit;
         $this->search = $search;
         $this->resultQueryParameter = $resultQueryParameter;
+        $this->resultQueryParameter1 = $resultQueryParameter1;
         $this->createdGte = $createdGte;
         $this->createdLte = $createdLte;
-        $this->resultQueryParameter1 = $resultQueryParameter1;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;

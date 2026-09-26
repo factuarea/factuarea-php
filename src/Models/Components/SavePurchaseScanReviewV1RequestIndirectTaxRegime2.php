@@ -13,11 +13,11 @@ class SavePurchaseScanReviewV1RequestIndirectTaxRegime2
 {
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestValue2 $value
+     * @var ?\Factuarea\Sdk\Models\Components\IndirectTaxRegimeValue2 $value
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('value')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestValue2|null')]
-    public ?SavePurchaseScanReviewV1RequestValue2 $value;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\IndirectTaxRegimeValue2|null')]
+    public ?IndirectTaxRegimeValue2 $value;
 
     /**
      * $issueCodes
@@ -30,11 +30,11 @@ class SavePurchaseScanReviewV1RequestIndirectTaxRegime2
     public ?array $issueCodes = null;
 
     /**
-     * @param  ?\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestValue2  $value
+     * @param  ?\Factuarea\Sdk\Models\Components\IndirectTaxRegimeValue2  $value
      * @param  ?array<\Factuarea\Sdk\Models\Components\IndirectTaxRegimeIssueCode2>  $issueCodes
      * @phpstan-pure
      */
-    public function __construct(?SavePurchaseScanReviewV1RequestValue2 $value = null, ?array $issueCodes = null)
+    public function __construct(?IndirectTaxRegimeValue2 $value = null, ?array $issueCodes = null)
     {
         $this->value = $value;
         $this->issueCodes = $issueCodes;

@@ -28,8 +28,9 @@ entirely in `src/Custom/` for this reason.
 ## The pinned spec
 
 `spec/openapi.json` is a copy of the Factuarea public OpenAPI document, pinned to
-commit **`e822661bc`** of the private `factuarea` repository
-(`backend/public/docs/openapi-public.json`, OpenAPI 3.1, 234 operations). It is
+the reviewed contract of `factuarea-app` PR **#1010**
+(`backend/public/docs/openapi-public.json`, OpenAPI 3.1, 483 operations).
+The pinned file SHA-256 is `bab124475f7a657bc1f8076bf92a530fb9aa40e72985e9f5db22ed004dc6c114`. It is
 committed so the SDK is fully reproducible from this repo alone.
 
 To update the SDK to a newer API version, replace `spec/openapi.json` with the new

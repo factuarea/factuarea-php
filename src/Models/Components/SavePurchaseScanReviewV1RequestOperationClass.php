@@ -13,10 +13,11 @@ class SavePurchaseScanReviewV1RequestOperationClass
 {
     /**
      *
-     * @var ?string $value
+     * @var ?\Factuarea\Sdk\Models\Components\OperationClassValue $value
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('value')]
-    public ?string $value;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\OperationClassValue|null')]
+    public ?OperationClassValue $value;
 
     /**
      * $issueCodes
@@ -29,11 +30,11 @@ class SavePurchaseScanReviewV1RequestOperationClass
     public ?array $issueCodes = null;
 
     /**
-     * @param  ?string  $value
+     * @param  ?\Factuarea\Sdk\Models\Components\OperationClassValue  $value
      * @param  ?array<\Factuarea\Sdk\Models\Components\OperationClassIssueCode>  $issueCodes
      * @phpstan-pure
      */
-    public function __construct(?string $value = null, ?array $issueCodes = null)
+    public function __construct(?OperationClassValue $value = null, ?array $issueCodes = null)
     {
         $this->value = $value;
         $this->issueCodes = $issueCodes;

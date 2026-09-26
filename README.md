@@ -1197,7 +1197,7 @@ if ($response->object !== null) {
 * [publicApiV1WorkSchedulesAssign](docs/sdks/workschedules/README.md#publicapiv1workschedulesassign) - Assign a schedule to an employee
 * [publicApiV1WorkSchedulesCreate](docs/sdks/workschedules/README.md#publicapiv1workschedulescreate) - Create a work schedule
 * [publicApiV1WorkSchedulesList](docs/sdks/workschedules/README.md#publicapiv1workscheduleslist) - List all work schedules
-* [publicApiV1WorkSchedulesEmployeeSchedule](docs/sdks/workschedules/README.md#publicapiv1workschedulesemployeeschedule) - Get an employee’s current schedule
+* [publicApiV1WorkSchedulesEmployeeSchedule](docs/sdks/workschedules/README.md#publicapiv1workschedulesemployeeschedule) - Get an employee’s schedule on a date
 * [publicApiV1WorkSchedulesStats](docs/sdks/workschedules/README.md#publicapiv1workschedulesstats) - Get work schedule stats
 * [publicApiV1WorkSchedulesAssignments](docs/sdks/workschedules/README.md#publicapiv1workschedulesassignments) - List a schedule’s assignments
 * [publicApiV1WorkSchedulesShow](docs/sdks/workschedules/README.md#publicapiv1workschedulesshow) - Retrieve a work schedule

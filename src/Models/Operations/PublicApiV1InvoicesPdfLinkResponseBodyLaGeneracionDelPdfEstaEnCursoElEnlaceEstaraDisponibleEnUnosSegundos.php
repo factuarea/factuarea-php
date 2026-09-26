@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos - The PDF has not been generated yet: its generation is enqueued and the response reports the `pendiente` status. Retry shortly to obtain the link (200). */
+/** PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos - The PDF has not been generated yet: its generation is enqueued and the response reports the `pendiente` status and a signed `pdf_url` that answers 404 until the PDF is ready. Retry shortly to obtain the link (200). */
 class PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos
 {
     /**

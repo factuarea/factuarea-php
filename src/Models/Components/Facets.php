@@ -52,6 +52,15 @@ class Facets
     public BySupplierLinkState $bySupplierLinkState;
 
     /**
+     * Suppliers with at least one linked scan in scope, ordered by count desc then name asc, capped at 100.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\BySupplier> $bySupplier
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('by_supplier')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BySupplier>')]
+    public array $bySupplier;
+
+    /**
      *
      * @var int $withIssues
      */
@@ -64,16 +73,18 @@ class Facets
      * @param  \Factuarea\Sdk\Models\Components\ByDocumentKind  $byDocumentKind
      * @param  \Factuarea\Sdk\Models\Components\ByFileKind  $byFileKind
      * @param  \Factuarea\Sdk\Models\Components\BySupplierLinkState  $bySupplierLinkState
+     * @param  array<\Factuarea\Sdk\Models\Components\BySupplier>  $bySupplier
      * @param  int  $withIssues
      * @phpstan-pure
      */
-    public function __construct(PurchaseScanStatsByStatus $byStatus, BySource $bySource, ByDocumentKind $byDocumentKind, ByFileKind $byFileKind, BySupplierLinkState $bySupplierLinkState, int $withIssues)
+    public function __construct(PurchaseScanStatsByStatus $byStatus, BySource $bySource, ByDocumentKind $byDocumentKind, ByFileKind $byFileKind, BySupplierLinkState $bySupplierLinkState, array $bySupplier, int $withIssues)
     {
         $this->byStatus = $byStatus;
         $this->bySource = $bySource;
         $this->byDocumentKind = $byDocumentKind;
         $this->byFileKind = $byFileKind;
         $this->bySupplierLinkState = $bySupplierLinkState;
+        $this->bySupplier = $bySupplier;
         $this->withIssues = $withIssues;
     }
 }

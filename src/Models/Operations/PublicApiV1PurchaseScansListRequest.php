@@ -95,30 +95,6 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $filterSender = null;
 
     /**
-     * $filterCreated
-     *
-     * @var ?array<LocalDate> $filterCreated
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[created][]')]
-    public ?array $filterCreated = null;
-
-    /**
-     * $filterIssuedOn
-     *
-     * @var ?array<LocalDate> $filterIssuedOn
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[issued_on][]')]
-    public ?array $filterIssuedOn = null;
-
-    /**
-     * $filterTotal
-     *
-     * @var ?array<string> $filterTotal
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[total][]')]
-    public ?array $filterTotal = null;
-
-    /**
      *
      * @var ?string $filterSourceQueryParameter1
      */
@@ -152,6 +128,111 @@ class PublicApiV1PurchaseScansListRequest
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[supplier_id]')]
     public ?string $filterSupplierIdQueryParameter1 = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterCreatedEq
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[created][eq],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterCreatedEq = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterCreatedGt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[created][gt],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterCreatedGt = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterCreatedGte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[created][gte],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterCreatedGte = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterCreatedLt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[created][lt],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterCreatedLt = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterCreatedLte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[created][lte],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterCreatedLte = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterIssuedOnEq
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[issued_on][eq],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterIssuedOnEq = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterIssuedOnGt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[issued_on][gt],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterIssuedOnGt = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterIssuedOnGte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[issued_on][gte],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterIssuedOnGte = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterIssuedOnLt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[issued_on][lt],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterIssuedOnLt = null;
+
+    /**
+     *
+     * @var ?LocalDate $filterIssuedOnLte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[issued_on][lte],dateTimeFormat=Y-m-d')]
+    public ?LocalDate $filterIssuedOnLte = null;
+
+    /**
+     *
+     * @var ?string $filterTotalEq
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[total][eq]')]
+    public ?string $filterTotalEq = null;
+
+    /**
+     *
+     * @var ?string $filterTotalGt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[total][gt]')]
+    public ?string $filterTotalGt = null;
+
+    /**
+     *
+     * @var ?string $filterTotalGte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[total][gte]')]
+    public ?string $filterTotalGte = null;
+
+    /**
+     *
+     * @var ?string $filterTotalLt
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[total][lt]')]
+    public ?string $filterTotalLt = null;
+
+    /**
+     *
+     * @var ?string $filterTotalLte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[total][lte]')]
+    public ?string $filterTotalLte = null;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -195,21 +276,33 @@ class PublicApiV1PurchaseScansListRequest
      * @param  ?array<\Factuarea\Sdk\Models\Operations\FilterSupplierLinkState>  $filterSupplierLinkStateQueryParameter
      * @param  ?bool  $filterHasIssues
      * @param  ?string  $filterSender
-     * @param  ?array<LocalDate>  $filterCreated
-     * @param  ?array<LocalDate>  $filterIssuedOn
-     * @param  ?array<string>  $filterTotal
      * @param  ?string  $filterSourceQueryParameter1
      * @param  ?string  $filterDocumentKindQueryParameter1
      * @param  ?string  $filterFileKindQueryParameter1
      * @param  ?string  $filterSupplierLinkStateQueryParameter1
      * @param  ?string  $filterSupplierIdQueryParameter1
+     * @param  ?LocalDate  $filterCreatedEq
+     * @param  ?LocalDate  $filterCreatedGt
+     * @param  ?LocalDate  $filterCreatedGte
+     * @param  ?LocalDate  $filterCreatedLt
+     * @param  ?LocalDate  $filterCreatedLte
+     * @param  ?LocalDate  $filterIssuedOnEq
+     * @param  ?LocalDate  $filterIssuedOnGt
+     * @param  ?LocalDate  $filterIssuedOnGte
+     * @param  ?LocalDate  $filterIssuedOnLt
+     * @param  ?LocalDate  $filterIssuedOnLte
+     * @param  ?string  $filterTotalEq
+     * @param  ?string  $filterTotalGt
+     * @param  ?string  $filterTotalGte
+     * @param  ?string  $filterTotalLt
+     * @param  ?string  $filterTotalLte
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
      * @phpstan-pure
      */
-    public function __construct(?int $limit = null, ?string $search = null, ?PublicApiV1PurchaseScansListSort $sort = null, ?FilterStatus $filterStatus = null, ?array $filterSourceQueryParameter = null, ?array $filterSupplierIdQueryParameter = null, ?array $filterDocumentKindQueryParameter = null, ?array $filterFileKindQueryParameter = null, ?array $filterSupplierLinkStateQueryParameter = null, ?bool $filterHasIssues = null, ?string $filterSender = null, ?array $filterCreated = null, ?array $filterIssuedOn = null, ?array $filterTotal = null, ?string $filterSourceQueryParameter1 = null, ?string $filterDocumentKindQueryParameter1 = null, ?string $filterFileKindQueryParameter1 = null, ?string $filterSupplierLinkStateQueryParameter1 = null, ?string $filterSupplierIdQueryParameter1 = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?string $endingBefore = null)
+    public function __construct(?int $limit = null, ?string $search = null, ?PublicApiV1PurchaseScansListSort $sort = null, ?FilterStatus $filterStatus = null, ?array $filterSourceQueryParameter = null, ?array $filterSupplierIdQueryParameter = null, ?array $filterDocumentKindQueryParameter = null, ?array $filterFileKindQueryParameter = null, ?array $filterSupplierLinkStateQueryParameter = null, ?bool $filterHasIssues = null, ?string $filterSender = null, ?string $filterSourceQueryParameter1 = null, ?string $filterDocumentKindQueryParameter1 = null, ?string $filterFileKindQueryParameter1 = null, ?string $filterSupplierLinkStateQueryParameter1 = null, ?string $filterSupplierIdQueryParameter1 = null, ?LocalDate $filterCreatedEq = null, ?LocalDate $filterCreatedGt = null, ?LocalDate $filterCreatedGte = null, ?LocalDate $filterCreatedLt = null, ?LocalDate $filterCreatedLte = null, ?LocalDate $filterIssuedOnEq = null, ?LocalDate $filterIssuedOnGt = null, ?LocalDate $filterIssuedOnGte = null, ?LocalDate $filterIssuedOnLt = null, ?LocalDate $filterIssuedOnLte = null, ?string $filterTotalEq = null, ?string $filterTotalGt = null, ?string $filterTotalGte = null, ?string $filterTotalLt = null, ?string $filterTotalLte = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?string $endingBefore = null)
     {
         $this->limit = $limit;
         $this->search = $search;
@@ -222,14 +315,26 @@ class PublicApiV1PurchaseScansListRequest
         $this->filterSupplierLinkStateQueryParameter = $filterSupplierLinkStateQueryParameter;
         $this->filterHasIssues = $filterHasIssues;
         $this->filterSender = $filterSender;
-        $this->filterCreated = $filterCreated;
-        $this->filterIssuedOn = $filterIssuedOn;
-        $this->filterTotal = $filterTotal;
         $this->filterSourceQueryParameter1 = $filterSourceQueryParameter1;
         $this->filterDocumentKindQueryParameter1 = $filterDocumentKindQueryParameter1;
         $this->filterFileKindQueryParameter1 = $filterFileKindQueryParameter1;
         $this->filterSupplierLinkStateQueryParameter1 = $filterSupplierLinkStateQueryParameter1;
         $this->filterSupplierIdQueryParameter1 = $filterSupplierIdQueryParameter1;
+        $this->filterCreatedEq = $filterCreatedEq;
+        $this->filterCreatedGt = $filterCreatedGt;
+        $this->filterCreatedGte = $filterCreatedGte;
+        $this->filterCreatedLt = $filterCreatedLt;
+        $this->filterCreatedLte = $filterCreatedLte;
+        $this->filterIssuedOnEq = $filterIssuedOnEq;
+        $this->filterIssuedOnGt = $filterIssuedOnGt;
+        $this->filterIssuedOnGte = $filterIssuedOnGte;
+        $this->filterIssuedOnLt = $filterIssuedOnLt;
+        $this->filterIssuedOnLte = $filterIssuedOnLte;
+        $this->filterTotalEq = $filterTotalEq;
+        $this->filterTotalGt = $filterTotalGt;
+        $this->filterTotalGte = $filterTotalGte;
+        $this->filterTotalLt = $filterTotalLt;
+        $this->filterTotalLte = $filterTotalLte;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;

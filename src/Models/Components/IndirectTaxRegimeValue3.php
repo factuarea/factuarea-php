@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-enum SavePurchaseScanReviewV1RequestValue2: string
+enum IndirectTaxRegimeValue3: string
 {
     case Iva = 'iva';
     case Igic = 'igic';

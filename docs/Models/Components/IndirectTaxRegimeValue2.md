@@ -1,4 +1,4 @@
-# SavePurchaseScanReviewV1RequestValue2
+# IndirectTaxRegimeValue2
 
 
 ## Values

@@ -556,7 +556,7 @@ class PurchaseScans
     /**
      * List purchase scans
      *
-     * List the documents received by the purchase scanner (upload, API or mailbox) with their lifecycle status, extraction issues and `available_actions`. Filter by `status`, `source` and date range; cursor-based pagination.
+     * List the documents received by the purchase scanner (upload, API or mailbox) with their lifecycle status, extraction issues and `available_actions`. Use `filter[status]`, `filter[source]` and the documented date/range filters; cursor-based pagination.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListResponse
@@ -639,7 +639,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -675,7 +675,7 @@ class PurchaseScans
     /**
      * Restore an archived purchase scan
      *
-     * Return an archived scan to its previous state. Check `available_actions` before reviewing or converting; restoring does not recover a purged original. Requires `expected_version`. Accepts `Idempotency-Key`.
+     * Return an archived scan to its previous restorable state; interrupted processing resumes from `queued`, and interrupted automatic conversion returns to `needs_review`. Check `available_actions` before reviewing or converting; restoring does not recover a purged original. Requires `expected_version`. Accepts `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansRestoreRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansRestoreResponse
@@ -917,7 +917,7 @@ class PurchaseScans
     /**
      * Save the review of a purchase scan
      *
-     * Persist the human corrections of a scan in `needs_review`: supplier, fiscal header, lines and notes, each field marked as verified. Requires `expected_version`; a stale version responds `409` and the latest version must be reloaded. Returns the updated scan.
+     * Persist the human corrections of a scan in `needs_review`: supplier, fiscal header, lines and notes, each field marked as verified. Requires `expected_version`; a stale version responds `409` and the latest version must be reloaded. Returns the updated scan. Malformed payloads return `422` before version comparison.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansReviewRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansReviewResponse
@@ -1393,7 +1393,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
