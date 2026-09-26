@@ -14,11 +14,17 @@ enum CreateApiKeyV1RequestScope: string
     case ContactsRead = 'contacts:read';
     case ContactsWrite = 'contacts:write';
     case ContactsDelete = 'contacts:delete';
+    case ClientsRead = 'clients:read';
+    case ClientsWrite = 'clients:write';
+    case ClientsDelete = 'clients:delete';
     case ProductsRead = 'products:read';
     case ProductsWrite = 'products:write';
     case ProductsDelete = 'products:delete';
     case PriceListsRead = 'price_lists:read';
     case PriceListsWrite = 'price_lists:write';
+    case SuppliersRead = 'suppliers:read';
+    case SuppliersWrite = 'suppliers:write';
+    case SuppliersDelete = 'suppliers:delete';
     case InvoicesRead = 'invoices:read';
     case InvoicesWrite = 'invoices:write';
     case InvoicesDelete = 'invoices:delete';

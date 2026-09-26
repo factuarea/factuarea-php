@@ -36,15 +36,25 @@ class PublicApiV1WorkSchedulesEmployeeScheduleRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * Date (Y-m-d) on which the employee's effective schedule is resolved; defaults to today when omitted.
+     *
+     * @var ?LocalDate $date
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date,dateTimeFormat=Y-m-d')]
+    public ?LocalDate $date = null;
+
+    /**
      * @param  string  $employee
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
+     * @param  ?LocalDate  $date
      * @phpstan-pure
      */
-    public function __construct(string $employee, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $employee, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?LocalDate $date = null)
     {
         $this->employee = $employee;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
+        $this->date = $date;
     }
 }

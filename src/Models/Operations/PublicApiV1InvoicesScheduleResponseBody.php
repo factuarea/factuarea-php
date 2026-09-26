@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1InvoicesScheduleResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * An invoice (compliant with Spanish AEAT VeriFactu).
      *
      * @var \Factuarea\Sdk\Models\Components\Invoice $data
      */

@@ -4,28 +4,29 @@
 
 ### Available Operations
 
-* [publicApiV1PurchaseInvoicesAttachFile](#publicapiv1purchaseinvoicesattachfile) - Attach a file to a purchase invoice
-* [publicApiV1PurchaseInvoicesBulkDelete](#publicapiv1purchaseinvoicesbulkdelete) - Bulk delete purchase invoices
-* [publicApiV1PurchaseInvoicesBulkStatus](#publicapiv1purchaseinvoicesbulkstatus) - Bulk change purchase invoice status
-* [publicApiV1PurchaseInvoicesCreate](#publicapiv1purchaseinvoicescreate) - Create a purchase invoice
-* [publicApiV1PurchaseInvoicesList](#publicapiv1purchaseinvoiceslist) - List all purchase invoices
-* [publicApiV1PurchaseInvoicesDelete](#publicapiv1purchaseinvoicesdelete) - Delete a purchase invoice
-* [publicApiV1PurchaseInvoicesShow](#publicapiv1purchaseinvoicesshow) - Retrieve a purchase invoice
-* [publicApiV1PurchaseInvoicesUpdate](#publicapiv1purchaseinvoicesupdate) - Update a purchase invoice
-* [publicApiV1PurchaseInvoicesDeleteFile](#publicapiv1purchaseinvoicesdeletefile) - Remove a purchase invoice file
-* [publicApiV1PurchaseInvoicesFile](#publicapiv1purchaseinvoicesfile) - Download the original purchase invoice file
-* [publicApiV1PurchaseInvoicesPaymentReceipt](#publicapiv1purchaseinvoicespaymentreceipt) - Download a purchase invoice payment receipt
-* [publicApiV1PurchaseInvoicesFindByExternalId](#publicapiv1purchaseinvoicesfindbyexternalid) - Find a purchase invoice by external ID
-* [publicApiV1PurchaseInvoicesStats](#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
-* [publicApiV1PurchaseInvoicesOverdue](#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
-* [publicApiV1PurchaseInvoicesPending](#publicapiv1purchaseinvoicespending) - List pending purchase invoices
-* [publicApiV1PurchaseInvoicesListPayments](#publicapiv1purchaseinvoiceslistpayments) - List purchase invoice payments
-* [publicApiV1PurchaseInvoicesRegisterPayment](#publicapiv1purchaseinvoicesregisterpayment) - Register a purchase invoice payment
-* [publicApiV1PurchaseInvoicesMarkPaid](#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
+* [publicApiV1PurchaseInvoicesAttachFile](#publicapiv1purchaseinvoicesattachfile) - Attach a file to an expense
+* [publicApiV1PurchaseInvoicesBulkDelete](#publicapiv1purchaseinvoicesbulkdelete) - Bulk delete expenses
+* [publicApiV1PurchaseInvoicesBulkStatus](#publicapiv1purchaseinvoicesbulkstatus) - Bulk change expense status
+* [publicApiV1PurchaseInvoicesCreate](#publicapiv1purchaseinvoicescreate) - Create an expense
+* [publicApiV1PurchaseInvoicesList](#publicapiv1purchaseinvoiceslist) - List all expenses
+* [publicApiV1PurchaseInvoicesDelete](#publicapiv1purchaseinvoicesdelete) - Delete an expense
+* [publicApiV1PurchaseInvoicesShow](#publicapiv1purchaseinvoicesshow) - Retrieve an expense
+* [publicApiV1PurchaseInvoicesUpdate](#publicapiv1purchaseinvoicesupdate) - Update an expense
+* [publicApiV1PurchaseInvoicesDeleteFile](#publicapiv1purchaseinvoicesdeletefile) - Remove an expense file
+* [publicApiV1PurchaseInvoicesFile](#publicapiv1purchaseinvoicesfile) - Download the original expense file
+* [publicApiV1PurchaseInvoicesPaymentReceipt](#publicapiv1purchaseinvoicespaymentreceipt) - Download an expense payment receipt
+* [publicApiV1PurchaseInvoicesFindByExternalId](#publicapiv1purchaseinvoicesfindbyexternalid) - Find an expense by external ID
+* [publicApiV1PurchaseInvoicesStats](#publicapiv1purchaseinvoicesstats) - Get expense stats
+* [publicApiV1PurchaseInvoicesExpenseCategories](#publicapiv1purchaseinvoicesexpensecategories) - List expense categories
+* [publicApiV1PurchaseInvoicesOverdue](#publicapiv1purchaseinvoicesoverdue) - List overdue expenses
+* [publicApiV1PurchaseInvoicesPending](#publicapiv1purchaseinvoicespending) - List pending expenses
+* [publicApiV1PurchaseInvoicesListPayments](#publicapiv1purchaseinvoiceslistpayments) - List expense payments
+* [publicApiV1PurchaseInvoicesRegisterPayment](#publicapiv1purchaseinvoicesregisterpayment) - Register an expense payment
+* [publicApiV1PurchaseInvoicesMarkPaid](#publicapiv1purchaseinvoicesmarkpaid) - Mark expense as paid
 
 ## publicApiV1PurchaseInvoicesAttachFile
 
-Upload the original PDF document for a purchase invoice as `multipart/form-data`. Replaces any previously attached file. Returns the updated purchase invoice.
+Upload the original PDF document for an expense as `multipart/form-data`. Replaces any previously attached file. Returns the updated expense.
 
 ### Example Usage: api_key_revoked
 
@@ -216,7 +217,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesBulkDelete
 
-Delete up to 100 purchase invoices by UUID in a single request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
+Delete up to 100 expenses by UUID in a single request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
 
 ### Example Usage: api_key_revoked
 
@@ -394,7 +395,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesBulkStatus
 
-Transition up to 50 purchase invoices (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every invoice (never `now()`). Returns a `BulkPartialSuccessResult`; invoices that could not transition (not found or already paid) come back in `failures[]`.
+Transition up to 50 expenses (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every invoice (never `now()`). Returns a `BulkPartialSuccessResult`; invoices that could not transition (not found or already paid) come back in `failures[]`.
 
 ### Example Usage: api_key_revoked
 
@@ -798,7 +799,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesList
 
-List purchase invoices received from suppliers with cursor-based pagination.
+List expenses recorded from suppliers with cursor-based pagination.
 
 ### Example Usage
 
@@ -856,7 +857,7 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1PurchaseInvoicesDelete
 
-Delete a purchase invoice.
+Delete an expense.
 
 ### Example Usage
 
@@ -916,7 +917,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1PurchaseInvoicesShow
 
-Retrieve a purchase invoice by its `uuid`.
+Retrieve an expense by its `uuid`.
 
 ### Example Usage
 
@@ -974,7 +975,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesUpdate
 
-Update a purchase invoice.
+Update an expense.
 
 ### Example Usage: api_key_revoked
 
@@ -1165,7 +1166,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesDeleteFile
 
-Delete the original file attached to a purchase invoice and release its storage. Idempotent: succeeds even when no file was attached.
+Delete the original file attached to an expense and release its storage. Idempotent: succeeds even when no file was attached.
 
 ### Example Usage
 
@@ -1225,7 +1226,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1PurchaseInvoicesFile
 
-Stream the original file attached to the purchase invoice when it was uploaded — a PDF or a scanned image (`image/jpeg`, `image/png`), the formats accepted on upload. Returns 404 if no attachment is present.
+Stream the original file attached to the expense when it was uploaded — a PDF or a scanned image (`image/jpeg`, `image/png`), the formats accepted on upload. Returns 404 if no attachment is present.
 
 ### Example Usage
 
@@ -1283,7 +1284,7 @@ if ($response->twoHundredApplicationPdfBytes !== null) {
 
 ## publicApiV1PurchaseInvoicesPaymentReceipt
 
-Stream the PDF payment receipt for a paid purchase invoice. Returns 409 if the invoice has not been paid yet.
+Stream the PDF payment receipt for a paid expense. Returns 409 if the invoice has not been paid yet.
 
 ### Example Usage
 
@@ -1341,7 +1342,7 @@ if ($response->bytes !== null) {
 
 ## publicApiV1PurchaseInvoicesFindByExternalId
 
-Look up a single purchase invoice by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Orthogonal to the supplier-provided `external_invoice_number` (the vendor's fiscal number). Returns the matching purchase invoice or 404 `purchase_invoice_not_found` if none uses that external_id within your company.
+Look up a single expense by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Orthogonal to the supplier-provided `external_invoice_number` (the vendor's fiscal number). Returns the matching expense or 404 `purchase_invoice_not_found` if none uses that external_id within your company.
 
 ### Example Usage: api_key_revoked
 
@@ -1506,7 +1507,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesStats
 
-Aggregated KPIs for your purchase invoices: total count and amount, counts per status, pending and overdue totals, and amounts by supplier. Returned as `{ "data": PurchaseInvoiceStats }`.
+Aggregated KPIs for your expenses: total count and amount, counts per status, pending and overdue totals, and amounts by supplier. Returned as `{ "data": PurchaseInvoiceStats }`.
 
 ### Example Usage
 
@@ -1560,9 +1561,65 @@ if ($response->object !== null) {
 | Errors\Error        | 500                 | application/json    |
 | Errors\APIException | 4XX, 5XX            | \*/\*               |
 
+## publicApiV1PurchaseInvoicesExpenseCategories
+
+List the expense categories available to your company. Use the returned `id` as the scanner review field `expense_category`. The complete catalog is returned in `data`, without pagination.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.expense_categories" method="get" path="/purchase_invoices/expense_categories" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesExpenseCategories(
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
+| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesResponse](../../Models/Operations/PublicApiV1PurchaseInvoicesExpenseCategoriesResponse.md)**
+
+### Errors
+
+| Error Type          | Status Code         | Content Type        |
+| ------------------- | ------------------- | ------------------- |
+| Errors\Error        | 401, 403, 429       | application/json    |
+| Errors\Error        | 500                 | application/json    |
+| Errors\APIException | 4XX, 5XX            | \*/\*               |
+
 ## publicApiV1PurchaseInvoicesOverdue
 
-Return purchase invoices whose due date has passed and are still unpaid.
+Return expenses whose due date has passed and are still unpaid.
 
 ### Example Usage
 
@@ -1619,7 +1676,7 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1PurchaseInvoicesPending
 
-Return purchase invoices in pending payment status, paginated.
+Return expenses in pending payment status, paginated.
 
 ### Example Usage
 
@@ -1676,7 +1733,7 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1PurchaseInvoicesListPayments
 
-Return the full payment ledger of a purchase invoice as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single invoice is bounded, so the complete set is returned without cursor pagination. An invoice with no payments returns an empty array, never a `404`; a `404` here means the invoice does not exist or belongs to another company.
+Return the full payment ledger of an expense as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single invoice is bounded, so the complete set is returned without cursor pagination. An invoice with no payments returns an empty array, never a `404`; a `404` here means the invoice does not exist or belongs to another company.
 
 ### Example Usage
 
@@ -1734,7 +1791,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesRegisterPayment
 
-Record a partial (or total) payment against a purchase invoice and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the invoice issue date and today, and a cancelled invoice accepts no payments. Once the accumulated payments cover the total, the invoice settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
+Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the invoice issue date and today, and a cancelled invoice accepts no payments. Once the accumulated payments cover the total, the invoice settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
 
 ### Example Usage: api_key_revoked
 
@@ -1919,7 +1976,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesMarkPaid
 
-Record payment of a purchase invoice using the optional `paid_on` date. When a draft invoice contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending invoice has already registered them, so marking it as paid never duplicates stock.
+Record payment of an expense using the optional `paid_on` date. When a draft expense contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending expense has already registered them, so marking it as paid never duplicates stock.
 
 ### Example Usage
 

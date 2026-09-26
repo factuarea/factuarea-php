@@ -178,7 +178,7 @@ class UpdateInvoiceRequestLine
     public ?string $sourceInvoiceReference = null;
 
     /**
-     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own purchase invoices that back it. A purchase invoice of another company is rejected with 422.
+     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own expenses that back it. An expense of another company is rejected with 422.
      *
      * @var ?array<string> $sourceInvoiceIds
      */

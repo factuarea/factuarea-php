@@ -699,7 +699,7 @@ class DeliveryNotes
     /**
      * Convert delivery note to invoice
      *
-     * Convert a delivery note into a sales invoice. The delivery note moves to `invoiced` with `converted_to_id` populated and the new invoice is returned under `data`. Only `target=invoice` is supported.
+     * Convert a delivery note into an invoice. The delivery note moves to `invoiced` with `converted_to_id` populated and the new invoice is returned under `data`. Only `target=invoice` is supported.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesConvertRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesConvertResponse

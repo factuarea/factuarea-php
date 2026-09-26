@@ -27,9 +27,10 @@ use Psr\Http\Message\RequestInterface;
  * that is transparently retried after a 5xx keeps its key, making the retry
  * idempotent end-to-end.
  *
- * Callers may always override this by passing an explicit `idempotencyKey`
- * argument to a generated operation; in that case the header is already present
- * and this hook leaves it untouched.
+ * For Speakeasy-generated operations, use {@see IdempotencyClient} instead:
+ * their explicit `idempotencyKey` argument lives in Guzzle options and is not
+ * visible to this before-request hook. This hook remains available to callers
+ * that pass headers directly on their PSR requests.
  *
  * The generated key is a random UUID v4, which matches the API's accepted key
  * shape (1-64 chars).

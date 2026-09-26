@@ -1893,7 +1893,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesCreate
 
-Create a sales invoice. It is created in `draft` by default; pass `options.issue_directly: true` to issue it immediately (assigning the correlative number and freezing the document per AEAT), or issue it later. VeriFactu *alta* is transmitted to AEAT asynchronously — a `201` does not mean AEAT has accepted the invoice yet, so poll it for the AEAT status.
+Create an invoice. It is created in `draft` by default; pass `options.issue_directly: true` to issue it immediately (assigning the correlative number and freezing the document per AEAT), or issue it later. VeriFactu *alta* is transmitted to AEAT asynchronously — a `201` does not mean AEAT has accepted the invoice yet, so poll it for the AEAT status.
 
 ```json
 {
@@ -2326,7 +2326,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesList
 
-List your sales invoices with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `series_id`, `issued_on[gte|lte]`, and `total[gte|lte]`.
+List your invoices with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `series_id`, `issued_on[gte|lte]`, and `total[gte|lte]`.
 
 ### Example Usage
 
@@ -2759,7 +2759,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1InvoicesShow
 
-Retrieve a sales invoice by its `uuid`.
+Retrieve an invoice by its `uuid`.
 
 ### Example Usage
 
@@ -3581,7 +3581,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesPdfLink
 
-Returns a temporary URL to the invoice PDF instead of streaming the bytes. Convenient for embedding in emails or messaging apps. Dual contract: 200 with the URL when the PDF is already materialized; 202 with `status: pendiente` when generation was enqueued (the PDF renders on the `pdf` queue) — retry until you get the 200.
+Returns a temporary signed URL to the invoice PDF instead of streaming the bytes. Convenient for embedding in emails or messaging apps. The URL is signed, needs no API key, only opens this invoice and stops working at `expires_at` (24 h) with 403 — or earlier with 404 if the invoice or the company branding changes after the PDF was generated: request a new link instead of storing it. Dual contract: 200 with the URL when the PDF is already materialized; 202 with `status: pendiente` when generation was enqueued (the PDF renders on the `pdf` queue) — retry until you get the 200. The `pdf_url` of the 202 is also signed and answers 404 until the PDF is ready.
 
 ### Example Usage
 

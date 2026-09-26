@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** PurchaseInvoiceLine - A line item on a purchase invoice. */
+/** PurchaseInvoiceLine - A line item on an expense. */
 class PurchaseInvoiceLine
 {
     /**
@@ -254,7 +254,7 @@ class PurchaseInvoiceLine
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
-     * Zero-based ordinal of the line within this purchase invoice, in the stable read order. Send it back on create/update to keep a line matched to its historical counterpart (measures, units and frozen cost are preserved when the physical selection and the supplier do not change). It is NOT a primary key and it grants no access to any other document.
+     * Zero-based ordinal of the line within this expense, in the stable read order. Send it back on create/update to keep a line matched to its historical counterpart (measures, units and frozen cost are preserved when the physical selection and the supplier do not change). It is NOT a primary key and it grants no access to any other document.
      *
      * @var ?int $sourceLineIndex
      */

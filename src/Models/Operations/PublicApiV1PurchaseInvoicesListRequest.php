@@ -29,7 +29,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $endingBefore = null;
 
     /**
-     * Purchase invoice status. Exact match on `status`.
+     * Expense status. Exact match on `status`.
      *
      * @var ?string $status
      */
@@ -37,7 +37,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $status = null;
 
     /**
-     * Purchase invoice status. Comma-separated list. Any of the values matches.
+     * Expense status. Comma-separated list. Any of the values matches.
      *
      * @var ?string $statusIn
      */
@@ -189,7 +189,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $externalInvoiceNumberContains = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches purchase invoices carrying ANY of the tags). Exact match on `tags`.
+     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches expenses carrying ANY of the tags). Exact match on `tags`.
      *
      * @var ?string $tags
      */
@@ -197,7 +197,7 @@ class PublicApiV1PurchaseInvoicesListRequest
     public ?string $tags = null;
 
     /**
-     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches purchase invoices carrying ANY of the tags). Comma-separated list. Any of the values matches.
+     * Filter by classification tag (lowercase slug). Supports multiple values with `tags[in]=a,b` (JSON_CONTAINS, OR semantics — matches expenses carrying ANY of the tags). Comma-separated list. Any of the values matches.
      *
      * @var ?string $tagsIn
      */

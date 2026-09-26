@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TeamTimeBalanceRow - A single row of the team time balance summary: the monthly totals of one active employee for the Control Horario (time tracking) module. */
+/** TeamTimeBalanceRow - A single row of the team time balance summary: the monthly totals of one active employee for the Control Horario (time tracking) module. The `total_*` fields project the whole month; `to_date` holds the accumulation of the closed days. */
 class TeamTimeBalanceRow
 {
     /**
@@ -29,7 +29,7 @@ class TeamTimeBalanceRow
     public string $employeeName;
 
     /**
-     * Total expected working minutes of the month.
+     * Total expected working minutes of the whole month, including today and the remaining days (projection).
      *
      * @var int $totalExpectedMinutes
      */
@@ -37,7 +37,7 @@ class TeamTimeBalanceRow
     public int $totalExpectedMinutes;
 
     /**
-     * Total worked minutes of the month.
+     * Total worked minutes of the month so far, today included.
      *
      * @var int $totalWorkedMinutes
      */
@@ -45,7 +45,7 @@ class TeamTimeBalanceRow
     public int $totalWorkedMinutes;
 
     /**
-     * Month balance in minutes (worked − expected).
+     * Month balance in minutes as the sum of the daily balances. In the current month it is a projection that already subtracts the expected minutes of today and of the remaining days; use `to_date.balance_minutes` for the actual balance.
      *
      * @var int $totalBalanceMinutes
      */
@@ -61,15 +61,25 @@ class TeamTimeBalanceRow
     public int $totalOvertimeMinutes;
 
     /**
+     * The month-to-date accumulation of the closed days (every day before today) for the Control Horario (time tracking) module. It is computed from the same daily breakdown as the `total_*` fields, which instead cover the whole month and are a projection: in the current month they already subtract the expected minutes of today and of the remaining days. Today is left out because its workday is still in progress. In a finished month it equals the `total_*` fields; when no day of the month has closed yet (its first day, or a future month), `through_date` is `null` and the four figures are 0.
+     *
+     * @var \Factuarea\Sdk\Models\Components\TimeBalanceToDate $toDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('to_date')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TimeBalanceToDate')]
+    public TimeBalanceToDate $toDate;
+
+    /**
      * @param  string  $employeeId
      * @param  string  $employeeName
      * @param  int  $totalExpectedMinutes
      * @param  int  $totalWorkedMinutes
      * @param  int  $totalBalanceMinutes
      * @param  int  $totalOvertimeMinutes
+     * @param  \Factuarea\Sdk\Models\Components\TimeBalanceToDate  $toDate
      * @phpstan-pure
      */
-    public function __construct(string $employeeId, string $employeeName, int $totalExpectedMinutes, int $totalWorkedMinutes, int $totalBalanceMinutes, int $totalOvertimeMinutes)
+    public function __construct(string $employeeId, string $employeeName, int $totalExpectedMinutes, int $totalWorkedMinutes, int $totalBalanceMinutes, int $totalOvertimeMinutes, TimeBalanceToDate $toDate)
     {
         $this->employeeId = $employeeId;
         $this->employeeName = $employeeName;
@@ -77,5 +87,6 @@ class TeamTimeBalanceRow
         $this->totalWorkedMinutes = $totalWorkedMinutes;
         $this->totalBalanceMinutes = $totalBalanceMinutes;
         $this->totalOvertimeMinutes = $totalOvertimeMinutes;
+        $this->toDate = $toDate;
     }
 }
