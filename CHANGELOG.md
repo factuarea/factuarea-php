@@ -4,6 +4,14 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.4.1] — 2026-09-27
+
+Synchronizes the generated SDK with the reviewed purchase scanner contract and
+updates product-facing documentation to use Expenses and Invoices. The scanner
+surface covers source uploads, extraction and review, duplicate resolution,
+conversion to a purchase draft, archive/restore, and inbound email history.
+The default `Factuarea-Version` is unchanged.
+
 ## [0.4.0] — 2026-09-21
 
 Regenerated from the public OpenAPI spec that publishes contacts as the sole

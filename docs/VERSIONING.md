@@ -56,6 +56,7 @@ or renamed, its concrete replacement.
 | ----------- | ------------------- | ------------------------------ |
 | `0.1.0`     | `2026-06-04`        | Initial pre-GA release.        |
 | `0.2.0`     | `2026-06-04`        | Spec sync: +183/−4 operations. |
+| `0.4.1`     | `2026-06-04`        | Reviewed scanner contract and Expenses/Invoices documentation. |
 
 When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 
