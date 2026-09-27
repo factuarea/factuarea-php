@@ -14,11 +14,11 @@ class Reversal
     /**
      * Reason the payment was reverted, from the closed catalog.
      *
-     * @var \Factuarea\Sdk\Models\Components\Reason $reason
+     * @var \Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason $reason
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('reason')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Reason')]
-    public Reason $reason;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason')]
+    public EventDataPaymentReversedReason $reason;
 
     /**
      * Where the reversal came from: `gateway` when the payment provider reported a return, dispute or chargeback (a bank movement already happened); `manual` when a user recorded it.
@@ -30,11 +30,11 @@ class Reversal
     public Origin $origin;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Reason  $reason
+     * @param  \Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason  $reason
      * @param  \Factuarea\Sdk\Models\Components\Origin  $origin
      * @phpstan-pure
      */
-    public function __construct(Reason $reason, Origin $origin)
+    public function __construct(EventDataPaymentReversedReason $reason, Origin $origin)
     {
         $this->reason = $reason;
         $this->origin = $origin;

@@ -1,6 +1,6 @@
 # PublicApiV1InvoicesPdfLinkResponseBody
 
-The PDF is already materialized: returns a temporary `url` to download it, its `filename` and the `expires_at` of the link.
+The PDF is already materialized: returns a signed temporary `url` to download it without an API key, its `filename` and the `expires_at` after which the URL answers 403.
 
 
 ## Fields

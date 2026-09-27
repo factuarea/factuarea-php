@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** DayBalance - The balance of a single day of the period for the Control Horario (time tracking) module: expected vs worked minutes, the resulting balance (worked − expected) and the day’s overtime minutes, plus the flags that explain why the expected minutes are zero (holiday, approved absence, rest day). */
+/** DayBalance - The balance of a single day of the period for the Control Horario (time tracking) module: expected vs worked minutes, the resulting balance (worked − expected) and the day’s overtime minutes, plus the flags that explain why the expected minutes are zero (holiday, approved absence, rest day, no schedule in effect, outside the employment period). The live monthly sheet and the period balance always include `is_unscheduled` and `is_outside_employment`; the frozen daily detail of a monthly close report does not. */
 class DayBalance
 {
     /**
@@ -21,7 +21,7 @@ class DayBalance
     public LocalDate $date;
 
     /**
-     * Expected working minutes of the day derived from the schedule (0 on holidays, approved absences and rest days).
+     * Expected working minutes of the day derived from the schedule (0 on holidays, approved absences, rest days, days without a schedule in effect and days outside the employment period).
      *
      * @var int $expectedMinutes
      */
@@ -29,7 +29,7 @@ class DayBalance
     public int $expectedMinutes;
 
     /**
-     * Worked minutes of the day.
+     * Worked minutes of the day. Always the minutes actually clocked, also on days without a schedule in effect or outside the employment period, except under a `validated` schedule, where a scheduled day counts its expected minutes.
      *
      * @var int $workedMinutes
      */
@@ -37,7 +37,7 @@ class DayBalance
     public int $workedMinutes;
 
     /**
-     * Day balance in minutes (worked − expected); negative when the employee worked less than expected.
+     * Day balance in minutes (worked − expected); negative when the employee worked less than expected. 0 on days without a schedule in effect or outside the employment period (no reference to compare against).
      *
      * @var int $balanceMinutes
      */
@@ -45,7 +45,7 @@ class DayBalance
     public int $balanceMinutes;
 
     /**
-     * Overtime minutes of the day (worked above the configured threshold, with the tolerance applied).
+     * Overtime minutes of the day (worked above the configured threshold, with the tolerance applied). 0 on days without a schedule in effect or outside the employment period: minutes clocked on those days never count as overtime.
      *
      * @var int $overtimeMinutes
      */
@@ -77,6 +77,24 @@ class DayBalance
     public bool $isRestDay;
 
     /**
+     * Whether the day falls within the employment period but no work schedule is in effect for it. Expected, balance and overtime minutes are 0; worked minutes are the minutes actually clocked. Never `true` together with `is_outside_employment`. Absent from the daily detail of a monthly close report.
+     *
+     * @var ?bool $isUnscheduled
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_unscheduled')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $isUnscheduled = null;
+
+    /**
+     * Whether the day is before the employee’s `hire_date` or after their `termination_date`. Expected, balance and overtime minutes are 0 even if a schedule assignment covers the day; clock entries recorded before this rule existed still show as worked minutes. Absent from the daily detail of a monthly close report.
+     *
+     * @var ?bool $isOutsideEmployment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_outside_employment')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $isOutsideEmployment = null;
+
+    /**
      * @param  LocalDate  $date
      * @param  int  $expectedMinutes
      * @param  int  $workedMinutes
@@ -85,9 +103,11 @@ class DayBalance
      * @param  bool  $isHoliday
      * @param  bool  $isApprovedAbsence
      * @param  bool  $isRestDay
+     * @param  ?bool  $isUnscheduled
+     * @param  ?bool  $isOutsideEmployment
      * @phpstan-pure
      */
-    public function __construct(LocalDate $date, int $expectedMinutes, int $workedMinutes, int $balanceMinutes, int $overtimeMinutes, bool $isHoliday, bool $isApprovedAbsence, bool $isRestDay)
+    public function __construct(LocalDate $date, int $expectedMinutes, int $workedMinutes, int $balanceMinutes, int $overtimeMinutes, bool $isHoliday, bool $isApprovedAbsence, bool $isRestDay, ?bool $isUnscheduled = null, ?bool $isOutsideEmployment = null)
     {
         $this->date = $date;
         $this->expectedMinutes = $expectedMinutes;
@@ -97,5 +117,7 @@ class DayBalance
         $this->isHoliday = $isHoliday;
         $this->isApprovedAbsence = $isApprovedAbsence;
         $this->isRestDay = $isRestDay;
+        $this->isUnscheduled = $isUnscheduled;
+        $this->isOutsideEmployment = $isOutsideEmployment;
     }
 }

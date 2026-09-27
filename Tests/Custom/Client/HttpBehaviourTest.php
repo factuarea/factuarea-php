@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Tests\Custom\Client;
 
+use Factuarea\Sdk\Custom\Idempotency\IdempotencyClient;
 use Factuarea\Sdk\Custom\Idempotency\IdempotencyHook;
 use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
@@ -22,7 +23,7 @@ use Psr\Http\Message\RequestInterface;
  * typed errors) against a mocked Guzzle transport — no real network.
  *
  * The client is assembled exactly the way {@see \Factuarea\Sdk\Custom\FactuareaClient}
- * does (Bearer auth + IdempotencyHook), but with the Guzzle handler swapped for
+ * does (Bearer auth + IdempotencyClient), but with the Guzzle handler swapped for
  * a MockHandler so we can script responses and capture outgoing requests.
  */
 final class HttpBehaviourTest extends TestCase
@@ -35,17 +36,16 @@ final class HttpBehaviourTest extends TestCase
         $this->history = [];
         $stack = HandlerStack::create($mock);
         $stack->push(Middleware::history($this->history));
-        $guzzle = new Client(['handler' => $stack]);
+        $guzzle = new IdempotencyClient(new Client(['handler' => $stack]));
 
         // Build the SDK the way FactuareaClient::create does (security wiring via the
-        // generated builder + FactuareaVersionHook + IdempotencyHook), but inject the
+        // generated builder + FactuareaVersionHook + IdempotencyClient), but inject the
         // mocked transport.
         $sdk = Factuarea::builder()
             ->setSecurity(new Security(bearerAuth: $apiKey))
             ->setClient($guzzle)
             ->build();
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
-        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new IdempotencyHook());
 
         return $sdk;
     }

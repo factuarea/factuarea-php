@@ -96,6 +96,126 @@ if ($response->object !== null) {
 
 Assign `customer`, `supplier`, or `lead` to a contact without changing its other roles. Assigning an already-present role is idempotent and returns the canonical contact.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    contact: '<value>',
+    role: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\ContactRoleV1Request(
+        role: Components\ContactRoleV1RequestRole::Lead,
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsAssignContactRole(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    contact: '<value>',
+    role: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\ContactRoleV1Request(
+        role: Components\ContactRoleV1RequestRole::Lead,
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsAssignContactRole(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsAssignContactRoleRequest(
+    contact: '<value>',
+    role: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\ContactRoleV1Request(
+        role: Components\ContactRoleV1RequestRole::Lead,
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsAssignContactRole(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.assign_contact_role" method="post" path="/contacts/{contact}/roles/{role}" example="parameter_invalid_format" -->
@@ -340,6 +460,123 @@ if ($response->object !== null) {
 
 Archive up to 500 contacts by `ids` with partial success. Archiving is always allowed and reversible: every contact keeps its identity, history, aliases and documents, stays retrievable with `is_archived: true` and can be brought back one by one with `PUT /contacts/{contact}/restore`. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. To make the contacts disappear from the application instead, use `POST /contacts/bulk-delete`.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkArchiveBusinessContactsV1Request(
+    ids: [
+        'de1c5d98-5ed7-41c4-a21f-db09ac6ee48e',
+        'f98f0689-23c5-4772-8ea0-b21fc5295ec3',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkArchiveBusinessContactsV1Request(
+    ids: [
+        'de1c5d98-5ed7-41c4-a21f-db09ac6ee48e',
+        'f98f0689-23c5-4772-8ea0-b21fc5295ec3',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkArchiveBusinessContactsV1Request(
+    ids: [
+        'de1c5d98-5ed7-41c4-a21f-db09ac6ee48e',
+        'f98f0689-23c5-4772-8ea0-b21fc5295ec3',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkArchive(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_archive" method="post" path="/contacts/bulk/archive" example="parameter_invalid_format" -->
@@ -522,6 +759,132 @@ if ($response->object !== null) {
 
 Set one customer, supplier or fiscal lead role to `active` or `inactive` for up to 500 contact `ids`, with partial success per UUID. The operation never changes the other commercial roles or user RBAC.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChangeContactRoleStatusV1Request(
+    ids: [
+        'f98d71b5-8cec-4317-b5b7-0377da0927ef',
+        'f7f06803-f1fa-4978-823a-2d85ecff1260',
+        'c66c5050-7cf0-4d7b-8259-81c1054574e2',
+    ],
+    role: Components\BulkChangeContactRoleStatusV1RequestRole::Customer,
+    status: Components\BulkChangeContactRoleStatusV1RequestStatus::Active,
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChangeContactRoleStatusV1Request(
+    ids: [
+        'f98d71b5-8cec-4317-b5b7-0377da0927ef',
+        'f7f06803-f1fa-4978-823a-2d85ecff1260',
+        'c66c5050-7cf0-4d7b-8259-81c1054574e2',
+    ],
+    role: Components\BulkChangeContactRoleStatusV1RequestRole::Customer,
+    status: Components\BulkChangeContactRoleStatusV1RequestStatus::Active,
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChangeContactRoleStatusV1Request(
+    ids: [
+        'f98d71b5-8cec-4317-b5b7-0377da0927ef',
+        'f7f06803-f1fa-4978-823a-2d85ecff1260',
+        'c66c5050-7cf0-4d7b-8259-81c1054574e2',
+    ],
+    role: Components\BulkChangeContactRoleStatusV1RequestRole::Customer,
+    status: Components\BulkChangeContactRoleStatusV1RequestStatus::Active,
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkChangeContactRoleStatus(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_change_contact_role_status" method="post" path="/contacts/bulk/status" example="parameter_invalid_format" -->
@@ -719,6 +1082,56 @@ Create or upsert up to 500 canonical contacts. Each row accepts the same identit
 ### Example Usage: dry_run
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="dry_run" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkCreateBusinessContactsV1Request(
+    contacts: [
+        new Components\CreateBusinessContactV1Request(
+            name: 'Distribuciones Ejemplo SL',
+            kind: Components\CreateBusinessContactV1RequestKind::Company,
+            taxId: 'B12345674',
+            address: new Components\CreateBusinessContactV1RequestAddress(
+                line1: 'Calle Mayor',
+                countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
+            ),
+            roles: [
+                Components\CreateBusinessContactV1RequestRole::Customer,
+                Components\CreateBusinessContactV1RequestRole::Supplier,
+            ],
+        ),
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkCreate(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_create" method="post" path="/contacts/bulk-create" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -992,6 +1405,120 @@ if ($response->object !== null) {
 
 Delete up to 500 contacts by `ids` with partial success, applying to each one the same soft delete as `DELETE /contacts/{contact}`: the contact disappears from every read surface while its identity, roles, aliases and documents are preserved, and its fiscal identity and `external_id` are released so they can be registered again. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`, already deleted contacts included), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. The deletion is irreversible through the API; for a reversible bulk removal use `POST /contacts/bulk/archive`.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteBusinessContactsV1Request(
+    ids: [
+        '9ed881bb-b54b-48d1-8e0a-6a09c7dddb1e',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteBusinessContactsV1Request(
+    ids: [
+        '9ed881bb-b54b-48d1-8e0a-6a09c7dddb1e',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteBusinessContactsV1Request(
+    ids: [
+        '9ed881bb-b54b-48d1-8e0a-6a09c7dddb1e',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsBulkDelete(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.bulk_delete" method="post" path="/contacts/bulk-delete" example="parameter_invalid_format" -->
@@ -1170,6 +1697,129 @@ if ($response->object !== null) {
 
 Set one commercial role to `active` or `inactive`. The other role and the platform RBAC role of every user remain unchanged.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    contact: '<value>',
+    role: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\ChangeContactRoleStatusV1Request(
+        role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
+        status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsChangeContactRoleStatus(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    contact: '<value>',
+    role: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\ChangeContactRoleStatusV1Request(
+        role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
+        status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsChangeContactRoleStatus(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsChangeContactRoleStatusRequest(
+    contact: '<value>',
+    role: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\ChangeContactRoleStatusV1Request(
+        role: Components\ChangeContactRoleStatusV1RequestRole::Supplier,
+        status: Components\ChangeContactRoleStatusV1RequestStatus::Active,
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsChangeContactRoleStatus(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.change_contact_role_status" method="put" path="/contacts/{contact}/roles/{role}/status" example="parameter_invalid_format" -->
@@ -1357,6 +2007,52 @@ if ($response->object !== null) {
 
 Create one canonical commercial contact with no assigned relationship or any cumulative combination of `customer`, `supplier` and `lead`. The response uses `id` with the generated UUID v7 and includes the common identity plus the directional profiles when applicable. A repeated `Idempotency-Key` replays the original response without duplicating the contact; an existing `external_id` is updated idempotently within the authenticated company.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateBusinessContactV1Request(
+    name: 'Distribuciones Ejemplo SL',
+    kind: Components\CreateBusinessContactV1RequestKind::Company,
+    taxId: 'B12345674',
+    address: new Components\CreateBusinessContactV1RequestAddress(
+        line1: 'Calle Mayor',
+        countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
+    ),
+    roles: [
+        Components\CreateBusinessContactV1RequestRole::Customer,
+        Components\CreateBusinessContactV1RequestRole::Supplier,
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: company_with_customer_and_supplier_roles
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="company_with_customer_and_supplier_roles" -->
@@ -1385,6 +2081,98 @@ $body = new Components\CreateBusinessContactV1Request(
     email: 'facturacion@talleresmed.es',
     phone: '961112233',
     externalId: 'ERP-CONTACT-0042',
+    roles: [
+        Components\CreateBusinessContactV1RequestRole::Customer,
+        Components\CreateBusinessContactV1RequestRole::Supplier,
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateBusinessContactV1Request(
+    name: 'Distribuciones Ejemplo SL',
+    kind: Components\CreateBusinessContactV1RequestKind::Company,
+    taxId: 'B12345674',
+    address: new Components\CreateBusinessContactV1RequestAddress(
+        line1: 'Calle Mayor',
+        countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
+    ),
+    roles: [
+        Components\CreateBusinessContactV1RequestRole::Customer,
+        Components\CreateBusinessContactV1RequestRole::Supplier,
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsCreate(
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.create" method="post" path="/contacts" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateBusinessContactV1Request(
+    name: 'Distribuciones Ejemplo SL',
+    kind: Components\CreateBusinessContactV1RequestKind::Company,
+    taxId: 'B12345674',
+    address: new Components\CreateBusinessContactV1RequestAddress(
+        line1: 'Calle Mayor',
+        countryCode: Components\CreateBusinessContactV1RequestCountryCode::Es,
+    ),
     roles: [
         Components\CreateBusinessContactV1RequestRole::Customer,
         Components\CreateBusinessContactV1RequestRole::Supplier,
@@ -1788,6 +2576,132 @@ if ($response->object !== null) {
 
 Update only the common identity and contact fields. Roles and directional profiles have explicit endpoints so changing customer data can never overwrite supplier defaults. A duplicate fiscal identity or external ID returns 409.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsUpdateRequest(
+    contact: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateBusinessContactV1Request(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsUpdateRequest(
+    contact: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateBusinessContactV1Request(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsUpdateRequest(
+    contact: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateBusinessContactV1Request(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update" method="put" path="/contacts/{contact}" example="parameter_invalid_format" -->
@@ -2035,6 +2949,111 @@ if ($response->res !== null) {
 
 Resolve one canonical contact by its integration `external_id` within the authenticated company. Returns 404 `contact_not_found` when the reference is unknown.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindBusinessContactByExternalIdV1Request(
+    externalId: '<id>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindBusinessContactByExternalIdV1Request(
+    externalId: '<id>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindBusinessContactByExternalIdV1Request(
+    externalId: '<id>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsFindByExternalId(
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_external_id" method="post" path="/contacts/find-by-external-id" example="parameter_invalid_format" -->
@@ -2200,6 +3219,111 @@ if ($response->object !== null) {
 
 Resolve one canonical contact by Spanish tax identifier within the authenticated company. The result includes all cumulative roles, so integrations do not need separate client and supplier lookups.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindBusinessContactByTaxIdV1Request(
+    taxId: '<id>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindBusinessContactByTaxIdV1Request(
+    taxId: '<id>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindBusinessContactByTaxIdV1Request(
+    taxId: '<id>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsFindByTaxId(
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.find_by_tax_id" method="post" path="/contacts/find-by-tax-id" example="parameter_invalid_format" -->
@@ -2551,6 +3675,138 @@ curl -X POST https://api.factuarea.com/v1/contacts/import \
 
 Limits: the file accepts CSV, TXT, XLSX or XLS up to 10 MB; `target_roles` accepts at most three distinct roles. Use the preview endpoint before importing. A queued import returns `202`.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ImportBusinessContactsV1Request(
+    file: new Components\ImportBusinessContactsV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ImportBusinessContactsV1Request(
+    file: new Components\ImportBusinessContactsV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ImportBusinessContactsV1Request(
+    file: new Components\ImportBusinessContactsV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="parameter_invalid_format" -->
@@ -2753,6 +4009,138 @@ if ($response->twoHundredApplicationJsonObject !== null) {
 
 Validate a CSV contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewBusinessContactImportV1Request(
+    file: new Components\PreviewBusinessContactImportV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewBusinessContactImportV1Request(
+    file: new Components\PreviewBusinessContactImportV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewBusinessContactImportV1Request(
+    file: new Components\PreviewBusinessContactImportV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsPreviewImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.preview_import" method="post" path="/contacts/import/preview" example="parameter_invalid_format" -->
@@ -3073,6 +4461,123 @@ if ($response->businessContactList !== null) {
 
 Replace the ENTIRE set of bank accounts of the contact. There is no way to add or drop a single account, because the invariants belong to the set — at most one default collection account and one default payment account, no repeated IBAN once normalized, and an account marked as default must accept that use — and checking them one by one would force the contact through invalid intermediate states. That is why `bank_accounts` is required: an empty list deletes every account, and omitting the key is a 422, never a silent "leave them as they are". A set identical to the current one writes nothing and emits no event. Bank accounts can never be edited from the identity update, which rejects the field like roles and directional profiles.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    contact: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateBusinessContactBankAccountsV1Request(
+        bankAccounts: [],
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsUpdateBankAccounts(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    contact: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateBusinessContactBankAccountsV1Request(
+        bankAccounts: [],
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsUpdateBankAccounts(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ContactsUpdateBankAccountsRequest(
+    contact: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
+    body: new Components\UpdateBusinessContactBankAccountsV1Request(
+        bankAccounts: [],
+    ),
+);
+
+$response = $sdk->contacts->publicApiV1ContactsUpdateBankAccounts(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.update_bank_accounts" method="put" path="/contacts/{contact}/bank-accounts" example="parameter_invalid_format" -->
@@ -3370,6 +4875,43 @@ if ($response->object !== null) {
 
 Verify a name and Spanish tax identifier against the AEAT census before issuing a document. The operation is stateless and fail-open: AEAT outages return `status: unavailable` rather than a server error.
 
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/contacts/census-verification" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\VerifyBusinessContactCensusV1Request(
+    taxId: '<id>',
+    name: '<value>',
+);
+
+$response = $sdk->contacts->publicApiV1ContactsVerifyCensus(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: parameter_invalid_format
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.verify_census" method="post" path="/contacts/census-verification" example="parameter_invalid_format" -->

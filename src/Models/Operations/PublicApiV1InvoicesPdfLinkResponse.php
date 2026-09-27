@@ -40,35 +40,35 @@ class PublicApiV1InvoicesPdfLinkResponse
     public array $headers;
 
     /**
-     * The PDF is already materialized: returns a temporary `url` to download it, its `filename` and the `expires_at` of the link.
-     *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkResponseBody $twoHundredApplicationJsonObject
-     */
-    public ?PublicApiV1InvoicesPdfLinkResponseBody $twoHundredApplicationJsonObject = null;
-
-    /**
-     * The PDF has not been generated yet: its generation is enqueued and the response reports the `pendiente` status. Retry shortly to obtain the link (200).
+     * The PDF has not been generated yet: its generation is enqueued and the response reports the `pendiente` status and a signed `pdf_url` that answers 404 until the PDF is ready. Retry shortly to obtain the link (200).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos $twoHundredAndTwoApplicationJsonObject
      */
     public ?PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos $twoHundredAndTwoApplicationJsonObject = null;
 
     /**
+     * The PDF is already materialized: returns a signed temporary `url` to download it without an API key, its `filename` and the `expires_at` after which the URL answers 403.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkResponseBody $twoHundredApplicationJsonObject
+     */
+    public ?PublicApiV1InvoicesPdfLinkResponseBody $twoHundredApplicationJsonObject = null;
+
+    /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkResponseBody  $twoHundredApplicationJsonObject
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos  $twoHundredAndTwoApplicationJsonObject
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkResponseBody  $twoHundredApplicationJsonObject
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesPdfLinkResponseBody $twoHundredApplicationJsonObject = null, ?PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos $twoHundredAndTwoApplicationJsonObject = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesPdfLinkResponseBodyLaGeneracionDelPdfEstaEnCursoElEnlaceEstaraDisponibleEnUnosSegundos $twoHundredAndTwoApplicationJsonObject = null, ?PublicApiV1InvoicesPdfLinkResponseBody $twoHundredApplicationJsonObject = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
         $this->twoHundredAndTwoApplicationJsonObject = $twoHundredAndTwoApplicationJsonObject;
+        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
     }
 }

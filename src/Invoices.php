@@ -3478,7 +3478,7 @@ class Invoices
     /**
      * Generate temporary PDF link
      *
-     * Returns a temporary URL to the invoice PDF instead of streaming the bytes. Convenient for embedding in emails or messaging apps. Dual contract: 200 with the URL when the PDF is already materialized; 202 with `status: pendiente` when generation was enqueued (the PDF renders on the `pdf` queue) — retry until you get the 200.
+     * Returns a temporary signed URL to the invoice PDF instead of streaming the bytes. Convenient for embedding in emails or messaging apps. The URL is signed, needs no API key, only opens this invoice and stops working at `expires_at` (24 h) with 403 — or earlier with 404 if the invoice or the company branding changes after the PDF was generated: request a new link instead of storing it. Dual contract: 200 with the URL when the PDF is already materialized; 202 with `status: pendiente` when generation was enqueued (the PDF renders on the `pdf` queue) — retry until you get the 200. The `pdf_url` of the 202 is also signed and answers 404 until the PDF is ready.
      *
      * @param  string  $invoice
      * @param  ?LocalDate  $factuareaVersion

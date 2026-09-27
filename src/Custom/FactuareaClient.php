@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Custom;
 
-use Factuarea\Sdk\Custom\Idempotency\IdempotencyHook;
+use Factuarea\Sdk\Custom\Idempotency\IdempotencyClient;
 use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
+use GuzzleHttp\Client;
 
 /**
  * Recommended entry point for the Factuarea PHP SDK.
@@ -24,7 +25,7 @@ use Factuarea\Sdk\Models\Components\Security;
  *
  * - Authentication by API key. The key prefix (`fact_test_` / `fact_live_`)
  *   selects the environment server-side; there is no environment flag.
- * - Automatic `Idempotency-Key` on every mutating request (see {@see IdempotencyHook}).
+ * - Automatic `Idempotency-Key` on every mutating request (see {@see IdempotencyClient}).
  * - Pinned `Factuarea-Version` header on every request (see {@see FactuareaVersionHook}),
  *   so the API behaves consistently until the integrator upgrades the SDK.
  * - Backoff retries over `429` + `5XX` honouring `Retry-After` (generated core).
@@ -56,7 +57,8 @@ final class FactuareaClient
         ?string $baseUrl = null,
     ): Factuarea {
         $builder = Factuarea::builder()
-            ->setSecurity(new Security(bearerAuth: $apiKey));
+            ->setSecurity(new Security(bearerAuth: $apiKey))
+            ->setClient(new IdempotencyClient(new Client(['timeout' => 60])));
 
         if ($baseUrl !== null) {
             $builder->setServerUrl(rtrim($baseUrl, '/'));
@@ -64,7 +66,6 @@ final class FactuareaClient
 
         $sdk = $builder->build();
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
-        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new IdempotencyHook());
 
         return $sdk;
     }

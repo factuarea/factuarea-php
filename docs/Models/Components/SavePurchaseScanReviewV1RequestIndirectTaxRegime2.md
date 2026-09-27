@@ -1,0 +1,9 @@
+# SavePurchaseScanReviewV1RequestIndirectTaxRegime2
+
+
+## Fields
+
+| Field                                                                                                   | Type                                                                                                    | Required                                                                                                | Description                                                                                             |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `value`                                                                                                 | [Components\IndirectTaxRegimeValue2](../../Models/Components/IndirectTaxRegimeValue2.md)                | :heavy_check_mark:                                                                                      | N/A                                                                                                     |
+| `issueCodes`                                                                                            | array<[Components\IndirectTaxRegimeIssueCode2](../../Models/Components/IndirectTaxRegimeIssueCode2.md)> | :heavy_minus_sign:                                                                                      | N/A                                                                                                     |

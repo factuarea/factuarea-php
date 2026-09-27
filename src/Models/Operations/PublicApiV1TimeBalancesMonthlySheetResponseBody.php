@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1TimeBalancesMonthlySheetResponseBody
 {
     /**
-     * The live monthly time sheet of an employee for the open (in-progress) period of the Control Horario (time tracking) module. A computed resource with no entity identity: it is keyed by employee + month, so it exposes `employee_id` (UUID v7) and never an `id`. Totals are in minutes; `days` is the daily breakdown. It is recomputed on every request, so a just-recorded clock entry is reflected without closing the month.
+     * The live monthly time sheet of an employee for the open (in-progress) period of the Control Horario (time tracking) module. A computed resource with no entity identity: it is keyed by employee + month, so it exposes `employee_id` (UUID v7) and never an `id`. Totals are in minutes; `days` is the daily breakdown. It is recomputed on every request, so a just-recorded clock entry is reflected without closing the month. The `total_*` fields cover the whole month and, in the current month, are a projection; `to_date` holds the actual accumulation of the closed days (every day before today).
      *
      * @var \Factuarea\Sdk\Models\Components\MonthlyTimeSheet $data
      */

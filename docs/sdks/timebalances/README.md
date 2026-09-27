@@ -10,7 +10,7 @@
 
 ## publicApiV1TimeBalancesEmployee
 
-Return the time balance of an arbitrary period of an employee: expected vs worked minutes, the balance and overtime per day, and the period totals. The employee is the `{employee}` (UUID v7) in the path; `from` and `to` (`YYYY-MM-DD`) are required. This is the same contract the monthly close reuses over closed periods. A range where `to` is before `from` returns 422. Totals are in minutes. A computed resource: it exposes `employee_id`, never an `id`.
+Return the time balance of an arbitrary period of an employee: expected vs worked minutes, the balance and overtime per day, and the period totals. The employee is the `{employee}` (UUID v7) in the path; `from` and `to` (`YYYY-MM-DD`) are required. This is the same contract the monthly close reuses over closed periods. Each day carries `is_unscheduled` (within the employment period but with no schedule in effect) and `is_outside_employment` (before `hire_date` or after `termination_date`); on both, expected, balance and overtime are 0 and worked minutes are the minutes actually clocked, so the period balance is the sum of the daily balances. A range where `to` is before `from` returns 422. Totals are in minutes. A computed resource: it exposes `employee_id`, never an `id`.
 
 ### Example Usage
 
@@ -70,7 +70,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TimeBalancesMonthlySheet
 
-Return the live monthly time sheet of an employee for the open (in-progress) period: expected vs worked minutes, the balance and overtime per day, and the monthly totals. `employee_id` (UUID v7) is required; `month` (`YYYY-MM`) defaults to the current month. The sheet is recomputed on every request from the immutable ledger, so a just-recorded clock entry is reflected without closing the month. Expected minutes discount public holidays and approved absences. Totals are in minutes. A computed resource: it exposes `employee_id`, never an `id`.
+Return the live monthly time sheet of an employee for the open (in-progress) period: expected vs worked minutes, the balance and overtime per day, and the monthly totals. `employee_id` (UUID v7) is required; `month` (`YYYY-MM`) defaults to the current month. The sheet is recomputed on every request from the immutable ledger, so a just-recorded clock entry is reflected without closing the month. Expected minutes discount public holidays and approved absences. Each day carries `is_unscheduled` (within the employment period but with no schedule in effect: the minutes actually clocked count as worked, while expected, balance and overtime are 0) and `is_outside_employment` (before `hire_date` or after `termination_date`: expected 0 even if a schedule covers the day). The `total_*` fields cover the whole month, so in the current month they are a projection that already subtracts the expected minutes of today and of the remaining days; `to_date` holds the actual accumulation of the closed days (every day before today) with `through_date`, and is `through_date: null` with zeros when no day has closed yet. Totals are in minutes. A computed resource: it exposes `employee_id`, never an `id`.
 
 ### Example Usage
 
@@ -130,7 +130,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TimeBalancesTeamSummary
 
-Return the team time balance summary (manager view) for a month: one row per active employee with their expected, worked, balance and overtime minutes. `month` (`YYYY-MM`) defaults to the current month. Only active employees with a schedule are included. Totals are in minutes. A computed resource with no `id`.
+Return the team time balance summary (manager view) for a month: one row per active employee with their expected, worked, balance and overtime minutes. `month` (`YYYY-MM`) defaults to the current month. Only active employees with a schedule are included. The `total_*` fields of each row cover the whole month (a projection in the current month); each row also carries `to_date`, the accumulation of that employee’s closed days (every day before today), with the same content as their monthly sheet. Totals are in minutes. A computed resource with no `id`.
 
 ### Example Usage
 

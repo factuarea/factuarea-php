@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class UpdateEmployeeRequest
 {
     /**
@@ -56,6 +56,15 @@ class UpdateEmployeeRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('contract_hours')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?float $contractHours = null;
+
+    /**
+     * Hire date of the employee (`Y-m-d`). Must not be later than the termination date; changing it keeps existing time entries and schedule assignments.
+     *
+     * @var ?LocalDate $hireDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('hire_date')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $hireDate = null;
 
     /**
      * Spanish autonomous community or city (ISO 3166-2:ES) used to localise public holidays.
@@ -113,6 +122,7 @@ class UpdateEmployeeRequest
      * @param  ?string  $email
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateEmployeeRequestEmploymentType  $employmentType
      * @param  ?float  $contractHours
+     * @param  ?LocalDate  $hireDate
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateEmployeeRequestCcaa  $ccaa
      * @param  ?string  $taxId
      * @param  ?string  $jobTitle
@@ -120,13 +130,14 @@ class UpdateEmployeeRequest
      * @param  ?array<string, string>  $metadata
      * @phpstan-pure
      */
-    public function __construct(?string $firstName = null, ?string $lastName = null, ?string $email = null, ?UpdateEmployeeRequestEmploymentType $employmentType = null, ?float $contractHours = null, ?UpdateEmployeeRequestCcaa $ccaa = null, ?string $taxId = null, ?string $jobTitle = null, ?string $externalId = null, ?array $metadata = null)
+    public function __construct(?string $firstName = null, ?string $lastName = null, ?string $email = null, ?UpdateEmployeeRequestEmploymentType $employmentType = null, ?float $contractHours = null, ?LocalDate $hireDate = null, ?UpdateEmployeeRequestCcaa $ccaa = null, ?string $taxId = null, ?string $jobTitle = null, ?string $externalId = null, ?array $metadata = null)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
         $this->employmentType = $employmentType;
         $this->contractHours = $contractHours;
+        $this->hireDate = $hireDate;
         $this->ccaa = $ccaa;
         $this->taxId = $taxId;
         $this->jobTitle = $jobTitle;

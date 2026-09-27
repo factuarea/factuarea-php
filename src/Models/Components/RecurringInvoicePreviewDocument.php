@@ -22,18 +22,18 @@ class RecurringInvoicePreviewDocument
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Totals $totals
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoicePreviewDocumentTotals $totals
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('totals')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Totals')]
-    public Totals $totals;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoicePreviewDocumentTotals')]
+    public RecurringInvoicePreviewDocumentTotals $totals;
 
     /**
      * @param  array<\Factuarea\Sdk\Models\Components\RecurringInvoicePreviewDocumentLine>  $lines
-     * @param  \Factuarea\Sdk\Models\Components\Totals  $totals
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoicePreviewDocumentTotals  $totals
      * @phpstan-pure
      */
-    public function __construct(array $lines, Totals $totals)
+    public function __construct(array $lines, RecurringInvoicePreviewDocumentTotals $totals)
     {
         $this->lines = $lines;
         $this->totals = $totals;

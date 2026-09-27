@@ -13,6 +13,16 @@ namespace Factuarea\Sdk\Models\Components;
 class Details
 {
     /**
+     * Review fields that must be corrected before a purchase scan can be converted. Keys use public identifiers, for example supplier_id or lines.0.tax_rate.
+     *
+     * @var ?array<string, array<string>> $fieldErrors
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('field_errors')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, array<string>>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $fieldErrors = null;
+
+    /**
      * UUID of the pre-existing resource that triggered the conflict. Resolvable with a `GET /v1/{resource}/{id}` without an extra `find_by_*` call. Only present on 409 duplication conflicts.
      *
      * @var ?string $existingResourceId
@@ -68,6 +78,7 @@ class Details
     public ?float $received = null;
 
     /**
+     * @param  ?array<string, array<string>>  $fieldErrors
      * @param  ?string  $existingResourceId
      * @param  ?string  $paymentSetupUrl
      * @param  ?array<string>  $allowedValues
@@ -76,8 +87,9 @@ class Details
      * @param  ?float  $received
      * @phpstan-pure
      */
-    public function __construct(?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null)
+    public function __construct(?array $fieldErrors = null, ?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null)
     {
+        $this->fieldErrors = $fieldErrors;
         $this->existingResourceId = $existingResourceId;
         $this->paymentSetupUrl = $paymentSetupUrl;
         $this->allowedValues = $allowedValues;

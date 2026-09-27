@@ -176,7 +176,7 @@ class WorkSchedules
     /**
      * Assign a schedule to an employee
      *
-     * Assign the work schedule to an employee with an effective start date. `employee_id` (UUID v7, must belong to your company) and `effective_from` (`Y-m-d`) are required. Assigning closes the employee’s previously open assignment and opens the new one (an employee has at most one open assignment; history is preserved). An unknown employee returns 422 `assigned_employee_not_found`; an unknown schedule returns 404. Returns the created assignment.
+     * Assign the work schedule to an employee with an effective start date. `employee_id` (UUID v7, must belong to your company) and `effective_from` (`Y-m-d`) are required. Assigning closes the employee’s previously open assignment and opens the new one (an employee has at most one open assignment; history is preserved). If that previous assignment has not started yet and the new `effective_from` is on or before its start, it is cancelled instead: it is closed as an empty span (`effective_to` = its `effective_from`), kept in the history and never in effect. Moving back the start of an assignment that is already in effect still returns 422. An unknown employee returns 422 `assigned_employee_not_found`; an unknown schedule returns 404. Returns the created assignment.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesAssignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesAssignResponse
@@ -548,17 +548,18 @@ class WorkSchedules
     }
 
     /**
-     * Get an employee’s current schedule
+     * Get an employee’s schedule on a date
      *
-     * Resolve the work schedule currently in effect (today) for an employee by its `id` (UUID v7). Returns 404 `schedule_assignment_not_found` when the employee has no schedule in effect (or belongs to another company). The result is the resolved schedule (`id` = UUID v7 of the schedule), not the assignment.
+     * Resolve the work schedule in effect for an employee by its `id` (UUID v7) on a given day. The optional `date` query parameter (`Y-m-d`) sets that day and defaults to today, so you can read a schedule that starts in the future, such as the one assigned from a pending hire date. Returns 404 `schedule_assignment_not_found` when the employee has no schedule in effect on that day (or belongs to another company), and 422 when `date` is not a valid `Y-m-d` date. The result is the resolved schedule (`id` = UUID v7 of the schedule), not the assignment.
      *
      * @param  string  $employee
+     * @param  ?LocalDate  $date
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesEmployeeScheduleResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesEmployeeSchedule(string $employee, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesEmployeeScheduleResponse
+    public function publicApiV1WorkSchedulesEmployeeSchedule(string $employee, ?LocalDate $date = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesEmployeeScheduleResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -587,6 +588,7 @@ class WorkSchedules
         }
         $request = new Operations\PublicApiV1WorkSchedulesEmployeeScheduleRequest(
             employee: $employee,
+            date: $date,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -594,6 +596,8 @@ class WorkSchedules
         $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/employee/{employee}', Operations\PublicApiV1WorkSchedulesEmployeeScheduleRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1WorkSchedulesEmployeeScheduleRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -603,6 +607,7 @@ class WorkSchedules
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.work_schedules.employee_schedule', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -637,7 +642,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1161,7 +1166,7 @@ class WorkSchedules
     /**
      * Unassign a schedule from an employee
      *
-     * Close the employee’s open assignment to this schedule. `employee_id` (UUID v7) is required; `effective_to` (`Y-m-d`) is optional and defaults to today. Returns 404 when there is no open assignment. Responds 204 No Content.
+     * Close the employee’s open assignment to this schedule. `employee_id` (UUID v7) is required; `effective_to` (`Y-m-d`) is optional and defaults to today. An assignment that has not started yet and is unassigned on or before its start (including the default of today) is cancelled: it is closed as an empty span (`effective_to` = its `effective_from`) and kept in the history. Closing an assignment already in effect on a date before its start returns 422. Returns 404 when there is no open assignment. Responds 204 No Content.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUnassignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUnassignResponse
