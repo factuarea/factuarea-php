@@ -13,7 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1InvoicesDuplicateResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * An invoice (compliant with Spanish AEAT VeriFactu).
      *
      * @var \Factuarea\Sdk\Models\Components\Invoice $data
      */

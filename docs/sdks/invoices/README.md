@@ -1893,7 +1893,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesCreate
 
-Create a sales invoice. It is created in `draft` by default; pass `options.issue_directly: true` to issue it immediately (assigning the correlative number and freezing the document per AEAT), or issue it later. VeriFactu *alta* is transmitted to AEAT asynchronously — a `201` does not mean AEAT has accepted the invoice yet, so poll it for the AEAT status.
+Create an invoice. It is created in `draft` by default; pass `options.issue_directly: true` to issue it immediately (assigning the correlative number and freezing the document per AEAT), or issue it later. VeriFactu *alta* is transmitted to AEAT asynchronously — a `201` does not mean AEAT has accepted the invoice yet, so poll it for the AEAT status.
 
 ```json
 {
@@ -2326,7 +2326,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesList
 
-List your sales invoices with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `series_id`, `issued_on[gte|lte]`, and `total[gte|lte]`.
+List your invoices with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `series_id`, `issued_on[gte|lte]`, and `total[gte|lte]`.
 
 ### Example Usage
 
@@ -2759,7 +2759,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1InvoicesShow
 
-Retrieve a sales invoice by its `uuid`.
+Retrieve an invoice by its `uuid`.
 
 ### Example Usage
 

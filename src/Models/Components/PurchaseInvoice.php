@@ -28,7 +28,7 @@ class PurchaseInvoice
     public PurchaseInvoiceObject $object;
 
     /**
-     * Whether this is a simplified purchase invoice (expense ticket). When `true`, `supplier` and `external_invoice_number` may be `null`.
+     * Whether this is a simplified supplier invoice (expense ticket). When `true`, `supplier` and `external_invoice_number` may be `null`.
      *
      * @var bool $isSimplified
      */
@@ -57,7 +57,7 @@ class PurchaseInvoice
     public float $subtotal;
 
     /**
-     * VAT BORNE (IVA soportado) of this purchase invoice, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
+     * VAT BORNE (IVA soportado) of this expense, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
      *
      * @var float $taxesTotal
      */
@@ -89,7 +89,7 @@ class PurchaseInvoice
     public float $totalSurcharge;
 
     /**
-     * Total of the purchase invoice. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
+     * Total of the expense. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
      *
      * @var float $total
      */
@@ -104,7 +104,7 @@ class PurchaseInvoice
     public string $currency;
 
     /**
-     * Amount already paid against this purchase invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
+     * Amount already paid against this expense (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
      *
      * @var float $paidAmount
      */
@@ -112,7 +112,7 @@ class PurchaseInvoice
     public float $paidAmount;
 
     /**
-     * Outstanding balance pending payment for this purchase invoice (derived from the payment ledger).
+     * Outstanding balance pending payment for this expense (derived from the payment ledger).
      *
      * @var float $pendingAmount
      */
@@ -138,7 +138,7 @@ class PurchaseInvoice
     public PurchaseInvoiceOperationClass $operationClass;
 
     /**
-     * Declarative per-document flag: whether this purchase invoice is excluded from the annual Modelo 347 report.
+     * Declarative per-document flag: whether this expense is excluded from the annual Modelo 347 report.
      *
      * @var bool $exclude347
      */

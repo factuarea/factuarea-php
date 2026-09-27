@@ -688,7 +688,7 @@ class Quotes
     /**
      * Convert quote to invoice
      *
-     * Convert an accepted quote into a sales invoice. The new invoice references the source quote via metadata; the quote moves to status `converted`.
+     * Convert an accepted quote into an invoice. The new invoice references the source quote via metadata; the quote moves to status `converted`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesConvertRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1QuotesConvertResponse

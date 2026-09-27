@@ -168,7 +168,7 @@ class CreateInvoiceRequestLine
     public ?CreateInvoiceRequestLineType $lineType = null;
 
     /**
-     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely registered as a purchase invoice.
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely registered as an expense.
      *
      * @var ?string $sourceInvoiceReference
      */
@@ -177,7 +177,7 @@ class CreateInvoiceRequestLine
     public ?string $sourceInvoiceReference = null;
 
     /**
-     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own purchase invoices that back it. A purchase invoice of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
+     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own expenses that back it. An expense of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
      *
      * @var ?array<string> $sourceInvoiceIds
      */

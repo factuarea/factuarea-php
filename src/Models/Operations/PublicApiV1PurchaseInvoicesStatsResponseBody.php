@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1PurchaseInvoicesStatsResponseBody
 {
     /**
-     * Aggregated metrics (KPIs) of the purchase invoices of the authenticated company: total, count by status and accumulated amounts. `overdue` is a derived condition (`pending` + past due date), not a persisted status.
+     * Aggregated metrics (KPIs) of the expenses of the authenticated company: total, count by status and accumulated amounts. `overdue` is a derived condition (`pending` + past due date), not a persisted status.
      *
      * @var \Factuarea\Sdk\Models\Components\PurchaseInvoiceStats $data
      */

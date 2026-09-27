@@ -750,7 +750,7 @@ if ($response->object !== null) {
 
 ## publicApiV1DeliveryNotesConvert
 
-Convert a delivery note into a sales invoice. The delivery note moves to `invoiced` with `converted_to_id` populated and the new invoice is returned under `data`. Only `target=invoice` is supported.
+Convert a delivery note into an invoice. The delivery note moves to `invoiced` with `converted_to_id` populated and the new invoice is returned under `data`. Only `target=invoice` is supported.
 
 ### Example Usage: api_key_revoked
 

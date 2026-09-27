@@ -1,6 +1,6 @@
 # PurchaseInvoiceAttachment
 
-Fichero adjunto (PDF/imagen) de la factura de compra. `null` cuando no hay adjunto.
+Fichero adjunto (PDF/imagen) del gasto. `null` cuando no hay adjunto.
 
 
 ## Fields

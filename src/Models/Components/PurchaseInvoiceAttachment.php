@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** PurchaseInvoiceAttachment - Fichero adjunto (PDF/imagen) de la factura de compra. `null` cuando no hay adjunto. */
+/** PurchaseInvoiceAttachment - Fichero adjunto (PDF/imagen) del gasto. `null` cuando no hay adjunto. */
 class PurchaseInvoiceAttachment
 {
     /**

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** PurchaseInvoiceStats - Aggregated metrics (KPIs) of the purchase invoices of the authenticated company: total, count by status and accumulated amounts. `overdue` is a derived condition (`pending` + past due date), not a persisted status. */
+/** PurchaseInvoiceStats - Aggregated metrics (KPIs) of the expenses of the authenticated company: total, count by status and accumulated amounts. `overdue` is a derived condition (`pending` + past due date), not a persisted status. */
 class PurchaseInvoiceStats
 {
     /**
@@ -21,7 +21,7 @@ class PurchaseInvoiceStats
     public PurchaseInvoiceStatsObject $object;
 
     /**
-     * Total number of purchase invoices.
+     * Total number of expenses.
      *
      * @var int $totalInvoices
      */
@@ -78,7 +78,7 @@ class PurchaseInvoiceStats
     public int $overdue;
 
     /**
-     * Total aggregate amount of all purchase invoices.
+     * Total aggregate amount of all expenses.
      *
      * @var float $totalAmount
      */

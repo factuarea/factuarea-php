@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1InvoicesAssignRealNumberResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * An invoice (compliant with Spanish AEAT VeriFactu).
      *
      * @var \Factuarea\Sdk\Models\Components\Invoice $data
      */

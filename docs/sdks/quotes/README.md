@@ -786,7 +786,7 @@ if ($response->object !== null) {
 
 ## publicApiV1QuotesConvert
 
-Convert an accepted quote into a sales invoice. The new invoice references the source quote via metadata; the quote moves to status `converted`.
+Convert an accepted quote into an invoice. The new invoice references the source quote via metadata; the quote moves to status `converted`.
 
 ### Example Usage: api_key_revoked
 

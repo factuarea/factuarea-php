@@ -40,7 +40,7 @@ class PublicApiV1PurchaseInvoicesCreateResponse
     public array $headers;
 
     /**
-     * Purchase invoice created successfully. The `Location` header contains the canonical URL of the newly created resource.
+     * Expense created successfully. The `Location` header contains the canonical URL of the newly created resource.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesCreateResponseBody $object
      */

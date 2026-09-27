@@ -1,6 +1,6 @@
 # BulkDeletePurchaseInvoicesRequest
 
-Delete several purchase invoices in one request. `ids` is an array of 1 to 100 UUIDs; unknown identifiers are reported as failed rather than failing the whole request.
+Delete several expenses in one request. `ids` is an array of 1 to 100 UUIDs; unknown identifiers are reported as failed rather than failing the whole request.
 
 
 ## Fields

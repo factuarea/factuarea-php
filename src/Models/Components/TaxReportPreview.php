@@ -83,7 +83,7 @@ class TaxReportPreview
     public int $invoiceCount;
 
     /**
-     * Number of purchase invoices considered in the period.
+     * Number of expenses considered in the period.
      *
      * @var int $purchaseInvoiceCount
      */
