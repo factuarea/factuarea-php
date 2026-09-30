@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkStatusInvoicesV1Request - Transition several invoices to `new_status` (`sent` or `paid`) in one request, up to 50 per batch. `ids` is an array of invoice UUIDs; `payment_date` is required and cannot be in the future when `new_status` is `paid`. Every transition passes the document state guard, and invoices that cannot transition are returned under `failures[]`. */
+/** BulkStatusInvoicesV1Request - Transition several invoices to `new_status` (`issued` or `paid`) in one request, up to 50 per batch. `issued` issues each draft without sending any email; `sent` is still accepted as an alias of `issued` in every API version and never marks the invoice as delivered. `ids` is an array of invoice UUIDs; `payment_date` is required and cannot be in the future when `new_status` is `paid`. Every transition passes the document state guard, and invoices that cannot transition are returned under `failures[]`. */
 class BulkStatusInvoicesV1Request
 {
     /**
@@ -22,6 +22,7 @@ class BulkStatusInvoicesV1Request
     public array $ids;
 
     /**
+     * Target status: `issued` issues each draft (definitive number, VeriFactu record) without sending any email; `paid` records a payment for the outstanding amount of each issued invoice. `sent` is accepted as an alias of `issued` in every API version and never sets the delivery mark (`is_sent`).
      *
      * @var \Factuarea\Sdk\Models\Components\BulkStatusInvoicesV1RequestNewStatus $newStatus
      */

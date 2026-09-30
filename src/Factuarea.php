@@ -75,6 +75,8 @@ class Factuarea
 
     public RecurringInvoices $recurringInvoices;
 
+    public Tasks $tasks;
+
     public Invoices $invoices;
 
     public AbsenceRequests $absenceRequests;
@@ -86,6 +88,8 @@ class Factuarea
     public AbsenceTypes $absenceTypes;
 
     public Contacts $contacts;
+
+    public Projects $projects;
 
     public PurchaseScans $purchaseScans;
 
@@ -119,13 +123,19 @@ class Factuarea
 
     public PriceLists $priceLists;
 
+    public TaskLabels $taskLabels;
+
     public WebhookEndpoints $webhookEndpoints;
 
     public StripeAutoinvoicing $stripeAutoinvoicing;
 
     public TaxReports $taxReports;
 
+    public Agenda $agenda;
+
     public Gestoria $gestoria;
+
+    public Users $users;
 
     public Emails $emails;
 
@@ -134,6 +144,8 @@ class Factuarea
     public TimeBalances $timeBalances;
 
     public Payouts $payouts;
+
+    public TaskTimers $taskTimers;
 
     public TaxCatalog $taxCatalog;
 
@@ -152,6 +164,8 @@ class Factuarea
     public Holidays $holidays;
 
     public Integrations $integrations;
+
+    public Notifications $notifications;
 
     public PaymentMethods $paymentMethods;
 
@@ -185,12 +199,14 @@ class Factuarea
         $this->companies = new Companies($this->sdkConfiguration);
         $this->verifactu = new Verifactu($this->sdkConfiguration);
         $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
+        $this->tasks = new Tasks($this->sdkConfiguration);
         $this->invoices = new Invoices($this->sdkConfiguration);
         $this->absenceRequests = new AbsenceRequests($this->sdkConfiguration);
         $this->timeCorrections = new TimeCorrections($this->sdkConfiguration);
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
         $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->contacts = new Contacts($this->sdkConfiguration);
+        $this->projects = new Projects($this->sdkConfiguration);
         $this->purchaseScans = new PurchaseScans($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
         $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
@@ -207,14 +223,18 @@ class Factuarea
         $this->account = new Account($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);
+        $this->taskLabels = new TaskLabels($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
+        $this->agenda = new Agenda($this->sdkConfiguration);
         $this->gestoria = new Gestoria($this->sdkConfiguration);
+        $this->users = new Users($this->sdkConfiguration);
         $this->emails = new Emails($this->sdkConfiguration);
         $this->presence = new Presence($this->sdkConfiguration);
         $this->timeBalances = new TimeBalances($this->sdkConfiguration);
         $this->payouts = new Payouts($this->sdkConfiguration);
+        $this->taskTimers = new TaskTimers($this->sdkConfiguration);
         $this->taxCatalog = new TaxCatalog($this->sdkConfiguration);
         $this->absenceCalendar = new AbsenceCalendar($this->sdkConfiguration);
         $this->timeTrackingSettings = new TimeTrackingSettings($this->sdkConfiguration);
@@ -224,6 +244,7 @@ class Factuarea
         $this->events = new Events($this->sdkConfiguration);
         $this->holidays = new Holidays($this->sdkConfiguration);
         $this->integrations = new Integrations($this->sdkConfiguration);
+        $this->notifications = new Notifications($this->sdkConfiguration);
         $this->paymentMethods = new PaymentMethods($this->sdkConfiguration);
         $this->payrollExportFormats = new PayrollExportFormats($this->sdkConfiguration);
         $this->purchaseScanEmails = new PurchaseScanEmails($this->sdkConfiguration);

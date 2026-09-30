@@ -45,20 +45,20 @@ class PublicApiV1ContactsActivitiesRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\Category $category
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesCategory $category
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=category')]
-    public ?Category $category = null;
+    public ?PublicApiV1ContactsActivitiesCategory $category = null;
 
     /**
      * @param  string  $contact
      * @param  array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection>  $direction
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
-     * @param  ?\Factuarea\Sdk\Models\Operations\Category  $category
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesCategory  $category
      * @phpstan-pure
      */
-    public function __construct(string $contact, array $direction, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Category $category = null)
+    public function __construct(string $contact, array $direction, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1ContactsActivitiesCategory $category = null)
     {
         $this->contact = $contact;
         $this->direction = $direction;

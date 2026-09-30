@@ -278,7 +278,7 @@ class InvoiceLine
     public ?string $aeatTaxCode = null;
 
     /**
-     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (≤100 chars). REQUIRED on a `SUPLIDO` line (a disbursement without its supporting reference is rejected with 422) and `null` on a normal line. Free text on purpose: the receipt of a public body is rarely registered as an expense.
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (≤100 chars). REQUIRED on a `SUPLIDO` line (a disbursement without its supporting reference is rejected with 422) and `null` on a normal line. Free text on purpose: the receipt of a public body is rarely a supplier invoice.
      *
      * @var ?string $sourceInvoiceReference
      */

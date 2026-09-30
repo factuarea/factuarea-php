@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class RecurringInvoiceAutoDelivery
 {
     /**
-     * If `true`, generated invoices are automatically emailed to `recipients`.
+     * Compatibility field DERIVED from `generation_mode`: `true` if and only if `generation_mode` is `issue_and_send`, in which case each generated invoice is emailed to `recipients`.
      *
      * @var bool $sendAutomatically
      */

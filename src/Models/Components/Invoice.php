@@ -28,7 +28,7 @@ class Invoice
     public InvoiceObject $object;
 
     /**
-     * Whether the invoice has a definitive number assigned. `false` for drafts (where `number` is `null`); becomes `true` after `POST /v1/invoices/{uuid}/assign-real-number`, or automatically on send/payment.
+     * Whether the invoice has a definitive number assigned. `false` for drafts (where `number` is `null`); becomes `true` after `POST /v1/invoices/{uuid}/assign-real-number`, or automatically when the invoice is issued.
      *
      * @var bool $isNumberAssigned
      */
@@ -60,12 +60,13 @@ class Invoice
     public ClientRef $client;
 
     /**
-     * Invoice lifecycle status.
+     * Public invoice status. `issued` means the invoice has been ISSUED (definitive number, VeriFactu record); it says nothing about delivery, which lives in `is_sent`/`sent_at`/`sent_via`. `paid` and `partially_paid` are derived from the payment ledger. Before API version `2026-10-01` the issued status is published as `sent` (that contract called issuing "sending"), so `sent` only appears for integrations pinned to an earlier version.
      *
-     * @var string $status
+     * @var \Factuarea\Sdk\Models\Components\InvoiceStatus $status
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
-    public string $status;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceStatus')]
+    public InvoiceStatus $status;
 
     /**
      *
@@ -239,6 +240,14 @@ class Invoice
     public bool $isCorrective;
 
     /**
+     * Whether the invoice has been delivered to the customer, independently of its fiscal `status`: an issued or overdue invoice can be delivered or not. Derived from the delivery mark (`sent_at` + `sent_via`), never set directly. Not present before API version `2026-10-01`.
+     *
+     * @var bool $isSent
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_sent')]
+    public bool $isSent;
+
+    /**
      *
      * @var \DateTime $createdAt
      */
@@ -373,11 +382,29 @@ class Invoice
     public ?LocalDate $paidOn;
 
     /**
+     * When the invoice was issued (ISO 8601), or `null` while it is a draft or scheduled. Not present before API version `2026-10-01`: earlier versions publish this instant in `sent_at`.
+     *
+     * @var ?\DateTime $issuedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('issued_at')]
+    public ?\DateTime $issuedAt;
+
+    /**
+     * When the invoice was first delivered to the customer (ISO 8601): the moment the mail server accepted its delivery email, or the date of a manual mark. `null` while it has not been delivered. A resend never moves it. Before API version `2026-10-01` this field carries the ISSUANCE instant instead (that contract called issuing "sending").
      *
      * @var ?\DateTime $sentAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('sent_at')]
     public ?\DateTime $sentAt;
+
+    /**
+     * Channel of the first delivery: `email` (the mail server accepted the delivery email) or `manual` (marked with `POST /v1/invoices/{id}/mark-sent`). `null` while the invoice has not been delivered. Not present before API version `2026-10-01`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SentVia $sentVia
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sent_via')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SentVia|null')]
+    public ?SentVia $sentVia;
 
     /**
      *
@@ -402,7 +429,7 @@ class Invoice
     public ?\DateTime $scheduledFor;
 
     /**
-     * Action the scheduler runs when `scheduled_for` is reached: `issue_and_send` (issue and email) or `draft` (issue only). `null` when the invoice is not scheduled.
+     * Action the scheduler runs when `scheduled_for` is reached: `issue` (issue without sending) or `issue_and_send` (issue and email it). `null` when the invoice is not scheduled. Before API version `2026-10-01` the `issue` action is published as `draft`, its previous name.
      *
      * @var ?\Factuarea\Sdk\Models\Components\InvoiceScheduledAction $scheduledAction
      */
@@ -433,7 +460,7 @@ class Invoice
      * @param  string  $type
      * @param  \Factuarea\Sdk\Models\Components\SeriesRef  $series
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
-     * @param  string  $status
+     * @param  \Factuarea\Sdk\Models\Components\InvoiceStatus  $status
      * @param  LocalDate  $issuedOn
      * @param  float  $subtotal
      * @param  float  $taxesTotal
@@ -455,6 +482,7 @@ class Invoice
      * @param  float  $pendingAmount
      * @param  \Factuarea\Sdk\Models\Components\Payments  $payments
      * @param  bool  $isCorrective
+     * @param  bool  $isSent
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $number
@@ -472,7 +500,9 @@ class Invoice
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceRecurring  $recurring
      * @param  ?\DateTime  $paidAt
      * @param  ?LocalDate  $paidOn
+     * @param  ?\DateTime  $issuedAt
      * @param  ?\DateTime  $sentAt
+     * @param  ?\Factuarea\Sdk\Models\Components\SentVia  $sentVia
      * @param  ?\DateTime  $voidedAt
      * @param  ?string  $voidReason
      * @param  ?\DateTime  $scheduledFor
@@ -481,7 +511,7 @@ class Invoice
      * @param  ?string  $sourceStoreId
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, Payments $payments, bool $isCorrective, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $sentAt = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null)
+    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceStatus $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, Payments $payments, bool $isCorrective, bool $isSent, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?SentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -511,6 +541,7 @@ class Invoice
         $this->pendingAmount = $pendingAmount;
         $this->payments = $payments;
         $this->isCorrective = $isCorrective;
+        $this->isSent = $isSent;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->number = $number;
@@ -528,7 +559,9 @@ class Invoice
         $this->recurring = $recurring;
         $this->paidAt = $paidAt;
         $this->paidOn = $paidOn;
+        $this->issuedAt = $issuedAt;
         $this->sentAt = $sentAt;
+        $this->sentVia = $sentVia;
         $this->voidedAt = $voidedAt;
         $this->voidReason = $voidReason;
         $this->scheduledFor = $scheduledFor;

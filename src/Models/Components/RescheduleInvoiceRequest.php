@@ -13,6 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class RescheduleInvoiceRequest
 {
     /**
+     * New instant at which the scheduled invoice will be issued, as an ISO 8601 date-time strictly in the future (422 otherwise). An explicit offset (`Z`, `+01:00`) is honoured; without one it is read in `Europe/Madrid`. Only the date moves: the `scheduled_action` chosen when scheduling (`issue` or `issue_and_send`) is kept.
      *
      * @var \DateTime $scheduledFor
      */

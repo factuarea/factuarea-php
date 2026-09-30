@@ -15,3 +15,7 @@ Type of action of the step, as frozen in the rule version snapshot.
 | `SendPaymentReminder` | send_payment_reminder |
 | `ChangeStatus`        | change_status         |
 | `TagEntity`           | tag_entity            |
+| `CreateTask`          | create_task           |
+| `ChangeTaskStatus`    | change_task_status    |
+| `AssignTask`          | assign_task           |
+| `AddTaskComment`      | add_task_comment      |

@@ -14,17 +14,11 @@ enum CreateChildApiKeyV1RequestScope: string
     case ContactsRead = 'contacts:read';
     case ContactsWrite = 'contacts:write';
     case ContactsDelete = 'contacts:delete';
-    case ClientsRead = 'clients:read';
-    case ClientsWrite = 'clients:write';
-    case ClientsDelete = 'clients:delete';
     case ProductsRead = 'products:read';
     case ProductsWrite = 'products:write';
     case ProductsDelete = 'products:delete';
     case PriceListsRead = 'price_lists:read';
     case PriceListsWrite = 'price_lists:write';
-    case SuppliersRead = 'suppliers:read';
-    case SuppliersWrite = 'suppliers:write';
-    case SuppliersDelete = 'suppliers:delete';
     case InvoicesRead = 'invoices:read';
     case InvoicesWrite = 'invoices:write';
     case InvoicesDelete = 'invoices:delete';
@@ -114,5 +108,14 @@ enum CreateChildApiKeyV1RequestScope: string
     case AutomationsWrite = 'automations:write';
     case AutomationsDelete = 'automations:delete';
     case AutomationRunsRead = 'automation_runs:read';
+    case ProjectsRead = 'projects:read';
+    case ProjectsWrite = 'projects:write';
+    case ProjectsDelete = 'projects:delete';
+    case TasksRead = 'tasks:read';
+    case TasksWrite = 'tasks:write';
+    case TasksDelete = 'tasks:delete';
+    case UsersRead = 'users:read';
+    case NotificationsRead = 'notifications:read';
+    case NotificationsWrite = 'notifications:write';
     case Wildcard = '*';
 }

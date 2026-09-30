@@ -29,7 +29,7 @@ class PublicApiV1InvoicesListRequest
     public ?string $endingBefore = null;
 
     /**
-     * Invoice status. Exact match on `status`.
+     * Invoice status (`draft`, `scheduled`, `issued`, `paid`, `partially_paid`, `cancelled`, `overdue`, `annulled`). Exact match on `status`. `sent` is accepted as an alias of `issued` in every API version, so `status=sent` returns the same invoices as `status=issued`.
      *
      * @var ?string $status
      */
@@ -37,7 +37,7 @@ class PublicApiV1InvoicesListRequest
     public ?string $status = null;
 
     /**
-     * Invoice status. Comma-separated list. Any of the values matches.
+     * Invoice status. Comma-separated list; any of the values matches. `sent` is accepted as an alias of `issued` in every API version.
      *
      * @var ?string $statusIn
      */
@@ -267,6 +267,14 @@ class PublicApiV1InvoicesListRequest
     public ?VerifactuStatus $verifactuStatus = null;
 
     /**
+     * Delivery filter, independent of the fiscal status: `true` returns only the invoices marked as delivered to the customer (an email accepted by the mail server or a manual mark), `false` only the ones not delivered yet. Available in every API version.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\IsSent $isSent
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=is_sent')]
+    public ?IsSent $isSent = null;
+
+    /**
      * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
@@ -308,9 +316,10 @@ class PublicApiV1InvoicesListRequest
      * @param  ?string  $xActiveProfile
      * @param  ?string  $originalInvoiceId
      * @param  ?\Factuarea\Sdk\Models\Operations\VerifactuStatus  $verifactuStatus
+     * @param  ?\Factuarea\Sdk\Models\Operations\IsSent  $isSent
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $dueOnGte = null, ?LocalDate $dueOnLte = null, ?LocalDate $dueOnGt = null, ?LocalDate $dueOnLt = null, ?float $totalGte = null, ?float $totalLte = null, ?float $totalGt = null, ?float $totalLt = null, ?string $currency = null, ?string $currencyIn = null, ?string $number = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1InvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $originalInvoiceId = null, ?VerifactuStatus $verifactuStatus = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $status = null, ?string $statusIn = null, ?string $clientId = null, ?string $clientIdIn = null, ?string $seriesId = null, ?string $seriesIdIn = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?LocalDate $dueOnGte = null, ?LocalDate $dueOnLte = null, ?LocalDate $dueOnGt = null, ?LocalDate $dueOnLt = null, ?float $totalGte = null, ?float $totalLte = null, ?float $totalGt = null, ?float $totalLt = null, ?string $currency = null, ?string $currencyIn = null, ?string $number = null, ?string $tags = null, ?string $tagsIn = null, ?PublicApiV1InvoicesListSort $sort = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $originalInvoiceId = null, ?VerifactuStatus $verifactuStatus = null, ?IsSent $isSent = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
@@ -344,6 +353,7 @@ class PublicApiV1InvoicesListRequest
         $this->xActiveProfile = $xActiveProfile;
         $this->originalInvoiceId = $originalInvoiceId;
         $this->verifactuStatus = $verifactuStatus;
+        $this->isSent = $isSent;
         $this->limit = $limit;
     }
 }

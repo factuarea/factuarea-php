@@ -35,12 +35,6 @@ enum OAuth2Scope: string
 
     case ContactsDelete = 'contacts:delete';
 
-    case ClientsRead = 'clients:read';
-
-    case ClientsWrite = 'clients:write';
-
-    case ClientsDelete = 'clients:delete';
-
     case ProductsRead = 'products:read';
 
     case ProductsWrite = 'products:write';
@@ -50,12 +44,6 @@ enum OAuth2Scope: string
     case PriceListsRead = 'price_lists:read';
 
     case PriceListsWrite = 'price_lists:write';
-
-    case SuppliersRead = 'suppliers:read';
-
-    case SuppliersWrite = 'suppliers:write';
-
-    case SuppliersDelete = 'suppliers:delete';
 
     case InvoicesRead = 'invoices:read';
 
@@ -234,6 +222,24 @@ enum OAuth2Scope: string
     case AutomationsDelete = 'automations:delete';
 
     case AutomationRunsRead = 'automation_runs:read';
+
+    case ProjectsRead = 'projects:read';
+
+    case ProjectsWrite = 'projects:write';
+
+    case ProjectsDelete = 'projects:delete';
+
+    case TasksRead = 'tasks:read';
+
+    case TasksWrite = 'tasks:write';
+
+    case TasksDelete = 'tasks:delete';
+
+    case UsersRead = 'users:read';
+
+    case NotificationsRead = 'notifications:read';
+
+    case NotificationsWrite = 'notifications:write';
 
     case Wildcard = '*';
 }

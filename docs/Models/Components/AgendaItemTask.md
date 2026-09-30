@@ -1,0 +1,16 @@
+# AgendaItemTask
+
+Task details, only in the `tasks` layer; `null` otherwise.
+
+
+## Fields
+
+| Field                                                                                 | Type                                                                                  | Required                                                                              | Description                                                                           |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `key`                                                                                 | *string*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
+| `projectId`                                                                           | *string*                                                                              | :heavy_check_mark:                                                                    | UUID of the project.                                                                  |
+| `projectName`                                                                         | *string*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
+| `priority`                                                                            | [Components\AgendaItemPriority](../../Models/Components/AgendaItemPriority.md)        | :heavy_check_mark:                                                                    | Task priority.                                                                        |
+| `assigneeId`                                                                          | *string*                                                                              | :heavy_check_mark:                                                                    | UUID of the assigned member, or `null`.                                               |
+| `boardStatus`                                                                         | [Components\BoardStatus](../../Models/Components/BoardStatus.md)                      | :heavy_check_mark:                                                                    | Board status: `planned` (backlog), `active` (in a column of the board) or `archived`. |
+| `completed`                                                                           | *bool*                                                                                | :heavy_check_mark:                                                                    | N/A                                                                                   |

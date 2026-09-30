@@ -71,10 +71,10 @@ class PublicApiV1HolidaysListRequest
     /**
      * Origin of the holiday: `reference` (seeded national/autonomic) or `custom` (company-defined local). Exact match on `source`.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\Source $source
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListSource $source
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=source')]
-    public ?Source $source = null;
+    public ?PublicApiV1HolidaysListSource $source = null;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -109,12 +109,12 @@ class PublicApiV1HolidaysListRequest
      * @param  ?string  $ccaaIn
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListScope  $scope
      * @param  ?string  $scopeIn
-     * @param  ?\Factuarea\Sdk\Models\Operations\Source  $source
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListSource  $source
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?int $year = null, ?string $ccaa = null, ?string $ccaaIn = null, ?PublicApiV1HolidaysListScope $scope = null, ?string $scopeIn = null, ?Source $source = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?int $year = null, ?string $ccaa = null, ?string $ccaaIn = null, ?PublicApiV1HolidaysListScope $scope = null, ?string $scopeIn = null, ?PublicApiV1HolidaysListSource $source = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;

@@ -1,0 +1,12 @@
+# EventDataTaskTimeEntryUpdated
+
+Payload (`data`) emitted with the `task_time_entry.updated` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
+
+
+## Fields
+
+| Field                                                                                                         | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                        | *string*                                                                                                      | :heavy_check_mark:                                                                                            | N/A                                                                                                           |
+| `object`                                                                                                      | [Components\TaskTimeEntry](../../Models/Components/TaskTimeEntry.md)                                          | :heavy_check_mark:                                                                                            | Time logged on a task. Unrelated to the working-day records of the time tracking module (`/v1/time-entries`). |
+| `projectId`                                                                                                   | *string*                                                                                                      | :heavy_check_mark:                                                                                            | UUID of the project of the task.                                                                              |

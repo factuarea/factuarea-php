@@ -71,7 +71,7 @@ class InvoiceReminderPreview
     public array $bcc;
 
     /**
-     * Current status of the invoice (e.g. `sent`, `overdue`).
+     * Current status of the invoice (e.g. `issued`, `overdue`). Before API version `2026-10-01` the issued status is published as `sent`.
      *
      * @var string $status
      */

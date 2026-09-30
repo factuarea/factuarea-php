@@ -1,0 +1,13 @@
+# AgendaList
+
+Every agenda item of the window in one page (`has_more` is always `false`), plus the layers served.
+
+
+## Fields
+
+| Field                                                                                                   | Type                                                                                                    | Required                                                                                                | Description                                                                                             |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                  | array<[Components\AgendaItem](../../Models/Components/AgendaItem.md)>                                   | :heavy_check_mark:                                                                                      | Items ordered by date, type and title.                                                                  |
+| `hasMore`                                                                                               | *bool*                                                                                                  | :heavy_check_mark:                                                                                      | Always `false`: the whole window is returned at once.                                                   |
+| `nextCursor`                                                                                            | *mixed*                                                                                                 | :heavy_check_mark:                                                                                      | Always `null`.                                                                                          |
+| `sources`                                                                                               | array<[Operations\PublicApiV1AgendaListSource](../../Models/Operations/PublicApiV1AgendaListSource.md)> | :heavy_check_mark:                                                                                      | Layers actually served: the requested ones that the API key can read (scope and module).                |

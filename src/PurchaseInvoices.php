@@ -302,7 +302,7 @@ class PurchaseInvoices
     /**
      * Bulk change expense status
      *
-     * Transition up to 50 expenses (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every invoice (never `now()`). Returns a `BulkPartialSuccessResult`; invoices that could not transition (not found or already paid) come back in `failures[]`.
+     * Transition up to 50 expenses (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every expense (never `now()`). Returns a `BulkPartialSuccessResult`; expenses that could not transition (not found or already paid) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1Request  $body
      * @param  string  $idempotencyKey
@@ -1302,7 +1302,7 @@ class PurchaseInvoices
     /**
      * List expense payments
      *
-     * Return the full payment ledger of an expense as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single invoice is bounded, so the complete set is returned without cursor pagination. An invoice with no payments returns an empty array, never a `404`; a `404` here means the invoice does not exist or belongs to another company.
+     * Return the full payment ledger of an expense as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single expense is bounded, so the complete set is returned without cursor pagination. An expense with no payments returns an empty array, never a `404`; a `404` here means the expense does not exist or belongs to another company.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -1664,7 +1664,7 @@ class PurchaseInvoices
     /**
      * Download an expense payment receipt
      *
-     * Stream the PDF payment receipt for a paid expense. Returns 409 if the invoice has not been paid yet.
+     * Stream the PDF payment receipt for a paid expense. Returns 409 if the expense has not been paid yet.
      *
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
@@ -1903,7 +1903,7 @@ class PurchaseInvoices
     /**
      * Register an expense payment
      *
-     * Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the invoice issue date and today, and a cancelled invoice accepts no payments. Once the accumulated payments cover the total, the invoice settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
+     * Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the supplier document issue date and today, and a cancelled expense accepts no payments. Once the accumulated payments cover the total, the expense settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse

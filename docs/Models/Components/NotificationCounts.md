@@ -1,0 +1,12 @@
+# NotificationCounts
+
+Notification counters of the member who owns the API key, after the change.
+
+
+## Fields
+
+| Field                                                                                      | Type                                                                                       | Required                                                                                   | Description                                                                                | Example                                                                                    |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `object`                                                                                   | [Components\NotificationCountsObject](../../Models/Components/NotificationCountsObject.md) | :heavy_check_mark:                                                                         | Stripe-like discriminator. Always `notification_counts` for this resource.                 | notification_counts                                                                        |
+| `total`                                                                                    | *int*                                                                                      | :heavy_check_mark:                                                                         | Notifications that are not archived.                                                       | 38                                                                                         |
+| `unread`                                                                                   | *int*                                                                                      | :heavy_check_mark:                                                                         | Unread notifications.                                                                      | 0                                                                                          |

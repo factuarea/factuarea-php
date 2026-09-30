@@ -9,7 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EventDataInvoiceSent - Payload (`data`) emitted with the `invoice.sent` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. */
+/**
+ * EventDataInvoiceSent - Payload (`data`) emitted with the `invoice.sent` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. Deprecated: alias of `invoice.issued`, emitted at the same instant and with the same `data.object`. New integrations should subscribe to `invoice.issued`; its removal will be announced with a `Sunset` date.
+ *
+ * @deprecated  class: This will be removed in a future release, please migrate away from it as soon as possible.
+ */
 class EventDataInvoiceSent
 {
     /**

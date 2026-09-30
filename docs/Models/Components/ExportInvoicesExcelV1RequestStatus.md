@@ -1,6 +1,6 @@
 # ExportInvoicesExcelV1RequestStatus
 
-Invoice status to filter by (draft, sent, paid, overdue, cancelled, annulled, scheduled).
+Invoice status to filter by (`draft`, `scheduled`, `issued`, `paid`, `cancelled`, `overdue`, `annulled`). `sent` is accepted as an alias of `issued` in every API version.
 
 
 ## Values
@@ -9,7 +9,7 @@ Invoice status to filter by (draft, sent, paid, overdue, cancelled, annulled, sc
 | ----------- | ----------- |
 | `Draft`     | draft       |
 | `Scheduled` | scheduled   |
-| `Sent`      | sent        |
+| `Issued`    | issued      |
 | `Paid`      | paid        |
 | `Cancelled` | cancelled   |
 | `Overdue`   | overdue     |

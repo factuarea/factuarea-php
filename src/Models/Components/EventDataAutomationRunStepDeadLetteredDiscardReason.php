@@ -32,6 +32,9 @@ enum EventDataAutomationRunStepDeadLetteredDiscardReason: string
     case DocumentTagLimitExceeded = 'document_tag_limit_exceeded';
     case DocumentCustomFieldLimitExceeded = 'document_custom_field_limit_exceeded';
     case DocumentTypeNotSupported = 'document_type_not_supported';
+    case TaskTargetNotFound = 'task_target_not_found';
+    case TaskProjectNotFound = 'task_project_not_found';
+    case ModuleNotAccessible = 'module_not_accessible';
     case StepAttemptsExhausted = 'step_attempts_exhausted';
     case RunExecutionTimeout = 'run_execution_timeout';
 }

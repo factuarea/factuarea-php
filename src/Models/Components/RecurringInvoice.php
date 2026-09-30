@@ -68,12 +68,21 @@ class RecurringInvoice
     public string $name;
 
     /**
-     * If `true`, the generated invoices are automatically emailed to `email_to`.
+     * Compatibility field DERIVED from `generation_mode`: `true` if and only if `generation_mode` is `issue_and_send` (each generated invoice is issued and emailed to `email_to`). On write, without an explicit `generation_mode`, `true` still means `issue_and_send` and `false` means `draft`; when both are sent and contradict each other the request is rejected with 422.
      *
      * @var bool $sendAutomatically
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('send_automatically')]
     public bool $sendAutomatically;
+
+    /**
+     * What each run of the recurrence does with the invoice it generates: `draft` leaves it as a draft (no definitive number); `issue` issues it (definitive number, VeriFactu record, stock movements) without emailing it, so it stays `is_sent = false`; `issue_and_send` issues it and emails it to the configured recipients, and it is marked as sent once the mail server accepts the email (if the delivery fails the invoice stays issued and not sent). Available in every API version. `send_automatically` is derived from it.
+     *
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoiceGenerationMode $generationMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('generation_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceGenerationMode')]
+    public RecurringInvoiceGenerationMode $generationMode;
 
     /**
      * Payment term days (Net X) applied to the due date of each generated invoice.
@@ -326,6 +335,7 @@ class RecurringInvoice
      * @param  string  $frequency
      * @param  string  $name
      * @param  bool  $sendAutomatically
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceGenerationMode  $generationMode
      * @param  int  $daysBeforeDue
      * @param  int  $occurrencesCount
      * @param  string  $holidayHandling
@@ -358,7 +368,7 @@ class RecurringInvoice
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null)
+    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, RecurringInvoiceGenerationMode $generationMode, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -368,6 +378,7 @@ class RecurringInvoice
         $this->frequency = $frequency;
         $this->name = $name;
         $this->sendAutomatically = $sendAutomatically;
+        $this->generationMode = $generationMode;
         $this->daysBeforeDue = $daysBeforeDue;
         $this->occurrencesCount = $occurrencesCount;
         $this->holidayHandling = $holidayHandling;

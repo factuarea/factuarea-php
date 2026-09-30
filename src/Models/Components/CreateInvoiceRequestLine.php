@@ -168,7 +168,7 @@ class CreateInvoiceRequestLine
     public ?CreateInvoiceRequestLineType $lineType = null;
 
     /**
-     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely registered as an expense.
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely a supplier invoice.
      *
      * @var ?string $sourceInvoiceReference
      */
