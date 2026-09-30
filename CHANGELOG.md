@@ -10,8 +10,8 @@ Regenerated from the public OpenAPI spec that adds the Tasks and Projects module
 and separates issuing an invoice from delivering it: **+81 operations, −0
 operations** (564 operations over 457 paths, up from 483 over 399). No operation
 was removed or renamed, but some generated enumerations change (see
-*Changed — breaking*). The default `Factuarea-Version` is unchanged
-(`2026-06-04`).
+*Changed — breaking*). The default `Factuarea-Version` moves to `2026-10-01`,
+the version whose contract the generated models describe.
 
 ### Added
 
@@ -125,6 +125,13 @@ those cases or compares those values must change:
   `SuppliersWrite` and `SuppliersDelete`. Those scopes belonged to the
   `/v1/clients/*` and `/v1/suppliers/*` routes retired in `0.4.0`; request
   `ContactsRead`, `ContactsWrite` or `ContactsDelete` instead.
+- The default `Factuarea-Version` moves from `2026-06-04` to `2026-10-01`
+  (`FactuareaVersionHook::DEFAULT_VERSION`). `2026-06-04` was never a version the
+  API accepts, so requests that relied on the default were rejected with 400
+  `unsupported_api_version`; `2026-10-01` is the contract these models describe
+  (invoices are published as `issued`, with `issued_at`, `is_sent` and
+  `sent_via`). An integration that needs the previous invoice vocabulary can send
+  `Factuarea-Version: 2026-06-01` explicitly; the hook never overwrites it.
 - `Invoice.status`, `WebhookEndpoint.enabled_events` and
   `WebhookEndpointWithSecret.enabled_events` declare their closed set of values
   (the nine invoice statuses above; the 149 webhook event types) and are
@@ -309,9 +316,8 @@ New operations on 14 existing resources: `invoices`, `account`, `clients`,
 
 ### Notes
 
-- `Factuarea-Version` stays at `2026-06-04`
-  (`FactuareaVersionHook::DEFAULT_VERSION`). This release widens the surface; it
-  does not move the API version, so no existing call changes behaviour.
+- `Factuarea-Version` moves to `2026-10-01`
+  (`FactuareaVersionHook::DEFAULT_VERSION`); see *Changed — breaking*.
 - The hand-written layer (`FactuareaClient`, `PageIterator`, `IdempotencyHook`,
   `FactuareaVersionHook`, `WebhookVerifier`) and its tests are unchanged: they
   live outside the Speakeasy-managed file set.
