@@ -19,9 +19,11 @@ request** (`src/Custom/Version/FactuareaVersionHook.php`). This means the API's
 behaviour is frozen for an integrator until they upgrade the SDK — upgrading is
 explicit and opt-in, never a surprise from a server-side change.
 
-The current default is **`2026-06-04`** — the date of the OpenAPI spec frozen in
-P0 (source commit `e822661bc`), exposed as
-`FactuareaVersionHook::DEFAULT_VERSION`.
+The current default is **`2026-10-01`** — the API version whose contract the
+generated models describe, exposed as `FactuareaVersionHook::DEFAULT_VERSION`.
+The pinned value must be one of the versions the API accepts: an unknown one is
+rejected with 400 `unsupported_api_version`. Releases up to `0.4.1` pinned
+`2026-06-04`, which the API never accepted.
 
 ### Overriding the pinned version
 
@@ -57,6 +59,7 @@ or renamed, its concrete replacement.
 | `0.1.0`     | `2026-06-04`        | Initial pre-GA release.        |
 | `0.2.0`     | `2026-06-04`        | Spec sync: +183/−4 operations. |
 | `0.4.1`     | `2026-06-04`        | Reviewed scanner contract and Expenses/Invoices documentation. |
+| `0.5.0`     | `2026-10-01`        | Tasks and projects: +81 operations (80 of Tasks, Projects, Task labels, Task timers, Users, Notifications and Agenda, plus `invoices.issue`). |
 
 When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 

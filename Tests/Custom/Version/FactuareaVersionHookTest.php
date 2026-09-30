@@ -55,9 +55,9 @@ final class FactuareaVersionHookTest extends TestCase
         );
     }
 
-    public function test_default_version_is_the_frozen_spec_date(): void
+    public function test_default_version_is_the_contract_version_of_the_models(): void
     {
-        $this->assertSame('2026-06-04', FactuareaVersionHook::DEFAULT_VERSION);
+        $this->assertSame('2026-10-01', FactuareaVersionHook::DEFAULT_VERSION);
         $this->assertMatchesRegularExpression(
             '/^\d{4}-\d{2}-\d{2}$/',
             FactuareaVersionHook::DEFAULT_VERSION,

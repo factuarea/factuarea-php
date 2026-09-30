@@ -4,6 +4,140 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.5.0] — 2026-09-29
+
+Regenerated from the public OpenAPI spec that adds the Tasks and Projects module
+and separates issuing an invoice from delivering it: **+81 operations, −0
+operations** (564 operations over 457 paths, up from 483 over 399). No operation
+was removed or renamed, but some generated enumerations change (see
+*Changed — breaking*). The default `Factuarea-Version` moves to `2026-10-01`,
+the version whose contract the generated models describe.
+
+### Added
+
+**Tasks and projects** — 80 operations under the `projects:*`, `tasks:*`,
+`users:read` and `notifications:*` scopes. Nested resources hang off their parent
+accessor (`$sdk->tasks->comments`, `$sdk->projects->columns`), and every method
+keeps the name derived from its `operationId` (`publicApiV1TasksCommentsCreate()`).
+After the first method of a list, the rest are abbreviated to their suffix.
+
+- **`Projects`** (22 operations): `publicApiV1ProjectsList()`, `Show()`,
+  `Create()`, `Update()`, `Delete()`, `Archive()`, `Unarchive()` and
+  `FindByKey()`; and, under `$sdk->projects`:
+  - `columns` (5): `publicApiV1ProjectsColumnsList()`, `Create()`, `Update()`,
+    `Delete()` and `Reorder()`.
+  - `customFields` (4): `publicApiV1ProjectsCustomFieldsList()`, `Create()`,
+    `Update()` and `Delete()`.
+  - `tasks` (2): `publicApiV1ProjectsTasksExport()` and `Import()`.
+  - `timeInvoices` (2): `publicApiV1ProjectsTimeInvoicesPreview()` and
+    `Create()`.
+  - `timeSummary` (1): `publicApiV1ProjectsTimeSummaryShow()`.
+- **`Tasks`** (45 operations): `publicApiV1TasksSearch()` (`GET /tasks`),
+  `Show()`, `Create()`, `Update()`, `Delete()`, `Duplicate()`, `FindByKey()`,
+  `Linked()`, `Assign()`, `Unassign()`, `Status()`, `Move()`, `Reposition()`,
+  `BulkUpdate()`, `BulkStatus()` and `BulkDelete()`; and, under `$sdk->tasks`:
+  - `comments` (4): `publicApiV1TasksCommentsList()`, `Create()`, `Update()` and
+    `Delete()`.
+  - `attachments` (5): `publicApiV1TasksAttachmentsList()`, `Show()`,
+    `Create()`, `Download()` and `Delete()`; `uploadLinks` (1):
+    `publicApiV1TasksUploadLinksCreate()`.
+  - `labels` (2): `publicApiV1TasksLabelsAssign()` and `Unassign()`.
+  - `relations` (3): `publicApiV1TasksRelationsList()`, `Create()` and
+    `Delete()`.
+  - `entityLinks` (3): `publicApiV1TasksEntityLinksList()`, `Create()` and
+    `Delete()`; `externalLinks` (3): `publicApiV1TasksExternalLinksList()`,
+    `Create()` and `Delete()`.
+  - `timeEntries` (5): `publicApiV1TasksTimeEntriesList()`, `Show()`,
+    `Create()`, `Update()` and `Delete()`; `timer` (1):
+    `publicApiV1TasksTimerStart()`.
+  - `activities` (1): `publicApiV1TasksActivitiesList()`; `customFields` (1):
+    `publicApiV1TasksCustomFieldsSet()`.
+- **`TaskLabels`** (5 operations): `publicApiV1TaskLabelsList()`, `Show()`,
+  `Create()`, `Update()` and `Delete()`.
+- **`TaskTimers`** (2 operations): `publicApiV1TaskTimersCurrent()` and `Stop()`.
+  They track time against tasks and are unrelated to the working-day clock of
+  `TimeEntries` (clock in, clock out…): the time logged against a task is
+  `$sdk->tasks->timeEntries`.
+- **`Users`** (2 operations): `publicApiV1UsersMe()` and `List()`.
+- **`Notifications`** (3 operations): `publicApiV1NotificationsList()`, `Read()`
+  and `MarkAllRead()`.
+- **`Agenda`** (1 operation): `publicApiV1AgendaList()`.
+
+Also new:
+
+- `Invoices::publicApiV1InvoicesIssue()` (`POST /invoices/{invoice}/issue`)
+  issues a draft (definitive number, VeriFactu record when applicable) without
+  emailing it. It is irreversible and consumes a series number, so send an
+  `Idempotency-Key`.
+- **Webhook events**: 24 new types in the `enabled_events` of
+  `CreateWebhookEndpointRequest` and `UpdateWebhookEndpointRequest`, in
+  `SendTestEventRequest.type` and in the `WebhookEventPayload` / `EventData`
+  unions — `task.*` (10: `created`, `updated`, `deleted`, `status_changed`,
+  `completed`, `assigned`, `unassigned`, `moved`, `due_soon`, `overdue`),
+  `task_comment.*` (`created`, `updated`, `deleted`), `task_time_entry.*`
+  (`created`, `updated`, `deleted`, `invoiced`), `project.*` (`created`,
+  `updated`, `archived`, `deleted`) and the invoice events `invoice.issued`,
+  `invoice.marked_sent` and `invoice.unsent`. `invoice.sent` is now flagged as
+  deprecated: it is an alias of `invoice.issued`, emitted at the same instant
+  with the same `data.object`. `EventDeletedObject` gains `object`, the type of
+  the deleted resource.
+- **API key scopes** (`CreateApiKeyV1Request`, `CreateChildApiKeyV1Request`):
+  `projects:read|write|delete`, `tasks:read|write|delete`, `users:read` and
+  `notifications:read|write`.
+- **Automations**: four task actions (`create_task`, `change_task_status`,
+  `assign_task`, `add_task_comment`); the catalog's actions expose the `module`
+  that governs them (`null` when transversal); step dead-letter reasons
+  `task_target_not_found`, `task_project_not_found` and `module_not_accessible`.
+
+### Changed
+
+- **Issuing an invoice is no longer "sending" it.** `Invoice` publishes
+  `is_sent`, `issued_at` and `sent_via` (`email`, `manual` or `null`) and a closed
+  `status` set — `draft`, `scheduled`, `issued`, `paid`, `partially_paid`,
+  `overdue`, `cancelled`, `annulled` and the legacy `sent`. `issued` and these
+  three fields are published only to callers on API version `2026-10-01` or
+  later; earlier versions — this SDK's default included — keep publishing an
+  issued invoice as `status: sent`, and a `scheduled_action` of `issue` as
+  `draft`. The status catalog (`InvoiceStatusItem.value`) declares the same set
+  and lists `issued` where earlier versions list `sent`. Pass a later
+  `factuareaVersion` on the call to opt in.
+- The rest of the invoice contract is available in every API version:
+  `Invoices::publicApiV1InvoicesList()` filters by delivery with `is_sent` and
+  accepts `status=issued` (`sent` stays an alias); `BulkStatus` accepts
+  `new_status: issued`; and scheduling accepts `scheduled_action: issue`.
+- **Recurring invoices** declare `generation_mode` (`draft`, `issue` or
+  `issue_and_send`) on create, create-from-invoice and update, and publish it on
+  `RecurringInvoice`. `send_automatically` is derived from it.
+
+### Changed — breaking
+
+Four generated enumerations follow the contract and lose cases, and three
+response fields that were plain strings become enumerations, so code that names
+those cases or compares those values must change:
+
+- `ScheduleInvoiceRequestScheduledAction::Draft` is gone; use `::Issue`. The API
+  still accepts the wire value `draft` as an alias of `issue`, but the enumeration
+  only offers `Issue` and `IssueAndSend`.
+- `ExportInvoicesExcelV1RequestStatus::Sent` is gone; use `::Issued` (the API
+  still accepts `sent` as an alias).
+- `CreateApiKeyV1RequestScope` and `CreateChildApiKeyV1RequestScope` no longer have
+  `ClientsRead`, `ClientsWrite`, `ClientsDelete`, `SuppliersRead`,
+  `SuppliersWrite` and `SuppliersDelete`. Those scopes belonged to the
+  `/v1/clients/*` and `/v1/suppliers/*` routes retired in `0.4.0`; request
+  `ContactsRead`, `ContactsWrite` or `ContactsDelete` instead.
+- The default `Factuarea-Version` moves from `2026-06-04` to `2026-10-01`
+  (`FactuareaVersionHook::DEFAULT_VERSION`). `2026-06-04` was never a version the
+  API accepts, so requests that relied on the default were rejected with 400
+  `unsupported_api_version`; `2026-10-01` is the contract these models describe
+  (invoices are published as `issued`, with `issued_at`, `is_sent` and
+  `sent_via`). An integration that needs the previous invoice vocabulary can send
+  `Factuarea-Version: 2026-06-01` explicitly; the hook never overwrites it.
+- `Invoice.status`, `WebhookEndpoint.enabled_events` and
+  `WebhookEndpointWithSecret.enabled_events` declare their closed set of values
+  (the nine invoice statuses above; the 149 webhook event types) and are
+  therefore generated as enumerations instead of strings. Compare with the
+  enumeration cases, or with their `->value`, rather than with string literals.
+
 ## [0.4.1] — 2026-09-27
 
 Synchronizes the generated SDK with the reviewed purchase scanner contract and
@@ -182,9 +316,8 @@ New operations on 14 existing resources: `invoices`, `account`, `clients`,
 
 ### Notes
 
-- `Factuarea-Version` stays at `2026-06-04`
-  (`FactuareaVersionHook::DEFAULT_VERSION`). This release widens the surface; it
-  does not move the API version, so no existing call changes behaviour.
+- `Factuarea-Version` moves to `2026-10-01`
+  (`FactuareaVersionHook::DEFAULT_VERSION`); see *Changed — breaking*.
 - The hand-written layer (`FactuareaClient`, `PageIterator`, `IdempotencyHook`,
   `FactuareaVersionHook`, `WebhookVerifier`) and its tests are unchanged: they
   live outside the Speakeasy-managed file set.
