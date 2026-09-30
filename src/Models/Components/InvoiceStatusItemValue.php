@@ -9,13 +9,16 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Internal status identifier. */
+/** Status identifier, in the same order as the catalog. Before API version `2026-10-01` the issued status is listed as `sent` (label «Enviado») in the position of `issued`. */
 enum InvoiceStatusItemValue: string
 {
     case Draft = 'draft';
-    case Sent = 'sent';
+    case Scheduled = 'scheduled';
+    case Issued = 'issued';
     case Paid = 'paid';
     case Cancelled = 'cancelled';
     case Overdue = 'overdue';
     case Annulled = 'annulled';
+    case PartiallyPaid = 'partially_paid';
+    case Sent = 'sent';
 }

@@ -36,12 +36,12 @@ class WebhookEndpointWithSecret
     public string $url;
 
     /**
-     * List of event types this endpoint subscribes to.
+     * List of event types this endpoint subscribes to. `invoice.sent` is a deprecated alias of `invoice.issued` (same instant, same `data.object`): it is still accepted so existing endpoints keep working, but new integrations should subscribe to `invoice.issued`.
      *
-     * @var array<string> $enabledEvents
+     * @var array<\Factuarea\Sdk\Models\Components\WebhookEndpointWithSecretEnabledEvent> $enabledEvents
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('enabled_events')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\WebhookEndpointWithSecretEnabledEvent>')]
     public array $enabledEvents;
 
     /**
@@ -128,7 +128,7 @@ class WebhookEndpointWithSecret
     public ?\DateTime $previousSecretValidUntil;
 
     /**
-     * API version (date-based, e.g. `2026-05-01`) pinned for the payloads delivered to this endpoint. `null` means the account default applies.
+     * Payload version (date-based, e.g. `2026-10-01`) pinned for the events delivered to this endpoint. An endpoint created without an explicit `api_version` is pinned at creation (`2026-10-01` when the effective REST version of the request is `2026-10-01` or later, `2026-05-22` otherwise). `null` only remains if it was cleared explicitly, and then the payload version of the default REST version (currently `2026-05-22`) applies, never the latest one. An endpoint pinned to a payload version before `2026-10-01` receives invoices in the previous vocabulary: `status: sent` for an issued invoice, `sent_at` equal to the issuance instant, and no `issued_at`, `is_sent` or `sent_via`.
      *
      * @var ?string $apiVersion
      */
@@ -167,7 +167,7 @@ class WebhookEndpointWithSecret
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\WebhookEndpointWithSecretObject  $object
      * @param  string  $url
-     * @param  array<string>  $enabledEvents
+     * @param  array<\Factuarea\Sdk\Models\Components\WebhookEndpointWithSecretEnabledEvent>  $enabledEvents
      * @param  string  $status
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt

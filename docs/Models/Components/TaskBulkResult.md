@@ -1,0 +1,12 @@
+# TaskBulkResult
+
+Result of a bulk task operation. Tasks that no longer exist or were moved are skipped silently.
+
+
+## Fields
+
+| Field                                                                                    | Type                                                                                     | Required                                                                                 | Description                                                                              | Example                                                                                  |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `object`                                                                                 | [Components\TaskBulkResultObject](../../Models/Components/TaskBulkResultObject.md)       | :heavy_check_mark:                                                                       | Stripe-like discriminator. Always `task_bulk_result` for this resource.                  | task_bulk_result                                                                         |
+| `operation`                                                                              | [Components\TaskBulkResultOperation](../../Models/Components/TaskBulkResultOperation.md) | :heavy_check_mark:                                                                       | Bulk operation performed.                                                                | status                                                                                   |
+| `changed`                                                                                | *int*                                                                                    | :heavy_check_mark:                                                                       | Tasks actually changed.                                                                  | 2                                                                                        |

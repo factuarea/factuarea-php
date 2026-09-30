@@ -15,3 +15,7 @@ Kind of action to run. Must be one of the action types `GET /v1/automations/cata
 | `SendPaymentReminder` | send_payment_reminder |
 | `ChangeStatus`        | change_status         |
 | `TagEntity`           | tag_entity            |
+| `CreateTask`          | create_task           |
+| `ChangeTaskStatus`    | change_task_status    |
+| `AssignTask`          | assign_task           |
+| `AddTaskComment`      | add_task_comment      |

@@ -56,6 +56,7 @@ class CreateWebhookEndpointRequest
     public ?array $ipAllowlist = null;
 
     /**
+     * Payload version (date-based, `YYYY-MM-DD`) to pin for the events delivered to this endpoint. Supported values: `2026-05-22` and `2026-10-01`. Omitted or `null`, the endpoint is pinned at creation to the payload version that matches the effective REST version of the request: `2026-10-01` when that version is `2026-10-01` or later (`Factuarea-Version` header, or the version pinned on the API key), and `2026-05-22` otherwise, including requests without a version header. So nobody receives the new vocabulary without opting in. With `2026-05-22`, invoices keep the previous vocabulary (`status: sent` for an issued invoice, `sent_at` equal to the issuance instant). A value that is not a `YYYY-MM-DD` date returns 422 (subcode `api_version_invalid_format`), and an unsupported one 422 (subcode `api_version_unsupported`).
      *
      * @var ?string $apiVersion
      */

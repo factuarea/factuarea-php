@@ -2486,6 +2486,131 @@ class Invoices
     }
 
     /**
+     * Issue an invoice
+     *
+     * Issues a draft invoice without sending it: assigns its definitive series number, freezes the issuer and customer snapshots, sets `issued_at`, registers the VeriFactu record when applicable and emits the `invoice.issued` event. No email is sent and the delivery mark is not set (`is_sent` stays `false`); to deliver it use `POST /v1/invoices/{id}/send`, or `POST /v1/invoices/{id}/mark-sent` with `Factuarea-Version: 2026-10-01` when you delivered it through another channel. Only a `draft` can be issued: any other status returns 422 `invalid_status_transition`. Issuing is irreversible and consumes a series number, so send an `Idempotency-Key` to retry safely. Available in every API version; the response follows the effective version (before `2026-10-01` the issued invoice is published as `status: sent`).
+     *
+     * @param  string  $invoice
+     * @param  string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesIssueResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1InvoicesIssue(string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1InvoicesIssueResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1InvoicesIssueRequest(
+            invoice: $invoice,
+            idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/invoices/{invoice}/issue', Operations\PublicApiV1InvoicesIssueRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.invoices.issue', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesIssueResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1InvoicesIssueResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
      * List all invoices
      *
      * List your invoices with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `series_id`, `issued_on[gte|lte]`, and `total[gte|lte]`.
@@ -2727,7 +2852,7 @@ class Invoices
     /**
      * Mark an invoice as sent
      *
-     * Transitions a draft invoice to `sent` without dispatching email. Useful when the document was delivered through an external channel.
+     * Its meaning depends on the effective API version. **Before `2026-10-01`** (including the default version) it ISSUES a draft invoice without dispatching any email, exactly as it always did: the response publishes the invoice as `status: sent`. **From `2026-10-01`** it only records that you delivered an issued invoice to the customer through a channel of your own (WhatsApp, paper, a portal…): it sets `is_sent: true`, `sent_via: manual` and `sent_at`, and never changes the fiscal status, the number or the VeriFactu record. In that version it is only accepted on `issued` or `overdue` invoices — on a draft it returns 422 `invoice_cannot_be_marked_as_sent` (issue it first with `POST /v1/invoices/{id}/issue`) — and it is idempotent: an invoice already marked as sent keeps its original date and channel. Because in the default version it issues the invoice, the operation stays classified as irreversible and accepts an `Idempotency-Key`.
      *
      * @param  string  $invoice
      * @param  string  $idempotencyKey
@@ -4114,7 +4239,7 @@ class Invoices
      *
      * Move the issuance date of an already scheduled invoice. The invoice **stays `scheduled` throughout** — unlike `unschedule` followed by `schedule`, it never returns to `draft`, so it is never editable or deletable in between and there is no window in which the sweep could find it unscheduled.
      *
-     * **What you can change:** `scheduled_for`, and only that. `scheduled_action` is preserved — a schedule created as `issue_and_send` still emails the client at the new date, and one created as `draft` still does not. To change the action you have to `unschedule` and `schedule` again. The content of the invoice (lines, client, series, totals) is untouched by this call: use `PATCH /v1/invoices/{id}` while it is still a draft for that.
+     * **What you can change:** `scheduled_for`, and only that. `scheduled_action` is preserved — a schedule created as `issue_and_send` still emails the client at the new date, and one created as `issue` still does not (before API version `2026-10-01` that action is published as `draft`). To change the action you have to `unschedule` and `schedule` again. The content of the invoice (lines, client, series, totals) is untouched by this call: use `PATCH /v1/invoices/{id}` while it is still a draft for that.
      *
      * Limits: only an invoice in `scheduled` can be rescheduled — a `draft` (never scheduled) or an already issued invoice returns 422 — and the new `scheduled_for` must be strictly in the future (422 otherwise). Everything documented under `schedule` about what happens when the date arrives (number assigned at that moment, snapshots frozen, asynchronous VeriFactu *alta*, email only with `issue_and_send`, per-invoice retry on failure) applies unchanged to the new date.
      *
@@ -4239,13 +4364,17 @@ class Invoices
      *
      * Reserve the issuance of a draft invoice for a future instant. The invoice moves to `scheduled` and **nothing fiscal happens yet**: it keeps its `BORRADOR` placeholder number, no series counter is consumed and nothing is registered with VeriFactu. Scheduling never burns numbering.
      *
-     * **What happens at `scheduled_for`.** A sweep runs every minute and, on the first pass at or after that instant, it: (1) assigns the definitive correlative number of the series **at that moment**, not when you scheduled — so a document scheduled today and issued next month takes the number that corresponds to next month; (2) freezes the recipient and issuer snapshots as of that instant, which is what the PDF and the fiscal XML will show; (3) moves the invoice to `sent`; (4) queues the VeriFactu *alta* to AEAT **asynchronously** when the company is enrolled; and (5) emails the client **only** when `scheduled_action` is `issue_and_send` and the client has an email on file — with `scheduled_action: draft` the invoice is issued but never delivered, and `issue_and_send` without a recipient email still issues it, silently skipping the delivery.
+     * **What happens at `scheduled_for`.** A sweep runs every minute and, on the first pass at or after that instant, it: (1) assigns the definitive correlative number of the series **at that moment**, not when you scheduled — so a document scheduled today and issued next month takes the number that corresponds to next month; (2) freezes the recipient and issuer snapshots as of that instant, which is what the PDF and the fiscal XML will show; (3) moves the invoice to `issued`, sets `issued_at` and emits `invoice.issued`; (4) queues the VeriFactu *alta* to AEAT **asynchronously** when the company is enrolled; and (5) emails the client **only** when `scheduled_action` is `issue_and_send` and the client has an email on file — with `scheduled_action: issue` the invoice is issued but never delivered, and `issue_and_send` without a recipient email still issues it, silently skipping the delivery. Issuing never sets the delivery mark by itself: `is_sent` becomes `true` (with `sent_via: email` and `sent_at`) only when the mail server accepts that email.
+     *
+     * **`scheduled_action`.** `issue` issues the invoice without sending it; `issue_and_send` issues it and emails it to the customer. `draft` is still accepted as an input alias of `issue` in every API version, because it always meant "issue without sending".
      *
      * **Time zone.** `scheduled_for` is an ISO 8601 date-time. If it carries an explicit offset (`2027-01-15T09:00:00Z`, `…+01:00`) that offset is honoured; without one it is read in the account's server time zone, `Europe/Madrid`. Resolution is minute-level: expect issuance within about a minute of the instant you asked for, never before it.
      *
-     * **If the scheduled issuance fails**, each invoice is isolated in its own transaction: the failing one stays `scheduled` with its date in the past, the error is logged, the rest of the batch is unaffected and the next sweep retries it. A successful issuance is never repeated, because `scheduled → sent` can only happen once.
+     * **If the scheduled issuance fails**, each invoice is isolated in its own transaction: the failing one stays `scheduled` with its date in the past, the error is logged, the rest of the batch is unaffected and the next sweep retries it. A successful issuance is never repeated, because `scheduled → issued` can only happen once.
      *
      * Limits: only a `draft` can be scheduled (any other status returns 422) and `scheduled_for` must be strictly in the future (422 otherwise). While it is still `scheduled` you can call `unschedule` to return it to `draft`, or `reschedule` to move only the date.
+     *
+     * **Before API version `2026-10-01`** (including the default version) the behaviour is the same, but the response uses the previous vocabulary: the action `issue` is published as `scheduled_action: draft`, and an invoice the sweep has issued is published as `status: sent` with `sent_at` equal to the issuance instant and without `issued_at`, `is_sent` or `sent_via`. Send `Factuarea-Version: 2026-10-01` to read the vocabulary documented here.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesScheduleRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesScheduleResponse
@@ -5240,7 +5369,7 @@ class Invoices
      *
      * Unscheduling leaves **no fiscal trace**, because nothing fiscal had happened yet: no correlative number of the series was consumed (the invoice still carries its `BORRADOR` placeholder), nothing was registered with VeriFactu and no email was sent. This is not an annulment and it does not appear in any AEAT record.
      *
-     * **Window of use.** It only applies while the invoice is `scheduled`. A `draft` that was never scheduled returns 422, and so does an invoice the sweep has already issued: from that instant on it is `sent`, it owns a definitive number and — where VeriFactu applies — an AEAT record, so the way back is no longer `unschedule` but `void`/`annul` to withdraw it (only while it is unpaid) or `corrective` to amend it. In practice the race is real: an invoice whose `scheduled_for` has just elapsed may already have been issued when your call lands.
+     * **Window of use.** It only applies while the invoice is `scheduled`. A `draft` that was never scheduled returns 422, and so does an invoice the sweep has already issued: from that instant on it is `issued` (published as `sent` before API version `2026-10-01`), it owns a definitive number and — where VeriFactu applies — an AEAT record, so the way back is no longer `unschedule` but `void`/`annul` to withdraw it (only while it is unpaid) or `corrective` to amend it. In practice the race is real: an invoice whose `scheduled_for` has just elapsed may already have been issued when your call lands.
      *
      * If you only want to move the date, use `PATCH /v1/invoices/{id}/reschedule` instead — it avoids the round trip through `draft` and the window in which the document is editable.
      *
@@ -5367,7 +5496,7 @@ class Invoices
     /**
      * Unsend an invoice
      *
-     * Clear the delivery marker (`sent_at`) of a `sent` invoice while keeping its `sent` status. The correlative number and VeriFactu record stay intact — the invoice is not reverted to draft and remains immutable per AEAT. Use it to undo an accidental mark-as-sent. Idempotent: a no-op when `sent_at` is already null. **It does not touch stock:** undoing the delivery marker does NOT return any goods to the warehouse, because the movement was booked when the invoice was issued and not when it was marked as sent. To undo the sale itself — and with it its stock — void the invoice or issue a corrective one.
+     * Clear the delivery mark of an issued invoice without changing its fiscal status: `sent_at` and `sent_via` go back to `null` and `is_sent` to `false`, while the invoice stays `issued` or `overdue`. The correlative number and VeriFactu record stay intact — the invoice is not reverted to draft and remains immutable per AEAT. Use it to undo a delivery that was recorded by mistake. Only `issued` and `overdue` invoices qualify: a draft, scheduled, cancelled or annulled invoice, or one with active payments, returns 422 `invalid_status_transition` (subcode `invoice_not_unsendable_in_current_state`). Idempotent: a no-op when the invoice is not marked as sent. **Before API version `2026-10-01`** (including the default version) `sent_at` represents the issuance instant, so the response keeps `status: sent` and a populated `sent_at`; read the delivery mark with `Factuarea-Version: 2026-10-01`. **It does not touch stock:** undoing the delivery marker does NOT return any goods to the warehouse, because the movement was booked when the invoice was issued and not when it was marked as sent. To undo the sale itself — and with it its stock — void the invoice or issue a corrective one.
      *
      * @param  string  $invoice
      * @param  ?string  $idempotencyKey

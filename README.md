@@ -532,6 +532,10 @@ if ($response->object !== null) {
 * [publicApiV1AccountPersonalizationTemplates](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationtemplates) - List available personalization templates
 * [publicApiV1AccountPersonalizationUpdate](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationupdate) - Update account personalization
 
+### [Agenda](docs/sdks/agenda/README.md)
+
+* [publicApiV1AgendaList](docs/sdks/agenda/README.md#publicapiv1agendalist) - List agenda items
+
 ### [Automations.Catalog](docs/sdks/catalog/README.md)
 
 * [publicApiV1AutomationsCatalogShow](docs/sdks/catalog/README.md#publicapiv1automationscatalogshow) - Retrieve the automation catalog
@@ -748,6 +752,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesPublicLinkGet](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkget) - Retrieve invoice public link
 * [publicApiV1InvoicesPublicLinkUpdate](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkupdate) - Update invoice public link
 * [publicApiV1InvoicesStats](docs/sdks/invoices/README.md#publicapiv1invoicesstats) - Get invoice statistics
+* [publicApiV1InvoicesIssue](docs/sdks/invoices/README.md#publicapiv1invoicesissue) - Issue an invoice
 * [publicApiV1InvoicesActivities](docs/sdks/invoices/README.md#publicapiv1invoicesactivities) - List invoice activity
 * [publicApiV1InvoicesCorrectives](docs/sdks/invoices/README.md#publicapiv1invoicescorrectives) - List corrective invoices
 * [publicApiV1InvoicesPaymentsList](docs/sdks/invoices/README.md#publicapiv1invoicespaymentslist) - List invoice payments
@@ -790,6 +795,12 @@ if ($response->object !== null) {
 * [publicApiV1MonthlyTimeRecordClosesSeal](docs/sdks/monthlytimerecordcloses/README.md#publicapiv1monthlytimerecordclosesseal) - Seal a monthly time record register
 * [publicApiV1MonthlyTimeRecordClosesSealShow](docs/sdks/monthlytimerecordcloses/README.md#publicapiv1monthlytimerecordclosessealshow) - Retrieve the seal of a monthly register
 * [publicApiV1MonthlyTimeRecordClosesShow](docs/sdks/monthlytimerecordcloses/README.md#publicapiv1monthlytimerecordclosesshow) - Retrieve a monthly time record close
+
+### [Notifications](docs/sdks/notifications/README.md)
+
+* [publicApiV1NotificationsList](docs/sdks/notifications/README.md#publicapiv1notificationslist) - List notifications
+* [publicApiV1NotificationsMarkAllRead](docs/sdks/notifications/README.md#publicapiv1notificationsmarkallread) - Mark all notifications as read
+* [publicApiV1NotificationsRead](docs/sdks/notifications/README.md#publicapiv1notificationsread) - Mark a notification as read
 
 ### [PaymentMethods](docs/sdks/paymentmethods/README.md)
 
@@ -919,6 +930,46 @@ if ($response->object !== null) {
 * [publicApiV1ProformasStatuses](docs/sdks/proformas/README.md#publicapiv1proformasstatuses) - List proforma statuses
 * [publicApiV1ProformasReject](docs/sdks/proformas/README.md#publicapiv1proformasreject) - Reject a proforma
 * [publicApiV1ProformasSend](docs/sdks/proformas/README.md#publicapiv1proformassend) - Send proforma by email
+
+### [Projects](docs/sdks/projects/README.md)
+
+* [publicApiV1ProjectsArchive](docs/sdks/projects/README.md#publicapiv1projectsarchive) - Archive a project
+* [publicApiV1ProjectsCreate](docs/sdks/projects/README.md#publicapiv1projectscreate) - Create a project
+* [publicApiV1ProjectsList](docs/sdks/projects/README.md#publicapiv1projectslist) - List projects
+* [publicApiV1ProjectsDelete](docs/sdks/projects/README.md#publicapiv1projectsdelete) - Delete a project
+* [publicApiV1ProjectsShow](docs/sdks/projects/README.md#publicapiv1projectsshow) - Retrieve a project
+* [publicApiV1ProjectsUpdate](docs/sdks/projects/README.md#publicapiv1projectsupdate) - Update a project
+* [publicApiV1ProjectsFindByKey](docs/sdks/projects/README.md#publicapiv1projectsfindbykey) - Find a project by key
+* [publicApiV1ProjectsUnarchive](docs/sdks/projects/README.md#publicapiv1projectsunarchive) - Unarchive a project
+
+#### [Projects.Columns](docs/sdks/columns/README.md)
+
+* [publicApiV1ProjectsColumnsCreate](docs/sdks/columns/README.md#publicapiv1projectscolumnscreate) - Create a project column
+* [publicApiV1ProjectsColumnsList](docs/sdks/columns/README.md#publicapiv1projectscolumnslist) - List project columns
+* [publicApiV1ProjectsColumnsDelete](docs/sdks/columns/README.md#publicapiv1projectscolumnsdelete) - Delete a project column
+* [publicApiV1ProjectsColumnsUpdate](docs/sdks/columns/README.md#publicapiv1projectscolumnsupdate) - Update a project column
+* [publicApiV1ProjectsColumnsReorder](docs/sdks/columns/README.md#publicapiv1projectscolumnsreorder) - Reorder project columns
+
+#### [Projects.CustomFields](docs/sdks/projectscustomfields/README.md)
+
+* [publicApiV1ProjectsCustomFieldsCreate](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldscreate) - Create a project custom field
+* [publicApiV1ProjectsCustomFieldsList](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldslist) - List project custom fields
+* [publicApiV1ProjectsCustomFieldsDelete](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldsdelete) - Delete a project custom field
+* [publicApiV1ProjectsCustomFieldsUpdate](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldsupdate) - Update a project custom field
+
+#### [Projects.Tasks](docs/sdks/projectstasks/README.md)
+
+* [publicApiV1ProjectsTasksExport](docs/sdks/projectstasks/README.md#publicapiv1projectstasksexport) - Export project tasks
+* [publicApiV1ProjectsTasksImport](docs/sdks/projectstasks/README.md#publicapiv1projectstasksimport) - Import tasks into a project
+
+#### [Projects.TimeInvoices](docs/sdks/timeinvoices/README.md)
+
+* [publicApiV1ProjectsTimeInvoicesCreate](docs/sdks/timeinvoices/README.md#publicapiv1projectstimeinvoicescreate) - Invoice project time
+* [publicApiV1ProjectsTimeInvoicesPreview](docs/sdks/timeinvoices/README.md#publicapiv1projectstimeinvoicespreview) - Preview a project time invoice
+
+#### [Projects.TimeSummary](docs/sdks/timesummary/README.md)
+
+* [publicApiV1ProjectsTimeSummaryShow](docs/sdks/timesummary/README.md#publicapiv1projectstimesummaryshow) - Retrieve a project time summary
 
 ### [PurchaseInvoices](docs/sdks/purchaseinvoices/README.md)
 
@@ -1051,6 +1102,100 @@ if ($response->object !== null) {
 
 * [publicApiV1StripeAutoinvoicingPaymentsList](docs/sdks/payments/README.md#publicapiv1stripeautoinvoicingpaymentslist) - List Stripe autoinvoiced charges
 
+### [TaskLabels](docs/sdks/tasklabels/README.md)
+
+* [publicApiV1TaskLabelsCreate](docs/sdks/tasklabels/README.md#publicapiv1tasklabelscreate) - Create a task label
+* [publicApiV1TaskLabelsList](docs/sdks/tasklabels/README.md#publicapiv1tasklabelslist) - List task labels
+* [publicApiV1TaskLabelsDelete](docs/sdks/tasklabels/README.md#publicapiv1tasklabelsdelete) - Delete a task label
+* [publicApiV1TaskLabelsShow](docs/sdks/tasklabels/README.md#publicapiv1tasklabelsshow) - Retrieve a task label
+* [publicApiV1TaskLabelsUpdate](docs/sdks/tasklabels/README.md#publicapiv1tasklabelsupdate) - Update a task label
+
+### [Tasks](docs/sdks/tasks/README.md)
+
+* [publicApiV1TasksAssign](docs/sdks/tasks/README.md#publicapiv1tasksassign) - Assign a task
+* [publicApiV1TasksBulkStatus](docs/sdks/tasks/README.md#publicapiv1tasksbulkstatus) - Bulk change task status
+* [publicApiV1TasksBulkDelete](docs/sdks/tasks/README.md#publicapiv1tasksbulkdelete) - Bulk delete tasks
+* [publicApiV1TasksBulkUpdate](docs/sdks/tasks/README.md#publicapiv1tasksbulkupdate) - Bulk update tasks
+* [publicApiV1TasksStatus](docs/sdks/tasks/README.md#publicapiv1tasksstatus) - Change task status
+* [publicApiV1TasksCreate](docs/sdks/tasks/README.md#publicapiv1taskscreate) - Create a task
+* [publicApiV1TasksSearch](docs/sdks/tasks/README.md#publicapiv1taskssearch) - Search tasks
+* [publicApiV1TasksDelete](docs/sdks/tasks/README.md#publicapiv1tasksdelete) - Delete a task
+* [publicApiV1TasksShow](docs/sdks/tasks/README.md#publicapiv1tasksshow) - Retrieve a task
+* [publicApiV1TasksUpdate](docs/sdks/tasks/README.md#publicapiv1tasksupdate) - Update a task
+* [publicApiV1TasksDuplicate](docs/sdks/tasks/README.md#publicapiv1tasksduplicate) - Duplicate a task
+* [publicApiV1TasksFindByKey](docs/sdks/tasks/README.md#publicapiv1tasksfindbykey) - Find a task by key
+* [publicApiV1TasksLinked](docs/sdks/tasks/README.md#publicapiv1taskslinked) - List tasks linked to an entity
+* [publicApiV1TasksReposition](docs/sdks/tasks/README.md#publicapiv1tasksreposition) - Reposition a task
+* [publicApiV1TasksMove](docs/sdks/tasks/README.md#publicapiv1tasksmove) - Move a task to another project
+* [publicApiV1TasksUnassign](docs/sdks/tasks/README.md#publicapiv1tasksunassign) - Unassign a task
+
+#### [Tasks.Activities](docs/sdks/activities/README.md)
+
+* [publicApiV1TasksActivitiesList](docs/sdks/activities/README.md#publicapiv1tasksactivitieslist) - List task activity
+
+#### [Tasks.Attachments](docs/sdks/attachments/README.md)
+
+* [publicApiV1TasksAttachmentsDelete](docs/sdks/attachments/README.md#publicapiv1tasksattachmentsdelete) - Delete a task attachment
+* [publicApiV1TasksAttachmentsShow](docs/sdks/attachments/README.md#publicapiv1tasksattachmentsshow) - Retrieve a task attachment
+* [publicApiV1TasksAttachmentsDownload](docs/sdks/attachments/README.md#publicapiv1tasksattachmentsdownload) - Download a task attachment
+* [publicApiV1TasksAttachmentsList](docs/sdks/attachments/README.md#publicapiv1tasksattachmentslist) - List task attachments
+* [publicApiV1TasksAttachmentsCreate](docs/sdks/attachments/README.md#publicapiv1tasksattachmentscreate) - Upload a task attachment
+
+#### [Tasks.Comments](docs/sdks/comments/README.md)
+
+* [publicApiV1TasksCommentsCreate](docs/sdks/comments/README.md#publicapiv1taskscommentscreate) - Create a task comment
+* [publicApiV1TasksCommentsList](docs/sdks/comments/README.md#publicapiv1taskscommentslist) - List task comments
+* [publicApiV1TasksCommentsDelete](docs/sdks/comments/README.md#publicapiv1taskscommentsdelete) - Delete a task comment
+* [publicApiV1TasksCommentsUpdate](docs/sdks/comments/README.md#publicapiv1taskscommentsupdate) - Update a task comment
+
+#### [Tasks.CustomFields](docs/sdks/taskscustomfields/README.md)
+
+* [publicApiV1TasksCustomFieldsSet](docs/sdks/taskscustomfields/README.md#publicapiv1taskscustomfieldsset) - Set a task custom field value
+
+#### [Tasks.EntityLinks](docs/sdks/entitylinks/README.md)
+
+* [publicApiV1TasksEntityLinksCreate](docs/sdks/entitylinks/README.md#publicapiv1tasksentitylinkscreate) - Link a task to an entity
+* [publicApiV1TasksEntityLinksList](docs/sdks/entitylinks/README.md#publicapiv1tasksentitylinkslist) - List task entity links
+* [publicApiV1TasksEntityLinksDelete](docs/sdks/entitylinks/README.md#publicapiv1tasksentitylinksdelete) - Unlink a task from an entity
+
+#### [Tasks.ExternalLinks](docs/sdks/externallinks/README.md)
+
+* [publicApiV1TasksExternalLinksCreate](docs/sdks/externallinks/README.md#publicapiv1tasksexternallinkscreate) - Create a task external link
+* [publicApiV1TasksExternalLinksList](docs/sdks/externallinks/README.md#publicapiv1tasksexternallinkslist) - List task external links
+* [publicApiV1TasksExternalLinksDelete](docs/sdks/externallinks/README.md#publicapiv1tasksexternallinksdelete) - Delete a task external link
+
+#### [Tasks.Labels](docs/sdks/labels/README.md)
+
+* [publicApiV1TasksLabelsAssign](docs/sdks/labels/README.md#publicapiv1taskslabelsassign) - Assign a label to a task
+* [publicApiV1TasksLabelsUnassign](docs/sdks/labels/README.md#publicapiv1taskslabelsunassign) - Remove a label from a task
+
+#### [Tasks.Relations](docs/sdks/relations/README.md)
+
+* [publicApiV1TasksRelationsCreate](docs/sdks/relations/README.md#publicapiv1tasksrelationscreate) - Create a task relation
+* [publicApiV1TasksRelationsList](docs/sdks/relations/README.md#publicapiv1tasksrelationslist) - List task relations
+* [publicApiV1TasksRelationsDelete](docs/sdks/relations/README.md#publicapiv1tasksrelationsdelete) - Delete a task relation
+
+#### [Tasks.TimeEntries](docs/sdks/taskstimeentries/README.md)
+
+* [publicApiV1TasksTimeEntriesDelete](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriesdelete) - Delete a task time entry
+* [publicApiV1TasksTimeEntriesShow](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriesshow) - Retrieve a task time entry
+* [publicApiV1TasksTimeEntriesUpdate](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriesupdate) - Update a task time entry
+* [publicApiV1TasksTimeEntriesList](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentrieslist) - List task time entries
+* [publicApiV1TasksTimeEntriesCreate](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriescreate) - Create a task time entry
+
+#### [Tasks.Timer](docs/sdks/timer/README.md)
+
+* [publicApiV1TasksTimerStart](docs/sdks/timer/README.md#publicapiv1taskstimerstart) - Start a task timer
+
+#### [Tasks.UploadLinks](docs/sdks/uploadlinks/README.md)
+
+* [publicApiV1TasksUploadLinksCreate](docs/sdks/uploadlinks/README.md#publicapiv1tasksuploadlinkscreate) - Create a task upload link
+
+### [TaskTimers](docs/sdks/tasktimers/README.md)
+
+* [publicApiV1TaskTimersCurrent](docs/sdks/tasktimers/README.md#publicapiv1tasktimerscurrent) - Retrieve the running task timer
+* [publicApiV1TaskTimersStop](docs/sdks/tasktimers/README.md#publicapiv1tasktimersstop) - Stop the running task timer
+
 ### [TaxCatalog](docs/sdks/taxcatalog/README.md)
 
 * [publicApiV1TaxCatalogShow](docs/sdks/taxcatalog/README.md#publicapiv1taxcatalogshow) - Retrieve the tax catalog
@@ -1120,6 +1265,11 @@ if ($response->object !== null) {
 
 * [publicApiV1TimeTrackingSettingsShow](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsshow) - Retrieve the time tracking settings
 * [publicApiV1TimeTrackingSettingsUpdate](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsupdate) - Update the time tracking settings
+
+### [Users](docs/sdks/users/README.md)
+
+* [publicApiV1UsersMe](docs/sdks/users/README.md#publicapiv1usersme) - Retrieve the current user
+* [publicApiV1UsersList](docs/sdks/users/README.md#publicapiv1userslist) - List users
 
 ### [Verifactu](docs/sdks/verifactu/README.md)
 

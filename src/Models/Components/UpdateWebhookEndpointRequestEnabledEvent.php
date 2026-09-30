@@ -16,7 +16,10 @@ enum UpdateWebhookEndpointRequestEnabledEvent: string
     case InvoiceCorrectiveAutoCreated = 'invoice.corrective_auto_created';
     case InvoiceSubscriptionAutoCreated = 'invoice.subscription_auto_created';
     case InvoiceUpdated = 'invoice.updated';
+    case InvoiceIssued = 'invoice.issued';
     case InvoiceSent = 'invoice.sent';
+    case InvoiceMarkedSent = 'invoice.marked_sent';
+    case InvoiceUnsent = 'invoice.unsent';
     case InvoicePaid = 'invoice.paid';
     case InvoiceCancelled = 'invoice.cancelled';
     case InvoiceAnnulled = 'invoice.annulled';
@@ -136,4 +139,25 @@ enum UpdateWebhookEndpointRequestEnabledEvent: string
     case AutomationRunStepDeadLettered = 'automation_run.step_dead_lettered';
     case OrderInvoiced = 'order.invoiced';
     case OrderRefunded = 'order.refunded';
+    case TaskCreated = 'task.created';
+    case TaskUpdated = 'task.updated';
+    case TaskDeleted = 'task.deleted';
+    case TaskStatusChanged = 'task.status_changed';
+    case TaskCompleted = 'task.completed';
+    case TaskAssigned = 'task.assigned';
+    case TaskUnassigned = 'task.unassigned';
+    case TaskMoved = 'task.moved';
+    case TaskDueSoon = 'task.due_soon';
+    case TaskOverdue = 'task.overdue';
+    case TaskCommentCreated = 'task_comment.created';
+    case TaskCommentUpdated = 'task_comment.updated';
+    case TaskCommentDeleted = 'task_comment.deleted';
+    case TaskTimeEntryCreated = 'task_time_entry.created';
+    case TaskTimeEntryUpdated = 'task_time_entry.updated';
+    case TaskTimeEntryDeleted = 'task_time_entry.deleted';
+    case TaskTimeEntryInvoiced = 'task_time_entry.invoiced';
+    case ProjectCreated = 'project.created';
+    case ProjectUpdated = 'project.updated';
+    case ProjectArchived = 'project.archived';
+    case ProjectDeleted = 'project.deleted';
 }

@@ -50,6 +50,15 @@ Components\WebhookEventPayloadInvoiceSubscriptionAutoCreated $value = /* values 
 Components\WebhookEventPayloadInvoiceUpdated $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadInvoiceIssued`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceIssued
+*/
+Components\WebhookEventPayloadInvoiceIssued $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadInvoiceSent`
 
 ```php
@@ -57,6 +66,24 @@ Components\WebhookEventPayloadInvoiceUpdated $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceSent
 */
 Components\WebhookEventPayloadInvoiceSent $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadInvoiceMarkedSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceMarkedSent
+*/
+Components\WebhookEventPayloadInvoiceMarkedSent $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadInvoiceUnsent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadInvoiceUnsent
+*/
+Components\WebhookEventPayloadInvoiceUnsent $value = /* values here */
 ```
 
 ### `Components\WebhookEventPayloadInvoicePaid`
@@ -1128,5 +1155,194 @@ Components\WebhookEventPayloadOrderInvoiced $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadOrderRefunded
 */
 Components\WebhookEventPayloadOrderRefunded $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskCreated
+*/
+Components\WebhookEventPayloadTaskCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskUpdated
+*/
+Components\WebhookEventPayloadTaskUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskDeleted
+*/
+Components\WebhookEventPayloadTaskDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskStatusChanged`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskStatusChanged
+*/
+Components\WebhookEventPayloadTaskStatusChanged $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskCompleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskCompleted
+*/
+Components\WebhookEventPayloadTaskCompleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskAssigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskAssigned
+*/
+Components\WebhookEventPayloadTaskAssigned $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskUnassigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskUnassigned
+*/
+Components\WebhookEventPayloadTaskUnassigned $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskMoved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskMoved
+*/
+Components\WebhookEventPayloadTaskMoved $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskDueSoon`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskDueSoon
+*/
+Components\WebhookEventPayloadTaskDueSoon $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskOverdue`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskOverdue
+*/
+Components\WebhookEventPayloadTaskOverdue $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskCommentCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskCommentCreated
+*/
+Components\WebhookEventPayloadTaskCommentCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskCommentUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskCommentUpdated
+*/
+Components\WebhookEventPayloadTaskCommentUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskCommentDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskCommentDeleted
+*/
+Components\WebhookEventPayloadTaskCommentDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskTimeEntryCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskTimeEntryCreated
+*/
+Components\WebhookEventPayloadTaskTimeEntryCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskTimeEntryUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskTimeEntryUpdated
+*/
+Components\WebhookEventPayloadTaskTimeEntryUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskTimeEntryDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskTimeEntryDeleted
+*/
+Components\WebhookEventPayloadTaskTimeEntryDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTaskTimeEntryInvoiced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTaskTimeEntryInvoiced
+*/
+Components\WebhookEventPayloadTaskTimeEntryInvoiced $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadProjectCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProjectCreated
+*/
+Components\WebhookEventPayloadProjectCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadProjectUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProjectUpdated
+*/
+Components\WebhookEventPayloadProjectUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadProjectArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProjectArchived
+*/
+Components\WebhookEventPayloadProjectArchived $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadProjectDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProjectDeleted
+*/
+Components\WebhookEventPayloadProjectDeleted $value = /* values here */
 ```
 

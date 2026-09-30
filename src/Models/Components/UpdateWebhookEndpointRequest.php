@@ -58,6 +58,7 @@ class UpdateWebhookEndpointRequest
     public ?array $ipAllowlist = null;
 
     /**
+     * New payload version (date-based, `YYYY-MM-DD`) pinned for the events delivered to this endpoint. Supported values: `2026-05-22` and `2026-10-01`. Omit the field to keep the current value; send `null` to unpin the endpoint, which then receives the payload version of the default REST version (currently `2026-05-22`), never the latest one. Endpoints that existed before version `2026-10-01` was released were pinned to `2026-05-22`, so they keep receiving invoices in the previous vocabulary until you change this value. A value that is not a `YYYY-MM-DD` date returns 422 (subcode `api_version_invalid_format`), and an unsupported one 422 (subcode `api_version_unsupported`).
      *
      * @var ?string $apiVersion
      */
