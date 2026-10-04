@@ -20,10 +20,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?bool $surchargeSubject = null;
 
     /**
-     * Resolver `any`: estas reglas las consumen la SPA (usuario en sesión) y
-     *
-     * la v1 (API key sin usuario autenticado). Con `exists` —resolver
-     * `auth_user`— la v1 respondía 500 al recibir una tarifa.
+     * UUID (v7) of an active price list of your company to apply by default to this customer.
      *
      * @var ?string $defaultPriceListUuid
      */
@@ -74,6 +71,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?CustomerProfilePaymentMethod $paymentMethod = null;
 
     /**
+     * Payment term in days (0-365). For a new contact, omitted or null means 30 days; an explicit 0 means immediate payment. For an existing contact upsert, an omitted profile is preserved and a supplied profile replaces its defaults.
      *
      * @var ?int $paymentTermsDays
      */

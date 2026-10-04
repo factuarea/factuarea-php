@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxUsage - Desglose del uso de un tax across bounded contexts. Permite decidir si es seguro borrar o desactivar un tax (`in_use=false` ⇒ delete seguro). */
+/** TaxUsage - Where a tax is used across your catalog and documents. It lets you decide whether it is safe to delete or deactivate the tax (`in_use=false` means it is safe to delete). */
 class TaxUsage
 {
     /**
@@ -29,7 +29,7 @@ class TaxUsage
     public string $taxesId;
 
     /**
-     * true si `total_count > 0`.
+     * `true` when `total_count > 0`.
      *
      * @var bool $inUse
      */
@@ -37,7 +37,7 @@ class TaxUsage
     public bool $inUse;
 
     /**
-     * Aggregate sum of the 6 keys in `used_by`.
+     * Sum of the six counters in `used_by`.
      *
      * @var int $totalCount
      */
@@ -45,7 +45,7 @@ class TaxUsage
     public int $totalCount;
 
     /**
-     * Count by consumer BC. Excludes `purchase_invoice_lines` (no FK) and `recurring_invoices` (JSON lines).
+     * Number of references by kind of resource. Purchase invoice lines (they store a rate, not a tax reference) and recurring invoices (their lines are stored as a template) are not counted.
      *
      * @var \Factuarea\Sdk\Models\Components\UsedBy $usedBy
      */

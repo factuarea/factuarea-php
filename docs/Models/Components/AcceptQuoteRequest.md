@@ -1,10 +1,6 @@
 # AcceptQuoteRequest
 
-Public REST API v1 — POST /v1/quotes/{uuid}/accept.
-
-Optional body: `accepted_on` (date, defaults to today), `notes`.
-The controller performs the cross-field validation for `quote_expired`
-(`valid_until < today` → 422).
+Optional body to record the acceptance of the quote: `accepted_on` (date, defaults to today) and `notes`. A quote whose `valid_until` date has already passed cannot be accepted (422 `quote_expired`).
 
 
 ## Fields

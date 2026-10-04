@@ -93,6 +93,58 @@ class BusinessContactImportPreview
     public bool $queued;
 
     /**
+     * Persisted import reference for synchronous and queued execution; null for dry-run.
+     *
+     * @var ?string $importUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('import_uuid')]
+    public ?string $importUuid;
+
+    /**
+     *
+     * @var ?int $addedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('added_count')]
+    public ?int $addedCount;
+
+    /**
+     *
+     * @var ?int $skippedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('skipped_count')]
+    public ?int $skippedCount;
+
+    /**
+     *
+     * @var ?int $failedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('failed_count')]
+    public ?int $failedCount;
+
+    /**
+     *
+     * @var ?int $unprocessedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('unprocessed_count')]
+    public ?int $unprocessedCount;
+
+    /**
+     * Persisted execution status; null for preview and dry-run. Synchronous responses can be failed with unprocessed rows after a concurrent closure.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewStatus $status
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewStatus|null')]
+    public ?BusinessContactImportPreviewStatus $status;
+
+    /**
+     *
+     * @var ?string $failureReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('failure_reason')]
+    public ?string $failureReason;
+
+    /**
      * @param  array<string>  $sourceHeaders
      * @param  array<\Factuarea\Sdk\Models\Components\Row>  $rows
      * @param  int  $total
@@ -104,9 +156,16 @@ class BusinessContactImportPreview
      * @param  int  $invalid
      * @param  bool  $dryRun
      * @param  bool  $queued
+     * @param  ?string  $importUuid
+     * @param  ?int  $addedCount
+     * @param  ?int  $skippedCount
+     * @param  ?int  $failedCount
+     * @param  ?int  $unprocessedCount
+     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewStatus  $status
+     * @param  ?string  $failureReason
      * @phpstan-pure
      */
-    public function __construct(array $sourceHeaders, array $rows, int $total, int $create, int $update, int $addRole, int $mergeCandidate, int $conflict, int $invalid, bool $dryRun, bool $queued)
+    public function __construct(array $sourceHeaders, array $rows, int $total, int $create, int $update, int $addRole, int $mergeCandidate, int $conflict, int $invalid, bool $dryRun, bool $queued, ?string $importUuid = null, ?int $addedCount = null, ?int $skippedCount = null, ?int $failedCount = null, ?int $unprocessedCount = null, ?BusinessContactImportPreviewStatus $status = null, ?string $failureReason = null)
     {
         $this->sourceHeaders = $sourceHeaders;
         $this->rows = $rows;
@@ -119,5 +178,12 @@ class BusinessContactImportPreview
         $this->invalid = $invalid;
         $this->dryRun = $dryRun;
         $this->queued = $queued;
+        $this->importUuid = $importUuid;
+        $this->addedCount = $addedCount;
+        $this->skippedCount = $skippedCount;
+        $this->failedCount = $failedCount;
+        $this->unprocessedCount = $unprocessedCount;
+        $this->status = $status;
+        $this->failureReason = $failureReason;
     }
 }

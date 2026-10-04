@@ -25,7 +25,7 @@
 
 ## publicApiV1RecurringInvoicesActivate
 
-Activate a paused recurring invoice. The next invoice will be generated according to the schedule. This is a semantic alias of `POST /recurring_invoices/{recurring_invoice}/resume` — both map to the same handler and behave identically; neither is deprecated.
+Activate a paused recurring invoice. The next invoice will be generated according to the schedule. This is a semantic alias of `POST /recurring_invoices/{recurring_invoice}/resume` — both behave identically; neither is deprecated.
 
 ### Example Usage
 
@@ -1559,7 +1559,7 @@ if ($response->object !== null) {
 
 ## publicApiV1RecurringInvoicesResume
 
-Resume a paused recurring invoice. This is a semantic alias of `POST /recurring_invoices/{recurring_invoice}/activate` — both map to the same handler and behave identically; neither is deprecated.
+Resume a paused recurring invoice. This is a semantic alias of `POST /recurring_invoices/{recurring_invoice}/activate` — both behave identically; neither is deprecated.
 
 ### Example Usage
 

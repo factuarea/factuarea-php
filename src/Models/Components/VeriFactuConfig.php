@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 /** VeriFactuConfig - VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/verifactu/config` and `PUT /v1/verifactu/settings`. The certificate password is never exposed. */
 class VeriFactuConfig
 {
@@ -45,7 +45,7 @@ class VeriFactuConfig
     public bool $autoTransmit;
 
     /**
-     * Entorno AEAT (`sandbox` / `production`).
+     * AEAT environment (`sandbox` / `production`).
      *
      * @var string $environment
      */
@@ -62,12 +62,54 @@ class VeriFactuConfig
     public array $notificationEmails;
 
     /**
-     * Indica si hay un certificado activo configurado.
+     * Whether there is an active certificate configured.
      *
      * @var bool $hasActiveCertificate
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('has_active_certificate')]
     public bool $hasActiveCertificate;
+
+    /**
+     * Who remits your records to AEAT: `own_certificate` (the default: your own certificate), `social_collaborator` (Factuarea remits with its certificate as social collaborator, annex I of the Resolution of 18-12-2024) or `power_of_attorney` (Factuarea remits under a power of attorney registered with AEAT). A third-party mode requires an active representation of the kind it asks for (`POST /v1/verifactu/representation`); change it with `PUT /v1/verifactu/settings`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\VeriFactuConfigRemissionMode $remissionMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('remission_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\VeriFactuConfigRemissionMode')]
+    public VeriFactuConfigRemissionMode $remissionMode;
+
+    /**
+     * Whether the company has a current representation that has NOT expired — the one that enables third-party remission — regardless of the mode. A representation that has expired keeps `active_representation_id` and `_kind` but this field is `false` (see `active_representation_is_expired`).
+     *
+     * @var bool $hasActiveRepresentation
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('has_active_representation')]
+    public bool $hasActiveRepresentation;
+
+    /**
+     * Whether the current representation has expired. `false` when there is none.
+     *
+     * @var bool $activeRepresentationIsExpired
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_representation_is_expired')]
+    public bool $activeRepresentationIsExpired;
+
+    /**
+     * Whether this instance offers the `social_collaborator` remission mode (the social-collaboration agreement with AEAT is in force). It is a fact of the instance, the same for every company: while it is `false`, `PUT /v1/verifactu/settings` with that mode returns 422 `social_collaborator_unavailable` and `power_of_attorney` covers the same use case.
+     *
+     * @var bool $socialCollaboratorAvailable
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('social_collaborator_available')]
+    public bool $socialCollaboratorAvailable;
+
+    /**
+     * State of the certificate that the remission would present given `remission_mode`: yours in `own_certificate`, the one of Factuarea in a third-party mode. `valid`: usable; `invalid`: configured but expired, revoked or for another tax ID; `not_configured`: there is none. The certificate of Factuarea never exposes its holder, tax ID, serial number or identifier.
+     *
+     * @var \Factuarea\Sdk\Models\Components\PresenterCertificateStatus $presenterCertificateStatus
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presenter_certificate_status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PresenterCertificateStatus')]
+    public PresenterCertificateStatus $presenterCertificateStatus;
 
     /**
      * Date until which the mode change is locked, or `null` if not locked.
@@ -93,6 +135,31 @@ class VeriFactuConfig
     public ?\DateTime $updatedAt;
 
     /**
+     * UUID (v7) of the current (not revoked) representation, even if it has expired, or `null` if there is none.
+     *
+     * @var ?string $activeRepresentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_representation_id')]
+    public ?string $activeRepresentationId;
+
+    /**
+     * Kind of the current (not revoked) representation, even if it has expired, or `null` if there is none.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ActiveRepresentationKind $activeRepresentationKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_representation_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ActiveRepresentationKind|null')]
+    public ?ActiveRepresentationKind $activeRepresentationKind;
+
+    /**
+     * Last day of validity (YYYY-MM-DD, Europe/Madrid) of the current representation, or `null` when there is none or it does not expire.
+     *
+     * @var ?LocalDate $activeRepresentationValidUntil
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_representation_valid_until')]
+    public ?LocalDate $activeRepresentationValidUntil;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\VeriFactuConfigObject  $object
      * @param  bool  $enabled
      * @param  string  $mode
@@ -100,12 +167,20 @@ class VeriFactuConfig
      * @param  string  $environment
      * @param  array<string>  $notificationEmails
      * @param  bool  $hasActiveCertificate
+     * @param  \Factuarea\Sdk\Models\Components\VeriFactuConfigRemissionMode  $remissionMode
+     * @param  bool  $hasActiveRepresentation
+     * @param  bool  $activeRepresentationIsExpired
+     * @param  bool  $socialCollaboratorAvailable
+     * @param  \Factuarea\Sdk\Models\Components\PresenterCertificateStatus  $presenterCertificateStatus
      * @param  ?\DateTime  $isLockedUntil
      * @param  ?string  $activeCertificateId
      * @param  ?\DateTime  $updatedAt
+     * @param  ?string  $activeRepresentationId
+     * @param  ?\Factuarea\Sdk\Models\Components\ActiveRepresentationKind  $activeRepresentationKind
+     * @param  ?LocalDate  $activeRepresentationValidUntil
      * @phpstan-pure
      */
-    public function __construct(VeriFactuConfigObject $object, bool $enabled, string $mode, bool $autoTransmit, string $environment, array $notificationEmails, bool $hasActiveCertificate, ?\DateTime $isLockedUntil = null, ?string $activeCertificateId = null, ?\DateTime $updatedAt = null)
+    public function __construct(VeriFactuConfigObject $object, bool $enabled, string $mode, bool $autoTransmit, string $environment, array $notificationEmails, bool $hasActiveCertificate, VeriFactuConfigRemissionMode $remissionMode, bool $hasActiveRepresentation, bool $activeRepresentationIsExpired, bool $socialCollaboratorAvailable, PresenterCertificateStatus $presenterCertificateStatus, ?\DateTime $isLockedUntil = null, ?string $activeCertificateId = null, ?\DateTime $updatedAt = null, ?string $activeRepresentationId = null, ?ActiveRepresentationKind $activeRepresentationKind = null, ?LocalDate $activeRepresentationValidUntil = null)
     {
         $this->object = $object;
         $this->enabled = $enabled;
@@ -114,8 +189,16 @@ class VeriFactuConfig
         $this->environment = $environment;
         $this->notificationEmails = $notificationEmails;
         $this->hasActiveCertificate = $hasActiveCertificate;
+        $this->remissionMode = $remissionMode;
+        $this->hasActiveRepresentation = $hasActiveRepresentation;
+        $this->activeRepresentationIsExpired = $activeRepresentationIsExpired;
+        $this->socialCollaboratorAvailable = $socialCollaboratorAvailable;
+        $this->presenterCertificateStatus = $presenterCertificateStatus;
         $this->isLockedUntil = $isLockedUntil;
         $this->activeCertificateId = $activeCertificateId;
         $this->updatedAt = $updatedAt;
+        $this->activeRepresentationId = $activeRepresentationId;
+        $this->activeRepresentationKind = $activeRepresentationKind;
+        $this->activeRepresentationValidUntil = $activeRepresentationValidUntil;
     }
 }

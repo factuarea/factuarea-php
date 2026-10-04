@@ -21,7 +21,7 @@ class Error2
     public ErrorType $type;
 
     /**
-     * Stable error code, e.g. missing_api_key, insufficient_scope, parameter_invalid, invalid_status_transition. Full reference of every code grouped by bounded context: https://docs.factuarea.com/guides/errors/all.
+     * Stable error code, e.g. missing_api_key, insufficient_scope, parameter_invalid, invalid_status_transition. Full reference of every code, grouped by area: https://docs.factuarea.com/guides/errors/all.
      *
      * @var string $code
      */
@@ -35,6 +35,15 @@ class Error2
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('message')]
     public string $message;
+
+    /**
+     * Zero-based position of the document line that raised the error, the same `N` as in a validation path `lines.N.field`. Present only when a domain rule rejects ONE specific line of the document (a product, variant, presentation, configuration or option that does not exist or is deactivated, a missing price or VAT rate, an exemption cause or regime key outside its catalog, a disbursement line carrying what it may not, a line total that does not match, …) and absent on every other error. It is additive: `param` keeps naming the field exactly as before, so a client can ignore `line_index`. Use it to highlight the offending line without parsing `message`.
+     *
+     * @var ?int $lineIndex
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('line_index')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $lineIndex = null;
 
     /**
      * Present on 422 validation errors: ALL failed fields, one item per field (not only the first). Each item carries `param`/`code`/`message` plus the optional hints `expected_format`/`allowed_values`. Additive and backward-compatible — `error.param`/`error.message` still mirror the first failed field.
@@ -96,6 +105,7 @@ class Error2
      * @param  \Factuarea\Sdk\Models\Components\ErrorType  $type
      * @param  string  $code
      * @param  string  $message
+     * @param  ?int  $lineIndex
      * @param  ?array<\Factuarea\Sdk\Models\Components\Error1>  $errors
      * @param  ?\Factuarea\Sdk\Models\Components\Details  $details
      * @param  ?string  $subcode
@@ -104,11 +114,12 @@ class Error2
      * @param  ?string  $requestId
      * @phpstan-pure
      */
-    public function __construct(ErrorType $type, string $code, string $message, ?array $errors = null, ?Details $details = null, ?string $subcode = null, ?string $param = null, ?string $docUrl = null, ?string $requestId = null)
+    public function __construct(ErrorType $type, string $code, string $message, ?int $lineIndex = null, ?array $errors = null, ?Details $details = null, ?string $subcode = null, ?string $param = null, ?string $docUrl = null, ?string $requestId = null)
     {
         $this->type = $type;
         $this->code = $code;
         $this->message = $message;
+        $this->lineIndex = $lineIndex;
         $this->errors = $errors;
         $this->details = $details;
         $this->subcode = $subcode;

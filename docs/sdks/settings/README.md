@@ -8,7 +8,7 @@
 
 ## publicApiV1VerifactuSettingsUpdate
 
-Update the VeriFactu settings of your company (e.g. mode/environment). Returns 422 `business_rule_violation` when a transition is locked by AEAT compliance (for example, once VeriFactu mode has been enabled it cannot be silently disabled).
+Update the VeriFactu settings of your company (e.g. mode/environment and, with `remission_mode`, who remits your records to AEAT). Returns 422 `business_rule_violation` when a transition is locked by AEAT compliance (for example, once VeriFactu mode has been enabled it cannot be silently disabled). A third-party `remission_mode` (`social_collaborator` or `power_of_attorney`) requires a current, unexpired representation of the kind it asks for — register it first with `POST /v1/verifactu/representation` — otherwise it returns 422 `business_rule_violation` with subcode `representation_required` and `param=remission_mode`; `social_collaborator` also returns 422 `social_collaborator_unavailable` while the social-collaboration agreement is not in force on this instance (`social_collaborator_available` in `GET /v1/verifactu/config`). Every change of mode is audited.
 
 ### Example Usage
 

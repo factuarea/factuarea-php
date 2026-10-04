@@ -20,12 +20,15 @@ use Speakeasy\Serializer\DeserializationContext;
 class Contacts
 {
     private SDKConfiguration $sdkConfiguration;
+    public Imports $imports;
+
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
+        $this->imports = new Imports($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -1568,7 +1571,9 @@ class Contacts
     /**
      * Import contacts
      *
-     * Import canonical contacts from CSV with target roles, explicit field mapping, conflict strategy and optional `dry_run`. Returns per-row classifications; large imports may return 202 when queued.
+     * Import canonical contacts from CSV with target roles, explicit field mapping, conflict strategy and optional `dry_run`. Returns per-row classifications and a stable import_uuid for synchronous 200 and queued 202 results. Dry-run is always synchronous and does not reserve or consume quota. New admissions share bulk_import_rows_per_month; imports admitted under the previous contact exemption retain it. Applied create/update/add_role rows consume quota; admission rejects with 429 import_row_quota_exceeded before writing or queueing when the allowance is exhausted.
+     *
+     * Fill in the downloaded template before applying the import. A file with no data rows returns 422 with code `business_rule_violation`, subcode `empty_import` and param `file`, before creating an import record or queueing work. Preview and `dry_run=true` accept a file containing only column headers and preserve `source_headers` with total 0.
      *
      * ```bash
      * curl -X POST https://api.factuarea.com/v1/contacts/import \
@@ -2083,7 +2088,7 @@ class Contacts
     /**
      * Preview a contact import
      *
-     * Validate a CSV contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically.
+     * Validate a contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically. A file containing only column headers returns 200 with total 0, no rows and source_headers preserved in their original order, so clients can inspect template columns before adding data.
      *
      * @param  \Factuarea\Sdk\Models\Components\PreviewBusinessContactImportV1Request  $body
      * @param  string  $idempotencyKey

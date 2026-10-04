@@ -76,6 +76,7 @@ class UpdateRecurringInvoiceRequestLine
     public ?float $confirmedBaseQuantity = null;
 
     /**
+     * VAT rate of the line (0–100). Optional, and it matters whenever `lines` is sent, because a `PUT` replaces the whole set of lines: a line that omits it (or sends `null`) takes the tax it references or the tax assigned to its product and otherwise the DEFAULT TAX of your company for this kind of document, inherited as a whole: its rate, its indirect-tax regime (IVA, IGIC or IPSI) and its AEAT qualification; an exempt or not-subject default also declares its cause (`exemption_reason`) on the line unless the line sends its own. If none of them exists the request is rejected with 422 `missing_required_param`, with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line); a rate already stored on a line is NOT kept if you resend the line without it. A `0` you send is honoured as a real 0 % rate.
      *
      * @var ?float $taxRate
      */

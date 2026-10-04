@@ -45,6 +45,22 @@ class PublicApiV1SeriesListRequest
     public ?string $documentTypeIn = null;
 
     /**
+     * Purpose of an invoice series: `complete`, `simplified`, `corrective` or `simplified_corrective`. Exact match on `invoice_kind`.
+     *
+     * @var ?string $invoiceKind
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_kind')]
+    public ?string $invoiceKind = null;
+
+    /**
+     * Purpose of an invoice series: `complete`, `simplified`, `corrective` or `simplified_corrective`. Comma-separated list. Any of the values matches.
+     *
+     * @var ?string $invoiceKindIn
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_kind[in]')]
+    public ?string $invoiceKindIn = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -74,16 +90,20 @@ class PublicApiV1SeriesListRequest
      * @param  ?string  $endingBefore
      * @param  ?string  $documentType
      * @param  ?string  $documentTypeIn
+     * @param  ?string  $invoiceKind
+     * @param  ?string  $invoiceKindIn
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $documentType = null, ?string $documentTypeIn = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $documentType = null, ?string $documentTypeIn = null, ?string $invoiceKind = null, ?string $invoiceKindIn = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->documentType = $documentType;
         $this->documentTypeIn = $documentTypeIn;
+        $this->invoiceKind = $invoiceKind;
+        $this->invoiceKindIn = $invoiceKindIn;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;

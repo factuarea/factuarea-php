@@ -51,6 +51,7 @@ class CreateDeliveryNoteRequestLine
     public ?string $taxRateId = null;
 
     /**
+     * VAT rate of the line (0–100). Optional: when you omit it (or send `null`) the line takes, in this order, the tax it references or the tax assigned to its product, and otherwise the DEFAULT TAX of your company for this kind of document (tax settings), inherited as a whole: its rate, its indirect-tax regime (IVA, IGIC or IPSI) and its AEAT qualification; an exempt or not-subject default also declares its cause (`exemption_reason`) on the line unless the line sends its own. The line ends up exactly as if you had chosen that tax. If none of them exists the request is rejected with 422 `missing_required_param`, with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line): the API never guesses a rate. A `0` you send is honoured as a real 0 % rate, never confused with «not stated».
      *
      * @var ?float $taxRate
      */

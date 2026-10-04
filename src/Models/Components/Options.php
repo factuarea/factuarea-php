@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Options
 {
     /**
+     * When `true`, the invoice is issued right after it is created (definitive number, frozen document) instead of staying as a draft.
      *
      * @var ?bool $issueDirectly
      */
@@ -20,6 +21,7 @@ class Options
     public ?bool $issueDirectly = null;
 
     /**
+     * When `true`, the invoice is emailed once issued; it implies issuing. The recipient is `options.send_to` or, when you omit it, the email of the client. If there is no possible recipient (no client, or a client with no email, and no `send_to`) the request is rejected with 422 `missing_required_param` and `param` = `options.send_to` BEFORE anything is created: no draft is left behind and no number is consumed. Repeating the request of an `external_id` that is already issued does not email it again while that email is queued or delivered.
      *
      * @var ?bool $sendAutomatically
      */
@@ -28,6 +30,7 @@ class Options
     public ?bool $sendAutomatically = null;
 
     /**
+     * Recipient email for `options.send_automatically`. Optional when the client has an email; required (422 `missing_required_param`) when you ask for the sending with no client or with a client that has no email. An empty value is rejected as well.
      *
      * @var ?string $sendTo
      */
@@ -36,6 +39,7 @@ class Options
     public ?string $sendTo = null;
 
     /**
+     * When `true`, the response waits up to about 15 seconds for the A4 PDF to be materialized (`pdf.status: ready`); if it is not ready by then `pdf.status` is `pending`. It implies issuing.
      *
      * @var ?bool $waitForPdf
      */
@@ -44,17 +48,28 @@ class Options
     public ?bool $waitForPdf = null;
 
     /**
+     * When `true`, the VeriFactu alta is generated synchronously, BEFORE responding, and the response carries its huella and QR in the `verifactu` block. It implies issuing. If the alta cannot be generated the invoice stays issued and the block reports `status: failed` with its `error_code`. Its transmission to AEAT follows its course in batches.
+     *
+     * @var ?bool $registerVerifactu
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('register_verifactu')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $registerVerifactu = null;
+
+    /**
      * @param  ?bool  $issueDirectly
      * @param  ?bool  $sendAutomatically
      * @param  ?string  $sendTo
      * @param  ?bool  $waitForPdf
+     * @param  ?bool  $registerVerifactu
      * @phpstan-pure
      */
-    public function __construct(?bool $issueDirectly = null, ?bool $sendAutomatically = null, ?string $sendTo = null, ?bool $waitForPdf = null)
+    public function __construct(?bool $issueDirectly = null, ?bool $sendAutomatically = null, ?string $sendTo = null, ?bool $waitForPdf = null, ?bool $registerVerifactu = null)
     {
         $this->issueDirectly = $issueDirectly;
         $this->sendAutomatically = $sendAutomatically;
         $this->sendTo = $sendTo;
         $this->waitForPdf = $waitForPdf;
+        $this->registerVerifactu = $registerVerifactu;
     }
 }

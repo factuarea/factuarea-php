@@ -50,7 +50,7 @@ class Presence
     /**
      * List office/remote presence declarations
      *
-     * List the office/remote presence declarations of your company with cursor-based pagination. Supports filtering by `employee_id` (UUID v7), by exact day (`date`) or by date range (`from`/`to`, `YYYY-MM-DD`). Each record is one employee’s declared work location for one day. Read-only over the public API — declarations are made from the app (SPA-only).
+     * List the office/remote presence declarations of your company with cursor-based pagination. Supports filtering by `employee_id` (UUID v7), by exact day (`date`) or by date range (`from`/`to`, `YYYY-MM-DD`). Each record is one employee’s declared work location for one day. Read-only over the public API — declarations are made from the Factuarea app.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PresenceDailyRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PresenceDailyResponse

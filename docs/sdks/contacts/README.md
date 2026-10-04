@@ -3662,7 +3662,9 @@ if ($response->object !== null) {
 
 ## publicApiV1ContactsImport
 
-Import canonical contacts from CSV with target roles, explicit field mapping, conflict strategy and optional `dry_run`. Returns per-row classifications; large imports may return 202 when queued.
+Import canonical contacts from CSV with target roles, explicit field mapping, conflict strategy and optional `dry_run`. Returns per-row classifications and a stable import_uuid for synchronous 200 and queued 202 results. Dry-run is always synchronous and does not reserve or consume quota. New admissions share bulk_import_rows_per_month; imports admitted under the previous contact exemption retain it. Applied create/update/add_role rows consume quota; admission rejects with 429 import_row_quota_exceeded before writing or queueing when the allowance is exhausted.
+
+Fill in the downloaded template before applying the import. A file with no data rows returns 422 with code `business_rule_violation`, subcode `empty_import` and param `file`, before creating an import record or queueing work. Preview and `dry_run=true` accept a file containing only column headers and preserve `source_headers` with total 0.
 
 ```bash
 curl -X POST https://api.factuarea.com/v1/contacts/import \
@@ -3678,6 +3680,50 @@ Limits: the file accepts CSV, TXT, XLSX or XLS up to 10 MB; `target_roles` accep
 ### Example Usage: api_key_revoked
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ImportBusinessContactsV1Request(
+    file: new Components\ImportBusinessContactsV1RequestFile(
+        fileName: 'example.file',
+        content: file_get_contents('example.file');,
+    ),
+    mapping: [
+        'name' => 'Name',
+        'tax_id' => 'VAT number',
+        'external_id' => 'Id',
+    ],
+);
+
+$response = $sdk->contacts->publicApiV1ContactsImport(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: closed_with_unprocessed_rows
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.contacts.import" method="post" path="/contacts/import" example="closed_with_unprocessed_rows" -->
 ```php
 declare(strict_types=1);
 
@@ -4007,7 +4053,7 @@ if ($response->twoHundredApplicationJsonObject !== null) {
 
 ## publicApiV1ContactsPreviewImport
 
-Validate a CSV contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically.
+Validate a contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically. A file containing only column headers returns 200 with total 0, no rows and source_headers preserved in their original order, so clients can inspect template columns before adding data.
 
 ### Example Usage: api_key_revoked
 

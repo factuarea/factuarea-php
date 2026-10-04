@@ -36,15 +36,25 @@ class PublicApiV1InvoicesPdfLinkRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * Paper of the PDF the signed link serves: `a4` (default, with the company template), `ticket_80` (80 mm thermal roll) or `ticket_58` (58 mm roll). Any other value returns 422 with a `parameter_invalid_enum` entry (and its `allowed_values`) in `error.errors[]`. Each format is rendered and cached separately.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkFormat $format
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=format')]
+    public ?PublicApiV1InvoicesPdfLinkFormat $format = null;
+
+    /**
      * @param  string  $invoice
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkFormat  $format
      * @phpstan-pure
      */
-    public function __construct(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1InvoicesPdfLinkFormat $format = null)
     {
         $this->invoice = $invoice;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
+        $this->format = $format;
     }
 }

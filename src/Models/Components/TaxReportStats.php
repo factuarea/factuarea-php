@@ -55,7 +55,7 @@ class TaxReportStats
     public int $totalSizeBytes;
 
     /**
-     * Trimestre fiscal en curso (UTC).
+     * Current fiscal quarter (UTC).
      *
      * @var \Factuarea\Sdk\Models\Components\CurrentQuarter $currentQuarter
      */

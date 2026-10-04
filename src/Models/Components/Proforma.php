@@ -113,7 +113,7 @@ class Proforma
     public float $total;
 
     /**
-     * Additional shipping cost added to the total.
+     * Shipping cost, expressed WITH VAT INCLUDED, added to the amount to pay. It is not part of `subtotal`, `total_vat` or `total`. When the proforma is converted to an invoice it becomes a "Gastos de envío" line whose base is `shipping_cost / (1 + r)` with VAT `r`, so the invoice total equals `total_with_shipping`.
      *
      * @var float $shippingCost
      */
@@ -121,7 +121,7 @@ class Proforma
     public float $shippingCost;
 
     /**
-     * Final total including the shipping cost (= total + shipping_cost).
+     * Final total including the shipping cost (= total + shipping_cost). The invoice generated from the proforma has exactly this total.
      *
      * @var float $totalWithShipping
      */
@@ -256,7 +256,7 @@ class Proforma
     public ?int $paymentTermsDays;
 
     /**
-     * Condiciones de entrega en formato libre.
+     * Delivery terms, free-form text.
      *
      * @var ?string $deliveryTerms
      */

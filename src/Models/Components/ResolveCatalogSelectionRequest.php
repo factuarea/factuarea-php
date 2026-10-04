@@ -28,10 +28,10 @@ class ResolveCatalogSelectionRequest
     public ?string $presentationId = null;
 
     /**
-     * Opciones ya elegidas: un ÚNICO valor por grupo. La selección
+     * Options already chosen: a SINGLE value per group. Multiple selection
      *
-     * múltiple queda fuera de alcance y dos valores del mismo grupo son
-     * una petición inválida, no una selección parcial.
+     * is out of scope and two values of the same group are an invalid
+     * request, not a partial selection.
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\ResolveCatalogSelectionRequestOption> $options
      */

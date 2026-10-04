@@ -1,10 +1,6 @@
 # CalculateTaxRequest
 
-Public REST API v1 — POST /v1/taxes/calculate.
-
-Body: `{ base: float, taxes_id: string }`. `taxes_id` es la FK a la tabla
-global `taxes` (valor UUID v7) — plural (D1), NUNCA `tax_id` (NIF/CIF fiscal).
-Devuelve `{ base, tax_rate, tax_amount, total_amount, tax }`.
+Calculate the tax amount of a base amount. Body: `base` (number) and `taxes_id` (UUID v7 of a tax of the catalog; it is `taxes_id` in the plural because `tax_id` already means the fiscal ID, NIF/CIF). Returns `base`, `tax_rate`, `tax_amount`, `total_amount` and the `tax`.
 
 
 ## Fields

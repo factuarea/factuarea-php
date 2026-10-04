@@ -45,12 +45,20 @@ class DeclaracionResponsable
     public string $systemId;
 
     /**
-     * Name of the invoicing software system.
+     * Name of the invoicing software system (not its code: that is `system_id`).
      *
      * @var string $systemName
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('system_name')]
     public string $systemName;
+
+    /**
+     * Components of the system (art. 15.d of Order HAC/1177/2024). An empty string in declarations that predate the full art. 15 content.
+     *
+     * @var string $components
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('components')]
+    public string $components;
 
     /**
      * Tax ID (NIF) of the SIF producer.
@@ -69,7 +77,15 @@ class DeclaracionResponsable
     public string $producerName;
 
     /**
-     * Indicates whether the system operates only in VeriFactu mode (tipo_uso = "S").
+     * Postal address of the SIF producer (art. 15.j). An empty string in declarations that predate the full art. 15 content.
+     *
+     * @var string $producerAddress
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('producer_address')]
+    public string $producerAddress;
+
+    /**
+     * Whether the system can ONLY operate as VERI*FACTU (art. 15.e, `TipoUsoPosibleSoloVerifactu`). It declares a possibility of the system, not the mode of a company.
      *
      * @var bool $verifactuOnly
      */
@@ -77,7 +93,7 @@ class DeclaracionResponsable
     public bool $verifactuOnly;
 
     /**
-     * Indicator of multiple taxpayers.
+     * Whether the system can serve several obliged taxpayers (art. 15.f, `TipoUsoPosibleMultiOT`). It declares a possibility of the system; the per-customer `IndicadorMultiplesOT` reported on each record is computed separately and is not part of art. 15.
      *
      * @var bool $multiOt
      */
@@ -116,35 +132,49 @@ class DeclaracionResponsable
     public \DateTime $createdAt;
 
     /**
+     * Signature types the system uses when it also works outside VERI*FACTU (art. 15.g). `null` when the system only works as VERI*FACTU and in declarations that predate the full art. 15 content.
+     *
+     * @var ?string $signatureTypes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('signature_types')]
+    public ?string $signatureTypes;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\DeclaracionResponsableObject  $object
      * @param  string  $version
      * @param  string  $systemId
      * @param  string  $systemName
+     * @param  string  $components
      * @param  string  $producerTaxId
      * @param  string  $producerName
+     * @param  string  $producerAddress
      * @param  bool  $verifactuOnly
      * @param  bool  $multiOt
      * @param  \DateTime  $declaredAt
      * @param  string  $signingPlace
      * @param  string  $contentHash
      * @param  \DateTime  $createdAt
+     * @param  ?string  $signatureTypes
      * @phpstan-pure
      */
-    public function __construct(string $id, DeclaracionResponsableObject $object, string $version, string $systemId, string $systemName, string $producerTaxId, string $producerName, bool $verifactuOnly, bool $multiOt, \DateTime $declaredAt, string $signingPlace, string $contentHash, \DateTime $createdAt)
+    public function __construct(string $id, DeclaracionResponsableObject $object, string $version, string $systemId, string $systemName, string $components, string $producerTaxId, string $producerName, string $producerAddress, bool $verifactuOnly, bool $multiOt, \DateTime $declaredAt, string $signingPlace, string $contentHash, \DateTime $createdAt, ?string $signatureTypes = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->version = $version;
         $this->systemId = $systemId;
         $this->systemName = $systemName;
+        $this->components = $components;
         $this->producerTaxId = $producerTaxId;
         $this->producerName = $producerName;
+        $this->producerAddress = $producerAddress;
         $this->verifactuOnly = $verifactuOnly;
         $this->multiOt = $multiOt;
         $this->declaredAt = $declaredAt;
         $this->signingPlace = $signingPlace;
         $this->contentHash = $contentHash;
         $this->createdAt = $createdAt;
+        $this->signatureTypes = $signatureTypes;
     }
 }

@@ -624,6 +624,11 @@ if ($response->object !== null) {
 * [publicApiV1ContactsUpdateSupplierProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatesupplierprofile) - Update a supplier profile
 * [publicApiV1ContactsVerifyCensus](docs/sdks/contacts/README.md#publicapiv1contactsverifycensus) - Verify a contact against the AEAT census
 
+#### [Contacts.Imports](docs/sdks/imports/README.md)
+
+* [publicApiV1ContactsImportsErrors](docs/sdks/imports/README.md#publicapiv1contactsimportserrors) - Download contact import errors
+* [publicApiV1ContactsImportsShow](docs/sdks/imports/README.md#publicapiv1contactsimportsshow) - Retrieve a contact import
+
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
 * [publicApiV1DeliveryNotesBulkDelete](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkdelete) - Bulk delete delivery notes
@@ -1068,6 +1073,7 @@ if ($response->object !== null) {
 * [publicApiV1SeriesActive](docs/sdks/series/README.md#publicapiv1seriesactive) - List active series by document type
 * [publicApiV1SeriesSetDefault](docs/sdks/series/README.md#publicapiv1seriessetdefault) - Mark a series as default for its type
 * [publicApiV1SeriesShow](docs/sdks/series/README.md#publicapiv1seriesshow) - Retrieve a series
+* [publicApiV1SeriesUpdate](docs/sdks/series/README.md#publicapiv1seriesupdate) - Update a series
 * [publicApiV1SeriesUnarchive](docs/sdks/series/README.md#publicapiv1seriesunarchive) - Unarchive a series
 
 ### [Shopify.Stores](docs/sdks/shopifystores/README.md)
@@ -1312,9 +1318,16 @@ if ($response->object !== null) {
 * [publicApiV1VerifactuRecordsFindByInvoiceNumber](docs/sdks/records/README.md#publicapiv1verifacturecordsfindbyinvoicenumber) - Find a VeriFactu record by invoice number
 * [publicApiV1VerifactuRecordsActivities](docs/sdks/records/README.md#publicapiv1verifacturecordsactivities) - List VeriFactu record activity timeline
 * [publicApiV1VerifactuRecordsList](docs/sdks/records/README.md#publicapiv1verifacturecordslist) - List VeriFactu records
+* [publicApiV1VerifactuRecordsRetryBlocked](docs/sdks/records/README.md#publicapiv1verifacturecordsretryblocked) - Retry every blocked VeriFactu record
 * [publicApiV1VerifactuRecordsRetry](docs/sdks/records/README.md#publicapiv1verifacturecordsretry) - Retry VeriFactu transmission
 * [publicApiV1VerifactuRecordsShow](docs/sdks/records/README.md#publicapiv1verifacturecordsshow) - Retrieve a VeriFactu record
-* [publicApiV1VerifactuRecordsSubsanar](docs/sdks/records/README.md#publicapiv1verifacturecordssubsanar) - Subsanar a rejected VeriFactu record
+* [publicApiV1VerifactuRecordsSubsanar](docs/sdks/records/README.md#publicapiv1verifacturecordssubsanar) - Subsanar a VeriFactu record
+
+#### [Verifactu.Representation](docs/sdks/representation/README.md)
+
+* [publicApiV1VerifactuRepresentationShow](docs/sdks/representation/README.md#publicapiv1verifacturepresentationshow) - Retrieve the active representation
+* [publicApiV1VerifactuRepresentationRegister](docs/sdks/representation/README.md#publicapiv1verifacturepresentationregister) - Register a representation
+* [publicApiV1VerifactuRepresentationRevoke](docs/sdks/representation/README.md#publicapiv1verifacturepresentationrevoke) - Revoke the active representation
 
 #### [Verifactu.Settings](docs/sdks/settings/README.md)
 

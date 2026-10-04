@@ -9,23 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** CreateInvoiceRequest - Create an invoice. Required: `client_id`, `series_id`, `issued_on`, `due_on` and `lines[]` (at least one). Optional: `notes`, `metadata`, `tags`, `custom_fields`, and an `options` object to atomically create, issue, send and wait for the PDF in a single call. Without `options` the invoice is created as a draft. A line may also be a DISBURSEMENT (`line_type: "SUPLIDO"`): an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) that is re-invoiced at cost and, under art. 78.Tres.3 of the Spanish VAT Act (LIVA), stays out of the taxable base — it carries no VAT, withholding, surcharge, discount or product, requires `source_invoice_reference`, and is not allowed on a simplified (`F2`) invoice. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line returns `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. */
+/** CreateInvoiceRequest - Create an invoice. Required: `series_id`, `issued_on`, `due_on`, `lines[]` (at least one) and `client_id` — except on a simplified invoice (`type: F2`), where the client is optional. A terminal can issue an already-paid simplified invoice in ONE idempotent call (unattended checkout): send `type: F2`, `prices_include_tax`, a `payment` block and `options.register_verifactu`, and identify the operation with `external_id`. Optional: `notes`, `metadata`, `tags`, `custom_fields`, and an `options` object to atomically create, issue, send and wait for the PDF in a single call. Without `options` the invoice is created as a draft. A line may also be a DISBURSEMENT (`line_type: "SUPLIDO"`): an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) that is re-invoiced at cost and, under art. 78.Tres.3 of the Spanish VAT Act (LIVA), stays out of the taxable base — it carries no VAT, withholding, surcharge, discount or product, requires `source_invoice_reference`, and is not allowed on a simplified (`F2`) invoice. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line returns `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. */
 class CreateInvoiceRequest
 {
-    /**
-     *
-     * @var string $clientId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('client_id')]
-    public string $clientId;
-
-    /**
-     *
-     * @var string $seriesId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
-    public string $seriesId;
-
     /**
      *
      * @var LocalDate $issuedOn
@@ -50,6 +36,25 @@ class CreateInvoiceRequest
     public array $lines;
 
     /**
+     * Id of the client (UUID v7). Required with `type: F1` (or without `type`), and the client must have a complete tax ID. Optional with `type: F2`: without it the invoice is an anonymous ticket; with it, a qualified simplified invoice (the client must belong to your company).
+     *
+     * @var ?string $clientId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('client_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $clientId = null;
+
+    /**
+     * Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\Payment $payment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Payment|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?Payment $payment = null;
+
+    /**
      *
      * @var ?\Factuarea\Sdk\Models\Components\Options $options
      */
@@ -57,6 +62,42 @@ class CreateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Options|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?Options $options = null;
+
+    /**
+     * Invoice type: `F1` (complete invoice, the default) or `F2` (simplified invoice, the ticket of a terminal). A simplified invoice needs simplified invoices enabled for the company (422 `simplified_invoices_disabled`) and cannot exceed the absolute cap of 3,000 € VAT included (422 `simplified_invoice_not_allowed`).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestType $type
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestType|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestType $type = null;
+
+    /**
+     * When `true`, the `unit_price` of every line is the FINAL price with taxes (VAT included) and the system computes the net base to the cent, so the invoice total equals the sum of the amounts you sent. If no distribution of the cents reaches that total the request is rejected with 422 `amount_reconciliation_failed` and nothing is issued. Catalog lines (`product_id`) are not accepted in this mode. Defaults to `false`.
+     *
+     * @var ?bool $pricesIncludeTax
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('prices_include_tax')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $pricesIncludeTax = null;
+
+    /**
+     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date (arts. 6.1.f and 7.1.c of Royal Decree 1619/2012). It cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. It is printed on the PDF and reported in the VeriFactu record.
+     *
+     * @var ?LocalDate $operationOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_on')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $operationOn = null;
+
+    /**
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
 
     /**
      *
@@ -125,12 +166,16 @@ class CreateInvoiceRequest
     public ?array $customFields = null;
 
     /**
-     * @param  string  $clientId
-     * @param  string  $seriesId
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $dueOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
+     * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\Payment  $payment
      * @param  ?\Factuarea\Sdk\Models\Components\Options  $options
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestType  $type
+     * @param  ?bool  $pricesIncludeTax
+     * @param  ?LocalDate  $operationOn
+     * @param  ?string  $seriesId
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?string  $notes
@@ -140,14 +185,18 @@ class CreateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?Options $options = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?string $clientId = null, ?Payment $payment = null, ?Options $options = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
-        $this->clientId = $clientId;
-        $this->seriesId = $seriesId;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
         $this->lines = $lines;
+        $this->clientId = $clientId;
+        $this->payment = $payment;
         $this->options = $options;
+        $this->type = $type;
+        $this->pricesIncludeTax = $pricesIncludeTax;
+        $this->operationOn = $operationOn;
+        $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
         $this->notes = $notes;

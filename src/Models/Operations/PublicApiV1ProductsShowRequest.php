@@ -36,10 +36,10 @@ class PublicApiV1ProductsShowRequest
     public ?string $xActiveProfile = null;
 
     /**
-     * Recursos anidados a incluir, separados por comas. Hoy solo
+     * Nested resources to include, comma-separated. Currently only
      *
-     * `configurable_catalog`, que adjunta los grupos de opciones
-     * vendibles y las combinaciones comerciales del producto.
+     * `configurable_catalog`, which attaches the sellable option groups
+     * and the commercial combinations of the product.
      *
      * @var ?string $include
      */

@@ -65,7 +65,7 @@ if ($response->object !== null) {
 
 ## publicApiV1VerifactuDeclaracionCurrent
 
-Return the current (latest) version of the producer-level VeriFactu Declaración Responsable. Read-only: the declaration is global to the producer of the system (Factuarea), not per-company. Returns 404 `declaracion_not_found` if none has been published.
+Return the current (latest) version of the producer-level VeriFactu Declaración Responsable, with the content required by art. 15 of Order HAC/1177/2024: system name and identifier, components, producer tax ID, name and address, the `TipoUsoPosible*` possibilities and the signature types. Read-only: the declaration is global to the producer of the system (Factuarea), not per-company. Returns 404 `declaracion_not_found` if none has been published.
 
 ### Example Usage
 

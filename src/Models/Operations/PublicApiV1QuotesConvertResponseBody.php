@@ -21,11 +21,35 @@ class PublicApiV1QuotesConvertResponseBody
     public Components\Invoice $data;
 
     /**
+     * Non-blocking warnings about the invoice that was created, in Spanish. Present ONLY when there is something to warn about, so a normal response does not carry the field. Paired one-to-one (same index) with `warning_codes`. Today there is one: a normal (non-disbursement) line at 0 % VAT with no exemption reason, because quotes, proformas and delivery notes do not model the exemption cause (E1–E6) or the non-subjection cause (N1, N2). The invoice is created as a draft anyway; set the cause on it before issuing it.
+     *
+     * @var ?array<string> $warnings
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warnings')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $warnings = null;
+
+    /**
+     * Stable machine-readable codes paired one-to-one (same index) with `warnings`. Branch on these instead of matching the Spanish text; unknown codes should fall back to the corresponding `warnings` entry. Present ONLY together with `warnings`. Catalog (append-only): `zero_rate_line_without_exemption`.
+     *
+     * @var ?array<string> $warningCodes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warning_codes')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $warningCodes = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
+     * @param  ?array<string>  $warnings
+     * @param  ?array<string>  $warningCodes
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data)
+    public function __construct(Components\Invoice $data, ?array $warnings = null, ?array $warningCodes = null)
     {
         $this->data = $data;
+        $this->warnings = $warnings;
+        $this->warningCodes = $warningCodes;
     }
 }

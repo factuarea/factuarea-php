@@ -51,7 +51,7 @@ class PublicApiV1CompaniesApiKeysRevokeRequest
     public ?string $xActiveProfile = null;
 
     /**
-     * Motivo opcional de la revocación (queda en audit log).
+     * Optional reason for the revocation, kept in the audit trail. Up to 500 characters.
      *
      * @var ?string $reason
      */

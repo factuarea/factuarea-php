@@ -20,7 +20,7 @@ class PublicApiV1RecurringInvoicesLogsRequest
     public string $recurringInvoice;
 
     /**
-     * Default `'25'` (string) por consistencia OpenAPI/Spectral.
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25. Alias: `per_page`; if both are sent, `limit` wins.
      *
      * @var ?string $limit
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Zona AEAT a efectos fiscales: `peninsula` + Baleares, `canarias` (IGIC), `ceuta` (IPSI), `melilla` (IPSI). */
+/** AEAT tax zone: `peninsula` (including the Balearic Islands), `canarias` (IGIC), `ceuta` (IPSI) or `melilla` (IPSI). */
 enum TaxCountryAeatZone: string
 {
     case Peninsula = 'peninsula';

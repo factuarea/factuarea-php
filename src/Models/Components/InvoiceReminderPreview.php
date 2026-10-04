@@ -45,7 +45,7 @@ class InvoiceReminderPreview
     public string $fromName;
 
     /**
-     * Destinatario principal resuelto.
+     * Resolved main recipient.
      *
      * @var string $to
      */

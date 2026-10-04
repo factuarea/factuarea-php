@@ -9,18 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * PreviewTaxReportV1Request - Public REST API v1 — POST /v1/tax_reports/preview.
- *
- *
- * Computes the report breakdown without persisting any generation or file.
- * Useful for showing the user what they are about to declare before confirming.
- *
- * We accept `303` / `347` as aliases of the canonical values
- * `modelo_303` / `modelo_347`, keeping consistency with the paths
- * `POST /v1/tax_reports/303` and `POST /v1/tax_reports/347`. The handler
- * normalizes the value before instantiating the VO `TaxReportType`.
- */
+/** PreviewTaxReportV1Request - Compute the breakdown of a tax report without persisting any generation or file. Useful to show what is about to be declared before confirming. `303` and `347` are accepted as aliases of `modelo_303` and `modelo_347`, consistent with `POST /v1/tax_reports/303` and `POST /v1/tax_reports/347`. */
 class PreviewTaxReportV1Request
 {
     /**

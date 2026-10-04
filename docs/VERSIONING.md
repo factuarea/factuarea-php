@@ -60,6 +60,7 @@ or renamed, its concrete replacement.
 | `0.2.0`     | `2026-06-04`        | Spec sync: +183/−4 operations. |
 | `0.4.1`     | `2026-06-04`        | Reviewed scanner contract and Expenses/Invoices documentation. |
 | `0.5.0`     | `2026-10-01`        | Tasks and projects: +81 operations (80 of Tasks, Projects, Task labels, Task timers, Users, Notifications and Agenda, plus `invoices.issue`). |
+| `0.6.0`     | `2026-10-01`        | Unattended checkout, VeriFactu representation and series update: +7 operations (contact imports, VeriFactu representation, blocked-record retry, `series.update`). |
 
 When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 

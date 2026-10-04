@@ -4,6 +4,142 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.6.0] — 2026-10-05
+
+Regenerated from the public OpenAPI spec that adds unattended checkout on
+invoice creation, the VeriFactu representation of the company and contact import
+follow-up: **+7 operations, −0 operations** (571 operations over 461 paths, up
+from 564 over 457). No operation was removed. Some generated classes are renamed
+or change shape (see *Changed — breaking*). `Factuarea-Version` stays at
+`2026-10-01` (`FactuareaVersionHook::DEFAULT_VERSION` is unchanged).
+
+### Added
+
+**Operations** (7):
+
+- `$sdk->contacts->imports` (new `Imports` accessor, 2 operations):
+  `publicApiV1ContactsImportsShow()` (`GET /contacts/imports/{id}`) retrieves a
+  contact import with its counters, per-row outcomes and status, and
+  `publicApiV1ContactsImportsErrors()` downloads its error report. Importing
+  contacts now returns a stable import UUID for synchronous and queued results;
+  the 429 `import_row_quota_exceeded` rejection applies when the monthly row
+  allowance is exhausted.
+- `$sdk->verifactu->representation` (new `Representation` accessor, 3
+  operations): `publicApiV1VerifactuRepresentationShow()` retrieves the active
+  representation, `publicApiV1VerifactuRepresentationRegister()` registers one
+  (`RegisterCompanyRepresentationV1Request`: `kind`, `signer_name`,
+  `signer_tax_id`, `granted_on`, the evidence `document` or the power-of-attorney
+  reference, and an optional `valid_until`) and
+  `publicApiV1VerifactuRepresentationRevoke()` revokes it. Registering and
+  revoking are irreversible, so send an `Idempotency-Key`.
+- `$sdk->verifactu->records->publicApiV1VerifactuRecordsRetryBlocked()`
+  (`POST /verifactu/records/retry-blocked`) retries every blocked VeriFactu
+  record in one call. Send an `Idempotency-Key`.
+- `$sdk->series->publicApiV1SeriesUpdate()` (`PUT /series/{series}`) updates a
+  series (`UpdateSeriesRequest`: `name`, `code`, `counter_reset`, `year_reset`,
+  `number_format`, `initial_number`, `invoice_kind`, `document_type`). Send an
+  `Idempotency-Key`.
+
+**Models and fields**:
+
+- **Unattended checkout on `invoices.create`**: `CreateInvoiceRequest` gains
+  `payment` (`Payment`: `method`, `paid_at`, `reference`; the payment is
+  registered for the whole amount due and the invoice ends up paid), `type`
+  (`F1` or `F2`, `CreateInvoiceRequestType`), `prices_include_tax` and
+  `operation_on`; `client_id` is optional on a simplified invoice (`F2`).
+  `Options` gains `register_verifactu`. `CreateInvoiceRequestMethod` enumerates
+  the payment methods (`bank_transfer`, `direct_debit`, `sepa_direct_debit`,
+  `cash`, `credit_card`, `check`, `paypal`, `bizum`, `other`). When the request is
+  a checkout, the response (`InvoiceWithCheckoutBlocks`, an `Invoice` plus
+  three blocks) carries `verifactu` (`Verifactu`: `status`, `error_code`,
+  `aeat_status`, `huella`, `qr_url`, `qr_png_base64`, `legend`, `csv`), `pdf`
+  (`Pdf`: `status`, `url`, `expires_at`) and `public_url`.
+  `UpdateInvoiceRequest` gains `type` and `operation_on`, and `Invoice`
+  publishes `operation_on`.
+- **Invoice PDF format**: `publicApiV1InvoicesPdf()` and
+  `publicApiV1InvoicesPdfLink()` accept `format` (`a4`, `ticket_80`,
+  `ticket_58`).
+- **Series by invoice kind**: `Series.invoice_kind` and `CreateSeriesRequest`,
+  `UpdateSeriesRequest` `invoice_kind` (`complete`, `simplified`, `corrective`,
+  `simplified_corrective`); `publicApiV1SeriesList()` filters with `invoice_kind`
+  and `invoice_kind_in`, and `publicApiV1SeriesActive()` and
+  `publicApiV1SeriesDefault()` accept `invoice_kind`. `publicApiV1SeriesActive()`
+  also accepts `document_type`.
+- **Corrective invoices**: `CreateCorrectiveInvoiceRequest` gains
+  `correction_nature` (`CorrectionNature`: `I` or `S`) and `series_id`, and its
+  lines gain `unit`, `regime_key` and `exemption_reason` (enumerations) plus
+  `exemption_reason_text`.
+- **Annulment**: `AnnulInvoiceV1Request.revert_collections` and, on
+  `CanAnnulInvoice`, `requires_collection_reversal` and
+  `active_collections_amount`. The payment reversal reason gains `issued_in_error`.
+- **VeriFactu records**: `VeriFactuRecord` gains `is_blocked`, `can_subsanar`,
+  `aeat_error_code`, `block_reason` (`MISSING_CERTIFICATE`,
+  `MISSING_REPRESENTATION`, `SYSTEM_CERTIFICATE_UNAVAILABLE`,
+  `PRESENTER_NOT_ENABLED`, `SUBMISSION_REJECTED`) and
+  `aeat_warning_requires_subsanation`; `VeriFactuStats` gains
+  `pending_incident_count`, `blocked_incident_count` and `oldest_pending_at`;
+  the subsanation result documents the UUID of the new record it creates. The
+  `ErrorCode` enumeration lists the remission error codes
+  (`certificate_missing`, `certificate_expired`, `certificate_revoked`,
+  `certificate_nif_mismatch`, `clock_drift_exceeded`, `representation_required`,
+  `system_certificate_unavailable`, `verifactu_not_enabled`).
+- **VeriFactu remission mode**: `VeriFactuConfig` gains `remission_mode`
+  (`own_certificate`, `social_collaborator`, `power_of_attorney`),
+  `has_active_representation`, `active_representation_id`,
+  `active_representation_kind`, `active_representation_valid_until`,
+  `active_representation_is_expired`, `social_collaborator_available` and
+  `presenter_certificate_status` (`valid`, `invalid`, `not_configured`);
+  `UpdateVeriFactuSettingsV1Request` accepts `remission_mode`.
+- **Invoice activity**: `InvoiceActivity.metadata` is now the typed `Metadata`
+  model (`record_type`, `requires_subsanation`, `attempt`, `reason`,
+  `block_reason`, `recipient`, `views_today`, `amount`, `method`,
+  `changed_fields`, `downloaded_pdf`, `csv`, `aeat_error_code`,
+  `aeat_error_message`, `next_retry_at`, `provider`). The timeline now includes
+  the result of every VeriFactu submission, undelivered emails, the first daily
+  visit to the public link and the payments registered, edited or reversed.
+- **Conversions**: the responses of the delivery note, proforma and quote
+  conversions expose `warnings` and `warning_codes`.
+- **Contact imports**: `BusinessContactImport`, `BusinessContactImportError`
+  and the `BusinessContactImportStatus` / `BusinessContactImportPreviewStatus`
+  (`queued`, `running`, `completed`, `partial`, `failed`) and
+  `BusinessContactImportPreviewResult` (`applied`, `skipped`, `failed`)
+  enumerations; the preview rows gain `result`.
+- Also: `DeclaracionResponsable` gains `components`, `producer_address` and
+  `signature_types`, and `Error2` gains `line_index`.
+
+### Changed — breaking
+
+No operation disappears, but some generated classes follow the contract:
+
+- `Operations\PublicApiV1InvoicesCreateResponseBody` is gone. The response of
+  `publicApiV1InvoicesCreate()` is split by status:
+  `PublicApiV1InvoicesCreateResponse::$twoHundredApplicationJsonObject`
+  (`PublicApiV1InvoicesCreateResponseBody1`) and
+  `$twoHundredAndOneApplicationJsonObject`
+  (`PublicApiV1InvoicesCreateResponseBody2`) replace `$object`; both carry an
+  `InvoiceWithCheckoutBlocks` in `data`.
+- `CreateInvoiceRequest::$clientId` and `$seriesId` are now optional properties,
+  so the constructor argument order changes: build the request with named
+  arguments.
+- The positional signature of `publicApiV1SeriesActive()` and
+  `publicApiV1SeriesDefault()` changes, since `document_type` / `invoice_kind`
+  come before `factuareaVersion`; use named arguments.
+- Renamed classes: `Components\Payments` is now `Components\InvoicePayments`,
+  `Components\SentVia` is `Components\InvoiceSentVia`,
+  `Components\ResultEnum` is `Components\PurchaseScanEmailResult` and
+  `Operations\DocumentType` is
+  `Operations\PublicApiV1SeriesDefaultDocumentType`. `Invoice::$payments`,
+  `Invoice::$sentVia`, `PurchaseScanEmail::$result` and the `documentType` of
+  `PublicApiV1SeriesDefaultRequest` change type accordingly.
+- `InvoiceActivity::$metadata` is a `Metadata` instead of an array.
+- `PublicApiV1InvoicesCorrectiveResponseBody::$warnings` is now optional
+  (`?array`).
+
+### Notes
+
+- The hand-written layer (`FactuareaClient`, `PageIterator`, `IdempotencyHook`,
+  `FactuareaVersionHook`, `WebhookVerifier`) and its tests are unchanged.
+
 ## [0.5.0] — 2026-09-29
 
 Regenerated from the public OpenAPI spec that adds the Tasks and Projects module

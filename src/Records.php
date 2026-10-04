@@ -672,7 +672,7 @@ class Records
     /**
      * Retry VeriFactu transmission
      *
-     * Requeues a failed VeriFactu record for transmission to AEAT. Conflict (409) if already accepted, 422 if retry limit exceeded.
+     * Schedules the AEAT remission batch of your company so that a failed VeriFactu record goes out in it. The record is sent inside the ordered batch of its company, respecting the AEAT flow control (`TiempoEsperaEnvio`) and never ahead of an earlier record of the chain. There is NO retry limit: while a technical incident lasts, art. 16.4 of Order HAC/1177/2024 requires retrying at least once an hour with no maximum, so `max_retries_exceeded` is no longer returned for records (it still applies to events: `POST /v1/verifactu/events/{id}/retry`). Returns 404 if the record does not exist and 422 `business_rule_violation` / `record_already_accepted` if AEAT already accepted it.
      *
      * @param  string  $record
      * @param  string  $idempotencyKey
@@ -762,6 +762,129 @@ class Records
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retry every blocked VeriFactu record
+     *
+     * Reactivates ALL the blocked records of your company at once and schedules their remission batch. A record is blocked when it is in `error` with no automatic retry because something needs your action: no usable certificate, no current representation for the third-party remission mode, a presenter that AEAT has not enabled (`4112`/`3003`) or a client-side rejection (`is_blocked: true` and its `block_reason` on the record). Blocked records hold back the rest of the chain, so fix the cause first (upload the certificate, register the representation, change the mode) and then call this. It sends nothing by itself: the records go out inside the ordered batch of your company, respecting the AEAT flow control, and there is NO retry limit (art. 16.4 of Order HAC/1177/2024). Returns `202` with `data.reactivated`, how many records were reactivated (`0` when none was blocked). It is the bulk equivalent of `POST /v1/verifactu/records/{id}/retry`; `GET /v1/verifactu/stats` reports how many records are blocked in `blocked_incident_count`.
+     *
+     * @param  string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsRetryBlockedResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1VerifactuRecordsRetryBlocked(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRecordsRetryBlockedResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1VerifactuRecordsRetryBlockedRequest(
+            idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/records/retry-blocked');
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.verifactu.records.retry_blocked', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['202'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRecordsRetryBlockedResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1VerifactuRecordsRetryBlockedResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -918,9 +1041,9 @@ class Records
     }
 
     /**
-     * Subsanar a rejected VeriFactu record
+     * Subsanar a VeriFactu record
      *
-     * Correct (subsana) an AEAT-rejected VeriFactu record: regenerate the correctable content from the source invoice keeping the original `huella`, reset the transmission round and re-queue the AEAT transmission (202). Returns 422 `record_not_rejected` if the record is not rejected, or `requires_annulment` when the correction affects fingerprint fields (annul + new alta required instead).
+     * Corrects (subsana) a VeriFactu `alta` that AEAT ACCEPTED (or accepted with errors) or REJECTED. The record is never edited in place: AEAT requires a NEW record and the original stays untouched (AEAT web services description, §9.1.2 and §9.1.3). The invoice master data is refreshed, a new correction (*subsanación*) `alta` is generated for the same invoice key with its own `huella` and chain position, and the remission batch of your company is re-queued. The new `alta` always goes with `Subsanacion=S` and the `RechazoPrevio` of its case: for an ACCEPTED record, a subsanación `alta` with no `RechazoPrevio` (§9.1.2); for a REJECTED record whose invoice AEAT does not hold, an «alta por rechazo» with `RechazoPrevio=X` (§9.1.3, the rejected record never existed in AEAT); and for a REJECTED subsanación of an invoice AEAT does hold, `RechazoPrevio=S`. Returns `202` with `data.id`: the id of the NEW record, the one that is transmitted — read it with `GET /v1/verifactu/records/{id}`; the status of the new record starts as `pending`. `can_subsanar` on the record tells you whether it is admitted. Returns 422 `record_not_rejected` if the record is neither accepted nor rejected (pending or in error), `record_not_subsanable` if it is not an `alta`, it is not the last `alta` of its invoice, the invoice is annulled or a rejected record already waits for its resend, or `requires_annulment` when the correction would change a field of the fingerprint (annul and issue a new `alta` instead).
      *
      * @param  string  $record
      * @param  string  $idempotencyKey

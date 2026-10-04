@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * BulkDeleteProductsRequest - Public REST API v1 — POST /v1/products/bulk-delete.
- *
- *
- * Body: `{ ids: string[] }`. Accepts between 1 and 200 IDs (UUID v7). Tenant
- * membership validation is performed by the Handler (filtered by company_id);
- * foreign IDs are silently ignored and will appear in `skipped`.
- */
+/** BulkDeleteProductsRequest - Delete several products in one request. `ids` is an array of 1 to 200 product UUIDs; identifiers that do not belong to your company are ignored and reported under `skipped`. */
 class BulkDeleteProductsRequest
 {
     /**

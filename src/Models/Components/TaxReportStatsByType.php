@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaxReportStatsByType
 {
     /**
-     * Declaraciones Modelo 303 generadas.
+     * Modelo 303 declarations generated.
      *
      * @var int $modelo303
      */
@@ -21,7 +21,7 @@ class TaxReportStatsByType
     public int $modelo303;
 
     /**
-     * Declaraciones Modelo 347 generadas.
+     * Modelo 347 declarations generated.
      *
      * @var int $modelo347
      */
@@ -29,7 +29,7 @@ class TaxReportStatsByType
     public int $modelo347;
 
     /**
-     * Declaraciones Modelo 130 generadas.
+     * Modelo 130 declarations generated.
      *
      * @var int $modelo130
      */

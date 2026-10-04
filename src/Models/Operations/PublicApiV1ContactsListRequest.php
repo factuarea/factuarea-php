@@ -116,7 +116,7 @@ class PublicApiV1ContactsListRequest
     public ?bool $isArchived = null;
 
     /**
-     * Coincidencia exacta de ciudad y provincia; país ISO 3166-1 alpha-2 exacto.
+     * Exact match on the city.
      *
      * @var ?string $city
      */
@@ -124,6 +124,7 @@ class PublicApiV1ContactsListRequest
     public ?string $city = null;
 
     /**
+     * Exact match on the province.
      *
      * @var ?string $province
      */
@@ -131,6 +132,7 @@ class PublicApiV1ContactsListRequest
     public ?string $province = null;
 
     /**
+     * Exact ISO 3166-1 alpha-2 country code.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListCountryCode $countryCode
      */
@@ -145,7 +147,7 @@ class PublicApiV1ContactsListRequest
     public ?bool $hasEmail = null;
 
     /**
-     * Verdadero si hay teléfono fijo O móvil; falso si ambos están vacíos.
+     * `true` returns contacts that have a landline OR a mobile phone; `false` returns contacts where both are empty.
      *
      * @var ?bool $hasPhone
      */

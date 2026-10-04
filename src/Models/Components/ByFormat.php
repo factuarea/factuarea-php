@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ByFormat
 {
     /**
-     * Ficheros en formato oficial AEAT.
+     * Files in the official AEAT format.
      *
      * @var int $txtAeat
      */
@@ -21,7 +21,7 @@ class ByFormat
     public int $txtAeat;
 
     /**
-     * Ficheros PDF.
+     * PDF files.
      *
      * @var int $pdf
      */
@@ -29,7 +29,7 @@ class ByFormat
     public int $pdf;
 
     /**
-     * Ficheros Excel.
+     * Excel files.
      *
      * @var int $excel
      */
