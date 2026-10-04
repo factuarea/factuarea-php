@@ -21,6 +21,15 @@ class UpdateInvoiceRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestType $type
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestType|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateInvoiceRequestType $type = null;
+
+    /**
+     *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestRepriceStrategy $repriceStrategy
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('reprice_strategy')]
@@ -69,6 +78,15 @@ class UpdateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $priceListId = null;
+
+    /**
+     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date. It can only be changed while the invoice is a draft, and it cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15.
+     *
+     * @var ?LocalDate $operationOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_on')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $operationOn = null;
 
     /**
      *
@@ -121,12 +139,14 @@ class UpdateInvoiceRequest
 
     /**
      * @param  ?string  $clientId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestType  $type
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $dueOn
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>  $lines
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
+     * @param  ?LocalDate  $operationOn
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
@@ -134,15 +154,17 @@ class UpdateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateInvoiceRequestType $type = null, ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
+        $this->type = $type;
         $this->repriceStrategy = $repriceStrategy;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
+        $this->operationOn = $operationOn;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->metadata = $metadata;

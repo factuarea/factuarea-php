@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1InvoicesCanAnnulResponseBody
 {
     /**
-     * Result of the pre-cancellation validator of an invoice: whether it can be cancelled, the blocking reasons (when it cannot) and whether the cancellation will create an additional VeriFactu record.
+     * Result of the pre-cancellation validator of an invoice: whether it can be cancelled, the blocking reasons (when it cannot), whether the cancellation will create an additional VeriFactu record and whether its live payments are the only obstacle (`requires_collection_reversal`). `can_annul` is the verdict of `POST .../annul` WITHOUT `revert_collections`.
      *
      * @var \Factuarea\Sdk\Models\Components\CanAnnulInvoice $data
      */

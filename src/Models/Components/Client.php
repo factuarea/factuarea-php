@@ -98,7 +98,7 @@ class Client
     public ?array $billingEmails = null;
 
     /**
-     * Indica si al cliente se le aplica recargo de equivalencia.
+     * Whether the equivalence surcharge (*recargo de equivalencia*, the Spanish special VAT regime for retailers) applies to the client.
      *
      * @var ?bool $isSurchargeSubject
      */

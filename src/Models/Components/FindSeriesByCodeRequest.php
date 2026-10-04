@@ -9,16 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * FindSeriesByCodeRequest - Public REST API v1 — POST /v1/series/find-by-code.
- *
- *
- * Looks up a series by its `code` (normalized to uppercase in the handler)
- * within the authenticated company. The `code` travels in the JSON body (not in
- * query params) because it is a private attribute that should not end up in
- * proxy logs. `document_type` is optional and disambiguates matches when the
- * same `code` is associated with several types.
- */
+/** FindSeriesByCodeRequest - Look up a series by its `code` (normalized to uppercase) within the authenticated company. The `code` travels in the JSON body, not in the query string, because it is a private attribute that should not end up in proxy logs. `document_type` is optional and disambiguates the matches when the same `code` is associated with several document types. */
 class FindSeriesByCodeRequest
 {
     /**

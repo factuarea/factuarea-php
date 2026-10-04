@@ -13,10 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseInvoicesOverdueRequest
 {
     /**
-     * Default `'25'` (string) por consistencia OpenAPI: Scramble infiere
-     *
-     *  schema.type=string para `request->input()` y el default debe ser
-     *  string (Spectral rechaza `default: 25` int con `type: string`).
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25. Alias: `per_page`; if both are sent, `limit` wins.
      *
      * @var ?string $limit
      */

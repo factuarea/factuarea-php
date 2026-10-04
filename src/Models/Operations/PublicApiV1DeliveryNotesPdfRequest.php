@@ -20,7 +20,7 @@ class PublicApiV1DeliveryNotesPdfRequest
     public string $deliveryNote;
 
     /**
-     * Cuando es truthy (`1`/`true`), fuerza `Content-Disposition: attachment` (descarga de fichero) en lugar de `inline`.
+     * When truthy (`1`/`true`), forces `Content-Disposition: attachment` (file download) instead of `inline`.
      *
      * @var ?string $download
      */

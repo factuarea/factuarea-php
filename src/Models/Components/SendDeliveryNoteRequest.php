@@ -9,18 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * SendDeliveryNoteRequest - Public REST API v1 — POST /v1/delivery_notes/{uuid}/send.
- *
- *
- * Required body: `email`. Optional: `subject`, `message` (max 2000 chars),
- * `template_id` (catalog id of the email template).
- *
- * `template_id` is the integer identifier of the global system table
- * `templates` (shared catalog, without `company_id` or `uuid` column). It is
- * validated against the PK `id`, like the internal SPA endpoint. That is why
- * it does NOT follow the public UUID convention of the other FKs.
- */
+/** SendDeliveryNoteRequest - Email a delivery note. Required body: `email`. Optional: `subject`, `message` (max 2000 characters) and `template_id` (id of the email template). `template_id` is the integer id of the shared catalog of email templates, so it does NOT follow the UUID convention of the other identifiers. */
 class SendDeliveryNoteRequest
 {
     /**
@@ -47,9 +36,7 @@ class SendDeliveryNoteRequest
     public ?string $message = null;
 
     /**
-     * uuid-audit-allow: global system catalog (`templates` table without
-     *
-     * company_id or uuid column; integer catalog PK, like the internal SPA).
+     * Integer id of the email template, from the shared catalog of templates (it is not a UUID).
      *
      * @var ?int $templateId
      */

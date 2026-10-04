@@ -43,17 +43,27 @@ class PublicApiV1InvoicesPdfRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * Paper of the PDF: `a4` (default, with the company template), `ticket_80` (80 mm thermal roll) or `ticket_58` (58 mm roll). Any other value returns 422 with a `parameter_invalid_enum` entry (and its `allowed_values`) in `error.errors[]`. The format does not change the company template; each format is rendered and cached separately and has its own `ETag`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfFormat $format
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=format')]
+    public ?PublicApiV1InvoicesPdfFormat $format = null;
+
+    /**
      * @param  string  $invoice
      * @param  ?string  $download
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfFormat  $format
      * @phpstan-pure
      */
-    public function __construct(string $invoice, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $invoice, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1InvoicesPdfFormat $format = null)
     {
         $this->invoice = $invoice;
         $this->download = $download;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
+        $this->format = $format;
     }
 }

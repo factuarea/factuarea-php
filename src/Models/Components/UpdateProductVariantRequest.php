@@ -58,9 +58,9 @@ class UpdateProductVariantRequest
     public ?string $barcode = null;
 
     /**
-     * Precio propio de la variante POR UNIDAD BASE. `null` = la variante
+     * Own price of the variant PER BASE UNIT. `null` = the variant does not
      *
-     * no altera el precio del producto.
+     * change the price of the product.
      *
      * @var ?float $basePriceOverride
      */
@@ -69,7 +69,7 @@ class UpdateProductVariantRequest
     public ?float $basePriceOverride = null;
 
     /**
-     * Coste propio de la variante POR UNIDAD BASE.
+     * Own cost of the variant PER BASE UNIT.
      *
      * @var ?float $unitCostOverride
      */
@@ -78,7 +78,7 @@ class UpdateProductVariantRequest
     public ?float $unitCostOverride = null;
 
     /**
-     * Alias publicado de `base_price_override`.
+     * Alias of `base_price_override`.
      *
      * @var ?float $priceOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -88,7 +88,7 @@ class UpdateProductVariantRequest
     public ?float $priceOverride = null;
 
     /**
-     * Alias publicado de `unit_cost_override`.
+     * Alias of `unit_cost_override`.
      *
      * @var ?float $costOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.

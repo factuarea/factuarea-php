@@ -1,15 +1,6 @@
 # BulkUpdateProductStockRequest
 
-Public REST API v1 — POST /v1/products/bulk-update-stock.
-
-Body: `{ updates: [{ product_id: string, stock: numeric-string, operation?: 'set'|'add'|'subtract', variant_id?: uuid }] }`.
-Accepts up to 500 updates in a single operation. `variant_id` targets the
-own balance of a variant of that product; a variant that does not belong to
-the product is skipped like an unknown product (skip-on-miss).
-
-We accept `items` as an alias of the canonical `updates` field for
-forgiveness with integrators following the most common convention. The
-controller normalizes it to `updates`.
+Update the stock of up to 500 products in a single operation. `updates[]` holds the entries, each with `product_id`, `stock` (numeric string), an optional `operation` (`set`, `add` or `subtract`) and an optional `variant_id` that targets the own balance of a variant of that product. A product or variant that is unknown (or does not belong to the product) is skipped. `items` is accepted as an alias of `updates`.
 
 
 ## Fields

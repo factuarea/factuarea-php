@@ -36,7 +36,7 @@ class Invoice
     public bool $isNumberAssigned;
 
     /**
-     * AEAT invoice type code: `F1` (ordinaria), `F2` (simplificada), `F3` (sustitutiva de simplificadas), `R1`–`R5` (rectificativa).
+     * Document type: `F1` (ordinary invoice, *ordinaria*), `F2` (simplified invoice, *simplificada*), `F3` (invoice replacing simplified ones, *sustitutiva de simplificadas*) or `R5` (corrective of a simplified invoice). A corrective of an `F1`/`F3` keeps `F1` here; its AEAT corrective code (`R1`–`R5`) is `corrective.correction_aeat_type`, and `is_corrective` tells correctives apart.
      *
      * @var string $type
      */
@@ -191,7 +191,7 @@ class Invoice
     public array $legalMentions;
 
     /**
-     * Read-only flag: whether this invoice is excluded from the annual Modelo 347 report. The public API cannot mutate it (the create/update FormRequest does not accept it); managing the flag is exclusive to the internal app.
+     * Read-only flag: whether this invoice is excluded from the annual Modelo 347 report. The public API cannot change it; the flag is managed from the Factuarea app.
      *
      * @var bool $exclude347
      */
@@ -225,11 +225,11 @@ class Invoice
     /**
      * Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/invoices/{id}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/invoices/{id}/payments`.
      *
-     * @var \Factuarea\Sdk\Models\Components\Payments $payments
+     * @var \Factuarea\Sdk\Models\Components\InvoicePayments $payments
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('payments')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Payments')]
-    public Payments $payments;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoicePayments')]
+    public InvoicePayments $payments;
 
     /**
      * Whether this invoice is a corrective (rectificativa) of another invoice.
@@ -291,6 +291,14 @@ class Invoice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('due_on')]
     public ?LocalDate $dueOn;
+
+    /**
+     * Date the operation took place when it differs from `issued_on` (arts. 6.1.f and 7.1.c of Royal Decree 1619/2012), or `null` when both coincide. It cannot be later than `issued_on` unless the first line that declares a `regime_key` uses 14 or 15 (otherwise 422 `operation_date_after_issue_date`), and it is immutable once the invoice is issued. A corrective invoice inherits the date of the original. It is printed on the PDF and reported in the VeriFactu record (`FechaOperacion`).
+     *
+     * @var ?LocalDate $operationOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_on')]
+    public ?LocalDate $operationOn;
 
     /**
      *
@@ -400,11 +408,11 @@ class Invoice
     /**
      * Channel of the first delivery: `email` (the mail server accepted the delivery email) or `manual` (marked with `POST /v1/invoices/{id}/mark-sent`). `null` while the invoice has not been delivered. Not present before API version `2026-10-01`.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\SentVia $sentVia
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceSentVia $sentVia
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('sent_via')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SentVia|null')]
-    public ?SentVia $sentVia;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceSentVia|null')]
+    public ?InvoiceSentVia $sentVia;
 
     /**
      *
@@ -480,7 +488,7 @@ class Invoice
      * @param  string  $verifactuStatus
      * @param  float  $paidAmount
      * @param  float  $pendingAmount
-     * @param  \Factuarea\Sdk\Models\Components\Payments  $payments
+     * @param  \Factuarea\Sdk\Models\Components\InvoicePayments  $payments
      * @param  bool  $isCorrective
      * @param  bool  $isSent
      * @param  \DateTime  $createdAt
@@ -489,6 +497,7 @@ class Invoice
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?LocalDate  $dueOn
+     * @param  ?LocalDate  $operationOn
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
@@ -502,7 +511,7 @@ class Invoice
      * @param  ?LocalDate  $paidOn
      * @param  ?\DateTime  $issuedAt
      * @param  ?\DateTime  $sentAt
-     * @param  ?\Factuarea\Sdk\Models\Components\SentVia  $sentVia
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceSentVia  $sentVia
      * @param  ?\DateTime  $voidedAt
      * @param  ?string  $voidReason
      * @param  ?\DateTime  $scheduledFor
@@ -511,7 +520,7 @@ class Invoice
      * @param  ?string  $sourceStoreId
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceStatus $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, Payments $payments, bool $isCorrective, bool $isSent, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?SentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null)
+    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceStatus $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, InvoicePayments $payments, bool $isCorrective, bool $isSent, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -548,6 +557,7 @@ class Invoice
         $this->priceListId = $priceListId;
         $this->priceListName = $priceListName;
         $this->dueOn = $dueOn;
+        $this->operationOn = $operationOn;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->metadata = $metadata;

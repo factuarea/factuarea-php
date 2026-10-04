@@ -20,7 +20,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public string $product;
 
     /**
-     * Máximo de movimientos por página (1-100, por defecto 25).
+     * Maximum number of movements per page (1-100, default 25).
      *
      * @var ?int $limit
      */
@@ -44,7 +44,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?string $xActiveProfile = null;
 
     /**
-     * Id del último movimiento ya recibido; la página empieza justo después.
+     * Id of the last movement already received; the page starts right after it.
      *
      * @var ?string $startingAfter
      */
@@ -52,7 +52,7 @@ class PublicApiV1ProductsStockMovementsListRequest
     public ?string $startingAfter = null;
 
     /**
-     * `in` = entradas (delta positivo), `out` = salidas (delta negativo). Ausente = el ledger completo.
+     * `in` = inbound movements (positive delta), `out` = outbound movements (negative delta). Omitted = the whole ledger.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListDirection $direction
      */

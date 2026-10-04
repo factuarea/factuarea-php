@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** DeliveryNoteStats - Resumen agregado de los albaranes de la empresa autenticada: total, importe acumulado, desglose por estado interno, pendientes de firma y convertidos a factura este mes. Devuelto por `GET /v1/delivery_notes/stats`. */
+/** DeliveryNoteStats - Aggregated summary of the delivery notes (*albaranes*) of the authenticated company: total, accumulated amount, breakdown by status, pending signature and converted to invoice this month. Returned by `GET /v1/delivery_notes/stats`. */
 class DeliveryNoteStats
 {
     /**

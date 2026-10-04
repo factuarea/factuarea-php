@@ -45,7 +45,7 @@ class InvoiceCorrective
     public ?string $correctionReason;
 
     /**
-     * Type of correction (`por_diferencias` / `por_sustitucion`).
+     * Scope of the correction: `total` (the whole invoice, `correction_type: full` on input) or `partial`.
      *
      * @var ?string $correctionType
      */
@@ -53,7 +53,7 @@ class InvoiceCorrective
     public ?string $correctionType;
 
     /**
-     * Nature of the correction (`S` substitutive / `I` by differences).
+     * Effective nature of the correction (art. 15.5 RD 1619/2012), the same one its VeriFactu record declares as `TipoRectificativa`: `I` by differences (the corrective carries the amount of the rectification, any sign) or `S` substitution (the invoice as it ends up). A corrective with a negative base is always `I`.
      *
      * @var ?string $correctionNature
      */
@@ -61,7 +61,7 @@ class InvoiceCorrective
     public ?string $correctionNature;
 
     /**
-     * Base imponible rectificada.
+     * Taxable base of the ORIGINAL invoice being corrected; reported to VeriFactu as `ImporteRectificacion.BaseRectificada` on a substitution (`S`).
      *
      * @var ?float $baseRectificada
      */
@@ -69,7 +69,7 @@ class InvoiceCorrective
     public ?float $baseRectificada;
 
     /**
-     * Cuota (IVA) rectificada.
+     * VAT amount of the ORIGINAL invoice being corrected; reported to VeriFactu as `ImporteRectificacion.CuotaRectificada` on a substitution (`S`).
      *
      * @var ?float $cuotaRectificada
      */

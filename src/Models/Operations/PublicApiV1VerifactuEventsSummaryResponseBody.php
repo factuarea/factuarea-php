@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1VerifactuEventsSummaryResponseBody
 {
     /**
-     * Resumen agregado de los eventos del SIF de la empresa: total y desglose por tipo y por estado. Devuelto por `GET /v1/verifactu/events/summary`.
+     * Aggregated summary of the VeriFactu events of the company: total and breakdown by type and by status. Returned by `GET /v1/verifactu/events/summary`.
      *
      * @var \Factuarea\Sdk\Models\Components\VeriFactuEventSummary $data
      */

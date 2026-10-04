@@ -9,7 +9,7 @@
 
 ## publicApiV1VerifactuConfig
 
-Return the VeriFactu configuration of your company (mode, environment, enrollment status). The certificate password is never exposed. Returned as `{ "data": VeriFactuConfig }`.
+Return the VeriFactu configuration of your company (mode, environment, enrollment status) and how it remits to AEAT: `remission_mode` (`own_certificate`, `social_collaborator` or `power_of_attorney`), whether it has an active representation and its kind, and the state of the certificate that the remission would present (`presenter_certificate_status`: `valid`, `invalid` or `not_configured`). `has_active_representation` is true only for a current representation that has NOT expired; `active_representation_valid_until` and `active_representation_is_expired` describe the current one (even an expired one keeps its id and kind), and `social_collaborator_available` says whether this instance offers the `social_collaborator` mode. The certificate password is never exposed, and neither is anything about the certificate of Factuarea. Returned as `{ "data": VeriFactuConfig }`.
 
 ### Example Usage
 
@@ -65,7 +65,7 @@ if ($response->object !== null) {
 
 ## publicApiV1VerifactuStats
 
-Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. Returned as `{ "data": VeriFactuStats }`.
+Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. It also reports the pending-remission alert: `pending_incident_count` — the records still waiting to be remitted to AEAT: pending (or without a state yet), in error of ANY kind, submitted and rejected records that were already subsanados; accepted records and rejected ones still waiting for your correction are not counted, nor are sandbox companies —, `blocked_incident_count` — of those, the blocked ones: errors with no automatic retry that need your action (see `POST /v1/verifactu/records/retry-blocked`) — and `oldest_pending_at`, the generation time of the oldest pending record. Those three fields are never affected by the filters: they are the figure art. 16 of Order HAC/1177/2024 asks you to show the taxpayer. Returned as `{ "data": VeriFactuStats }`.
 
 ### Example Usage
 

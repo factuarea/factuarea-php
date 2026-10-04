@@ -37,7 +37,7 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public ?string $xActiveProfile = null;
 
     /**
-     * Número de empresas hijas que se activarían en bloque (≥1, default 1).
+     * Number of child companies that would be activated in bulk (≥1, default 1).
      *
      * @var ?int $count
      */

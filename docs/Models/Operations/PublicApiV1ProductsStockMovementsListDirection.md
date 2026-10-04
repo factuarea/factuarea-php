@@ -1,6 +1,6 @@
 # PublicApiV1ProductsStockMovementsListDirection
 
-`in` = entradas (delta positivo), `out` = salidas (delta negativo). Ausente = el ledger completo.
+`in` = inbound movements (positive delta), `out` = outbound movements (negative delta). Omitted = the whole ledger.
 
 
 ## Values

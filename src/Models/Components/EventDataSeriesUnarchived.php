@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class EventDataSeriesUnarchived
 {
     /**
-     * A document numbering series. Immutable per AEAT compliance.
+     * A document numbering series. It can be edited with `PUT /v1/series/{id}` under the fiscal guards of the numbering (code, mask and purpose are fixed once documents exist) and it is never deleted: archive it instead.
      *
      * @var \Factuarea\Sdk\Models\Components\Series $object
      */

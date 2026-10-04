@@ -1,6 +1,6 @@
 # PublicApiV1CompaniesListStatus
 
-Filtrar por estado del vínculo de gestoría. Sin filtro se ocultan las archivadas (solo `active` e `inactive`).
+Filter by the status of the managed-company link (gestoría). Without a filter the archived companies are hidden (only `active` and `inactive` are returned).
 
 
 ## Values

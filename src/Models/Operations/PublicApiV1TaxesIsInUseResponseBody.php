@@ -13,7 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1TaxesIsInUseResponseBody
 {
     /**
-     * Desglose del uso de un tax across bounded contexts. Permite decidir si es seguro borrar o desactivar un tax (`in_use=false` ⇒ delete seguro).
+     * Where a tax is used across your catalog and documents. It lets you decide whether it is safe to delete or deactivate the tax (`in_use=false` means it is safe to delete).
      *
      * @var \Factuarea\Sdk\Models\Components\TaxUsage $data
      */

@@ -1,6 +1,6 @@
 # CurrentQuarter
 
-Trimestre fiscal en curso (UTC).
+Current fiscal quarter (UTC).
 
 
 ## Fields

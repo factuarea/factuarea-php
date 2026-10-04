@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Filtrar por estado del vínculo de gestoría. Sin filtro se ocultan las archivadas (solo `active` e `inactive`). */
+/** Filter by the status of the managed-company link (gestoría). Without a filter the archived companies are hidden (only `active` and `inactive` are returned). */
 enum PublicApiV1CompaniesListStatus: string
 {
     case Active = 'active';

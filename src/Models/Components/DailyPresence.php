@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** DailyPresence - An office/remote presence declaration for the Control Horario (time tracking) module: an employee’s declared work location for a single day (one row per company + employee + day). Read-only over the public API — the declaration itself is made from the app (SPA-only). */
+/** DailyPresence - An office/remote presence declaration for the Control Horario (time tracking) module: an employee’s declared work location for a single day (one row per company + employee + day). Read-only over the public API — the declaration itself is made from the Factuarea app. */
 class DailyPresence
 {
     /**

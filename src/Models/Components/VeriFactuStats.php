@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuStats - Resumen agregado de los registros VeriFactu de la empresa autenticada: conteos por estado y desglose por tipo. Devuelto por `GET /v1/verifactu/stats`. */
+/** VeriFactuStats - Aggregated summary of the VeriFactu records of the authenticated company: counts by status and breakdown by type. Returned by `GET /v1/verifactu/stats`. */
 class VeriFactuStats
 {
     /**
@@ -21,7 +21,7 @@ class VeriFactuStats
     public VeriFactuStatsObject $object;
 
     /**
-     * Total de registros VeriFactu.
+     * Total number of VeriFactu records.
      *
      * @var int $totalRecords
      */
@@ -61,7 +61,7 @@ class VeriFactuStats
     public int $rejected;
 
     /**
-     * Registros en estado de error.
+     * Records in error status.
      *
      * @var int $error
      */
@@ -87,12 +87,36 @@ class VeriFactuStats
     public array $byInvoiceType;
 
     /**
+     * Records still waiting to be remitted to AEAT: `pending` (or without a state yet), `error` of ANY kind (those that retry by themselves and the blocked ones), `submitted` (in flight, or orphaned until the next sweep) and `rejected` records that have already been subsanados. NOT counted: `accepted`, `rejected` records still waiting for your correction, and sandbox (test mode) companies. The query filters never affect it. Art. 16 of Order HAC/1177/2024 requires the taxpayer to see how many records are pending.
+     *
+     * @var int $pendingIncidentCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pending_incident_count')]
+    public int $pendingIncidentCount;
+
+    /**
+     * Of the pending records, the BLOCKED ones: `error` with NO automatic retry (missing certificate or representation, presenter not enabled by AEAT, or a client-side rejection). They do not go out until someone reactivates them (`POST /v1/verifactu/records/retry-blocked`) and they hold back the chain of the company. It is a subset of `pending_incident_count`; the query filters never affect it.
+     *
+     * @var int $blockedIncidentCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('blocked_incident_count')]
+    public int $blockedIncidentCount;
+
+    /**
      * Date of the last transmission to AEAT, or `null` if there is none.
      *
      * @var ?\DateTime $lastTransmissionAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('last_transmission_at')]
     public ?\DateTime $lastTransmissionAt;
+
+    /**
+     * Generation timestamp of the oldest of the pending records counted by `pending_incident_count`, or `null` when there is none. The query filters never affect it.
+     *
+     * @var ?\DateTime $oldestPendingAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('oldest_pending_at')]
+    public ?\DateTime $oldestPendingAt;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\VeriFactuStatsObject  $object
@@ -104,10 +128,13 @@ class VeriFactuStats
      * @param  int  $error
      * @param  array<string, int>  $byRecordType
      * @param  array<string, int>  $byInvoiceType
+     * @param  int  $pendingIncidentCount
+     * @param  int  $blockedIncidentCount
      * @param  ?\DateTime  $lastTransmissionAt
+     * @param  ?\DateTime  $oldestPendingAt
      * @phpstan-pure
      */
-    public function __construct(VeriFactuStatsObject $object, int $totalRecords, int $pending, int $submitted, int $accepted, int $rejected, int $error, array $byRecordType, array $byInvoiceType, ?\DateTime $lastTransmissionAt = null)
+    public function __construct(VeriFactuStatsObject $object, int $totalRecords, int $pending, int $submitted, int $accepted, int $rejected, int $error, array $byRecordType, array $byInvoiceType, int $pendingIncidentCount, int $blockedIncidentCount, ?\DateTime $lastTransmissionAt = null, ?\DateTime $oldestPendingAt = null)
     {
         $this->object = $object;
         $this->totalRecords = $totalRecords;
@@ -118,6 +145,9 @@ class VeriFactuStats
         $this->error = $error;
         $this->byRecordType = $byRecordType;
         $this->byInvoiceType = $byInvoiceType;
+        $this->pendingIncidentCount = $pendingIncidentCount;
+        $this->blockedIncidentCount = $blockedIncidentCount;
         $this->lastTransmissionAt = $lastTransmissionAt;
+        $this->oldestPendingAt = $oldestPendingAt;
     }
 }

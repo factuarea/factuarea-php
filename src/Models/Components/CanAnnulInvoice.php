@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CanAnnulInvoice - Result of the pre-cancellation validator of an invoice: whether it can be cancelled, the blocking reasons (when it cannot) and whether the cancellation will create an additional VeriFactu record. */
+/** CanAnnulInvoice - Result of the pre-cancellation validator of an invoice: whether it can be cancelled, the blocking reasons (when it cannot), whether the cancellation will create an additional VeriFactu record and whether its live payments are the only obstacle (`requires_collection_reversal`). `can_annul` is the verdict of `POST .../annul` WITHOUT `revert_collections`. */
 class CanAnnulInvoice
 {
     /**
@@ -47,17 +47,37 @@ class CanAnnulInvoice
     public array $info;
 
     /**
+     * `true` when the live payments of the invoice are the ONLY obstacle to annulling it: `POST /v1/invoices/{invoice}/annul` with `revert_collections: true` would succeed. `can_annul` stays `false` in that case, because it is the verdict without `revert_collections`. `false` when there are no live payments or when something else also blocks the annulment.
+     *
+     * @var bool $requiresCollectionReversal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('requires_collection_reversal')]
+    public bool $requiresCollectionReversal;
+
+    /**
+     * Amount, in euros, of the live payments of the invoice — what `revert_collections` would revert. `0` when there are none.
+     *
+     * @var float $activeCollectionsAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_collections_amount')]
+    public float $activeCollectionsAmount;
+
+    /**
      * @param  bool  $canAnnul
      * @param  array<string>  $reasons
      * @param  bool  $willCreateVerifactu
      * @param  array<string>  $info
+     * @param  bool  $requiresCollectionReversal
+     * @param  float  $activeCollectionsAmount
      * @phpstan-pure
      */
-    public function __construct(bool $canAnnul, array $reasons, bool $willCreateVerifactu, array $info)
+    public function __construct(bool $canAnnul, array $reasons, bool $willCreateVerifactu, array $info, bool $requiresCollectionReversal, float $activeCollectionsAmount)
     {
         $this->canAnnul = $canAnnul;
         $this->reasons = $reasons;
         $this->willCreateVerifactu = $willCreateVerifactu;
         $this->info = $info;
+        $this->requiresCollectionReversal = $requiresCollectionReversal;
+        $this->activeCollectionsAmount = $activeCollectionsAmount;
     }
 }

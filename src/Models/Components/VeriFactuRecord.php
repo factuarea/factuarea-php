@@ -85,7 +85,7 @@ class VeriFactuRecord
     public string $huella;
 
     /**
-     * Entorno AEAT (`sandbox` / `production`).
+     * AEAT environment (`sandbox` / `production`).
      *
      * @var string $environment
      */
@@ -116,6 +116,22 @@ class VeriFactuRecord
     public \DateTime $createdAt;
 
     /**
+     * Whether the record is BLOCKED: it is in `error` with NO automatic retry, so it does not go out again until someone reactivates it (fix the cause, then `POST /v1/verifactu/records/retry-blocked`, or `POST /v1/verifactu/records/{id}/retry` one by one), and it holds back the rest of the chain of the company. `false` for a record that retries by itself, with a backoff of at most one hour (art. 16.4 of Order HAC/1177/2024).
+     *
+     * @var bool $isBlocked
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_blocked')]
+    public bool $isBlocked;
+
+    /**
+     * Whether the record admits `POST /v1/verifactu/records/{id}/subsanar`: an `alta` that is ACCEPTED (or accepted with errors) or REJECTED by AEAT and is the last one of its invoice, which has not been annulled. It is the very rule that endpoint applies, so `true` guarantees it will not refuse the record by its state; whether there is something to correct and whether it changes a field of the hash (`requires_annulment`) is only known when you subsanar.
+     *
+     * @var bool $canSubsanar
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('can_subsanar')]
+    public bool $canSubsanar;
+
+    /**
      * Submission identifier assigned by AEAT (column `aeat_submission_id`). `null` until AEAT returns it. Never the internal PK of the record.
      *
      * @var ?string $aeatSubmissionId
@@ -140,6 +156,31 @@ class VeriFactuRecord
     public ?\DateTime $transmittedAt;
 
     /**
+     * Error code of the last AEAT rejection or failure (for example `1110` or `4112`), the internal code of a record that is stopped (`MISSING_CERTIFICATE`, `MISSING_REPRESENTATION`, `SYSTEM_CERTIFICATE_UNAVAILABLE`), `SCHEMA_INVALID` on a `rejected` record that was never sent because it does not meet the AEAT XML schema (fix it with a subsanation), or the warning code of a record accepted with errors; `null` when there is none. Without it you cannot tell a `4112` (presenter not enabled by AEAT) from a network failure.
+     *
+     * @var ?string $aeatErrorCode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('aeat_error_code')]
+    public ?string $aeatErrorCode;
+
+    /**
+     * Why the remission of the record is stopped, or `null`. `MISSING_CERTIFICATE`: your company has no usable certificate (missing, expired, revoked or for another tax ID). `MISSING_REPRESENTATION`: the remission mode is a third-party one and there is no current representation of the kind it asks for. `PRESENTER_NOT_ENABLED`: AEAT says the presenter is not enabled (`4112` or `3003`). `SUBMISSION_REJECTED`: AEAT rejected the submission for a client-side fault. These four need an action from you and make `is_blocked` true. `SYSTEM_CERTIFICATE_UNAVAILABLE`: the certificate of Factuarea that remits in the third-party modes is not available; it is on our side, does NOT block (`is_blocked` stays `false`) and the record retries by itself.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\VeriFactuRecordBlockReason $blockReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('block_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\VeriFactuRecordBlockReason|null')]
+    public ?VeriFactuRecordBlockReason $blockReason;
+
+    /**
+     * For a record AEAT accepted with errors (`status` `accepted` with an `aeat_error_code`), whether AEAT requires a subsanation of that admissible error: every `2xxx` code does except `2004` (FechaHoraHusoGenRegistro) and `2009` (ClaveRegimen with IPSI), which AEAT exempts (AEAT «Validaciones» v1.2.2, §4.3.1). `false` for a warning that is not an AEAT code (`duplicate_annulled`: review the invoice instead). `null` when the record is not accepted with a warning.
+     *
+     * @var ?bool $aeatWarningRequiresSubsanation
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('aeat_warning_requires_subsanation')]
+    public ?bool $aeatWarningRequiresSubsanation;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\VeriFactuRecordObject  $object
      * @param  string  $type
@@ -153,12 +194,17 @@ class VeriFactuRecord
      * @param  bool  $isSimplificada
      * @param  bool  $isSubstituteForSimplified
      * @param  \DateTime  $createdAt
+     * @param  bool  $isBlocked
+     * @param  bool  $canSubsanar
      * @param  ?string  $aeatSubmissionId
      * @param  ?string  $aeatCsv
      * @param  ?\DateTime  $transmittedAt
+     * @param  ?string  $aeatErrorCode
+     * @param  ?\Factuarea\Sdk\Models\Components\VeriFactuRecordBlockReason  $blockReason
+     * @param  ?bool  $aeatWarningRequiresSubsanation
      * @phpstan-pure
      */
-    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, float $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null)
+    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, float $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, bool $isBlocked, bool $canSubsanar, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null, ?string $aeatErrorCode = null, ?VeriFactuRecordBlockReason $blockReason = null, ?bool $aeatWarningRequiresSubsanation = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -173,8 +219,13 @@ class VeriFactuRecord
         $this->isSimplificada = $isSimplificada;
         $this->isSubstituteForSimplified = $isSubstituteForSimplified;
         $this->createdAt = $createdAt;
+        $this->isBlocked = $isBlocked;
+        $this->canSubsanar = $canSubsanar;
         $this->aeatSubmissionId = $aeatSubmissionId;
         $this->aeatCsv = $aeatCsv;
         $this->transmittedAt = $transmittedAt;
+        $this->aeatErrorCode = $aeatErrorCode;
+        $this->blockReason = $blockReason;
+        $this->aeatWarningRequiresSubsanation = $aeatWarningRequiresSubsanation;
     }
 }

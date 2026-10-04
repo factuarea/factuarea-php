@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** InvoiceActivity - An event in the activity timeline of an invoice. Groups domain events originated by changes to the invoice itself (creation, sending, payment, correction, etc.). */
+/** InvoiceActivity - An event in the activity timeline of an invoice. Groups domain events originated by changes to the invoice itself (creation, sending, payment, correction, etc.), the result of every submission of its VeriFactu records to AEAT, emails that could not be delivered, the first visit of each day to its public link and the payments registered, edited or reversed on it. */
 class InvoiceActivity
 {
     /**
@@ -21,7 +21,7 @@ class InvoiceActivity
     public InvoiceActivityObject $object;
 
     /**
-     * Tipo de evento de dominio (p. ej. `invoice.created`, `invoice.paid`).
+     * Domain event type (e.g. `invoice.created`, `invoice.paid`). These types have an exact `metadata` contract (see `metadata`): `verifactu.record_accepted` (AEAT accepted a record of the invoice — the alta, a subsanation or the annulment —, with or without admissible errors), `verifactu.record_rejected` (AEAT rejected a record), `verifactu.transmission_failed` (the submission failed because of AEAT or the network and is retried automatically; ONE per incident, not one per attempt), `verifactu.transmission_blocked` (the submission is stopped with no automatic retry until someone fixes the cause), `invoice.email_failed` (the invoice email could not be delivered after its retries) and `invoice.public_link_viewed` (first visit of the day, Europe/Madrid, to the public link; later visits that day do not add another entry), `payment.payment_created` (a payment was registered), `payment.payment_reversed` (a payment was reversed) and `payment.payment_updated` (a payment was edited). Payment events also cover the payments recorded before they were published here.
      *
      * @var string $eventType
      */
@@ -37,13 +37,13 @@ class InvoiceActivity
     public string $description;
 
     /**
-     * Event metadata. Internal identifiers (PKs) are stripped; `*_uuid` values are preserved.
+     * Event metadata. Internal identifiers (PKs) are stripped; `*_uuid` values are preserved. The event types listed in `event_type` publish EXACTLY these keys: `verifactu.record_accepted` → `record_type`, `csv`, `aeat_error_code`, `requires_subsanation`, `attempt`; `verifactu.record_rejected` → `record_type`, `aeat_error_code`, `aeat_error_message`, `attempt`; `verifactu.transmission_failed` → `record_type`, `reason`, `attempt`, `next_retry_at`; `verifactu.transmission_blocked` → `record_type`, `block_reason`; `invoice.email_failed` → `recipient`, `reason`; `invoice.public_link_viewed` → `views_today` and, only when known, `downloaded_pdf`; `payment.payment_created` → `amount`, `method`, `provider`; `payment.payment_reversed` → `amount`, `reason`, `provider`; `payment.payment_updated` → `changed_fields`, `provider`.
      *
-     * @var array<string, mixed> $metadata
+     * @var \Factuarea\Sdk\Models\Components\Metadata $metadata
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('metadata')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string, mixed>')]
-    public array $metadata;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Metadata')]
+    public Metadata $metadata;
 
     /**
      * When the event occurred (ISO 8601).
@@ -66,12 +66,12 @@ class InvoiceActivity
      * @param  \Factuarea\Sdk\Models\Components\InvoiceActivityObject  $object
      * @param  string  $eventType
      * @param  string  $description
-     * @param  array<string, mixed>  $metadata
+     * @param  \Factuarea\Sdk\Models\Components\Metadata  $metadata
      * @param  \DateTime  $createdAt
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceActivityPerformedBy  $performedBy
      * @phpstan-pure
      */
-    public function __construct(InvoiceActivityObject $object, string $eventType, string $description, array $metadata, \DateTime $createdAt, ?InvoiceActivityPerformedBy $performedBy = null)
+    public function __construct(InvoiceActivityObject $object, string $eventType, string $description, Metadata $metadata, \DateTime $createdAt, ?InvoiceActivityPerformedBy $performedBy = null)
     {
         $this->object = $object;
         $this->eventType = $eventType;

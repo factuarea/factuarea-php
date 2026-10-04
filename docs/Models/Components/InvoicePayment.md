@@ -1,6 +1,6 @@
 # InvoicePayment
 
-Datos del cobro de la factura. Presente (objeto) cuando `status` es `paid`, `null` en otro caso.
+Payment data of the invoice. An object when `status` is `paid`, `null` otherwise.
 
 
 ## Fields

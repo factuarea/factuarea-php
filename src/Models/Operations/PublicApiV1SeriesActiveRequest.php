@@ -13,6 +13,22 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1SeriesActiveRequest
 {
     /**
+     * Optional filter by document type. Without it, every active series of the company is returned.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveDocumentType $documentType
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=document_type')]
+    public ?PublicApiV1SeriesActiveDocumentType $documentType = null;
+
+    /**
+     * Restrict to invoice series of this purpose (only invoice series are returned). A value outside the list returns 422 `series_invoice_kind_invalid`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveInvoiceKind $invoiceKind
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_kind')]
+    public ?PublicApiV1SeriesActiveInvoiceKind $invoiceKind = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -29,12 +45,16 @@ class PublicApiV1SeriesActiveRequest
     public ?string $xActiveProfile = null;
 
     /**
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveDocumentType  $documentType
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveInvoiceKind  $invoiceKind
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(?PublicApiV1SeriesActiveDocumentType $documentType = null, ?PublicApiV1SeriesActiveInvoiceKind $invoiceKind = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
     {
+        $this->documentType = $documentType;
+        $this->invoiceKind = $invoiceKind;
         $this->factuareaVersion = $factuareaVersion;
         $this->xActiveProfile = $xActiveProfile;
     }

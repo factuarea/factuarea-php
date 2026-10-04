@@ -35,11 +35,11 @@ class PurchaseScanEmail
     /**
      * pending while the attachments are still being ingested; parked when the sender is not allowlisted or fails SPF/DKIM/DMARC authentication (no scan is created).
      *
-     * @var \Factuarea\Sdk\Models\Components\ResultEnum $result
+     * @var \Factuarea\Sdk\Models\Components\PurchaseScanEmailResult $result
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('result')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResultEnum')]
-    public ResultEnum $result;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseScanEmailResult')]
+    public PurchaseScanEmailResult $result;
 
     /**
      * $acceptedAttachments
@@ -88,7 +88,7 @@ class PurchaseScanEmail
      * @param  string  $id
      * @param  string  $sender
      * @param  \DateTime  $receivedAt
-     * @param  \Factuarea\Sdk\Models\Components\ResultEnum  $result
+     * @param  \Factuarea\Sdk\Models\Components\PurchaseScanEmailResult  $result
      * @param  array<\Factuarea\Sdk\Models\Components\AcceptedAttachment>  $acceptedAttachments
      * @param  array<\Factuarea\Sdk\Models\Components\RejectedAttachment>  $rejectedAttachments
      * @param  ?string  $subject
@@ -96,7 +96,7 @@ class PurchaseScanEmail
      * @param  ?\Factuarea\Sdk\Models\Components\SenderAuthentication  $senderAuthentication
      * @phpstan-pure
      */
-    public function __construct(string $id, string $sender, \DateTime $receivedAt, ResultEnum $result, array $acceptedAttachments, array $rejectedAttachments, ?string $subject = null, ?PurchaseScanEmailReason $reason = null, ?SenderAuthentication $senderAuthentication = null)
+    public function __construct(string $id, string $sender, \DateTime $receivedAt, PurchaseScanEmailResult $result, array $acceptedAttachments, array $rejectedAttachments, ?string $subject = null, ?PurchaseScanEmailReason $reason = null, ?SenderAuthentication $senderAuthentication = null)
     {
         $this->id = $id;
         $this->sender = $sender;
