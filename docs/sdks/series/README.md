@@ -153,7 +153,7 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesCreate
 
-Create a document numbering series. Optional `number_format` sets the numbering mask (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (≥1) starts the counter to continue an existing numbering. The same code may be reused across document types (multi-series), but not within the same document type. Code, mask and purpose can still be changed with `PUT /v1/companies/{company}/series/{series}` until the first document is issued; after that they are fixed.
+Create a document numbering series. Optional `number_format` sets the numbering mask (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (≥1) starts the counter to continue an existing numbering. The same code may be reused across document types (multi-series), but not within the same document type. Code, mask and purpose can still be changed with `PATCH /v1/companies/{company}/series/{series}` until the first document is issued; after that they are fixed.
 
 ### Example Usage: api_key_revoked
 
