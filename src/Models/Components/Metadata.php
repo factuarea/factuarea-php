@@ -50,7 +50,7 @@ class Metadata
     public ?string $reason = null;
 
     /**
-     * `verifactu.transmission_blocked`: why the submission is stopped. It does not go out again until the cause is fixed and the record is reactivated (`POST /v1/verifactu/records/retry-blocked`).
+     * `verifactu.transmission_blocked`: why the submission is stopped. It does not go out again until the cause is fixed and the record is reactivated (`POST /v1/companies/{company}/verifactu/records/retry-blocked`).
      *
      * @var ?\Factuarea\Sdk\Models\Components\InvoiceActivityBlockReason $blockReason
      */
@@ -78,13 +78,13 @@ class Metadata
     public ?int $viewsToday = null;
 
     /**
-     * `payment.payment_created` and `payment.payment_reversed`: amount of the payment in euros.
+     * `payment.payment_created` and `payment.payment_reversed`: amount of the payment in euros as a 2-decimal string.
      *
-     * @var ?float $amount
+     * @var ?string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $amount = null;
+    public ?string $amount = null;
 
     /**
      * `payment.payment_created`: payment method key, from the catalog of `GET /v1/payment-methods` (e.g. `bank_transfer`, `cash`, `credit_card`).
@@ -177,7 +177,7 @@ class Metadata
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceActivityBlockReason  $blockReason
      * @param  ?string  $recipient
      * @param  ?int  $viewsToday
-     * @param  ?float  $amount
+     * @param  ?string  $amount
      * @param  ?string  $method
      * @param  ?array<string>  $changedFields
      * @param  ?bool  $downloadedPdf
@@ -189,7 +189,7 @@ class Metadata
      * @param  ?string  $provider
      * @phpstan-pure
      */
-    public function __construct(?RecordType $recordType = null, ?bool $requiresSubsanation = null, ?int $attempt = null, ?string $reason = null, ?InvoiceActivityBlockReason $blockReason = null, ?string $recipient = null, ?int $viewsToday = null, ?float $amount = null, ?string $method = null, ?array $changedFields = null, ?bool $downloadedPdf = null, ?array $additionalProperties = null, ?string $csv = null, ?string $aeatErrorCode = null, ?string $aeatErrorMessage = null, ?\DateTime $nextRetryAt = null, ?string $provider = null)
+    public function __construct(?RecordType $recordType = null, ?bool $requiresSubsanation = null, ?int $attempt = null, ?string $reason = null, ?InvoiceActivityBlockReason $blockReason = null, ?string $recipient = null, ?int $viewsToday = null, ?string $amount = null, ?string $method = null, ?array $changedFields = null, ?bool $downloadedPdf = null, ?array $additionalProperties = null, ?string $csv = null, ?string $aeatErrorCode = null, ?string $aeatErrorMessage = null, ?\DateTime $nextRetryAt = null, ?string $provider = null)
     {
         $this->recordType = $recordType;
         $this->requiresSubsanation = $requiresSubsanation;

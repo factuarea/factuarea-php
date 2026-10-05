@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1ContactsCreateResponseBody1 - The `external_id` already identified a contact of the company: that contact was updated with the request, keeps its `id` and is returned. */
+/** PublicApiV1ContactsCreateResponseBody1 - Contact created. The `Location` header contains the canonical URL of the new contact. */
 class PublicApiV1ContactsCreateResponseBody1
 {
     /**

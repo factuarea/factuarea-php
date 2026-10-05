@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Notification
 {
     /**
-     * UUID (v7) of the notification.
+     * UUID v7 of the notification.
      *
      * @var string $id
      */
@@ -100,7 +100,7 @@ class Notification
     public ?string $entityType;
 
     /**
-     * UUID of the related resource, or `null`. For task notifications (`entity_type` = `task`) it is the UUID of the task, ready for `GET /v1/tasks/{task}`.
+     * UUID of the related resource, or `null`. For task notifications (`entity_type` = `task`) it is the UUID of the task, ready for `GET /v1/companies/{company}/tasks/{task}`.
      *
      * @var ?string $entityId
      */

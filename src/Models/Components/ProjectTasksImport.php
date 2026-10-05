@@ -54,13 +54,29 @@ class ProjectTasksImport
     public int $failed;
 
     /**
-     * Non-blocking adjustments (an unknown member left unassigned, a label created…).
+     * Non-blocking adjustments (an unknown member left unassigned, a label created…). Only the first 200 are listed: see `warnings_truncated` and `warnings_total`.
      *
      * @var array<\Factuarea\Sdk\Models\Components\ProjectTasksImportWarning> $warnings
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('warnings')]
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProjectTasksImportWarning>')]
     public array $warnings;
+
+    /**
+     * `true` when the document produced more than 200 warnings and only the first 200 are in `warnings`.
+     *
+     * @var bool $warningsTruncated
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warnings_truncated')]
+    public bool $warningsTruncated;
+
+    /**
+     * Number of warnings the import produced, including those left out of `warnings`.
+     *
+     * @var int $warningsTotal
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warnings_total')]
+    public int $warningsTotal;
 
     /**
      * Outcome per task of the document.
@@ -78,10 +94,12 @@ class ProjectTasksImport
      * @param  int  $created
      * @param  int  $failed
      * @param  array<\Factuarea\Sdk\Models\Components\ProjectTasksImportWarning>  $warnings
+     * @param  bool  $warningsTruncated
+     * @param  int  $warningsTotal
      * @param  array<\Factuarea\Sdk\Models\Components\ProjectTasksImportTask>  $tasks
      * @phpstan-pure
      */
-    public function __construct(ProjectTasksImportObject $object, string $projectId, int $total, int $created, int $failed, array $warnings, array $tasks)
+    public function __construct(ProjectTasksImportObject $object, string $projectId, int $total, int $created, int $failed, array $warnings, bool $warningsTruncated, int $warningsTotal, array $tasks)
     {
         $this->object = $object;
         $this->projectId = $projectId;
@@ -89,6 +107,8 @@ class ProjectTasksImport
         $this->created = $created;
         $this->failed = $failed;
         $this->warnings = $warnings;
+        $this->warningsTruncated = $warningsTruncated;
+        $this->warningsTotal = $warningsTotal;
         $this->tasks = $tasks;
     }
 }

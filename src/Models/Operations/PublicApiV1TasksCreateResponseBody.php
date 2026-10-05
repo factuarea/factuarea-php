@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1TasksCreateResponseBody - Task created successfully. The `Location` header contains the canonical URL of the newly created task. */
 class PublicApiV1TasksCreateResponseBody
 {
     /**

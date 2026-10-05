@@ -76,9 +76,9 @@ if ($response->twoHundredTextPlainBytes !== null) {
 
 Looks up the most recent generated tax report for a given type and period. Returns the report or 404 `tax_report_not_found` when none exists for the period.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.find_by_period" method="post" path="/companies/{company}/tax-reports/find-by-period" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.find_by_period" method="post" path="/companies/{company}/tax-reports/find-by-period" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -97,7 +97,43 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\FindTaxReportByPeriodV1Request(
-    type: Components\FindTaxReportByPeriodV1RequestType::Modelo130,
+    type: Components\FindTaxReportByPeriodV1RequestType::Modelo347,
+    year: 401435,
+);
+
+$response = $sdk->taxReports->publicApiV1TaxReportsFindByPeriod(
+    company: 'Jacobs, Graham and Bernhard',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.find_by_period" method="post" path="/companies/{company}/tax-reports/find-by-period" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindTaxReportByPeriodV1Request(
+    type: Components\FindTaxReportByPeriodV1RequestType::Modelo347,
     year: 401435,
 );
 
@@ -133,48 +169,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\FindTaxReportByPeriodV1Request(
-    type: Components\FindTaxReportByPeriodV1RequestType::Modelo130,
+    type: Components\FindTaxReportByPeriodV1RequestType::Modelo347,
     year: 401435,
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsFindByPeriod(
-    company: 'DuBuque, Howell and Stroman',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.find_by_period" method="post" path="/companies/{company}/tax-reports/find-by-period" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindTaxReportByPeriodV1Request(
-    type: Components\FindTaxReportByPeriodV1RequestType::Modelo130,
-    year: 401435,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsFindByPeriod(
-    company: 'Jacobs, Graham and Bernhard',
+    company: 'Sanford - DuBuque',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -205,48 +205,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\FindTaxReportByPeriodV1Request(
-    type: Components\FindTaxReportByPeriodV1RequestType::Modelo130,
+    type: Components\FindTaxReportByPeriodV1RequestType::Modelo347,
     year: 401435,
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsFindByPeriod(
-    company: 'Schoen Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.find_by_period" method="post" path="/companies/{company}/tax-reports/find-by-period" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindTaxReportByPeriodV1Request(
-    type: Components\FindTaxReportByPeriodV1RequestType::Modelo130,
-    year: 401435,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsFindByPeriod(
-    company: 'Sanford - DuBuque',
+    company: 'Kreiger, Monahan and Schoen',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -281,9 +245,46 @@ if ($response->object !== null) {
 
 Generates the Spanish Modelo 130 (quarterly IRPF instalment payment, direct estimation) for the given year and quarter in the requested format (txt_aeat, pdf, excel; defaults to pdf). The calculation is cumulative year-to-date (1 Jan to end of quarter).
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_130" method="post" path="/companies/{company}/tax-reports/130" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_130" method="post" path="/companies/{company}/tax-reports/130" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\GenerateModelo130V1Request(
+    year: 705122,
+    format: Components\GenerateModelo130V1RequestFormat::Excel,
+);
+
+$response = $sdk->taxReports->publicApiV1TaxReportsGenerate130(
+    company: 'Sanford, Schneider and McGlynn',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_130" method="post" path="/companies/{company}/tax-reports/130" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -344,44 +345,7 @@ $body = new Components\GenerateModelo130V1Request(
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsGenerate130(
-    company: 'Kozey and Sons',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_130" method="post" path="/companies/{company}/tax-reports/130" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\GenerateModelo130V1Request(
-    year: 705122,
-    format: Components\GenerateModelo130V1RequestFormat::Excel,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsGenerate130(
-    company: 'Sanford, Schneider and McGlynn',
+    company: 'Nikolaus, Kozey and Kozey',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -418,44 +382,7 @@ $body = new Components\GenerateModelo130V1Request(
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsGenerate130(
-    company: 'McGlynn, Zulauf and Nikolaus',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_130" method="post" path="/companies/{company}/tax-reports/130" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\GenerateModelo130V1Request(
-    year: 705122,
-    format: Components\GenerateModelo130V1RequestFormat::Excel,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsGenerate130(
-    company: 'Collier, Bayer and Smith',
+    company: 'Sanford, Schneider and McGlynn',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -492,9 +419,46 @@ if ($response->object !== null) {
 
 Generates the Spanish Modelo 303 (quarterly VAT) for the given year and quarter in the requested format (txt_aeat, pdf, excel).
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_303" method="post" path="/companies/{company}/tax-reports/303" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_303" method="post" path="/companies/{company}/tax-reports/303" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\GenerateModelo303V1Request(
+    year: 745633,
+    format: Components\GenerateModelo303V1RequestFormat::Excel,
+);
+
+$response = $sdk->taxReports->publicApiV1TaxReportsGenerate303(
+    company: 'Reynolds, Homenick and Bernier',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_303" method="post" path="/companies/{company}/tax-reports/303" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -555,44 +519,7 @@ $body = new Components\GenerateModelo303V1Request(
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsGenerate303(
-    company: 'McKenzie - Welch',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_303" method="post" path="/companies/{company}/tax-reports/303" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\GenerateModelo303V1Request(
-    year: 745633,
-    format: Components\GenerateModelo303V1RequestFormat::Excel,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsGenerate303(
-    company: 'Reynolds, Homenick and Bernier',
+    company: 'McDermott - Barrows',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -629,44 +556,7 @@ $body = new Components\GenerateModelo303V1Request(
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsGenerate303(
-    company: 'Halvorson LLC',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_303" method="post" path="/companies/{company}/tax-reports/303" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\GenerateModelo303V1Request(
-    year: 745633,
-    format: Components\GenerateModelo303V1RequestFormat::Excel,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsGenerate303(
-    company: 'McDermott - Barrows',
+    company: 'Collins - Moen',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -703,9 +593,46 @@ if ($response->object !== null) {
 
 Generates the Spanish Modelo 347 (annual third-party operations > 3,005.06 EUR) for the given year.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_347" method="post" path="/companies/{company}/tax-reports/347" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_347" method="post" path="/companies/{company}/tax-reports/347" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\GenerateModelo347V1Request(
+    year: 376706,
+    format: Components\GenerateModelo347V1RequestFormat::TxtAeat,
+);
+
+$response = $sdk->taxReports->publicApiV1TaxReportsGenerate347(
+    company: 'Barrows Group',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_347" method="post" path="/companies/{company}/tax-reports/347" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -766,44 +693,7 @@ $body = new Components\GenerateModelo347V1Request(
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsGenerate347(
-    company: 'Satterfield, Bednar and Schroeder',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_347" method="post" path="/companies/{company}/tax-reports/347" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\GenerateModelo347V1Request(
-    year: 376706,
-    format: Components\GenerateModelo347V1RequestFormat::TxtAeat,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsGenerate347(
-    company: 'Barrows Group',
+    company: 'Boehm - Konopelski',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -840,44 +730,7 @@ $body = new Components\GenerateModelo347V1Request(
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsGenerate347(
-    company: 'Boehm - Konopelski',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.generate_347" method="post" path="/companies/{company}/tax-reports/347" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\GenerateModelo347V1Request(
-    year: 376706,
-    format: Components\GenerateModelo347V1RequestFormat::TxtAeat,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsGenerate347(
-    company: 'Boehm - Konopelski',
+    company: 'Wisozk Group',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1095,9 +948,9 @@ if ($response->paginatedList !== null) {
 
 Computes the breakdown of a tax report without persisting a generation or writing files. Ideal for interactive UIs that confirm totals before commit.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.preview" method="post" path="/companies/{company}/tax-reports/preview" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.preview" method="post" path="/companies/{company}/tax-reports/preview" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1116,7 +969,43 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\PreviewTaxReportV1Request(
-    type: Components\PreviewTaxReportV1RequestType::Modelo347,
+    type: Components\PreviewTaxReportV1RequestType::Modelo303,
+    year: 455020,
+);
+
+$response = $sdk->taxReports->publicApiV1TaxReportsPreview(
+    company: 'Klocko Inc',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.preview" method="post" path="/companies/{company}/tax-reports/preview" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewTaxReportV1Request(
+    type: Components\PreviewTaxReportV1RequestType::Modelo303,
     year: 455020,
 );
 
@@ -1152,48 +1041,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\PreviewTaxReportV1Request(
-    type: Components\PreviewTaxReportV1RequestType::Modelo347,
+    type: Components\PreviewTaxReportV1RequestType::Modelo303,
     year: 455020,
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsPreview(
-    company: 'Stamm - Kovacek',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.preview" method="post" path="/companies/{company}/tax-reports/preview" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewTaxReportV1Request(
-    type: Components\PreviewTaxReportV1RequestType::Modelo347,
-    year: 455020,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsPreview(
-    company: 'Klocko Inc',
+    company: 'D\'Amore, Streich and Hammes',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1224,48 +1077,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\PreviewTaxReportV1Request(
-    type: Components\PreviewTaxReportV1RequestType::Modelo347,
+    type: Components\PreviewTaxReportV1RequestType::Modelo303,
     year: 455020,
 );
 
 $response = $sdk->taxReports->publicApiV1TaxReportsPreview(
-    company: 'D\'Amore, Streich and Hammes',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tax_reports.preview" method="post" path="/companies/{company}/tax-reports/preview" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewTaxReportV1Request(
-    type: Components\PreviewTaxReportV1RequestType::Modelo347,
-    year: 455020,
-);
-
-$response = $sdk->taxReports->publicApiV1TaxReportsPreview(
-    company: 'D\'Amore, Streich and Hammes',
+    company: 'O\'Connell - Schneider',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

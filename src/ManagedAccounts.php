@@ -20,7 +20,7 @@ use Speakeasy\Serializer\DeserializationContext;
 class ManagedAccounts
 {
     private SDKConfiguration $sdkConfiguration;
-    public Imports $imports;
+    public ManagedAccountsImports $imports;
 
     public AccessLevel $accessLevel;
 
@@ -36,7 +36,7 @@ class ManagedAccounts
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
-        $this->imports = new Imports($this->sdkConfiguration);
+        $this->imports = new ManagedAccountsImports($this->sdkConfiguration);
         $this->accessLevel = new AccessLevel($this->sdkConfiguration);
         $this->plan = new Plan($this->sdkConfiguration);
         $this->management = new Management($this->sdkConfiguration);

@@ -15,9 +15,9 @@
 
 Create a new API key in your account and return its plaintext `secret` exactly once — store it now, it cannot be retrieved later. Requesting a scope above the plan of the scoped tax IDs or outside the catalog returns 422; the credential cap is counted over the ACCOUNT. Without `scoped_company_ids` the new key reaches the same tax IDs as the credential that creates it, and it can never reach more. Pass `environment: test` to mint a sandbox key (`fact_test_`) that only reaches the sandbox company, with no real-world side effects (declaring `scoped_company_ids` with it returns 422); omit it for a live key (`fact_live_`). Creating against another account returns 404 and persists nothing.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.create" method="post" path="/accounts/{account}/api-keys" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.create" method="post" path="/accounts/{account}/api-keys" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -38,7 +38,46 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateApiKeyV1Request(
     name: '<value>',
     scopes: [
-        Components\CreateApiKeyV1RequestScope::WorkSchedulesRead,
+        Components\CreateApiKeyV1RequestScope::EmployeesWrite,
+    ],
+);
+
+$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysCreate(
+    account: '87093000',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.create" method="post" path="/accounts/{account}/api-keys" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateApiKeyV1Request(
+    name: '<value>',
+    scopes: [
+        Components\CreateApiKeyV1RequestScope::EmployeesWrite,
     ],
 );
 
@@ -77,51 +116,12 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateApiKeyV1Request(
     name: '<value>',
     scopes: [
-        Components\CreateApiKeyV1RequestScope::WorkSchedulesRead,
+        Components\CreateApiKeyV1RequestScope::TimeEntriesRead,
     ],
 );
 
 $response = $sdk->account->apiKeys->publicApiV1AccountApiKeysCreate(
-    account: '59597385',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.create" method="post" path="/accounts/{account}/api-keys" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateApiKeyV1Request(
-    name: '<value>',
-    scopes: [
-        Components\CreateApiKeyV1RequestScope::WorkSchedulesRead,
-    ],
-);
-
-$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysCreate(
-    account: '87093000',
+    account: '59595973',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -155,51 +155,12 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateApiKeyV1Request(
     name: '<value>',
     scopes: [
-        Components\CreateApiKeyV1RequestScope::WorkSchedulesRead,
+        Components\CreateApiKeyV1RequestScope::TimeEntriesRead,
     ],
 );
 
 $response = $sdk->account->apiKeys->publicApiV1AccountApiKeysCreate(
-    account: '09300059',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.create" method="post" path="/accounts/{account}/api-keys" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateApiKeyV1Request(
-    name: '<value>',
-    scopes: [
-        Components\CreateApiKeyV1RequestScope::WorkSchedulesRead,
-    ],
-);
-
-$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysCreate(
-    account: '85467065',
+    account: '87093000',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -469,9 +430,87 @@ if ($response->object !== null) {
 
 Replace the scope of tax IDs of an API key of your account with `scoped_company_ids`, the complete resulting list (not a delta), and return the resulting scope. Use it to add the companies you manage to a key you already deployed. You can only change keys whose current scope is within yours, and the new scope can never exceed yours. Every scope the key already has is re-checked against the plan of ALL the tax IDs of the new scope; a scope one of them does not allow returns 422 and nothing changes. Test keys and browser-published keys cannot change scope.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest(
+    account: '09999995',
+    apiKey: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateApiKeyNifScopeV1Request(
+        scopedCompanyIds: [],
+    ),
+);
+
+$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysUpdateNifScope(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest(
+    account: '23536343',
+    apiKey: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateApiKeyNifScopeV1Request(
+        scopedCompanyIds: [],
+    ),
+);
+
+$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysUpdateNifScope(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -508,9 +547,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest(
+    account: '17781543',
+    apiKey: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateApiKeyNifScopeV1Request(
+        scopedCompanyIds: [],
+    ),
+);
+
+$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysUpdateNifScope(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -570,45 +648,6 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest(
     account: '32780179',
-    apiKey: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateApiKeyNifScopeV1Request(
-        scopedCompanyIds: [],
-    ),
-);
-
-$response = $sdk->account->apiKeys->publicApiV1AccountApiKeysUpdateNifScope(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.api_keys.update_nif_scope" method="patch" path="/accounts/{account}/api-keys/{api_key}/nif-scope" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest(
-    account: '23536343',
     apiKey: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

@@ -23,7 +23,7 @@ class Details
     public ?array $fieldErrors = null;
 
     /**
-     * UUID of the pre-existing resource that triggered the conflict. Resolvable with a `GET /v1/{resource}/{id}` without an extra `find_by_*` call. Only present on 409 duplication conflicts.
+     * Public identifier (UUID v7) of the resource that already exists, so you can fetch it with a `GET` and no extra `find_by_*` call. Only present on 409 duplication conflicts.
      *
      * @var ?string $existingResourceId
      */

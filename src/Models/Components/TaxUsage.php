@@ -21,7 +21,7 @@ class TaxUsage
     public TaxUsageObject $object;
 
     /**
-     * UUID (v7) of the requested tax.
+     * UUID v7 of the requested tax.
      *
      * @var string $taxesId
      */

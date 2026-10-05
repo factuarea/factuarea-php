@@ -131,9 +131,89 @@ if ($response->statusCode === 200) {
 
 Create or replace the grant of a `member` on one tax ID of the account with the given `level` (`view` or `operate`), and return 200 with the resulting grant. It is a full replacement of a singular sub-resource addressed entirely by its path, hence `PUT`: repeating it with the same level leaves the same state and sends no email or notification. Lowering a grant also lowers the API keys of that member. Returns 404 `member_not_found`, 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope, and 422 `grants_only_for_member` when the member is an `owner` or `admin`.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
+    account: '22878698',
+    member: '<value>',
+    company: 'Padberg and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SetAccountMemberGrantV1Request(
+        level: Components\SetAccountMemberGrantV1RequestLevel::View,
+    ),
+);
+
+$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
+    account: '86401896',
+    member: '<value>',
+    company: 'Leannon - Feil',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SetAccountMemberGrantV1Request(
+        level: Components\SetAccountMemberGrantV1RequestLevel::View,
+    ),
+);
+
+$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -171,9 +251,49 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
+    account: '84183246',
+    member: '<value>',
+    company: 'Ratke, Renner and Kuphal',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SetAccountMemberGrantV1Request(
+        level: Components\SetAccountMemberGrantV1RequestLevel::View,
+    ),
+);
+
+$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -236,46 +356,6 @@ $request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
     account: '04840872',
     member: '<value>',
     company: 'Raynor and Sons',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SetAccountMemberGrantV1Request(
-        level: Components\SetAccountMemberGrantV1RequestLevel::View,
-    ),
-);
-
-$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
-    account: '86401896',
-    member: '<value>',
-    company: 'Leannon - Feil',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SetAccountMemberGrantV1Request(

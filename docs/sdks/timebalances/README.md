@@ -36,8 +36,8 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TimeBalancesEmployeeRequest(
     company: 'Kreiger, Corwin and Deckow',
     employee: '<value>',
-    from: LocalDate::parse('2024-06-13'),
-    to: LocalDate::parse('2024-06-01'),
+    from: LocalDate::parse('2026-12-05'),
+    to: LocalDate::parse('2025-06-06'),
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 
@@ -96,7 +96,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->timeBalances->publicApiV1TimeBalancesMonthlySheet(
     company: 'Jacobs, Hilpert and Schinner',
-    employeeId: '46019a14-ff6a-4fbb-8dfa-e2d9d19bd7ee',
+    employeeId: 'b65c4601-9a14-4ff6-bafb-bdfae2d9d19b',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );

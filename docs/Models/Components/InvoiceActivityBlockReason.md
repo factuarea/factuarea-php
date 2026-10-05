@@ -1,6 +1,6 @@
 # InvoiceActivityBlockReason
 
-`verifactu.transmission_blocked`: why the submission is stopped. It does not go out again until the cause is fixed and the record is reactivated (`POST /v1/verifactu/records/retry-blocked`).
+`verifactu.transmission_blocked`: why the submission is stopped. It does not go out again until the cause is fixed and the record is reactivated (`POST /v1/companies/{company}/verifactu/records/retry-blocked`).
 
 
 ## Values

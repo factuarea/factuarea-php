@@ -37,7 +37,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->stripeAutoinvoicing->accounts->publicApiV1StripeAutoinvoicingAccountsDisconnect(
     company: 'Schinner, Hills and Reilly',
-    account: '04860988',
+    account: '87370486',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -97,7 +97,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->stripeAutoinvoicing->accounts->publicApiV1StripeAutoinvoicingAccountsShow(
     company: 'Turner Group',
-    account: '70585716',
+    account: '49170585',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
@@ -154,7 +154,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest(
     company: 'Bartell and Sons',
-    account: '63362471',
+    account: '40763362',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );

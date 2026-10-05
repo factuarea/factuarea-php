@@ -17,9 +17,9 @@
 
 Create a webhook endpoint that receives event notifications via HTTPS callbacks. The signing `secret` is returned **once** in this response and never again — store it securely.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -38,9 +38,56 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateWebhookEndpointRequest(
-    url: 'https://evil-starboard.org',
+    url: 'https://angelic-lender.biz',
     enabledEvents: [
-        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
+        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceMetadataChanged,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: 'Bartell, Lebsack and Farrell',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://angelic-lender.biz',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceMetadataChanged,
     ],
     metadata: [
         'erp_code' => 'IVA-GEN',
@@ -85,9 +132,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateWebhookEndpointRequest(
-    url: 'https://evil-starboard.org',
+    url: 'https://angelic-lender.biz',
     enabledEvents: [
-        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
+        Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
     ],
     metadata: [
         'erp_code' => 'IVA-GEN',
@@ -100,54 +147,7 @@ $body = new Components\CreateWebhookEndpointRequest(
 );
 
 $response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
-    company: 'Wilkinson LLC',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateWebhookEndpointRequest(
-    url: 'https://evil-starboard.org',
-    enabledEvents: [
-        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
-    ],
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    customHeaders: [
-        'Authorization' => 'Bearer integration-token',
-        'X-Custom-Auth' => 'tenant-a',
-    ],
-);
-
-$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
-    company: 'Bartell, Lebsack and Farrell',
+    company: 'Lynch, Beer and Balistreri',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -179,9 +179,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateWebhookEndpointRequest(
-    url: 'https://evil-starboard.org',
+    url: 'https://angelic-lender.biz',
     enabledEvents: [
-        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
+        Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
     ],
     metadata: [
         'erp_code' => 'IVA-GEN',
@@ -194,54 +194,7 @@ $body = new Components\CreateWebhookEndpointRequest(
 );
 
 $response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
-    company: 'Hickle - Robel',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateWebhookEndpointRequest(
-    url: 'https://evil-starboard.org',
-    enabledEvents: [
-        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
-    ],
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    customHeaders: [
-        'Authorization' => 'Bearer integration-token',
-        'X-Custom-Auth' => 'tenant-a',
-    ],
-);
-
-$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
-    company: 'Lynch, Beer and Balistreri',
+    company: 'Fisher and Sons',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -280,7 +233,7 @@ $body = new Components\CreateWebhookEndpointRequest(
         Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
     ],
     description: 'Webhook principal de producción.',
-    apiVersion: '2026-09-23',
+    apiVersion: '2026-10-05',
     timeoutSeconds: 10,
 );
 
@@ -497,9 +450,54 @@ if ($response->object !== null) {
 
 Update a webhook endpoint (URL, description, enabled events, status, IP allowlist).
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: 'Bahringer and Sons',
+    webhookEndpoint: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -521,7 +519,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
     company: 'Lesch Inc',
     webhookEndpoint: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateWebhookEndpointRequest(
         metadata: [
@@ -589,52 +586,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
-    company: 'Bahringer and Sons',
-    webhookEndpoint: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateWebhookEndpointRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-        customHeaders: [
-            'Authorization' => 'Bearer integration-token',
-            'X-Custom-Auth' => 'tenant-a',
-        ],
-    ),
-);
-
-$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="success" -->
@@ -658,52 +609,6 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
     company: 'Lesch Inc',
-    webhookEndpoint: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateWebhookEndpointRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-        customHeaders: [
-            'Authorization' => 'Bearer integration-token',
-            'X-Custom-Auth' => 'tenant-a',
-        ],
-    ),
-);
-
-$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
-    company: 'Prosacco, Homenick and Farrell',
     webhookEndpoint: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

@@ -51,11 +51,11 @@ class PurchaseScanEmails
      *
      * List the emails received in the purchase scanner mailbox with sender, subject, accepted and rejected attachments and ingestion result. Search by sender or subject and filter by ingestion result or date range; cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScanEmailsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScanEmailsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScanEmailsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseScanEmailsList(?Operations\PublicApiV1PurchaseScanEmailsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1PurchaseScanEmailsListResponse
+    public function publicApiV1PurchaseScanEmailsList(Operations\PublicApiV1PurchaseScanEmailsListRequest $request, ?Options $options = null): Operations\PublicApiV1PurchaseScanEmailsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -83,7 +83,7 @@ class PurchaseScanEmails
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scan_emails');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scan-emails', Operations\PublicApiV1PurchaseScanEmailsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -132,7 +132,7 @@ class PurchaseScanEmails
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

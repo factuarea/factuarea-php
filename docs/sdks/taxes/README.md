@@ -20,9 +20,45 @@
 
 Apply the referenced tax to a base amount and return the breakdown: base, tax_rate, tax_amount, total_amount and the full tax object.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CalculateTaxRequest(
+    base: 1715.56,
+    taxesId: 'e0683a9c-bad1-4692-bb01-105d103397cc',
+);
+
+$response = $sdk->taxes->publicApiV1TaxesCalculate(
+    company: 'VonRueden - Abshire',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -82,43 +118,7 @@ $body = new Components\CalculateTaxRequest(
 );
 
 $response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: 'Ryan Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTaxRequest(
-    base: 1715.56,
-    taxesId: 'e0683a9c-bad1-4692-bb01-105d103397cc',
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: 'VonRueden - Abshire',
+    company: 'Mosciski and Sons',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -154,43 +154,7 @@ $body = new Components\CalculateTaxRequest(
 );
 
 $response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: 'Emard, Abernathy and Paucek',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTaxRequest(
-    base: 1715.56,
-    taxesId: 'e0683a9c-bad1-4692-bb01-105d103397cc',
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: 'Mosciski and Sons',
+    company: 'Kuvalis Group',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -225,9 +189,44 @@ if ($response->object !== null) {
 
 Compute subtotal, VAT, surcharge, retention and grand total for an array of line items with quantity, price, discount and tax rates. Returns the document totals plus the per-line breakdown.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CalculateTotalsRequest(
+    lines: [],
+);
+
+$response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
+    company: 'Tromp Inc',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -285,42 +284,7 @@ $body = new Components\CalculateTotalsRequest(
 );
 
 $response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: 'Bogan - Kihn',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTotalsRequest(
-    lines: [],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: 'Tromp Inc',
+    company: 'Torp - Metz',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -355,42 +319,7 @@ $body = new Components\CalculateTotalsRequest(
 );
 
 $response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: 'Torp - Metz',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTotalsRequest(
-    lines: [],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: 'Torp - Metz',
+    company: 'Konopelski - Hermann',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

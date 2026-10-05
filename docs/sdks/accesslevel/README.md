@@ -10,9 +10,81 @@
 
 Change the `level` your account keeps on one of its managed accounts: `none`, `view` (read-only) or `operate`. Before the holder claims the account you can raise and lower it; after the claim, raising returns 422 `access_level_raise_forbidden` with no change, and lowering is always allowed. Lowering narrows at once what your credentials reach in its tax IDs. Returns 200 with the managed account and its new level. The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ChangeManagedAccountAccessLevelV1Request(
+    level: Components\ChangeManagedAccountAccessLevelV1RequestLevel::View,
+);
+
+$response = $sdk->managedAccounts->accessLevel->publicApiV1ManagedAccountsAccessLevelUpdate(
+    account: '72223638',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ChangeManagedAccountAccessLevelV1Request(
+    level: Components\ChangeManagedAccountAccessLevelV1RequestLevel::View,
+);
+
+$response = $sdk->managedAccounts->accessLevel->publicApiV1ManagedAccountsAccessLevelUpdate(
+    account: '78043384',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -46,9 +118,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ChangeManagedAccountAccessLevelV1Request(
+    level: Components\ChangeManagedAccountAccessLevelV1RequestLevel::View,
+);
+
+$response = $sdk->managedAccounts->accessLevel->publicApiV1ManagedAccountsAccessLevelUpdate(
+    account: '42855169',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -72,42 +180,6 @@ $body = new Components\ChangeManagedAccountAccessLevelV1Request(
 
 $response = $sdk->managedAccounts->accessLevel->publicApiV1ManagedAccountsAccessLevelUpdate(
     account: '86876120',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.access_level.update" method="patch" path="/accounts/{account}/access-level" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ChangeManagedAccountAccessLevelV1Request(
-    level: Components\ChangeManagedAccountAccessLevelV1RequestLevel::View,
-);
-
-$response = $sdk->managedAccounts->accessLevel->publicApiV1ManagedAccountsAccessLevelUpdate(
-    account: '78043384',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')

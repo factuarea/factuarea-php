@@ -16,9 +16,83 @@
 
 Create a webhook endpoint of your ACCOUNT that receives event notifications via HTTPS callbacks. It can subscribe to the same events as a company endpoint plus the `account.*` events of the account (members, owner, tax IDs, access granted or received, managed accounts and bulk imports). `account_relationship` says whose tax IDs it hears about: `own` (the tax IDs of your account), `managed` (the accounts your account manages) or `all` (the default). The signing `secret` is returned **once** in this response and never again — store it securely. The endpoint is created in the environment of the credential (`live` or `test`), cannot change environment and is invisible from the other one. The credential must reach every tax ID of the account and the person who issued it must be an owner or admin of the account (403 `forbidden_action` otherwise); a test key cannot create (403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway). The number of endpoints per account and environment depends on the plan: 402 `addon_required` when the plan allows none and 422 `account_webhook_endpoint_limit_reached` at the limit. Returns 201 with a `Location` header.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAccountWebhookV1Request(
+    url: 'https://urban-summer.info/',
+    enabledEvents: [],
+);
+
+$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
+    account: '38973372',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAccountWebhookV1Request(
+    url: 'https://urban-summer.info/',
+    enabledEvents: [],
+);
+
+$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
+    account: '63173023',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -53,9 +127,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAccountWebhookV1Request(
+    url: 'https://urban-summer.info/',
+    enabledEvents: [],
+);
+
+$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
+    account: '08143659',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -117,43 +228,6 @@ $body = new Components\CreateAccountWebhookV1Request(
 
 $response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
     account: '81599073',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAccountWebhookV1Request(
-    url: 'https://urban-summer.info/',
-    enabledEvents: [],
-);
-
-$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
-    account: '63173023',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')

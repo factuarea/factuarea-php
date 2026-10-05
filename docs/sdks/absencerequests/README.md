@@ -213,9 +213,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.create" method="post" path="/companies/{company}/absence-requests" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.create" method="post" path="/companies/{company}/absence-requests" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -234,10 +234,49 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateAbsenceRequestRequest(
-    employeeId: 'e98b13b2-de72-4ebc-939a-d5c65fe0dead',
-    absenceTypeId: 'f0273c95-cf77-4c44-9f55-0d9cf5fd81e2',
-    startDate: LocalDate::parse('2025-04-03'),
-    endDate: LocalDate::parse('2024-02-29'),
+    employeeId: '186e98b1-3b2d-4e72-bebc-39ad5c65fe0d',
+    absenceTypeId: 'ad6f0273-c95c-4f77-8c44-f550d9cf5fd8',
+    startDate: LocalDate::parse('2026-10-22'),
+    endDate: LocalDate::parse('2024-05-24'),
+);
+
+$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
+    company: 'Lakin - Howe',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.create" method="post" path="/companies/{company}/absence-requests" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAbsenceRequestRequest(
+    employeeId: '186e98b1-3b2d-4e72-bebc-39ad5c65fe0d',
+    absenceTypeId: 'ad6f0273-c95c-4f77-8c44-f550d9cf5fd8',
+    startDate: LocalDate::parse('2026-10-22'),
+    endDate: LocalDate::parse('2024-05-24'),
 );
 
 $response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
@@ -273,53 +312,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateAbsenceRequestRequest(
-    employeeId: 'e98b13b2-de72-4ebc-939a-d5c65fe0dead',
-    absenceTypeId: 'f0273c95-cf77-4c44-9f55-0d9cf5fd81e2',
-    startDate: LocalDate::parse('2025-04-03'),
-    endDate: LocalDate::parse('2024-02-29'),
+    employeeId: '186e98b1-3b2d-4e72-bebc-39ad5c65fe0d',
+    absenceTypeId: 'ad6f0273-c95c-4f77-8c44-f550d9cf5fd8',
+    startDate: LocalDate::parse('2026-10-22'),
+    endDate: LocalDate::parse('2024-05-24'),
 );
 
 $response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
-    company: 'Smitham, Trantow and Schmidt',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.create" method="post" path="/companies/{company}/absence-requests" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAbsenceRequestRequest(
-    employeeId: 'e98b13b2-de72-4ebc-939a-d5c65fe0dead',
-    absenceTypeId: 'f0273c95-cf77-4c44-9f55-0d9cf5fd81e2',
-    startDate: LocalDate::parse('2025-04-03'),
-    endDate: LocalDate::parse('2024-02-29'),
-);
-
-$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
-    company: 'Lakin - Howe',
+    company: 'Dicki - Reynolds',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -351,53 +351,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateAbsenceRequestRequest(
-    employeeId: 'e98b13b2-de72-4ebc-939a-d5c65fe0dead',
-    absenceTypeId: 'f0273c95-cf77-4c44-9f55-0d9cf5fd81e2',
-    startDate: LocalDate::parse('2025-04-03'),
-    endDate: LocalDate::parse('2024-02-29'),
+    employeeId: '186e98b1-3b2d-4e72-bebc-39ad5c65fe0d',
+    absenceTypeId: 'ad6f0273-c95c-4f77-8c44-f550d9cf5fd8',
+    startDate: LocalDate::parse('2026-10-22'),
+    endDate: LocalDate::parse('2024-05-24'),
 );
 
 $response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
-    company: 'Lemke - Strosin',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.create" method="post" path="/companies/{company}/absence-requests" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAbsenceRequestRequest(
-    employeeId: 'e98b13b2-de72-4ebc-939a-d5c65fe0dead',
-    absenceTypeId: 'f0273c95-cf77-4c44-9f55-0d9cf5fd81e2',
-    startDate: LocalDate::parse('2025-04-03'),
-    endDate: LocalDate::parse('2024-02-29'),
-);
-
-$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsCreate(
-    company: 'Dicki - Reynolds',
+    company: 'Miller, Larson and Reichert',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -491,9 +452,48 @@ if ($response->paginatedList !== null) {
 
 Reject a pending absence request (transition `pending` → `rejected`). A `reason` is required (422 without it); rejecting neither consumes nor releases balance. Returns the updated request.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/companies/{company}/absence-requests/{absence_request}/reject" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/companies/{company}/absence-requests/{absence_request}/reject" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsenceRequestsRejectRequest(
+    company: 'Shanahan - Hegmann',
+    absenceRequest: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RejectAbsenceRequestRequest(
+        reason: '<value>',
+    ),
+);
+
+$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsReject(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/companies/{company}/absence-requests/{absence_request}/reject" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -608,45 +608,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/companies/{company}/absence-requests/{absence_request}/reject" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsenceRequestsRejectRequest(
-    company: 'Shanahan - Hegmann',
-    absenceRequest: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RejectAbsenceRequestRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsReject(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/companies/{company}/absence-requests/{absence_request}/reject" example="success" -->
@@ -670,45 +631,6 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1AbsenceRequestsRejectRequest(
     company: 'Littel - Cartwright',
-    absenceRequest: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RejectAbsenceRequestRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->absenceRequests->publicApiV1AbsenceRequestsReject(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-requests.reject" method="post" path="/companies/{company}/absence-requests/{absence_request}/reject" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsenceRequestsRejectRequest(
-    company: 'Kutch, Cremin and Senger',
     absenceRequest: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

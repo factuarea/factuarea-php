@@ -68,9 +68,9 @@ if ($response->managedAccountList !== null) {
 
 Provision a SEPARATE account for one of your clients, with its tax ID (`tax_id`, `legal_name`), its plan (`emprendedor` or `empresario`) and the `access_level` your account keeps on it (`none` by default, `view` or `operate`). Your account pays it: in live mode the account is charged on the `managed-accounts` subscription of your account. `external_ref` is YOUR reference and makes the call idempotent by itself: provisioning an `external_ref` you already provisioned returns 200 with that same account, creates nothing and issues no claim voucher (use the claim-token operation to issue a new one). A new account returns **201 Created** with the claim voucher the holder uses to take the account: with `send_email: false` (the default) `claim_token` and `claim_url` are returned EXACTLY ONCE, for you to deliver; with `send_email: true` the link travels only in the email to `owner_email` and both fields are `null`. An idempotent replay returns them as `null` too: the voucher is never stored in the clear, not even in the idempotency cache. `owner_email` is required with a live key and whenever `send_email` is `true`. The environment is the one of the key: a `fact_test_` key creates a TEST account, with no charge, no voucher (`claim_token` and `claim_url` are `null`) and outside your managed account limit. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`. Returns 402 `payment_method_required` when your account has no payment method to pay a live managed account, 409 `provisioning_account_claimed` when the `external_ref` names an account its holder already claimed, 409 `managed_account_external_ref_in_other_environment` when it names a managed account of the other environment, 422 `managed_account_plan_not_self_serve` for `enterprise` (it is only assigned by Factuarea by contract), 422 `managed_account_provider_in_trial` for a paid plan while your account is in trial (only test accounts), 422 `managed_accounts_limit_reached` at the managed account limit of your account, and 422 `idempotency_key_required` because provisioning is irreversible.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="api_key_expired" -->
 ```php
 declare(strict_types=1);
 
@@ -106,9 +106,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -144,9 +144,85 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="unsupported_api_version" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ProvisionManagedAccountV1Request(
+    externalRef: '<value>',
+    plan: Components\ProvisionManagedAccountV1RequestPlan::Enterprise,
+    taxId: '<id>',
+    legalName: '<value>',
+);
+
+$response = $sdk->managedAccounts->publicApiV1ManagedAccountsCreate(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: ip_not_allowed
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ProvisionManagedAccountV1Request(
+    externalRef: '<value>',
+    plan: Components\ProvisionManagedAccountV1RequestPlan::Enterprise,
+    taxId: '<id>',
+    legalName: '<value>',
+);
+
+$response = $sdk->managedAccounts->publicApiV1ManagedAccountsCreate(
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.managed_accounts.create" method="post" path="/accounts" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 

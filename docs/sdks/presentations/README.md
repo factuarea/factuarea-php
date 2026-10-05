@@ -13,47 +13,6 @@
 
 Create a commercial presentation for a product with its unit and conversion data.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    company: 'Upton - Feil',
-    product: 'Generic Concrete Pants',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateProductPresentationRequest(
-        name: '<value>',
-        mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
-        unit: Components\CreateProductPresentationRequestUnit::Grm,
-    ),
-);
-
-$response = $sdk->products->presentations->publicApiV1ProductsPresentationsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="missing_api_key" -->
@@ -76,49 +35,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    company: 'Gerhold - Collins',
-    product: 'Modern Fresh Tuna',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateProductPresentationRequest(
-        name: '<value>',
-        mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
-        unit: Components\CreateProductPresentationRequestUnit::Grm,
-    ),
-);
-
-$response = $sdk->products->presentations->publicApiV1ProductsPresentationsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    company: 'Gusikowski, Russel and Waelchi',
-    product: 'Intelligent Soft Keyboard',
+    company: 'Rutherford LLC',
+    product: 'Refined Metal Cheese',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateProductPresentationRequest(
@@ -158,49 +76,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    company: 'Waelchi, Kuhn and Rutherford',
-    product: 'Licensed Cotton Table',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateProductPresentationRequest(
-        name: '<value>',
-        mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
-        unit: Components\CreateProductPresentationRequestUnit::Grm,
-    ),
-);
-
-$response = $sdk->products->presentations->publicApiV1ProductsPresentationsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
-    company: 'Wolf - Emard',
-    product: 'Elegant Rubber Cheese',
+    company: 'Gusikowski, Russel and Waelchi',
+    product: 'Refined Wooden Hat',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateProductPresentationRequest(
@@ -264,7 +141,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsPresentationsListRequest(
     company: 'Rempel - Jacobi',
-    product: 'Gorgeous Steel Shirt',
+    product: 'Elegant Rubber Fish',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 
@@ -322,7 +199,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsPresentationsDeleteRequest(
     company: 'VonRueden - Roob',
-    product: 'Intelligent Concrete Shoes',
+    product: 'Fantastic Wooden Shirt',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -359,48 +236,6 @@ if ($response->statusCode === 200) {
 
 Update the selected commercial presentation while preserving tenant and product ownership.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    company: 'Willms - Bosco',
-    product: 'Handcrafted Frozen Ball',
-    presentation: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductPresentationRequest(
-        name: '<value>',
-        mode: Components\UpdateProductPresentationRequestMode::Fixed,
-        unit: Components\UpdateProductPresentationRequestUnit::Mtk,
-    ),
-);
-
-$response = $sdk->products->presentations->publicApiV1ProductsPresentationsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="missing_api_key" -->
@@ -423,50 +258,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    company: 'Hermiston - Hoeger',
-    product: 'Bespoke Metal Salad',
-    presentation: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductPresentationRequest(
-        name: '<value>',
-        mode: Components\UpdateProductPresentationRequestMode::Fixed,
-        unit: Components\UpdateProductPresentationRequestUnit::Mtk,
-    ),
-);
-
-$response = $sdk->products->presentations->publicApiV1ProductsPresentationsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    company: 'Quitzon LLC',
-    product: 'Practical Cotton Bike',
+    company: 'DuBuque, Bradtke and Dooley',
+    product: 'Electronic Cotton Tuna',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -507,50 +300,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    company: 'Pacocha Group',
-    product: 'Electronic Cotton Tuna',
-    presentation: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductPresentationRequest(
-        name: '<value>',
-        mode: Components\UpdateProductPresentationRequestMode::Fixed,
-        unit: Components\UpdateProductPresentationRequestUnit::Mtk,
-    ),
-);
-
-$response = $sdk->products->presentations->publicApiV1ProductsPresentationsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
-    company: 'Parisian LLC',
-    product: 'Oriental Fresh Bike',
+    company: 'Quitzon LLC',
+    product: 'Luxurious Rubber Chair',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

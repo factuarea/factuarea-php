@@ -14,6 +14,46 @@
 
 Create a new person as a member of the ACCOUNT with an account `role` (`admin` or `member`; ownership is transferred, never assigned) and the required `grants` list (it may be empty; only a `member` carries grants, each one a tax ID of the account by its `company_id` UUID and a `level`: `view` or `operate`). The person receives an email to verify their address. Returns 201 with the member and a `Location` header. Because it changes the team of the whole account, the credential scope must cover every tax ID of the account (403 `forbidden_action` otherwise). Returns 400 `parameter_missing` when `grants` is absent, 422 `grants_only_for_member` for grants on an `admin`, 422 `grant_company_not_in_account` when a grant names a tax ID outside the account or your credential scope, and 422 `business_rule_violation` when the email is already registered (add existing people with an invitation), a tax ID repeats or the plan user limit is reached.
 
+### Example Usage: api_key_expired
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\AddAccountMemberV1Request(
+    name: '<value>',
+    email: 'Luciano10@gmail.com',
+    password: 'Ynp9gKjYicJQzDC',
+    role: Components\AddAccountMemberV1RequestRole::Member,
+    grants: [],
+);
+
+$response = $sdk->account->members->publicApiV1AccountMembersCreate(
+    account: '55925368',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: api_key_revoked
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="api_key_revoked" -->
@@ -36,58 +76,14 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\AddAccountMemberV1Request(
     name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
+    email: 'Luciano10@gmail.com',
+    password: 'Ynp9gKjYicJQzDC',
+    role: Components\AddAccountMemberV1RequestRole::Member,
     grants: [],
 );
 
 $response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '27207496',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AddAccountMemberV1Request(
-    name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
-    role: Components\AddAccountMemberV1RequestRole::Admin,
-    grants: [
-        new Components\AddAccountMemberV1RequestGrant(
-            companyId: '1371c9df-d404-4b07-9c19-ca4b6f80a0f6',
-            level: Components\AddAccountMemberV1RequestLevel::Operate,
-        ),
-    ],
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '71392636',
+    account: '47166534',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -120,18 +116,54 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\AddAccountMemberV1Request(
     name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
-    grants: [
-        new Components\AddAccountMemberV1RequestGrant(
-            companyId: '1371c9df-d404-4b07-9c19-ca4b6f80a0f6',
-            level: Components\AddAccountMemberV1RequestLevel::Operate,
-        ),
-    ],
+    email: 'Luciano10@gmail.com',
+    password: 'Ynp9gKjYicJQzDC',
+    role: Components\AddAccountMemberV1RequestRole::Member,
+    grants: [],
 );
 
 $response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '48110510',
+    account: '98847191',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: ip_not_allowed
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\AddAccountMemberV1Request(
+    name: '<value>',
+    email: 'Luciano10@gmail.com',
+    password: 'Ynp9gKjYicJQzDC',
+    role: Components\AddAccountMemberV1RequestRole::Member,
+    grants: [],
+);
+
+$response = $sdk->account->members->publicApiV1AccountMembersCreate(
+    account: '14172225',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -164,58 +196,14 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\AddAccountMemberV1Request(
     name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
+    email: 'Luciano10@gmail.com',
+    password: 'Ynp9gKjYicJQzDC',
+    role: Components\AddAccountMemberV1RequestRole::Member,
     grants: [],
 );
 
 $response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '71162589',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AddAccountMemberV1Request(
-    name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
-    role: Components\AddAccountMemberV1RequestRole::Admin,
-    grants: [
-        new Components\AddAccountMemberV1RequestGrant(
-            companyId: '1371c9df-d404-4b07-9c19-ca4b6f80a0f6',
-            level: Components\AddAccountMemberV1RequestLevel::Operate,
-        ),
-    ],
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '61716414',
+    account: '71392636',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -248,64 +236,14 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\AddAccountMemberV1Request(
     name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
-    role: Components\AddAccountMemberV1RequestRole::Admin,
-    grants: [
-        new Components\AddAccountMemberV1RequestGrant(
-            companyId: '1371c9df-d404-4b07-9c19-ca4b6f80a0f6',
-            level: Components\AddAccountMemberV1RequestLevel::Operate,
-        ),
-    ],
+    email: 'Luciano10@gmail.com',
+    password: 'Ynp9gKjYicJQzDC',
+    role: Components\AddAccountMemberV1RequestRole::Member,
+    grants: [],
 );
 
 $response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '50219412',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AddAccountMemberV1Request(
-    name: '<value>',
-    email: 'Forest_Gutmann@yahoo.com',
-    password: '2xJ5d0M1Mh3Dywn',
-    role: Components\AddAccountMemberV1RequestRole::Admin,
-    grants: [
-        new Components\AddAccountMemberV1RequestGrant(
-            companyId: '1371c9df-d404-4b07-9c19-ca4b6f80a0f6',
-            level: Components\AddAccountMemberV1RequestLevel::Operate,
-        ),
-    ],
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '98847191',
+    account: '61716414',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -398,118 +336,7 @@ if ($response->accountMemberList !== null) {
 
 Change the account `role` of a member (`admin` or `member`), its `external_advisor` mark, or both; at least one is required. Both changes run in a single transaction: unmarking the advisor goes before the role change and marking goes after it, so a failure leaves the member untouched. Moving to `admin` revokes the member grants. Returns 200 with the updated member. Returns 404 `member_not_found` when the member does not exist or belongs to another account, 422 `external_advisor_already_assigned` when the account already has another external advisor, and 422 `business_rule_violation` when the member is the account owner (`cannot_change_account_owner_role`: ownership is transferred), when the advisor would not be a `member`, or when unmarking the advisor would exceed the plan user limit. The credential scope must cover every tax ID of the account.
 
-### Example Usage: api_key_revoked
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.update" method="patch" path="/accounts/{account}/members/{member}" example="api_key_revoked" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersUpdateRequest(
-    account: '59028762',
-    member: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChangeAccountMemberRoleV1Request(),
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: invalid_api_key
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.update" method="patch" path="/accounts/{account}/members/{member}" example="invalid_api_key" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersUpdateRequest(
-    account: '25037134',
-    member: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChangeAccountMemberRoleV1Request(),
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: missing_api_key
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.update" method="patch" path="/accounts/{account}/members/{member}" example="missing_api_key" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersUpdateRequest(
-    account: '14155425',
-    member: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChangeAccountMemberRoleV1Request(),
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: success
+### Example Usage
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.members.update" method="patch" path="/accounts/{account}/members/{member}" example="success" -->
 ```php

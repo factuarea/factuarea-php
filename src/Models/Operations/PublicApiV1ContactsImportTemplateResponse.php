@@ -40,11 +40,18 @@ class PublicApiV1ContactsImportTemplateResponse
     public array $headers;
 
     /**
-     * CSV import template with canonical identity, cumulative role and directional-profile headings.
+     * Import template generated from the importer column descriptors: a headers-only CSV by default, or the XLSX workbook with `?format=xlsx`.
      *
      * @var ?string $res
      */
     public ?string $res = null;
+
+    /**
+     * Import template generated from the importer column descriptors: a headers-only CSV by default, or the XLSX workbook with `?format=xlsx`.
+     *
+     * @var ?string $bytes
+     */
+    public ?string $bytes = null;
 
     /**
      * @param  string  $contentType
@@ -52,14 +59,16 @@ class PublicApiV1ContactsImportTemplateResponse
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
      * @param  ?string  $res
+     * @param  ?string  $bytes
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $res = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $res = null, ?string $bytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
         $this->res = $res;
+        $this->bytes = $bytes;
     }
 }

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaskRelation
 {
     /**
-     * UUID (v7) of the relation.
+     * UUID v7 of the relation.
      *
      * @var string $id
      */

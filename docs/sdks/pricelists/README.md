@@ -17,42 +17,6 @@
 
 Create an active price list with a name unique within the authenticated company.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.create" method="post" path="/companies/{company}/price-lists" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreatePriceListRequest(
-    name: '<value>',
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsCreate(
-    company: 'Kutch, Bogisich and Prosacco',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.create" method="post" path="/companies/{company}/price-lists" example="missing_api_key" -->
@@ -89,42 +53,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.create" method="post" path="/companies/{company}/price-lists" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreatePriceListRequest(
-    name: '<value>',
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsCreate(
-    company: 'Hettinger, Block and Kessler',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.create" method="post" path="/companies/{company}/price-lists" example="success" -->
@@ -151,42 +79,6 @@ $body = new Components\CreatePriceListRequest(
 
 $response = $sdk->priceLists->publicApiV1PriceListsCreate(
     company: 'Hettinger, Block and Kessler',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.create" method="post" path="/companies/{company}/price-lists" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreatePriceListRequest(
-    name: '<value>',
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsCreate(
-    company: 'Hills Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -398,46 +290,6 @@ if ($response->object !== null) {
 
 Update the name or lifecycle status of a price list.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.update" method="patch" path="/companies/{company}/price-lists/{priceList}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PriceListsUpdateRequest(
-    company: 'Oberbrunner and Sons',
-    priceList: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdatePriceListRequest(
-        name: '<value>',
-        status: Components\UpdatePriceListRequestStatus::Active,
-    ),
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.update" method="patch" path="/companies/{company}/price-lists/{priceList}" example="missing_api_key" -->
@@ -460,47 +312,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsUpdateRequest(
-    company: 'Upton Group',
-    priceList: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdatePriceListRequest(
-        name: '<value>',
-        status: Components\UpdatePriceListRequestStatus::Active,
-    ),
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.update" method="patch" path="/companies/{company}/price-lists/{priceList}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PriceListsUpdateRequest(
-    company: 'Murphy and Sons',
+    company: 'Oberbrunner and Sons',
     priceList: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -540,47 +352,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PriceListsUpdateRequest(
-    company: 'Satterfield LLC',
-    priceList: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdatePriceListRequest(
-        name: '<value>',
-        status: Components\UpdatePriceListRequestStatus::Active,
-    ),
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.update" method="patch" path="/companies/{company}/price-lists/{priceList}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PriceListsUpdateRequest(
-    company: 'Russel - Buckridge',
+    company: 'Murphy and Sons',
     priceList: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -679,41 +451,6 @@ if ($response->object !== null) {
 
 Resolve the effective catalog price for a complete catalog selection — product, optional variant, optional presentation, optional commercial combination (`configuration_id`), its canonical `selection_signature` and the chosen `option_value_ids` — under an optional price list. The combination and its signature are NOT mutually exclusive here: a real selection carries both, because the signature is derived from the combination. What is rejected is repeating the cross the combination already identifies (`variant_id` / `presentation_id`). No amount is ever accepted in the payload: every own price and every option adjustment comes from the catalog, so a caller cannot price its own line. The response carries the breakdown (`unit_semantics`, `source_amount`, `option_adjustment_total`, `option_adjustments_absorbed`) so a double charge is detectable from the preview — `source` alone cannot tell a price-list entry that ABSORBS the option adjustments from a legacy one that ADDS them, and both say `price_list`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve" method="post" path="/companies/{company}/price-lists/resolve" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ResolveCatalogPriceRequest(
-    productId: '6573aef2-3e84-43aa-b8fc-3a5d18cffe5f',
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsResolve(
-    company: 'Okuneva - Turner',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve" method="post" path="/companies/{company}/price-lists/resolve" example="missing_api_key" -->
@@ -739,42 +476,7 @@ $body = new Components\ResolveCatalogPriceRequest(
 );
 
 $response = $sdk->priceLists->publicApiV1PriceListsResolve(
-    company: 'Dicki and Sons',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve" method="post" path="/companies/{company}/price-lists/resolve" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ResolveCatalogPriceRequest(
-    productId: '6573aef2-3e84-43aa-b8fc-3a5d18cffe5f',
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsResolve(
-    company: 'Heathcote Inc',
+    company: 'Okuneva - Turner',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -809,42 +511,7 @@ $body = new Components\ResolveCatalogPriceRequest(
 );
 
 $response = $sdk->priceLists->publicApiV1PriceListsResolve(
-    company: 'O\'Reilly - Sporer',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve" method="post" path="/companies/{company}/price-lists/resolve" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ResolveCatalogPriceRequest(
-    productId: '6573aef2-3e84-43aa-b8fc-3a5d18cffe5f',
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsResolve(
-    company: 'Dare, Ferry and Von',
+    company: 'Heathcote Inc',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -879,41 +546,6 @@ if ($response->object !== null) {
 
 Reprice a whole document in one request: resolve the effective price of up to 100 catalog selections and compare each with the unit price the line has frozen today (`current_unit_price`), returning `changed` and `difference`. It is a READ and persists nothing; the verb is POST because the list of selections, with their combinations and option values, does not fit in a query string — the same reason as `POST /v1/companies/{company}/price-lists/resolve`. Each selection carries exactly what the document line assembler will see, so the previewed amount is the one the line will freeze. A target that cannot be resolved is attributed to ITS index (`targets.<n>`) instead of failing the whole batch: with forty lines, knowing WHICH one is the whole point.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve_many" method="post" path="/companies/{company}/price-lists/resolve-many" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ResolveManyCatalogPricesRequest(
-    targets: [],
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsResolveMany(
-    company: 'Beahan, Conroy and Streich',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve_many" method="post" path="/companies/{company}/price-lists/resolve-many" example="missing_api_key" -->
@@ -939,42 +571,7 @@ $body = new Components\ResolveManyCatalogPricesRequest(
 );
 
 $response = $sdk->priceLists->publicApiV1PriceListsResolveMany(
-    company: 'Conroy - Streich',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve_many" method="post" path="/companies/{company}/price-lists/resolve-many" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ResolveManyCatalogPricesRequest(
-    targets: [],
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsResolveMany(
-    company: 'Bode - Kirlin',
+    company: 'Beahan, Conroy and Streich',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1009,42 +606,7 @@ $body = new Components\ResolveManyCatalogPricesRequest(
 );
 
 $response = $sdk->priceLists->publicApiV1PriceListsResolveMany(
-    company: 'Kirlin - Pollich',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.resolve_many" method="post" path="/companies/{company}/price-lists/resolve-many" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ResolveManyCatalogPricesRequest(
-    targets: [],
-);
-
-$response = $sdk->priceLists->publicApiV1PriceListsResolveMany(
-    company: 'Stamm - Stokes',
+    company: 'Bode - Kirlin',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

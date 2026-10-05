@@ -1,6 +1,6 @@
 # LinkedTask
 
-A task linked to a Factuarea entity, as listed by `GET /v1/tasks/linked`.
+A task linked to a Factuarea entity, as listed by `GET /v1/companies/{company}/tasks/linked`.
 
 
 ## Fields

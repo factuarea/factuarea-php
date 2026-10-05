@@ -88,7 +88,7 @@ class Event
     public ?string $correlationId;
 
     /**
-     * API version (date-based) the event data was serialized under, sealed at emission (e.g. `2026-09-23`). An event re-emitted by an automation declares the payload version its data was frozen in, which can be older than the latest version. `null` only for legacy events emitted before versions were sealed.
+     * API version (date-based) the event data was serialized under, sealed at emission (e.g. `2026-10-05`). An event re-emitted by an automation declares the payload version its data was frozen in, which can be older than the latest version. `null` only for legacy events emitted before versions were sealed.
      *
      * @var ?string $apiVersion
      */

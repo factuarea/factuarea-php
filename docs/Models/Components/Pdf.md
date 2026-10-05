@@ -1,6 +1,6 @@
 # Pdf
 
-The A4 PDF of the invoice. `null` while the invoice is still a draft (it has no PDF yet). For another paper — 80 or 58 mm tickets — call `GET /v1/invoices/{invoice}/pdf?format=ticket_80|ticket_58`, which renders in the request.
+The A4 PDF of the invoice. `null` while the invoice is still a draft (it has no PDF yet). For another paper — 80 or 58 mm tickets — call `GET /v1/companies/{company}/invoices/{invoice}/pdf?format=ticket_80|ticket_58`, which renders in the request.
 
 
 ## Fields

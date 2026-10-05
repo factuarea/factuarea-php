@@ -41,11 +41,11 @@ class ManagedAccountImport
     /**
      * Statistics of the execution: rows by status, accounts created and reconciled, customers queued and amounts in cents.
      *
-     * @var \Factuarea\Sdk\Models\Components\Stats $stats
+     * @var \Factuarea\Sdk\Models\Components\ManagedAccountImportStats $stats
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stats')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Stats')]
-    public Stats $stats;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ManagedAccountImportStats')]
+    public ManagedAccountImportStats $stats;
 
     /**
      * Rows of the accounts file, in file order, with their claim voucher.
@@ -69,12 +69,12 @@ class ManagedAccountImport
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountImportObject  $object
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountImportStatus  $status
-     * @param  \Factuarea\Sdk\Models\Components\Stats  $stats
+     * @param  \Factuarea\Sdk\Models\Components\ManagedAccountImportStats  $stats
      * @param  array<\Factuarea\Sdk\Models\Components\ManagedAccountImportManagedAccountImportRow>  $rows
      * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountImportOwnCompanyCustomers  $ownCompanyCustomers
      * @phpstan-pure
      */
-    public function __construct(string $id, ManagedAccountImportObject $object, ManagedAccountImportStatus $status, Stats $stats, array $rows, ?ManagedAccountImportOwnCompanyCustomers $ownCompanyCustomers = null)
+    public function __construct(string $id, ManagedAccountImportObject $object, ManagedAccountImportStatus $status, ManagedAccountImportStats $stats, array $rows, ?ManagedAccountImportOwnCompanyCustomers $ownCompanyCustomers = null)
     {
         $this->id = $id;
         $this->object = $object;

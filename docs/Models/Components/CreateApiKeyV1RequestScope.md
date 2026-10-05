@@ -59,6 +59,7 @@
 | `TaxReportsWrite`             | tax_reports:write             |
 | `AccountRead`                 | account:read                  |
 | `AccountWrite`                | account:write                 |
+| `AccountOwner`                | account:owner                 |
 | `CompaniesRead`               | companies:read                |
 | `CompaniesWrite`              | companies:write               |
 | `CompaniesDelete`             | companies:delete              |
@@ -96,6 +97,14 @@
 | `AutomationsWrite`            | automations:write             |
 | `AutomationsDelete`           | automations:delete            |
 | `AutomationRunsRead`          | automation_runs:read          |
+| `MembersRead`                 | members:read                  |
+| `MembersWrite`                | members:write                 |
+| `InvitationsRead`             | invitations:read              |
+| `InvitationsWrite`            | invitations:write             |
+| `NifTransfersRead`            | nif_transfers:read            |
+| `NifTransfersWrite`           | nif_transfers:write           |
+| `AccountsRead`                | accounts:read                 |
+| `AccountsWrite`               | accounts:write                |
 | `ProjectsRead`                | projects:read                 |
 | `ProjectsWrite`               | projects:write                |
 | `ProjectsDelete`              | projects:delete               |

@@ -85,7 +85,7 @@ class TimeInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}/time-invoices', Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}/time-invoices', Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -136,7 +136,7 @@ class TimeInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -175,13 +175,13 @@ class TimeInvoices
      * Preview the invoice lines that invoicing the selected time would produce, without creating anything: select either `entry_ids` or a `period`, and a `grouping`. Entries that cannot be invoiced (not billable, already invoiced, without a price or whose invoice line amounts would exceed the invoice limits) return 422 `task_time_not_invoiceable`. A read-only POST: it does not need an `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Components\PreviewTaskTimeInvoiceV1Request  $body
+     * @param  string  $company
      * @param  string  $project
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsTimeInvoicesPreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsTimeInvoicesPreview(Components\PreviewTaskTimeInvoiceV1Request $body, string $project, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsTimeInvoicesPreviewResponse
+    public function publicApiV1ProjectsTimeInvoicesPreview(Components\PreviewTaskTimeInvoiceV1Request $body, string $company, string $project, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsTimeInvoicesPreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,13 +209,13 @@ class TimeInvoices
             ];
         }
         $request = new Operations\PublicApiV1ProjectsTimeInvoicesPreviewRequest(
+            company: $company,
             project: $project,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}/time-invoices/preview', Operations\PublicApiV1ProjectsTimeInvoicesPreviewRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}/time-invoices/preview', Operations\PublicApiV1ProjectsTimeInvoicesPreviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -266,7 +266,7 @@ class TimeInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

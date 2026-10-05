@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * `purchase_scans.create` (`POST /purchase_scans`) — uploads N originals as
+ * `purchase_scans.create` (`POST /companies/{company}/purchase-scans`) — uploads N originals as
  * `multipart/form-data`. Written against a mocked Guzzle transport (same
  * pattern as {@see \Factuarea\Sdk\Tests\Custom\Client\HttpBehaviourTest}), so
  * it does not require the SDK to actually be regenerated to be authored, but
@@ -33,7 +33,7 @@ use Psr\Http\Message\RequestInterface;
  * on the parent `files` array), not the hypothesized
  * `UploadPurchaseScansRequestFiles`. Everything else in the original
  * hypothesis held: class `PurchaseScans`, method
- * `publicApiV1PurchaseScansCreate(Components\UploadPurchaseScansRequest $body, string $idempotencyKey, ...)`,
+ * `publicApiV1PurchaseScansCreate(Components\UploadPurchaseScansRequest $body, string $company, string $idempotencyKey, ...)`,
  * and `multipartArrayFormat: standard` DOES make Speakeasy emit one
  * multipart part per array item under the same field name natively — no
  * `src/Custom/` helper needed (evidence for task 4.7).
@@ -71,7 +71,7 @@ final class PurchaseScansUploadTest extends TestCase
             true,
             flags: JSON_THROW_ON_ERROR,
         );
-        $envelope = $spec['paths']['/purchase_scans']['post']['responses']['202']['content']['application/json']['examples']['success']['value'];
+        $envelope = $spec['paths']['/companies/{company}/purchase-scans']['post']['responses']['202']['content']['application/json']['examples']['success']['value'];
         $first = $envelope['data']['accepted'][0];
         $first['original_filename'] = 'factura-1.pdf';
         $first['item_index'] = 0;
@@ -99,11 +99,11 @@ final class PurchaseScansUploadTest extends TestCase
         ]);
         $idempotencyKey = IdempotencyHook::uuidV4();
 
-        $response = $sdk->purchaseScans->publicApiV1PurchaseScansCreate($body, $idempotencyKey);
+        $response = $sdk->purchaseScans->publicApiV1PurchaseScansCreate($body, '019e0000-0000-7000-8000-0000000000c0', $idempotencyKey);
 
         $request = $this->lastRequest();
         $this->assertSame('POST', $request->getMethod());
-        $this->assertStringEndsWith('/purchase_scans', (string) $request->getUri());
+        $this->assertStringEndsWith('/companies/019e0000-0000-7000-8000-0000000000c0/purchase-scans', (string) $request->getUri());
         $this->assertStringStartsWith('multipart/form-data', $request->getHeaderLine('Content-Type'));
         $this->assertSame($idempotencyKey, $request->getHeaderLine('Idempotency-Key'));
 

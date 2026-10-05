@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Errors;
 
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils;
-/** Error - `parameter_unknown` with `subcode` `retired_active_profile_header`: the retired `X-Active-Profile` header was sent; the company goes in the path. `parameter_invalid_format` on `Factuarea-Version`: the header is not a `YYYY-MM-DD` date. `unsupported_api_version`: the `Factuarea-Version` date is not a supported version. */
+/** Error - Missing or invalid API key. */
 class Error
 {
     /**

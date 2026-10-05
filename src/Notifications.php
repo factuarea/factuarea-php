@@ -52,11 +52,11 @@ class Notifications
      *
      * List the in-app notifications of the member who owns the API key, newest first. Filter by `status` (`unread` or `read`) and `category`; archived notifications never appear. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1NotificationsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1NotificationsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1NotificationsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1NotificationsList(?Operations\PublicApiV1NotificationsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1NotificationsListResponse
+    public function publicApiV1NotificationsList(Operations\PublicApiV1NotificationsListRequest $request, ?Options $options = null): Operations\PublicApiV1NotificationsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class Notifications
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/notifications');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/notifications', Operations\PublicApiV1NotificationsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class Notifications
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,13 +171,13 @@ class Notifications
      *
      * Mark every unread notification of the key holder as read and return the updated counters. No request body.
      *
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1NotificationsMarkAllReadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1NotificationsMarkAllRead(?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1NotificationsMarkAllReadResponse
+    public function publicApiV1NotificationsMarkAllRead(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1NotificationsMarkAllReadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -205,12 +205,12 @@ class Notifications
             ];
         }
         $request = new Operations\PublicApiV1NotificationsMarkAllReadRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/notifications/mark-all-read');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/notifications/mark-all-read', Operations\PublicApiV1NotificationsMarkAllReadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -256,7 +256,7 @@ class Notifications
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -294,14 +294,14 @@ class Notifications
      *
      * Mark one notification of the key holder as read and return the updated counters (`total`, `unread`). A notification of another member returns 404 `notification_not_found`.
      *
+     * @param  string  $company
      * @param  string  $notification
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1NotificationsReadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1NotificationsRead(string $notification, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1NotificationsReadResponse
+    public function publicApiV1NotificationsRead(string $company, string $notification, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1NotificationsReadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -329,13 +329,13 @@ class Notifications
             ];
         }
         $request = new Operations\PublicApiV1NotificationsReadRequest(
+            company: $company,
             notification: $notification,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/notifications/{notification}/read', Operations\PublicApiV1NotificationsReadRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/notifications/{notification}/read', Operations\PublicApiV1NotificationsReadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -381,7 +381,7 @@ class Notifications
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

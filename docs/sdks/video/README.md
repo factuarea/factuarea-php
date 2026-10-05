@@ -36,7 +36,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->products->video->publicApiV1ProductsVideoDelete(
     company: 'Hessel and Sons',
-    product: 'Incredible Plastic Chair',
+    product: 'Handcrafted Frozen Shoes',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -72,9 +72,9 @@ if ($response->statusCode === 200) {
 
 Attach a video file (mp4, mov, avi or webm; up to 50 MB) to the product. Replaces any existing video.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -94,8 +94,50 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: 'Harris Group',
-    product: 'Electronic Steel Salad',
+    company: 'Corkery - Macejkovic',
+    product: 'Modern Fresh Chair',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UploadProductVideoRequest(
+        video: new Components\UploadProductVideoRequestVideo(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->products->video->publicApiV1ProductsVideoUpload(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsVideoUploadRequest(
+    company: 'Schoen - Kshlerin',
+    product: 'Fantastic Soft Hat',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductVideoRequest(
@@ -136,50 +178,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: 'Harris Group',
-    product: 'Electronic Steel Salad',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductVideoRequest(
-        video: new Components\UploadProductVideoRequestVideo(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->video->publicApiV1ProductsVideoUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: 'Corkery - Macejkovic',
-    product: 'Fantastic Soft Hat',
+    company: 'Schoen - Kshlerin',
+    product: 'Awesome Concrete Mouse',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductVideoRequest(
@@ -221,49 +221,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsVideoUploadRequest(
     company: 'Corkery - Macejkovic',
-    product: 'Fantastic Soft Hat',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductVideoRequest(
-        video: new Components\UploadProductVideoRequestVideo(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->video->publicApiV1ProductsVideoUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: 'Ortiz - Price',
-    product: 'Handmade Wooden Car',
+    product: 'Awesome Concrete Mouse',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductVideoRequest(
@@ -329,7 +287,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->products->video->publicApiV1ProductsVideoDownload(
     company: 'Keeling LLC',
-    product: 'Ergonomic Steel Cheese',
+    product: 'Handmade Granite Mouse',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );

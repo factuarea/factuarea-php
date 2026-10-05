@@ -34,7 +34,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsConfigurationsListRequest(
     company: 'Gerlach - Gutkowski',
-    product: 'Luxurious Steel Mouse',
+    product: 'Electronic Fresh Chips',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 
@@ -69,9 +69,9 @@ if ($response->paginatedList !== null) {
 
 Compute what would be lost if the commercial combinations of a product were replaced by the proposed ones, and mint the `impact_token` that confirms THAT exact change. It is a READ and persists nothing — asking twice over the same catalog returns the same token — but it requires `products:write`, because the only thing its answer does is authorise a destructive write. Send `configurations` as the COMPLETE list of combinations that would remain ACTIVE (an empty list means "retire the allow-list", which returns the product to the cartesian cross), plus `variant_ids`/`presentation_ids` enumerating what SURVIVES on each axis — omitting a key means "that axis is untouched", which is not the same as an empty list. The answer says whether the change needs confirmation at all (`requires_confirmation`), which crosses stop being sellable, and which negotiated prices would be retired and from which price lists. The token is a fingerprint of the current catalog AND of the set of prices at stake, not a credential: if either changes before you confirm, the confirmation is rejected and you ask for a fresh preview. Send it back as `impact_token` when emptying `configurations` on `PATCH /v1/companies/{company}/products/{product}`, or when deleting the variant or presentation whose removal would leave the product with no declared combination.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: insufficient_scope
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="insufficient_scope" -->
 ```php
 declare(strict_types=1);
 
@@ -94,8 +94,8 @@ $body = new Components\PreviewCatalogConfigurationImpactRequest(
 );
 
 $response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: 'Daniel, King and Schneider',
-    product: 'Recycled Rubber Pizza',
+    company: 'Champlin - Stamm',
+    product: 'Luxurious Wooden Tuna',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -130,44 +130,8 @@ $body = new Components\PreviewCatalogConfigurationImpactRequest(
 );
 
 $response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: 'King - Schneider',
-    product: 'Recycled Rubber Pizza',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewCatalogConfigurationImpactRequest(
-    configurations: [],
-);
-
-$response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: 'Champlin - Stamm',
-    product: 'Bespoke Metal Towels',
+    company: 'Marquardt - Wilkinson',
+    product: 'Ergonomic Concrete Soap',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -202,44 +166,8 @@ $body = new Components\PreviewCatalogConfigurationImpactRequest(
 );
 
 $response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: 'Stamm - Bernhard',
-    product: 'Luxurious Wooden Tuna',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewCatalogConfigurationImpactRequest(
-    configurations: [],
-);
-
-$response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: 'Cremin, Weber and Jacobi',
-    product: 'Licensed Soft Pants',
+    company: 'Champlin - Stamm',
+    product: 'Elegant Steel Ball',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

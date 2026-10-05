@@ -154,7 +154,7 @@ class CreateCorrectiveInvoiceRequestLine
     public ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null;
 
     /**
-     * Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one.
+     * Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/companies/{company}/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason
      */

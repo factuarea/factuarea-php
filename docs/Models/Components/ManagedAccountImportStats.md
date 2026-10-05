@@ -1,0 +1,20 @@
+# ManagedAccountImportStats
+
+Statistics of the execution: rows by status, accounts created and reconciled, customers queued and amounts in cents.
+
+
+## Fields
+
+| Field                                                    | Type                                                     | Required                                                 | Description                                              | Example                                                  |
+| -------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
+| `totalRows`                                              | *int*                                                    | :heavy_check_mark:                                       | N/A                                                      | 2                                                        |
+| `valid`                                                  | *int*                                                    | :heavy_check_mark:                                       | N/A                                                      | 2                                                        |
+| `warning`                                                | *int*                                                    | :heavy_check_mark:                                       | N/A                                                      | 0                                                        |
+| `alreadyExists`                                          | *int*                                                    | :heavy_check_mark:                                       | N/A                                                      | 0                                                        |
+| `blocked`                                                | *int*                                                    | :heavy_check_mark:                                       | N/A                                                      | 0                                                        |
+| `error`                                                  | *int*                                                    | :heavy_check_mark:                                       | N/A                                                      | 0                                                        |
+| `created`                                                | *int*                                                    | :heavy_check_mark:                                       | Accounts and tax IDs created.                            | 2                                                        |
+| `reconciled`                                             | *int*                                                    | :heavy_check_mark:                                       | Existing accounts and tax IDs reconciled.                | 0                                                        |
+| `customersQueued`                                        | *int*                                                    | :heavy_check_mark:                                       | Customers queued for import.                             | 3                                                        |
+| `monthlyAmountCents`                                     | *int*                                                    | :heavy_check_mark:                                       | Monthly net amount added to your subscription, in cents. | 5000                                                     |
+| `prorationAmountCents`                                   | *int*                                                    | :heavy_check_mark:                                       | Prorated net amount charged at once, in cents.           | 2500                                                     |

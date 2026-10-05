@@ -13,7 +13,7 @@ Add a label of your company catalog (`label_id`) to a task. Adding a label the t
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.labels.assign" method="post" path="/tasks/{task}/labels" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.labels.assign" method="post" path="/companies/{company}/tasks/{task}/labels" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -33,10 +33,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksLabelsAssignRequest(
+    company: 'Heller, Mills and Tillman',
     task: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\AssignTaskLabelV1Request(
         labelId: 'be79d59e-da81-496f-83d9-bc3fef3e8f9c',
     ),
@@ -52,7 +52,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.labels.assign" method="post" path="/tasks/{task}/labels" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.labels.assign" method="post" path="/companies/{company}/tasks/{task}/labels" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -72,10 +72,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksLabelsAssignRequest(
+    company: 'Towne, Krajcik and McLaughlin',
     task: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\AssignTaskLabelV1Request(
         labelId: 'be79d59e-da81-496f-83d9-bc3fef3e8f9c',
     ),
@@ -104,7 +104,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -114,7 +114,7 @@ Remove a label from a task. The label stays in the catalog.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.labels.unassign" method="delete" path="/tasks/{task}/labels/{label}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.labels.unassign" method="delete" path="/companies/{company}/tasks/{task}/labels/{label}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -134,11 +134,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksLabelsUnassignRequest(
+    company: 'O\'Hara, Nitzsche and Kovacek',
     task: '<value>',
     label: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->tasks->labels->publicApiV1TasksLabelsUnassign(
@@ -162,8 +162,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 409, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

@@ -33,8 +33,8 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1AbsenceCalendarShowRequest(
     company: 'Jenkins, Jacobi and Gerlach',
-    year: 159448,
-    month: 614831,
+    year: 930823,
+    month: 411636,
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 

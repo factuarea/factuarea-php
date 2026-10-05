@@ -50,15 +50,15 @@ class ProjectsTasks
     /**
      * Export project tasks
      *
-     * Export the tasks of a project as a JSON document in the `factuarea.tasks.v1` format: the project, its labels, its custom fields and every task with its comments. The document can be imported back with `POST /v1/projects/{project}/tasks/import`. Requires `projects:read` only: the export includes every task with its description and comments even if the key has no `tasks:read`, so grant `projects:read` with that in mind.
+     * Export the tasks of a project as a JSON document in the `factuarea.tasks.v1` format: the project, its labels, its custom fields and every task with its comments. The document can be imported back with `POST /v1/companies/{company}/projects/{project}/tasks/import`. Requires `projects:read` only: the export includes every task with its description and comments even if the key has no `tasks:read`, so grant `projects:read` with that in mind.
      *
+     * @param  string  $company
      * @param  string  $project
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsTasksExportResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsTasksExport(string $project, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsTasksExportResponse
+    public function publicApiV1ProjectsTasksExport(string $company, string $project, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsTasksExportResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,12 +86,12 @@ class ProjectsTasks
             ];
         }
         $request = new Operations\PublicApiV1ProjectsTasksExportRequest(
+            company: $company,
             project: $project,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}/tasks/export', Operations\PublicApiV1ProjectsTasksExportRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}/tasks/export', Operations\PublicApiV1ProjectsTasksExportRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -137,7 +137,7 @@ class ProjectsTasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -173,7 +173,7 @@ class ProjectsTasks
     /**
      * Import tasks into a project
      *
-     * Import tasks into a project from a JSON document (`factuarea.tasks.v1`, or an export of other task tools in a supported format). The import is synchronous only and accepts up to 200 tasks per call: more than 200 returns 422, so split the file. The report lists, per task, its `index` in the document, the created `id` and `key` or the `error` that prevented it; it has no `mode` or `run_id` because the API does not create background import runs. Requires `projects:write` only: it creates tasks and comments even if the key has no `tasks:write`. Requires an `Idempotency-Key`.
+     * Import tasks into a project from a JSON document (`factuarea.tasks.v1`, or an export of other task tools in a supported format). The import is synchronous only and accepts up to 200 tasks per call: more than 200 returns 422, so split the file. The report lists, per task, its `index` in the document, the created `id` and `key` or the `error` that prevented it; it has no `mode` or `run_id` because the API does not create background import runs. At most the first 200 warnings are listed; `warnings_total` counts them all and `warnings_truncated` tells whether some were left out. Requires `projects:write` only: it creates tasks and comments even if the key has no `tasks:write`. Requires an `Idempotency-Key`: repeating the call with the same key and the same body returns the same report without creating tasks again, and reusing the key with a different body returns 409 `idempotency_key_reused`. Importing again with a new key creates a new copy of the tasks. The key is mandatory over REST (a request without it is rejected with `422 idempotency_key_required`); only the MCP tool `import_project_tasks` can be called without one, and then every call creates a copy.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsTasksImportRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsTasksImportResponse
@@ -207,7 +207,7 @@ class ProjectsTasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}/tasks/import', Operations\PublicApiV1ProjectsTasksImportRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}/tasks/import', Operations\PublicApiV1ProjectsTasksImportRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -258,7 +258,7 @@ class ProjectsTasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

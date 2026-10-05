@@ -51,7 +51,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1QuotesAcceptRequest(
-    company: 'Reichel, Braun and Sauer',
+    company: 'Hudson - Rogahn',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -88,9 +88,49 @@ if ($response->object !== null) {
 
 Deletes up to 100 quotes in one call. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteQuotesV1Request(
+    ids: [
+        '50c6e87e-3e22-4007-8273-57d60562d3d4',
+        'a866a457-2a8b-47a8-9423-17a9e928ee10',
+        'c7a563c0-6970-4cf1-862a-2ee5c91d01a4',
+    ],
+);
+
+$response = $sdk->quotes->publicApiV1QuotesBulkDelete(
+    company: 'Heaney, Bashirian and Russel',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -157,47 +197,7 @@ $body = new Components\BulkDeleteQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: 'Ebert - Shanahan',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteQuotesV1Request(
-    ids: [
-        '50c6e87e-3e22-4007-8273-57d60562d3d4',
-        'a866a457-2a8b-47a8-9423-17a9e928ee10',
-        'c7a563c0-6970-4cf1-862a-2ee5c91d01a4',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: 'Heaney, Bashirian and Russel',
+    company: 'Veum Group',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -237,47 +237,7 @@ $body = new Components\BulkDeleteQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: 'Kulas - Champlin',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteQuotesV1Request(
-    ids: [
-        '50c6e87e-3e22-4007-8273-57d60562d3d4',
-        'a866a457-2a8b-47a8-9423-17a9e928ee10',
-        'c7a563c0-6970-4cf1-862a-2ee5c91d01a4',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: 'Veum Group',
+    company: 'Waelchi LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -314,9 +274,9 @@ if ($response->object !== null) {
 
 Packages the PDFs of up to 50 quotes (by id) into a single ZIP. Ids that are not found or have no generable PDF do not abort the request: the ZIP carries only the valid ones and the per-resource counts travel in the `X-Bulk-*` response headers.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -343,7 +303,47 @@ $body = new Components\BulkPdfQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: 'Torp - Quitzon',
+    company: 'Aufderhar, Satterfield and Kilback',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfQuotesV1Request(
+    ids: [
+        '0c79c3ea-98bf-424c-8a7f-fbf1dc8c9bae',
+        'be108833-5a92-4a25-9212-493e66cfbcdd',
+        'e2e9abc5-2772-4592-ab01-a927e3678598',
+    ],
+);
+
+$response = $sdk->quotes->publicApiV1QuotesBulkPdf(
+    company: 'Schaefer Group',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -383,87 +383,7 @@ $body = new Components\BulkPdfQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: 'Kshlerin and Sons',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfQuotesV1Request(
-    ids: [
-        '0c79c3ea-98bf-424c-8a7f-fbf1dc8c9bae',
-        'be108833-5a92-4a25-9212-493e66cfbcdd',
-        'e2e9abc5-2772-4592-ab01-a927e3678598',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: 'Kshlerin and Sons',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfQuotesV1Request(
-    ids: [
-        '0c79c3ea-98bf-424c-8a7f-fbf1dc8c9bae',
-        'be108833-5a92-4a25-9212-493e66cfbcdd',
-        'e2e9abc5-2772-4592-ab01-a927e3678598',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: 'Reynolds, O\'Hara and Prohaska',
+    company: 'Aufderhar, Satterfield and Kilback',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -500,9 +420,48 @@ if ($response->bytes !== null) {
 
 Sends up to 200 quotes by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each quote that could not be sent (not found, terminal status or no resolvable recipient).
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendQuotesV1Request(
+    ids: [
+        '15eadab4-cf26-4723-896b-624e564dbfe7',
+        'fe467341-e47e-4566-9903-ea335213c2d8',
+    ],
+);
+
+$response = $sdk->quotes->publicApiV1QuotesBulkSend(
+    company: 'Cartwright Inc',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -567,46 +526,7 @@ $body = new Components\BulkSendQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: 'Jaskolski, Braun and Becker',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendQuotesV1Request(
-    ids: [
-        '15eadab4-cf26-4723-896b-624e564dbfe7',
-        'fe467341-e47e-4566-9903-ea335213c2d8',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: 'Cartwright Inc',
+    company: 'Parker, Smitham and O\'Connell',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -645,46 +565,7 @@ $body = new Components\BulkSendQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: 'Schamberger, Marquardt and Osinski',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendQuotesV1Request(
-    ids: [
-        '15eadab4-cf26-4723-896b-624e564dbfe7',
-        'fe467341-e47e-4566-9903-ea335213c2d8',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: 'Gulgowski, Rosenbaum and Wiegand',
+    company: 'Cartwright Inc',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -721,9 +602,9 @@ if ($response->object !== null) {
 
 Transition up to 50 quotes (by id) to a status from the closed set `[approved, rejected]`, each through the document state guard. Returns a `BulkPartialSuccessResult`; quotes whose transition is rejected (not found or not transitionable) come back in `failures[]`.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -743,10 +624,50 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\BulkStatusQuotesV1Request(
     ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
+        'b31b60f8-7e70-466e-940c-28ff575bd969',
+        '2b21a853-578a-4436-9e79-6e2c4f6540f2',
     ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
+    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Rejected,
+);
+
+$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
+    company: 'O\'Keefe, Reinger and Dietrich',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusQuotesV1Request(
+    ids: [
+        'b31b60f8-7e70-466e-940c-28ff575bd969',
+        '2b21a853-578a-4436-9e79-6e2c4f6540f2',
+    ],
+    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Rejected,
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkStatus(
@@ -790,47 +711,7 @@ $body = new Components\BulkStatusQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: 'Feil and Sons',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusQuotesV1Request(
-    ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
-    ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: 'O\'Keefe, Reinger and Dietrich',
+    company: 'Reilly - Johnston',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -870,47 +751,7 @@ $body = new Components\BulkStatusQuotesV1Request(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: 'Turner, Hirthe and Ryan',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusQuotesV1Request(
-    ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
-    ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: 'Zemlak - Kutch',
+    company: 'O\'Keefe, Reinger and Dietrich',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -947,9 +788,46 @@ if ($response->object !== null) {
 
 Convert an accepted quote into an invoice. The new invoice references the source quote via metadata; the quote moves to status `converted`.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesConvertRequest(
+    company: 'Kuphal, Wiegand and Green',
+    quote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertQuoteRequest(),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -973,9 +851,7 @@ $request = new Operations\PublicApiV1QuotesConvertRequest(
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConvertQuoteRequest(
-        target: Components\ConvertQuoteRequestTarget::Invoice,
-    ),
+    body: new Components\ConvertQuoteRequest(),
 );
 
 $response = $sdk->quotes->publicApiV1QuotesConvert(
@@ -1009,45 +885,6 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1QuotesConvertRequest(
     company: 'Haag - Weber',
-    quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConvertQuoteRequest(
-        target: Components\ConvertQuoteRequestTarget::Invoice,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesConvert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesConvertRequest(
-    company: 'Kuphal, Wiegand and Green',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -1103,45 +940,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesConvertRequest(
-    company: 'Haag - Weber',
-    quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConvertQuoteRequest(
-        target: Components\ConvertQuoteRequestTarget::Invoice,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesConvert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1165,9 +963,9 @@ if ($response->object !== null) {
 
 Create a new sales quote in `draft` status. Quotes can later be converted to invoices via `POST /v1/companies/{company}/quotes/{quote}/convert`.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1186,14 +984,69 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateQuoteRequest(
-    clientId: 'ca96451e-67cd-46a3-96a9-85fcb29d4f41',
-    issuedOn: LocalDate::parse('2025-08-24'),
-    validUntil: LocalDate::parse('2026-08-18'),
+    clientId: '3dbf67ca-9645-41e6-a7cd-6a36a985fcb2',
+    issuedOn: LocalDate::parse('2026-08-13'),
+    validUntil: LocalDate::parse('2024-11-29'),
     metadata: [
         'erp_code' => 'IVA-GEN',
         'ledger_account' => '477000',
     ],
-    lines: [],
+    lines: [
+        new Components\CreateQuoteRequestLine(
+            description: 'gratefully deflate furthermore beside swing',
+            quantity: 6321.19,
+            unitPrice: 3369.49,
+        ),
+    ],
+);
+
+$response = $sdk->quotes->publicApiV1QuotesCreate(
+    company: 'Stamm - Rippin',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateQuoteRequest(
+    clientId: '3dbf67ca-9645-41e6-a7cd-6a36a985fcb2',
+    issuedOn: LocalDate::parse('2026-08-13'),
+    validUntil: LocalDate::parse('2024-11-29'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateQuoteRequestLine(
+            description: 'gratefully deflate furthermore beside swing',
+            quantity: 6321.19,
+            unitPrice: 3369.49,
+        ),
+    ],
 );
 
 $response = $sdk->quotes->publicApiV1QuotesCreate(
@@ -1229,9 +1082,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateQuoteRequest(
-    clientId: 'ca96451e-67cd-46a3-96a9-85fcb29d4f41',
-    issuedOn: LocalDate::parse('2025-08-24'),
-    validUntil: LocalDate::parse('2026-08-18'),
+    clientId: 'bf67ca96-451e-467c-9d6a-36a985fcb29d',
+    issuedOn: LocalDate::parse('2026-12-07'),
+    validUntil: LocalDate::parse('2024-11-23'),
     metadata: [
         'erp_code' => 'IVA-GEN',
         'ledger_account' => '477000',
@@ -1240,7 +1093,7 @@ $body = new Components\CreateQuoteRequest(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: 'Leuschke - Lesch',
+    company: 'Monahan Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1299,49 +1152,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateQuoteRequest(
-    clientId: 'ca96451e-67cd-46a3-96a9-85fcb29d4f41',
-    issuedOn: LocalDate::parse('2025-08-24'),
-    validUntil: LocalDate::parse('2026-08-18'),
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    lines: [],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: 'Stamm - Rippin',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="success" -->
@@ -1363,9 +1173,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateQuoteRequest(
-    clientId: 'ca96451e-67cd-46a3-96a9-85fcb29d4f41',
-    issuedOn: LocalDate::parse('2025-08-24'),
-    validUntil: LocalDate::parse('2026-08-18'),
+    clientId: 'bf67ca96-451e-467c-9d6a-36a985fcb29d',
+    issuedOn: LocalDate::parse('2026-12-07'),
+    validUntil: LocalDate::parse('2024-11-23'),
     metadata: [
         'erp_code' => 'IVA-GEN',
         'ledger_account' => '477000',
@@ -1374,50 +1184,7 @@ $body = new Components\CreateQuoteRequest(
 );
 
 $response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: 'Gutmann - Brakus',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateQuoteRequest(
-    clientId: 'ca96451e-67cd-46a3-96a9-85fcb29d4f41',
-    issuedOn: LocalDate::parse('2025-08-24'),
-    validUntil: LocalDate::parse('2026-08-18'),
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    lines: [],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: 'Monahan Inc',
+    company: 'Kemmer, Kilback and Schimmel',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1476,7 +1243,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1QuotesListRequest(
-    company: 'Kshlerin, Reichert and Nicolas',
+    company: 'Terry LLC',
     sort: Operations\PublicApiV1QuotesListSort::MinusCreated,
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
@@ -1630,9 +1397,50 @@ if ($response->object !== null) {
 
 Update a draft quote. Once accepted/rejected/converted, the quote becomes immutable.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesUpdateRequest(
+    company: 'O\'Hara, Stracke and Cruickshank',
+    quote: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateQuoteRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1654,7 +1462,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1QuotesUpdateRequest(
     company: 'Schiller - Abernathy',
     quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateQuoteRequest(
         metadata: [
@@ -1694,49 +1501,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: 'Herzog - Bernier',
-    quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuoteRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: 'O\'Hara, Stracke and Cruickshank',
+    company: 'Wintheiser - Hirthe',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -1778,49 +1543,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: 'Wintheiser - Hirthe',
-    quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuoteRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: 'Wintheiser - Hirthe',
+    company: 'Schiller - Abernathy',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -1982,9 +1705,44 @@ if ($response->object !== null) {
 
 Look up a single quote by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Returns the matching quote or 404 `quote_not_found` if no quote uses that external_id within your company.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindQuoteByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
+    company: 'Koelpin - Ryan',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2052,41 +1810,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindQuoteByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
-    company: 'Koelpin - Ryan',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="success" -->
@@ -2113,41 +1836,6 @@ $body = new Components\FindQuoteByExternalIdRequest(
 
 $response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
     company: 'Koelpin - Ryan',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindQuoteByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
-    company: 'Carter, Zieme and Kuhic',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2240,9 +1928,48 @@ if ($response->object !== null) {
 
 Applies an action to the public link: `revoke`, `activate`, `extend` (with `extend_days`), or `reset` to the plan default.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
+    company: 'Heaney, Leffler and Lebsack',
+    quote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateQuotePublicLinkRequest(
+        action: Components\UpdateQuotePublicLinkRequestAction::Reset,
+    ),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -2318,45 +2045,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
-    company: 'Heaney, Leffler and Lebsack',
-    quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuotePublicLinkRequest(
-        action: Components\UpdateQuotePublicLinkRequestAction::Reset,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="success" -->
@@ -2380,45 +2068,6 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
     company: 'Smitham Inc',
-    quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuotePublicLinkRequest(
-        action: Components\UpdateQuotePublicLinkRequestAction::Reset,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
-    company: 'Berge Inc',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -2592,7 +2241,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1QuotesRejectRequest(
-    company: 'Rosenbaum - Nolan',
+    company: 'Roob - Stroman',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -2651,7 +2300,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1QuotesSendRequest(
-    company: 'Hauck LLC',
+    company: 'Jenkins, Auer and Lesch',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

@@ -33,7 +33,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsStockMovementsListRequest(
     company: 'McGlynn, Hegmann and McLaughlin',
-    product: 'Tasty Metal Ball',
+    product: 'Refined Plastic Computer',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 

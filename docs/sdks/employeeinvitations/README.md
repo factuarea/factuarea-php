@@ -129,6 +129,42 @@ if ($response->paginatedList !== null) {
 
 Invite a person to join your company as an employee (Control Horario portal). Only `email` is required — the `employee` role is fixed by the server, never taken from the payload. The invited person receives an email with an acceptance link. Inviting an email that already belongs to a company user, or one that already has a pending invitation, returns 422. Employee invitations do not consume the plan `users` seat limit.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-invitations.send" method="post" path="/companies/{company}/employee-invitations" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\SendEmployeeInvitationRequest(
+    email: 'Guadalupe.Batz@gmail.com',
+);
+
+$response = $sdk->employeeInvitations->publicApiV1EmployeeInvitationsSend(
+    company: 'Jacobson - Hirthe',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: employee_invitation
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.employee-invitations.send" method="post" path="/companies/{company}/employee-invitations" example="employee_invitation" -->
@@ -165,9 +201,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.employee-invitations.send" method="post" path="/companies/{company}/employee-invitations" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-invitations.send" method="post" path="/companies/{company}/employee-invitations" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -186,7 +222,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\SendEmployeeInvitationRequest(
-    email: 'Ara_Mante86@gmail.com',
+    email: 'Guadalupe.Batz@gmail.com',
 );
 
 $response = $sdk->employeeInvitations->publicApiV1EmployeeInvitationsSend(
@@ -222,47 +258,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\SendEmployeeInvitationRequest(
-    email: 'Ara_Mante86@gmail.com',
+    email: 'Guadalupe.Batz@gmail.com',
 );
 
 $response = $sdk->employeeInvitations->publicApiV1EmployeeInvitationsSend(
-    company: 'Hettinger, Dooley and Heidenreich',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employee-invitations.send" method="post" path="/companies/{company}/employee-invitations" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\SendEmployeeInvitationRequest(
-    email: 'Ara_Mante86@gmail.com',
-);
-
-$response = $sdk->employeeInvitations->publicApiV1EmployeeInvitationsSend(
-    company: 'Jacobson - Hirthe',
+    company: 'Ruecker and Sons',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -294,47 +294,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\SendEmployeeInvitationRequest(
-    email: 'Ara_Mante86@gmail.com',
+    email: 'Guadalupe.Batz@gmail.com',
 );
 
 $response = $sdk->employeeInvitations->publicApiV1EmployeeInvitationsSend(
-    company: 'Jacobson, Wisozk and Lesch',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employee-invitations.send" method="post" path="/companies/{company}/employee-invitations" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\SendEmployeeInvitationRequest(
-    email: 'Ara_Mante86@gmail.com',
-);
-
-$response = $sdk->employeeInvitations->publicApiV1EmployeeInvitationsSend(
-    company: 'Ruecker and Sons',
+    company: 'Blanda - Brekke',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

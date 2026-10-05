@@ -41,20 +41,20 @@ class Cost
     /**
      * Total of both modes.
      *
-     * @var \Factuarea\Sdk\Models\Components\Total $total
+     * @var \Factuarea\Sdk\Models\Components\ManagedAccountImportPreviewTotal $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Total')]
-    public Total $total;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ManagedAccountImportPreviewTotal')]
+    public ManagedAccountImportPreviewTotal $total;
 
     /**
      * @param  string  $currency
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountImportPreviewManagedAccount  $managedAccount
      * @param  \Factuarea\Sdk\Models\Components\OwnNif  $ownNif
-     * @param  \Factuarea\Sdk\Models\Components\Total  $total
+     * @param  \Factuarea\Sdk\Models\Components\ManagedAccountImportPreviewTotal  $total
      * @phpstan-pure
      */
-    public function __construct(string $currency, ManagedAccountImportPreviewManagedAccount $managedAccount, OwnNif $ownNif, Total $total)
+    public function __construct(string $currency, ManagedAccountImportPreviewManagedAccount $managedAccount, OwnNif $ownNif, ManagedAccountImportPreviewTotal $total)
     {
         $this->currency = $currency;
         $this->managedAccount = $managedAccount;

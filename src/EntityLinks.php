@@ -84,7 +84,7 @@ class EntityLinks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/entity-links', Operations\PublicApiV1TasksEntityLinksCreateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/entity-links', Operations\PublicApiV1TasksEntityLinksCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -135,7 +135,7 @@ class EntityLinks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -205,7 +205,7 @@ class EntityLinks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/entity-links/{link}', Operations\PublicApiV1TasksEntityLinksDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/entity-links/{link}', Operations\PublicApiV1TasksEntityLinksDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -251,7 +251,7 @@ class EntityLinks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -289,13 +289,13 @@ class EntityLinks
      *
      * List the Factuarea entities a task is linked to (invoices, quotes, contacts, products…), with their display label. A link is always returned; when its entity was deleted, when its module is not accessible to your company or when the key lacks the read scope of the entity resource (for example `invoices:read` for an invoice, `contacts:read` for a contact), it comes with `available: false` and `summary: null`, so the link can still be removed. Returns a plain list, without pagination.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksEntityLinksListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksEntityLinksList(string $task, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksEntityLinksListResponse
+    public function publicApiV1TasksEntityLinksList(string $company, string $task, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksEntityLinksListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -323,12 +323,12 @@ class EntityLinks
             ];
         }
         $request = new Operations\PublicApiV1TasksEntityLinksListRequest(
+            company: $company,
             task: $task,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/entity-links', Operations\PublicApiV1TasksEntityLinksListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/entity-links', Operations\PublicApiV1TasksEntityLinksListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -374,7 +374,7 @@ class EntityLinks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

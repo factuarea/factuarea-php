@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Project
 {
     /**
-     * UUID (v7) of the project.
+     * UUID v7 of the project.
      *
      * @var string $id
      */
@@ -72,11 +72,11 @@ class Project
     /**
      * Task statistics of the project.
      *
-     * @var \Factuarea\Sdk\Models\Components\Stats $stats
+     * @var \Factuarea\Sdk\Models\Components\ProjectStats $stats
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('stats')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Stats')]
-    public Stats $stats;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProjectStats')]
+    public ProjectStats $stats;
 
     /**
      * Creation timestamp.
@@ -142,7 +142,7 @@ class Project
      * @param  string  $icon
      * @param  int  $position
      * @param  bool  $isArchived
-     * @param  \Factuarea\Sdk\Models\Components\Stats  $stats
+     * @param  \Factuarea\Sdk\Models\Components\ProjectStats  $stats
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $description
@@ -152,7 +152,7 @@ class Project
      * @param  ?string  $billingProductId
      * @phpstan-pure
      */
-    public function __construct(string $id, ProjectObject $object, string $key, string $name, string $icon, int $position, bool $isArchived, Stats $stats, \DateTime $createdAt, \DateTime $updatedAt, ?string $description = null, ?\DateTime $archivedAt = null, ?string $billingContactId = null, ?string $billingHourlyRate = null, ?string $billingProductId = null)
+    public function __construct(string $id, ProjectObject $object, string $key, string $name, string $icon, int $position, bool $isArchived, ProjectStats $stats, \DateTime $createdAt, \DateTime $updatedAt, ?string $description = null, ?\DateTime $archivedAt = null, ?string $billingContactId = null, ?string $billingHourlyRate = null, ?string $billingProductId = null)
     {
         $this->id = $id;
         $this->object = $object;

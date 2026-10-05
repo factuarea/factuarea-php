@@ -67,6 +67,84 @@ if ($response->object !== null) {
 
 Create or partially update the time tracking configuration of your company (every field is optional and an omitted one keeps its current value, or the default when the company has no configuration yet): `overtime_basis` (`weekly`/`daily`), the optional daily/weekly overtime thresholds in minutes (`null` derives them from the schedule), the rounding `overtime_tolerance_minutes`, and the clock-in reminder toggle and grace minutes. A negative threshold or tolerance returns 422 in Spanish. Returns the updated settings with `id` = UUID v7 of the row.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="patch" path="/companies/{company}/time-tracking-settings" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateTimeTrackingSettingsRequest(
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
+    overtimeToleranceMinutes: 290077,
+    clockInReminderEnabled: false,
+    clockInReminderGraceMinutes: 469595,
+);
+
+$response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
+    company: 'Greenfelder LLC',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: $body
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="patch" path="/companies/{company}/time-tracking-settings" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateTimeTrackingSettingsRequest(
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
+    overtimeToleranceMinutes: 290077,
+    clockInReminderEnabled: false,
+    clockInReminderGraceMinutes: 469595,
+);
+
+$response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
+    company: 'Brown and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: $body
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_tracking_settings.update" method="patch" path="/companies/{company}/time-tracking-settings" example="missing_api_key" -->
@@ -88,14 +166,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\UpdateTimeTrackingSettingsRequest(
-    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Weekly,
-    overtimeToleranceMinutes: 110541,
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
+    overtimeToleranceMinutes: 290077,
     clockInReminderEnabled: false,
-    clockInReminderGraceMinutes: 982652,
+    clockInReminderGraceMinutes: 469595,
 );
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
-    company: 'Franey, Roberts and Osinski',
+    company: 'Boyer, Runolfsson and Reichert',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: $body
@@ -168,14 +246,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\UpdateTimeTrackingSettingsRequest(
-    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Weekly,
-    overtimeToleranceMinutes: 110541,
+    overtimeBasis: Components\UpdateTimeTrackingSettingsRequestOvertimeBasis::Daily,
+    overtimeToleranceMinutes: 290077,
     clockInReminderEnabled: false,
-    clockInReminderGraceMinutes: 982652,
+    clockInReminderGraceMinutes: 469595,
 );
 
 $response = $sdk->timeTrackingSettings->publicApiV1TimeTrackingSettingsUpdate(
-    company: 'Runolfsson - Reichert',
+    company: 'Brown and Sons',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: $body

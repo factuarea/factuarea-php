@@ -21,7 +21,7 @@ class ImportProjectTasksV1Request
     public array $tasks;
 
     /**
-     * Format of the document: `factuarea.tasks.v1`, the format produced by `GET /v1/projects/{project}/tasks/export`. It may be omitted when the document is a `{project, tasks}` JSON file exported from another task manager, which is also accepted.
+     * Format of the document: `factuarea.tasks.v1`, the format produced by `GET /v1/companies/{company}/projects/{project}/tasks/export`. It may be omitted when the document is a `{project, tasks}` JSON file exported from another task manager, which is also accepted.
      *
      * @var ?string $format
      */

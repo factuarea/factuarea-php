@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ProjectCustomField
 {
     /**
-     * UUID (v7) of the custom field.
+     * UUID v7 of the custom field.
      *
      * @var string $id
      */

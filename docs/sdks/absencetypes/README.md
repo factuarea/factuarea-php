@@ -116,9 +116,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.create" method="post" path="/companies/{company}/absence-types" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.create" method="post" path="/companies/{company}/absence-types" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -139,9 +139,50 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateAbsenceTypeRequest(
     name: '<value>',
     isPaid: false,
-    requiresApproval: true,
+    requiresApproval: false,
     measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
-    color: 'yellow',
+    color: 'orchid',
+    visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
+);
+
+$response = $sdk->absenceTypes->publicApiV1AbsenceTypesCreate(
+    company: 'Olson, Frami and Marvin',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.create" method="post" path="/companies/{company}/absence-types" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAbsenceTypeRequest(
+    name: '<value>',
+    isPaid: false,
+    requiresApproval: false,
+    measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
+    color: 'orchid',
     visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
 );
 
@@ -180,55 +221,14 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateAbsenceTypeRequest(
     name: '<value>',
     isPaid: false,
-    requiresApproval: true,
+    requiresApproval: false,
     measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
-    color: 'yellow',
+    color: 'orchid',
     visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
 );
 
 $response = $sdk->absenceTypes->publicApiV1AbsenceTypesCreate(
-    company: 'Corkery - Runte',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.create" method="post" path="/companies/{company}/absence-types" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAbsenceTypeRequest(
-    name: '<value>',
-    isPaid: false,
-    requiresApproval: true,
-    measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
-    color: 'yellow',
-    visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
-);
-
-$response = $sdk->absenceTypes->publicApiV1AbsenceTypesCreate(
-    company: 'Olson, Frami and Marvin',
+    company: 'Pacocha, Brekke and Zemlak',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -262,55 +262,14 @@ $sdk = Sdk\Factuarea::builder()
 $body = new Components\CreateAbsenceTypeRequest(
     name: '<value>',
     isPaid: false,
-    requiresApproval: true,
+    requiresApproval: false,
     measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
-    color: 'yellow',
+    color: 'orchid',
     visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
 );
 
 $response = $sdk->absenceTypes->publicApiV1AbsenceTypesCreate(
-    company: 'Brekke, Zemlak and Ankunding',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-types.create" method="post" path="/companies/{company}/absence-types" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAbsenceTypeRequest(
-    name: '<value>',
-    isPaid: false,
-    requiresApproval: true,
-    measurementUnit: Components\CreateAbsenceTypeRequestMeasurementUnit::Days,
-    color: 'yellow',
-    visibility: Components\CreateAbsenceTypeRequestVisibility::ManagersOnly,
-);
-
-$response = $sdk->absenceTypes->publicApiV1AbsenceTypesCreate(
-    company: 'Pacocha, Brekke and Zemlak',
+    company: 'Champlin, Aufderhar and Zemlak',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')

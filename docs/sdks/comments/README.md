@@ -15,7 +15,7 @@ Add a comment to a task as the member who owns the API key. `body` is Markdown; 
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/tasks/{task}/comments" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -35,10 +35,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCommentsCreateRequest(
+    company: 'Orn - Tillman',
     task: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\AddTaskCommentV1Request(
         body: '<value>',
     ),
@@ -54,7 +54,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/tasks/{task}/comments" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -74,10 +74,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCommentsCreateRequest(
+    company: 'Nolan, Ferry and Mosciski',
     task: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\AddTaskCommentV1Request(
         body: '<value>',
     ),
@@ -104,11 +104,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1TasksCommentsList
 
@@ -116,7 +116,7 @@ List the comments of a task, oldest first. Each comment has its Markdown `body` 
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.list" method="get" path="/tasks/{task}/comments" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.list" method="get" path="/companies/{company}/tasks/{task}/comments" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -136,9 +136,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCommentsListRequest(
+    company: 'Prosacco, Hintz and Dooley',
     task: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->tasks->comments->publicApiV1TasksCommentsList(
@@ -162,11 +162,11 @@ if ($response->taskCommentList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1TasksCommentsDelete
 
@@ -174,7 +174,7 @@ Permanently delete a comment. The author can delete their own comments; owners a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.delete" method="delete" path="/tasks/{task}/comments/{comment}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.delete" method="delete" path="/companies/{company}/tasks/{task}/comments/{comment}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -194,11 +194,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCommentsDeleteRequest(
+    company: 'Jacobs - Reilly',
     task: '<value>',
     comment: 'Carbonite web goalkeeper gloves are ergonomically designed to give easy fit',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->tasks->comments->publicApiV1TasksCommentsDelete(
@@ -224,7 +224,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -234,7 +234,7 @@ Edit the body of a comment. Only its author can edit it; comments synchronized f
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/tasks/{task}/comments/{comment}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -254,11 +254,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCommentsUpdateRequest(
+    company: 'McLaughlin, Gutkowski and Hickle',
     task: '<value>',
     comment: 'The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\EditTaskCommentV1Request(
         body: '<value>',
     ),
@@ -274,7 +274,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/tasks/{task}/comments/{comment}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -294,11 +294,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCommentsUpdateRequest(
+    company: 'Russel, Dickens and Paucek',
     task: '<value>',
     comment: 'The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\EditTaskCommentV1Request(
         body: '<value>',
     ),
@@ -327,6 +327,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

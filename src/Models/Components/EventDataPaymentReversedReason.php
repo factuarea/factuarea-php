@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Reason the payment was reverted, from the closed catalog. `issued_in_error` is set only by annulling an invoice issued by mistake with `revert_collections` (`POST /v1/invoices/{invoice}/annul`); it cannot be requested for a single payment. */
+/** Reason the payment was reverted, from the closed catalog. `issued_in_error` is set only by annulling an invoice issued by mistake with `revert_collections` (`POST /v1/companies/{company}/invoices/{invoice}/annul`); it cannot be requested for a single payment. */
 enum EventDataPaymentReversedReason: string
 {
     case DirectDebitReturn = 'direct_debit_return';

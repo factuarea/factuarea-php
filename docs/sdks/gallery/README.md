@@ -35,8 +35,8 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsGalleryDeleteRequest(
     company: 'Langworth and Sons',
-    product: 'Rustic Steel Sausages',
-    index: 578285,
+    product: 'Intelligent Metal Shoes',
+    index: 825437,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
@@ -96,8 +96,8 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->products->gallery->publicApiV1ProductsGalleryDownload(
     company: 'Koepp, Metz and Wilderman',
-    product: 'Rustic Steel Car',
-    index: 143931,
+    product: 'Small Granite Pants',
+    index: 952765,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
@@ -132,9 +132,9 @@ if ($response->bytes !== null) {
 
 Attach an image (jpeg, png, jpg, gif or webp; up to 3 MB) to the product gallery. Returns the updated product. Fails with 422 if the gallery limit is exceeded.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -154,8 +154,50 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
-    company: 'Rau, Mann and Gerlach',
-    product: 'Handmade Rubber Pizza',
+    company: 'Becker, Stark and Streich',
+    product: 'Electronic Steel Sausages',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UploadProductGalleryImageRequest(
+        image: new Components\Image(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->products->gallery->publicApiV1ProductsGalleryUpload(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
+    company: 'Walter - Carter',
+    product: 'Sleek Cotton Towels',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductGalleryImageRequest(
@@ -196,50 +238,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
-    company: 'Rau, Mann and Gerlach',
-    product: 'Handmade Rubber Pizza',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductGalleryImageRequest(
-        image: new Components\Image(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->gallery->publicApiV1ProductsGalleryUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
-    company: 'Becker, Stark and Streich',
-    product: 'Ergonomic Wooden Bike',
+    company: 'Walter - Carter',
+    product: 'Small Bronze Soap',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductGalleryImageRequest(
@@ -281,49 +281,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
     company: 'Becker, Stark and Streich',
-    product: 'Ergonomic Wooden Bike',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductGalleryImageRequest(
-        image: new Components\Image(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->gallery->publicApiV1ProductsGalleryUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
-    company: 'Pacocha, Lueilwitz and Von',
-    product: 'Intelligent Metal Fish',
+    product: 'Small Bronze Soap',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductGalleryImageRequest(

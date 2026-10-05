@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseScansListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -20,6 +29,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?int $limit = null;
 
     /**
+     * Free-text search (partial, case-insensitive match).
      *
      * @var ?string $search
      */
@@ -27,6 +37,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $search = null;
 
     /**
+     * Sort order: `received_at` (default is `-received_at`, newest first), `issue_date`, `total` or `status`; prefix it with `-` for descending.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListSort $sort
      */
@@ -34,6 +45,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?PublicApiV1PurchaseScansListSort $sort = null;
 
     /**
+     * Only scans in this status: `received`, `queued`, `processing`, `needs_review`, `duplicate`, `failed`, `auto_created`, `created` or `archived`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\FilterStatus $filterStatus
      */
@@ -41,46 +53,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?FilterStatus $filterStatus = null;
 
     /**
-     * $filterSourceQueryParameter
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\FilterSource> $filterSourceQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[source][]')]
-    public ?array $filterSourceQueryParameter = null;
-
-    /**
-     * $filterSupplierIdQueryParameter
-     *
-     * @var ?array<string> $filterSupplierIdQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[supplier_id][]')]
-    public ?array $filterSupplierIdQueryParameter = null;
-
-    /**
-     * $filterDocumentKindQueryParameter
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\FilterDocumentKind> $filterDocumentKindQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[document_kind][]')]
-    public ?array $filterDocumentKindQueryParameter = null;
-
-    /**
-     * $filterFileKindQueryParameter
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\FilterFileKind> $filterFileKindQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[file_kind][]')]
-    public ?array $filterFileKindQueryParameter = null;
-
-    /**
-     * $filterSupplierLinkStateQueryParameter
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\FilterSupplierLinkState> $filterSupplierLinkStateQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[supplier_link_state][]')]
-    public ?array $filterSupplierLinkStateQueryParameter = null;
-
-    /**
+     * `true` returns only scans that have issues to review and `false` only those without any.
      *
      * @var ?bool $filterHasIssues
      */
@@ -88,6 +61,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?bool $filterHasIssues = null;
 
     /**
+     * Sender of the scan: a full email address or a domain that starts with `@` (up to 254 characters).
      *
      * @var ?string $filterSender
      */
@@ -95,41 +69,47 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $filterSender = null;
 
     /**
+     * Comma-separated list of scan sources: `upload`, `email` or `api`.
      *
-     * @var ?string $filterSourceQueryParameter1
+     * @var ?string $filterSource
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[source]')]
-    public ?string $filterSourceQueryParameter1 = null;
+    public ?string $filterSource = null;
 
     /**
+     * Comma-separated list of document kinds: `invoice`, `simplified_qualified`, `ticket`, `delivery_note`, `other` or `undetermined`.
      *
-     * @var ?string $filterDocumentKindQueryParameter1
+     * @var ?string $filterDocumentKind
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[document_kind]')]
-    public ?string $filterDocumentKindQueryParameter1 = null;
+    public ?string $filterDocumentKind = null;
 
     /**
+     * Comma-separated list of file kinds: `pdf` or `image`.
      *
-     * @var ?string $filterFileKindQueryParameter1
+     * @var ?string $filterFileKind
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[file_kind]')]
-    public ?string $filterFileKindQueryParameter1 = null;
+    public ?string $filterFileKind = null;
 
     /**
+     * Comma-separated list of supplier link states: `linked`, `pending_link` or `unidentified`.
      *
-     * @var ?string $filterSupplierLinkStateQueryParameter1
+     * @var ?string $filterSupplierLinkState
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[supplier_link_state]')]
-    public ?string $filterSupplierLinkStateQueryParameter1 = null;
+    public ?string $filterSupplierLinkState = null;
 
     /**
+     * Comma-separated list of supplier identifiers (UUID v7, up to 20).
      *
-     * @var ?string $filterSupplierIdQueryParameter1
+     * @var ?string $filterSupplierId
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=filter[supplier_id]')]
-    public ?string $filterSupplierIdQueryParameter1 = null;
+    public ?string $filterSupplierId = null;
 
     /**
+     * Only scans created on this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterCreatedEq
      */
@@ -137,6 +117,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterCreatedEq = null;
 
     /**
+     * Only scans created after this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterCreatedGt
      */
@@ -144,6 +125,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterCreatedGt = null;
 
     /**
+     * Only scans created on or after this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterCreatedGte
      */
@@ -151,6 +133,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterCreatedGte = null;
 
     /**
+     * Only scans created before this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterCreatedLt
      */
@@ -158,6 +141,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterCreatedLt = null;
 
     /**
+     * Only scans created on or before this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterCreatedLte
      */
@@ -165,6 +149,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterCreatedLte = null;
 
     /**
+     * Only scans whose document was issued on this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterIssuedOnEq
      */
@@ -172,6 +157,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterIssuedOnEq = null;
 
     /**
+     * Only scans whose document was issued after this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterIssuedOnGt
      */
@@ -179,6 +165,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterIssuedOnGt = null;
 
     /**
+     * Only scans whose document was issued on or after this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterIssuedOnGte
      */
@@ -186,6 +173,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterIssuedOnGte = null;
 
     /**
+     * Only scans whose document was issued before this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterIssuedOnLt
      */
@@ -193,6 +181,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterIssuedOnLt = null;
 
     /**
+     * Only scans whose document was issued on or before this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $filterIssuedOnLte
      */
@@ -200,6 +189,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $filterIssuedOnLte = null;
 
     /**
+     * Only scans whose total equals this amount (decimal string, up to 4 decimals).
      *
      * @var ?string $filterTotalEq
      */
@@ -207,6 +197,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $filterTotalEq = null;
 
     /**
+     * Only scans whose total is greater than this amount (decimal string, up to 4 decimals).
      *
      * @var ?string $filterTotalGt
      */
@@ -214,6 +205,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $filterTotalGt = null;
 
     /**
+     * Only scans whose total is at least this amount (decimal string, up to 4 decimals).
      *
      * @var ?string $filterTotalGte
      */
@@ -221,6 +213,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $filterTotalGte = null;
 
     /**
+     * Only scans whose total is less than this amount (decimal string, up to 4 decimals).
      *
      * @var ?string $filterTotalLt
      */
@@ -228,6 +221,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $filterTotalLt = null;
 
     /**
+     * Only scans whose total is at most this amount (decimal string, up to 4 decimals).
      *
      * @var ?string $filterTotalLte
      */
@@ -243,14 +237,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -258,6 +245,7 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $startingAfter = null;
 
     /**
+     * Cursor for backward pagination: the `id` of the first scan of the page you hold. It cannot be combined with `starting_after`.
      *
      * @var ?string $endingBefore
      */
@@ -265,22 +253,18 @@ class PublicApiV1PurchaseScansListRequest
     public ?string $endingBefore = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $search
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListSort  $sort
      * @param  ?\Factuarea\Sdk\Models\Operations\FilterStatus  $filterStatus
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\FilterSource>  $filterSourceQueryParameter
-     * @param  ?array<string>  $filterSupplierIdQueryParameter
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\FilterDocumentKind>  $filterDocumentKindQueryParameter
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\FilterFileKind>  $filterFileKindQueryParameter
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\FilterSupplierLinkState>  $filterSupplierLinkStateQueryParameter
      * @param  ?bool  $filterHasIssues
      * @param  ?string  $filterSender
-     * @param  ?string  $filterSourceQueryParameter1
-     * @param  ?string  $filterDocumentKindQueryParameter1
-     * @param  ?string  $filterFileKindQueryParameter1
-     * @param  ?string  $filterSupplierLinkStateQueryParameter1
-     * @param  ?string  $filterSupplierIdQueryParameter1
+     * @param  ?string  $filterSource
+     * @param  ?string  $filterDocumentKind
+     * @param  ?string  $filterFileKind
+     * @param  ?string  $filterSupplierLinkState
+     * @param  ?string  $filterSupplierId
      * @param  ?LocalDate  $filterCreatedEq
      * @param  ?LocalDate  $filterCreatedGt
      * @param  ?LocalDate  $filterCreatedGte
@@ -297,29 +281,24 @@ class PublicApiV1PurchaseScansListRequest
      * @param  ?string  $filterTotalLt
      * @param  ?string  $filterTotalLte
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
      * @phpstan-pure
      */
-    public function __construct(?int $limit = null, ?string $search = null, ?PublicApiV1PurchaseScansListSort $sort = null, ?FilterStatus $filterStatus = null, ?array $filterSourceQueryParameter = null, ?array $filterSupplierIdQueryParameter = null, ?array $filterDocumentKindQueryParameter = null, ?array $filterFileKindQueryParameter = null, ?array $filterSupplierLinkStateQueryParameter = null, ?bool $filterHasIssues = null, ?string $filterSender = null, ?string $filterSourceQueryParameter1 = null, ?string $filterDocumentKindQueryParameter1 = null, ?string $filterFileKindQueryParameter1 = null, ?string $filterSupplierLinkStateQueryParameter1 = null, ?string $filterSupplierIdQueryParameter1 = null, ?LocalDate $filterCreatedEq = null, ?LocalDate $filterCreatedGt = null, ?LocalDate $filterCreatedGte = null, ?LocalDate $filterCreatedLt = null, ?LocalDate $filterCreatedLte = null, ?LocalDate $filterIssuedOnEq = null, ?LocalDate $filterIssuedOnGt = null, ?LocalDate $filterIssuedOnGte = null, ?LocalDate $filterIssuedOnLt = null, ?LocalDate $filterIssuedOnLte = null, ?string $filterTotalEq = null, ?string $filterTotalGt = null, ?string $filterTotalGte = null, ?string $filterTotalLt = null, ?string $filterTotalLte = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?string $endingBefore = null)
+    public function __construct(string $company, ?int $limit = null, ?string $search = null, ?PublicApiV1PurchaseScansListSort $sort = null, ?FilterStatus $filterStatus = null, ?bool $filterHasIssues = null, ?string $filterSender = null, ?string $filterSource = null, ?string $filterDocumentKind = null, ?string $filterFileKind = null, ?string $filterSupplierLinkState = null, ?string $filterSupplierId = null, ?LocalDate $filterCreatedEq = null, ?LocalDate $filterCreatedGt = null, ?LocalDate $filterCreatedGte = null, ?LocalDate $filterCreatedLt = null, ?LocalDate $filterCreatedLte = null, ?LocalDate $filterIssuedOnEq = null, ?LocalDate $filterIssuedOnGt = null, ?LocalDate $filterIssuedOnGte = null, ?LocalDate $filterIssuedOnLt = null, ?LocalDate $filterIssuedOnLte = null, ?string $filterTotalEq = null, ?string $filterTotalGt = null, ?string $filterTotalGte = null, ?string $filterTotalLt = null, ?string $filterTotalLte = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null, ?string $endingBefore = null)
     {
+        $this->company = $company;
         $this->limit = $limit;
         $this->search = $search;
         $this->sort = $sort;
         $this->filterStatus = $filterStatus;
-        $this->filterSourceQueryParameter = $filterSourceQueryParameter;
-        $this->filterSupplierIdQueryParameter = $filterSupplierIdQueryParameter;
-        $this->filterDocumentKindQueryParameter = $filterDocumentKindQueryParameter;
-        $this->filterFileKindQueryParameter = $filterFileKindQueryParameter;
-        $this->filterSupplierLinkStateQueryParameter = $filterSupplierLinkStateQueryParameter;
         $this->filterHasIssues = $filterHasIssues;
         $this->filterSender = $filterSender;
-        $this->filterSourceQueryParameter1 = $filterSourceQueryParameter1;
-        $this->filterDocumentKindQueryParameter1 = $filterDocumentKindQueryParameter1;
-        $this->filterFileKindQueryParameter1 = $filterFileKindQueryParameter1;
-        $this->filterSupplierLinkStateQueryParameter1 = $filterSupplierLinkStateQueryParameter1;
-        $this->filterSupplierIdQueryParameter1 = $filterSupplierIdQueryParameter1;
+        $this->filterSource = $filterSource;
+        $this->filterDocumentKind = $filterDocumentKind;
+        $this->filterFileKind = $filterFileKind;
+        $this->filterSupplierLinkState = $filterSupplierLinkState;
+        $this->filterSupplierId = $filterSupplierId;
         $this->filterCreatedEq = $filterCreatedEq;
         $this->filterCreatedGt = $filterCreatedGt;
         $this->filterCreatedGte = $filterCreatedGte;
@@ -336,7 +315,6 @@ class PublicApiV1PurchaseScansListRequest
         $this->filterTotalLt = $filterTotalLt;
         $this->filterTotalLte = $filterTotalLte;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
     }

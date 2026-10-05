@@ -4,14 +4,37 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
-## [Unreleased] — account-tenancy (company axis and account model)
+## [0.7.0] — 2026-10-05
 
-> Merged from the account-tenancy branch. It was drafted as `0.5.0` before `origin/main` published its own `0.5.0` and `0.6.0`; the final version number is assigned when the SDK is regenerated against the final contract.
+Regenerated from the **final axis contract**, which carries every surface of
+`0.6.0` (tasks and projects, document scanner, notifications, users, agenda,
+unattended checkout, VeriFactu representation, series update, contact imports)
+expressed on the new axes: **613 operations** in **494 paths** (up from 571 in
+461): **+53 / −11**. The default `Factuarea-Version` is unchanged
+(`FactuareaVersionHook::DEFAULT_VERSION` stays `2026-10-01`). In `0.x` a breaking
+change travels in a `minor`, so this release is `0.7.0`; the section below is the
+full breaking window, measured against `0.6.0`.
 
-Regenerated from the **company-axis** contract: every company resource now hangs
-off `/v1/companies/{company}/…` and the account surface off
-`/v1/accounts/{account}/…`. **481 operations** in **396 paths** (up from 469 in
-387): **+17 / −5**. The default `Factuarea-Version` is unchanged.
+### Changed — breaking (since 0.6.0)
+
+- **Every company operation lives under `/v1/companies/{company}/…`**, including
+  all the surfaces `0.6.0` added on flat URLs (`tasks`, `projects`, `task-labels`,
+  `task-timers`, `purchase-scans`, `purchase-scan-emails`, `notifications`,
+  `agenda`, `users`, VeriFactu representation, contact imports, `series`). Each
+  method takes the company id; see the detail below.
+- **Partial updates use `PATCH`.** The 40 `…Update` operations that were `PUT`
+  (contacts, products, invoices, quotes, proformas, delivery notes, purchase
+  invoices, recurring invoices, series, tasks, projects, webhook endpoints,
+  employees, work schedules, absence types and policies, …) and
+  `PurchaseScans::publicApiV1PurchaseScansReview()` are now `PATCH`. Signatures
+  do not change.
+- `Contacts::publicApiV1ContactsRestore()` is now `POST`.
+- Removed with the move to the account axis: the five company API-key operations
+  and the six tax write operations (see the detail below).
+- Document amounts in webhook and API payloads travel as decimal strings; the
+  `2026-10-05` webhook payload version is for new endpoints only.
+
+### Detail of the axis and account-model window
 
 ### Changed — breaking
 

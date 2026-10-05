@@ -51,16 +51,16 @@ class Representation
     /**
      * Register a representation
      *
-     * Register the representation that lets Factuarea remit your VeriFactu records to AEAT with its own certificate. Send `multipart/form-data` with `kind` (`social_collaboration_annex_i` or `aeat_power_of_attorney`), `signer_name`, `signer_tax_id`, `granted_on` and the evidence: the signed annex I as `document` (PDF, up to 5 MB, validated by magic bytes) for social collaboration, and the proof of the power of attorney as `document` or its reference in `power_of_attorney_reference` for a power of attorney. The document is custodied encrypted and counts against your storage quota (402 `storage_quota_exceeded`). If a representation was already active it is revoked and kept in the history, and the new one becomes the active one. The optional `valid_until` sets the last day of validity (not before `granted_on`, at most 5 years after it); without it the representation does not expire, and once the day has passed it stops enabling third-party remission (you are warned 30 and 7 days ahead and when it expires). If your company already remits through a third-party mode, registering a representation of the OTHER kind moves the mode to the one that kind asks for (annex I → `social_collaborator`, power of attorney → `power_of_attorney`) — or back to `own_certificate` when that mode cannot be used, because this instance does not offer the social collaborator or the new representation is already expired — and the records that were blocked waiting for it are reactivated. With `own_certificate` nothing changes: switch explicitly with `PUT /v1/verifactu/settings`, which requires this representation. Returns 201 with `data` (the new representation) and `remission_mode`, the remission mode that results, plus a `Location` header; an invalid payload returns 422 (`param` names the field; the evidence that is missing or not a valid PDF is `business_rule_violation` / `invalid_representation`).
+     * Register the representation that lets Factuarea remit your VeriFactu records to AEAT with its own certificate. Send `multipart/form-data` with `kind` (`social_collaboration_annex_i` or `aeat_power_of_attorney`), `signer_name`, `signer_tax_id`, `granted_on` and the evidence: the signed annex I as `document` (PDF, up to 5 MB, validated by magic bytes) for social collaboration, and the proof of the power of attorney as `document` or its reference in `power_of_attorney_reference` for a power of attorney. The document is custodied encrypted and counts against your storage quota (402 `storage_quota_exceeded`). If a representation was already active it is revoked and kept in the history, and the new one becomes the active one. The optional `valid_until` sets the last day of validity (not before `granted_on`, at most 5 years after it); without it the representation does not expire, and once the day has passed it stops enabling third-party remission (you are warned 30 and 7 days ahead and when it expires). If your company already remits through a third-party mode, registering a representation of the OTHER kind moves the mode to the one that kind asks for (annex I → `social_collaborator`, power of attorney → `power_of_attorney`) — or back to `own_certificate` when that mode cannot be used, because this instance does not offer the social collaborator or the new representation is already expired — and the records that were blocked waiting for it are reactivated. With `own_certificate` nothing changes: switch explicitly with `PUT /v1/companies/{company}/verifactu/settings`, which requires this representation. Returns 201 with `data` (the new representation) and `remission_mode`, the remission mode that results, plus a `Location` header; an invalid payload returns 422 (`param` names the field; the evidence that is missing or not a valid PDF is `business_rule_violation` / `invalid_representation`).
      *
      * @param  \Factuarea\Sdk\Models\Components\RegisterCompanyRepresentationV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRepresentationRegisterResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRepresentationRegister(Components\RegisterCompanyRepresentationV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRepresentationRegisterResponse
+    public function publicApiV1VerifactuRepresentationRegister(Components\RegisterCompanyRepresentationV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuRepresentationRegisterResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class Representation
             ];
         }
         $request = new Operations\PublicApiV1VerifactuRepresentationRegisterRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/representation');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/representation', Operations\PublicApiV1VerifactuRepresentationRegisterRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'multipart');
@@ -145,7 +145,7 @@ class Representation
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -183,14 +183,14 @@ class Representation
      *
      * Revoke the active representation: Factuarea stops remitting your records on your behalf and `remission_mode` goes back to `own_certificate`, so from then on the remission uses your own certificate. Revoking is TERMINAL — a revoked representation is never reactivated; register another one to authorize again — and the custodied document is kept in the history. `reason` is optional, 3 to 500 characters, in the JSON body or in the query (a text outside that range returns 422 with `param=reason` instead of being trimmed); without it «Revocada vía API v1.» is recorded. Returns 204; with no current representation it returns 422 `business_rule_violation` / `invalid_representation`.
      *
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?string  $reason
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRepresentationRevokeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRepresentationRevoke(string $idempotencyKey, ?string $reason = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRepresentationRevokeResponse
+    public function publicApiV1VerifactuRepresentationRevoke(string $company, string $idempotencyKey, ?string $reason = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuRepresentationRevokeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -218,13 +218,13 @@ class Representation
             ];
         }
         $request = new Operations\PublicApiV1VerifactuRepresentationRevokeRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             reason: $reason,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/representation');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/representation', Operations\PublicApiV1VerifactuRepresentationRevokeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -263,7 +263,7 @@ class Representation
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -301,12 +301,12 @@ class Representation
      *
      * Return the CURRENT representation with which your company authorizes Factuarea to remit its VeriFactu records to AEAT on its behalf (social collaboration, annex I, or a power of attorney registered with AEAT): kind, signer, grant date, last day of validity (`valid_until`) and whether it has expired (`is_expired`), and whether the signed document is custodied. A representation that has expired is still returned (`is_active: true`, `is_expired: true`) but no longer enables third-party remission: register a new one. The document itself is never returned. Returns 404 `resource_not_found` only when there is no current (not revoked) representation.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuRepresentationShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuRepresentationShow(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuRepresentationShowResponse
+    public function publicApiV1VerifactuRepresentationShow(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuRepresentationShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -334,11 +334,11 @@ class Representation
             ];
         }
         $request = new Operations\PublicApiV1VerifactuRepresentationShowRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/representation');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/representation', Operations\PublicApiV1VerifactuRepresentationShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -384,7 +384,7 @@ class Representation
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

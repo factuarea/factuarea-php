@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaskLabel
 {
     /**
-     * UUID (v7) of the label.
+     * UUID v7 of the label.
      *
      * @var string $id
      */

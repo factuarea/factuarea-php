@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class AssignTaskLabelV1Request
 {
     /**
-     * `id` (UUID) of a label from the company's task label catalog.
+     * Public identifier (UUID v7) of a label from the company's task label catalog.
      *
      * @var string $labelId
      */

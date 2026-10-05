@@ -77,9 +77,9 @@ if ($response->object !== null) {
 
 Create an automation rule out of three pieces: the trigger that puts it in motion, an optional condition tree evaluated against the triggering event, and the ordered list of actions it executes. The server assigns the `id` (UUID v7) and seals version 1 of the definition. New rules are created in `draft` and do not fire until you activate them with `POST /v1/companies/{company}/automations/rules/{rule}/activate`. Omit `conditions` to run on every event of the trigger. The trigger must belong to the catalog visible to your company and every action must have a registered adapter; otherwise the call returns 422 and nothing is created.
 
-### Example Usage: api_key_revoked
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="api_key_revoked" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="api_key_expired" -->
 ```php
 declare(strict_types=1);
 
@@ -119,9 +119,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -150,7 +150,7 @@ $body = new Components\CreateAutomationRuleV1Request(
 );
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'Padberg and Sons',
+    company: 'Heidenreich and Sons',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -192,7 +192,49 @@ $body = new Components\CreateAutomationRuleV1Request(
 );
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'Heidenreich and Sons',
+    company: 'Cartwright, Yundt and Graham',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: ip_not_allowed
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAutomationRuleV1Request(
+    name: '<value>',
+    triggerType: '<value>',
+    actions: [
+        new Components\AutomationActionInput(
+            type: Components\AutomationActionInputType::SendDocumentEmail,
+        ),
+    ],
+);
+
+$response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
+    company: 'Schiller Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -234,91 +276,7 @@ $body = new Components\CreateAutomationRuleV1Request(
 );
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'Cartwright, Yundt and Graham',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAutomationRuleV1Request(
-    name: '<value>',
-    triggerType: '<value>',
-    actions: [
-        new Components\AutomationActionInput(
-            type: Components\AutomationActionInputType::SendDocumentEmail,
-        ),
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'Ledner and Sons',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAutomationRuleV1Request(
-    name: '<value>',
-    triggerType: '<value>',
-    actions: [
-        new Components\AutomationActionInput(
-            type: Components\AutomationActionInputType::SendDocumentEmail,
-        ),
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'Cartwright, Yundt and Graham',
+    company: 'Padberg and Sons',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -614,6 +572,45 @@ IMPORTANT — if the rule acts on documents (send a document by email, send a pa
 
 A condition that cannot be evaluated is not an HTTP error: it comes back as `condition_error` with 200, because seeing exactly that is what the dry run is for. A step a guardrail would cut short in production comes back as non-executable with its typed reason, never as a success.
 
+### Example Usage: api_key_expired
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\DryRunAutomationRuleV1Request(
+    eventType: '<value>',
+    eventPayload: [
+
+    ],
+);
+
+$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
+    company: 'Adams, Schiller and Harber',
+    rule: '<value>',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: api_key_revoked
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="api_key_revoked" -->
@@ -642,46 +639,7 @@ $body = new Components\DryRunAutomationRuleV1Request(
 );
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: 'Prohaska - Reilly',
-    rule: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\DryRunAutomationRuleV1Request(
-    eventType: '<value>',
-    eventPayload: [
-
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: 'Stracke, Little and Turner',
+    company: 'Beahan LLC',
     rule: '<value>',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -720,7 +678,46 @@ $body = new Components\DryRunAutomationRuleV1Request(
 );
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: 'Kub, Reilly and Kihn',
+    company: 'Romaguera, Kub and Reilly',
+    rule: '<value>',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: ip_not_allowed
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\DryRunAutomationRuleV1Request(
+    eventType: '<value>',
+    eventPayload: [
+
+    ],
+);
+
+$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
+    company: 'Lind - Fisher',
     rule: '<value>',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -759,85 +756,7 @@ $body = new Components\DryRunAutomationRuleV1Request(
 );
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: 'Turner LLC',
-    rule: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\DryRunAutomationRuleV1Request(
-    eventType: '<value>',
-    eventPayload: [
-
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: 'Maggio - Runte',
-    rule: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\DryRunAutomationRuleV1Request(
-    eventType: '<value>',
-    eventPayload: [
-
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: 'Romaguera, Kub and Reilly',
+    company: 'Stracke, Little and Turner',
     rule: '<value>',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

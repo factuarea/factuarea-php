@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * `purchase_scans.source` (`GET /purchase_scans/{purchase_scan}/source`) —
+ * `purchase_scans.source` (`GET /companies/{company}/purchase-scans/{purchase_scan}/source`) —
  * downloads the original file. The response has no `application/json` variant
  * on 200 (`anchors/contract.md` §"Las 13 operaciones": `application/pdf,
  * image/jpeg, image/png`), mirroring the existing binary-download precedent
@@ -77,11 +77,11 @@ final class PurchaseScansSourceTest extends TestCase
         ]);
         $sdk = $this->sdkWith($mock);
 
-        $response = $sdk->purchaseScans->publicApiV1PurchaseScansSource('019e0000-0000-7000-8000-000000000042');
+        $response = $sdk->purchaseScans->publicApiV1PurchaseScansSource('019e0000-0000-7000-8000-0000000000c0', '019e0000-0000-7000-8000-000000000042');
 
         $this->assertSame('GET', $this->lastRequest()->getMethod());
         $this->assertStringEndsWith(
-            '/purchase_scans/019e0000-0000-7000-8000-000000000042/source',
+            '/companies/019e0000-0000-7000-8000-0000000000c0/purchase-scans/019e0000-0000-7000-8000-000000000042/source',
             (string) $this->lastRequest()->getUri(),
         );
         $this->assertSame(200, $response->statusCode);
@@ -100,7 +100,7 @@ final class PurchaseScansSourceTest extends TestCase
         $sdk = $this->sdkWith($mock);
 
         try {
-            $sdk->purchaseScans->publicApiV1PurchaseScansSource('019e0000-0000-7000-8000-000000000099');
+            $sdk->purchaseScans->publicApiV1PurchaseScansSource('019e0000-0000-7000-8000-0000000000c0', '019e0000-0000-7000-8000-000000000099');
             $this->fail('Expected a typed ErrorThrowable for a 404.');
         } catch (ErrorThrowable $e) {
             $this->assertSame('purchase_scan_not_found', $e->container->error->code);

@@ -12,7 +12,7 @@ List the emails received in the purchase scanner mailbox with sender, subject, a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scan_emails.list" method="get" path="/purchase_scan_emails" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scan_emails.list" method="get" path="/companies/{company}/purchase-scan-emails" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,8 +32,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1PurchaseScanEmailsListRequest(
+    company: 'Barrows - Kuhic',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->purchaseScanEmails->publicApiV1PurchaseScanEmailsList(
@@ -57,8 +57,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

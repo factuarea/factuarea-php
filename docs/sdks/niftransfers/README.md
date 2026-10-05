@@ -13,9 +13,81 @@
 
 Accept a TAX ID TRANSFER by presenting its `secret`: the tax ID the transfer covers moves to the account in the path, which is the credential account. It is an action on the collection and carries no identifier in the path, because whoever accepts does NOT own the transfer and cannot address it by id — all they hold is a secret someone gave them. The body carries the `secret` and nothing else: the tax ID is named by the TRANSFER, not by whoever presents it, so a `company_id` here is rejected rather than silently ignored. Accepting locks the transfer, re-validates that its tax ID still belongs to the issuing account, moves the membership (together with the sandbox company of the tax ID when the issuing account holds it), prunes the tax ID out of the scope of the issuing account credentials, removes from the tax ID the people of the issuing account who do not also belong to the receiving account (closing their web sessions and the OAuth tokens bound to it), grants `owner` of the tax ID to whoever administers the receiving account if they had no access to it, records the trail and notifies the issuing account owner, all inside ONE transaction: a transfer is accepted at most once even under concurrent requests. The 200 publishes the consumed transfer — its public `id`, the tax ID, its expiry and `status: consumed` — and never the issuing account, the consumption instant or the secret. Requires an administrative role in at least one tax ID of the RECEIVING account: 403 `forbidden_action` otherwise. The incoming tax ID becomes an ADDITIONAL tax ID of the receiving account — except for an account registered without a tax ID, where it becomes its titular and is not charged —, so the additional tax ID gate runs BEFORE anything moves, and a rejection leaves the transfer valid and the tax ID in the issuing account: the credential must reach the titular company of the receiving account, which pays it (403 `forbidden_action` otherwise), with an effective access that allows writing (403 `company_read_only` when it is read-only, `view`), the receiving account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged on acceptance: with no payment method on file it returns 402 `payment_method_required` (with `error.details.payment_setup_url`) and a declined charge returns 402 `additional_nif_charge_failed`; if the move fails after charging, the charge is compensated. Returns 422 `nif_transfer_invalid` when the secret matches no transfer, the transfer was already consumed or revoked, it is addressed to a different account, or its tax ID has already changed account (all with the SAME body: telling them apart would say whether that secret ever existed), 422 `nif_transfer_expired` when the transfer is still unconsumed but its window has passed — a DIFFERENT code on purpose, so the holder knows to ask for another one instead of looking for a mistake on their side —, 422 `business_rule_violation` with subcode `account_must_keep_one_nif` when the issuing account would keep no active tax ID, 409 `resource_conflict` when an account registered without a tax ID already holds business data in its empty company, 422 `idempotency_key_required` because moving a tax ID this way is irreversible, and 404 `account_not_found` when `{account}` is not the credential account.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\AcceptNifTransferV1Request(
+    secret: '<value>',
+);
+
+$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersAccept(
+    account: '08711140',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\AcceptNifTransferV1Request(
+    secret: '<value>',
+);
+
+$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersAccept(
+    account: '66353528',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -49,9 +121,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\AcceptNifTransferV1Request(
+    secret: '<value>',
+);
+
+$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersAccept(
+    account: '04005430',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -75,42 +183,6 @@ $body = new Components\AcceptNifTransferV1Request(
 
 $response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersAccept(
     account: '52446704',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.accept" method="post" path="/accounts/{account}/nif-transfers/accept" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AcceptNifTransferV1Request(
-    secret: '<value>',
-);
-
-$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersAccept(
-    account: '66353528',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -147,9 +219,81 @@ if ($response->object !== null) {
 
 Issue a TAX ID TRANSFER over ONE tax ID of your account, named explicitly in `company_id`, and receive **201 Created** with the transfer and its plaintext `secret`. This is the only way a tax ID can move from this account to another one, and the initiative is always the giving side: no operation lets an account ask for someone else's tax ID. The secret is returned EXACTLY ONCE and never persisted — only its irreversible fingerprint is stored, so no later read can return it, today or ever; hand it to the receiving account through a channel you trust. An idempotent replay of this call returns the same transfer with `secret: null`: the secret is never stored, not even in the idempotency cache. `recipient_account_id` is OPTIONAL and closes the transfer to a single account: only that account can accept it, and anyone else presenting the secret gets `nif_transfer_invalid`; without it, whoever holds the secret can accept it. The OWNER company of your account cannot be given away. `expires_at` is OPTIONAL: omit it for the product default (24 hours), or pass an ISO 8601 instant that is in the future and within the product ceiling (7 days). If the secret leaks, revoke the transfer with the revoke operation. No `Location` header is returned, deliberately: a transfer has no individual read operation. Returns 403 `forbidden_action` when the credential holder does not administer that tax ID, 403 `company_read_only` when the effective access of the credential to that tax ID is read-only (`view`), without issuing anything, 404 `profile_not_found` when the tax ID does not exist, belongs to another account, is outside your scope or the credential has no access to it (all with the same body), 422 `business_rule_violation` on a past, too-distant or uninterpretable `expires_at`, on the owner company of the account (`error.param` `company_id`) or on a recipient that does not exist or is your own account (`error.param` `recipient_account_id`, both with the same body), 422 `idempotency_key_required` because issuing is irreversible — once out, the secret is out — and 404 `account_not_found` when `{account}` is not the credential account.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_expired
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateNifTransferV1Request(
+    companyId: '77b702f0-7a64-41e9-a51f-99c0514b498d',
+);
+
+$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersCreate(
+    account: '82329594',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateNifTransferV1Request(
+    companyId: '77b702f0-7a64-41e9-a51f-99c0514b498d',
+);
+
+$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersCreate(
+    account: '60402971',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -183,9 +327,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="ip_not_allowed" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateNifTransferV1Request(
+    companyId: '77b702f0-7a64-41e9-a51f-99c0514b498d',
+);
+
+$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersCreate(
+    account: '83742311',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -209,42 +389,6 @@ $body = new Components\CreateNifTransferV1Request(
 
 $response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersCreate(
     account: '86018095',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.nif_transfers.create" method="post" path="/accounts/{account}/nif-transfers" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateNifTransferV1Request(
-    companyId: '77b702f0-7a64-41e9-a51f-99c0514b498d',
-);
-
-$response = $sdk->account->nifTransfers->publicApiV1AccountNifTransfersCreate(
-    account: '60402971',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

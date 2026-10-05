@@ -17,6 +17,43 @@
 
 Clock the start of an employee’s workday, opening a new work span. `employee_id` (UUID v7) and `source` (`web`/`mobile`) are required; `occurred_at` defaults to the server time. Valid only when the employee is not already clocked in; an invalid transition returns 422 in Spanish. `occurred_at` must fall within the employee’s employment period (from `hire_date` to `termination_date`, both inclusive, compared on the calendar date of `occurred_at` in its own UTC offset); otherwise it returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` (param `occurred_at`) and a Spanish message naming the hire or termination date, and nothing is written. Pausing, resuming and clocking out of a span that is already open are never blocked by this rule. Returns 201 with the created `clock_in` entry.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/companies/{company}/time-entries/clock-in" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '61a10e53-764d-4d06-a61a-ea598eac5c21',
+    source: Components\ClockActionRequestSource::Mobile,
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
+    company: 'Cartwright LLC',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: clock_in
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/companies/{company}/time-entries/clock-in" example="clock_in" -->
@@ -56,9 +93,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/companies/{company}/time-entries/clock-in" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/companies/{company}/time-entries/clock-in" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -77,8 +114,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '10e53764-dd06-461a-aea5-98eac5c21990',
-    source: Components\ClockActionRequestSource::Web,
+    employeeId: '61a10e53-764d-4d06-a61a-ea598eac5c21',
+    source: Components\ClockActionRequestSource::Mobile,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
@@ -114,49 +151,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '10e53764-dd06-461a-aea5-98eac5c21990',
-    source: Components\ClockActionRequestSource::Web,
+    employeeId: '61a10e53-764d-4d06-a61a-ea598eac5c21',
+    source: Components\ClockActionRequestSource::Mobile,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
-    company: 'Stracke, Farrell and Grady',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/companies/{company}/time-entries/clock-in" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '10e53764-dd06-461a-aea5-98eac5c21990',
-    source: Components\ClockActionRequestSource::Web,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
-    company: 'Cartwright LLC',
+    company: 'Farrell Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -188,49 +188,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '10e53764-dd06-461a-aea5-98eac5c21990',
-    source: Components\ClockActionRequestSource::Web,
+    employeeId: '61a10e53-764d-4d06-a61a-ea598eac5c21',
+    source: Components\ClockActionRequestSource::Mobile,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
-    company: 'Rau - Crona',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_in" method="post" path="/companies/{company}/time-entries/clock-in" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '10e53764-dd06-461a-aea5-98eac5c21990',
-    source: Components\ClockActionRequestSource::Web,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesClockIn(
-    company: 'Farrell Inc',
+    company: 'Bartell - Walter',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -267,6 +230,43 @@ if ($response->object !== null) {
 
 Clock the end of the employee’s current work span (from `working` or `paused`). `employee_id` (UUID v7) and `source` are required. Valid only when a span is open; an invalid transition returns 422 in Spanish. Returns 201 with the created `clock_out` entry.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/companies/{company}/time-entries/clock-out" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '56e7c7af-d389-4ddc-afc5-42b03da5d4b7',
+    source: Components\ClockActionRequestSource::Web,
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesClockOut(
+    company: 'Kautzer and Sons',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: clock_out
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/companies/{company}/time-entries/clock-out" example="clock_out" -->
@@ -306,9 +306,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/companies/{company}/time-entries/clock-out" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/companies/{company}/time-entries/clock-out" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -327,7 +327,7 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '7c7afd38-9ddc-4fc5-a42b-03da5d4b7813',
+    employeeId: '56e7c7af-d389-4ddc-afc5-42b03da5d4b7',
     source: Components\ClockActionRequestSource::Web,
 );
 
@@ -364,49 +364,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '7c7afd38-9ddc-4fc5-a42b-03da5d4b7813',
+    employeeId: '56e7c7af-d389-4ddc-afc5-42b03da5d4b7',
     source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesClockOut(
-    company: 'Goodwin Group',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/companies/{company}/time-entries/clock-out" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '7c7afd38-9ddc-4fc5-a42b-03da5d4b7813',
-    source: Components\ClockActionRequestSource::Web,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesClockOut(
-    company: 'Kautzer and Sons',
+    company: 'Wintheiser, Stracke and Effertz',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -438,49 +401,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '7c7afd38-9ddc-4fc5-a42b-03da5d4b7813',
+    employeeId: '56e7c7af-d389-4ddc-afc5-42b03da5d4b7',
     source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesClockOut(
-    company: 'Davis Inc',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.clock_out" method="post" path="/companies/{company}/time-entries/clock-out" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '7c7afd38-9ddc-4fc5-a42b-03da5d4b7813',
-    source: Components\ClockActionRequestSource::Web,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesClockOut(
-    company: 'Wintheiser, Stracke and Effertz',
+    company: 'Rowe Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -541,7 +467,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesCurrent(
     company: 'Hettinger - Romaguera',
-    employeeId: '305bce43-9404-4ec3-933d-3e82ebdc670e',
+    employeeId: '35c305bc-e439-4404-9ec3-33d3e82ebdc6',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
@@ -632,9 +558,9 @@ if ($response->paginatedList !== null) {
 
 Start a pause in the employee’s current work span. `employee_id` (UUID v7) and `source` are required. Valid only when the employee is `working`; an invalid transition returns 422 in Spanish. Returns 201 with the created `pause_start` entry.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/companies/{company}/time-entries/pause" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/companies/{company}/time-entries/pause" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -653,8 +579,45 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '424afd66-71c8-42dc-a13d-707ef870ab59',
-    source: Components\ClockActionRequestSource::Mobile,
+    employeeId: '561424af-d667-41c8-a2dc-13d707ef870a',
+    source: Components\ClockActionRequestSource::Web,
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
+    company: 'Jerde Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/companies/{company}/time-entries/pause" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '561424af-d667-41c8-a2dc-13d707ef870a',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
@@ -690,12 +653,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '424afd66-71c8-42dc-a13d-707ef870ab59',
-    source: Components\ClockActionRequestSource::Mobile,
+    employeeId: '561424af-d667-41c8-a2dc-13d707ef870a',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
-    company: 'Durgan Group',
+    company: 'White, Stamm and Huel',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -745,43 +708,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/companies/{company}/time-entries/pause" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '424afd66-71c8-42dc-a13d-707ef870ab59',
-    source: Components\ClockActionRequestSource::Mobile,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
-    company: 'Jerde Group',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/companies/{company}/time-entries/pause" example="success" -->
@@ -803,49 +729,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '424afd66-71c8-42dc-a13d-707ef870ab59',
-    source: Components\ClockActionRequestSource::Mobile,
+    employeeId: '561424af-d667-41c8-a2dc-13d707ef870a',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
-    company: 'Oberbrunner - Grady',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.pause" method="post" path="/companies/{company}/time-entries/pause" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '424afd66-71c8-42dc-a13d-707ef870ab59',
-    source: Components\ClockActionRequestSource::Mobile,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesPause(
-    company: 'White, Stamm and Huel',
+    company: 'Crooks - Gerlach',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -882,9 +771,9 @@ if ($response->object !== null) {
 
 Record a past work span for an employee (a retroactive manual entry). `employee_id` (UUID v7), `started_at`, `ended_at` and a `reason` are required; optional `pauses` add pause intervals. The entries are stored with `is_retroactive: true` and `source: manual`, and one audit log entry is written. `ended_at` before `started_at`, or a missing reason, returns 422 in Spanish. A span that starts or ends outside the employee’s employment period (before `hire_date` or after `termination_date`) returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` and writes nothing. Returns 201 with the created span’s `clock_out` entry.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.manual" method="post" path="/companies/{company}/time-entries/manual" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.manual" method="post" path="/companies/{company}/time-entries/manual" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -904,9 +793,49 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\RecordManualTimeEntryRequest(
-    employeeId: '0fb77502-b170-4c8a-a295-6b25d7cf864f',
-    startedAt: Utils\Utils::parseDateTime('2026-04-07T00:34:14.801Z'),
-    endedAt: Utils\Utils::parseDateTime('2024-03-30T00:41:13.880Z'),
+    employeeId: 'b3370fb7-7502-4b17-a0c8-a2956b25d7cf',
+    startedAt: Utils\Utils::parseDateTime('2025-03-12T14:48:37.243Z'),
+    endedAt: Utils\Utils::parseDateTime('2024-11-28T12:45:16.786Z'),
+    reason: '<value>',
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesManual(
+    company: 'Durgan, Feeney and Kutch',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.manual" method="post" path="/companies/{company}/time-entries/manual" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\RecordManualTimeEntryRequest(
+    employeeId: 'b3370fb7-7502-4b17-a0c8-a2956b25d7cf',
+    startedAt: Utils\Utils::parseDateTime('2025-03-12T14:48:37.243Z'),
+    endedAt: Utils\Utils::parseDateTime('2024-11-28T12:45:16.786Z'),
     reason: '<value>',
 );
 
@@ -990,54 +919,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\RecordManualTimeEntryRequest(
-    employeeId: '0fb77502-b170-4c8a-a295-6b25d7cf864f',
-    startedAt: Utils\Utils::parseDateTime('2026-04-07T00:34:14.801Z'),
-    endedAt: Utils\Utils::parseDateTime('2024-03-30T00:41:13.880Z'),
+    employeeId: 'b3370fb7-7502-4b17-a0c8-a2956b25d7cf',
+    startedAt: Utils\Utils::parseDateTime('2025-03-12T14:48:37.243Z'),
+    endedAt: Utils\Utils::parseDateTime('2024-11-28T12:45:16.786Z'),
     reason: '<value>',
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesManual(
-    company: 'O\'Keefe - Thompson',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.manual" method="post" path="/companies/{company}/time-entries/manual" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Utils;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\RecordManualTimeEntryRequest(
-    employeeId: '0fb77502-b170-4c8a-a295-6b25d7cf864f',
-    startedAt: Utils\Utils::parseDateTime('2026-04-07T00:34:14.801Z'),
-    endedAt: Utils\Utils::parseDateTime('2024-03-30T00:41:13.880Z'),
-    reason: '<value>',
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesManual(
-    company: 'Durgan, Feeney and Kutch',
+    company: 'Kovacek Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1070,54 +959,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\RecordManualTimeEntryRequest(
-    employeeId: '0fb77502-b170-4c8a-a295-6b25d7cf864f',
-    startedAt: Utils\Utils::parseDateTime('2026-04-07T00:34:14.801Z'),
-    endedAt: Utils\Utils::parseDateTime('2024-03-30T00:41:13.880Z'),
+    employeeId: 'b3370fb7-7502-4b17-a0c8-a2956b25d7cf',
+    startedAt: Utils\Utils::parseDateTime('2025-03-12T14:48:37.243Z'),
+    endedAt: Utils\Utils::parseDateTime('2024-11-28T12:45:16.786Z'),
     reason: '<value>',
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesManual(
-    company: 'Kuphal - Dickens',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.manual" method="post" path="/companies/{company}/time-entries/manual" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Utils;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\RecordManualTimeEntryRequest(
-    employeeId: '0fb77502-b170-4c8a-a295-6b25d7cf864f',
-    startedAt: Utils\Utils::parseDateTime('2026-04-07T00:34:14.801Z'),
-    endedAt: Utils\Utils::parseDateTime('2024-03-30T00:41:13.880Z'),
-    reason: '<value>',
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesManual(
-    company: 'Kovacek Inc',
+    company: 'West - Prosacco',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1154,9 +1003,9 @@ if ($response->object !== null) {
 
 Resume the employee’s workday after a pause. `employee_id` (UUID v7) and `source` are required. Valid only when the employee is `paused`; an invalid transition returns 422 in Spanish. Returns 201 with the created `pause_end` entry.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/companies/{company}/time-entries/resume" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/companies/{company}/time-entries/resume" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1175,8 +1024,45 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '22d745d8-ff65-4c96-8a6e-f4b53d041a1c',
-    source: Components\ClockActionRequestSource::Mobile,
+    employeeId: '53622d74-5d8f-4f65-ac96-a6ef4b53d041',
+    source: Components\ClockActionRequestSource::Web,
+);
+
+$response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
+    company: 'Dicki Inc',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/companies/{company}/time-entries/resume" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ClockActionRequest(
+    employeeId: '53622d74-5d8f-4f65-ac96-a6ef4b53d041',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
@@ -1212,12 +1098,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '22d745d8-ff65-4c96-8a6e-f4b53d041a1c',
-    source: Components\ClockActionRequestSource::Mobile,
+    employeeId: '53622d74-5d8f-4f65-ac96-a6ef4b53d041',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
-    company: 'Boyle - Schumm',
+    company: 'Funk Inc',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1267,43 +1153,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/companies/{company}/time-entries/resume" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '22d745d8-ff65-4c96-8a6e-f4b53d041a1c',
-    source: Components\ClockActionRequestSource::Mobile,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
-    company: 'Dicki Inc',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/companies/{company}/time-entries/resume" example="success" -->
@@ -1325,49 +1174,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\ClockActionRequest(
-    employeeId: '22d745d8-ff65-4c96-8a6e-f4b53d041a1c',
-    source: Components\ClockActionRequestSource::Mobile,
+    employeeId: '53622d74-5d8f-4f65-ac96-a6ef4b53d041',
+    source: Components\ClockActionRequestSource::Web,
 );
 
 $response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
-    company: 'Macejkovic, Cummerata and Monahan',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_entries.resume" method="post" path="/companies/{company}/time-entries/resume" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\ClockActionRequest(
-    employeeId: '22d745d8-ff65-4c96-8a6e-f4b53d041a1c',
-    source: Components\ClockActionRequestSource::Mobile,
-);
-
-$response = $sdk->timeEntries->publicApiV1TimeEntriesResume(
-    company: 'Funk Inc',
+    company: 'Crona - Schuster',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')

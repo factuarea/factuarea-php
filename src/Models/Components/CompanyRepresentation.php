@@ -13,7 +13,7 @@ use Brick\DateTime\LocalDate;
 class CompanyRepresentation
 {
     /**
-     * UUID (v7) of the representation.
+     * UUID v7 of the representation.
      *
      * @var string $id
      */

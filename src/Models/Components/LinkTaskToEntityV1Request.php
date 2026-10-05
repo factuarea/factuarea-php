@@ -21,7 +21,7 @@ class LinkTaskToEntityV1Request
     public LinkTaskToEntityV1RequestEntityType $entityType;
 
     /**
-     * Public `id` (UUID) of the company entity.
+     * Public identifier (UUID v7) of the company entity.
      *
      * @var string $entityId
      */

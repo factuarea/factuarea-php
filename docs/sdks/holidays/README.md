@@ -94,8 +94,8 @@ $sdk = Sdk\Factuarea::builder()
 
 $response = $sdk->holidays->publicApiV1HolidaysResolve(
     company: 'Corwin LLC',
-    ccaa: Operations\Ccaa::Md,
-    year: 478063,
+    ccaa: Operations\Ccaa::Cl,
+    year: 150372,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );

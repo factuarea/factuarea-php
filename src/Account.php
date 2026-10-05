@@ -23,6 +23,8 @@ class Account
 
     public Members $members;
 
+    public ConnectReturnDomains $connectReturnDomains;
+
     public Invitations $invitations;
 
     public Webhooks $webhooks;
@@ -43,6 +45,7 @@ class Account
         $this->sdkConfiguration = $sdkConfig;
         $this->nifTransfers = new NifTransfers($this->sdkConfiguration);
         $this->members = new Members($this->sdkConfiguration);
+        $this->connectReturnDomains = new ConnectReturnDomains($this->sdkConfiguration);
         $this->invitations = new Invitations($this->sdkConfiguration);
         $this->webhooks = new Webhooks($this->sdkConfiguration);
         $this->apiKeys = new ApiKeys($this->sdkConfiguration);

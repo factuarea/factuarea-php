@@ -57,9 +57,7 @@ class CreateProductVariantRequest
     public ?string $barcode = null;
 
     /**
-     * Own price of the variant PER BASE UNIT. `null` = the variant does not
-     *
-     * change the price of the product.
+     * Own price of the variant PER BASE UNIT; `null` keeps the price of the product.
      *
      * @var ?float $basePriceOverride
      */
@@ -77,7 +75,7 @@ class CreateProductVariantRequest
     public ?float $unitCostOverride = null;
 
     /**
-     * Alias of `base_price_override`.
+     * Published alias of `base_price_override`.
      *
      * @var ?float $priceOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -87,7 +85,7 @@ class CreateProductVariantRequest
     public ?float $priceOverride = null;
 
     /**
-     * Alias of `unit_cost_override`.
+     * Published alias of `unit_cost_override`.
      *
      * @var ?float $costOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.

@@ -17,6 +17,52 @@
 
 Register a new employee for the authenticated company (resolved from the API key, never from the payload). `first_name`, `last_name`, `email`, `employment_type` (`full_time`/`part_time`), `contract_hours`, `hire_date` and `ccaa` are required; `tax_id` and `job_title` are optional. Returns the created employee with its generated `id` (UUID v7). Active employees count towards the workforce module seat billing.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employees.create" method="post" path="/companies/{company}/employees" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateEmployeeRequest(
+    firstName: 'Keira',
+    lastName: 'Yundt',
+    email: 'Nels50@yahoo.com',
+    employmentType: Components\CreateEmployeeRequestEmploymentType::PartTime,
+    contractHours: 5105.19,
+    hireDate: LocalDate::parse('2024-02-11'),
+    ccaa: Components\CreateEmployeeRequestCcaa::Ce,
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+);
+
+$response = $sdk->employees->publicApiV1EmployeesCreate(
+    company: 'Dare and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: employee
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.employees.create" method="post" path="/companies/{company}/employees" example="employee" -->
@@ -65,9 +111,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.create" method="post" path="/companies/{company}/employees" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.employees.create" method="post" path="/companies/{company}/employees" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -86,13 +132,13 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateEmployeeRequest(
-    firstName: 'Jenifer',
-    lastName: 'Swaniawski',
-    email: 'Deven_Wintheiser51@yahoo.com',
+    firstName: 'Keira',
+    lastName: 'Yundt',
+    email: 'Nels50@yahoo.com',
     employmentType: Components\CreateEmployeeRequestEmploymentType::PartTime,
-    contractHours: 7823.57,
-    hireDate: LocalDate::parse('2024-08-17'),
-    ccaa: Components\CreateEmployeeRequestCcaa::Ct,
+    contractHours: 5105.19,
+    hireDate: LocalDate::parse('2024-02-11'),
+    ccaa: Components\CreateEmployeeRequestCcaa::Ce,
     metadata: [
         'erp_code' => 'IVA-GEN',
         'ledger_account' => '477000',
@@ -132,13 +178,13 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateEmployeeRequest(
-    firstName: 'Jenifer',
-    lastName: 'Swaniawski',
-    email: 'Deven_Wintheiser51@yahoo.com',
+    firstName: 'Keira',
+    lastName: 'Yundt',
+    email: 'Nels50@yahoo.com',
     employmentType: Components\CreateEmployeeRequestEmploymentType::PartTime,
-    contractHours: 7823.57,
-    hireDate: LocalDate::parse('2024-08-17'),
-    ccaa: Components\CreateEmployeeRequestCcaa::Ct,
+    contractHours: 5105.19,
+    hireDate: LocalDate::parse('2024-02-11'),
+    ccaa: Components\CreateEmployeeRequestCcaa::Ce,
     metadata: [
         'erp_code' => 'IVA-GEN',
         'ledger_account' => '477000',
@@ -146,53 +192,7 @@ $body = new Components\CreateEmployeeRequest(
 );
 
 $response = $sdk->employees->publicApiV1EmployeesCreate(
-    company: 'Cormier - Quitzon',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.create" method="post" path="/companies/{company}/employees" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateEmployeeRequest(
-    firstName: 'Jenifer',
-    lastName: 'Swaniawski',
-    email: 'Deven_Wintheiser51@yahoo.com',
-    employmentType: Components\CreateEmployeeRequestEmploymentType::PartTime,
-    contractHours: 7823.57,
-    hireDate: LocalDate::parse('2024-08-17'),
-    ccaa: Components\CreateEmployeeRequestCcaa::Ct,
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->employees->publicApiV1EmployeesCreate(
-    company: 'Dare and Sons',
+    company: 'Gibson LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -224,13 +224,13 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateEmployeeRequest(
-    firstName: 'Jenifer',
-    lastName: 'Swaniawski',
-    email: 'Deven_Wintheiser51@yahoo.com',
+    firstName: 'Keira',
+    lastName: 'Yundt',
+    email: 'Nels50@yahoo.com',
     employmentType: Components\CreateEmployeeRequestEmploymentType::PartTime,
-    contractHours: 7823.57,
-    hireDate: LocalDate::parse('2024-08-17'),
-    ccaa: Components\CreateEmployeeRequestCcaa::Ct,
+    contractHours: 5105.19,
+    hireDate: LocalDate::parse('2024-02-11'),
+    ccaa: Components\CreateEmployeeRequestCcaa::Ce,
     metadata: [
         'erp_code' => 'IVA-GEN',
         'ledger_account' => '477000',
@@ -238,53 +238,7 @@ $body = new Components\CreateEmployeeRequest(
 );
 
 $response = $sdk->employees->publicApiV1EmployeesCreate(
-    company: 'Franecki, Lindgren and Casper',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.create" method="post" path="/companies/{company}/employees" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateEmployeeRequest(
-    firstName: 'Jenifer',
-    lastName: 'Swaniawski',
-    email: 'Deven_Wintheiser51@yahoo.com',
-    employmentType: Components\CreateEmployeeRequestEmploymentType::PartTime,
-    contractHours: 7823.57,
-    hireDate: LocalDate::parse('2024-08-17'),
-    ccaa: Components\CreateEmployeeRequestCcaa::Ct,
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->employees->publicApiV1EmployeesCreate(
-    company: 'Gibson LLC',
+    company: 'Rohan and Sons',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -476,9 +430,44 @@ if ($response->object !== null) {
 
 Look up an employee by their `external_id` (sent in the JSON body), the integration key that maps them to a record in a third-party system (ERP/CRM/HR). Distinct from the fiscal `tax_id`. Returns the matching employee or 404 if no employee uses that external_id within your company.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.find_by_external_id" method="post" path="/companies/{company}/employees/find-by-external-id" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.employees.find_by_external_id" method="post" path="/companies/{company}/employees/find-by-external-id" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindEmployeeByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->employees->publicApiV1EmployeesFindByExternalId(
+    company: 'Koch Group',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employees.find_by_external_id" method="post" path="/companies/{company}/employees/find-by-external-id" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -546,41 +535,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.find_by_external_id" method="post" path="/companies/{company}/employees/find-by-external-id" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindEmployeeByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->employees->publicApiV1EmployeesFindByExternalId(
-    company: 'Koch Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.employees.find_by_external_id" method="post" path="/companies/{company}/employees/find-by-external-id" example="success" -->
@@ -607,41 +561,6 @@ $body = new Components\FindEmployeeByExternalIdRequest(
 
 $response = $sdk->employees->publicApiV1EmployeesFindByExternalId(
     company: 'McLaughlin - Nader',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.find_by_external_id" method="post" path="/companies/{company}/employees/find-by-external-id" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindEmployeeByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->employees->publicApiV1EmployeesFindByExternalId(
-    company: 'Zboncak, Braun and Emard',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -850,6 +769,48 @@ if ($response->object !== null) {
 
 Update an employee. Partial update: only fields present in the payload are modified; omitted fields keep their value. `hire_date` (`Y-m-d`) can be corrected: it must not be later than the employee’s `termination_date` (422 `parameter_invalid_value`, subcode `invalid_hire_date`), and changing it keeps existing time entries and schedule assignments — entries left outside the new employment period stay in the ledger and are flagged with `is_outside_employment` in the time balances. Returns the updated employee.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1EmployeesUpdateRequest(
+    company: 'Kuvalis - Stark',
+    employee: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateEmployeeRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->employees->publicApiV1EmployeesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: employee_update
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="employee_update" -->
@@ -895,9 +856,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -979,48 +940,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1EmployeesUpdateRequest(
-    company: 'Kuvalis - Stark',
-    employee: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateEmployeeRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->employees->publicApiV1EmployeesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="success" -->
@@ -1044,48 +963,6 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1EmployeesUpdateRequest(
     company: 'Franey LLC',
-    employee: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateEmployeeRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->employees->publicApiV1EmployeesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.employees.update" method="patch" path="/companies/{company}/employees/{employee}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1EmployeesUpdateRequest(
-    company: 'Kreiger, Schuppe and Emmerich',
     employee: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

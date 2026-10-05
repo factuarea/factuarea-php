@@ -79,6 +79,45 @@ if ($response->object !== null) {
 
 Assign the absence policy to one or more employees. `employee_ids` (a non-empty list of UUID v7, each belonging to your company) is required; an unknown employee returns 422. Returns the policy with its updated assigned-employee count.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.assign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/assign" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsencePoliciesAssignRequest(
+    company: 'Nicolas - Gerlach',
+    absencePolicy: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignAbsencePolicyRequest(
+        employeeIds: [],
+    ),
+);
+
+$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: assign
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.assign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/assign" example="assign" -->
@@ -121,9 +160,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.assign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/assign" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.assign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/assign" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -148,10 +187,7 @@ $request = new Operations\PublicApiV1AbsencePoliciesAssignRequest(
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AssignAbsencePolicyRequest(
-        employeeIds: [
-            '8ecad96a-5de3-4dd1-a62e-31401d5cd955',
-            'a06d49e2-884d-43c4-b8bc-2aff2608c042',
-        ],
+        employeeIds: [],
     ),
 );
 
@@ -185,57 +221,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AbsencePoliciesAssignRequest(
-    company: 'Muller, Douglas and Greenholt',
+    company: 'Okuneva, Smith and Marvin',
     absencePolicy: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AssignAbsencePolicyRequest(
-        employeeIds: [
-            '8ecad96a-5de3-4dd1-a62e-31401d5cd955',
-            'a06d49e2-884d-43c4-b8bc-2aff2608c042',
-        ],
-    ),
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesAssign(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.assign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/assign" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsencePoliciesAssignRequest(
-    company: 'Nicolas - Gerlach',
-    absencePolicy: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignAbsencePolicyRequest(
-        employeeIds: [
-            '8ecad96a-5de3-4dd1-a62e-31401d5cd955',
-            'a06d49e2-884d-43c4-b8bc-2aff2608c042',
-        ],
+        employeeIds: [],
     ),
 );
 
@@ -269,57 +260,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AbsencePoliciesAssignRequest(
-    company: 'Gerlach - DuBuque',
+    company: 'Little and Sons',
     absencePolicy: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AssignAbsencePolicyRequest(
-        employeeIds: [
-            '8ecad96a-5de3-4dd1-a62e-31401d5cd955',
-            'a06d49e2-884d-43c4-b8bc-2aff2608c042',
-        ],
-    ),
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesAssign(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.assign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/assign" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsencePoliciesAssignRequest(
-    company: 'Okuneva, Smith and Marvin',
-    absencePolicy: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignAbsencePolicyRequest(
-        employeeIds: [
-            '8ecad96a-5de3-4dd1-a62e-31401d5cd955',
-            'a06d49e2-884d-43c4-b8bc-2aff2608c042',
-        ],
+        employeeIds: [],
     ),
 );
 
@@ -354,6 +300,45 @@ if ($response->object !== null) {
 
 Configure how much unused balance carries over at year-end for this absence policy. `carryover_type` (`none`/`capped`/`unlimited`) is required; `carryover_max_days` is required and positive only when `carryover_type` is `capped`. Optional `carryover_expiry_month` (1..12) and `carryover_expiry_day` set when the carried-over balance expires. A policy belonging to another company returns 404 `absence_policy_not_found` (anti-enumeration). Returns the updated policy.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.carryover" method="post" path="/companies/{company}/absence-policies/{absence_policy}/carryover" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsencePoliciesCarryoverRequest(
+    company: 'Corkery Group',
+    absencePolicy: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConfigureAbsencePolicyCarryoverRequest(
+        carryoverType: Components\CarryoverType::Capped,
+    ),
+);
+
+$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCarryover(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: carryover
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.carryover" method="post" path="/companies/{company}/absence-policies/{absence_policy}/carryover" example="carryover" -->
@@ -396,9 +381,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.carryover" method="post" path="/companies/{company}/absence-policies/{absence_policy}/carryover" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.carryover" method="post" path="/companies/{company}/absence-policies/{absence_policy}/carryover" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -423,7 +408,7 @@ $request = new Operations\PublicApiV1AbsencePoliciesCarryoverRequest(
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConfigureAbsencePolicyCarryoverRequest(
-        carryoverType: Components\CarryoverType::None,
+        carryoverType: Components\CarryoverType::Capped,
     ),
 );
 
@@ -457,51 +442,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AbsencePoliciesCarryoverRequest(
-    company: 'Dietrich LLC',
+    company: 'Hilll Group',
     absencePolicy: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConfigureAbsencePolicyCarryoverRequest(
-        carryoverType: Components\CarryoverType::None,
-    ),
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCarryover(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.carryover" method="post" path="/companies/{company}/absence-policies/{absence_policy}/carryover" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsencePoliciesCarryoverRequest(
-    company: 'Corkery Group',
-    absencePolicy: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConfigureAbsencePolicyCarryoverRequest(
-        carryoverType: Components\CarryoverType::None,
+        carryoverType: Components\CarryoverType::Capped,
     ),
 );
 
@@ -535,51 +481,12 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AbsencePoliciesCarryoverRequest(
-    company: 'Goyette - O\'Conner',
+    company: 'Casper - Goyette',
     absencePolicy: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConfigureAbsencePolicyCarryoverRequest(
-        carryoverType: Components\CarryoverType::None,
-    ),
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCarryover(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.carryover" method="post" path="/companies/{company}/absence-policies/{absence_policy}/carryover" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsencePoliciesCarryoverRequest(
-    company: 'Hilll Group',
-    absencePolicy: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConfigureAbsencePolicyCarryoverRequest(
-        carryoverType: Components\CarryoverType::None,
+        carryoverType: Components\CarryoverType::Capped,
     ),
 );
 
@@ -656,9 +563,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.create" method="post" path="/companies/{company}/absence-policies" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.create" method="post" path="/companies/{company}/absence-policies" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -678,9 +585,52 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\CreateAbsencePolicyRequest(
     name: '<value>',
-    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Unlimited,
+    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Limited,
     accrualMethod: Components\CreateAbsencePolicyRequestAccrualMethod::Annual,
-    absenceTypeIds: [],
+    absenceTypeIds: [
+        '853a9e86-d1f8-4eb7-820c-55511166330c',
+    ],
+);
+
+$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCreate(
+    company: 'Kling - Klein',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.create" method="post" path="/companies/{company}/absence-policies" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateAbsencePolicyRequest(
+    name: '<value>',
+    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Limited,
+    accrualMethod: Components\CreateAbsencePolicyRequestAccrualMethod::Annual,
+    absenceTypeIds: [
+        '853a9e86-d1f8-4eb7-820c-55511166330c',
+    ],
 );
 
 $response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCreate(
@@ -717,52 +667,15 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\CreateAbsencePolicyRequest(
     name: '<value>',
-    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Unlimited,
+    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Limited,
     accrualMethod: Components\CreateAbsencePolicyRequestAccrualMethod::Annual,
-    absenceTypeIds: [],
+    absenceTypeIds: [
+        '853a9e86-d1f8-4eb7-820c-55511166330c',
+    ],
 );
 
 $response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCreate(
-    company: 'Jerde and Sons',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.create" method="post" path="/companies/{company}/absence-policies" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAbsencePolicyRequest(
-    name: '<value>',
-    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Unlimited,
-    accrualMethod: Components\CreateAbsencePolicyRequestAccrualMethod::Annual,
-    absenceTypeIds: [],
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCreate(
-    company: 'Kling - Klein',
+    company: 'Marquardt and Sons',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -795,52 +708,15 @@ $sdk = Sdk\Factuarea::builder()
 
 $body = new Components\CreateAbsencePolicyRequest(
     name: '<value>',
-    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Unlimited,
+    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Limited,
     accrualMethod: Components\CreateAbsencePolicyRequestAccrualMethod::Annual,
-    absenceTypeIds: [],
+    absenceTypeIds: [
+        '853a9e86-d1f8-4eb7-820c-55511166330c',
+    ],
 );
 
 $response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCreate(
-    company: 'Marquardt and Sons',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.create" method="post" path="/companies/{company}/absence-policies" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAbsencePolicyRequest(
-    name: '<value>',
-    allowanceType: Components\CreateAbsencePolicyRequestAllowanceType::Unlimited,
-    accrualMethod: Components\CreateAbsencePolicyRequestAccrualMethod::Annual,
-    absenceTypeIds: [],
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesCreate(
-    company: 'Marquardt and Sons',
+    company: 'Hayes Group',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1211,9 +1087,50 @@ if ($response->object !== null) {
 
 Remove the assignment of the absence policy from one or more employees. `employee_ids` (a non-empty list of UUID v7) is required; removing an assignment that does not exist is a no-op. Returns the policy with its updated assigned-employee count.
 
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.unassign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/unassign" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.unassign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/unassign" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
+    company: 'Langosh - Nienow',
+    absencePolicy: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UnassignAbsencePolicyRequest(
+        employeeIds: [
+            '8a04451b-8908-493d-8804-bb272083a6b6',
+        ],
+    ),
+);
+
+$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesUnassign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.unassign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/unassign" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -1238,7 +1155,9 @@ $request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UnassignAbsencePolicyRequest(
-        employeeIds: [],
+        employeeIds: [
+            '8a04451b-8908-493d-8804-bb272083a6b6',
+        ],
     ),
 );
 
@@ -1272,51 +1191,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
-    company: 'Raynor - Lubowitz',
+    company: 'Carroll LLC',
     absencePolicy: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UnassignAbsencePolicyRequest(
-        employeeIds: [],
-    ),
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesUnassign(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.unassign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/unassign" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
-    company: 'Langosh - Nienow',
-    absencePolicy: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UnassignAbsencePolicyRequest(
-        employeeIds: [],
+        employeeIds: [
+            '8a04451b-8908-493d-8804-bb272083a6b6',
+        ],
     ),
 );
 
@@ -1350,12 +1232,14 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
-    company: 'Hagenes - Herman',
+    company: 'Hackett - Hagenes',
     absencePolicy: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UnassignAbsencePolicyRequest(
-        employeeIds: [],
+        employeeIds: [
+            '8a04451b-8908-493d-8804-bb272083a6b6',
+        ],
     ),
 );
 
@@ -1397,45 +1281,6 @@ $request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
         employeeIds: [
             '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b02',
         ],
-    ),
-);
-
-$response = $sdk->absencePolicies->publicApiV1AbsencePoliciesUnassign(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-policies.unassign" method="post" path="/companies/{company}/absence-policies/{absence_policy}/unassign" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AbsencePoliciesUnassignRequest(
-    company: 'Carroll LLC',
-    absencePolicy: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UnassignAbsencePolicyRequest(
-        employeeIds: [],
     ),
 );
 

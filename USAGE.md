@@ -19,7 +19,7 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->account->publicApiV1AccountBilling(
-    company: 'Stroman, Welch and Rogahn',
+    company: 'Gerlach - Schroeder',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );

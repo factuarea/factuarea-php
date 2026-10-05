@@ -14,48 +14,6 @@
 
 Create a tenant-scoped supplier offer for a product or one of its variants.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    company: 'O\'Kon - Zulauf',
-    product: 'Sleek Plastic Table',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateSupplierProductOfferRequest(
-        supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
-        purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
-        conversionFactor: 9830.52,
-        availability: Components\CreateSupplierProductOfferRequestAvailability::StoreDependent,
-    ),
-);
-
-$response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="missing_api_key" -->
@@ -78,50 +36,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    company: 'Braun Inc',
-    product: 'Elegant Rubber Hat',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateSupplierProductOfferRequest(
-        supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
-        purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
-        conversionFactor: 9830.52,
-        availability: Components\CreateSupplierProductOfferRequestAvailability::StoreDependent,
-    ),
-);
-
-$response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    company: 'Farrell Inc',
-    product: 'Fantastic Metal Fish',
+    company: 'Lind - Jacobi',
+    product: 'Incredible Concrete Cheese',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateSupplierProductOfferRequest(
@@ -162,50 +78,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    company: 'Friesen - Casper',
-    product: 'Incredible Concrete Cheese',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateSupplierProductOfferRequest(
-        supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
-        purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
-        conversionFactor: 9830.52,
-        availability: Components\CreateSupplierProductOfferRequestAvailability::StoreDependent,
-    ),
-);
-
-$response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
-    company: 'Hodkiewicz and Sons',
-    product: 'Practical Fresh Towels',
+    company: 'Farrell Inc',
+    product: 'Elegant Fresh Bike',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateSupplierProductOfferRequest(
@@ -270,7 +144,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersListRequest(
     company: 'Legros, Shields and Bailey',
-    product: 'Rustic Granite Shoes',
+    product: 'Refined Metal Shoes',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 
@@ -328,7 +202,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersDeleteRequest(
     company: 'Pouros, Kulas and Kuvalis',
-    product: 'Rustic Wooden Table',
+    product: 'Rustic Rubber Hat',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -365,49 +239,6 @@ if ($response->statusCode === 200) {
 
 Update cost, unit conversion, availability or activation data of a supplier offer.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    company: 'Prohaska, Hagenes and Sanford',
-    product: 'Sleek Bronze Bike',
-    offer: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateSupplierProductOfferRequest(
-        supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
-        purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
-        conversionFactor: 6554.65,
-        availability: Components\UpdateSupplierProductOfferRequestAvailability::Seasonal,
-    ),
-);
-
-$response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="missing_api_key" -->
@@ -430,51 +261,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    company: 'Haag - Beer',
-    product: 'Unbranded Soft Towels',
-    offer: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateSupplierProductOfferRequest(
-        supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
-        purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
-        conversionFactor: 6554.65,
-        availability: Components\UpdateSupplierProductOfferRequestAvailability::Seasonal,
-    ),
-);
-
-$response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    company: 'Rosenbaum, Macejkovic and Wyman',
-    product: 'Small Soft Pizza',
+    company: 'Simonis, Nikolaus and Roob',
+    product: 'Generic Wooden Mouse',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -516,51 +304,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    company: 'Sanford LLC',
-    product: 'Generic Wooden Mouse',
-    offer: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateSupplierProductOfferRequest(
-        supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
-        purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
-        conversionFactor: 6554.65,
-        availability: Components\UpdateSupplierProductOfferRequestAvailability::Seasonal,
-    ),
-);
-
-$response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
-    company: 'Hartmann, Kohler and Lueilwitz',
-    product: 'Handmade Rubber Table',
+    company: 'Rosenbaum, Macejkovic and Wyman',
+    product: 'Intelligent Soft Salad',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -626,7 +371,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersPreferredRequest(
     company: 'Hayes - Purdy',
-    product: 'Electronic Bronze Table',
+    product: 'Ergonomic Frozen Salad',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),

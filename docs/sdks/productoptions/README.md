@@ -33,7 +33,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsOptionsListRequest(
     company: 'Mayer - Bosco',
-    product: 'Handmade Cotton Tuna',
+    product: 'Gorgeous Metal Bike',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 

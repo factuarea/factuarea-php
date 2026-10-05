@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Sort order: `received_at` (default is `-received_at`, newest first), `issue_date`, `total` or `status`; prefix it with `-` for descending. */
 enum PublicApiV1PurchaseScansListSort: string
 {
     case ReceivedAt = 'received_at';

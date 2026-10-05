@@ -132,6 +132,44 @@ if ($response->object !== null) {
 
 Invite a person by email to join the ACCOUNT with an account `role` (`admin` or `member`) and the required `grants` list (it may be empty; only a `member` carries grants, each one a tax ID of the account by its `company_id` UUID and a `level`). This is how a person who already exists on the platform joins an account. Set `send_email: false` to skip the email and deliver the link yourself. Returns 201 with the invitation and a `Location` header; only a copy-link invitation (`send_email: false`) carries its acceptance `secret` and `accept_url`, exactly once. With `send_email: true` the secret travels only in the email and both fields are `null`, so the invitee proves control of the mailbox. An idempotent replay returns them as `null`. Inviting an `admin` requires a credential scope that covers every tax ID of the account. Returns 400 `parameter_missing` when `grants` is absent, 422 `grants_only_for_member`, 422 `grant_company_not_in_account`, and 422 `business_rule_violation` when a pending invitation already exists for that address, the person is already a member, a tax ID repeats or the account reached its plan user limit. The external advisor invitation is only available in the web app.
 
+### Example Usage: api_key_expired
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="api_key_expired" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\InviteAccountMemberV1Request(
+    email: 'Dudley_Bergstrom@yahoo.com',
+    role: Components\InviteAccountMemberV1RequestRole::Member,
+    grants: [],
+);
+
+$response = $sdk->account->invitations->publicApiV1AccountInvitationsCreate(
+    account: '51936395',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: api_key_revoked
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="api_key_revoked" -->
@@ -153,13 +191,13 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\InviteAccountMemberV1Request(
-    email: 'Jaylen94@gmail.com',
+    email: 'Dudley_Bergstrom@yahoo.com',
     role: Components\InviteAccountMemberV1RequestRole::Member,
     grants: [],
 );
 
 $response = $sdk->account->invitations->publicApiV1AccountInvitationsCreate(
-    account: '47122250',
+    account: '55498618',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -170,9 +208,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -208,9 +246,9 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: invalid_api_key
+### Example Usage: ip_not_allowed
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="invalid_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="ip_not_allowed" -->
 ```php
 declare(strict_types=1);
 
@@ -229,13 +267,13 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\InviteAccountMemberV1Request(
-    email: 'Jaylen94@gmail.com',
+    email: 'Dudley_Bergstrom@yahoo.com',
     role: Components\InviteAccountMemberV1RequestRole::Member,
     grants: [],
 );
 
 $response = $sdk->account->invitations->publicApiV1AccountInvitationsCreate(
-    account: '95277385',
+    account: '27738547',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -249,44 +287,6 @@ if ($response->object !== null) {
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="missing_api_key" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\InviteAccountMemberV1Request(
-    email: 'Jaylen94@gmail.com',
-    role: Components\InviteAccountMemberV1RequestRole::Member,
-    grants: [],
-);
-
-$response = $sdk->account->invitations->publicApiV1AccountInvitationsCreate(
-    account: '18519363',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="retired_active_profile_header" -->
 ```php
 declare(strict_types=1);
 
@@ -350,44 +350,6 @@ $body = new Components\InviteAccountMemberV1Request(
 
 $response = $sdk->account->invitations->publicApiV1AccountInvitationsCreate(
     account: '42040184',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.invitations.create" method="post" path="/accounts/{account}/invitations" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\InviteAccountMemberV1Request(
-    email: 'Dudley_Bergstrom@yahoo.com',
-    role: Components\InviteAccountMemberV1RequestRole::Member,
-    grants: [],
-);
-
-$response = $sdk->account->invitations->publicApiV1AccountInvitationsCreate(
-    account: '55498618',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

@@ -52,11 +52,11 @@ class Users
      *
      * List the members of your company (the people tasks can be assigned to), ordered by name, with their `id`, name, email, initials and avatar color. `q` filters by name or email. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1UsersListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1UsersListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1UsersListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1UsersList(?Operations\PublicApiV1UsersListRequest $request = null, ?Options $options = null): Operations\PublicApiV1UsersListResponse
+    public function publicApiV1UsersList(Operations\PublicApiV1UsersListRequest $request, ?Options $options = null): Operations\PublicApiV1UsersListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -84,7 +84,7 @@ class Users
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/users');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/users', Operations\PublicApiV1UsersListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -133,7 +133,7 @@ class Users
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,12 +171,12 @@ class Users
      *
      * Return the member who owns the API key in the company the call acts on. If the key holder is no longer a member of that company or of the company that owns the key, it returns 404 `route_not_found`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1UsersMeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1UsersMe(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1UsersMeResponse
+    public function publicApiV1UsersMe(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1UsersMeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -204,11 +204,11 @@ class Users
             ];
         }
         $request = new Operations\PublicApiV1UsersMeRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/users/me');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/users/me', Operations\PublicApiV1UsersMeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -254,7 +254,7 @@ class Users
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

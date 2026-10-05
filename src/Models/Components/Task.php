@@ -13,7 +13,7 @@ use Brick\DateTime\LocalDate;
 class Task
 {
     /**
-     * UUID (v7) of the task.
+     * UUID v7 of the task.
      *
      * @var string $id
      */

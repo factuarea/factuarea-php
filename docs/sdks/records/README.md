@@ -18,42 +18,6 @@
 
 Look up a VeriFactu record by the `aeat_csv` (Código Seguro de Verificación) returned by AEAT on acceptance, sent in the JSON body. Returns the matching record or 404 `verifactu_record_not_found`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
-    aeatCsv: 'A1B2C3D4E5F6G7H8',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
-    company: 'Goldner and Sons',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="missing_api_key" -->
@@ -81,42 +45,6 @@ $body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
     company: 'Leuschke Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
-    aeatCsv: 'A1B2C3D4E5F6G7H8',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
-    company: 'Bednar - Ruecker',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -162,42 +90,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
-    aeatCsv: 'A1B2C3D4E5F6G7H8',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
-    company: 'Leuschke Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -223,42 +115,6 @@ if ($response->object !== null) {
 
 Look up a VeriFactu record by its `huella` (the chained SHA-256 fingerprint sent in the JSON body). Returns the matching record or 404 `verifactu_record_not_found` if none exists within your company.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
-    huella: 'a7f392e180c6d45b3e9a21f067d48c5e913ab7260fe854d39ca871b2e6d04f35',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
-    company: 'Muller, Kuhic and Powlowski',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="missing_api_key" -->
@@ -286,42 +142,6 @@ $body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
     company: 'Powlowski, Rice and Anderson',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
-    huella: 'a7f392e180c6d45b3e9a21f067d48c5e913ab7260fe854d39ca871b2e6d04f35',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
-    company: 'Prohaska LLC',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -367,42 +187,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
-    huella: 'a7f392e180c6d45b3e9a21f067d48c5e913ab7260fe854d39ca871b2e6d04f35',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
-    company: 'Powlowski, Rice and Anderson',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -428,43 +212,6 @@ if ($response->object !== null) {
 
 Look up the VeriFactu record associated with a given invoice number (sent in the JSON body). Returns the matching record or 404 `verifactu_record_not_found` if the invoice has no record within your company.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody(
-    series: 'FAC-2026',
-    number: '00042',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
-    company: 'Hahn - Kertzmann',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="missing_api_key" -->
@@ -502,43 +249,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody(
-    series: 'FAC-2026',
-    number: '00042',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
-    company: 'Moore, Halvorson and Greenholt',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="success" -->
@@ -567,43 +277,6 @@ $body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
     company: 'Hahn - Kertzmann',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody(
-    series: 'FAC-2026',
-    number: '00042',
-);
-
-$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
-    company: 'Shields - Marquardt',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -761,11 +434,11 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1VerifactuRecordsRetryBlocked
 
-Reactivates ALL the blocked records of your company at once and schedules their remission batch. A record is blocked when it is in `error` with no automatic retry because something needs your action: no usable certificate, no current representation for the third-party remission mode, a presenter that AEAT has not enabled (`4112`/`3003`) or a client-side rejection (`is_blocked: true` and its `block_reason` on the record). Blocked records hold back the rest of the chain, so fix the cause first (upload the certificate, register the representation, change the mode) and then call this. It sends nothing by itself: the records go out inside the ordered batch of your company, respecting the AEAT flow control, and there is NO retry limit (art. 16.4 of Order HAC/1177/2024). Returns `202` with `data.reactivated`, how many records were reactivated (`0` when none was blocked). It is the bulk equivalent of `POST /v1/verifactu/records/{id}/retry`; `GET /v1/verifactu/stats` reports how many records are blocked in `blocked_incident_count`.
+Reactivates ALL the blocked records of your company at once and schedules their remission batch. A record is blocked when it is in `error` with no automatic retry because something needs your action: no usable certificate, no current representation for the third-party remission mode, a presenter that AEAT has not enabled (`4112`/`3003`) or a client-side rejection (`is_blocked: true` and its `block_reason` on the record). Blocked records hold back the rest of the chain, so fix the cause first (upload the certificate, register the representation, change the mode) and then call this. It sends nothing by itself: the records go out inside the ordered batch of your company, respecting the AEAT flow control, and there is NO retry limit (art. 16.4 of Order HAC/1177/2024). Returns `202` with `data.reactivated`, how many records were reactivated (`0` when none was blocked). It is the bulk equivalent of `POST /v1/companies/{company}/verifactu/records/{record}/retry`; `GET /v1/companies/{company}/verifactu/stats` reports how many records are blocked in `blocked_incident_count`.
 
 ### Example Usage: none_blocked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.retry_blocked" method="post" path="/verifactu/records/retry-blocked" example="none_blocked" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.retry_blocked" method="post" path="/companies/{company}/verifactu/records/retry-blocked" example="none_blocked" -->
 ```php
 declare(strict_types=1);
 
@@ -786,9 +459,9 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsRetryBlocked(
+    company: 'Schmeler LLC',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -798,7 +471,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.retry_blocked" method="post" path="/verifactu/records/retry-blocked" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.retry_blocked" method="post" path="/companies/{company}/verifactu/records/retry-blocked" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -819,9 +492,9 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsRetryBlocked(
+    company: 'Lehner - Schmeler',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -834,9 +507,9 @@ if ($response->object !== null) {
 
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                      | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).                                                                                                                                                                                                  | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -844,15 +517,15 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 409, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1VerifactuRecordsRetry
 
-Schedules the AEAT remission batch of your company so that a failed VeriFactu record goes out in it. The record is sent inside the ordered batch of its company, respecting the AEAT flow control (`TiempoEsperaEnvio`) and never ahead of an earlier record of the chain. There is NO retry limit: while a technical incident lasts, art. 16.4 of Order HAC/1177/2024 requires retrying at least once an hour with no maximum, so `max_retries_exceeded` is no longer returned for records (it still applies to events: `POST /v1/verifactu/events/{id}/retry`). Returns 404 if the record does not exist and 422 `business_rule_violation` / `record_already_accepted` if AEAT already accepted it.
+Schedules the AEAT remission batch of your company so that a failed VeriFactu record goes out in it. The record is sent inside the ordered batch of its company, respecting the AEAT flow control (`TiempoEsperaEnvio`) and never ahead of an earlier record of the chain. There is NO retry limit: while a technical incident lasts, art. 16.4 of Order HAC/1177/2024 requires retrying at least once an hour with no maximum, so `max_retries_exceeded` is no longer returned for records (it still applies to events: `POST /v1/companies/{company}/verifactu/events/{event}/retry`). Returns 404 if the record does not exist and 422 `business_rule_violation` / `record_already_accepted` if AEAT already accepted it.
 
 ### Example Usage
 
@@ -904,11 +577,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1VerifactuRecordsShow
 
@@ -916,7 +589,7 @@ Retrieve a VeriFactu record by its `id` (UUID v7). Returns 404 `verifactu_record
 
 ### Example Usage: blocked_record
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.show" method="get" path="/verifactu/records/{record}" example="blocked_record" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.show" method="get" path="/companies/{company}/verifactu/records/{record}" example="blocked_record" -->
 ```php
 declare(strict_types=1);
 
@@ -937,9 +610,9 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsShow(
+    company: 'Beer, Pfannerstill and Skiles',
     record: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -1003,7 +676,7 @@ if ($response->object !== null) {
 
 ## publicApiV1VerifactuRecordsSubsanar
 
-Corrects (subsana) a VeriFactu `alta` that AEAT ACCEPTED (or accepted with errors) or REJECTED. The record is never edited in place: AEAT requires a NEW record and the original stays untouched (AEAT web services description, §9.1.2 and §9.1.3). The invoice master data is refreshed, a new correction (*subsanación*) `alta` is generated for the same invoice key with its own `huella` and chain position, and the remission batch of your company is re-queued. The new `alta` always goes with `Subsanacion=S` and the `RechazoPrevio` of its case: for an ACCEPTED record, a subsanación `alta` with no `RechazoPrevio` (§9.1.2); for a REJECTED record whose invoice AEAT does not hold, an «alta por rechazo» with `RechazoPrevio=X` (§9.1.3, the rejected record never existed in AEAT); and for a REJECTED subsanación of an invoice AEAT does hold, `RechazoPrevio=S`. Returns `202` with `data.id`: the id of the NEW record, the one that is transmitted — read it with `GET /v1/verifactu/records/{id}`; the status of the new record starts as `pending`. `can_subsanar` on the record tells you whether it is admitted. Returns 422 `record_not_rejected` if the record is neither accepted nor rejected (pending or in error), `record_not_subsanable` if it is not an `alta`, it is not the last `alta` of its invoice, the invoice is annulled or a rejected record already waits for its resend, or `requires_annulment` when the correction would change a field of the fingerprint (annul and issue a new `alta` instead).
+Corrects (subsana) a VeriFactu `alta` that AEAT ACCEPTED (or accepted with errors) or REJECTED. The record is never edited in place: AEAT requires a NEW record and the original stays untouched (AEAT web services description, §9.1.2 and §9.1.3). The invoice master data is refreshed, a new correction (*subsanación*) `alta` is generated for the same invoice key with its own `huella` and chain position, and the remission batch of your company is re-queued. The new `alta` always goes with `Subsanacion=S` and the `RechazoPrevio` of its case: for an ACCEPTED record, a subsanación `alta` with no `RechazoPrevio` (§9.1.2); for a REJECTED record whose invoice AEAT does not hold, an «alta por rechazo» with `RechazoPrevio=X` (§9.1.3, the rejected record never existed in AEAT); and for a REJECTED subsanación of an invoice AEAT does hold, `RechazoPrevio=S`. Returns `202` with `data.id`: the id of the NEW record, the one that is transmitted — read it with `GET /v1/companies/{company}/verifactu/records/{record}`; the status of the new record starts as `pending`. `can_subsanar` on the record tells you whether it is admitted. Returns 422 `record_not_rejected` if the record is neither accepted nor rejected (pending or in error), `record_not_subsanable` if it is not an `alta`, it is not the last `alta` of its invoice, the invoice is annulled or a rejected record already waits for its resend, or `requires_annulment` when the correction would change a field of the fingerprint (annul and issue a new `alta` instead).
 
 ### Example Usage
 
@@ -1055,8 +728,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |

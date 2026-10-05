@@ -45,7 +45,7 @@ class WebhookEndpointWithSecret
     public array $enabledEvents;
 
     /**
-     * enabled, disabled, or paused.
+     * Status of the endpoint: `active` (it receives deliveries), `degraded` (every delivery of the last 24 hours failed: deliveries are paused until a `ping` succeeds) or `disabled` (turned off by you: it receives none).
      *
      * @var string $status
      */
@@ -74,14 +74,6 @@ class WebhookEndpointWithSecret
     #[\Speakeasy\Serializer\Annotation\SerializedName('custom_headers')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string, string>')]
     public array $customHeaders;
-
-    /**
-     * Signing secret. Returned only at creation or after rotation.
-     *
-     * @var string $secret
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('secret')]
-    public string $secret;
 
     /**
      *
@@ -164,6 +156,14 @@ class WebhookEndpointWithSecret
     public ?\DateTime $degradedSince;
 
     /**
+     * Signing secret, returned only at creation or after rotation. `null` only in an idempotent replay of that creation or rotation, because the secret is never stored.
+     *
+     * @var ?string $secret
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('secret')]
+    public ?string $secret;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\WebhookEndpointWithSecretObject  $object
      * @param  string  $url
@@ -172,7 +172,6 @@ class WebhookEndpointWithSecret
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  array<string, string>  $customHeaders
-     * @param  string  $secret
      * @param  ?string  $description
      * @param  ?array<string>  $ipAllowlist
      * @param  ?float  $deliverySuccessRate24h
@@ -183,9 +182,10 @@ class WebhookEndpointWithSecret
      * @param  ?array<string, string>  $metadata
      * @param  ?int  $timeoutSeconds
      * @param  ?\DateTime  $degradedSince
+     * @param  ?string  $secret
      * @phpstan-pure
      */
-    public function __construct(string $id, WebhookEndpointWithSecretObject $object, string $url, array $enabledEvents, string $status, \DateTime $createdAt, \DateTime $updatedAt, array $customHeaders, string $secret, ?string $description = null, ?array $ipAllowlist = null, ?float $deliverySuccessRate24h = null, ?\DateTime $lastDeliveryAt = null, ?\DateTime $lastFailureAt = null, ?\DateTime $previousSecretValidUntil = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null, ?\DateTime $degradedSince = null)
+    public function __construct(string $id, WebhookEndpointWithSecretObject $object, string $url, array $enabledEvents, string $status, \DateTime $createdAt, \DateTime $updatedAt, array $customHeaders, ?string $description = null, ?array $ipAllowlist = null, ?float $deliverySuccessRate24h = null, ?\DateTime $lastDeliveryAt = null, ?\DateTime $lastFailureAt = null, ?\DateTime $previousSecretValidUntil = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null, ?\DateTime $degradedSince = null, ?string $secret = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -195,7 +195,6 @@ class WebhookEndpointWithSecret
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->customHeaders = $customHeaders;
-        $this->secret = $secret;
         $this->description = $description;
         $this->ipAllowlist = $ipAllowlist;
         $this->deliverySuccessRate24h = $deliverySuccessRate24h;
@@ -206,5 +205,6 @@ class WebhookEndpointWithSecret
         $this->metadata = $metadata;
         $this->timeoutSeconds = $timeoutSeconds;
         $this->degradedSince = $degradedSince;
+        $this->secret = $secret;
     }
 }

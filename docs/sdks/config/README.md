@@ -67,6 +67,78 @@ if ($response->object !== null) {
 
 Partially update the auto-invoicing of Stripe Connect charges: enable or disable it (`enabled`) and choose the series used. Optionally tune the fiscal policy (`simplified_threshold_cents` in cents [0, 300000], `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`); omitted fields keep their value. With multiple connected accounts it returns 422 `per_account_config_required` — configure each account individually.
 
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.config.update" method="patch" path="/companies/{company}/stripe-autoinvoicing/config" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateStripeAutoinvoicingConfigRequest(
+    enabled: false,
+);
+
+$response = $sdk->stripeAutoinvoicing->config->publicApiV1StripeAutoinvoicingConfigUpdate(
+    company: 'Huel Inc',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: $body
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.config.update" method="patch" path="/companies/{company}/stripe-autoinvoicing/config" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateStripeAutoinvoicingConfigRequest(
+    enabled: false,
+);
+
+$response = $sdk->stripeAutoinvoicing->config->publicApiV1StripeAutoinvoicingConfigUpdate(
+    company: 'Hand - Borer',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: $body
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.config.update" method="patch" path="/companies/{company}/stripe-autoinvoicing/config" example="missing_api_key" -->
@@ -92,7 +164,7 @@ $body = new Components\UpdateStripeAutoinvoicingConfigRequest(
 );
 
 $response = $sdk->stripeAutoinvoicing->config->publicApiV1StripeAutoinvoicingConfigUpdate(
-    company: 'Borer - Greenfelder',
+    company: 'Hand - Borer',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: $body
@@ -128,7 +200,7 @@ $body = new Components\UpdateStripeAutoinvoicingConfigRequest(
 );
 
 $response = $sdk->stripeAutoinvoicing->config->publicApiV1StripeAutoinvoicingConfigUpdate(
-    company: 'Kassulke Group',
+    company: 'Huel Inc',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: $body

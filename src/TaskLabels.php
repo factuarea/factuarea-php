@@ -54,13 +54,13 @@ class TaskLabels
      * Add a label to the catalog with a `name` (unique in your company, case-insensitive: 409 `task_label_name_in_use`) and a `color` from the task palette.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTaskLabelV1Request  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaskLabelsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaskLabelsCreate(Components\CreateTaskLabelV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsCreateResponse
+    public function publicApiV1TaskLabelsCreate(Components\CreateTaskLabelV1Request $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class TaskLabels
             ];
         }
         $request = new Operations\PublicApiV1TaskLabelsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-labels');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-labels', Operations\PublicApiV1TaskLabelsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -145,7 +145,7 @@ class TaskLabels
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -183,14 +183,14 @@ class TaskLabels
      *
      * Permanently delete a label from the catalog and remove it from every task. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
      *
+     * @param  string  $company
      * @param  string  $label
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaskLabelsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaskLabelsDelete(string $label, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsDeleteResponse
+    public function publicApiV1TaskLabelsDelete(string $company, string $label, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -218,13 +218,13 @@ class TaskLabels
             ];
         }
         $request = new Operations\PublicApiV1TaskLabelsDeleteRequest(
+            company: $company,
             label: $label,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-labels/{label}', Operations\PublicApiV1TaskLabelsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-labels/{label}', Operations\PublicApiV1TaskLabelsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -270,7 +270,7 @@ class TaskLabels
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -308,14 +308,14 @@ class TaskLabels
      *
      * List the task label catalog of your company, ordered by name. Each label carries `tasks_count`: how many tasks of your company carry it, archived tasks included. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaskLabelsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaskLabelsList(?int $limit = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsListResponse
+    public function publicApiV1TaskLabelsList(string $company, ?int $limit = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -343,13 +343,13 @@ class TaskLabels
             ];
         }
         $request = new Operations\PublicApiV1TaskLabelsListRequest(
+            company: $company,
             limit: $limit,
             startingAfter: $startingAfter,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-labels');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-labels', Operations\PublicApiV1TaskLabelsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -398,7 +398,7 @@ class TaskLabels
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -436,13 +436,13 @@ class TaskLabels
      *
      * Retrieve a label of the catalog, with `tasks_count`: how many tasks of your company carry it, archived tasks included.
      *
+     * @param  string  $company
      * @param  string  $label
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaskLabelsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaskLabelsShow(string $label, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsShowResponse
+    public function publicApiV1TaskLabelsShow(string $company, string $label, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaskLabelsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -470,12 +470,12 @@ class TaskLabels
             ];
         }
         $request = new Operations\PublicApiV1TaskLabelsShowRequest(
+            company: $company,
             label: $label,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-labels/{label}', Operations\PublicApiV1TaskLabelsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-labels/{label}', Operations\PublicApiV1TaskLabelsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -521,7 +521,7 @@ class TaskLabels
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -591,7 +591,7 @@ class TaskLabels
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-labels/{label}', Operations\PublicApiV1TaskLabelsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-labels/{label}', Operations\PublicApiV1TaskLabelsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -604,7 +604,7 @@ class TaskLabels
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.task_labels.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -641,7 +641,7 @@ class TaskLabels
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

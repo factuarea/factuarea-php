@@ -29,13 +29,23 @@ class PublicApiV1ContactsImportTemplateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Template format. `csv` (default) returns only the headers; `xlsx` returns a workbook with the Data, Instructions, Examples and Allowed values sheets.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsImportTemplateFormat $format
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=format')]
+    public ?PublicApiV1ContactsImportTemplateFormat $format = null;
+
+    /**
      * @param  string  $company
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsImportTemplateFormat  $format
      * @param  ?LocalDate  $factuareaVersion
      * @phpstan-pure
      */
-    public function __construct(string $company, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsImportTemplateFormat $format = PublicApiV1ContactsImportTemplateFormat::Csv)
     {
         $this->company = $company;
         $this->factuareaVersion = $factuareaVersion;
+        $this->format = $format;
     }
 }

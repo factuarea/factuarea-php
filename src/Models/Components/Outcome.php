@@ -13,69 +13,75 @@ class Outcome
 {
     /**
      *
-     * @var ?int $rowNumber
+     * @var int $rowNumber
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('row_number')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $rowNumber = null;
+    public int $rowNumber;
 
     /**
      *
-     * @var ?string $result
+     * @var \Factuarea\Sdk\Models\Components\BusinessContactImportResult $result
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('result')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $result = null;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportResult')]
+    public BusinessContactImportResult $result;
 
     /**
      *
-     * @var ?string $action
+     * @var \Factuarea\Sdk\Models\Components\BusinessContactImportAction $action
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('action')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $action = null;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportAction')]
+    public BusinessContactImportAction $action;
 
     /**
-     * $errors
+     * Errors and warnings of the row.
      *
-     * @var ?array<\Factuarea\Sdk\Models\Components\BusinessContactImportError> $errors
+     * @var array<\Factuarea\Sdk\Models\Components\BusinessContactImportError> $errors
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('errors')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportError>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $errors = null;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportError>')]
+    public array $errors;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactImportReason $reason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportReason|null')]
+    public ?BusinessContactImportReason $reason;
 
     /**
      *
      * @var ?string $groupKey
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('group_key')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $groupKey = null;
+    public ?string $groupKey;
 
     /**
      *
      * @var ?string $targetUuid
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('target_uuid')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $targetUuid = null;
+    public ?string $targetUuid;
 
     /**
-     * @param  ?int  $rowNumber
-     * @param  ?string  $result
-     * @param  ?string  $action
-     * @param  ?array<\Factuarea\Sdk\Models\Components\BusinessContactImportError>  $errors
+     * @param  int  $rowNumber
+     * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportResult  $result
+     * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportAction  $action
+     * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportError>  $errors
+     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportReason  $reason
      * @param  ?string  $groupKey
      * @param  ?string  $targetUuid
      * @phpstan-pure
      */
-    public function __construct(?int $rowNumber = null, ?string $result = null, ?string $action = null, ?array $errors = null, ?string $groupKey = null, ?string $targetUuid = null)
+    public function __construct(int $rowNumber, BusinessContactImportResult $result, BusinessContactImportAction $action, array $errors, ?BusinessContactImportReason $reason = null, ?string $groupKey = null, ?string $targetUuid = null)
     {
         $this->rowNumber = $rowNumber;
         $this->result = $result;
         $this->action = $action;
         $this->errors = $errors;
+        $this->reason = $reason;
         $this->groupKey = $groupKey;
         $this->targetUuid = $targetUuid;
     }
