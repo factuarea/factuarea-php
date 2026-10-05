@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateCompanyV1Request - Register a tax ID (NIF) in your account. `name` and `tax_id` are required; the rest of the profile (business name, fiscal address, contact details) is optional. `tax_id` is validated as a Spanish tax ID (NIF/CIF/NIE) and must be unique within your account; `country_aeat_zone` is derived from the postal code. The new company joins your account and is adopted into the scope of the calling key, so you can operate on it right away; it is NOT linked to any accounting-firm hierarchy. A tax ID already registered in another account is rejected and has to be claimed instead. */
+/** CreateCompanyV1Request - Register a tax ID (NIF) in your account. `name` and `tax_id` are required; the rest of the profile (business name, fiscal address, contact details) is optional. `tax_id` is validated as a Spanish tax ID (NIF/CIF/NIE) and must be unique within your account; `country_aeat_zone` is derived from the postal code. The new company joins your account and is adopted into the scope of the calling key, so you can operate on it right away. A tax ID already registered in another account is rejected: the account that holds it has to hand it over to yours with a tax ID transfer instead. */
 class CreateCompanyV1Request
 {
     /**

@@ -21,12 +21,12 @@ class QuoteStats
     public int $totalCount;
 
     /**
-     * Aggregate amount of the quotes (EUR).
+     * Aggregate amount of the quotes (EUR), as a 2-decimal string.
      *
-     * @var float $totalAmount
+     * @var string $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public float $totalAmount;
+    public string $totalAmount;
 
     /**
      * Quote count by status. Keys: `draft`, `sent`, `accepted`, `rejected`, `expired`, `converted`, `cancelled`.
@@ -55,13 +55,13 @@ class QuoteStats
 
     /**
      * @param  int  $totalCount
-     * @param  float  $totalAmount
+     * @param  string  $totalAmount
      * @param  array<string, int>  $countByStatus
      * @param  int  $expiredCount
      * @param  int  $convertedCount
      * @phpstan-pure
      */
-    public function __construct(int $totalCount, float $totalAmount, array $countByStatus, int $expiredCount, int $convertedCount)
+    public function __construct(int $totalCount, string $totalAmount, array $countByStatus, int $expiredCount, int $convertedCount)
     {
         $this->totalCount = $totalCount;
         $this->totalAmount = $totalAmount;

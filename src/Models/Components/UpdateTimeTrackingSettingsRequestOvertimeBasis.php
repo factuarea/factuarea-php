@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Overtime computation basis: `weekly` or `daily`. */
+/** Overtime computation basis: `weekly` or `daily`. Optional: when omitted it keeps its current value. */
 enum UpdateTimeTrackingSettingsRequestOvertimeBasis: string
 {
     case Weekly = 'weekly';

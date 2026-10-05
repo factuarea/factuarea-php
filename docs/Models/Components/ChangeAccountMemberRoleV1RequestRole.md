@@ -1,13 +1,11 @@
 # ChangeAccountMemberRoleV1RequestRole
 
-New membership role on that company: `owner`, `admin`, `member` or `employee`.
+New account role: `admin` or `member`. Required when `external_advisor` is not sent.
 
 
 ## Values
 
-| Name       | Value      |
-| ---------- | ---------- |
-| `Owner`    | owner      |
-| `Admin`    | admin      |
-| `Member`   | member     |
-| `Employee` | employee   |
+| Name     | Value    |
+| -------- | -------- |
+| `Admin`  | admin    |
+| `Member` | member   |

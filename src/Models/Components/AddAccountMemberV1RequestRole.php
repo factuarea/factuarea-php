@@ -9,11 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Membership role on that company: `owner`, `admin`, `member` or `employee`. */
+/** Account role of the new member: `admin` or `member`. Ownership is never assigned, it is transferred. */
 enum AddAccountMemberV1RequestRole: string
 {
-    case Owner = 'owner';
     case Admin = 'admin';
     case Member = 'member';
-    case Employee = 'employee';
 }

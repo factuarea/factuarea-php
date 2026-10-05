@@ -28,6 +28,7 @@ class RecurringInvoiceLine
     public float $quantity;
 
     /**
+     * Unit price as a decimal STRING with 4 decimals (e.g. `"100.0000"`), the scale the template accepts: reading a line and sending it back never changes its price.
      *
      * @var string $unitPrice
      */

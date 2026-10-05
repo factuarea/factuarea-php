@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1StoresCreateResponseBody - Online store connected. The `Location` header contains the canonical URL of the new store connection. */
 class PublicApiV1StoresCreateResponseBody
 {
     /**

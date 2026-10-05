@@ -7,11 +7,12 @@
 * [publicApiV1AccountBilling](#publicapiv1accountbilling) - Retrieve account billing details
 * [publicApiV1AccountUsage](#publicapiv1accountusage) - Retrieve account usage for the current period
 * [publicApiV1AccountShow](#publicapiv1accountshow) - Retrieve the calling credential
+* [publicApiV1AccountProvisioningUsage](#publicapiv1accountprovisioningusage) - Retrieve provisioning usage
 * [publicApiV1AccountVerifyCensus](#publicapiv1accountverifycensus) - Verify account against the AEAT census
 
 ## publicApiV1AccountBilling
 
-Returns the subscription billing snapshot of the authenticated company: base plan subscription (status, trial, current period end, pending plan change), gestoría seats subscription (quantity, active managed companies, per-seat cost with VAT, recurring total, next invoice) and default payment method. Managed companies (plan `gestionada`) receive `managed: true` without the master's billing data. Amounts are integer cents; unresolved amounts are `null`, never a misleading 0.
+Returns the subscription billing snapshot of the authenticated company: base plan subscription (status, trial, current period end, pending plan change), additional NIF subscription (quantity, active additional tax IDs, per-NIF cost with VAT, recurring total, next invoice; `null` when the account has no additional tax IDs) and default payment method. A tax ID whose billing is paid by another account receives `managed: true` with plan `gestionada`, without an additional NIF subscription or payment method: what the payer pays is never shown to it. Amounts are euros as 2-decimal strings; unresolved amounts are `null`, never a misleading 0.
 
 ### Example Usage
 
@@ -59,11 +60,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 404, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1AccountUsage
 
@@ -115,15 +116,15 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 404, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1AccountShow
 
-Introspect the credential authenticating the request: its public identity, the account it belongs to, its environment (`live`/`test`), its rate-limit tier, its EFFECTIVE scopes (a scope trimmed by the plan of the scoped tax IDs is not listed) and the tax IDs it reaches, each with its opaque identifier and its fiscal identifier. Use it to validate a credential and discover its scope in a single call — including the single-tax-ID case, where it is how you learn your own opaque identifier. It never returns per-tax-ID settings (personalization, plan, add-ons): those belong to the company axis.
+Introspect the credential authenticating the request: its public identity, the account it belongs to, its environment (`live`/`test`), its rate-limit tier, its EFFECTIVE scopes (a scope trimmed by the plan of the scoped tax IDs is not listed) and the tax IDs it reaches, each with its opaque identifier and its fiscal identifier. Use it to validate a credential and discover its scope in a single call — including the single-tax-ID case, where it is how you learn your own opaque identifier. `account` also carries its `name`, its `environment`, whether it is an account provider (`is_provider`) and the privileged scopes Factuarea granted it (`privileged_scopes`), and `client_accounts[]` lists the accounts of your clients the credential account reaches through a relation (granted or provisioned), with their access level, status, whether your account pays them and their environment. `client_accounts[]` is filled only when the credential has the privileged `accounts:read` scope in effect (otherwise it is empty and `client_accounts_visible` is `false`) and holds at most 100 accounts (`client_accounts_has_more` tells whether there are more; `GET /v1/accounts` lists them all). It never returns per-tax-ID settings (personalization, plan, add-ons): those belong to the company axis.
 
 ### Example Usage
 
@@ -170,9 +171,65 @@ if ($response->object !== null) {
 
 | Error Type          | Status Code         | Content Type        |
 | ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 429       | application/json    |
+| Errors\Error        | 400, 401, 403, 429  | application/json    |
 | Errors\Error        | 500                 | application/json    |
 | Errors\APIException | 4XX, 5XX            | \*/\*               |
+
+## publicApiV1AccountProvisioningUsage
+
+Retrieve the provisioning usage of YOUR account as a provider: managed accounts with the management in force by environment (`managed_accounts.live` and `managed_accounts.test`; test ones never count towards the limit), your managed account `limit` and the `remaining` live ones (never negative), the live ones by plan (`managed_accounts_by_plan`, always with every plan of the catalog), and what your account pays for them on top of their fee (`provider_paid_additional_nifs` and `provider_paid_employee_seats`). It only answers for your own account: `{account}` is the credential account, and any other returns 404 `account_not_found`. Requires the privileged `accounts:read` scope, which `*` does not cover (403 `privileged_scope_required` otherwise).
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.provisioning_usage" method="get" path="/accounts/{account}/provisioning-usage" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->account->publicApiV1AccountProvisioningUsage(
+    account: '56767982',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `account`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1AccountProvisioningUsageResponse](../../Models/Operations/PublicApiV1AccountProvisioningUsageResponse.md)**
+
+### Errors
+
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1AccountVerifyCensus
 
@@ -228,6 +285,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

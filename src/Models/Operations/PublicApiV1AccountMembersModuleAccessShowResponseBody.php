@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1AccountMembersModuleAccessShowResponseBody
 {
     /**
-     * The module access level of a member in one NIF. `restrictions` is a DENY list: it states what has been WITHDRAWN, not what the person can do, so an empty object means no restriction at all and never no access.
+     * The module access level of an account member in one tax ID. `restrictions` is a DENY list: it states what has been WITHDRAWN, not what the person can do, so an empty object means no restriction at all and never no access.
      *
      * @var \Factuarea\Sdk\Models\Components\MemberModuleAccess $data
      */

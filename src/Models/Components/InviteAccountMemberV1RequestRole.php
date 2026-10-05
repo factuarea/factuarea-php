@@ -9,11 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Membership role the person would join with: `owner`, `admin`, `member` or `employee`. */
+/** Account role the person would join with: `admin` or `member`. */
 enum InviteAccountMemberV1RequestRole: string
 {
-    case Owner = 'owner';
     case Admin = 'admin';
     case Member = 'member';
-    case Employee = 'employee';
 }

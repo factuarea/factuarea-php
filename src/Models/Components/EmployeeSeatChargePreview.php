@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EmployeeSeatChargePreview - Preview of the prorated per-seat charge for activating or hiring employees, computed from the Stripe upcoming invoice without charging. The exclusive reason flags for a 0 amount, by precedence: `already_covered` > `requires_active_plan` > `included_in_trial`. At most one is true. `requires_payment_method` is NOT a 0-amount branch: it flags an obstacle on a REAL amount. Read `seats_billable` before promising a charge: when false the operation never bills (enterprise by contract, trial, sandbox or live mode off) even though the amount is computed. Amounts are in minor currency units (cents). */
+/** EmployeeSeatChargePreview - Preview of the prorated per-seat charge for activating or hiring employees, computed from the Stripe upcoming invoice without charging. The exclusive reason flags for a 0 amount, by precedence: `already_covered` > `requires_active_plan` > `included_in_trial`. At most one is true. `requires_payment_method` is NOT a 0-amount branch: it flags an obstacle on a REAL amount. Read `seats_billable` before promising a charge: when false the operation never bills (enterprise by contract, trial, sandbox or live mode off) even though the amount is computed. `amount`, `tax_amount` and `total` are euro 2-decimal strings; `recurring_base_cents` and `recurring_total_cents` stay in cents, as their names state. */
 class EmployeeSeatChargePreview
 {
     /**
@@ -22,28 +22,28 @@ class EmployeeSeatChargePreview
     public EmployeeSeatChargePreviewObject $object;
 
     /**
-     * Taxable base of the proration (without VAT), in cents.
+     * Taxable base of the proration (without VAT), in euros as a 2-decimal string.
      *
-     * @var int $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public int $amount;
+    public string $amount;
 
     /**
-     * VAT amount of the proration, in cents.
+     * VAT amount of the proration, in euros as a 2-decimal string.
      *
-     * @var int $taxAmount
+     * @var string $taxAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount')]
-    public int $taxAmount;
+    public string $taxAmount;
 
     /**
-     * Total actually charged (`amount + tax_amount`), in cents.
+     * Total actually charged (`amount + tax_amount`), in euros as a 2-decimal string.
      *
-     * @var int $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public int $total;
+    public string $total;
 
     /**
      * ISO 4217 currency code (uppercase).
@@ -143,9 +143,9 @@ class EmployeeSeatChargePreview
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\EmployeeSeatChargePreviewObject  $object
-     * @param  int  $amount
-     * @param  int  $taxAmount
-     * @param  int  $total
+     * @param  string  $amount
+     * @param  string  $taxAmount
+     * @param  string  $total
      * @param  string  $currency
      * @param  bool  $requiresPaymentMethod
      * @param  bool  $requiresActivePlan
@@ -160,7 +160,7 @@ class EmployeeSeatChargePreview
      * @param  ?int  $recurringTotalCents
      * @phpstan-pure
      */
-    public function __construct(EmployeeSeatChargePreviewObject $object, int $amount, int $taxAmount, int $total, string $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, bool $seatsBillable, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null)
+    public function __construct(EmployeeSeatChargePreviewObject $object, string $amount, string $taxAmount, string $total, string $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, bool $seatsBillable, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null)
     {
         $this->object = $object;
         $this->amount = $amount;

@@ -96,11 +96,11 @@ class Tax
     /**
      * Map `DocumentType -> bool` indicating for which document types this tax is default. Replaces the 5 legacy booleans `is_default_invoice/quote/delivery_note/proforma/purchase_invoice`.
      *
-     * @var \Factuarea\Sdk\Models\Components\TaxDefaultForDocuments $defaultForDocuments
+     * @var \Factuarea\Sdk\Models\Components\DefaultForDocuments $defaultForDocuments
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('default_for_documents')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TaxDefaultForDocuments')]
-    public TaxDefaultForDocuments $defaultForDocuments;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DefaultForDocuments')]
+    public DefaultForDocuments $defaultForDocuments;
 
     /**
      * Reverse charge (Art. 84.Uno.2º LIVA). Default `false`.
@@ -222,7 +222,7 @@ class Tax
      * @param  bool  $isDefault
      * @param  bool  $isActive
      * @param  bool  $isSystem
-     * @param  \Factuarea\Sdk\Models\Components\TaxDefaultForDocuments  $defaultForDocuments
+     * @param  \Factuarea\Sdk\Models\Components\DefaultForDocuments  $defaultForDocuments
      * @param  bool  $reverseCharge
      * @param  ?string  $country
      * @param  ?string  $description
@@ -238,7 +238,7 @@ class Tax
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, TaxObject $object, string $name, string $code, float $rate, TaxType $type, TaxAppliesTo $appliesTo, bool $isDefault, bool $isActive, bool $isSystem, TaxDefaultForDocuments $defaultForDocuments, bool $reverseCharge, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?ExternalReference $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?TaxCountryAeatZone $countryAeatZone = null, ?TaxIndirectTaxRegime $indirectTaxRegime = null, ?string $linkedSurchargeTaxesId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, TaxObject $object, string $name, string $code, float $rate, TaxType $type, TaxAppliesTo $appliesTo, bool $isDefault, bool $isActive, bool $isSystem, DefaultForDocuments $defaultForDocuments, bool $reverseCharge, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?ExternalReference $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?TaxCountryAeatZone $countryAeatZone = null, ?TaxIndirectTaxRegime $indirectTaxRegime = null, ?string $linkedSurchargeTaxesId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

@@ -22,11 +22,12 @@ class EventDataInvoicePaid
     public Invoice $object;
 
     /**
+     * Amount of the payment that settled the invoice (EUR), as a 2-decimal string.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      *
@@ -59,13 +60,13 @@ class EventDataInvoicePaid
     /**
      * @param  string  $type
      * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  ?LocalDate  $paymentDate
      * @param  ?string  $paymentMethod
      * @param  ?string  $paymentReference
      * @phpstan-pure
      */
-    public function __construct(Invoice $object, float $amount, ?LocalDate $paymentDate = null, ?string $paymentMethod = null, ?string $paymentReference = null, string $type = 'invoice.paid')
+    public function __construct(Invoice $object, string $amount, ?LocalDate $paymentDate = null, ?string $paymentMethod = null, ?string $paymentReference = null, string $type = 'invoice.paid')
     {
         $this->object = $object;
         $this->amount = $amount;

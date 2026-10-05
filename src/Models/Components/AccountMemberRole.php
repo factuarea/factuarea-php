@@ -9,33 +9,10 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-class AccountMemberRole
+/** Account role. There is exactly one `owner`; ownership is transferred, never assigned. */
+enum AccountMemberRole: string
 {
-    /**
-     * Opaque identifier (UUID v7) of the NIF.
-     *
-     * @var string $companyId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('company_id')]
-    public string $companyId;
-
-    /**
-     * Role of the person in that NIF.
-     *
-     * @var \Factuarea\Sdk\Models\Components\MembershipRole $membershipRole
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('membership_role')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\MembershipRole')]
-    public MembershipRole $membershipRole;
-
-    /**
-     * @param  string  $companyId
-     * @param  \Factuarea\Sdk\Models\Components\MembershipRole  $membershipRole
-     * @phpstan-pure
-     */
-    public function __construct(string $companyId, MembershipRole $membershipRole)
-    {
-        $this->companyId = $companyId;
-        $this->membershipRole = $membershipRole;
-    }
+    case Owner = 'owner';
+    case Admin = 'admin';
+    case Member = 'member';
 }

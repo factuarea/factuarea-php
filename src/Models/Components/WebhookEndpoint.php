@@ -45,7 +45,7 @@ class WebhookEndpoint
     public array $enabledEvents;
 
     /**
-     * enabled, disabled, or paused.
+     * Status of the endpoint: `active` (it receives deliveries), `degraded` (every delivery of the last 24 hours failed: deliveries are paused until a `ping` succeeds) or `disabled` (turned off by you: it receives none).
      *
      * @var string $status
      */
@@ -120,7 +120,7 @@ class WebhookEndpoint
     public ?\DateTime $previousSecretValidUntil;
 
     /**
-     * API version (date-based, e.g. `2026-05-01`) pinned for the payloads delivered to this endpoint. `null` means the account default applies.
+     * Payload version (date-based) pinned for this endpoint. A new endpoint is pinned to the latest version when created; `null` makes it follow the latest version on every emission. Supported: `2026-05-22`, `2026-09-23`. Deliveries use this version, except events re-emitted by an automation whose data was frozen in an older version: those travel in their frozen version and declare it in the envelope `api_version`.
      *
      * @var ?string $apiVersion
      */

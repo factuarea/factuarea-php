@@ -30,13 +30,6 @@ class PublicApiV1WorkSchedulesUpdateRequest
     public string $schedule;
 
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequest $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public Components\UpdateWeeklyScheduleRequest $body;
-
-    /**
      * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).
      *
      * @var ?string $idempotencyKey
@@ -53,19 +46,26 @@ class PublicApiV1WorkSchedulesUpdateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequest $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\UpdateWeeklyScheduleRequest $body = null;
+
+    /**
      * @param  string  $company
      * @param  string  $schedule
-     * @param  \Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequest  $body
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $company, string $schedule, Components\UpdateWeeklyScheduleRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $schedule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Components\UpdateWeeklyScheduleRequest $body = null)
     {
         $this->company = $company;
         $this->schedule = $schedule;
-        $this->body = $body;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }

@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ConsolidatedWorkforce - A row of the consolidated workforce compliance panel for a gestoría (accounting firm): the public identity of one `active` managed company plus its time-tracking compliance summary, projected from that company’s latest monthly close without recomputation. A computed resource with no identity of its own: its `id` is the UUID v7 of the managed company, never a record id. */
+/** ConsolidatedWorkforce - A row of the consolidated workforce compliance panel of an account: the public identity of one `active` tax ID plus its time-tracking compliance summary, projected from that company’s latest monthly close without recomputation. A computed resource with no identity of its own: its `id` is the UUID v7 of the tax ID, never a record id. */
 class ConsolidatedWorkforce
 {
     /**
-     * UUID v7 of the managed company this row belongs to (the resource has no id of its own).
+     * UUID v7 of the tax ID this row belongs to (the resource has no id of its own).
      *
      * @var string $id
      */
@@ -21,7 +21,7 @@ class ConsolidatedWorkforce
     public string $id;
 
     /**
-     * Trade name / legal name of the managed company.
+     * Trade name / legal name of the tax ID.
      *
      * @var string $name
      */
@@ -29,7 +29,7 @@ class ConsolidatedWorkforce
     public string $name;
 
     /**
-     * Spanish fiscal identifier (NIF/CIF) of the managed company.
+     * Spanish fiscal identifier (NIF/CIF) of the tax ID.
      *
      * @var string $taxId
      */

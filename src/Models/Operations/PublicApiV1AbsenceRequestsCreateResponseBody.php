@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1AbsenceRequestsCreateResponseBody - Absence request created. The `Location` header contains the canonical URL of the new absence request. */
 class PublicApiV1AbsenceRequestsCreateResponseBody
 {
     /**

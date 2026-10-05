@@ -33,11 +33,12 @@ class RecurringInvoicePreviewDate
     public int $occurrenceNumber;
 
     /**
+     * Estimated total of the occurrence (EUR), as a 2-decimal string.
      *
-     * @var float $estimatedTotal
+     * @var string $estimatedTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('estimated_total')]
-    public float $estimatedTotal;
+    public string $estimatedTotal;
 
     /**
      *
@@ -50,11 +51,11 @@ class RecurringInvoicePreviewDate
      * @param  LocalDate  $date
      * @param  LocalDate  $dueDate
      * @param  int  $occurrenceNumber
-     * @param  float  $estimatedTotal
+     * @param  string  $estimatedTotal
      * @param  bool  $willBeSent
      * @phpstan-pure
      */
-    public function __construct(LocalDate $date, LocalDate $dueDate, int $occurrenceNumber, float $estimatedTotal, bool $willBeSent)
+    public function __construct(LocalDate $date, LocalDate $dueDate, int $occurrenceNumber, string $estimatedTotal, bool $willBeSent)
     {
         $this->date = $date;
         $this->dueDate = $dueDate;

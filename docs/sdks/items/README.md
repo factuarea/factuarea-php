@@ -66,7 +66,7 @@ if ($response->statusCode === 200) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -122,16 +122,57 @@ if ($response->priceListItemCollection !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1PriceListsItemsUpsert
 
 Create or update the unique price entry for a catalog target in this price list.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/companies/{company}/price-lists/{priceList}/items" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
+    company: 'Lakin, Goodwin and Torp',
+    priceList: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpsertPriceListItemRequest(
+        productId: '26de84ec-0a42-4323-9bfb-1bc6264d89a2',
+        unitPrice: 4921.67,
+        priceUnit: Components\UpsertPriceListItemRequestPriceUnit::Mtr,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsUpsert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/companies/{company}/price-lists/{priceList}/items" example="missing_api_key" -->
@@ -155,6 +196,47 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
     company: 'Leannon, Boehm and Nolan',
+    priceList: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpsertPriceListItemRequest(
+        productId: '26de84ec-0a42-4323-9bfb-1bc6264d89a2',
+        unitPrice: 4921.67,
+        priceUnit: Components\UpsertPriceListItemRequestPriceUnit::Mtr,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsUpsert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/companies/{company}/price-lists/{priceList}/items" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
+    company: 'Jacobs - Shanahan',
     priceList: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -214,6 +296,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.upsert" method="post" path="/companies/{company}/price-lists/{priceList}/items" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsUpsertRequest(
+    company: 'Abshire, O\'Connell and Gleichner',
+    priceList: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpsertPriceListItemRequest(
+        productId: '26de84ec-0a42-4323-9bfb-1bc6264d89a2',
+        unitPrice: 4921.67,
+        priceUnit: Components\UpsertPriceListItemRequestPriceUnit::Mtr,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsUpsert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -229,7 +352,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -237,7 +360,47 @@ if ($response->object !== null) {
 
 Permanently destroy a retired price entry: its historical amount, its retirement reason and the snapshot of its target. This cannot be undone and there is no copy anywhere else, so `confirm` must be sent as `true`. Only a RETIRED entry can be purged — an active entry is rejected, and so is an unknown one.
 
-### Example Usage
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.purge_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/purge" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsPurgeRetiredRequest(
+    company: 'Stanton Group',
+    priceList: '<value>',
+    item: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\PurgeRetiredPriceListItemRequest(
+        confirm: Components\Confirm::One,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsPurgeRetired(
+    request: $request
+);
+
+if ($response->statusCode === 200) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.purge_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/purge" example="missing_api_key" -->
 ```php
@@ -277,6 +440,86 @@ if ($response->statusCode === 200) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.purge_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/purge" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsPurgeRetiredRequest(
+    company: 'Ledner and Sons',
+    priceList: '<value>',
+    item: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\PurgeRetiredPriceListItemRequest(
+        confirm: Components\Confirm::One,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsPurgeRetired(
+    request: $request
+);
+
+if ($response->statusCode === 200) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.purge_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/purge" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsPurgeRetiredRequest(
+    company: 'Bartell - Keeling',
+    priceList: '<value>',
+    item: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\PurgeRetiredPriceListItemRequest(
+        confirm: Components\Confirm::One,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsPurgeRetired(
+    request: $request
+);
+
+if ($response->statusCode === 200) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -292,7 +535,7 @@ if ($response->statusCode === 200) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -300,6 +543,48 @@ if ($response->statusCode === 200) {
 
 Create a NEW active price entry from a retired one, pointing it at a live catalog target and confirming its price. This is not a restore: the retired entry keeps its historical price, reason and date and is returned by `?status=retired` exactly as before. The response carries the new entry, with its own `id`. If the live target already has an active price in this list, the request is rejected instead of leaving two active prices for the same target.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/reassign" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsReassignRetiredRequest(
+    company: 'Hudson LLC',
+    priceList: '<value>',
+    item: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ReassignRetiredPriceListItemRequest(
+        productId: '79ba691d-62f7-4026-94b0-676285c7b17e',
+        unitPrice: 9135.26,
+        priceUnit: Components\ReassignRetiredPriceListItemRequestPriceUnit::Grm,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsReassignRetired(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/reassign" example="missing_api_key" -->
@@ -323,6 +608,48 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1PriceListsItemsReassignRetiredRequest(
     company: 'Steuber LLC',
+    priceList: '<value>',
+    item: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ReassignRetiredPriceListItemRequest(
+        productId: '79ba691d-62f7-4026-94b0-676285c7b17e',
+        unitPrice: 9135.26,
+        priceUnit: Components\ReassignRetiredPriceListItemRequestPriceUnit::Grm,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsReassignRetired(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/reassign" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsReassignRetiredRequest(
+    company: 'Morar LLC',
     priceList: '<value>',
     item: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
@@ -384,6 +711,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.price-lists.items.reassign_retired" method="post" path="/companies/{company}/price-lists/{priceList}/items/{item}/reassign" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PriceListsItemsReassignRetiredRequest(
+    company: 'Smitham - Keebler',
+    priceList: '<value>',
+    item: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ReassignRetiredPriceListItemRequest(
+        productId: '79ba691d-62f7-4026-94b0-676285c7b17e',
+        unitPrice: 9135.26,
+        priceUnit: Components\ReassignRetiredPriceListItemRequestPriceUnit::Grm,
+    ),
+);
+
+$response = $sdk->priceLists->items->publicApiV1PriceListsItemsReassignRetired(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -399,6 +768,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

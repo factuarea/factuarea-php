@@ -29,6 +29,14 @@ class PublicApiV1CompaniesListRequest
     public ?string $taxId = null;
 
     /**
+     * Send `readiness` to add to each company whether it can issue right now (`readiness`, same contract as the issuing-readiness endpoint); it also works with `tax_id`. No other value is accepted.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\IncludeT $include
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=include')]
+    public ?IncludeT $include = null;
+
+    /**
      * Cursor for forward pagination (this list takes a single `cursor`, not `starting_after`/`ending_before`): the `id` of the last company on the previous page.
      *
      * @var ?string $cursor
@@ -63,16 +71,18 @@ class PublicApiV1CompaniesListRequest
     /**
      * @param  string  $account
      * @param  ?string  $taxId
+     * @param  ?\Factuarea\Sdk\Models\Operations\IncludeT  $include
      * @param  ?int  $limit
      * @param  ?string  $cursor
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus  $status
      * @phpstan-pure
      */
-    public function __construct(string $account, ?string $taxId = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1CompaniesListStatus $status = null, ?int $limit = 25)
+    public function __construct(string $account, ?string $taxId = null, ?IncludeT $include = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1CompaniesListStatus $status = null, ?int $limit = 25)
     {
         $this->account = $account;
         $this->taxId = $taxId;
+        $this->include = $include;
         $this->cursor = $cursor;
         $this->factuareaVersion = $factuareaVersion;
         $this->status = $status;

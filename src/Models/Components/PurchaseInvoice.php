@@ -242,11 +242,20 @@ class PurchaseInvoice
     public ?LocalDate $dueOn;
 
     /**
+     * Instant (ISO 8601 with offset) at which the payment that settled the purchase invoice was RECORDED in the ledger. `null` while it is not paid. Not the declared date: see `paid_date`.
      *
-     * @var ?LocalDate $paidRecordedAt
+     * @var ?\DateTime $paidRecordedAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('paid_recorded_at')]
-    public ?LocalDate $paidRecordedAt;
+    public ?\DateTime $paidRecordedAt;
+
+    /**
+     * Declared payment date (YYYY-MM-DD). `null` while the purchase invoice is not paid. The input field of `mark-paid` and `payments` keeps the name `paid_on`.
+     *
+     * @var ?LocalDate $paidDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_date')]
+    public ?LocalDate $paidDate;
 
     /**
      *
@@ -369,7 +378,8 @@ class PurchaseInvoice
      * @param  ?\Factuarea\Sdk\Models\Components\SupplierRef  $supplier
      * @param  ?LocalDate  $receivedOn
      * @param  ?LocalDate  $dueOn
-     * @param  ?LocalDate  $paidRecordedAt
+     * @param  ?\DateTime  $paidRecordedAt
+     * @param  ?LocalDate  $paidDate
      * @param  ?string  $paymentMethod
      * @param  ?int  $paymentTermsDays
      * @param  mixed  $bankAccount
@@ -383,7 +393,7 @@ class PurchaseInvoice
      * @param  ?string  $notes
      * @phpstan-pure
      */
-    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $paidAmount, string $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidRecordedAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
+    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $paidAmount, string $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -415,6 +425,7 @@ class PurchaseInvoice
         $this->receivedOn = $receivedOn;
         $this->dueOn = $dueOn;
         $this->paidRecordedAt = $paidRecordedAt;
+        $this->paidDate = $paidDate;
         $this->paymentMethod = $paymentMethod;
         $this->paymentTermsDays = $paymentTermsDays;
         $this->bankAccount = $bankAccount;

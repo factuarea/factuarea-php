@@ -30,7 +30,7 @@ class PurchaseInvoiceLine
     public float|string $quantity;
 
     /**
-     * Cost per billed unit, always a decimal STRING. On a measured line (one carrying `purchase_measurement`) it keeps the 4-decimal scale of the snapshot (e.g. `"7.4000"`) so no precision is lost; on a legacy or manual line it is the 2-decimal money string shared by every amount of the line (e.g. `"100.00"`).
+     * Cost per billed unit, always a decimal STRING with the 4-decimal scale of its column (e.g. `"7.4000"`, `"100.0000"`), on measured (carrying `purchase_measurement`), legacy and manual lines alike: it is returned exactly as it was accepted and stored, so reading a line and sending it back never changes its cost. Derived amounts keep 2 decimals.
      *
      * @var string $unitPrice
      */

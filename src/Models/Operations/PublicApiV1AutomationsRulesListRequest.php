@@ -53,7 +53,7 @@ class PublicApiV1AutomationsRulesListRequest
     public ?string $triggerType = null;
 
     /**
-     * Scope of the rule: `empresa` watches only your own company, `cartera` watches every client company you manage as an accounting firm. Exact match on `scope`.
+     * Scope of the rule: `empresa` watches only your own company, `cartera` watches the other tax IDs your account operates. Exact match on `scope`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesListScope $scope
      */

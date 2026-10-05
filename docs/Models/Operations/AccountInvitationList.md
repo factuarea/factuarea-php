@@ -1,6 +1,6 @@
 # AccountInvitationList
 
-Cursor-paginated list of account invitations (`{ data, has_more, next_cursor }`).
+Cursor-paginated list of account invitations (`{ data, has_more, next_cursor }`). The acceptance secret never appears here.
 
 
 ## Fields

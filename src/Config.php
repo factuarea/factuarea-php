@@ -136,7 +136,7 @@ class Config
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -172,16 +172,16 @@ class Config
     /**
      * Update Stripe autoinvoicing config
      *
-     * Enable or disable auto-invoicing of Stripe Connect charges and choose the series used. Optionally tune the fiscal policy (`simplified_threshold_cents` in cents [0, 300000], `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`); omitted fields keep their value. With multiple connected accounts it returns 422 `per_account_config_required` — configure each account individually.
+     * Partially update the auto-invoicing of Stripe Connect charges: enable or disable it (`enabled`) and choose the series used. Optionally tune the fiscal policy (`simplified_threshold_cents` in cents [0, 300000], `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`); omitted fields keep their value. With multiple connected accounts it returns 422 `per_account_config_required` — configure each account individually.
      *
-     * @param  \Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
      * @param  string  $company
      * @param  string  $idempotencyKey
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
      * @param  ?LocalDate  $factuareaVersion
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingConfigUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingConfigUpdate(Components\UpdateStripeAutoinvoicingConfigRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingConfigUpdateResponse
+    public function publicApiV1StripeAutoinvoicingConfigUpdate(string $company, string $idempotencyKey, ?Components\UpdateStripeAutoinvoicingConfigRequest $body = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingConfigUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -211,18 +211,17 @@ class Config
         $request = new Operations\PublicApiV1StripeAutoinvoicingConfigUpdateRequest(
             company: $company,
             idempotencyKey: $idempotencyKey,
-            body: $body,
             factuareaVersion: $factuareaVersion,
+            body: $body,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/stripe-autoinvoicing/config', Operations\PublicApiV1StripeAutoinvoicingConfigUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body === null) {
-            throw new \Exception('Request body is required');
+        if ($body !== null) {
+            $httpOptions = array_merge_recursive($httpOptions, $body);
         }
-        $httpOptions = array_merge_recursive($httpOptions, $body);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -266,7 +265,7 @@ class Config
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

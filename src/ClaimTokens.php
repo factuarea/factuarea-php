@@ -49,18 +49,18 @@ class ClaimTokens
     }
 
     /**
-     * Accept a claim token
+     * Reissue the claim voucher of a managed account
      *
-     * Redeem a CLAIM TOKEN by presenting its `secret`: the tax ID the token covers moves to the account in the path, which is the credential account. It is an action on the collection and carries no identifier in the path, because whoever redeems does NOT own the token and cannot address it by id — all they hold is a secret someone gave them. The body carries the `secret` and nothing else: the tax ID is named by the TOKEN, not by whoever presents it, so a `company_id` here is rejected rather than silently ignored. Redeeming resolves the token, re-validates that its tax ID still belongs to the issuing account, moves the membership, prunes the tax ID out of the scope of the issuing account credentials and records the trail, all inside ONE transaction. The 200 publishes the consumed token — its public `id`, the tax ID, its expiry and `status: consumed` — and never the issuing account, the consumption instant or the secret. Requires an administrative role in at least one tax ID of the RECEIVING account: 403 `forbidden_action` otherwise. Returns 422 `claim_token_invalid` when the secret matches no token, the token was already consumed, or its tax ID has already changed account (the three with the SAME body: telling them apart would say whether that secret ever existed), 422 `claim_token_expired` when the token is still unconsumed but its window has passed — a DIFFERENT code on purpose, so the holder knows to ask for another one instead of looking for a mistake on their side —, 422 `idempotency_key_required` because moving a tax ID this way is irreversible, and 404 `account_not_found` when `{account}` is not the credential account.
+     * Issue a NEW claim voucher for one of your managed accounts that its holder has not claimed yet: the pending vouchers stop working and the new one goes to the same email and language. Returns **201 Created** with `object: managed_account_claim`; with `send_email: false` (the default) `claim_token` and `claim_url` are returned EXACTLY ONCE, for you to deliver; with `send_email: true` the link travels only in the email to the holder and both fields are `null`. An idempotent replay returns them as `null`: the voucher is never stored in the clear. Returns 409 `provisioning_account_claimed` when the holder already claimed the account, 422 `managed_account_not_claimable` for a test account (it cannot be claimed), and 422 `idempotency_key_required` because reissuing is irreversible. The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`.
      *
-     * @param  \Factuarea\Sdk\Models\Components\AcceptAccountClaimTokenV1Request  $body
      * @param  string  $account
      * @param  string  $idempotencyKey
+     * @param  ?\Factuarea\Sdk\Models\Components\ReissueManagedAccountClaimV1Request  $body
      * @param  ?LocalDate  $factuareaVersion
-     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensAcceptResponse
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsClaimTokensCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountClaimTokensAccept(Components\AcceptAccountClaimTokenV1Request $body, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountClaimTokensAcceptResponse
+    public function publicApiV1ManagedAccountsClaimTokensCreate(string $account, string $idempotencyKey, ?Components\ReissueManagedAccountClaimV1Request $body = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ManagedAccountsClaimTokensCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,21 +87,20 @@ class ClaimTokens
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1AccountClaimTokensAcceptRequest(
+        $request = new Operations\PublicApiV1ManagedAccountsClaimTokensCreateRequest(
             account: $account,
             idempotencyKey: $idempotencyKey,
-            body: $body,
             factuareaVersion: $factuareaVersion,
+            body: $body,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/claim-tokens/accept', Operations\PublicApiV1AccountClaimTokensAcceptRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/claim-tokens', Operations\PublicApiV1ManagedAccountsClaimTokensCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body === null) {
-            throw new \Exception('Request body is required');
+        if ($body !== null) {
+            $httpOptions = array_merge_recursive($httpOptions, $body);
         }
-        $httpOptions = array_merge_recursive($httpOptions, $body);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -109,137 +108,7 @@ class ClaimTokens
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
-        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.claim_tokens.accept', null, $this->sdkConfiguration->securitySource);
-        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
-        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
-        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
-        try {
-            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
-        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
-            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
-            $httpResponse = $res;
-        }
-        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
-
-        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
-            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
-            $httpResponse = $res;
-        }
-
-        $statusCode = $httpResponse->getStatusCode();
-        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensAcceptResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1AccountClaimTokensAcceptResponse(
-                    statusCode: $statusCode,
-                    contentType: $contentType,
-                    rawResponse: $httpResponse,
-                    headers: $httpResponse->getHeaders(),
-                    object: $obj);
-
-                return $response;
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
-            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
-            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-        } else {
-            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-        }
-    }
-
-    /**
-     * Issue a claim token for a tax ID
-     *
-     * Issue a CLAIM TOKEN over ONE tax ID of your account, named explicitly in `company_id`, and receive **201 Created** with the token and its plaintext `secret`. This is the only way a tax ID can move from this account to another one, and the initiative is always the giving side: no operation lets an account ask for someone else's tax ID. The secret is returned EXACTLY ONCE and never persisted — only its irreversible fingerprint is stored, so no later read can return it, today or ever; hand it to the receiving account through a channel you trust. `expires_at` is OPTIONAL: omit it for the product default, or pass an ISO 8601 instant that is in the future and within the product ceiling. No `Location` header is returned, deliberately: a token has no individual read operation. Returns 403 `forbidden_action` when the credential holder does not administer that tax ID, 404 `profile_not_found` when the tax ID does not exist, belongs to another account or is outside your scope (all three with the same body), 422 `business_rule_violation` on a past, too-distant or uninterpretable `expires_at`, 422 `idempotency_key_required` because issuing is irreversible — once out, the secret is out — and 404 `account_not_found` when `{account}` is not the credential account.
-     *
-     * @param  \Factuarea\Sdk\Models\Components\CreateAccountClaimTokenV1Request  $body
-     * @param  string  $account
-     * @param  string  $idempotencyKey
-     * @param  ?LocalDate  $factuareaVersion
-     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensCreateResponse
-     * @throws \Factuarea\Sdk\Models\Errors\APIException
-     */
-    public function publicApiV1AccountClaimTokensCreate(Components\CreateAccountClaimTokenV1Request $body, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountClaimTokensCreateResponse
-    {
-        $retryConfig = null;
-        if ($options) {
-            $retryConfig = $options->retryConfig;
-        }
-        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
-            $retryConfig = $this->sdkConfiguration->retryConfig;
-        } else {
-            $retryConfig = new Retry\RetryConfigBackoff(
-                initialIntervalMs: 500,
-                maxIntervalMs: 60000,
-                exponent: 1.5,
-                maxElapsedTimeMs: 3600000,
-                retryConnectionErrors: true,
-            );
-        }
-        $retryCodes = null;
-        if ($options) {
-            $retryCodes = $options->retryCodes;
-        }
-        if ($retryCodes === null) {
-            $retryCodes = [
-                '429',
-                '5xx',
-            ];
-        }
-        $request = new Operations\PublicApiV1AccountClaimTokensCreateRequest(
-            account: $account,
-            idempotencyKey: $idempotencyKey,
-            body: $body,
-            factuareaVersion: $factuareaVersion,
-        );
-        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/claim-tokens', Operations\PublicApiV1AccountClaimTokensCreateRequest::class, $request);
-        $urlOverride = null;
-        $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body === null) {
-            throw new \Exception('Request body is required');
-        }
-        $httpOptions = array_merge_recursive($httpOptions, $body);
-        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
-        if (! array_key_exists('headers', $httpOptions)) {
-            $httpOptions['headers'] = [];
-        }
-        $httpOptions['headers']['Accept'] = 'application/json';
-        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
-        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.claim_tokens.create', null, $this->sdkConfiguration->securitySource);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.managed_accounts.claim_tokens.create', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
@@ -263,8 +132,8 @@ class ClaimTokens
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensCreateResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1AccountClaimTokensCreateResponse(
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsClaimTokensCreateResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1ManagedAccountsClaimTokensCreateResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
@@ -275,133 +144,7 @@ class ClaimTokens
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
-            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
-            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-        } else {
-            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-        }
-    }
-
-    /**
-     * List issued claim tokens
-     *
-     * List the claim tokens your account has ISSUED over its own tax IDs — the inventory of open cessions — with cursor-based pagination (`limit` 1-100, default 25, plus `starting_after`) and an optional `status` filter (`active`, `expired`, `consumed`). Tokens RECEIVED from other accounts are never listed: a token someone handed you is not yours — you only hold a secret — and publishing them would tell you which other accounts are giving away which tax IDs. Unlike its member and invitation siblings this listing is NOT narrowed by the tax-ID scope of the credential and does not go through the administration guard: a token is an act of the ACCOUNT over one of its tax IDs, so its natural reach is the whole account and the `claim_tokens:read` scope is what authorises it. The `status` of each item is DERIVED against a single clock instant for the whole page — the table has no status column — and the `secret` never travels through this read: publishing it would turn a read permission into an effective tax-ID transfer permission. Returns 422 `invalid_param_value` for a `status` outside the closed vocabulary, 400 for an unknown query parameter or a malformed `limit`/`starting_after`, and 404 `account_not_found` when `{account}` is not the credential account.
-     *
-     * @param  string  $account
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensListStatus  $status
-     * @param  ?LocalDate  $factuareaVersion
-     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountClaimTokensListResponse
-     * @throws \Factuarea\Sdk\Models\Errors\APIException
-     */
-    public function publicApiV1AccountClaimTokensList(string $account, ?Operations\PublicApiV1AccountClaimTokensListStatus $status = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountClaimTokensListResponse
-    {
-        $retryConfig = null;
-        if ($options) {
-            $retryConfig = $options->retryConfig;
-        }
-        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
-            $retryConfig = $this->sdkConfiguration->retryConfig;
-        } else {
-            $retryConfig = new Retry\RetryConfigBackoff(
-                initialIntervalMs: 500,
-                maxIntervalMs: 60000,
-                exponent: 1.5,
-                maxElapsedTimeMs: 3600000,
-                retryConnectionErrors: true,
-            );
-        }
-        $retryCodes = null;
-        if ($options) {
-            $retryCodes = $options->retryCodes;
-        }
-        if ($retryCodes === null) {
-            $retryCodes = [
-                '429',
-                '5xx',
-            ];
-        }
-        $request = new Operations\PublicApiV1AccountClaimTokensListRequest(
-            account: $account,
-            status: $status,
-            factuareaVersion: $factuareaVersion,
-        );
-        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/claim-tokens', Operations\PublicApiV1AccountClaimTokensListRequest::class, $request);
-        $urlOverride = null;
-        $httpOptions = ['http_errors' => false];
-
-        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1AccountClaimTokensListRequest::class, $request, $urlOverride);
-        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
-        if (! array_key_exists('headers', $httpOptions)) {
-            $httpOptions['headers'] = [];
-        }
-        $httpOptions['headers']['Accept'] = 'application/json';
-        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
-        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.claim_tokens.list', null, $this->sdkConfiguration->securitySource);
-        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
-        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
-        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
-        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
-        try {
-            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
-        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
-            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
-            $httpResponse = $res;
-        }
-        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
-
-        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
-            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
-            $httpResponse = $res;
-        }
-
-        $statusCode = $httpResponse->getStatusCode();
-        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\AccountClaimTokenList', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1AccountClaimTokensListResponse(
-                    statusCode: $statusCode,
-                    contentType: $contentType,
-                    rawResponse: $httpResponse,
-                    headers: $httpResponse->getHeaders(),
-                    accountClaimTokenList: $obj);
-
-                return $response;
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

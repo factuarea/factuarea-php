@@ -12,14 +12,6 @@ namespace Factuarea\Sdk\Models\Components;
 class InviteAccountMemberV1Request
 {
     /**
-     * Public identifier (UUID v7) of the company of your account the person is invited to.
-     *
-     * @var string $companyId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('company_id')]
-    public string $companyId;
-
-    /**
      * Email address the invitation is sent to.
      *
      * @var string $email
@@ -28,7 +20,7 @@ class InviteAccountMemberV1Request
     public string $email;
 
     /**
-     * Membership role the person would join with: `owner`, `admin`, `member` or `employee`.
+     * Account role the person would join with: `admin` or `member`.
      *
      * @var \Factuarea\Sdk\Models\Components\InviteAccountMemberV1RequestRole $role
      */
@@ -37,15 +29,35 @@ class InviteAccountMemberV1Request
     public InviteAccountMemberV1RequestRole $role;
 
     /**
-     * @param  string  $companyId
+     * Initial per-tax-ID grants of the invited person. Required, it can be empty; only a `member` carries grants.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\InviteAccountMemberV1RequestGrant> $grants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('grants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InviteAccountMemberV1RequestGrant>')]
+    public array $grants;
+
+    /**
+     * Send the invitation email (`true`, default) or only return the acceptance link (`false`).
+     *
+     * @var ?bool $sendEmail
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('send_email')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $sendEmail = null;
+
+    /**
      * @param  string  $email
      * @param  \Factuarea\Sdk\Models\Components\InviteAccountMemberV1RequestRole  $role
+     * @param  array<\Factuarea\Sdk\Models\Components\InviteAccountMemberV1RequestGrant>  $grants
+     * @param  ?bool  $sendEmail
      * @phpstan-pure
      */
-    public function __construct(string $companyId, string $email, InviteAccountMemberV1RequestRole $role)
+    public function __construct(string $email, InviteAccountMemberV1RequestRole $role, array $grants, ?bool $sendEmail = null)
     {
-        $this->companyId = $companyId;
         $this->email = $email;
         $this->role = $role;
+        $this->grants = $grants;
+        $this->sendEmail = $sendEmail;
     }
 }

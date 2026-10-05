@@ -32,6 +32,16 @@ class UpdateWebhookEndpointRequest
     public ?array $customHeaders = null;
 
     /**
+     * Optional endpoint status: `active` re-enables the endpoint and `disabled` pauses it; omit it to leave the status unchanged. `degraded` cannot be set by hand. Re-enabling an endpoint that was paused because its company tax ID was transferred to another account makes the caller its new owner, so the degraded-endpoint email reaches that person from then on.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestStatus $status
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestStatus|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateWebhookEndpointRequestStatus $status = null;
+
+    /**
      *
      * @var ?string $url
      */
@@ -89,6 +99,7 @@ class UpdateWebhookEndpointRequest
     /**
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestEnabledEvent>  $enabledEvents
      * @param  ?array<string, string>  $customHeaders
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestStatus  $status
      * @param  ?string  $url
      * @param  ?string  $description
      * @param  ?array<string>  $ipAllowlist
@@ -97,10 +108,11 @@ class UpdateWebhookEndpointRequest
      * @param  ?int  $timeoutSeconds
      * @phpstan-pure
      */
-    public function __construct(?array $enabledEvents = null, ?array $customHeaders = null, ?string $url = null, ?string $description = null, ?array $ipAllowlist = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null)
+    public function __construct(?array $enabledEvents = null, ?array $customHeaders = null, ?UpdateWebhookEndpointRequestStatus $status = null, ?string $url = null, ?string $description = null, ?array $ipAllowlist = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null)
     {
         $this->enabledEvents = $enabledEvents;
         $this->customHeaders = $customHeaders;
+        $this->status = $status;
         $this->url = $url;
         $this->description = $description;
         $this->ipAllowlist = $ipAllowlist;

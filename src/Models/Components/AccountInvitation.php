@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AccountInvitation - An invitation to join one NIF of your account. The acceptance token is never part of this representation: publishing it would turn a read permission into an effective power to add members, and one that would survive revoking the credential. */
+/** AccountInvitation - An invitation to join your ACCOUNT with an account role and its initial grants. The acceptance secret is never part of this representation: publishing it would turn a read permission into an effective power to add members, and one that would survive revoking the credential. */
 class AccountInvitation
 {
     /**
@@ -30,14 +30,6 @@ class AccountInvitation
     public AccountInvitationObject $object;
 
     /**
-     * Opaque identifier (UUID v7) of the NIF the person is invited to.
-     *
-     * @var string $companyId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('company_id')]
-    public string $companyId;
-
-    /**
      * Address the invitation was sent to.
      *
      * @var string $email
@@ -46,7 +38,7 @@ class AccountInvitation
     public string $email;
 
     /**
-     * Membership role the person would get. Only `admin` and `member` can be invited through this surface; `employee` appears on invitations created by the Control Horario flow, which owns its own seat. `owner` never appears: NIF ownership is not handed out by invitation.
+     * Account role the person would join with. `owner` never appears: ownership is transferred, never handed out by invitation.
      *
      * @var \Factuarea\Sdk\Models\Components\AccountInvitationRole $role
      */
@@ -55,7 +47,32 @@ class AccountInvitation
     public AccountInvitationRole $role;
 
     /**
-     * Derived state. `accepted` and `canceled` are final; `expired` only applies to an invitation that was still pending when its expiry passed.
+     * Initial per-tax-ID grants of a `member` invitation, limited to the tax IDs your credential reads. Always empty for an `admin`.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\AccountInvitationGrant> $grants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('grants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\AccountInvitationGrant>')]
+    public array $grants;
+
+    /**
+     * Whether the invitation was delivered by email (`false`: the link was copied and delivered by whoever invited).
+     *
+     * @var bool $sendEmail
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('send_email')]
+    public bool $sendEmail;
+
+    /**
+     * Whether this is the invitation of the external advisor of the account (only created from the web app).
+     *
+     * @var bool $externalAdvisor
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_advisor')]
+    public bool $externalAdvisor;
+
+    /**
+     * Derived state. `accepted` and `revoked` are final; `expired` only applies to an invitation that was still pending when its expiry passed.
      *
      * @var \Factuarea\Sdk\Models\Components\AccountInvitationStatus $status
      */
@@ -74,20 +91,24 @@ class AccountInvitation
     /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\AccountInvitationObject  $object
-     * @param  string  $companyId
      * @param  string  $email
      * @param  \Factuarea\Sdk\Models\Components\AccountInvitationRole  $role
+     * @param  array<\Factuarea\Sdk\Models\Components\AccountInvitationGrant>  $grants
+     * @param  bool  $sendEmail
+     * @param  bool  $externalAdvisor
      * @param  \Factuarea\Sdk\Models\Components\AccountInvitationStatus  $status
      * @param  \DateTime  $expiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, AccountInvitationObject $object, string $companyId, string $email, AccountInvitationRole $role, AccountInvitationStatus $status, \DateTime $expiresAt)
+    public function __construct(string $id, AccountInvitationObject $object, string $email, AccountInvitationRole $role, array $grants, bool $sendEmail, bool $externalAdvisor, AccountInvitationStatus $status, \DateTime $expiresAt)
     {
         $this->id = $id;
         $this->object = $object;
-        $this->companyId = $companyId;
         $this->email = $email;
         $this->role = $role;
+        $this->grants = $grants;
+        $this->sendEmail = $sendEmail;
+        $this->externalAdvisor = $externalAdvisor;
         $this->status = $status;
         $this->expiresAt = $expiresAt;
     }

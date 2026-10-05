@@ -49,17 +49,48 @@ class Me
     public array $scope;
 
     /**
+     * Accounts of your clients that the credential account reaches through a relation, ordered by `id`: accounts that granted it access (`granted`) and accounts it provisioned and still manages (`provisioned`). Only accounts of the environment of the key are listed, and at most 100 (`client_accounts_has_more` tells whether more exist; list them with `GET /v1/accounts`). Listed ONLY when the credential has the `accounts:read` scope in effect (the same one `GET /v1/accounts` requires): without it the list is empty and `client_accounts_visible` is `false`. Empty as well when there is none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\ClientAccount> $clientAccounts
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('client_accounts')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ClientAccount>')]
+    public array $clientAccounts;
+
+    /**
+     * `true` when the credential has the `accounts:read` scope in effect and `client_accounts` is the real list; `false` when it is empty because that scope is missing.
+     *
+     * @var bool $clientAccountsVisible
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('client_accounts_visible')]
+    public bool $clientAccountsVisible;
+
+    /**
+     * `true` when more client accounts exist beyond the 100 listed in `client_accounts`.
+     *
+     * @var bool $clientAccountsHasMore
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('client_accounts_has_more')]
+    public bool $clientAccountsHasMore;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\MeObject  $object
      * @param  \Factuarea\Sdk\Models\Components\MeAccount  $account
      * @param  \Factuarea\Sdk\Models\Components\MeApiKey  $apiKey
      * @param  array<\Factuarea\Sdk\Models\Components\MeScope>  $scope
+     * @param  array<\Factuarea\Sdk\Models\Components\ClientAccount>  $clientAccounts
+     * @param  bool  $clientAccountsVisible
+     * @param  bool  $clientAccountsHasMore
      * @phpstan-pure
      */
-    public function __construct(MeObject $object, MeAccount $account, MeApiKey $apiKey, array $scope)
+    public function __construct(MeObject $object, MeAccount $account, MeApiKey $apiKey, array $scope, array $clientAccounts, bool $clientAccountsVisible, bool $clientAccountsHasMore)
     {
         $this->object = $object;
         $this->account = $account;
         $this->apiKey = $apiKey;
         $this->scope = $scope;
+        $this->clientAccounts = $clientAccounts;
+        $this->clientAccountsVisible = $clientAccountsVisible;
+        $this->clientAccountsHasMore = $clientAccountsHasMore;
     }
 }

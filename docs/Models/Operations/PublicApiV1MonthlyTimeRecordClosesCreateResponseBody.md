@@ -1,5 +1,7 @@
 # PublicApiV1MonthlyTimeRecordClosesCreateResponseBody
 
+Month closed. The `Location` header contains the canonical URL of the new monthly close.
+
 
 ## Fields
 

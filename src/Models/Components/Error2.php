@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Error2
 {
     /**
-     * Machine-readable category of the error. Versioned by `Factuarea-Version`: from `2026-09-01` onwards the payment gate codes `payment_method_required`, `seat_charge_failed`, `gestoria_plan_required`, `employee_seat_payment_method_required` and `employee_seat_charge_failed` are served as `payment_required_error`; requests pinned to an earlier version keep receiving `invalid_request_error` for those five. `error.code` and `error.subcode` never change — branch on `code` if you want version-independent behaviour.
+     * Machine-readable category of the error. Versioned by `Factuarea-Version`: from `2026-09-01` onwards the payment gate codes `payment_method_required`, `employee_seat_payment_method_required` and `employee_seat_charge_failed` are served as `payment_required_error`; requests pinned to an earlier version keep receiving `invalid_request_error` for those three. The additional tax ID codes (`additional_nif_plan_required`, `additional_nif_charge_failed`) and `addon_required` are newer and carry `payment_required_error` in every version. `error.code` and `error.subcode` never change — branch on `code` if you want version-independent behaviour.
      *
      * @var \Factuarea\Sdk\Models\Components\ErrorType $type
      */
@@ -57,7 +57,7 @@ class Error2
     public ?Details $details = null;
 
     /**
-     * Sub-code detailing the subtype within `code`. Present only on some errors, and only where `code` alone is ambiguous: on 409 duplication conflicts it pins the duplicate key (`code=resource_already_exists`, `subcode=tax_id_already_exists`), and on 402 payment errors it pins which gate rejected the call (`code=seat_charge_failed`, `subcode=seat_charge_failed`; `code=addon_required`, `subcode=webhooks_addon_required`). Like `code`, it is stable and invariant across locales and API versions.
+     * Sub-code detailing the subtype within `code`. Present only on some errors, and only where `code` alone is ambiguous: on 409 duplication conflicts it pins the duplicate key (`code=resource_already_exists`, `subcode=tax_id_already_exists`), and on 402 payment errors it pins which gate rejected the call (`code=additional_nif_charge_failed`, `subcode=additional_nif_charge_failed`; `code=addon_required`, `subcode=webhooks_addon_required`). Like `code`, it is stable and invariant across locales and API versions.
      *
      * @var ?string $subcode
      */

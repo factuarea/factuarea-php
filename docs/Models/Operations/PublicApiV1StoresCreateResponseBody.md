@@ -1,5 +1,7 @@
 # PublicApiV1StoresCreateResponseBody
 
+Online store connected. The `Location` header contains the canonical URL of the new store connection.
+
 
 ## Fields
 

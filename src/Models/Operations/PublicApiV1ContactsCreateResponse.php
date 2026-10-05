@@ -40,25 +40,35 @@ class PublicApiV1ContactsCreateResponse
     public array $headers;
 
     /**
+     * The `external_id` already identified a contact of the company: that contact was updated with the request, keeps its `id` and is returned.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody $object
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody1 $twoHundredApplicationJsonObject
      */
-    public ?PublicApiV1ContactsCreateResponseBody $object = null;
+    public ?PublicApiV1ContactsCreateResponseBody1 $twoHundredApplicationJsonObject = null;
+
+    /**
+     * Contact created. The `Location` header contains the canonical URL of the new contact.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody2 $twoHundredAndOneApplicationJsonObject
+     */
+    public ?PublicApiV1ContactsCreateResponseBody2 $twoHundredAndOneApplicationJsonObject = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody  $object
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody1  $twoHundredApplicationJsonObject
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody2  $twoHundredAndOneApplicationJsonObject
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1ContactsCreateResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1ContactsCreateResponseBody1 $twoHundredApplicationJsonObject = null, ?PublicApiV1ContactsCreateResponseBody2 $twoHundredAndOneApplicationJsonObject = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
+        $this->twoHundredAndOneApplicationJsonObject = $twoHundredAndOneApplicationJsonObject;
     }
 }

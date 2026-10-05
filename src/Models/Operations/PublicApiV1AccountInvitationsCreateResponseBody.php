@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1AccountInvitationsCreateResponseBody - Invitation created. The `Location` header contains the canonical URL of the new account invitation; the body carries its acceptance secret once. */
 class PublicApiV1AccountInvitationsCreateResponseBody
 {
     /**
-     * An invitation to join one NIF of your account. The acceptance token is never part of this representation: publishing it would turn a read permission into an effective power to add members, and one that would survive revoking the credential.
+     * The response of creating or resending an account invitation: the fields of `AccountInvitation` PLUS the acceptance `secret` and `accept_url`. They are returned ONLY for a copy-link invitation (`send_email: false`), and only once: when the invitation is delivered by email (`send_email: true`) the secret travels only in that email and both fields are `null`. They are not stored in the clear, not even in the idempotency cache, so an idempotent replay returns both as `null`. Resending issues a NEW secret and the previous one stops working.
      *
-     * @var \Factuarea\Sdk\Models\Components\AccountInvitation $data
+     * @var \Factuarea\Sdk\Models\Components\AccountInvitationWithSecret $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountInvitation')]
-    public Components\AccountInvitation $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountInvitationWithSecret')]
+    public Components\AccountInvitationWithSecret $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\AccountInvitation  $data
+     * @param  \Factuarea\Sdk\Models\Components\AccountInvitationWithSecret  $data
      * @phpstan-pure
      */
-    public function __construct(Components\AccountInvitation $data)
+    public function __construct(Components\AccountInvitationWithSecret $data)
     {
         $this->data = $data;
     }

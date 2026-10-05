@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EmployeeSeatBillingStatus - Billing status of the per-employee add-on for your company (Control Horario). Whether the dedicated `employee-seats` subscription is active, how many seats are billed, how many employees are active and the recurring per-seat cost. Amounts are in minor currency units (cents) and are null when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. Employees never count towards the plan `users` seat limit. Read `subscribed` together with `seats_billable` to tell a legitimate no-charge state apart from a billing anomaly. */
+/** EmployeeSeatBillingStatus - Billing status of the per-employee add-on for your company (Control Horario). Whether the dedicated `employee-seats` subscription is active, how many seats are billed, how many employees are active and the recurring per-seat cost. Amounts are euro 2-decimal strings and are null when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. Employees never count towards the plan `users` seat limit. Read `subscribed` together with `seats_billable` to tell a legitimate no-charge state apart from a billing anomaly. */
 class EmployeeSeatBillingStatus
 {
     /**
@@ -70,12 +70,12 @@ class EmployeeSeatBillingStatus
     public bool $seatsBillable;
 
     /**
-     * Taxable base of one seat per billing cycle, in cents, or null when not resolvable.
+     * Taxable base of one seat per billing cycle, in euros as a 2-decimal string, or null when not resolvable.
      *
-     * @var ?int $unitAmount
+     * @var ?string $unitAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_amount')]
-    public ?int $unitAmount;
+    public ?string $unitAmount;
 
     /**
      * Applied VAT rate (e.g. 21), or null when not resolved.
@@ -86,28 +86,28 @@ class EmployeeSeatBillingStatus
     public ?int $taxRate;
 
     /**
-     * VAT amount of one seat, in cents, or null.
+     * VAT amount of one seat, in euros as a 2-decimal string, or null.
      *
-     * @var ?int $taxAmount
+     * @var ?string $taxAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount')]
-    public ?int $taxAmount;
+    public ?string $taxAmount;
 
     /**
-     * Base + VAT of one seat, in cents, or null.
+     * Base + VAT of one seat, in euros as a 2-decimal string, or null.
      *
-     * @var ?int $totalPerSeat
+     * @var ?string $totalPerSeat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_per_seat')]
-    public ?int $totalPerSeat;
+    public ?string $totalPerSeat;
 
     /**
-     * Projected recurring total (`total_per_seat` × `quantity`), in cents. Null when VAT is not resolved.
+     * Projected recurring total (`total_per_seat` × `quantity`), in euros as a 2-decimal string. Null when VAT is not resolved.
      *
-     * @var ?int $recurringTotal
+     * @var ?string $recurringTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_total')]
-    public ?int $recurringTotal;
+    public ?string $recurringTotal;
 
     /**
      * The seat is always billed monthly, regardless of the plan interval; null when not subscribed.
@@ -134,16 +134,16 @@ class EmployeeSeatBillingStatus
      * @param  string  $currency
      * @param  bool  $requiresActivePlan
      * @param  bool  $seatsBillable
-     * @param  ?int  $unitAmount
+     * @param  ?string  $unitAmount
      * @param  ?int  $taxRate
-     * @param  ?int  $taxAmount
-     * @param  ?int  $totalPerSeat
-     * @param  ?int  $recurringTotal
+     * @param  ?string  $taxAmount
+     * @param  ?string  $totalPerSeat
+     * @param  ?string  $recurringTotal
      * @param  ?\Factuarea\Sdk\Models\Components\EmployeeSeatBillingStatusBillingInterval  $billingInterval
      * @param  ?\DateTime  $nextInvoiceAt
      * @phpstan-pure
      */
-    public function __construct(EmployeeSeatBillingStatusObject $object, bool $subscribed, int $quantity, int $activeEmployees, string $currency, bool $requiresActivePlan, bool $seatsBillable, ?int $unitAmount = null, ?int $taxRate = null, ?int $taxAmount = null, ?int $totalPerSeat = null, ?int $recurringTotal = null, ?EmployeeSeatBillingStatusBillingInterval $billingInterval = null, ?\DateTime $nextInvoiceAt = null)
+    public function __construct(EmployeeSeatBillingStatusObject $object, bool $subscribed, int $quantity, int $activeEmployees, string $currency, bool $requiresActivePlan, bool $seatsBillable, ?string $unitAmount = null, ?int $taxRate = null, ?string $taxAmount = null, ?string $totalPerSeat = null, ?string $recurringTotal = null, ?EmployeeSeatBillingStatusBillingInterval $billingInterval = null, ?\DateTime $nextInvoiceAt = null)
     {
         $this->object = $object;
         $this->subscribed = $subscribed;

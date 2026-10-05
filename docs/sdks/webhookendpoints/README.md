@@ -17,6 +17,53 @@
 
 Create a webhook endpoint that receives event notifications via HTTPS callbacks. The signing `secret` is returned **once** in this response and never again — store it securely.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://evil-starboard.org',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: 'Fisher and Sons',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="missing_api_key" -->
@@ -54,6 +101,53 @@ $body = new Components\CreateWebhookEndpointRequest(
 
 $response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
     company: 'Wilkinson LLC',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://evil-starboard.org',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: 'Bartell, Lebsack and Farrell',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -111,6 +205,53 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://evil-starboard.org',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::InvoiceCancelled,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: 'Lynch, Beer and Balistreri',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: webhook_endpoint_production
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="webhook_endpoint_production" -->
@@ -139,7 +280,7 @@ $body = new Components\CreateWebhookEndpointRequest(
         Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
     ],
     description: 'Webhook principal de producción.',
-    apiVersion: '2026-05-01',
+    apiVersion: '2026-09-23',
     timeoutSeconds: 10,
 );
 
@@ -173,7 +314,7 @@ if ($response->object !== null) {
 
 | Error Type                        | Status Code                       | Content Type                      |
 | --------------------------------- | --------------------------------- | --------------------------------- |
-| Errors\Error                      | 401, 402, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 400, 401, 402, 403, 404, 422, 429 | application/json                  |
 | Errors\Error                      | 500                               | application/json                  |
 | Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
@@ -228,11 +369,11 @@ if ($response->paginatedList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1WebhookEndpointsDelete
 
@@ -290,7 +431,7 @@ if ($response->statusCode === 200) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -346,16 +487,62 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 404, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1WebhookEndpointsUpdate
 
 Update a webhook endpoint (URL, description, enabled events, status, IP allowlist).
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: 'Lesch Inc',
+    webhookEndpoint: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="missing_api_key" -->
@@ -379,6 +566,52 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
     company: 'Prosacco, Homenick and Farrell',
+    webhookEndpoint: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: 'Bahringer and Sons',
     webhookEndpoint: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
@@ -448,6 +681,52 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            http: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: 'Prosacco, Homenick and Farrell',
+    webhookEndpoint: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -463,13 +742,13 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1WebhookEndpointsPing
 
-Send a test event (`webhook.ping`) to the endpoint to verify it is reachable and the signature handshake works. The synthetic delivery appears in `GET /companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries`.
+Send a synchronous test request (`{"type": "webhook.ping"}`, 10-second timeout) to the URL of the endpoint to check that it is reachable, and return its HTTP status, a truncated body and the duration. The request carries no `Factuarea-Signature` and creates no delivery, so it does not appear in `GET /companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries`: use `test-event` to exercise the signature. An endpoint that was not `active` becomes `active` again when the request succeeds.
 
 ### Example Usage
 
@@ -521,15 +800,15 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1WebhookEndpointsRotateSecret
 
-Rotate the signing secret of a webhook endpoint. The new secret is returned **once** in this response. The previous secret remains valid for a 24-hour grace period (see `previous_secret_valid_until`) to allow zero-downtime rotation.
+Rotate the signing secret of a webhook endpoint. The new secret is returned **once** in this response. The previous secret remains valid for a 24-hour grace period (see `previous_secret_valid_until`) to allow zero-downtime rotation. Rotating again within five minutes of the last rotation returns 422 `business_rule_violation` with the subcode `webhook_secret_recently_rotated`; nothing changes, so wait and retry.
 
 ### Example Usage
 
@@ -583,7 +862,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -642,6 +921,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

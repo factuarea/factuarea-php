@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Derived state. `accepted` and `canceled` are final; `expired` only applies to an invitation that was still pending when its expiry passed. */
+/** Derived state. `accepted` and `revoked` are final; `expired` only applies to an invitation that was still pending when its expiry passed. */
 enum AccountInvitationStatus: string
 {
     case Pending = 'pending';
     case Accepted = 'accepted';
-    case Canceled = 'canceled';
+    case Revoked = 'revoked';
     case Expired = 'expired';
 }

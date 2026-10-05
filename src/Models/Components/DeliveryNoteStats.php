@@ -21,12 +21,12 @@ class DeliveryNoteStats
     public int $totalCount;
 
     /**
-     * Aggregate amount of the delivery notes (EUR).
+     * Aggregate amount of the delivery notes (EUR), as a 2-decimal string.
      *
-     * @var float $totalAmount
+     * @var string $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public float $totalAmount;
+    public string $totalAmount;
 
     /**
      * Breakdown by internal delivery note state. The key is the internal state (`draft`, `delivered`, `invoiced`, `cancelled`); the value is an object with `status`, `count` and `total` (accumulated amount in EUR). States with no delivery notes do not appear.
@@ -55,13 +55,13 @@ class DeliveryNoteStats
 
     /**
      * @param  int  $totalCount
-     * @param  float  $totalAmount
+     * @param  string  $totalAmount
      * @param  array<string, \Factuarea\Sdk\Models\Components\DeliveryNoteStatsByStatus>  $byStatus
      * @param  int  $pendingSignature
      * @param  int  $convertedThisMonth
      * @phpstan-pure
      */
-    public function __construct(int $totalCount, float $totalAmount, array $byStatus, int $pendingSignature, int $convertedThisMonth)
+    public function __construct(int $totalCount, string $totalAmount, array $byStatus, int $pendingSignature, int $convertedThisMonth)
     {
         $this->totalCount = $totalCount;
         $this->totalAmount = $totalAmount;

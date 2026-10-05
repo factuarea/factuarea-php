@@ -12,14 +12,6 @@ namespace Factuarea\Sdk\Models\Components;
 class AddAccountMemberV1Request
 {
     /**
-     * Public identifier (UUID v7) of the company of your account the person is added to.
-     *
-     * @var string $companyId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('company_id')]
-    public string $companyId;
-
-    /**
      * Full name of the person.
      *
      * @var string $name
@@ -44,7 +36,7 @@ class AddAccountMemberV1Request
     public string $password;
 
     /**
-     * Membership role on that company: `owner`, `admin`, `member` or `employee`.
+     * Account role of the new member: `admin` or `member`. Ownership is never assigned, it is transferred.
      *
      * @var \Factuarea\Sdk\Models\Components\AddAccountMemberV1RequestRole $role
      */
@@ -53,19 +45,28 @@ class AddAccountMemberV1Request
     public AddAccountMemberV1RequestRole $role;
 
     /**
-     * @param  string  $companyId
+     * Initial per-tax-ID grants of the member. Required, it can be empty; only a `member` carries grants.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\AddAccountMemberV1RequestGrant> $grants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('grants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\AddAccountMemberV1RequestGrant>')]
+    public array $grants;
+
+    /**
      * @param  string  $name
      * @param  string  $email
      * @param  string  $password
      * @param  \Factuarea\Sdk\Models\Components\AddAccountMemberV1RequestRole  $role
+     * @param  array<\Factuarea\Sdk\Models\Components\AddAccountMemberV1RequestGrant>  $grants
      * @phpstan-pure
      */
-    public function __construct(string $companyId, string $name, string $email, string $password, AddAccountMemberV1RequestRole $role)
+    public function __construct(string $name, string $email, string $password, AddAccountMemberV1RequestRole $role, array $grants)
     {
-        $this->companyId = $companyId;
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
         $this->role = $role;
+        $this->grants = $grants;
     }
 }

@@ -1,13 +1,11 @@
 # InviteAccountMemberV1RequestRole
 
-Membership role the person would join with: `owner`, `admin`, `member` or `employee`.
+Account role the person would join with: `admin` or `member`.
 
 
 ## Values
 
-| Name       | Value      |
-| ---------- | ---------- |
-| `Owner`    | owner      |
-| `Admin`    | admin      |
-| `Member`   | member     |
-| `Employee` | employee   |
+| Name     | Value    |
+| -------- | -------- |
+| `Admin`  | admin    |
+| `Member` | member   |

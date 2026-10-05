@@ -50,7 +50,7 @@ class Gestoria
     /**
      * Retrieve the consolidated workforce compliance overview
      *
-     * Return the consolidated time-tracking compliance panel for your whole managed portfolio: one row per `active` managed company, each projected from that company's latest monthly close without recomputation — whether the current (last closable) period is closed, its status (`closed`/`reopened`), the last closed period (`last_closed_year`/`last_closed_month`), and the aggregated `total_balance_minutes`, `total_overtime_minutes` and `employee_count`. Master-scoped: the portfolio is resolved from your API key, never from the payload, and only your own children appear. Unlike the per-company endpoints, which name a single managed company in the `{company}` path segment, this aggregates across children in one call. Returned as `{ "data": [ConsolidatedWorkforce, ...] }`.
+     * Return the consolidated time-tracking compliance panel for your portfolio: one row per `active` company within your credential scope (the owner company of the account excluded), each projected from that company's latest monthly close without recomputation — whether the current (last closable) period is closed, its status (`closed`/`reopened`), the last closed period (`last_closed_year`/`last_closed_month`), and the aggregated `total_balance_minutes`, `total_overtime_minutes` and `employee_count`. Scope-bound: the rows are resolved from the tax IDs your credential reaches, never from the payload, so a credential scoped to one tax ID sees that tax ID and no other company. Unlike the per-company endpoints, which name a single company in the `{company}` path segment, this aggregates across the scope in one call. Returned as `{ "data": [ConsolidatedWorkforce, ...] }`.
      *
      * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
@@ -135,7 +135,7 @@ class Gestoria
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

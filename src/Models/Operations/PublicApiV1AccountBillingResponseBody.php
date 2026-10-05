@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1AccountBillingResponseBody
 {
     /**
-     * Billing snapshot of the effective tenant: current plan (trial, grace period, pending change), gestoría seat subscription (when the account manages companies) and payment method. Managed child companies return `managed: true` with the synthetic `gestionada` plan — the master's billing never leaks to a child key.
+     * Billing snapshot of the authenticated company: current plan (trial, grace period, pending change), additional NIF subscription in `gestoria_seats` (when the account has additional tax IDs) and payment method. A tax ID whose billing is paid by another account returns `managed: true` with plan `gestionada`, no additional NIF subscription and no payment method: what the payer pays is never shown to it.
      *
      * @var \Factuarea\Sdk\Models\Components\AccountBilling $data
      */

@@ -55,11 +55,11 @@ class MeApiKey
     /**
      * Environment of the authenticated key: `live` (`fact_live_` prefix, real side effects) or `test` (`fact_test_` prefix, sandbox company, no real-world effects). Always matches the real prefix of the credential.
      *
-     * @var \Factuarea\Sdk\Models\Components\MeEnvironment $environment
+     * @var \Factuarea\Sdk\Models\Components\MeApiKeyEnvironment $environment
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\MeEnvironment')]
-    public MeEnvironment $environment;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\MeApiKeyEnvironment')]
+    public MeApiKeyEnvironment $environment;
 
     /**
      *
@@ -88,13 +88,13 @@ class MeApiKey
      * @param  string  $prefix
      * @param  array<string>  $scopes
      * @param  string  $tier
-     * @param  \Factuarea\Sdk\Models\Components\MeEnvironment  $environment
+     * @param  \Factuarea\Sdk\Models\Components\MeApiKeyEnvironment  $environment
      * @param  \DateTime  $createdAt
      * @param  ?\DateTime  $lastUsedAt
      * @param  ?\DateTime  $expiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, string $name, string $prefix, array $scopes, string $tier, MeEnvironment $environment, \DateTime $createdAt, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null)
+    public function __construct(string $id, string $name, string $prefix, array $scopes, string $tier, MeApiKeyEnvironment $environment, \DateTime $createdAt, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null)
     {
         $this->id = $id;
         $this->name = $name;

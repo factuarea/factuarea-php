@@ -66,6 +66,102 @@ off `/v1/companies/{company}/…` and the account surface off
   `UpdateProductRequest*` is documented as a UUID v7; the API rejects a new one
   with another UUID version with 422. Text only: no signature or type changes.
 
+### Account model
+
+Regenerated a second time, from the **account-model** contract, inside the same
+unpublished `0.5.0` (in `0.x` a breaking change travels in a `minor`, and this
+work publishes nothing): **508 operations** in **418 paths**, **+36 / −9**
+against the 481 above. Generated with Speakeasy 1.800.1; nothing generated was
+edited by hand and `src/Custom/` is untouched. The default `Factuarea-Version`
+is unchanged. Same single breaking window as above: see
+https://docs.factuarea.com/docs/changelog/axis-and-payload-breaking-window
+(the account-model news page is at
+https://docs.factuarea.com/docs/changelog/account-model).
+
+#### Removed and replaced — breaking
+
+The claim token of an account becomes a **tax ID transfer**. Each retired method
+is listed with the one that replaces it:
+
+| Retired | Replaced by |
+|---|---|
+| `$sdk->account->claimTokens->publicApiV1AccountClaimTokensAccept()` | `$sdk->account->nifTransfers->publicApiV1AccountNifTransfersAccept()` |
+| `$sdk->account->claimTokens->publicApiV1AccountClaimTokensCreate()` | `$sdk->account->nifTransfers->publicApiV1AccountNifTransfersCreate()` |
+| `$sdk->account->claimTokens->publicApiV1AccountClaimTokensList()` | `$sdk->account->nifTransfers->publicApiV1AccountNifTransfersList()` |
+
+`NifTransfers` also gains `publicApiV1AccountNifTransfersRevoke()`. The NIF
+portfolio stays in `Companies`.
+
+#### Removed without a replacement — breaking
+
+- The six tax write operations are gone from the contract:
+  `Taxes::publicApiV1Taxes{Create,Delete,SetDefault,SetDefaultForDocument,Toggle,Update}()`.
+- The `oAuth2` security scheme is no longer declared: `Security::$oAuth2` and the
+  generated `Hooks\OAuth2Scope` enum are gone. `bearerAuth` and `apiKeyAuth` are
+  unchanged.
+- `Components\MembershipRole` and `Components\PlatformRole` are gone with no
+  replacement: the contract no longer carries `platform_role` nor
+  `roles[].membership_role`. `Components\AccountMember` loses `$platformRole`
+  and its `$roles` array, and `Components\AccountMemberRole` stops being the
+  `{company_id, membership_role}` class and becomes the account-role enum
+  (`owner`, `admin`, `member`) that `AccountMember::$role` now uses.
+
+#### Contacts: `create` now declares two success responses — breaking
+
+`Operations\PublicApiV1ContactsCreateResponse` loses `$object` and gains
+`$twoHundredApplicationJsonObject` (200, an existing `external_id` was updated
+and is returned) and `$twoHundredAndOneApplicationJsonObject` (201, contact
+created). Both bodies are `{ data: BusinessContact }`. The contract declares
+the two statuses separately for `POST /v1/companies/{company}/contacts`, so read
+whichever the call returned; the former `$object` has no equivalent.
+`Operations\PublicApiV1ContactsCreateResponseBody` is replaced by
+`…ResponseBody1` (200) and `…ResponseBody2` (201).
+
+#### Generated classes renamed — breaking
+
+Speakeasy names the nested types of a response by position and prefixes them
+when two operations would share a short name. These classes are removed and
+each has a different name now; a type hint, `instanceof` or `use` of the old
+name stops resolving. Properties and wire format do not change.
+
+| Before | After |
+|---|---|
+| `Deliveries` | `WebhookEndpointsDeliveries` |
+| `RequestLogs` | `DevelopersRequestLogs` |
+| `Components\AccountEnvironment` | `Components\AccountEnvironment1` (`MeAccount::$environment`) and `Components\AccountEnvironment2` (`AccountApiKey::$environment`) |
+| `Components\MeEnvironment` | `Components\MeApiKeyEnvironment` |
+| `Components\Options` | `Components\CreateInvoiceRequestOptions` |
+| `Components\Origin` | `Components\EventDataPaymentReversedOrigin` (`Reversal::$origin`) |
+| `Components\Totals` | `Components\RecurringInvoicePreviewDocumentTotals` |
+| `Components\TaxDefaultForDocuments` | `Components\DefaultForDocuments` |
+| `Operations\ApiRequestLogList` | `Operations\PublicApiV1DevelopersRequestLogsListApiRequestLogList` (and `…AccountRequestLogsList…` for the account axis) |
+| `Operations\Method` | `Operations\PublicApiV1DevelopersRequestLogsListMethod` (and `…AccountRequestLogsListMethod`) |
+| `Operations\StatusRange` | `Operations\PublicApiV1DevelopersRequestLogsListStatusRange` (and `…AccountRequestLogsListStatusRange`) |
+
+#### Added
+
+- **Managed accounts** (`$sdk->managedAccounts`): `create`, `list`, `show`, the
+  `plan` (`preview`, `update`), the `accessLevel` update, `management->end` and
+  the reissue of the claim token of a managed account
+  (`claimTokens->publicApiV1ManagedAccountsClaimTokensCreate()`, a different
+  operation from the retired transfer ones).
+- **Bulk import of managed accounts** (`$sdk->managedAccounts->imports`):
+  `publicApiV1ManagedAccountsImportsCreate()`, `…Preview()` and `…Template()`.
+  The first two send `multipart/form-data` with `accounts_file` (required) and
+  `customers_file` (optional) as `Components\AccountsFile` / `CustomersFile`, plus
+  an optional `options` object.
+- **Account webhooks** (`$sdk->account->webhooks`): `create`, `list`, `show`,
+  `update`, `delete`, `rotateSecret`, `test`, and `->deliveries` (`list`, `show`,
+  `retry`). They are signed like company webhooks, so the hand-written
+  `WebhookVerifier` verifies the account envelope unchanged.
+- **Account request logs** (`$sdk->account->requestLogs`): `list` and `show`.
+- Also on the account axis: `publicApiV1AccountProvisioningUsage()`,
+  `ApiKeys::publicApiV1AccountApiKeysUpdateNifScope()`,
+  `Invitations::publicApiV1AccountInvitationsShow()`,
+  `Members::publicApiV1AccountMembersShow()` and the member grants
+  (`Members->grants`: `list`, `show`, `update`, `delete`), plus
+  `Companies::publicApiV1CompaniesStats()`.
+
 ## [0.4.0] — 2026-09-21
 
 Regenerated from the public OpenAPI spec that publishes contacts as the sole

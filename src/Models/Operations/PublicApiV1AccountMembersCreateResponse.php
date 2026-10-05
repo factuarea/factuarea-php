@@ -40,6 +40,7 @@ class PublicApiV1AccountMembersCreateResponse
     public array $headers;
 
     /**
+     * Member created. The `Location` header contains the canonical URL of the new account member.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersCreateResponseBody $object
      */

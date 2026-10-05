@@ -13,44 +13,44 @@ namespace Factuarea\Sdk\Models\Components;
 class TaxTotals
 {
     /**
-     * Sum of the taxable bases of all lines (EUR).
+     * Sum of the taxable bases of all lines (EUR), as a 2-decimal string.
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
-     * Sum of the VAT of all lines.
+     * Sum of the VAT of all lines, as a 2-decimal string.
      *
-     * @var float $totalVat
+     * @var string $totalVat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
-    public float $totalVat;
+    public string $totalVat;
 
     /**
-     * Sum of the equivalence surcharge of all lines.
+     * Sum of the equivalence surcharge of all lines, as a 2-decimal string.
      *
-     * @var float $totalSurcharge
+     * @var string $totalSurcharge
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
-    public float $totalSurcharge;
+    public string $totalSurcharge;
 
     /**
-     * Sum of the withholding (IRPF) of all lines.
+     * Sum of the withholding (IRPF) of all lines, as a 2-decimal string.
      *
-     * @var float $totalRetention
+     * @var string $totalRetention
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
-    public float $totalRetention;
+    public string $totalRetention;
 
     /**
-     * Total general.
+     * Grand total, as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Calculated breakdown for each received line, in the same order.
@@ -62,15 +62,15 @@ class TaxTotals
     public array $lines;
 
     /**
-     * @param  float  $subtotal
-     * @param  float  $totalVat
-     * @param  float  $totalSurcharge
-     * @param  float  $totalRetention
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $totalVat
+     * @param  string  $totalSurcharge
+     * @param  string  $totalRetention
+     * @param  string  $total
      * @param  array<\Factuarea\Sdk\Models\Components\TaxTotalsLine>  $lines
      * @phpstan-pure
      */
-    public function __construct(float $subtotal, float $totalVat, float $totalSurcharge, float $totalRetention, float $total, array $lines)
+    public function __construct(string $subtotal, string $totalVat, string $totalSurcharge, string $totalRetention, string $total, array $lines)
     {
         $this->subtotal = $subtotal;
         $this->totalVat = $totalVat;

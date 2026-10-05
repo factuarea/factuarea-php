@@ -79,6 +79,8 @@ class Factuarea
 
     public Invoices $invoices;
 
+    public ManagedAccounts $managedAccounts;
+
     public AbsenceRequests $absenceRequests;
 
     public TimeCorrections $timeCorrections;
@@ -183,6 +185,7 @@ class Factuarea
         $this->verifactu = new Verifactu($this->sdkConfiguration);
         $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
         $this->invoices = new Invoices($this->sdkConfiguration);
+        $this->managedAccounts = new ManagedAccounts($this->sdkConfiguration);
         $this->absenceRequests = new AbsenceRequests($this->sdkConfiguration);
         $this->timeCorrections = new TimeCorrections($this->sdkConfiguration);
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);

@@ -29,7 +29,7 @@ class PublicApiV1AutomationsRunsListRequest
     public ?string $automationRuleId = null;
 
     /**
-     * Managed company ID (UUID v7) the run acted upon. Only companies you manage yield results.
+     * Subject tax ID (UUID v7) the run acted upon. Only tax IDs of your portfolio yield results.
      *
      * @var ?string $subjectCompanyId
      */

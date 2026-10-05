@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** MemberModuleAccess - The module access level of a member in one NIF. `restrictions` is a DENY list: it states what has been WITHDRAWN, not what the person can do, so an empty object means no restriction at all and never no access. */
+/** MemberModuleAccess - The module access level of an account member in one tax ID. `restrictions` is a DENY list: it states what has been WITHDRAWN, not what the person can do, so an empty object means no restriction at all and never no access. */
 class MemberModuleAccess
 {
     /**
@@ -22,7 +22,7 @@ class MemberModuleAccess
     public MemberModuleAccessObject $object;
 
     /**
-     * Opaque identifier (UUID v7) of the member.
+     * Opaque identifier (UUID v7) of the account member (the `id` of `AccountMember`).
      *
      * @var string $memberId
      */
@@ -30,7 +30,7 @@ class MemberModuleAccess
     public string $memberId;
 
     /**
-     * Opaque identifier (UUID v7) of the NIF the level applies to.
+     * Opaque identifier (UUID v7) of the tax ID the level applies to.
      *
      * @var string $companyId
      */

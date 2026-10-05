@@ -28,9 +28,9 @@ class SDKConfiguration
 
     public string $sdkVersion = '0.5.0';
 
-    public string $genVersion = '2.938.0';
+    public string $genVersion = '2.943.0';
 
-    public string $userAgent = 'speakeasy-sdk/php 0.5.0 2.938.0 1.0.0 factuarea/factuarea-php';
+    public string $userAgent = 'speakeasy-sdk/php 0.5.0 2.943.0 1.0.0 factuarea/factuarea-php';
 
     public ?RetryConfig $retryConfig = null;
 

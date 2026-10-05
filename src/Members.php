@@ -22,6 +22,8 @@ class Members
     private SDKConfiguration $sdkConfiguration;
     public ModuleAccess $moduleAccess;
 
+    public Grants $grants;
+
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
@@ -29,6 +31,7 @@ class Members
     {
         $this->sdkConfiguration = $sdkConfig;
         $this->moduleAccess = new ModuleAccess($this->sdkConfiguration);
+        $this->grants = new Grants($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -52,9 +55,9 @@ class Members
     }
 
     /**
-     * Add a member to an account NIF
+     * Add a member to the account
      *
-     * Create a new person and grant them a membership in the NIF named by `company_id`, which must be within your credential scope. The created person receives an email to verify their address. Returns 422 if the email already belongs to a registered person — the way to add someone who already exists is an invitation — and also when the NIF has reached the user limit of its plan.
+     * Create a new person as a member of the ACCOUNT with an account `role` (`admin` or `member`; ownership is transferred, never assigned) and the required `grants` list (it may be empty; only a `member` carries grants, each one a tax ID of the account by its `company_id` UUID and a `level`: `view` or `operate`). The person receives an email to verify their address. Returns 201 with the member and a `Location` header. Because it changes the team of the whole account, the credential scope must cover every tax ID of the account (403 `forbidden_action` otherwise). Returns 400 `parameter_missing` when `grants` is absent, 422 `grants_only_for_member` for grants on an `admin`, 422 `grant_company_not_in_account` when a grant names a tax ID outside the account or your credential scope, and 422 `business_rule_violation` when the email is already registered (add existing people with an invitation), a tax ID repeats or the plan user limit is reached.
      *
      * @param  \Factuarea\Sdk\Models\Components\AddAccountMemberV1Request  $body
      * @param  string  $account
@@ -148,7 +151,7 @@ class Members
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -182,9 +185,9 @@ class Members
     }
 
     /**
-     * Remove a member from an account NIF
+     * Remove a member from the account
      *
-     * Remove a member from the NIF passed in the `company_id` query parameter. This is a removal from that NIF, never a global one: if the person still belongs to another NIF only the membership is dropped and their sessions are revoked, and only when it was their last NIF is the account itself deleted. Returns 204 on success, 422 `member_is_last_owner` when it would leave the NIF without anyone able to administer it, and 404 when the member is outside your scope.
+     * Remove a member from the WHOLE account: the person stops reaching every tax ID of the account, loses its grants and its sessions there, and its API keys lose that scope; when no other link remains the person is deleted. To remove access to a single tax ID, revoke that grant instead. No query parameter is accepted: the former `?company_id=` returns 400 `parameter_unknown`. Returns 204 on success, 422 `member_is_last_owner` for the account owner (transfer ownership first), 422 `business_rule_violation` when removing yourself, and 404 `member_not_found` when the member does not exist or belongs to another account. Irreversible.
      *
      * @param  string  $account
      * @param  string  $member
@@ -263,7 +266,7 @@ class Members
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -299,7 +302,7 @@ class Members
     /**
      * List account members
      *
-     * List the people with a membership in the account NIFs your credential can administer. The guard is evaluated NIF by NIF: only the NIFs where the credential holder has an administrative role and the `user_management` section available are listed, and a credential that administers none returns 403. Each item exposes the opaque `id` (UUID v7) of the PERSON, plus `platform_role` and one `roles[]` entry per NIF (`company_id`, `membership_role`); employee-only memberships are excluded. Cursor-paginated with `limit` (1-100, default 25) and `starting_after`.
+     * List every member of the ACCOUNT, cursor-paginated with `limit` (1-100, default 25) and `starting_after` or `ending_before`. Each item exposes the member `id` (UUID v7), `name`, `email`, the account `role` (`owner`, `admin` or `member`), the `external_advisor` mark, the per-tax-ID `grants[]` of a `member` and a `permissions` block with what the credential holder can do on that member. Every member is listed, but only the grants on tax IDs your credential reads are published. The credential holder must be an owner or admin of the account with the `user_management` section available: otherwise 403 `forbidden_action`. An account identifier that is not yours returns 404 `account_not_found`.
      *
      * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
@@ -384,7 +387,130 @@ class Members
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retrieve an account member
+     *
+     * Retrieve one member of the account by its `id` (UUID v7): account `role`, `external_advisor` mark, per-tax-ID `grants[]` (only those on tax IDs your credential reads) and the `permissions` block of the credential holder on that member. Requires the credential holder to be an owner or admin of the account (403 `forbidden_action` otherwise, without revealing whether the member exists). A member that does not exist, is malformed or belongs to another account returns the same 404 `member_not_found`.
+     *
+     * @param  string  $account
+     * @param  string  $member
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersShowResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1AccountMembersShow(string $account, string $member, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountMembersShowResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1AccountMembersShowRequest(
+            account: $account,
+            member: $member,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/members/{member}', Operations\PublicApiV1AccountMembersShowRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.members.show', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersShowResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountMembersShowResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -420,7 +546,7 @@ class Members
     /**
      * Change an account member role
      *
-     * Change the membership role of a member in the NIF named by `company_id`. Returns 422 `member_is_last_owner` when the change would leave the NIF without anyone able to administer it, and 404 when the member does not exist in that NIF or is outside your credential scope.
+     * Change the account `role` of a member (`admin` or `member`), its `external_advisor` mark, or both; at least one is required. Both changes run in a single transaction: unmarking the advisor goes before the role change and marking goes after it, so a failure leaves the member untouched. Moving to `admin` revokes the member grants. Returns 200 with the updated member. Returns 404 `member_not_found` when the member does not exist or belongs to another account, 422 `external_advisor_already_assigned` when the account already has another external advisor, and 422 `business_rule_violation` when the member is the account owner (`cannot_change_account_owner_role`: ownership is transferred), when the advisor would not be a `member`, or when unmarking the advisor would exceed the plan user limit. The credential scope must cover every tax ID of the account.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersUpdateResponse
@@ -458,10 +584,9 @@ class Members
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body === null) {
-            throw new \Exception('Request body is required');
+        if ($body !== null) {
+            $httpOptions = array_merge_recursive($httpOptions, $body);
         }
-        $httpOptions = array_merge_recursive($httpOptions, $body);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -505,7 +630,7 @@ class Members
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

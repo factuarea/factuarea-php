@@ -40,17 +40,25 @@ class PublicApiV1AccountInvitationsResendResponse
     public array $headers;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsResendResponseBody $object
+     */
+    public ?PublicApiV1AccountInvitationsResendResponseBody $object = null;
+
+    /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsResendResponseBody  $object
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1AccountInvitationsResendResponseBody $object = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
+        $this->object = $object;
     }
 }

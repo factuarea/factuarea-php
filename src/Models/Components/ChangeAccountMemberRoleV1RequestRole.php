@@ -9,11 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** New membership role on that company: `owner`, `admin`, `member` or `employee`. */
+/** New account role: `admin` or `member`. Required when `external_advisor` is not sent. */
 enum ChangeAccountMemberRoleV1RequestRole: string
 {
-    case Owner = 'owner';
     case Admin = 'admin';
     case Member = 'member';
-    case Employee = 'employee';
 }

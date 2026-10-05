@@ -23,7 +23,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     /**
      * HTTP methods, comma-separated (`?method=GET,POST`) or repeated: `GET`, `POST`, `PUT`, `PATCH` or `DELETE`; any other value returns 422.
      *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\Method> $method
+     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListMethod> $method
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=method[]')]
     public ?array $method = null;
@@ -31,7 +31,7 @@ class PublicApiV1DevelopersRequestLogsListRequest
     /**
      * Status code ranges, comma-separated (`?status_range=4xx,5xx`) or repeated: `2xx`, `3xx`, `4xx` or `5xx`; it wins over `only_errors=true` (shorthand for `4xx,5xx`).
      *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\StatusRange> $statusRange
+     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListStatusRange> $statusRange
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=status_range[]')]
     public ?array $statusRange = null;
@@ -110,8 +110,8 @@ class PublicApiV1DevelopersRequestLogsListRequest
 
     /**
      * @param  string  $company
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\Method>  $method
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\StatusRange>  $statusRange
+     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListMethod>  $method
+     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListStatusRange>  $statusRange
      * @param  ?bool  $onlyErrors
      * @param  ?string  $apiKeyPrefix
      * @param  ?string  $pathSearch

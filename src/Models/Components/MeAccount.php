@@ -21,11 +21,53 @@ class MeAccount
     public string $id;
 
     /**
+     * Name of the account.
+     *
+     * @var string $name
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
+    public string $name;
+
+    /**
+     * Environment of the account (`live` or `test`).
+     *
+     * @var \Factuarea\Sdk\Models\Components\AccountEnvironment1 $environment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountEnvironment1')]
+    public AccountEnvironment1 $environment;
+
+    /**
+     * Whether the account provisions managed accounts for its clients (it holds the account provider privilege).
+     *
+     * @var bool $isProvider
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_provider')]
+    public bool $isProvider;
+
+    /**
+     * Privileged scopes Factuarea granted to the account. `*` never covers them: a key can only carry them when they are listed here.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\PrivilegedScope> $privilegedScopes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('privileged_scopes')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PrivilegedScope>')]
+    public array $privilegedScopes;
+
+    /**
      * @param  string  $id
+     * @param  string  $name
+     * @param  \Factuarea\Sdk\Models\Components\AccountEnvironment1  $environment
+     * @param  bool  $isProvider
+     * @param  array<\Factuarea\Sdk\Models\Components\PrivilegedScope>  $privilegedScopes
      * @phpstan-pure
      */
-    public function __construct(string $id)
+    public function __construct(string $id, string $name, AccountEnvironment1 $environment, bool $isProvider, array $privilegedScopes)
     {
         $this->id = $id;
+        $this->name = $name;
+        $this->environment = $environment;
+        $this->isProvider = $isProvider;
+        $this->privilegedScopes = $privilegedScopes;
     }
 }

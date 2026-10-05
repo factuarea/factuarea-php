@@ -30,13 +30,6 @@ class PublicApiV1StripeAutoinvoicingConfigUpdateRequest
     public string $idempotencyKey;
 
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public Components\UpdateStripeAutoinvoicingConfigRequest $body;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -45,17 +38,24 @@ class PublicApiV1StripeAutoinvoicingConfigUpdateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\UpdateStripeAutoinvoicingConfigRequest $body = null;
+
+    /**
      * @param  string  $company
      * @param  string  $idempotencyKey
-     * @param  \Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $company, string $idempotencyKey, Components\UpdateStripeAutoinvoicingConfigRequest $body, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Components\UpdateStripeAutoinvoicingConfigRequest $body = null)
     {
         $this->company = $company;
         $this->idempotencyKey = $idempotencyKey;
-        $this->body = $body;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }

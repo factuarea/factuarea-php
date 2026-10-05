@@ -1,5 +1,7 @@
 # PublicApiV1AccountApiKeysCreateResponseBody
 
+API key created. The `Location` header contains the canonical URL of the new key.
+
 
 ## Fields
 

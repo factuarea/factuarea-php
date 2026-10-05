@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** AccountInvitationList - Cursor-paginated list of account invitations (`{ data, has_more, next_cursor }`). */
+/** AccountInvitationList - Cursor-paginated list of account invitations (`{ data, has_more, next_cursor }`). The acceptance secret never appears here. */
 class AccountInvitationList
 {
     /**

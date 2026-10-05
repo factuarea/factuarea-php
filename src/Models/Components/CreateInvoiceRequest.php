@@ -51,12 +51,12 @@ class CreateInvoiceRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Options $options
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions $options
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Options|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?Options $options = null;
+    public ?CreateInvoiceRequestOptions $options = null;
 
     /**
      *
@@ -130,7 +130,7 @@ class CreateInvoiceRequest
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $dueOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
-     * @param  ?\Factuarea\Sdk\Models\Components\Options  $options
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions  $options
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?string  $notes
@@ -140,7 +140,7 @@ class CreateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?Options $options = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, string $seriesId, LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?CreateInvoiceRequestOptions $options = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->seriesId = $seriesId;

@@ -49,9 +49,9 @@ class Invitations
     }
 
     /**
-     * Cancel an account member invitation
+     * Revoke an account invitation
      *
-     * Cancel a pending invitation identified by its `id` (UUID v7); it transitions to `canceled` and can no longer be accepted. Returns 204 on success, 422 when the invitation was already accepted, and 404 when it is outside your credential scope.
+     * Revoke a pending invitation identified by its `id` (UUID v7): it transitions to `revoked` and its link can no longer be accepted. It never removes an existing member. Returns 204 on success, 422 `business_rule_violation` when it was already accepted or revoked, and 404 `invitation_not_found` when it does not exist or belongs to another account.
      *
      * @param  string  $account
      * @param  string  $invitation
@@ -130,7 +130,7 @@ class Invitations
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -164,9 +164,9 @@ class Invitations
     }
 
     /**
-     * Send an account member invitation
+     * Send an account invitation
      *
-     * Invite a person by email to join the NIF named by `company_id`, which must be within your credential scope. Only `admin` and `member` can be invited through this surface: `owner` is rejected because NIF ownership is not handed out by invitation, and `employee` because it has its own flow with a Control Horario seat, both with 422. Returns 422 as well when a pending invitation already exists for that address, when the person already belongs to that NIF, or when the NIF has reached the user limit of its plan. The response carries the invitation, never its acceptance token.
+     * Invite a person by email to join the ACCOUNT with an account `role` (`admin` or `member`) and the required `grants` list (it may be empty; only a `member` carries grants, each one a tax ID of the account by its `company_id` UUID and a `level`). This is how a person who already exists on the platform joins an account. Set `send_email: false` to skip the email and deliver the link yourself. Returns 201 with the invitation and a `Location` header; only a copy-link invitation (`send_email: false`) carries its acceptance `secret` and `accept_url`, exactly once. With `send_email: true` the secret travels only in the email and both fields are `null`, so the invitee proves control of the mailbox. An idempotent replay returns them as `null`. Inviting an `admin` requires a credential scope that covers every tax ID of the account. Returns 400 `parameter_missing` when `grants` is absent, 422 `grants_only_for_member`, 422 `grant_company_not_in_account`, and 422 `business_rule_violation` when a pending invitation already exists for that address, the person is already a member, a tax ID repeats or the account reached its plan user limit. The external advisor invitation is only available in the web app.
      *
      * @param  \Factuarea\Sdk\Models\Components\InviteAccountMemberV1Request  $body
      * @param  string  $account
@@ -260,7 +260,7 @@ class Invitations
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -296,7 +296,7 @@ class Invitations
     /**
      * List account invitations
      *
-     * List the member invitations of the account NIFs your credential can administer, optionally filtered by `status` (`pending`, `accepted`, `canceled`, `expired`). The same NIF-by-NIF guard as the member listing applies, and a credential that administers none returns 403. The acceptance token is never exposed. Cursor-paginated with `limit` (1-100, default 25) and `starting_after`.
+     * List the invitations of the ACCOUNT, optionally filtered by `status` (`pending`, `accepted`, `revoked`, `expired`), cursor-paginated with `limit` (1-100, default 25) and `starting_after` or `ending_before`. Each item exposes the invited `email`, the account `role` (`admin` or `member`), its initial `grants[]` (only those on tax IDs your credential reads), `send_email`, `external_advisor`, `status` and `expires_at`. The acceptance secret is never listed. The credential holder must be an owner or admin of the account (403 `forbidden_action` otherwise).
      *
      * @param  string  $account
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsListStatus  $status
@@ -386,7 +386,7 @@ class Invitations
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -420,9 +420,9 @@ class Invitations
     }
 
     /**
-     * Resend an account member invitation
+     * Resend an account invitation
      *
-     * Resend a pending invitation identified by its `id` (UUID v7), regenerating its token and expiry and sending the invitation email again. Returns 204 on success, 422 `invitation_expired` when the invitation has already expired, 422 when it was already accepted or canceled, and 404 when it is outside your credential scope.
+     * Resend a pending invitation identified by its `id` (UUID v7): a NEW acceptance secret is issued (the previous one stops working), the expiry is renewed and, when the invitation was created with `send_email`, the email is sent again. Returns 200 with the invitation and, only for a copy-link invitation (`send_email: false`), the new `secret` and `accept_url` exactly once; when it is delivered by email the new secret travels only in the email and both are `null`, and an idempotent replay returns them as `null`. Resending hands out a new secret, so it follows the same scope rules as sending: an `admin` invitation requires a credential scope that covers every tax ID of the account (403 `forbidden_action` otherwise), and a `member` invitation requires every tax ID of its grants inside your credential scope (422 `grant_company_not_in_account` otherwise). Returns 422 `invitation_expired` when it has already expired (send a new one), 422 `business_rule_violation` when it was already accepted or revoked, and 404 `invitation_not_found` when it does not exist or belongs to another account.
      *
      * @param  string  $account
      * @param  string  $invitation
@@ -493,15 +493,148 @@ class Invitations
         }
 
         $statusCode = $httpResponse->getStatusCode();
-        if (Utils\Utils::matchStatusCodes($statusCode, ['204'])) {
-            $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
-            return new Operations\PublicApiV1AccountInvitationsResendResponse(
-                statusCode: $statusCode,
-                contentType: $contentType,
-                rawResponse: $httpResponse
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsResendResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountInvitationsResendResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retrieve an account invitation
+     *
+     * Retrieve one invitation of the account by its `id` (UUID v7): invited `email`, account `role`, initial `grants[]` (only those on tax IDs your credential reads), `send_email`, `external_advisor`, `status` (`pending`, `accepted`, `revoked` or `expired`) and `expires_at`. The acceptance secret and URL are never returned here: they are only delivered once, by the write that issues them. An invitation that does not exist, is malformed, belongs to another account or is not an account invitation returns the same 404 `invitation_not_found`.
+     *
+     * @param  string  $account
+     * @param  string  $invitation
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsShowResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1AccountInvitationsShow(string $account, string $invitation, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountInvitationsShowResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1AccountInvitationsShowRequest(
+            account: $account,
+            invitation: $invitation,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/invitations/{invitation}', Operations\PublicApiV1AccountInvitationsShowRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.invitations.show', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsShowResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountInvitationsShowResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

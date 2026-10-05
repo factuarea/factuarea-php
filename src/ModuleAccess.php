@@ -50,7 +50,7 @@ class ModuleAccess
     /**
      * Retrieve a member module access level
      *
-     * Retrieve the module access level of a member in the NIF passed in the `company_id` query parameter. `restrictions` is a DENY list — section to withdrawn capabilities out of `access`, `delete`, `send` and `export` — so an empty object means no restriction at all, never no access. Returns 404 when the member is not in that NIF or outside your credential scope.
+     * Retrieve the module access level of an account member (`{member}` is the account member `id`) in the tax ID passed in the required `company_id` query parameter. `restrictions` is a DENY list — section to withdrawn capabilities out of `access`, `delete`, `send` and `export` — so an empty object means no restriction at all, never no access; it applies on top of the member grant on that tax ID. A member that does not exist, belongs to another account or has no access to that tax ID, and a tax ID outside the account or outside what your credential reads, all return the same 404 `member_not_found`.
      *
      * @param  string  $account
      * @param  string  $member
@@ -137,7 +137,7 @@ class ModuleAccess
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -173,7 +173,7 @@ class ModuleAccess
     /**
      * Set a member module access level
      *
-     * Replace the FULL set of module restrictions of a member in the NIF named by `company_id`. The body substitutes every previous restriction, so repeating the call leaves the same state and an empty `restrictions` object lifts them all. Returns 422 when restricting yourself, the NIF owner, the last person able to manage users, or a section that cannot be restricted.
+     * Replace the FULL set of module restrictions of an account member (`{member}` is the account member `id`) in the tax ID named by `company_id`. The body substitutes every previous restriction, so repeating the call leaves the same state and an empty `restrictions` object lifts them all; lifting restrictions never grants more than the member grant on that tax ID. Returns 404 `member_not_found` when the member or the tax ID is outside the account or your credential scope, and 422 when restricting yourself, the account owner, the last person able to manage users, or a section that cannot be restricted.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersModuleAccessUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersModuleAccessUpdateResponse
@@ -258,7 +258,7 @@ class ModuleAccess
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

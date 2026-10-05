@@ -30,13 +30,6 @@ class PublicApiV1AccountMembersUpdateRequest
     public string $member;
 
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1Request $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public Components\ChangeAccountMemberRoleV1Request $body;
-
-    /**
      * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).
      *
      * @var ?string $idempotencyKey
@@ -53,19 +46,26 @@ class PublicApiV1AccountMembersUpdateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1Request $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\ChangeAccountMemberRoleV1Request $body = null;
+
+    /**
      * @param  string  $account
      * @param  string  $member
-     * @param  \Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1Request  $body
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1Request  $body
      * @phpstan-pure
      */
-    public function __construct(string $account, string $member, Components\ChangeAccountMemberRoleV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $account, string $member, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Components\ChangeAccountMemberRoleV1Request $body = null)
     {
         $this->account = $account;
         $this->member = $member;
-        $this->body = $body;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }

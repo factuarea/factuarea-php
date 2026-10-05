@@ -40,6 +40,7 @@ class PublicApiV1AccountInvitationsCreateResponse
     public array $headers;
 
     /**
+     * Invitation created. The `Location` header contains the canonical URL of the new account invitation; the body carries its acceptance secret once.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsCreateResponseBody $object
      */

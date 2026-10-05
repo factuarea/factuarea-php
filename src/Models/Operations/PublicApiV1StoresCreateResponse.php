@@ -40,6 +40,7 @@ class PublicApiV1StoresCreateResponse
     public array $headers;
 
     /**
+     * Online store connected. The `Location` header contains the canonical URL of the new store connection.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1StoresCreateResponseBody $object
      */

@@ -1,6 +1,6 @@
 # PublicApiV1AccountInvitationsListStatus
 
-Only invitations in this status: `pending`, `accepted`, `canceled` or `expired`.
+Only invitations in this status: `pending`, `accepted`, `revoked` or `expired`.
 
 
 ## Values
@@ -9,5 +9,5 @@ Only invitations in this status: `pending`, `accepted`, `canceled` or `expired`.
 | ---------- | ---------- |
 | `Pending`  | pending    |
 | `Accepted` | accepted   |
-| `Canceled` | canceled   |
+| `Revoked`  | revoked    |
 | `Expired`  | expired    |

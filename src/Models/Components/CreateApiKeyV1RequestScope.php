@@ -107,7 +107,9 @@ enum CreateApiKeyV1RequestScope: string
     case MembersWrite = 'members:write';
     case InvitationsRead = 'invitations:read';
     case InvitationsWrite = 'invitations:write';
-    case ClaimTokensRead = 'claim_tokens:read';
-    case ClaimTokensWrite = 'claim_tokens:write';
+    case NifTransfersRead = 'nif_transfers:read';
+    case NifTransfersWrite = 'nif_transfers:write';
+    case AccountsRead = 'accounts:read';
+    case AccountsWrite = 'accounts:write';
     case Wildcard = '*';
 }

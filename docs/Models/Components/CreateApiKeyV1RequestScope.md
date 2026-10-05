@@ -101,6 +101,8 @@
 | `MembersWrite`                | members:write                 |
 | `InvitationsRead`             | invitations:read              |
 | `InvitationsWrite`            | invitations:write             |
-| `ClaimTokensRead`             | claim_tokens:read             |
-| `ClaimTokensWrite`            | claim_tokens:write            |
+| `NifTransfersRead`            | nif_transfers:read            |
+| `NifTransfersWrite`           | nif_transfers:write           |
+| `AccountsRead`                | accounts:read                 |
+| `AccountsWrite`               | accounts:write                |
 | `Wildcard`                    | *                             |

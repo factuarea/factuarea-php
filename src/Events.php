@@ -133,7 +133,7 @@ class Events
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -169,7 +169,7 @@ class Events
     /**
      * Retrieve an event
      *
-     * Retrieve a single event by its `id` (format `evt_<ulid>`, an opaque identifier). Useful for auditing and replaying webhook payloads. Returns `404 not_found` if the event does not exist or belongs to another company.
+     * Retrieve a single event by its `id`, a UUID v7. Useful for auditing and replaying webhook payloads. Returns `404 event_not_found` if the event does not exist or belongs to another company.
      *
      * @param  string  $company
      * @param  string  $event
@@ -256,7 +256,7 @@ class Events
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -12,30 +12,32 @@ namespace Factuarea\Sdk\Models\Components;
 class ChangeAccountMemberRoleV1Request
 {
     /**
-     * Public identifier (UUID v7) of the company of your account where the role changes.
+     * New account role: `admin` or `member`. Required when `external_advisor` is not sent.
      *
-     * @var string $companyId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('company_id')]
-    public string $companyId;
-
-    /**
-     * New membership role on that company: `owner`, `admin`, `member` or `employee`.
-     *
-     * @var \Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole $role
+     * @var ?\Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole $role
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('role')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole')]
-    public ChangeAccountMemberRoleV1RequestRole $role;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ChangeAccountMemberRoleV1RequestRole $role = null;
 
     /**
-     * @param  string  $companyId
-     * @param  \Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole  $role
+     * Mark or unmark the member as the external advisor of the account (only a `member`, one per account). Required when `role` is not sent.
+     *
+     * @var ?bool $externalAdvisor
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_advisor')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $externalAdvisor = null;
+
+    /**
+     * @param  ?\Factuarea\Sdk\Models\Components\ChangeAccountMemberRoleV1RequestRole  $role
+     * @param  ?bool  $externalAdvisor
      * @phpstan-pure
      */
-    public function __construct(string $companyId, ChangeAccountMemberRoleV1RequestRole $role)
+    public function __construct(?ChangeAccountMemberRoleV1RequestRole $role = null, ?bool $externalAdvisor = null)
     {
-        $this->companyId = $companyId;
         $this->role = $role;
+        $this->externalAdvisor = $externalAdvisor;
     }
 }

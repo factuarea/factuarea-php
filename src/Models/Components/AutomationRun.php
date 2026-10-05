@@ -122,7 +122,7 @@ class AutomationRun
     public array $steps;
 
     /**
-     * The managed client company this run acted upon, when it comes from a rule of scope `cartera`. It is `null` for runs of scope `empresa`, which act on the company that owns the rule and have no subject. `id` and `name` are themselves `null` when the company can no longer be read (it was deleted): the block is still emitted, so a portfolio run stays distinguishable from a company-scoped one.
+     * The tax ID this run acted upon, when it comes from a rule of scope `cartera`. It is `null` for runs of scope `empresa`, which act on the company that owns the rule and have no subject. `id` and `name` are themselves `null` when the company cannot be read at that moment: the block is still emitted, so a portfolio run stays distinguishable from a company-scoped one. When the tax ID is deleted, the run is kept but its link to the company is cleared, so `subject_company` becomes `null`, as in a run of scope `empresa`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\SubjectCompany $subjectCompany
      */

@@ -20,28 +20,28 @@ class CompanySeatChargePreview
     public CompanySeatChargePreviewObject $object;
 
     /**
-     * Amount in euro cents.
+     * Taxable base of the proration (without VAT), in euros as a 2-decimal string.
      *
-     * @var int $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public int $amount;
+    public string $amount;
 
     /**
-     * Amount in euro cents.
+     * VAT amount of the proration, in euros as a 2-decimal string.
      *
-     * @var int $taxAmount
+     * @var string $taxAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount')]
-    public int $taxAmount;
+    public string $taxAmount;
 
     /**
-     * Amount in euro cents.
+     * Total actually charged (`amount + tax_amount`), in euros as a 2-decimal string.
      *
-     * @var int $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public int $total;
+    public string $total;
 
     /**
      *
@@ -123,9 +123,9 @@ class CompanySeatChargePreview
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\CompanySeatChargePreviewObject  $object
-     * @param  int  $amount
-     * @param  int  $taxAmount
-     * @param  int  $total
+     * @param  string  $amount
+     * @param  string  $taxAmount
+     * @param  string  $total
      * @param  \Factuarea\Sdk\Models\Components\CompanySeatChargePreviewCurrency  $currency
      * @param  bool  $requiresPaymentMethod
      * @param  bool  $requiresActivePlan
@@ -139,7 +139,7 @@ class CompanySeatChargePreview
      * @param  ?int  $recurringTotalCents
      * @phpstan-pure
      */
-    public function __construct(CompanySeatChargePreviewObject $object, int $amount, int $taxAmount, int $total, CompanySeatChargePreviewCurrency $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null)
+    public function __construct(CompanySeatChargePreviewObject $object, string $amount, string $taxAmount, string $total, CompanySeatChargePreviewCurrency $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null)
     {
         $this->object = $object;
         $this->amount = $amount;

@@ -36,12 +36,14 @@ class UpdateQuoteRequestLine
     public ?string $additionalDescription = null;
 
     /**
+     * Unit price. Send a JSON number or a decimal string with up to 4 decimals (`"0.0125"`, `"100.0000"`): the string is the exact form the response returns, so a line read from the API can be sent back unchanged. Derived amounts are computed from it and keep 2 decimals.
      *
-     * @var ?float $unitPrice
+     * @var float|string|null $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('float|string|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $unitPrice = null;
+    public float|string|null $unitPrice = null;
 
     /**
      *
@@ -212,7 +214,7 @@ class UpdateQuoteRequestLine
      * @param  ?float  $quantity
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
-     * @param  ?float  $unitPrice
+     * @param  float|string|null  $unitPrice
      * @param  ?string  $taxRateId
      * @param  ?float  $taxRate
      * @param  ?float  $retentionRate
@@ -235,7 +237,7 @@ class UpdateQuoteRequestLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?UpdateQuoteRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateQuoteRequestPriceSource $priceSource = null, ?UpdateQuoteRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?UpdateQuoteRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateQuoteRequestPriceSource $priceSource = null, ?UpdateQuoteRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->description = $description;

@@ -40,6 +40,7 @@ class PublicApiV1AccountApiKeysCreateResponse
     public array $headers;
 
     /**
+     * API key created. The `Location` header contains the canonical URL of the new key.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysCreateResponseBody $object
      */

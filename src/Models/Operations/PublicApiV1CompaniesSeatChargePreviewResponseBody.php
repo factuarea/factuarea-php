@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1CompaniesSeatChargePreviewResponseBody - Preview the charge for managed-company seats without creating a company or charging a payment method. Monetary amounts are in cents. */
+/** PublicApiV1CompaniesSeatChargePreviewResponseBody - Preview the charge of the additional tax IDs (seats) of the account without creating a company or charging a payment method. `amount`, `tax_amount` and `total` are euro 2-decimal strings; `recurring_base_cents` and `recurring_total_cents` stay in cents, as their names state. */
 class PublicApiV1CompaniesSeatChargePreviewResponseBody
 {
     /**

@@ -3,9 +3,9 @@
 
 ## Fields
 
-| Field               | Type                | Required            | Description         | Example             |
-| ------------------- | ------------------- | ------------------- | ------------------- | ------------------- |
-| `paymentIntent`     | *?string*           | :heavy_minus_sign:  | N/A                 | pi_3QabcDEF2ghIJklm |
-| `chargeId`          | *?string*           | :heavy_minus_sign:  | N/A                 | ch_3QabcDEF2ghIJklm |
-| `amount`            | *?float*            | :heavy_minus_sign:  | N/A                 | 121                 |
-| `fee`               | *?float*            | :heavy_minus_sign:  | N/A                 | 3.5                 |
+| Field                                                                         | Type                                                                          | Required                                                                      | Description                                                                   | Example                                                                       |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `paymentIntent`                                                               | *?string*                                                                     | :heavy_minus_sign:                                                            | N/A                                                                           | pi_3QabcDEF2ghIJklm                                                           |
+| `chargeId`                                                                    | *?string*                                                                     | :heavy_minus_sign:                                                            | N/A                                                                           | ch_3QabcDEF2ghIJklm                                                           |
+| `amount`                                                                      | *?string*                                                                     | :heavy_minus_sign:                                                            | Amount of the component charge, as a 2-decimal string in the payout currency. | 121.00                                                                        |
+| `fee`                                                                         | *?string*                                                                     | :heavy_minus_sign:                                                            | Fee of the component charge, as a 2-decimal string in the payout currency.    | 3.50                                                                          |

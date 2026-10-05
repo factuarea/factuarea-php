@@ -1,6 +1,6 @@
 # AccountInvitationStatus
 
-Derived state. `accepted` and `canceled` are final; `expired` only applies to an invitation that was still pending when its expiry passed.
+Derived state. `accepted` and `revoked` are final; `expired` only applies to an invitation that was still pending when its expiry passed.
 
 
 ## Values
@@ -9,5 +9,5 @@ Derived state. `accepted` and `canceled` are final; `expired` only applies to an
 | ---------- | ---------- |
 | `Pending`  | pending    |
 | `Accepted` | accepted   |
-| `Canceled` | canceled   |
+| `Revoked`  | revoked    |
 | `Expired`  | expired    |

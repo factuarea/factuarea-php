@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Company - A managed company (child sub-account) under your master tenant. Created and operated through the gestoría endpoints; its child API keys can only hold a subset of the scopes of the key that created them. */
+/** Company - A company (tax ID) of your account, registered and operated through the `/v1/accounts/{account}/companies` endpoints. `readiness` (whether it can issue right now, with the same contract as `GET /v1/accounts/{account}/companies/{company}/issuing-readiness`) is present only when the list is requested with `include=readiness`; otherwise the key is absent. */
 class Company
 {
     /**
-     * Opaque identifier (UUID v7) of the managed company.
+     * Opaque identifier (UUID v7) of the tax ID.
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class Company
     public CompanyObject $object;
 
     /**
-     * Commercial name of the managed company.
+     * Commercial name of the tax ID.
      *
      * @var string $name
      */
@@ -38,7 +38,7 @@ class Company
     public string $name;
 
     /**
-     * Spanish fiscal identifier (NIF/CIF/NIE). Unique across the companies managed by your master tenant.
+     * Spanish fiscal identifier (NIF/CIF/NIE). Unique within your account.
      *
      * @var string $taxId
      */
@@ -46,7 +46,7 @@ class Company
     public string $taxId;
 
     /**
-     * Lifecycle status: `active` (operational) or `archived` (no longer accepts operations).
+     * Status of the tax ID in the account: `active` (operational), `inactive` (deactivated, data preserved, can be reactivated) or `archived` (no longer accepts operations).
      *
      * @var \Factuarea\Sdk\Models\Components\CompanyStatus $status
      */
@@ -55,7 +55,7 @@ class Company
     public CompanyStatus $status;
 
     /**
-     * When the managed company was registered (ISO 8601).
+     * When the tax ID was registered in the account (ISO 8601).
      *
      * @var \DateTime $createdAt
      */
@@ -136,20 +136,39 @@ class Company
     public ?string $logoUrl;
 
     /**
-     * Paid seat coverage of this managed company (ISO 8601): reactivating it before this date is free. `null` when the seat was never charged or the coverage expired.
+     * Paid coverage of this company as an additional tax ID of the account (ISO 8601): reactivating it before this date is free. `null` when it was never charged or the coverage expired.
      *
-     * @var ?\DateTime $seatPaidUntil
+     * @var ?\DateTime $paidUntil
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('seat_paid_until')]
-    public ?\DateTime $seatPaidUntil;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_until')]
+    public ?\DateTime $paidUntil;
 
     /**
-     * When the managed company was last updated (ISO 8601), or `null`.
+     * Why the system suspended this `inactive` tax ID, or `null` when it is not suspended by the system (active, archived, or deactivated by the account itself). `payer_blocked`: the account paying for this managed account has its billing blocked; it resumes when the payer settles. `management_ended`: the management of this managed account ended before anyone took over the payment; it resumes when the holder of the account takes over the payment.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SuspensionReason $suspensionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('suspension_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SuspensionReason|null')]
+    public ?SuspensionReason $suspensionReason;
+
+    /**
+     * When the tax ID was last updated (ISO 8601), or `null`.
      *
      * @var ?\DateTime $updatedAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('updated_at')]
     public ?\DateTime $updatedAt;
+
+    /**
+     * Whether a NIF can issue documents right now, and what stands in the way when it cannot. `can_issue` is the verdict and `blockers` the reasons: an empty `blockers` with `can_issue` false would be a bug, because a refusal that cannot be named cannot be fixed.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\IssuingReadiness $readiness
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('readiness')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\IssuingReadiness|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?IssuingReadiness $readiness = null;
 
     /**
      * @param  string  $id
@@ -167,11 +186,13 @@ class Company
      * @param  ?string  $email
      * @param  ?string  $phone
      * @param  ?string  $logoUrl
-     * @param  ?\DateTime  $seatPaidUntil
+     * @param  ?\DateTime  $paidUntil
+     * @param  ?\Factuarea\Sdk\Models\Components\SuspensionReason  $suspensionReason
      * @param  ?\DateTime  $updatedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\IssuingReadiness  $readiness
      * @phpstan-pure
      */
-    public function __construct(string $id, CompanyObject $object, string $name, string $taxId, CompanyStatus $status, \DateTime $createdAt, ?string $businessName = null, ?string $address = null, ?string $city = null, ?string $postalCode = null, ?string $province = null, ?CompanyCountryAeatZone $countryAeatZone = null, ?string $email = null, ?string $phone = null, ?string $logoUrl = null, ?\DateTime $seatPaidUntil = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, CompanyObject $object, string $name, string $taxId, CompanyStatus $status, \DateTime $createdAt, ?string $businessName = null, ?string $address = null, ?string $city = null, ?string $postalCode = null, ?string $province = null, ?CompanyCountryAeatZone $countryAeatZone = null, ?string $email = null, ?string $phone = null, ?string $logoUrl = null, ?\DateTime $paidUntil = null, ?SuspensionReason $suspensionReason = null, ?\DateTime $updatedAt = null, ?IssuingReadiness $readiness = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -188,7 +209,9 @@ class Company
         $this->email = $email;
         $this->phone = $phone;
         $this->logoUrl = $logoUrl;
-        $this->seatPaidUntil = $seatPaidUntil;
+        $this->paidUntil = $paidUntil;
+        $this->suspensionReason = $suspensionReason;
         $this->updatedAt = $updatedAt;
+        $this->readiness = $readiness;
     }
 }

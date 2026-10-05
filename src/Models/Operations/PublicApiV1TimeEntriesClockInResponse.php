@@ -40,6 +40,7 @@ class PublicApiV1TimeEntriesClockInResponse
     public array $headers;
 
     /**
+     * Clock-in recorded. The `Location` header contains the canonical URL of the new time entry.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesClockInResponseBody $object
      */

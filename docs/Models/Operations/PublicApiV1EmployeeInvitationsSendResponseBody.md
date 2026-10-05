@@ -1,5 +1,7 @@
 # PublicApiV1EmployeeInvitationsSendResponseBody
 
+Invitation sent. The `Location` header contains the URL of the new invitation (the one that cancels it with `DELETE`).
+
 
 ## Fields
 

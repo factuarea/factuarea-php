@@ -51,7 +51,7 @@ class ApiKeys
     /**
      * Create an API key
      *
-     * Create a new API key in your account and return its plaintext `secret` exactly once — store it now, it cannot be retrieved later. Requesting a scope above the plan of the scoped tax IDs or outside the catalog returns 422; the credential cap is counted over the ACCOUNT. Pass `environment: test` to mint a sandbox key (`fact_test_`) with no real-world side effects; omit it for a live key (`fact_live_`). Creating against another account returns 404 and persists nothing.
+     * Create a new API key in your account and return its plaintext `secret` exactly once — store it now, it cannot be retrieved later. Requesting a scope above the plan of the scoped tax IDs or outside the catalog returns 422; the credential cap is counted over the ACCOUNT. Without `scoped_company_ids` the new key reaches the same tax IDs as the credential that creates it, and it can never reach more. Pass `environment: test` to mint a sandbox key (`fact_test_`) that only reaches the sandbox company, with no real-world side effects (declaring `scoped_company_ids` with it returns 422); omit it for a live key (`fact_live_`). Creating against another account returns 404 and persists nothing.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateApiKeyV1Request  $body
      * @param  string  $account
@@ -145,7 +145,7 @@ class ApiKeys
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -181,7 +181,7 @@ class ApiKeys
     /**
      * List your API keys
      *
-     * List the API keys of your account with cursor-based pagination. The subject is the ACCOUNT, never the tax ID acting on the request: a credential scoped to several tax IDs sees every key of its account, whichever one is effective. Each key exposes its `prefix`, `scopes`, `tier`, `environment` (`live`/`test`) and lifecycle timestamps. The plaintext secret is never returned — it is shown once, at creation or rotation. An account identifier that is not yours returns 404, indistinguishable from one that does not exist.
+     * List the API keys of your account with cursor-based pagination. The subject is the ACCOUNT, never the tax ID acting on the request, but the list is bounded by the scope of the credential that asks: a key is listed only when EVERY tax ID of its scope is within the scope of the calling credential, so a credential scoped to one tax ID does not see a key that also reaches another one. Each key exposes its `prefix`, `scopes`, `tier`, `environment` (`live`/`test`) and lifecycle timestamps. The plaintext secret is never returned — it is shown once, at creation or rotation. An account identifier that is not yours returns 404, indistinguishable from one that does not exist.
      *
      * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
@@ -266,7 +266,7 @@ class ApiKeys
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -386,7 +386,7 @@ class ApiKeys
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -422,7 +422,7 @@ class ApiKeys
     /**
      * Rotate an API key secret
      *
-     * Invalidate the current secret of an API key of your account immediately, generate a fresh `prefix` + `secret`, and return the new secret in plaintext exactly once. Any request made with the previous secret stops authenticating right away. Irreversible.
+     * Rotate the secret of an API key of your account: generate a fresh `prefix` + `secret` and return the new secret in plaintext exactly once. The previous secret keeps authenticating for a 24-hour grace window and stops afterwards, so you can roll the new one out without downtime; rotating again during the grace window replaces the previous secret at once. Irreversible.
      *
      * @param  string  $account
      * @param  string  $apiKey
@@ -511,7 +511,7 @@ class ApiKeys
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -634,7 +634,128 @@ class ApiKeys
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Change the tax IDs an API key reaches
+     *
+     * Replace the scope of tax IDs of an API key of your account with `scoped_company_ids`, the complete resulting list (not a delta), and return the resulting scope. Use it to add the companies you manage to a key you already deployed. You can only change keys whose current scope is within yours, and the new scope can never exceed yours. Every scope the key already has is re-checked against the plan of ALL the tax IDs of the new scope; a scope one of them does not allow returns 422 and nothing changes. Test keys and browser-published keys cannot change scope.
+     *
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest  $request
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1AccountApiKeysUpdateNifScope(Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest $request, ?Options $options = null): Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/api-keys/{api_key}/nif-scope', Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
+        if ($body === null) {
+            throw new \Exception('Request body is required');
+        }
+        $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.api_keys.update_nif_scope', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -95,14 +95,6 @@ class ApiKeyWithSecret
     public bool $isRevoked;
 
     /**
-     * Plaintext secret. Returned only at creation or after rotation — never again.
-     *
-     * @var string $secret
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('secret')]
-    public string $secret;
-
-    /**
      * Timestamp of the last authenticated request with this key, or `null` if never used.
      *
      * @var ?\DateTime $lastUsedAt
@@ -127,6 +119,14 @@ class ApiKeyWithSecret
     public ?\DateTime $revokedAt;
 
     /**
+     * Plaintext secret, returned only at creation or after rotation — never again. `null` only in an idempotent replay of that creation or rotation, because the secret is never stored.
+     *
+     * @var ?string $secret
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('secret')]
+    public ?string $secret;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ApiKeyWithSecretObject  $object
      * @param  string  $name
@@ -137,13 +137,13 @@ class ApiKeyWithSecret
      * @param  \DateTime  $createdAt
      * @param  bool  $isActive
      * @param  bool  $isRevoked
-     * @param  string  $secret
      * @param  ?\DateTime  $lastUsedAt
      * @param  ?\DateTime  $expiresAt
      * @param  ?\DateTime  $revokedAt
+     * @param  ?string  $secret
      * @phpstan-pure
      */
-    public function __construct(string $id, ApiKeyWithSecretObject $object, string $name, string $prefix, array $scopes, string $tier, ApiKeyWithSecretEnvironment $environment, \DateTime $createdAt, bool $isActive, bool $isRevoked, string $secret, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null, ?\DateTime $revokedAt = null)
+    public function __construct(string $id, ApiKeyWithSecretObject $object, string $name, string $prefix, array $scopes, string $tier, ApiKeyWithSecretEnvironment $environment, \DateTime $createdAt, bool $isActive, bool $isRevoked, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null, ?\DateTime $revokedAt = null, ?string $secret = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -155,9 +155,9 @@ class ApiKeyWithSecret
         $this->createdAt = $createdAt;
         $this->isActive = $isActive;
         $this->isRevoked = $isRevoked;
-        $this->secret = $secret;
         $this->lastUsedAt = $lastUsedAt;
         $this->expiresAt = $expiresAt;
         $this->revokedAt = $revokedAt;
+        $this->secret = $secret;
     }
 }

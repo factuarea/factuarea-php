@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AccountMember - A person with a membership in one or more NIFs of your account. The identifier is the PERSON's, not a membership row, so it survives changes of NIF. Two different role vocabularies travel side by side and must not be collapsed: `platform_role` is the global role of the person, and `roles[].membership_role` is their role in each NIF. */
+/** AccountMember - A member of your ACCOUNT. The membership is of the account, not of a tax ID: an `owner` or `admin` reaches every tax ID of the account, and a `member` only the tax IDs of its `grants`. */
 class AccountMember
 {
     /**
-     * Opaque identifier of the person, a UUID v7.
+     * Opaque identifier of the account member, a UUID v7. It is the `{member}` of the member routes, not the identifier of the person.
      *
      * @var string $id
      */
@@ -46,39 +46,60 @@ class AccountMember
     public string $email;
 
     /**
-     * Global platform role of the person. A DIFFERENT vocabulary from `roles[].membership_role`: the same concept is called `user` here and `member` there.
+     * Account role. There is exactly one `owner`; ownership is transferred, never assigned.
      *
-     * @var \Factuarea\Sdk\Models\Components\PlatformRole $platformRole
+     * @var \Factuarea\Sdk\Models\Components\AccountMemberRole $role
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('platform_role')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PlatformRole')]
-    public PlatformRole $platformRole;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('role')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountMemberRole')]
+    public AccountMemberRole $role;
 
     /**
-     * One entry per NIF of your credential scope where this person holds a membership. NIFs outside the scope never appear, not even as an identifier.
+     * Whether this member is the external advisor of the account (always a `member`, at most one per account, and it does not take a seat of the plan).
      *
-     * @var array<\Factuarea\Sdk\Models\Components\AccountMemberRole> $roles
+     * @var bool $externalAdvisor
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('roles')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\AccountMemberRole>')]
-    public array $roles;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('external_advisor')]
+    public bool $externalAdvisor;
+
+    /**
+     * Per-tax-ID grants of a `member`, limited to the tax IDs your credential reads. Always empty for an `owner` or `admin`.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\AccountMemberGrantAccountMemberGrant> $grants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('grants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\AccountMemberGrantAccountMemberGrant>')]
+    public array $grants;
+
+    /**
+     * What the person behind the credential can do on this member right now. It is computed for the reader, so two credentials can read different permissions for the same member.
+     *
+     * @var \Factuarea\Sdk\Models\Components\AccountMemberPermissions $permissions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('permissions')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountMemberPermissions')]
+    public AccountMemberPermissions $permissions;
 
     /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\AccountMemberObject  $object
      * @param  string  $name
      * @param  string  $email
-     * @param  \Factuarea\Sdk\Models\Components\PlatformRole  $platformRole
-     * @param  array<\Factuarea\Sdk\Models\Components\AccountMemberRole>  $roles
+     * @param  \Factuarea\Sdk\Models\Components\AccountMemberRole  $role
+     * @param  bool  $externalAdvisor
+     * @param  array<\Factuarea\Sdk\Models\Components\AccountMemberGrantAccountMemberGrant>  $grants
+     * @param  \Factuarea\Sdk\Models\Components\AccountMemberPermissions  $permissions
      * @phpstan-pure
      */
-    public function __construct(string $id, AccountMemberObject $object, string $name, string $email, PlatformRole $platformRole, array $roles)
+    public function __construct(string $id, AccountMemberObject $object, string $name, string $email, AccountMemberRole $role, bool $externalAdvisor, array $grants, AccountMemberPermissions $permissions)
     {
         $this->id = $id;
         $this->object = $object;
         $this->name = $name;
         $this->email = $email;
-        $this->platformRole = $platformRole;
-        $this->roles = $roles;
+        $this->role = $role;
+        $this->externalAdvisor = $externalAdvisor;
+        $this->grants = $grants;
+        $this->permissions = $permissions;
     }
 }

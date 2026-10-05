@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Only invitations in this status: `pending`, `accepted`, `canceled` or `expired`. */
+/** Only invitations in this status: `pending`, `accepted`, `revoked` or `expired`. */
 enum PublicApiV1AccountInvitationsListStatus: string
 {
     case Pending = 'pending';
     case Accepted = 'accepted';
-    case Canceled = 'canceled';
+    case Revoked = 'revoked';
     case Expired = 'expired';
 }

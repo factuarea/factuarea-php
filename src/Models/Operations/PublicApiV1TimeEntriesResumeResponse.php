@@ -40,6 +40,7 @@ class PublicApiV1TimeEntriesResumeResponse
     public array $headers;
 
     /**
+     * Resume recorded. The `Location` header contains the canonical URL of the new time entry.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesResumeResponseBody $object
      */

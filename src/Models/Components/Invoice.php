@@ -359,6 +359,7 @@ class Invoice
     public ?InvoiceRecurring $recurring;
 
     /**
+     * Instant (ISO 8601 with offset) at which the collection that settled the invoice was RECORDED in the ledger. `null` while the invoice is not collected. Not the declared date: see `paid_date`.
      *
      * @var ?\DateTime $paidRecordedAt
      */
@@ -366,6 +367,7 @@ class Invoice
     public ?\DateTime $paidRecordedAt;
 
     /**
+     * Declared collection date (YYYY-MM-DD). `null` while the invoice is not collected. The input field of `mark-paid` and `payments` keeps the name `paid_on`.
      *
      * @var ?LocalDate $paidDate
      */

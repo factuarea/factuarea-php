@@ -21,7 +21,7 @@ class PublicApiV1AccountInvitationsListRequest
     public string $account;
 
     /**
-     * Only invitations in this status: `pending`, `accepted`, `canceled` or `expired`.
+     * Only invitations in this status: `pending`, `accepted`, `revoked` or `expired`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsListStatus $status
      */

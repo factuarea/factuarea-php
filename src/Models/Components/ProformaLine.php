@@ -28,6 +28,7 @@ class ProformaLine
     public float $quantity;
 
     /**
+     * Unit price as a decimal STRING with the 4-decimal scale of its column (e.g. `"0.0125"`, `"100.0000"`): it is returned exactly as it was accepted and stored, so reading a line and sending it back never changes its price. Derived amounts (`subtotal`, `taxes`, `total`) keep 2 decimals.
      *
      * @var string $unitPrice
      */

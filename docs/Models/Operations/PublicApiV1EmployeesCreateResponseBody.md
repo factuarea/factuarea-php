@@ -1,5 +1,7 @@
 # PublicApiV1EmployeesCreateResponseBody
 
+Employee created. The `Location` header contains the canonical URL of the new employee.
+
 
 ## Fields
 

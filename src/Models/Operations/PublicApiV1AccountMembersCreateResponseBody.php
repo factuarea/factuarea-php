@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1AccountMembersCreateResponseBody - Member created. The `Location` header contains the canonical URL of the new account member. */
 class PublicApiV1AccountMembersCreateResponseBody
 {
     /**
-     * A person with a membership in one or more NIFs of your account. The identifier is the PERSON's, not a membership row, so it survives changes of NIF. Two different role vocabularies travel side by side and must not be collapsed: `platform_role` is the global role of the person, and `roles[].membership_role` is their role in each NIF.
+     * A member of your ACCOUNT. The membership is of the account, not of a tax ID: an `owner` or `admin` reaches every tax ID of the account, and a `member` only the tax IDs of its `grants`.
      *
      * @var \Factuarea\Sdk\Models\Components\AccountMember $data
      */

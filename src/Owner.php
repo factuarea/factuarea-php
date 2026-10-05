@@ -51,7 +51,7 @@ class Owner
     /**
      * Transfer account ownership
      *
-     * Put the ACCOUNT in the name of another person of the team. Requires the `account:owner` scope — the highest privilege of the account — and the caller must be the CURRENT owner, checked per request against the source of truth: a credential outlives its creator ceasing to be the owner, so the check is never frozen at issuance. Pass the target person in `owner_user_id`; the account subject and the acting person come from the authenticated credential and never from the body. The 200 publishes the incoming AND the outgoing owner, which no later read can reconstruct. Returns 403 `owner_transfer_forbidden` when the caller is not the current owner (it reveals neither who is nor whether the target exists), 422 `invalid_param_value` when `owner_user_id` is missing or malformed, 422 `business_rule_violation` when the target does not exist or is not a member of any tax ID of the account (both with the SAME body), 422 `idempotency_key_required` because the operation is irreversible, and 404 `account_not_found` when `{account}` is not the credential account — foreign, non-existent or malformed, all three with the same body and never a 403.
+     * Put the ACCOUNT in the name of another MEMBER of the account. Requires the `account:owner` scope — the highest privilege of the account — and the caller must be the CURRENT owner, checked per request against the source of truth: a credential outlives its creator ceasing to be the owner, so the check is never frozen at issuance. Pass the target PERSON in `owner_user_id` (their person UUID, not the account member `id`); the account subject and the acting person come from the authenticated credential and never from the body. In the same transaction the outgoing owner becomes an `admin` and the target becomes the `owner`; both keep access to every tax ID of the account, and no tax ID, API key or plan changes. Transferring to the current owner changes nothing and returns the same person in both fields. The 200 publishes the incoming AND the outgoing owner, which no later read can reconstruct. Returns 403 `owner_transfer_forbidden` when the caller is not the current owner (it reveals neither who is nor whether the target exists), 422 `invalid_param_value` when `owner_user_id` is missing or malformed, 422 `business_rule_violation` when the target does not exist, is not a member of the account or is its external advisor (all three with the SAME body), 422 `idempotency_key_required` because the operation is irreversible, and 404 `account_not_found` when `{account}` is not the credential account — foreign, non-existent or malformed, all three with the same body and never a 403.
      *
      * @param  \Factuarea\Sdk\Models\Components\TransferAccountOwnershipV1Request  $body
      * @param  string  $account
@@ -145,7 +145,7 @@ class Owner
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

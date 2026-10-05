@@ -7,7 +7,7 @@ Update the Stripe auto-invoicing configuration. `enabled` toggles auto-invoicing
 
 | Field                              | Type                               | Required                           | Description                        |
 | ---------------------------------- | ---------------------------------- | ---------------------------------- | ---------------------------------- |
-| `enabled`                          | *bool*                             | :heavy_check_mark:                 | N/A                                |
+| `enabled`                          | *?bool*                            | :heavy_minus_sign:                 | N/A                                |
 | `seriesId`                         | *?string*                          | :heavy_minus_sign:                 | N/A                                |
 | `simplifiedThresholdCents`         | *?int*                             | :heavy_minus_sign:                 | N/A                                |
 | `requireNif`                       | *?bool*                            | :heavy_minus_sign:                 | N/A                                |

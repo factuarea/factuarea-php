@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AccountBilling - Billing snapshot of the effective tenant: current plan (trial, grace period, pending change), gestoría seat subscription (when the account manages companies) and payment method. Managed child companies return `managed: true` with the synthetic `gestionada` plan — the master's billing never leaks to a child key. */
+/** AccountBilling - Billing snapshot of the authenticated company: current plan (trial, grace period, pending change), additional NIF subscription in `gestoria_seats` (when the account has additional tax IDs) and payment method. A tax ID whose billing is paid by another account returns `managed: true` with plan `gestionada`, no additional NIF subscription and no payment method: what the payer pays is never shown to it. */
 class AccountBilling
 {
     /**
@@ -22,7 +22,7 @@ class AccountBilling
     public AccountBillingObject $object;
 
     /**
-     * true when the effective tenant is a managed child company (gestoría): its billing is the master's seat, so `gestoria_seats` and `payment_method` are null.
+     * true when the effective tax ID is paid by another account: it has no plan billing of its own, so `gestoria_seats` and `payment_method` are null.
      *
      * @var bool $managed
      */
@@ -39,7 +39,7 @@ class AccountBilling
     public AccountBillingPlan $plan;
 
     /**
-     * Gestoría seat subscription of the account, or null when the tenant does not manage companies. Amounts are in minor currency units (cents) and are null when the recurring cost is not resolvable (enterprise outside Stripe, sandbox, no active plan) — never a misleading 0.
+     * Additional NIF subscription of the account (one seat per active additional tax ID; the field keeps its original public name `gestoria_seats` for compatibility), or null when the account has no additional tax IDs. Amounts are in euros as 2-decimal strings and are null when the recurring cost is not resolvable (enterprise outside Stripe, sandbox, no active plan) — never a misleading 0.
      *
      * @var ?\Factuarea\Sdk\Models\Components\GestoriaSeats $gestoriaSeats
      */

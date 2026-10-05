@@ -1,0 +1,11 @@
+# ManagedAccountImportPreviewManagedAccount
+
+Cost of the new `managed_account` rows, charged on the `managed-accounts` subscription of your account.
+
+
+## Fields
+
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                | Example                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `monthlyAmountCents`                                                                                       | *int*                                                                                                      | :heavy_check_mark:                                                                                         | Monthly net amount, in cents.                                                                              | 3500                                                                                                       |
+| `prorationAmountCents`                                                                                     | *int*                                                                                                      | :heavy_check_mark:                                                                                         | Net amount prorated to the end of your current billing period and charged at once when applying, in cents. | 1750                                                                                                       |

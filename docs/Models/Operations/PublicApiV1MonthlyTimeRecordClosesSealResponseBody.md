@@ -1,5 +1,7 @@
 # PublicApiV1MonthlyTimeRecordClosesSealResponseBody
 
+Monthly close sealed. The `Location` header contains the URL of the signature of that close.
+
 
 ## Fields
 

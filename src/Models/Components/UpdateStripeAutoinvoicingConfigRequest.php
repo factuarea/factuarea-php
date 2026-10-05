@@ -14,10 +14,11 @@ class UpdateStripeAutoinvoicingConfigRequest
 {
     /**
      *
-     * @var bool $enabled
+     * @var ?bool $enabled
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('enabled')]
-    public bool $enabled;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $enabled = null;
 
     /**
      *
@@ -60,7 +61,7 @@ class UpdateStripeAutoinvoicingConfigRequest
     public ?string $seriesId = null;
 
     /**
-     * @param  bool  $enabled
+     * @param  ?bool  $enabled
      * @param  ?int  $simplifiedThresholdCents
      * @param  ?bool  $requireNif
      * @param  ?bool  $refundsEnabled
@@ -68,7 +69,7 @@ class UpdateStripeAutoinvoicingConfigRequest
      * @param  ?string  $seriesId
      * @phpstan-pure
      */
-    public function __construct(bool $enabled, ?int $simplifiedThresholdCents = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null)
+    public function __construct(?bool $enabled = null, ?int $simplifiedThresholdCents = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null)
     {
         $this->enabled = $enabled;
         $this->simplifiedThresholdCents = $simplifiedThresholdCents;

@@ -20,7 +20,7 @@ class UpdatePurchaseInvoiceRequestLine
     public ?float $quantity = null;
 
     /**
-     * Per-line VAT rate (0–100). REQUIRED whenever `lines` is sent: a `PUT` replaces the whole set of lines, so omitting it would wipe the VAT the invoice already had. A purchase with no VAT is declared explicitly as `tax_rate: 0`.
+     * Per-line VAT rate (0–100). REQUIRED whenever `lines` is sent: sending `lines` replaces the whole set of lines, so omitting it would wipe the VAT the invoice already had. A purchase with no VAT is declared explicitly as `tax_rate: 0`.
      *
      * @var ?float $taxRate
      */
@@ -62,12 +62,14 @@ class UpdatePurchaseInvoiceRequestLine
     public ?string $additionalDescription = null;
 
     /**
+     * Unit price. Send a JSON number or a decimal string with up to 4 decimals (`"0.0125"`, `"100.0000"`): the string is the exact form the response returns, so a line read from the API can be sent back unchanged. Derived amounts are computed from it and keep 2 decimals.
      *
-     * @var ?float $unitPrice
+     * @var float|string|null $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('float|string|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $unitPrice = null;
+    public float|string|null $unitPrice = null;
 
     /**
      *
@@ -245,7 +247,7 @@ class UpdatePurchaseInvoiceRequestLine
      * @param  ?string  $description
      * @param  ?float  $discountPercent
      * @param  ?string  $additionalDescription
-     * @param  ?float  $unitPrice
+     * @param  float|string|null  $unitPrice
      * @param  ?string  $productId
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
@@ -268,7 +270,7 @@ class UpdatePurchaseInvoiceRequestLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?float $taxRate = null, ?UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(?float $quantity = null, ?float $taxRate = null, ?UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->taxRate = $taxRate;
