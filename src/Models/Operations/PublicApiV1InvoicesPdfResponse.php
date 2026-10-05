@@ -40,6 +40,7 @@ class PublicApiV1InvoicesPdfResponse
     public array $headers;
 
     /**
+     * Binary PDF stream of the invoice (`application/pdf`) in the paper chosen with `format` (`a4` by default, `ticket_80` or `ticket_58`). Use `?download=1` to receive `Content-Disposition: attachment`; otherwise the disposition is `inline`. The response carries an `ETag`; send it back via `If-None-Match` to get a `304 Not Modified` when nothing changed.
      *
      * @var ?string $bytes
      */

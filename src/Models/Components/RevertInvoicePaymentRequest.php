@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class RevertInvoicePaymentRequest
 {
     /**
-     * Why the payment is being reverted. One of the closed catalog: `direct_debit_return` (returned SEPA direct debit), `card_dispute` (card chargeback or reversal), `misapplied_payment` (booked against the wrong invoice), `bounced_effect` (dishonoured bill) or `recording_error`. Any other value returns 422 `payment_reversal_reason_invalid`.
+     * Why the payment is being reverted. One of the closed catalog: `direct_debit_return` (returned SEPA direct debit), `card_dispute` (card chargeback or reversal), `misapplied_payment` (booked against the wrong invoice), `bounced_effect` (dishonoured bill) or `recording_error`. `issued_in_error` also belongs to the catalog but is reserved to annulling the invoice (`POST /v1/invoices/{invoice}/annul` with `revert_collections=true`): sent here it returns 422 `reversal_reason_reserved`. Any other value returns 422 `payment_reversal_reason_invalid`.
      *
      * @var string $reason
      */

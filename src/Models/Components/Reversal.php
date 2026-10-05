@@ -12,29 +12,29 @@ namespace Factuarea\Sdk\Models\Components;
 class Reversal
 {
     /**
-     * Reason the payment was reverted, from the closed catalog.
+     * Reason the payment was reverted, from the closed catalog. `issued_in_error` is set only by annulling an invoice issued by mistake with `revert_collections` (`POST /v1/invoices/{invoice}/annul`); it cannot be requested for a single payment.
      *
-     * @var \Factuarea\Sdk\Models\Components\Reason $reason
+     * @var \Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason $reason
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('reason')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Reason')]
-    public Reason $reason;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason')]
+    public EventDataPaymentReversedReason $reason;
 
     /**
      * Where the reversal came from: `gateway` when the payment provider reported a return, dispute or chargeback (a bank movement already happened); `manual` when a user recorded it.
      *
-     * @var \Factuarea\Sdk\Models\Components\EventDataPaymentReversedOrigin $origin
+     * @var \Factuarea\Sdk\Models\Components\Origin $origin
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('origin')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataPaymentReversedOrigin')]
-    public EventDataPaymentReversedOrigin $origin;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Origin')]
+    public Origin $origin;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Reason  $reason
-     * @param  \Factuarea\Sdk\Models\Components\EventDataPaymentReversedOrigin  $origin
+     * @param  \Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason  $reason
+     * @param  \Factuarea\Sdk\Models\Components\Origin  $origin
      * @phpstan-pure
      */
-    public function __construct(Reason $reason, EventDataPaymentReversedOrigin $origin)
+    public function __construct(EventDataPaymentReversedReason $reason, Origin $origin)
     {
         $this->reason = $reason;
         $this->origin = $origin;

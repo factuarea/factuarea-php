@@ -77,7 +77,7 @@ class ResolvedCatalogPrice
     public ?string $presentationId;
 
     /**
-     * Commercial combination the price was resolved against. It can be set even when the request only sent the signature: a signature that matches a materialized combination is normalized to its identity before pricing.
+     * Commercial combination against which the price was resolved. It may be present even when the request sent only the signature: a signature that matches a materialized combination is normalized to its identity before pricing.
      *
      * @var ?string $configurationId
      */
@@ -93,7 +93,7 @@ class ResolvedCatalogPrice
     public ?string $selectionSignature;
 
     /**
-     * Price list that was CONSULTED, not the source of the price: it is set even when `source` is `product`. Check `source` to know where the amount came from.
+     * Price list CONSULTED, not necessarily the source of the price: it is present even when `source` is `product`. To know where the amount came from, look at `source`.
      *
      * @var ?string $priceListId
      */
@@ -108,7 +108,7 @@ class ResolvedCatalogPrice
     public ?string $priceListName;
 
     /**
-     * Semantics of the amount of the winning source: `per_base_unit` is converted once by the presentation factor; `per_commercial_unit` is never converted.
+     * Semantics of the amount of the winning source. `per_base_unit` is converted once by the factor of the presentation; `per_commercial_unit` is never converted.
      *
      * @var ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPriceUnitSemantics $unitSemantics
      */
@@ -117,7 +117,7 @@ class ResolvedCatalogPrice
     public ?ResolvedCatalogPriceUnitSemantics $unitSemantics;
 
     /**
-     * Amount of the winning source, already converted to `price_unit` and BEFORE option adjustments: `source_amount + option_adjustment_total = unit_price`.
+     * Amount of the winning source, already converted to `price_unit` and BEFORE the option adjustments: `source_amount + option_adjustment_total = unit_price`.
      *
      * @var ?string $sourceAmount
      */
@@ -133,7 +133,7 @@ class ResolvedCatalogPrice
     public ?string $optionAdjustmentTotal;
 
     /**
-     * Whether the winning source already included the option adjustments; `null` means the resolver did not say, never `false`.
+     * Whether the winning source already included the option adjustments. `null` means the resolver did not take a position, never `false`.
      *
      * @var ?bool $optionAdjustmentsAbsorbed
      */

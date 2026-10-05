@@ -1119,7 +1119,7 @@ if ($response->object !== null) {
 
 ## publicApiV1ProformasConvert
 
-Convert a proforma into a final sales invoice. The new invoice references the source proforma; the proforma moves to status `converted`.
+Convert a proforma into a final invoice. The new invoice references the source proforma; the proforma moves to status `converted`.
 
 ### Example Usage: factuarea_version_invalid_format
 

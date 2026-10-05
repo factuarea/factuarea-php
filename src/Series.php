@@ -51,14 +51,16 @@ class Series
     /**
      * List active series by document type
      *
-     * Return all non-archived series for the given document type within your company.
+     * Return the non-archived series of your company, optionally filtered by `document_type` and, for invoice series, by purpose (`invoice_kind`). Each invoice series carries its `invoice_kind`. Returns 422 `series_invoice_kind_invalid` for an unknown `invoice_kind`.
      *
-     * @param  string  $company
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveDocumentType  $documentType
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveInvoiceKind  $invoiceKind
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesActiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesActive(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesActiveResponse
+    public function publicApiV1SeriesActive(?Operations\PublicApiV1SeriesActiveDocumentType $documentType = null, ?Operations\PublicApiV1SeriesActiveInvoiceKind $invoiceKind = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesActiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,13 +88,17 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesActiveRequest(
-            company: $company,
+            documentType: $documentType,
+            invoiceKind: $invoiceKind,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/active', Operations\PublicApiV1SeriesActiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/active');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1SeriesActiveRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -102,6 +108,7 @@ class Series
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.series.active', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -136,7 +143,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -206,7 +213,7 @@ class Series
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/{series}/activities', Operations\PublicApiV1SeriesActivitiesRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}/activities', Operations\PublicApiV1SeriesActivitiesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -255,7 +262,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -291,16 +298,16 @@ class Series
     /**
      * Archive a series
      *
-     * Archive a series so it stops appearing as available for new documents. Fails with 409 if the series is the default and the only active series of its type. Returns 204 on success.
+     * Archive a series so it stops appearing as available for new documents. Returns 422 `business_rule_violation` with subcode `cannot_archive_last_default_series` if the series is the default and the only active series of its type, and with `series_already_archived` if it is already archived. Returns 204 on success.
      *
-     * @param  string  $company
      * @param  string  $series
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesArchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesArchive(string $company, string $series, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesArchiveResponse
+    public function publicApiV1SeriesArchive(string $series, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesArchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -328,13 +335,13 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesArchiveRequest(
-            company: $company,
             series: $series,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/{series}/archive', Operations\PublicApiV1SeriesArchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}/archive', Operations\PublicApiV1SeriesArchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -370,7 +377,7 @@ class Series
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -412,7 +419,7 @@ class Series
      *
      * - One entry per document type, with a `status` of `created`, `existing` or `no_default`.
      * - `no_default` means the type has active series but none marked as default — archiving the default demotes it without promoting a replacement — and the company still cannot issue that document.
-     * - Treat `no_default` as work still to do, not as success: the active series arrive in `candidates` and you resolve it with `POST /v1/companies/{company}/series/{series}/default`.
+     * - Treat `no_default` as work still to do, not as success: the active series arrive in `candidates` and you resolve it with `POST /v1/series/{id}/default`.
      *
      * **Why it does not choose for you**
      *
@@ -423,13 +430,13 @@ class Series
      * - Idempotent by business rule: a second call creates nothing, fails nothing and reports the state again.
      * - INDEPENDENT of the `Idempotency-Key` header: with the header, a repeated key replays the original body — `created` entries included — instead of reporting the current state.
      *
-     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesBootstrapResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesBootstrap(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesBootstrapResponse
+    public function publicApiV1SeriesBootstrap(?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesBootstrapResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -457,12 +464,12 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesBootstrapRequest(
-            company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/bootstrap', Operations\PublicApiV1SeriesBootstrapRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/bootstrap');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -508,7 +515,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -544,16 +551,16 @@ class Series
     /**
      * Create a series
      *
-     * Create a document numbering series. Optional `number_format` sets the numbering mask (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (≥1) starts the counter to continue an existing numbering. The same code may be reused across document types (multi-series). A series is immutable once created per AEAT (`PUT` returns 405), so these can only be set here.
+     * Create a document numbering series. Optional `number_format` sets the numbering mask (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (≥1) starts the counter to continue an existing numbering. The same code may be reused across document types (multi-series), but not within the same document type. Code, mask and purpose can still be changed with `PUT /v1/series/{id}` until the first document is issued; after that they are fixed.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateSeriesRequest  $body
-     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesCreate(Components\CreateSeriesRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesCreateResponse
+    public function publicApiV1SeriesCreate(Components\CreateSeriesRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -581,13 +588,13 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesCreateRequest(
-            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series', Operations\PublicApiV1SeriesCreateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -638,7 +645,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -674,15 +681,16 @@ class Series
     /**
      * Get the default series for a document type
      *
-     * Return the default numbering series for the given document type (invoice, quote, proforma, delivery_note). Returns 404 when no default is configured.
+     * Return the default numbering series for the given document type (invoice, quote, proforma, delivery_note). Invoice series have a fixed purpose and the default is per purpose: pass `invoice_kind` (`complete` when omitted, `simplified`, `corrective` or `simplified_corrective`) to get the series an invoice of that purpose will be numbered in. Returns 404 when no default is configured (an invoice series of a purpose is created automatically the first time an invoice of that purpose is issued) and 422 `series_invoice_kind_invalid` for an unknown `invoice_kind`.
      *
-     * @param  string  $company
-     * @param  \Factuarea\Sdk\Models\Operations\DocumentType  $documentType
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultDocumentType  $documentType
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultInvoiceKind  $invoiceKind
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesDefault(string $company, Operations\DocumentType $documentType, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesDefaultResponse
+    public function publicApiV1SeriesDefault(Operations\PublicApiV1SeriesDefaultDocumentType $documentType, ?Operations\PublicApiV1SeriesDefaultInvoiceKind $invoiceKind = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesDefaultResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -710,12 +718,13 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesDefaultRequest(
-            company: $company,
             documentType: $documentType,
+            invoiceKind: $invoiceKind,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/default', Operations\PublicApiV1SeriesDefaultRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/default');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -764,7 +773,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -803,12 +812,12 @@ class Series
      * Look up a series by its `code` (JSON body, case-insensitive). A `code` is not unique across document types (multi-series), so pass `document_type` to resolve the exact `(code, document_type)` series. If you omit it the code is matched across all types: a single match is returned, but an ambiguous code returns 422 `document_type_required_for_ambiguous_code` rather than silently picking one. Returns 404 if none exists.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindSeriesByCodeRequest  $body
-     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesFindByCodeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesFindByCode(Components\FindSeriesByCodeRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesFindByCodeResponse
+    public function publicApiV1SeriesFindByCode(Components\FindSeriesByCodeRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesFindByCodeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -836,12 +845,12 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesFindByCodeRequest(
-            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/find-by-code', Operations\PublicApiV1SeriesFindByCodeRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/find-by-code');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -892,7 +901,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -930,11 +939,11 @@ class Series
      *
      * List your document numbering series with cursor-based pagination.
      *
-     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesListRequest  $request
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesList(Operations\PublicApiV1SeriesListRequest $request, ?Options $options = null): Operations\PublicApiV1SeriesListResponse
+    public function publicApiV1SeriesList(?Operations\PublicApiV1SeriesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1SeriesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -962,7 +971,7 @@ class Series
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series', Operations\PublicApiV1SeriesListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1011,7 +1020,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1049,14 +1058,14 @@ class Series
      *
      * Promote a series to default for its document type. If another series was the default for the same type it is demoted atomically. Returns 204 on success.
      *
-     * @param  string  $company
      * @param  string  $series
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesSetDefaultResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesSetDefault(string $company, string $series, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesSetDefaultResponse
+    public function publicApiV1SeriesSetDefault(string $series, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesSetDefaultResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1084,13 +1093,13 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesSetDefaultRequest(
-            company: $company,
             series: $series,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/{series}/default', Operations\PublicApiV1SeriesSetDefaultRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}/default', Operations\PublicApiV1SeriesSetDefaultRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1126,7 +1135,7 @@ class Series
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1162,17 +1171,17 @@ class Series
     /**
      * Retrieve a series
      *
-     * Retrieve a series by its `id`.
+     * Retrieve a series by its `uuid`.
      *
-     * Series are **immutable** for fiscal compliance (AEAT VeriFactu — legal numbering continuity): `PUT`, `PATCH` and `DELETE` on `/v1/companies/{company}/series/{series}` return `405 Method Not Allowed` with `error.code = "series_immutable"` and header `Allow: GET, POST`. To "delete" a series use `POST /v1/companies/{company}/series/{series}/archive`; to change the numbering, create a new series and mark it as default.
+     * A series is **never deleted** through the API: `DELETE` and `PATCH` on `/v1/series/{uuid}` return `405 Method Not Allowed` with `error.code = "series_immutable"` and header `Allow: GET, PUT`. To retire a series use `POST /v1/series/{uuid}/archive`; to change it, use `PUT /v1/series/{uuid}`, which keeps the fiscal guards of the numbering.
      *
-     * @param  string  $company
      * @param  string  $series
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesShow(string $company, string $series, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesShowResponse
+    public function publicApiV1SeriesShow(string $series, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1200,12 +1209,12 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesShowRequest(
-            company: $company,
             series: $series,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/{series}', Operations\PublicApiV1SeriesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}', Operations\PublicApiV1SeriesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1251,7 +1260,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1289,12 +1298,12 @@ class Series
      *
      * Aggregated KPIs for your document numbering series: total series count, active and archived counts, and a breakdown by document type. Returned as `{ "data": SeriesStats }`.
      *
-     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesStatsResponse
+    public function publicApiV1SeriesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1322,11 +1331,11 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesStatsRequest(
-            company: $company,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/stats', Operations\PublicApiV1SeriesStatsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/stats');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1372,7 +1381,7 @@ class Series
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1410,14 +1419,14 @@ class Series
      *
      * Return an archived series back to the active pool. Does not change the current default of its type. Returns 204 on success.
      *
-     * @param  string  $company
      * @param  string  $series
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesUnarchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1SeriesUnarchive(string $company, string $series, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1SeriesUnarchiveResponse
+    public function publicApiV1SeriesUnarchive(string $series, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1SeriesUnarchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1445,13 +1454,13 @@ class Series
             ];
         }
         $request = new Operations\PublicApiV1SeriesUnarchiveRequest(
-            company: $company,
             series: $series,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
+            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/series/{series}/unarchive', Operations\PublicApiV1SeriesUnarchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}/unarchive', Operations\PublicApiV1SeriesUnarchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1487,7 +1496,127 @@ class Series
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Update a series
+     *
+     * Partially update a series: only the fields you send change (`name`, `code`, `counter_reset`, `number_format`, `initial_number`, `invoice_kind`; `year_reset` is the deprecated alias of `counter_reset`). The same fiscal guards as the web app apply, each one as a 422 `business_rule_violation` with its own `subcode` and nothing changed: `code` and `number_format` only while the series has no documents (`series_code_immutable_with_documents`, `series_format_immutable_with_documents`); once AEAT has accepted a record of one of its invoices, `code`, `number_format` and `initial_number` are locked (`series_locked_by_verifactu`); `initial_number` cannot open a gap (`series_initial_number_creates_gap`); `invoice_kind` is fixed with the first invoice (`series_invoice_kind_locked`) and the default series of a purpose cannot change purpose (`series_default_kind_change`). A `code` already used by another series of the same document type returns 422 with `param=code`; `document_type` cannot be changed. Returns 200 with the updated series, and 404 `series_not_found` if it does not belong to your company.
+     *
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesUpdateRequest  $request
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesUpdateResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1SeriesUpdate(Operations\PublicApiV1SeriesUpdateRequest $request, ?Options $options = null): Operations\PublicApiV1SeriesUpdateResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/series/{series}', Operations\PublicApiV1SeriesUpdateRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
+        if ($body !== null) {
+            $httpOptions = array_merge_recursive($httpOptions, $body);
+        }
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.series.update', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesUpdateResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1SeriesUpdateResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

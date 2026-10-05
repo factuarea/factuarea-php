@@ -8,118 +8,54 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
-/** Stats - Statistics of the execution: rows by status, accounts created and reconciled, customers queued and amounts in cents. */
+use Brick\DateTime\LocalDate;
+/** Stats - Task statistics of the project. */
 class Stats
 {
     /**
+     * Tasks of the project, archived ones included.
      *
-     * @var int $totalRows
+     * @var int $totalTasks
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('total_rows')]
-    public int $totalRows;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_tasks')]
+    public int $totalTasks;
 
     /**
+     * Completed tasks.
      *
-     * @var int $valid
+     * @var int $completedTasks
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('valid')]
-    public int $valid;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('completed_tasks')]
+    public int $completedTasks;
 
     /**
+     * Completed tasks over total, as a whole percentage.
      *
-     * @var int $warning
+     * @var int $completionPercentage
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('warning')]
-    public int $warning;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('completion_percentage')]
+    public int $completionPercentage;
 
     /**
+     * Earliest due date among the open tasks, or `null`.
      *
-     * @var int $alreadyExists
+     * @var ?LocalDate $nextDueOn
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('already_exists')]
-    public int $alreadyExists;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('next_due_on')]
+    public ?LocalDate $nextDueOn;
 
     /**
-     *
-     * @var int $blocked
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('blocked')]
-    public int $blocked;
-
-    /**
-     *
-     * @var int $error
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('error')]
-    public int $error;
-
-    /**
-     * Accounts and tax IDs created.
-     *
-     * @var int $created
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('created')]
-    public int $created;
-
-    /**
-     * Existing accounts and tax IDs reconciled.
-     *
-     * @var int $reconciled
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('reconciled')]
-    public int $reconciled;
-
-    /**
-     * Customers queued for import.
-     *
-     * @var int $customersQueued
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('customers_queued')]
-    public int $customersQueued;
-
-    /**
-     * Monthly net amount added to your subscription, in cents.
-     *
-     * @var int $monthlyAmountCents
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('monthly_amount_cents')]
-    public int $monthlyAmountCents;
-
-    /**
-     * Prorated net amount charged at once, in cents.
-     *
-     * @var int $prorationAmountCents
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('proration_amount_cents')]
-    public int $prorationAmountCents;
-
-    /**
-     * @param  int  $totalRows
-     * @param  int  $valid
-     * @param  int  $warning
-     * @param  int  $alreadyExists
-     * @param  int  $blocked
-     * @param  int  $error
-     * @param  int  $created
-     * @param  int  $reconciled
-     * @param  int  $customersQueued
-     * @param  int  $monthlyAmountCents
-     * @param  int  $prorationAmountCents
+     * @param  int  $totalTasks
+     * @param  int  $completedTasks
+     * @param  int  $completionPercentage
+     * @param  ?LocalDate  $nextDueOn
      * @phpstan-pure
      */
-    public function __construct(int $totalRows, int $valid, int $warning, int $alreadyExists, int $blocked, int $error, int $created, int $reconciled, int $customersQueued, int $monthlyAmountCents, int $prorationAmountCents)
+    public function __construct(int $totalTasks, int $completedTasks, int $completionPercentage, ?LocalDate $nextDueOn = null)
     {
-        $this->totalRows = $totalRows;
-        $this->valid = $valid;
-        $this->warning = $warning;
-        $this->alreadyExists = $alreadyExists;
-        $this->blocked = $blocked;
-        $this->error = $error;
-        $this->created = $created;
-        $this->reconciled = $reconciled;
-        $this->customersQueued = $customersQueued;
-        $this->monthlyAmountCents = $monthlyAmountCents;
-        $this->prorationAmountCents = $prorationAmountCents;
+        $this->totalTasks = $totalTasks;
+        $this->completedTasks = $completedTasks;
+        $this->completionPercentage = $completionPercentage;
+        $this->nextDueOn = $nextDueOn;
     }
 }

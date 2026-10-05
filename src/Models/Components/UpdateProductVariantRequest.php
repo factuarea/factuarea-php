@@ -26,7 +26,7 @@ class UpdateProductVariantRequest
     public bool $manageStock;
 
     /**
-     * Own balance of the variant, in the product base unit (up to 4 decimals). Send the current balance to leave it untouched — it may be negative when delivered documents ran ahead of the incoming stock. Any other value is a manual set and must be `>= 0` (422 otherwise); to move the balance use `PATCH /v1/companies/{company}/products/{product}/stock` with `variant_id`.
+     * Own balance of the variant, in the product base unit (up to 4 decimals). Send the current balance to leave it untouched — it may be negative when delivered documents ran ahead of the incoming stock. Any other value is a manual set and must be `>= 0` (422 otherwise); to move the balance use `PUT /v1/products/{uuid}/stock` with `variant_id`.
      *
      * @var float $stock
      */
@@ -58,7 +58,9 @@ class UpdateProductVariantRequest
     public ?string $barcode = null;
 
     /**
-     * Own price of the variant PER BASE UNIT; `null` keeps the price of the product.
+     * Own price of the variant PER BASE UNIT. `null` = the variant does not
+     *
+     * change the price of the product.
      *
      * @var ?float $basePriceOverride
      */
@@ -76,7 +78,7 @@ class UpdateProductVariantRequest
     public ?float $unitCostOverride = null;
 
     /**
-     * Published alias of `base_price_override`.
+     * Alias of `base_price_override`.
      *
      * @var ?float $priceOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -86,7 +88,7 @@ class UpdateProductVariantRequest
     public ?float $priceOverride = null;
 
     /**
-     * Published alias of `unit_cost_override`.
+     * Alias of `unit_cost_override`.
      *
      * @var ?float $costOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.

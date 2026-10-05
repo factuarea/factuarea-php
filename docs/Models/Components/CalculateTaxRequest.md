@@ -1,6 +1,6 @@
 # CalculateTaxRequest
 
-Calculate a tax on a base amount. Body: `base` (number) and `taxes_id`, the public identifier (UUID v7) of the tax, never the tax ID of a company. Returns `base`, `tax_rate`, `tax_amount`, `total_amount` and `tax`.
+Calculate the tax amount of a base amount. Body: `base` (number) and `taxes_id` (UUID v7 of a tax of the catalog; it is `taxes_id` in the plural because `tax_id` already means the fiscal ID, NIF/CIF). Returns `base`, `tax_rate`, `tax_amount`, `total_amount` and the `tax`.
 
 
 ## Fields

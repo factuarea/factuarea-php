@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateRecurringFromInvoiceRequestAutoDelivery
 {
     /**
+     * Compatibility flag derived from `generation_mode`. Without `generation_mode`, `true` selects `issue_and_send` and `false` selects `draft`. Together with `generation_mode` it must agree with it (`true` only with `issue_and_send`), otherwise the request is rejected with 422. Prefer sending `generation_mode`.
      *
      * @var ?bool $sendAutomatically
      */

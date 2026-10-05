@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1ContactsImportResponseBody2 - Import accepted for asynchronous processing. */
 class PublicApiV1ContactsImportResponseBody2
 {
     /**

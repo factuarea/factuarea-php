@@ -1,6 +1,6 @@
 # InvoicePayment
 
-Payment data of the invoice: an object when `status` is `paid`, otherwise `null`.
+Payment data of the invoice. An object when `status` is `paid`, `null` otherwise.
 
 
 ## Fields

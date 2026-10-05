@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1QuotesStatsResponseBody
 {
     /**
-     * Aggregated summary of the quotes of the company: total, accumulated amount, count by status, expired and converted to an invoice. Returned by `GET /v1/companies/{company}/quotes/stats`.
+     * Aggregated summary of the quotes of the authenticated company: total, accumulated amount, count by status, expired and converted to invoice. Returned by `GET /v1/quotes/stats`.
      *
      * @var \Factuarea\Sdk\Models\Components\QuoteStats $data
      */

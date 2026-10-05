@@ -25,7 +25,8 @@ use Psr\Http\Message\RequestInterface;
  * until they upgrade the SDK — an explicit, opt-in upgrade. See `docs/VERSIONING.md`
  * for the `Factuarea-Version` ↔ SDK-version mapping (design D6).
  *
- * The default is the date of the spec frozen in P0 ({@see self::DEFAULT_VERSION}).
+ * The default is the API version whose contract the generated models describe
+ * ({@see self::DEFAULT_VERSION}).
  * A caller that explicitly sets the header (or passes a per-call override that
  * lands as this header) wins: the hook never overwrites an existing value.
  */
@@ -34,11 +35,14 @@ final class FactuareaVersionHook implements BeforeRequestHook
     private const HEADER = 'Factuarea-Version';
 
     /**
-     * The pinned API version for this SDK release: the date of the OpenAPI spec
-     * frozen in P0 (commit `e822661bc`). Bumping this is a behaviour change and
-     * follows the SemVer rules documented in `docs/VERSIONING.md`.
+     * The pinned API version for this SDK release: the version whose contract the
+     * generated models describe (`Invoice.is_sent`, `issued_at` and `sent_via` are
+     * only returned from `2026-10-01`). It must be a version the API accepts, since
+     * an unknown one is rejected with 400 `unsupported_api_version`. Bumping this
+     * is a behaviour change and follows the SemVer rules documented in
+     * `docs/VERSIONING.md`.
      */
-    public const DEFAULT_VERSION = '2026-06-04';
+    public const DEFAULT_VERSION = '2026-10-01';
 
     public function __construct(private readonly string $version = self::DEFAULT_VERSION)
     {

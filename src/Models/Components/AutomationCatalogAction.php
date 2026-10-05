@@ -46,17 +46,27 @@ class AutomationCatalogAction
     public bool $supportsPortfolioScope;
 
     /**
+     * Key of the module that governs this action, or `null` when the action is transversal. Informational: an action of a module you have not contracted never reaches this list.
+     *
+     * @var ?string $module
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('module')]
+    public ?string $module;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ActionKey  $key
      * @param  string  $label
      * @param  array<\Factuarea\Sdk\Models\Components\Parameter>  $parameters
      * @param  bool  $supportsPortfolioScope
+     * @param  ?string  $module
      * @phpstan-pure
      */
-    public function __construct(ActionKey $key, string $label, array $parameters, bool $supportsPortfolioScope)
+    public function __construct(ActionKey $key, string $label, array $parameters, bool $supportsPortfolioScope, ?string $module = null)
     {
         $this->key = $key;
         $this->label = $label;
         $this->parameters = $parameters;
         $this->supportsPortfolioScope = $supportsPortfolioScope;
+        $this->module = $module;
     }
 }

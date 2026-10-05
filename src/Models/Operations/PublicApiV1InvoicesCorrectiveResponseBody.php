@@ -13,7 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1InvoicesCorrectiveResponseBody
 {
     /**
-     * A sales invoice (compliant with Spanish AEAT VeriFactu).
+     * An invoice (compliant with Spanish AEAT VeriFactu).
      *
      * @var \Factuarea\Sdk\Models\Components\Invoice $data
      */
@@ -24,18 +24,19 @@ class PublicApiV1InvoicesCorrectiveResponseBody
     /**
      * $warnings
      *
-     * @var array<string> $warnings
+     * @var ?array<string> $warnings
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('warnings')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
-    public array $warnings;
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $warnings = null;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\Invoice  $data
-     * @param  array<string>  $warnings
+     * @param  ?array<string>  $warnings
      * @phpstan-pure
      */
-    public function __construct(Components\Invoice $data, array $warnings)
+    public function __construct(Components\Invoice $data, ?array $warnings = null)
     {
         $this->data = $data;
         $this->warnings = $warnings;

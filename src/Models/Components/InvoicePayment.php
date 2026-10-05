@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** InvoicePayment - Payment data of the invoice: an object when `status` is `paid`, otherwise `null`. */
+/** InvoicePayment - Payment data of the invoice. An object when `status` is `paid`, `null` otherwise. */
 class InvoicePayment
 {
     /**

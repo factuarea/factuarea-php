@@ -1,6 +1,6 @@
 # PublicApiV1PurchaseInvoicesCreateResponseBody
 
-Purchase invoice created successfully. The `Location` header contains the canonical URL of the newly created resource.
+Expense created successfully. The `Location` header contains the canonical URL of the newly created resource.
 
 
 ## Fields

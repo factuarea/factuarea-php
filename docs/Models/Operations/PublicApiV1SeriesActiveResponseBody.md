@@ -1,6 +1,6 @@
 # PublicApiV1SeriesActiveResponseBody
 
-Active document series, optionally filtered by document_type.
+Active document series, optionally filtered by document_type and, for invoice series, by invoice_kind.
 
 
 ## Fields

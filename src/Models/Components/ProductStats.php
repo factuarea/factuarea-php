@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ProductStats - Aggregated summary of the product catalog of the authenticated company: total, active, out of stock and low stock. Returned by `GET /v1/companies/{company}/products/stats`. */
+/** ProductStats - Aggregated summary of the product catalog of the authenticated company: total, active, out of stock and low stock. Returned by `GET /v1/products/stats`. */
 class ProductStats
 {
     /**
@@ -29,7 +29,7 @@ class ProductStats
     public int $activeProducts;
 
     /**
-     * Products without available stock (stock = 0).
+     * Products with no stock available (stock = 0).
      *
      * @var int $outOfStockCount
      */

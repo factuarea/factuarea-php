@@ -688,7 +688,7 @@ class Proformas
     /**
      * Convert proforma to invoice
      *
-     * Convert a proforma into a final sales invoice. The new invoice references the source proforma; the proforma moves to status `converted`.
+     * Convert a proforma into a final invoice. The new invoice references the source proforma; the proforma moves to status `converted`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasConvertRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProformasConvertResponse

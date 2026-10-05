@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** UpdateRecurringInvoiceRequest - Partial update of a recurring invoice template; only the fields sent overwrite the current value, omitted ones are preserved. Writable fields mirror creation (`client_id`, `series_id`, `name`, `description`, `frequency`, `holiday_handling`, `start_on`, `end_on`, `notes`, `metadata`, `days_before_due`, `max_occurrences`, `email_to`, `send_automatically`, `lines[]`). */
+/** UpdateRecurringInvoiceRequest - Partial update of a recurring invoice template; only the fields sent overwrite the current value, omitted ones are preserved. Writable fields mirror creation (`client_id`, `series_id`, `name`, `description`, `frequency`, `holiday_handling`, `start_on`, `end_on`, `notes`, `metadata`, `days_before_due`, `max_occurrences`, `email_to`, `send_automatically`, `generation_mode`, `auto_delivery`, `lines[]`). Omitting `generation_mode` keeps the current mode. */
 class UpdateRecurringInvoiceRequest
 {
     /**
@@ -55,6 +55,7 @@ class UpdateRecurringInvoiceRequest
     public ?LocalDate $startOn = null;
 
     /**
+     * Compatibility flag derived from `generation_mode`. Without `generation_mode`, `true` selects `issue_and_send` and `false` selects `draft`. Together with `generation_mode` it must agree with it (`true` only with `issue_and_send`), otherwise the request is rejected with 422. Prefer sending `generation_mode`.
      *
      * @var ?bool $sendAutomatically
      */
@@ -195,6 +196,16 @@ class UpdateRecurringInvoiceRequest
     public ?string $emailTo = null;
 
     /**
+     * New generation mode of the recurrence: `draft` (generated invoices stay as drafts), `issue` (they are issued without being emailed) or `issue_and_send` (they are issued and emailed to the `auto_delivery` recipients). Any other value is rejected with 422. Optional: when omitted (or `null`) the current mode is kept, unless `send_automatically` is sent on its own and changes whether the recurrence emails its invoices (`true` switches a non-sending mode to `issue_and_send`; `false` switches `issue_and_send` to `draft`). When sent, it takes precedence and `send_automatically` becomes a derived field (`true` only with `issue_and_send`); sending a `send_automatically` (top-level or inside `auto_delivery`) that contradicts it is rejected with 422. Recipients are only required with `issue_and_send`: if the recurrence has an `auto_delivery` configuration, it must keep at least one recipient (422 `auto_delivery_recipients_required` otherwise). Available in every API version.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestGenerationMode $generationMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('generation_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestGenerationMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestGenerationMode $generationMode = null;
+
+    /**
      * @param  ?string  $clientId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestRepriceStrategy  $repriceStrategy
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestFrequency  $frequency
@@ -216,9 +227,10 @@ class UpdateRecurringInvoiceRequest
      * @param  ?int  $daysBeforeDue
      * @param  ?int  $maxOccurrences
      * @param  ?string  $emailTo
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestGenerationMode  $generationMode
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null)
+    public function __construct(?string $clientId = null, ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?UpdateRecurringInvoiceRequestGenerationMode $generationMode = null)
     {
         $this->clientId = $clientId;
         $this->repriceStrategy = $repriceStrategy;
@@ -241,5 +253,6 @@ class UpdateRecurringInvoiceRequest
         $this->daysBeforeDue = $daysBeforeDue;
         $this->maxOccurrences = $maxOccurrences;
         $this->emailTo = $emailTo;
+        $this->generationMode = $generationMode;
     }
 }

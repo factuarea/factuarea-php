@@ -28,7 +28,10 @@ class ResolveCatalogSelectionRequest
     public ?string $presentationId = null;
 
     /**
-     * Options already chosen, ONE value per group: two values of the same group are an invalid request, not a partial selection.
+     * Options already chosen: a SINGLE value per group. Multiple selection
+     *
+     * is out of scope and two values of the same group are an invalid
+     * request, not a partial selection.
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\ResolveCatalogSelectionRequestOption> $options
      */

@@ -13,15 +13,6 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesPdfRequest
 {
     /**
-     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
-     *
-     * @var string $company
-     */
-    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
-    public string $company;
-
-    /**
-     * Public identifier (UUID v7) of the invoice.
      *
      * @var string $invoice
      */
@@ -29,7 +20,6 @@ class PublicApiV1InvoicesPdfRequest
     public string $invoice;
 
     /**
-     * Send `1` to get the PDF as an attachment (`Content-Disposition: attachment`) instead of inline.
      *
      * @var ?string $download
      */
@@ -45,17 +35,35 @@ class PublicApiV1InvoicesPdfRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * @param  string  $company
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
+     * Paper of the PDF: `a4` (default, with the company template), `ticket_80` (80 mm thermal roll) or `ticket_58` (58 mm roll). Any other value returns 422 with a `parameter_invalid_enum` entry (and its `allowed_values`) in `error.errors[]`. The format does not change the company template; each format is rendered and cached separately and has its own `ETag`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfFormat $format
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=format')]
+    public ?PublicApiV1InvoicesPdfFormat $format = null;
+
+    /**
      * @param  string  $invoice
      * @param  ?string  $download
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfFormat  $format
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, ?string $download = null, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $invoice, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1InvoicesPdfFormat $format = null)
     {
-        $this->company = $company;
         $this->invoice = $invoice;
         $this->download = $download;
         $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
+        $this->format = $format;
     }
 }

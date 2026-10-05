@@ -29,7 +29,7 @@ class InvoiceStats
     public int $totalCount;
 
     /**
-     * Invoice count by status (key = status, value = number of invoices).
+     * Invoice count by status (key = status, value = number of invoices). Issued invoices are counted under `issued`; before API version `2026-10-01` that key is `sent`.
      *
      * @var array<string, int> $byStatus
      */

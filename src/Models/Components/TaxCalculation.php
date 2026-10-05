@@ -9,16 +9,16 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxCalculation - Result of applying a tax to a base amount. Returned by `POST /v1/companies/{company}/taxes/calculate`. */
+/** TaxCalculation - Result of applying a tax to a base amount. Returned by `POST /v1/taxes/calculate`. */
 class TaxCalculation
 {
     /**
-     * Base amount the tax is applied to (EUR), as a 2-decimal string.
+     * Base amount the tax is applied to (EUR).
      *
-     * @var string $base
+     * @var float $base
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base')]
-    public string $base;
+    public float $base;
 
     /**
      * Applied tax rate, e.g. `21` for 21% VAT.
@@ -29,20 +29,20 @@ class TaxCalculation
     public float $taxRate;
 
     /**
-     * Tax amount (base × tax_rate / 100), as a 2-decimal string.
+     * Tax amount (base × tax_rate / 100).
      *
-     * @var string $taxAmount
+     * @var float $taxAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount')]
-    public string $taxAmount;
+    public float $taxAmount;
 
     /**
-     * Resulting total amount (base + tax_amount), as a 2-decimal string.
+     * Resulting total amount (base + tax_amount).
      *
-     * @var string $totalAmount
+     * @var float $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public string $totalAmount;
+    public float $totalAmount;
 
     /**
      * A tax rate configuration. Catalog partially global (`is_system=true` for system taxes, without `company_id`) and partially custom per company.
@@ -54,14 +54,14 @@ class TaxCalculation
     public Tax $tax;
 
     /**
-     * @param  string  $base
+     * @param  float  $base
      * @param  float  $taxRate
-     * @param  string  $taxAmount
-     * @param  string  $totalAmount
+     * @param  float  $taxAmount
+     * @param  float  $totalAmount
      * @param  \Factuarea\Sdk\Models\Components\Tax  $tax
      * @phpstan-pure
      */
-    public function __construct(string $base, float $taxRate, string $taxAmount, string $totalAmount, Tax $tax)
+    public function __construct(float $base, float $taxRate, float $taxAmount, float $totalAmount, Tax $tax)
     {
         $this->base = $base;
         $this->taxRate = $taxRate;

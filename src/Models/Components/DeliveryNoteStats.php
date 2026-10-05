@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** DeliveryNoteStats - Aggregated summary of the delivery notes of the company: total, accumulated amount, breakdown by internal status, pending signature and converted to an invoice this month. Returned by `GET /v1/companies/{company}/delivery-notes/stats`. */
+/** DeliveryNoteStats - Aggregated summary of the delivery notes (*albaranes*) of the authenticated company: total, accumulated amount, breakdown by status, pending signature and converted to invoice this month. Returned by `GET /v1/delivery_notes/stats`. */
 class DeliveryNoteStats
 {
     /**
@@ -21,12 +21,12 @@ class DeliveryNoteStats
     public int $totalCount;
 
     /**
-     * Aggregate amount of the delivery notes (EUR), as a 2-decimal string.
+     * Aggregate amount of the delivery notes (EUR).
      *
-     * @var string $totalAmount
+     * @var float $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public string $totalAmount;
+    public float $totalAmount;
 
     /**
      * Breakdown by internal delivery note state. The key is the internal state (`draft`, `delivered`, `invoiced`, `cancelled`); the value is an object with `status`, `count` and `total` (accumulated amount in EUR). States with no delivery notes do not appear.
@@ -55,13 +55,13 @@ class DeliveryNoteStats
 
     /**
      * @param  int  $totalCount
-     * @param  string  $totalAmount
+     * @param  float  $totalAmount
      * @param  array<string, \Factuarea\Sdk\Models\Components\DeliveryNoteStatsByStatus>  $byStatus
      * @param  int  $pendingSignature
      * @param  int  $convertedThisMonth
      * @phpstan-pure
      */
-    public function __construct(int $totalCount, string $totalAmount, array $byStatus, int $pendingSignature, int $convertedThisMonth)
+    public function __construct(int $totalCount, float $totalAmount, array $byStatus, int $pendingSignature, int $convertedThisMonth)
     {
         $this->totalCount = $totalCount;
         $this->totalAmount = $totalAmount;

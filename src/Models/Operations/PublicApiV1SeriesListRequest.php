@@ -13,15 +13,7 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1SeriesListRequest
 {
     /**
-     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
-     *
-     * @var string $company
-     */
-    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
-    public string $company;
-
-    /**
-     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
+     * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
      *
      * @var ?string $startingAfter
      */
@@ -29,7 +21,7 @@ class PublicApiV1SeriesListRequest
     public ?string $startingAfter = null;
 
     /**
-     * Cursor for backward pagination: pass the `id` of the first object on the current page.
+     * Cursor for backward pagination. Use the `uuid` of the first object on the current page.
      *
      * @var ?string $endingBefore
      */
@@ -53,6 +45,22 @@ class PublicApiV1SeriesListRequest
     public ?string $documentTypeIn = null;
 
     /**
+     * Purpose of an invoice series: `complete`, `simplified`, `corrective` or `simplified_corrective`. Exact match on `invoice_kind`.
+     *
+     * @var ?string $invoiceKind
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_kind')]
+    public ?string $invoiceKind = null;
+
+    /**
+     * Purpose of an invoice series: `complete`, `simplified`, `corrective` or `simplified_corrective`. Comma-separated list. Any of the values matches.
+     *
+     * @var ?string $invoiceKindIn
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_kind[in]')]
+    public ?string $invoiceKindIn = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -61,7 +69,15 @@ class PublicApiV1SeriesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Number of objects to return, between 1 and 100 (default 25).
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
+     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
      *
      * @var ?int $limit
      */
@@ -69,23 +85,27 @@ class PublicApiV1SeriesListRequest
     public ?int $limit = null;
 
     /**
-     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
      * @param  ?string  $documentType
      * @param  ?string  $documentTypeIn
+     * @param  ?string  $invoiceKind
+     * @param  ?string  $invoiceKindIn
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $documentType = null, ?string $documentTypeIn = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $documentType = null, ?string $documentTypeIn = null, ?string $invoiceKind = null, ?string $invoiceKindIn = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
-        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->documentType = $documentType;
         $this->documentTypeIn = $documentTypeIn;
+        $this->invoiceKind = $invoiceKind;
+        $this->invoiceKindIn = $invoiceKindIn;
         $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

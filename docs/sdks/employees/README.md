@@ -848,7 +848,7 @@ if ($response->object !== null) {
 
 ## publicApiV1EmployeesUpdate
 
-Update an employee. Partial update: only fields present in the payload are modified; omitted fields keep their value. `hire_date` is immutable. Returns the updated employee.
+Update an employee. Partial update: only fields present in the payload are modified; omitted fields keep their value. `hire_date` (`Y-m-d`) can be corrected: it must not be later than the employee’s `termination_date` (422 `parameter_invalid_value`, subcode `invalid_hire_date`), and changing it keeps existing time entries and schedule assignments — entries left outside the new employment period stay in the ledger and are flagged with `is_outside_employment` in the time balances. Returns the updated employee.
 
 ### Example Usage: employee_update
 
@@ -878,6 +878,7 @@ $request = new Operations\PublicApiV1EmployeesUpdateRequest(
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateEmployeeRequest(
         contractHours: 38,
+        hireDate: LocalDate::parse('2026-01-12'),
         jobTitle: 'Analista senior de datos',
         externalId: 'EMP-1042',
         metadata: [

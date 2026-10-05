@@ -98,7 +98,7 @@ class Client
     public ?array $billingEmails = null;
 
     /**
-     * Whether the equivalence surcharge (recargo de equivalencia) applies to the client.
+     * Whether the equivalence surcharge (*recargo de equivalencia*, the Spanish special VAT regime for retailers) applies to the client.
      *
      * @var ?bool $isSurchargeSubject
      */
@@ -141,7 +141,7 @@ class Client
     public ?string $dir3ProcessingUnit;
 
     /**
-     * UUID v7 of the default price list assigned to the client.
+     * UUID (v7) of the default price list assigned to the client.
      *
      * @var ?string $defaultPriceListId
      */

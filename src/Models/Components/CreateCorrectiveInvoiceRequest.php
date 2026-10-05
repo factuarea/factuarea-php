@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateCorrectiveInvoiceRequest - Generate a corrective (rectificativa) invoice for a previously issued invoice. `correction_reason` (required) maps to a VeriFactu R-code; `correction_type` is `full` or `partial`; the optional `correction_code` (`R1`..`R5`) forces the explicit R-code and is validated against the AEAT legal matrix for the original invoice type. Optional `justification`, `notes`, and `lines[]` (required when `correction_type` is `partial`). */
+/** CreateCorrectiveInvoiceRequest - Generate a corrective (rectificativa) invoice for a previously issued invoice. `correction_reason` (required) maps to a VeriFactu R-code; `correction_type` is `full` or `partial`; the optional `correction_nature` is `I` (by differences: void the whole invoice with `full` and no `lines`, or correct amounts with `partial` and the adjustment `lines`) or `S` (substitution: `full` with the final `lines`, no negative quantity) — omitted, `full` with `lines` is `S` and the rest `I`; `unit_price` is never negative (a negative `quantity` subtracts); the optional `correction_code` (`R1`..`R5`) forces the explicit R-code and is validated against the AEAT legal matrix for the original invoice type. Optional `justification`, `notes`, and `lines[]` (none to void the whole invoice; required for a partial correction and for a substitution). Each line may also declare the fiscal nature of the line it corrects — `unit`, `regime_key`, `exemption_reason` and `exemption_reason_text` — with the same rules as `POST /v1/invoices`: a key you OMIT inherits the value of the original line at the same index, a key you SEND (even `null`) replaces it, and `null` means explicitly none. */
 class CreateCorrectiveInvoiceRequest
 {
     /**
@@ -46,6 +46,24 @@ class CreateCorrectiveInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CorrectionCode|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CorrectionCode $correctionCode = null;
+
+    /**
+     * Nature of the correction (art. 15.5 Royal Decree 1619/2012; VeriFactu `TipoRectificativa`). Optional: OMIT it and `full` with `lines` is a substitution (`S`), while `full` without `lines` and `partial` are by differences (`I`). `I`, by differences: the corrective carries the amount of the rectification, whatever its sign — void the whole invoice with `correction_type: full` and no `lines`, or correct some amounts with `partial` and the adjustment `lines` (`full` with `lines` and an explicit `I` is rejected). `S`, substitution: `correction_type: full` with the FINAL `lines` of the correct invoice (no negative quantity); registered with `ImporteRectificacion` (base and tax of the original). An incoherent combination is rejected with 422 before anything is created.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CorrectionNature $correctionNature
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('correction_nature')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CorrectionNature|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CorrectionNature $correctionNature = null;
+
+    /**
+     *
+     * @var ?string $seriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $seriesId = null;
 
     /**
      *
@@ -88,18 +106,22 @@ class CreateCorrectiveInvoiceRequest
      * @param  \Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCorrectionType  $correctionType
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLine>  $lines
      * @param  ?\Factuarea\Sdk\Models\Components\CorrectionCode  $correctionCode
+     * @param  ?\Factuarea\Sdk\Models\Components\CorrectionNature  $correctionNature
+     * @param  ?string  $seriesId
      * @param  ?string  $justification
      * @param  ?string  $notes
      * @param  ?array<string>  $tags
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(CorrectionReason $correctionReason, CreateCorrectiveInvoiceRequestCorrectionType $correctionType, ?array $lines = null, ?CorrectionCode $correctionCode = null, ?string $justification = null, ?string $notes = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(CorrectionReason $correctionReason, CreateCorrectiveInvoiceRequestCorrectionType $correctionType, ?array $lines = null, ?CorrectionCode $correctionCode = null, ?CorrectionNature $correctionNature = null, ?string $seriesId = null, ?string $justification = null, ?string $notes = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->correctionReason = $correctionReason;
         $this->correctionType = $correctionType;
         $this->lines = $lines;
         $this->correctionCode = $correctionCode;
+        $this->correctionNature = $correctionNature;
+        $this->seriesId = $seriesId;
         $this->justification = $justification;
         $this->notes = $notes;
         $this->tags = $tags;

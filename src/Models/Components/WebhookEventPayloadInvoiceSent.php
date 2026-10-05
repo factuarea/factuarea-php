@@ -9,7 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** WebhookEventPayloadInvoiceSent - Webhook delivery body for the `invoice.sent` event. */
+/**
+ * WebhookEventPayloadInvoiceSent - Webhook delivery body for the `invoice.sent` event. Deprecated: alias of `invoice.issued`, emitted at the same instant and with the same `data.object`. New integrations should subscribe to `invoice.issued`; its removal will be announced with a `Sunset` date.
+ *
+ * @deprecated  class: This will be removed in a future release, please migrate away from it as soon as possible.
+ */
 class WebhookEventPayloadInvoiceSent
 {
     /**
@@ -45,9 +49,10 @@ class WebhookEventPayloadInvoiceSent
     public bool $test;
 
     /**
-     * Payload (`data`) emitted with the `invoice.sent` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
+     * Payload (`data`) emitted with the `invoice.sent` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys. Deprecated: alias of `invoice.issued`, emitted at the same instant and with the same `data.object`. New integrations should subscribe to `invoice.issued`; its removal will be announced with a `Sunset` date.
      *
      * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSent $data
+     * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceSent')]

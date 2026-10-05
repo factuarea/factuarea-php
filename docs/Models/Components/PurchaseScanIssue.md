@@ -1,0 +1,12 @@
+# PurchaseScanIssue
+
+
+## Fields
+
+| Field                                                                               | Type                                                                                | Required                                                                            | Description                                                                         |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `code`                                                                              | *string*                                                                            | :heavy_check_mark:                                                                  | N/A                                                                                 |
+| `severity`                                                                          | [?Components\PurchaseScanSeverity](../../Models/Components/PurchaseScanSeverity.md) | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `field`                                                                             | *?string*                                                                           | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `lineId`                                                                            | *?string*                                                                           | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `message`                                                                           | *?string*                                                                           | :heavy_minus_sign:                                                                  | N/A                                                                                 |

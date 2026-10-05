@@ -1,6 +1,6 @@
 # PublicApiV1PurchaseInvoicesListPaymentsResponseBody
 
-All payments for the purchase invoice, including reversed payments. An invoice without payments returns an empty collection.
+All payments for the expense, including reversed payments. An expense without payments returns an empty collection.
 
 
 ## Fields

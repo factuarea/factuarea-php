@@ -160,7 +160,7 @@ class Tax
     public ?LocalDate $validUntil;
 
     /**
-     * Zona AEAT a efectos fiscales: `peninsula` + Baleares, `canarias` (IGIC), `ceuta` (IPSI), `melilla` (IPSI).
+     * AEAT tax zone: `peninsula` (including the Balearic Islands), `canarias` (IGIC), `ceuta` (IPSI) or `melilla` (IPSI).
      *
      * @var ?\Factuarea\Sdk\Models\Components\TaxCountryAeatZone $countryAeatZone
      */

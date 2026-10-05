@@ -47,6 +47,7 @@ class PublicApiV1ContactsImportResponse
     public ?PublicApiV1ContactsImportResponseBody1 $twoHundredApplicationJsonObject = null;
 
     /**
+     * Import accepted for asynchronous processing.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsImportResponseBody2 $twoHundredAndTwoApplicationJsonObject
      */

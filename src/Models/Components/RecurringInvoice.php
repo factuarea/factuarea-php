@@ -68,12 +68,21 @@ class RecurringInvoice
     public string $name;
 
     /**
-     * If `true`, the generated invoices are automatically emailed to `email_to`.
+     * Compatibility field DERIVED from `generation_mode`: `true` if and only if `generation_mode` is `issue_and_send` (each generated invoice is issued and emailed to `email_to`). On write, without an explicit `generation_mode`, `true` still means `issue_and_send` and `false` means `draft`; when both are sent and contradict each other the request is rejected with 422.
      *
      * @var bool $sendAutomatically
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('send_automatically')]
     public bool $sendAutomatically;
+
+    /**
+     * What each run of the recurrence does with the invoice it generates: `draft` leaves it as a draft (no definitive number); `issue` issues it (definitive number, VeriFactu record, stock movements) without emailing it, so it stays `is_sent = false`; `issue_and_send` issues it and emails it to the configured recipients, and it is marked as sent once the mail server accepts the email (if the delivery fails the invoice stays issued and not sent). Available in every API version. `send_automatically` is derived from it.
+     *
+     * @var \Factuarea\Sdk\Models\Components\RecurringInvoiceGenerationMode $generationMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('generation_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceGenerationMode')]
+    public RecurringInvoiceGenerationMode $generationMode;
 
     /**
      * Payment term days (Net X) applied to the due date of each generated invoice.
@@ -116,50 +125,50 @@ class RecurringInvoice
 
     /**
      *
-     * @var string $subtotal
+     * @var float $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public string $subtotal;
+    public float $subtotal;
 
     /**
      * NET aggregate of the header taxes: `total_vat + total_surcharge - total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total. It is NOT the VAT figure of the Spanish Modelo 303 - read `total_vat` for that. These amounts are a PREVIEW aggregated from the template lines (the recurrence persists no header totals), rounded per line exactly as the invoice it will issue stores them.
      *
-     * @var string $taxesTotal
+     * @var float $taxesTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes_total')]
-    public string $taxesTotal;
+    public float $taxesTotal;
 
     /**
      * Output VAT (IVA repercutido) the recurrence will accrue: sum of the VAT of its template lines. This is the figure a Spanish Modelo 303 declares, and it is NOT recoverable from `taxes_total`, which nets the withholding out.
      *
-     * @var string $totalVat
+     * @var float $totalVat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
-    public string $totalVat;
+    public float $totalVat;
 
     /**
      * Withholding (retencion de IRPF) the recurrence will apply: sum of the withholding of its template lines, as a POSITIVE amount that SUBTRACTS from the total. This is the figure a Spanish Modelo 130/111 declares. It is ALREADY netted out inside `taxes_total`, so do not subtract it again.
      *
-     * @var string $totalRetention
+     * @var float $totalRetention
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
-    public string $totalRetention;
+    public float $totalRetention;
 
     /**
      * Equivalence surcharge (recargo de equivalencia) of the template lines. It ADDS to the total exactly like VAT does, and is ALREADY included inside `taxes_total`.
      *
-     * @var string $totalSurcharge
+     * @var float $totalSurcharge
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
-    public string $totalSurcharge;
+    public float $totalSurcharge;
 
     /**
      * Total the recurrence will invoice. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the six document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the AGGREGATE one, specific to the sales-side families - `total = subtotal + taxes_total`. NEVER reconstruct it as `subtotal + taxes_total - total_retention`: `taxes_total` ALREADY has the withholding netted out, so that combination subtracts it twice.
      *
-     * @var string $total
+     * @var float $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public string $total;
+    public float $total;
 
     /**
      *
@@ -326,17 +335,18 @@ class RecurringInvoice
      * @param  string  $frequency
      * @param  string  $name
      * @param  bool  $sendAutomatically
+     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceGenerationMode  $generationMode
      * @param  int  $daysBeforeDue
      * @param  int  $occurrencesCount
      * @param  string  $holidayHandling
      * @param  LocalDate  $startOn
      * @param  string  $nextRunAt
-     * @param  string  $subtotal
-     * @param  string  $taxesTotal
-     * @param  string  $totalVat
-     * @param  string  $totalRetention
-     * @param  string  $totalSurcharge
-     * @param  string  $total
+     * @param  float  $subtotal
+     * @param  float  $taxesTotal
+     * @param  float  $totalVat
+     * @param  float  $totalRetention
+     * @param  float  $totalSurcharge
+     * @param  float  $total
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\RecurringInvoiceLine>  $lines
      * @param  array<string>  $tags
@@ -358,7 +368,7 @@ class RecurringInvoice
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null)
+    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, RecurringInvoiceGenerationMode $generationMode, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -368,6 +378,7 @@ class RecurringInvoice
         $this->frequency = $frequency;
         $this->name = $name;
         $this->sendAutomatically = $sendAutomatically;
+        $this->generationMode = $generationMode;
         $this->daysBeforeDue = $daysBeforeDue;
         $this->occurrencesCount = $occurrencesCount;
         $this->holidayHandling = $holidayHandling;

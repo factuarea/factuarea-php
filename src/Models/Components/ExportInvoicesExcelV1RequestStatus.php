@@ -9,12 +9,12 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Invoice status to filter by (draft, sent, paid, overdue, cancelled, annulled, scheduled). */
+/** Invoice status to filter by (`draft`, `scheduled`, `issued`, `paid`, `cancelled`, `overdue`, `annulled`). `sent` is accepted as an alias of `issued` in every API version. */
 enum ExportInvoicesExcelV1RequestStatus: string
 {
     case Draft = 'draft';
     case Scheduled = 'scheduled';
-    case Sent = 'sent';
+    case Issued = 'issued';
     case Paid = 'paid';
     case Cancelled = 'cancelled';
     case Overdue = 'overdue';

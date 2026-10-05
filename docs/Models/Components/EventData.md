@@ -50,6 +50,15 @@ Components\EventDataInvoiceSubscriptionAutoCreated $value = /* values here */
 Components\EventDataInvoiceUpdated $value = /* values here */
 ```
 
+### `Components\EventDataInvoiceIssued`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataInvoiceIssued
+*/
+Components\EventDataInvoiceIssued $value = /* values here */
+```
+
 ### `Components\EventDataInvoiceSent`
 
 ```php
@@ -57,6 +66,24 @@ Components\EventDataInvoiceUpdated $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceSent
 */
 Components\EventDataInvoiceSent $value = /* values here */
+```
+
+### `Components\EventDataInvoiceMarkedSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataInvoiceMarkedSent
+*/
+Components\EventDataInvoiceMarkedSent $value = /* values here */
+```
+
+### `Components\EventDataInvoiceUnsent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataInvoiceUnsent
+*/
+Components\EventDataInvoiceUnsent $value = /* values here */
 ```
 
 ### `Components\EventDataInvoicePaid`
@@ -1128,5 +1155,194 @@ Components\EventDataOrderInvoiced $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataOrderRefunded
 */
 Components\EventDataOrderRefunded $value = /* values here */
+```
+
+### `Components\EventDataTaskCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskCreated
+*/
+Components\EventDataTaskCreated $value = /* values here */
+```
+
+### `Components\EventDataTaskUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskUpdated
+*/
+Components\EventDataTaskUpdated $value = /* values here */
+```
+
+### `Components\EventDataTaskDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskDeleted
+*/
+Components\EventDataTaskDeleted $value = /* values here */
+```
+
+### `Components\EventDataTaskStatusChanged`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskStatusChanged
+*/
+Components\EventDataTaskStatusChanged $value = /* values here */
+```
+
+### `Components\EventDataTaskCompleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskCompleted
+*/
+Components\EventDataTaskCompleted $value = /* values here */
+```
+
+### `Components\EventDataTaskAssigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskAssigned
+*/
+Components\EventDataTaskAssigned $value = /* values here */
+```
+
+### `Components\EventDataTaskUnassigned`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskUnassigned
+*/
+Components\EventDataTaskUnassigned $value = /* values here */
+```
+
+### `Components\EventDataTaskMoved`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskMoved
+*/
+Components\EventDataTaskMoved $value = /* values here */
+```
+
+### `Components\EventDataTaskDueSoon`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskDueSoon
+*/
+Components\EventDataTaskDueSoon $value = /* values here */
+```
+
+### `Components\EventDataTaskOverdue`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskOverdue
+*/
+Components\EventDataTaskOverdue $value = /* values here */
+```
+
+### `Components\EventDataTaskCommentCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskCommentCreated
+*/
+Components\EventDataTaskCommentCreated $value = /* values here */
+```
+
+### `Components\EventDataTaskCommentUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskCommentUpdated
+*/
+Components\EventDataTaskCommentUpdated $value = /* values here */
+```
+
+### `Components\EventDataTaskCommentDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskCommentDeleted
+*/
+Components\EventDataTaskCommentDeleted $value = /* values here */
+```
+
+### `Components\EventDataTaskTimeEntryCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskTimeEntryCreated
+*/
+Components\EventDataTaskTimeEntryCreated $value = /* values here */
+```
+
+### `Components\EventDataTaskTimeEntryUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskTimeEntryUpdated
+*/
+Components\EventDataTaskTimeEntryUpdated $value = /* values here */
+```
+
+### `Components\EventDataTaskTimeEntryDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskTimeEntryDeleted
+*/
+Components\EventDataTaskTimeEntryDeleted $value = /* values here */
+```
+
+### `Components\EventDataTaskTimeEntryInvoiced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTaskTimeEntryInvoiced
+*/
+Components\EventDataTaskTimeEntryInvoiced $value = /* values here */
+```
+
+### `Components\EventDataProjectCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProjectCreated
+*/
+Components\EventDataProjectCreated $value = /* values here */
+```
+
+### `Components\EventDataProjectUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProjectUpdated
+*/
+Components\EventDataProjectUpdated $value = /* values here */
+```
+
+### `Components\EventDataProjectArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProjectArchived
+*/
+Components\EventDataProjectArchived $value = /* values here */
+```
+
+### `Components\EventDataProjectDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProjectDeleted
+*/
+Components\EventDataProjectDeleted $value = /* values here */
 ```
 

@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1VerifactuStatsResponseBody
 {
     /**
-     * Aggregated summary of the VeriFactu records of the company: counts by status and breakdown by type. Returned by `GET /v1/companies/{company}/verifactu/stats`.
+     * Aggregated summary of the VeriFactu records of the authenticated company: counts by status and breakdown by type. Returned by `GET /v1/verifactu/stats`.
      *
      * @var \Factuarea\Sdk\Models\Components\VeriFactuStats $data
      */

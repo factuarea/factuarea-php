@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Only companies in this status: `active`, `inactive` or `archived` (archived ones are hidden when omitted). */
+/** Filter by the status of the managed-company link (gestoría). Without a filter the archived companies are hidden (only `active` and `inactive` are returned). */
 enum PublicApiV1CompaniesListStatus: string
 {
     case Active = 'active';

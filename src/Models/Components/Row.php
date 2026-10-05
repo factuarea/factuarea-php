@@ -38,11 +38,21 @@ class Row
     /**
      * $warnings
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Warning> $warnings
+     * @var array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewWarning> $warnings
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('warnings')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Warning>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewWarning>')]
     public array $warnings;
+
+    /**
+     * Present for confirmed execution rows; omitted from planned preview rows.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewResult $result
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('result')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewResult|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?BusinessContactImportPreviewResult $result = null;
 
     /**
      *
@@ -55,16 +65,18 @@ class Row
      * @param  int  $row
      * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportPreviewAction  $action
      * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewError>  $errors
-     * @param  array<\Factuarea\Sdk\Models\Components\Warning>  $warnings
+     * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewWarning>  $warnings
+     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewResult  $result
      * @param  ?string  $targetUuid
      * @phpstan-pure
      */
-    public function __construct(int $row, BusinessContactImportPreviewAction $action, array $errors, array $warnings, ?string $targetUuid = null)
+    public function __construct(int $row, BusinessContactImportPreviewAction $action, array $errors, array $warnings, ?BusinessContactImportPreviewResult $result = null, ?string $targetUuid = null)
     {
         $this->row = $row;
         $this->action = $action;
         $this->errors = $errors;
         $this->warnings = $warnings;
+        $this->result = $result;
         $this->targetUuid = $targetUuid;
     }
 }

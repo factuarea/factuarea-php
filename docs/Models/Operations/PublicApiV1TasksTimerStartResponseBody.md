@@ -1,0 +1,8 @@
+# PublicApiV1TasksTimerStartResponseBody
+
+
+## Fields
+
+| Field                                                                                                         | Type                                                                                                          | Required                                                                                                      | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                        | [Components\TaskTimeEntry](../../Models/Components/TaskTimeEntry.md)                                          | :heavy_check_mark:                                                                                            | Time logged on a task. Unrelated to the working-day records of the time tracking module (`/v1/time-entries`). |

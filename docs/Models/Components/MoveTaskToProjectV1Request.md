@@ -1,0 +1,10 @@
+# MoveTaskToProjectV1Request
+
+
+## Fields
+
+| Field                                                                                      | Type                                                                                       | Required                                                                                   | Description                                                                                |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `projectId`                                                                                | *string*                                                                                   | :heavy_check_mark:                                                                         | `id` of the destination project.                                                           |
+| `columnId`                                                                                 | *?string*                                                                                  | :heavy_minus_sign:                                                                         | `id` of the destination column within the project. Mutually exclusive with `status`.       |
+| `status`                                                                                   | *?string*                                                                                  | :heavy_minus_sign:                                                                         | Destination virtual status (`planned` or `archived`). Mutually exclusive with `column_id`. |

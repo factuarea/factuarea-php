@@ -1,6 +1,6 @@
 # TaxStats
 
-Aggregated KPIs over the company tax catalog (includes global system taxes). Breakdown by `type` and by AEAT `external_reference`.
+Aggregated KPIs over the company tax catalog (includes global system taxes). Broken down by `type` and by AEAT `external_reference`.
 
 
 ## Fields

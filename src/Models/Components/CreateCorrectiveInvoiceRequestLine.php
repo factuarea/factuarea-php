@@ -117,7 +117,7 @@ class CreateCorrectiveInvoiceRequestLine
     public ?float $confirmedBaseQuantity = null;
 
     /**
-     * Kind of line: `NORMAL` (default) for an ordinary line, or `SUPLIDO` for a DISBURSEMENT — an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) re-invoiced at cost, which stays out of the taxable base (art. 78.Tres.3 LIVA) and is aggregated into `total_disbursements`. A `SUPLIDO` line must carry no VAT, withholding, surcharge, discount or product, and requires `source_invoice_reference`. Only meaningful when `correction_type` is `partial`, which is when `lines[]` is sent; a value outside the catalog is rejected with 422.
+     * Kind of line: `NORMAL` (default) for an ordinary line, or `SUPLIDO` for a DISBURSEMENT — an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) re-invoiced at cost, which stays out of the taxable base (art. 78.Tres.3 LIVA) and is aggregated into `total_disbursements`. A `SUPLIDO` line must carry no VAT, withholding, surcharge, discount or product, and requires `source_invoice_reference`. Only meaningful when `lines[]` is sent (a partial correction or a substitution); a value outside the catalog is rejected with 422.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLineType $lineType
      */
@@ -133,6 +133,44 @@ class CreateCorrectiveInvoiceRequestLine
     #[\Speakeasy\Serializer\Annotation\SerializedName('source_invoice_reference')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $sourceInvoiceReference = null;
+
+    /**
+     * Unit of measure printed next to the quantity on the corrected line (`hours`, `kg`, `units`, …), up to 20 characters. Presentation only. OMIT it and the line inherits the unit of the original line at the same index; SEND it (even `null`) and it replaces it, `null` meaning no unit.
+     *
+     * @var ?string $unit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('unit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $unit = null;
+
+    /**
+     * VeriFactu special-regime key of the corrected line (the closed AEAT catalog, e.g. `01` general regime, `14` or `15` for operations whose VAT accrues later than the issue date). OMIT it and the line inherits the key of the original line at the same index; SEND it (even `null`) and it replaces it, `null` meaning no special regime.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestRegimeKey $regimeKey
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regime_key')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestRegimeKey|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null;
+
+    /**
+     * Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestExemptionReason|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason = null;
+
+    /**
+     * Free-text wording of the exemption provision of the corrected line (up to 255 characters), printed under the line description (art. 6.1.j of Royal Decree 1619/2012). OMIT it and the line inherits the text of the original line at the same index; SEND it (even `null`) and it replaces it, `null` meaning no text.
+     *
+     * @var ?string $exemptionReasonText
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason_text')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $exemptionReasonText = null;
 
     /**
      *
@@ -168,11 +206,15 @@ class CreateCorrectiveInvoiceRequestLine
      * @param  ?float  $confirmedBaseQuantity
      * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLineType  $lineType
      * @param  ?string  $sourceInvoiceReference
+     * @param  ?string  $unit
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestRegimeKey  $regimeKey
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestExemptionReason  $exemptionReason
+     * @param  ?string  $exemptionReasonText
      * @param  ?string  $configurationUuid
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestOption>  $options
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $additionalDescription = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?string $configurationUuid = null, ?array $options = null)
+    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $additionalDescription = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?string $unit = null, ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null, ?CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason = null, ?string $exemptionReasonText = null, ?string $configurationUuid = null, ?array $options = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
@@ -189,6 +231,10 @@ class CreateCorrectiveInvoiceRequestLine
         $this->confirmedBaseQuantity = $confirmedBaseQuantity;
         $this->lineType = $lineType;
         $this->sourceInvoiceReference = $sourceInvoiceReference;
+        $this->unit = $unit;
+        $this->regimeKey = $regimeKey;
+        $this->exemptionReason = $exemptionReason;
+        $this->exemptionReasonText = $exemptionReasonText;
         $this->configurationUuid = $configurationUuid;
         $this->options = $options;
     }

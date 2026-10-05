@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TeamTimeBalanceSummary - The team time balance summary (manager view) for a month for the Control Horario (time tracking) module. A computed resource with no entity identity: it is keyed by company + month and holds one row per active employee with their monthly totals. Totals are in minutes. */
+/** TeamTimeBalanceSummary - The team time balance summary (manager view) for a month for the Control Horario (time tracking) module. A computed resource with no entity identity: it is keyed by company + month and holds one row per active employee with their monthly totals and their accumulation of the closed days (`to_date`). Totals are in minutes. */
 class TeamTimeBalanceSummary
 {
     /**

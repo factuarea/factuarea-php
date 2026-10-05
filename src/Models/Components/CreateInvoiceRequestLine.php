@@ -53,6 +53,7 @@ class CreateInvoiceRequestLine
     public ?string $taxRateId = null;
 
     /**
+     * VAT rate of the line (0–100). Optional: when you omit it (or send `null`) the line takes, in this order, the tax it references or the tax assigned to its product, and otherwise the DEFAULT TAX of your company for this kind of document (tax settings), inherited as a whole: its rate, its indirect-tax regime (IVA, IGIC or IPSI) and its AEAT qualification; an exempt or not-subject default also declares its cause (`exemption_reason`) on the line unless the line sends its own. The line ends up exactly as if you had chosen that tax. If none of them exists the request is rejected with 422 `missing_required_param`, with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line): the API never guesses a rate. A `0` you send is honoured as a real 0 % rate, never confused with «not stated».
      *
      * @var ?float $taxRate
      */
@@ -170,7 +171,7 @@ class CreateInvoiceRequestLine
     public ?CreateInvoiceRequestLineType $lineType = null;
 
     /**
-     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely registered as a purchase invoice.
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely a supplier invoice.
      *
      * @var ?string $sourceInvoiceReference
      */
@@ -179,7 +180,7 @@ class CreateInvoiceRequestLine
     public ?string $sourceInvoiceReference = null;
 
     /**
-     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own purchase invoices that back it. A purchase invoice of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
+     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own expenses that back it. An expense of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
      *
      * @var ?array<string> $sourceInvoiceIds
      */

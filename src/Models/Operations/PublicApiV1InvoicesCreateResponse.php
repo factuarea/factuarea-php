@@ -40,26 +40,35 @@ class PublicApiV1InvoicesCreateResponse
     public array $headers;
 
     /**
-     * Invoice created successfully. The `Location` header contains the canonical URL of the newly created resource.
+     * Late retry of an unattended checkout: the `external_id` already belongs to an invoice issued in your company, so that invoice is returned unchanged — with the `Idempotent-Replayed: true` header — after completing the VeriFactu alta and the payment if they were missing. Nothing new is created and the invoice number is not consumed again. If the type or the total of the request differ from the issued invoice, the answer is `409` `unattended_replay_mismatch` instead.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateResponseBody $object
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateResponseBody1 $twoHundredApplicationJsonObject
      */
-    public ?PublicApiV1InvoicesCreateResponseBody $object = null;
+    public ?PublicApiV1InvoicesCreateResponseBody1 $twoHundredApplicationJsonObject = null;
+
+    /**
+     * Invoice created successfully. In an unattended checkout (`type: F2`, a `payment` block or `options.register_verifactu`) the body also carries the `verifactu`, `pdf` and `public_url` blocks. The `Location` header contains the canonical URL of the newly created resource.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateResponseBody2 $twoHundredAndOneApplicationJsonObject
+     */
+    public ?PublicApiV1InvoicesCreateResponseBody2 $twoHundredAndOneApplicationJsonObject = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateResponseBody  $object
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateResponseBody1  $twoHundredApplicationJsonObject
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesCreateResponseBody2  $twoHundredAndOneApplicationJsonObject
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesCreateResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesCreateResponseBody1 $twoHundredApplicationJsonObject = null, ?PublicApiV1InvoicesCreateResponseBody2 $twoHundredAndOneApplicationJsonObject = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
+        $this->twoHundredAndOneApplicationJsonObject = $twoHundredAndOneApplicationJsonObject;
     }
 }

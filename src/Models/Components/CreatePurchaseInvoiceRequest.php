@@ -52,7 +52,7 @@ class CreatePurchaseInvoiceRequest
     public ?CreatePurchaseInvoiceRequestStatus $status = null;
 
     /**
-     * Whether to exclude this purchase invoice from the annual Modelo 347 declaration.
+     * Whether to exclude this expense from the annual Modelo 347 declaration.
      *
      * @var ?bool $exclude347
      */

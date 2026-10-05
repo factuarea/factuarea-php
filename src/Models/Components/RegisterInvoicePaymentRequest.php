@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** RegisterInvoicePaymentRequest - Register a partial (or full) payment against a sales invoice. Required: `amount` (> 0), `paid_on` (date) and `payment_method` (a value from the closed catalog). Optional: `reference`, `notes`. */
+/** RegisterInvoicePaymentRequest - Register a partial (or full) payment against an invoice. Required: `amount` (> 0), `paid_on` (date) and `payment_method` (a value from the closed catalog). Optional: `reference`, `notes`. */
 class RegisterInvoicePaymentRequest
 {
     /**

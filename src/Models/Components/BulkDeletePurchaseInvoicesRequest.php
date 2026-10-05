@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkDeletePurchaseInvoicesRequest - Delete several purchase invoices in one request. `ids` is an array of 1 to 100 UUIDs; unknown identifiers are reported as failed rather than failing the whole request. */
+/** BulkDeletePurchaseInvoicesRequest - Delete several expenses in one request. `ids` is an array of 1 to 100 UUIDs; unknown identifiers are reported as failed rather than failing the whole request. */
 class BulkDeletePurchaseInvoicesRequest
 {
     /**

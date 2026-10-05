@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Operations;
 class PublicApiV1VerifactuRecordsSubsanarData
 {
     /**
+     * UUID (v7) of the NEW record created by the correction (subsanación), the one that is transmitted to AEAT. The original record is never modified.
      *
      * @var string $id
      */

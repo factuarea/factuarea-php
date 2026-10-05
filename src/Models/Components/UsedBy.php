@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UsedBy - Count by consumer BC. Excludes `purchase_invoice_lines` (no FK) and `recurring_invoices` (JSON lines). */
+/** UsedBy - Number of references by kind of resource. Purchase invoice lines (they store a rate, not a tax reference) and recurring invoices (their lines are stored as a template) are not counted. */
 class UsedBy
 {
     /**
-     * `products.tax_id` referencias.
+     * Products that reference the tax.
      *
      * @var int $products
      */
@@ -21,7 +21,7 @@ class UsedBy
     public int $products;
 
     /**
-     * `suppliers.default_tax_id` referencias.
+     * Suppliers that use the tax as their default tax.
      *
      * @var int $suppliers
      */
@@ -29,7 +29,7 @@ class UsedBy
     public int $suppliers;
 
     /**
-     * `invoice_lines.{vat_id,retention_id,surcharge_id,tax_id}` referencias.
+     * Invoice lines that reference the tax as VAT, withholding, surcharge or generic tax.
      *
      * @var int $invoiceLines
      */

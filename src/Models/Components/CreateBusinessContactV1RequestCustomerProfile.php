@@ -20,7 +20,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?bool $surchargeSubject = null;
 
     /**
-     * Public identifier (UUID v7) of an active price list of your company applied by default to this customer, or `null`.
+     * UUID (v7) of an active price list of your company to apply by default to this customer.
      *
      * @var ?string $defaultPriceListUuid
      */
@@ -71,6 +71,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?CustomerProfilePaymentMethod $paymentMethod = null;
 
     /**
+     * Payment term in days (0-365). For a new contact, omitted or null means 30 days; an explicit 0 means immediate payment. For an existing contact upsert, an omitted profile is preserved and a supplied profile replaces its defaults.
      *
      * @var ?int $paymentTermsDays
      */

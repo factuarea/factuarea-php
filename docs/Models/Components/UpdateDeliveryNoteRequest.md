@@ -1,10 +1,6 @@
 # UpdateDeliveryNoteRequest
 
-Public REST API v1 — PATCH /v1/companies/{company}/delivery-notes/{delivery_note}.
-
-Partial update: omitted fields are kept. Only allowed when
-the delivery note is in `draft` status (the controller maps the
-transition exception to 422 `invalid_status_transition`).
+Partial update of a delivery note: omitted fields are kept. Only allowed while the delivery note is in `draft` status (otherwise 422 `invalid_status_transition`).
 
 
 ## Fields

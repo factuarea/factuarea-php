@@ -917,7 +917,7 @@ class Employees
     /**
      * Update an employee
      *
-     * Update an employee. Partial update: only fields present in the payload are modified; omitted fields keep their value. `hire_date` is immutable. Returns the updated employee.
+     * Update an employee. Partial update: only fields present in the payload are modified; omitted fields keep their value. `hire_date` (`Y-m-d`) can be corrected: it must not be later than the employee’s `termination_date` (422 `parameter_invalid_value`, subcode `invalid_hire_date`), and changing it keeps existing time entries and schedule assignments — entries left outside the new employment period stay in the ledger and are flagged with `is_outside_employment` in the time balances. Returns the updated employee.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesUpdateResponse

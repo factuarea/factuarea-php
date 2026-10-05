@@ -13,20 +13,20 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1SeriesDefaultRequest
 {
     /**
-     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
-     *
-     * @var string $company
-     */
-    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
-    public string $company;
-
-    /**
      * Document type whose default series is requested.
      *
-     * @var \Factuarea\Sdk\Models\Operations\DocumentType $documentType
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultDocumentType $documentType
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=document_type')]
-    public DocumentType $documentType;
+    public PublicApiV1SeriesDefaultDocumentType $documentType;
+
+    /**
+     * Purpose of the invoice series whose default is requested (only with `document_type=invoice`). Defaults to `complete`. Returns 404 when the company has no series of that purpose yet (it is created automatically on the first issue) and 422 `series_invoice_kind_invalid` for a value outside the list.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultInvoiceKind $invoiceKind
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=invoice_kind')]
+    public ?PublicApiV1SeriesDefaultInvoiceKind $invoiceKind = null;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -37,15 +37,25 @@ class PublicApiV1SeriesDefaultRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * @param  string  $company
-     * @param  \Factuarea\Sdk\Models\Operations\DocumentType  $documentType
+     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     *
+     * @var ?string $xActiveProfile
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
+    public ?string $xActiveProfile = null;
+
+    /**
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultDocumentType  $documentType
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesDefaultInvoiceKind  $invoiceKind
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(string $company, DocumentType $documentType, ?LocalDate $factuareaVersion = null)
+    public function __construct(PublicApiV1SeriesDefaultDocumentType $documentType, ?PublicApiV1SeriesDefaultInvoiceKind $invoiceKind = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
     {
-        $this->company = $company;
         $this->documentType = $documentType;
+        $this->invoiceKind = $invoiceKind;
         $this->factuareaVersion = $factuareaVersion;
+        $this->xActiveProfile = $xActiveProfile;
     }
 }

@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:docs/Models/Components/AccountsFile.md
 # AccountsFile
+========
+# RecurringInvoicePreviewDocumentTotals
+>>>>>>>> origin/main:docs/Models/Components/RecurringInvoicePreviewDocumentTotals.md
 
 
 ## Fields

@@ -47,10 +47,10 @@ class BulkCreateResult
     /**
      * Per-row classification of validate-only mode (`dry_run=true`). Empty in create mode.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Result> $results
+     * @var array<\Factuarea\Sdk\Models\Components\BulkCreateResultResult> $results
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('results')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Result>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BulkCreateResultResult>')]
     public array $results;
 
     /**
@@ -67,7 +67,7 @@ class BulkCreateResult
      * @param  int  $total
      * @param  int  $successful
      * @param  int  $failed
-     * @param  array<\Factuarea\Sdk\Models\Components\Result>  $results
+     * @param  array<\Factuarea\Sdk\Models\Components\BulkCreateResultResult>  $results
      * @param  array<\Factuarea\Sdk\Models\Components\BulkCreateResultFailure>  $failures
      * @phpstan-pure
      */

@@ -124,7 +124,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PresenceDaily
 
-List the office/remote presence declarations of your company with cursor-based pagination. Supports filtering by `employee_id` (UUID v7), by exact day (`date`) or by date range (`from`/`to`, `YYYY-MM-DD`). Each record is one employee’s declared work location for one day. Read-only over the public API — declarations are made from the app (SPA-only).
+List the office/remote presence declarations of your company with cursor-based pagination. Supports filtering by `employee_id` (UUID v7), by exact day (`date`) or by date range (`from`/`to`, `YYYY-MM-DD`). Each record is one employee’s declared work location for one day. Read-only over the public API — declarations are made from the Factuarea app.
 
 ### Example Usage
 

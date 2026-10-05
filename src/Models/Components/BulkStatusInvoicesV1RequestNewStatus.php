@@ -9,8 +9,10 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** Target status: `issued` issues each draft (definitive number, VeriFactu record) without sending any email; `paid` records a payment for the outstanding amount of each issued invoice. `sent` is accepted as an alias of `issued` in every API version and never sets the delivery mark (`is_sent`). */
 enum BulkStatusInvoicesV1RequestNewStatus: string
 {
+    case Issued = 'issued';
     case Sent = 'sent';
     case Paid = 'paid';
 }

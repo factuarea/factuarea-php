@@ -12,9 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Update
 {
     /**
-     * Tenant-scoped resolution happens in the controller to preserve the
-     *
-     * bulk skip-on-miss contract without revealing cross-tenant UUIDs.
+     * UUID (v7) of the product. A product that does not exist or does not belong to your company is skipped, without revealing whether it exists.
      *
      * @var string $productId
      */

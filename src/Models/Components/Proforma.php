@@ -67,66 +67,66 @@ class Proforma
 
     /**
      *
-     * @var string $subtotal
+     * @var float $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public string $subtotal;
+    public float $subtotal;
 
     /**
-     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on an expense the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
-     * @var string $taxesTotal
+     * @var float $taxesTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes_total')]
-    public string $taxesTotal;
+    public float $taxesTotal;
 
     /**
      * Sum of the VAT of all lines.
      *
-     * @var string $totalVat
+     * @var float $totalVat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_vat')]
-    public string $totalVat;
+    public float $totalVat;
 
     /**
      * Sum of the withholding (IRPF) of all lines.
      *
-     * @var string $totalRetention
+     * @var float $totalRetention
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_retention')]
-    public string $totalRetention;
+    public float $totalRetention;
 
     /**
      * Sum of the equivalence surcharge of all lines.
      *
-     * @var string $totalSurcharge
+     * @var float $totalSurcharge
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_surcharge')]
-    public string $totalSurcharge;
+    public float $totalSurcharge;
 
     /**
      * Total of the document. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the AGGREGATE one, specific to the sales-side families - `total = subtotal + taxes_total`. NEVER reconstruct it as `subtotal + taxes_total - total_retention`: `taxes_total` ALREADY has the withholding netted out, so that combination subtracts it twice and yields a false total (4,320.00 + 259.20 - 648.00 = 3,931.20 against a real 4,579.20).
      *
-     * @var string $total
+     * @var float $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public string $total;
+    public float $total;
 
     /**
-     * Additional shipping cost added to the total.
+     * Shipping cost, expressed WITH VAT INCLUDED, added to the amount to pay. It is not part of `subtotal`, `total_vat` or `total`. When the proforma is converted to an invoice it becomes a "Gastos de envío" line whose base is `shipping_cost / (1 + r)` with VAT `r`, so the invoice total equals `total_with_shipping`.
      *
-     * @var string $shippingCost
+     * @var float $shippingCost
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('shipping_cost')]
-    public string $shippingCost;
+    public float $shippingCost;
 
     /**
-     * Final total including the shipping cost (= total + shipping_cost).
+     * Final total including the shipping cost (= total + shipping_cost). The invoice generated from the proforma has exactly this total.
      *
-     * @var string $totalWithShipping
+     * @var float $totalWithShipping
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_with_shipping')]
-    public string $totalWithShipping;
+    public float $totalWithShipping;
 
     /**
      *
@@ -224,7 +224,7 @@ class Proforma
     public ?string $reference;
 
     /**
-     * UUID v7 of the invoice this proforma was converted into, if applicable.
+     * UUID (v7) of the invoice this proforma was converted into, if applicable.
      *
      * @var ?string $convertedToId
      */
@@ -256,7 +256,7 @@ class Proforma
     public ?int $paymentTermsDays;
 
     /**
-     * Free-text delivery terms.
+     * Delivery terms, free-form text.
      *
      * @var ?string $deliveryTerms
      */
@@ -322,14 +322,14 @@ class Proforma
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
      * @param  string  $status
      * @param  LocalDate  $issuedOn
-     * @param  string  $subtotal
-     * @param  string  $taxesTotal
-     * @param  string  $totalVat
-     * @param  string  $totalRetention
-     * @param  string  $totalSurcharge
-     * @param  string  $total
-     * @param  string  $shippingCost
-     * @param  string  $totalWithShipping
+     * @param  float  $subtotal
+     * @param  float  $taxesTotal
+     * @param  float  $totalVat
+     * @param  float  $totalRetention
+     * @param  float  $totalSurcharge
+     * @param  float  $total
+     * @param  float  $shippingCost
+     * @param  float  $totalWithShipping
      * @param  string  $currency
      * @param  array<\Factuarea\Sdk\Models\Components\ProformaLine>  $lines
      * @param  array<string>  $tags
@@ -355,7 +355,7 @@ class Proforma
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $shippingCost, string $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $shippingCost, float $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;

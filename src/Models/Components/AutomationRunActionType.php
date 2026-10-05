@@ -20,4 +20,8 @@ enum AutomationRunActionType: string
     case SendPaymentReminder = 'send_payment_reminder';
     case ChangeStatus = 'change_status';
     case TagEntity = 'tag_entity';
+    case CreateTask = 'create_task';
+    case ChangeTaskStatus = 'change_task_status';
+    case AssignTask = 'assign_task';
+    case AddTaskComment = 'add_task_comment';
 }

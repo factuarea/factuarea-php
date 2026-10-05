@@ -1,6 +1,6 @@
 # RegisterInvoicePaymentRequest
 
-Register a partial (or full) payment against a sales invoice. Required: `amount` (> 0), `paid_on` (date) and `payment_method` (a value from the closed catalog). Optional: `reference`, `notes`.
+Register a partial (or full) payment against an invoice. Required: `amount` (> 0), `paid_on` (date) and `payment_method` (a value from the closed catalog). Optional: `reference`, `notes`.
 
 
 ## Fields

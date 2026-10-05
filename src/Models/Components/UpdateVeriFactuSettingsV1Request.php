@@ -56,19 +56,31 @@ class UpdateVeriFactuSettingsV1Request
     public ?array $notificationEmails = null;
 
     /**
+     * Who submits the VeriFactu records of your company to AEAT. It does not change whether the company operates in VERI*FACTU or NO VERI*FACTU mode: it only decides whose electronic certificate signs and submits the records. `own_certificate` (default): the records are submitted with the electronic certificate of the company itself. `social_collaborator`: Factuarea submits the records on your behalf as a social collaborator, with the certificate of Factuarea; it needs an active `social_collaboration_annex_i` representation. `power_of_attorney`: Factuarea submits the records on your behalf as an attorney-in-fact, with the certificate of Factuarea; it needs an active `aeat_power_of_attorney` representation.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\RemissionMode $remissionMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('remission_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RemissionMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?RemissionMode $remissionMode = null;
+
+    /**
      * @param  ?bool  $enabled
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestMode  $mode
      * @param  ?bool  $autoTransmit
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestEnvironment  $environment
      * @param  ?array<string>  $notificationEmails
+     * @param  ?\Factuarea\Sdk\Models\Components\RemissionMode  $remissionMode
      * @phpstan-pure
      */
-    public function __construct(?bool $enabled = null, ?UpdateVeriFactuSettingsV1RequestMode $mode = null, ?bool $autoTransmit = null, ?UpdateVeriFactuSettingsV1RequestEnvironment $environment = null, ?array $notificationEmails = null)
+    public function __construct(?bool $enabled = null, ?UpdateVeriFactuSettingsV1RequestMode $mode = null, ?bool $autoTransmit = null, ?UpdateVeriFactuSettingsV1RequestEnvironment $environment = null, ?array $notificationEmails = null, ?RemissionMode $remissionMode = null)
     {
         $this->enabled = $enabled;
         $this->mode = $mode;
         $this->autoTransmit = $autoTransmit;
         $this->environment = $environment;
         $this->notificationEmails = $notificationEmails;
+        $this->remissionMode = $remissionMode;
     }
 }

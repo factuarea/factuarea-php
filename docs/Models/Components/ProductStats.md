@@ -1,6 +1,6 @@
 # ProductStats
 
-Aggregated summary of the product catalog of the authenticated company: total, active, out of stock and low stock. Returned by `GET /v1/companies/{company}/products/stats`.
+Aggregated summary of the product catalog of the authenticated company: total, active, out of stock and low stock. Returned by `GET /v1/products/stats`.
 
 
 ## Fields
@@ -9,5 +9,5 @@ Aggregated summary of the product catalog of the authenticated company: total, a
 | ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
 | `totalProducts`                                         | *int*                                                   | :heavy_check_mark:                                      | Total number of products registered in the company.     | 248                                                     |
 | `activeProducts`                                        | *int*                                                   | :heavy_check_mark:                                      | Products marked as active.                              | 231                                                     |
-| `outOfStockCount`                                       | *int*                                                   | :heavy_check_mark:                                      | Products without available stock (stock = 0).           | 12                                                      |
+| `outOfStockCount`                                       | *int*                                                   | :heavy_check_mark:                                      | Products with no stock available (stock = 0).           | 12                                                      |
 | `lowStockCount`                                         | *int*                                                   | :heavy_check_mark:                                      | Products whose stock is below the configured threshold. | 18                                                      |

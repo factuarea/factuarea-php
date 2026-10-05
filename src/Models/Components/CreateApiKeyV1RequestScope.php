@@ -65,7 +65,6 @@ enum CreateApiKeyV1RequestScope: string
     case TaxReportsWrite = 'tax_reports:write';
     case AccountRead = 'account:read';
     case AccountWrite = 'account:write';
-    case AccountOwner = 'account:owner';
     case CompaniesRead = 'companies:read';
     case CompaniesWrite = 'companies:write';
     case CompaniesDelete = 'companies:delete';
@@ -103,13 +102,14 @@ enum CreateApiKeyV1RequestScope: string
     case AutomationsWrite = 'automations:write';
     case AutomationsDelete = 'automations:delete';
     case AutomationRunsRead = 'automation_runs:read';
-    case MembersRead = 'members:read';
-    case MembersWrite = 'members:write';
-    case InvitationsRead = 'invitations:read';
-    case InvitationsWrite = 'invitations:write';
-    case NifTransfersRead = 'nif_transfers:read';
-    case NifTransfersWrite = 'nif_transfers:write';
-    case AccountsRead = 'accounts:read';
-    case AccountsWrite = 'accounts:write';
+    case ProjectsRead = 'projects:read';
+    case ProjectsWrite = 'projects:write';
+    case ProjectsDelete = 'projects:delete';
+    case TasksRead = 'tasks:read';
+    case TasksWrite = 'tasks:write';
+    case TasksDelete = 'tasks:delete';
+    case UsersRead = 'users:read';
+    case NotificationsRead = 'notifications:read';
+    case NotificationsWrite = 'notifications:write';
     case Wildcard = '*';
 }

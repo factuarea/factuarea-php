@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** RecurringInvoiceStats - Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/companies/{company}/recurring-invoices/stats`. */
+/** RecurringInvoiceStats - Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/recurring_invoices/stats`. */
 class RecurringInvoiceStats
 {
     /**
@@ -45,7 +45,7 @@ class RecurringInvoiceStats
     public int $paused;
 
     /**
-     * Cancelled recurring invoices (final, irreversible status).
+     * Cancelled recurring invoices (terminal, irreversible status).
      *
      * @var int $cancelled
      */
@@ -85,7 +85,7 @@ class RecurringInvoiceStats
     public int $generatedThisMonth;
 
     /**
-     * Failed recurring invoice runs in the current month.
+     * Recurrence runs that failed during the current month.
      *
      * @var int $failedThisMonth
      */
@@ -113,10 +113,10 @@ class RecurringInvoiceStats
     /**
      * Remaining scheduled template estimate from today through month end (EUR); it is not issued revenue, collections, or guaranteed cash.
      *
-     * @var string $estimatedRevenueThisMonth
+     * @var float $estimatedRevenueThisMonth
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('estimated_revenue_this_month')]
-    public string $estimatedRevenueThisMonth;
+    public float $estimatedRevenueThisMonth;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceStatsObject  $object
@@ -131,10 +131,10 @@ class RecurringInvoiceStats
      * @param  int  $failedThisMonth
      * @param  array<string, int>  $frequencyBreakdown
      * @param  array<\Factuarea\Sdk\Models\Components\NextScheduled>  $nextScheduled
-     * @param  string  $estimatedRevenueThisMonth
+     * @param  float  $estimatedRevenueThisMonth
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceStatsObject $object, int $total, int $active, int $paused, int $cancelled, int $completed, int $dueToday, int $dueThisWeek, int $generatedThisMonth, int $failedThisMonth, array $frequencyBreakdown, array $nextScheduled, string $estimatedRevenueThisMonth)
+    public function __construct(RecurringInvoiceStatsObject $object, int $total, int $active, int $paused, int $cancelled, int $completed, int $dueToday, int $dueThisWeek, int $generatedThisMonth, int $failedThisMonth, array $frequencyBreakdown, array $nextScheduled, float $estimatedRevenueThisMonth)
     {
         $this->object = $object;
         $this->total = $total;

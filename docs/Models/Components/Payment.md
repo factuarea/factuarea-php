@@ -1,0 +1,12 @@
+# Payment
+
+Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
+
+
+## Fields
+
+| Field                                                                                                 | Type                                                                                                  | Required                                                                                              | Description                                                                                           |
+| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `method`                                                                                              | [Components\CreateInvoiceRequestMethod](../../Models/Components/CreateInvoiceRequestMethod.md)        | :heavy_check_mark:                                                                                    | Payment method, from the catalog of `GET /v1/payment-methods`. Required when `payment` is sent.       |
+| `paidAt`                                                                                              | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                         | :heavy_minus_sign:                                                                                    | Date of the payment (ISO 8601); only its date is used. Defaults to the issue date.                    |
+| `reference`                                                                                           | *?string*                                                                                             | :heavy_minus_sign:                                                                                    | Reference of the payment, for example the transaction id of the card terminal (up to 100 characters). |
