@@ -122,6 +122,15 @@ class CompanySeatChargePreview
     public ?int $recurringTotalCents;
 
     /**
+     * Explicit reason for no immediate charge. A null reason never implies an Enterprise contract; negotiated_free_price preserves the acquired private seat price.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ZeroReason $zeroReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('zero_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ZeroReason|null')]
+    public ?ZeroReason $zeroReason;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\CompanySeatChargePreviewObject  $object
      * @param  int  $amount
      * @param  int  $taxAmount
@@ -137,9 +146,10 @@ class CompanySeatChargePreview
      * @param  ?int  $recurringQuantity
      * @param  ?int  $recurringBaseCents
      * @param  ?int  $recurringTotalCents
+     * @param  ?\Factuarea\Sdk\Models\Components\ZeroReason  $zeroReason
      * @phpstan-pure
      */
-    public function __construct(CompanySeatChargePreviewObject $object, int $amount, int $taxAmount, int $total, CompanySeatChargePreviewCurrency $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null)
+    public function __construct(CompanySeatChargePreviewObject $object, int $amount, int $taxAmount, int $total, CompanySeatChargePreviewCurrency $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null, ?ZeroReason $zeroReason = null)
     {
         $this->object = $object;
         $this->amount = $amount;
@@ -156,5 +166,6 @@ class CompanySeatChargePreview
         $this->recurringQuantity = $recurringQuantity;
         $this->recurringBaseCents = $recurringBaseCents;
         $this->recurringTotalCents = $recurringTotalCents;
+        $this->zeroReason = $zeroReason;
     }
 }

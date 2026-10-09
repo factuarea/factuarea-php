@@ -4,13 +4,13 @@
 
 ### Available Operations
 
-* [publicApiV1InvoicesQuarterlyAvailable](#publicapiv1invoicesquarterlyavailable) - List quarters with invoices
+* [publicApiV1InvoicesQuarterlyAvailable](#publicapiv1invoicesquarterlyavailable) - List quarters to export
 * [publicApiV1InvoicesQuarterlyDownloadZip](#publicapiv1invoicesquarterlydownloadzip) - Generate quarterly ZIP archive
 * [publicApiV1InvoicesQuarterlySendEmail](#publicapiv1invoicesquarterlysendemail) - Email quarterly ZIP to accountant
 
 ## publicApiV1InvoicesQuarterlyAvailable
 
-Returns the quarters that have at least one invoice, with breakdown by invoice type (F1/F2/F3/R5). Useful to populate "quarter to export" selectors.
+Returns the quarters that have at least one invoice, with breakdown by invoice type (F1/F2/F3/R5), and the quarters that only have charges left out of invoicing by the company's connected Stripe accounts (or refunds of such charges): those come back with `invoice_count` 0 and an empty breakdown, and their quarterly ZIP contains only the charges CSV. Useful to populate "quarter to export" selectors.
 
 ### Example Usage
 
@@ -66,7 +66,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesQuarterlyDownloadZip
 
-Builds a ZIP with all invoice PDFs of the given quarter. Returns ZIP metadata (path, processed counts, errors).
+Builds a ZIP with all invoice PDFs of the given quarter. When the company has charges left out of invoicing in that quarter (from any of its connected Stripe accounts) and `include_non_invoiced_charges` is not `false` (default `true`), the ZIP also includes the CSV `cobros_sin_factura_Q{quarter}_{year}.csv` with the charges of the quarter and the refunds that happen in the quarter (date, type, description, origin, reason, reference, currency, amount, refunded amount and net amount; a refund of a charge from an earlier quarter is a negative line) and totals per currency; without such charges the file is not added. If the quarter has no invoices but has such charges, the ZIP contains only the CSV. Returns ZIP metadata (path, processed counts, errors).
 
 ### Example Usage: api_key_revoked
 
@@ -203,7 +203,7 @@ if ($response->bytes !== null) {
 
 ## publicApiV1InvoicesQuarterlySendEmail
 
-Generates the quarterly ZIP and emails it to the recipient, typically the tax accountant.
+Generates the quarterly ZIP and emails it to the recipient, typically the tax accountant. When the company has charges left out of invoicing in that quarter (from any of its connected Stripe accounts) and `include_non_invoiced_charges` is not `false` (default `true`), the ZIP also includes the CSV `cobros_sin_factura_Q{quarter}_{year}.csv` with the charges of the quarter and the refunds that happen in the quarter (date, type, description, origin, reason, reference, currency, amount, refunded amount and net amount; a refund of a charge from an earlier quarter is a negative line) and totals per currency; without such charges the file is not added. If the quarter has no invoices but has such charges, the ZIP contains only the CSV.
 
 ### Example Usage: api_key_revoked
 

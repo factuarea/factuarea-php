@@ -15,6 +15,7 @@ enum BusinessContactImportPreviewAction: string
     case Update = 'update';
     case AddRole = 'add_role';
     case MergeCandidate = 'merge_candidate';
+    case Skip = 'skip';
     case Conflict = 'conflict';
     case Invalid = 'invalid';
 }

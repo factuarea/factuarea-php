@@ -9,10 +9,11 @@ The canonical recipient field is `email`. We accept
 
 ## Fields
 
-| Field              | Type               | Required           | Description        |
-| ------------------ | ------------------ | ------------------ | ------------------ |
-| `year`             | *int*              | :heavy_check_mark: | N/A                |
-| `quarter`          | *int*              | :heavy_check_mark: | N/A                |
-| `includeIndex`     | *?bool*            | :heavy_minus_sign: | N/A                |
-| `email`            | *?string*          | :heavy_minus_sign: | N/A                |
-| `message`          | *?string*          | :heavy_minus_sign: | N/A                |
+| Field                       | Type                        | Required                    | Description                 |
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- |
+| `year`                      | *int*                       | :heavy_check_mark:          | N/A                         |
+| `quarter`                   | *int*                       | :heavy_check_mark:          | N/A                         |
+| `includeIndex`              | *?bool*                     | :heavy_minus_sign:          | N/A                         |
+| `includeNonInvoicedCharges` | *?bool*                     | :heavy_minus_sign:          | N/A                         |
+| `email`                     | *?string*                   | :heavy_minus_sign:          | N/A                         |
+| `message`                   | *?string*                   | :heavy_minus_sign:          | N/A                         |

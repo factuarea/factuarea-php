@@ -137,6 +137,14 @@ class Store
     public ?\DateTime $connectedAt;
 
     /**
+     * Optional note written in the notes of the invoices auto-created from this store's orders, or `null` when none is configured (the default: invoices carry no note). When an order needed a currency conversion to EUR, the conversion trace is appended to the note. Editable with `PUT /v1/stores/{store}`; `null` or an empty string clears it.
+     *
+     * @var ?string $invoiceNote
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_note')]
+    public ?string $invoiceNote;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\StoreObject  $object
      * @param  string  $integrationId
@@ -152,9 +160,10 @@ class Store
      * @param  \Factuarea\Sdk\Models\Components\StoreStatus  $status
      * @param  ?string  $remoteBaseUrl
      * @param  ?\DateTime  $connectedAt
+     * @param  ?string  $invoiceNote
      * @phpstan-pure
      */
-    public function __construct(string $id, StoreObject $object, string $integrationId, StoreProvider $provider, string $externalStoreId, string $name, float $simplifiedThreshold, bool $requireTaxId, bool $pricesIncludeTax, bool $autoinvoicingEnabled, bool $autosendEnabled, StoreEnvironment $environment, StoreStatus $status, ?string $remoteBaseUrl = null, ?\DateTime $connectedAt = null)
+    public function __construct(string $id, StoreObject $object, string $integrationId, StoreProvider $provider, string $externalStoreId, string $name, float $simplifiedThreshold, bool $requireTaxId, bool $pricesIncludeTax, bool $autoinvoicingEnabled, bool $autosendEnabled, StoreEnvironment $environment, StoreStatus $status, ?string $remoteBaseUrl = null, ?\DateTime $connectedAt = null, ?string $invoiceNote = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -171,5 +180,6 @@ class Store
         $this->status = $status;
         $this->remoteBaseUrl = $remoteBaseUrl;
         $this->connectedAt = $connectedAt;
+        $this->invoiceNote = $invoiceNote;
     }
 }

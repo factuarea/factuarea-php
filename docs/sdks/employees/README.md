@@ -269,6 +269,7 @@ if ($response->object !== null) {
 | ---------------------------- | ---------------------------- | ---------------------------- |
 | Errors\Error                 | 401, 402, 403, 409, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
+| Errors\Error                 | 503                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1EmployeesList
@@ -705,6 +706,7 @@ if ($response->object !== null) {
 | --------------------------------- | --------------------------------- | --------------------------------- |
 | Errors\Error                      | 401, 402, 403, 404, 409, 422, 429 | application/json                  |
 | Errors\Error                      | 500                               | application/json                  |
+| Errors\Error                      | 503                               | application/json                  |
 | Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1EmployeesShow

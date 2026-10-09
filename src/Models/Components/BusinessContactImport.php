@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** BusinessContactImport - Tracking of a contact import. `outcomes` lists at most 500 rows (`outcomes_truncated`); `skip_reasons` counts the skipped rows by reason. */
 class BusinessContactImport
 {
     /**
@@ -17,6 +18,22 @@ class BusinessContactImport
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('id')]
     public string $id;
+
+    /**
+     *
+     * @var \Factuarea\Sdk\Models\Components\BusinessContactImportObject $object
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportObject')]
+    public BusinessContactImportObject $object;
+
+    /**
+     *
+     * @var \Factuarea\Sdk\Models\Components\BusinessContactImportEntityType $entityType
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('entity_type')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportEntityType')]
+    public BusinessContactImportEntityType $entityType;
 
     /**
      *
@@ -49,6 +66,13 @@ class BusinessContactImport
 
     /**
      *
+     * @var int $updatedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('updated_count')]
+    public int $updatedCount;
+
+    /**
+     *
      * @var int $skippedCount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('skipped_count')]
@@ -63,10 +87,51 @@ class BusinessContactImport
 
     /**
      *
+     * @var int $warningsCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warnings_count')]
+    public int $warningsCount;
+
+    /**
+     *
      * @var int $unprocessedCount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unprocessed_count')]
     public int $unprocessedCount;
+
+    /**
+     * Skipped rows grouped by reason.
+     *
+     * @var array<string, int> $skipReasons
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('skip_reasons')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, int>')]
+    public array $skipReasons;
+
+    /**
+     * $firstDiagnostics
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\FirstDiagnostic> $firstDiagnostics
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('first_diagnostics')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\FirstDiagnostic>')]
+    public array $firstDiagnostics;
+
+    /**
+     * $outcomes
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\BusinessContactImportOutcome> $outcomes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('outcomes')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportOutcome>')]
+    public array $outcomes;
+
+    /**
+     *
+     * @var bool $outcomesTruncated
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('outcomes_truncated')]
+    public bool $outcomesTruncated;
 
     /**
      *
@@ -76,13 +141,13 @@ class BusinessContactImport
     public \DateTime $createdAt;
 
     /**
-     * $outcomes
+     * `nothing_changed` means the import finished without creating or updating anything; do not present it as a success.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Outcome> $outcomes
+     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactImportOutcomeKind $outcomeKind
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('outcomes')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Outcome>')]
-    public array $outcomes;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('outcome_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportOutcomeKind|null')]
+    public ?BusinessContactImportOutcomeKind $outcomeKind;
 
     /**
      *
@@ -100,68 +165,66 @@ class BusinessContactImport
 
     /**
      *
-     * @var ?string $startedAt
+     * @var ?\DateTime $startedAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('started_at')]
-    public ?string $startedAt;
+    public ?\DateTime $startedAt;
 
     /**
      *
-     * @var ?string $finishedAt
+     * @var ?\DateTime $finishedAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('finished_at')]
-    public ?string $finishedAt;
-
-    /**
-     *
-     * @var string $object
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
-    public string $object;
-
-    /**
-     *
-     * @var string $entityType
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('entity_type')]
-    public string $entityType;
+    public ?\DateTime $finishedAt;
 
     /**
      * @param  string  $id
-     * @param  string  $object
-     * @param  string  $entityType
+     * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportObject  $object
+     * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportEntityType  $entityType
      * @param  \Factuarea\Sdk\Models\Components\BusinessContactImportStatus  $status
      * @param  string  $sourceFilename
      * @param  int  $totalRows
      * @param  int  $addedCount
+     * @param  int  $updatedCount
      * @param  int  $skippedCount
      * @param  int  $failedCount
+     * @param  int  $warningsCount
      * @param  int  $unprocessedCount
+     * @param  array<string, int>  $skipReasons
+     * @param  array<\Factuarea\Sdk\Models\Components\FirstDiagnostic>  $firstDiagnostics
+     * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportOutcome>  $outcomes
+     * @param  bool  $outcomesTruncated
      * @param  \DateTime  $createdAt
-     * @param  array<\Factuarea\Sdk\Models\Components\Outcome>  $outcomes
+     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportOutcomeKind  $outcomeKind
      * @param  ?string  $errorReportUrl
      * @param  ?string  $failureReason
-     * @param  ?string  $startedAt
-     * @param  ?string  $finishedAt
+     * @param  ?\DateTime  $startedAt
+     * @param  ?\DateTime  $finishedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, BusinessContactImportStatus $status, string $sourceFilename, int $totalRows, int $addedCount, int $skippedCount, int $failedCount, int $unprocessedCount, \DateTime $createdAt, array $outcomes, ?string $errorReportUrl = null, ?string $failureReason = null, ?string $startedAt = null, ?string $finishedAt = null, string $object = 'contact_import', string $entityType = 'business_contacts')
+    public function __construct(string $id, BusinessContactImportObject $object, BusinessContactImportEntityType $entityType, BusinessContactImportStatus $status, string $sourceFilename, int $totalRows, int $addedCount, int $updatedCount, int $skippedCount, int $failedCount, int $warningsCount, int $unprocessedCount, array $skipReasons, array $firstDiagnostics, array $outcomes, bool $outcomesTruncated, \DateTime $createdAt, ?BusinessContactImportOutcomeKind $outcomeKind = null, ?string $errorReportUrl = null, ?string $failureReason = null, ?\DateTime $startedAt = null, ?\DateTime $finishedAt = null)
     {
         $this->id = $id;
+        $this->object = $object;
+        $this->entityType = $entityType;
         $this->status = $status;
         $this->sourceFilename = $sourceFilename;
         $this->totalRows = $totalRows;
         $this->addedCount = $addedCount;
+        $this->updatedCount = $updatedCount;
         $this->skippedCount = $skippedCount;
         $this->failedCount = $failedCount;
+        $this->warningsCount = $warningsCount;
         $this->unprocessedCount = $unprocessedCount;
-        $this->createdAt = $createdAt;
+        $this->skipReasons = $skipReasons;
+        $this->firstDiagnostics = $firstDiagnostics;
         $this->outcomes = $outcomes;
+        $this->outcomesTruncated = $outcomesTruncated;
+        $this->createdAt = $createdAt;
+        $this->outcomeKind = $outcomeKind;
         $this->errorReportUrl = $errorReportUrl;
         $this->failureReason = $failureReason;
         $this->startedAt = $startedAt;
         $this->finishedAt = $finishedAt;
-        $this->object = $object;
-        $this->entityType = $entityType;
     }
 }

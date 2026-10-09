@@ -53,7 +53,7 @@ class PublicApiV1TaxesListRequest
     public ?bool $isActive = null;
 
     /**
-     * Filter taxes marked as global default (legacy flag). Exact match on `is_default`.
+     * Filter taxes that are your company's effective default (the tax your company proposes by default for the document). Exact match on `is_default`.
      *
      * @var ?bool $isDefault
      */
@@ -117,12 +117,20 @@ class PublicApiV1TaxesListRequest
     public ?string $externalReferenceIn = null;
 
     /**
-     * Filter system taxes (global catalog) vs custom. Exact match on `is_system`.
+     * Filter the protected canonical taxes of the Factuarea catalog (`true`) vs the rest (`false`). To tell the global catalog from your own taxes use `ownership`. Exact match on `is_system`.
      *
      * @var ?bool $isSystem
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=is_system')]
     public ?bool $isSystem = null;
+
+    /**
+     * Whose taxes to list: `global` (the read-only Factuarea catalog) or `company` (the taxes your company created). Omit it to list both. Any other value responds 422 with `error.param=ownership`. Exact match on `ownership`.
+     *
+     * @var ?string $ownership
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=ownership')]
+    public ?string $ownership = null;
 
     /**
      * AEAT fiscal zone: `peninsula`, `canarias`, `ceuta`, `melilla`. Exact match on `country_aeat_zone`.
@@ -180,13 +188,14 @@ class PublicApiV1TaxesListRequest
      * @param  ?string  $externalReference
      * @param  ?string  $externalReferenceIn
      * @param  ?bool  $isSystem
+     * @param  ?string  $ownership
      * @param  ?string  $countryAeatZone
      * @param  ?string  $indirectTaxRegime
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $typeIn = null, ?bool $isActive = null, ?bool $isDefault = null, ?string $appliesTo = null, ?string $appliesToIn = null, ?string $country = null, ?string $code = null, ?string $search = null, ?string $externalReference = null, ?string $externalReferenceIn = null, ?bool $isSystem = null, ?string $countryAeatZone = null, ?string $indirectTaxRegime = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $typeIn = null, ?bool $isActive = null, ?bool $isDefault = null, ?string $appliesTo = null, ?string $appliesToIn = null, ?string $country = null, ?string $code = null, ?string $search = null, ?string $externalReference = null, ?string $externalReferenceIn = null, ?bool $isSystem = null, ?string $ownership = null, ?string $countryAeatZone = null, ?string $indirectTaxRegime = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
     {
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
@@ -202,6 +211,7 @@ class PublicApiV1TaxesListRequest
         $this->externalReference = $externalReference;
         $this->externalReferenceIn = $externalReferenceIn;
         $this->isSystem = $isSystem;
+        $this->ownership = $ownership;
         $this->countryAeatZone = $countryAeatZone;
         $this->indirectTaxRegime = $indirectTaxRegime;
         $this->factuareaVersion = $factuareaVersion;

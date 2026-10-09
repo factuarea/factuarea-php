@@ -51,7 +51,7 @@ class Taxes
     /**
      * List active taxes
      *
-     * Return the active taxes available to your company, combining system-wide defaults plus company-specific definitions.
+     * Return the active taxes available to your company, combining the global platform catalog plus the taxes owned by your company.
      *
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
@@ -554,7 +554,7 @@ class Taxes
     /**
      * Create a tax
      *
-     * Register a new tax with name, unique code, type (vat, retention, surcharge or other), rate and scope (sale, purchase or both). The ISO-2 country code is required.
+     * Create a tax owned by your company, with name, code, type (vat, retention, surcharge or other), rate and scope (sale, purchase or both). The ISO-2 country code is required. The code must be unique among the global catalog and your own taxes (409 otherwise); other companies may reuse it. The tax is visible only to your company. `default_for_documents` sets your company's defaults; a document type the tax cannot be default for responds 422 `tax_not_defaultable_for_document`.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTaxRequest  $body
      * @param  ?string  $idempotencyKey
@@ -807,7 +807,7 @@ class Taxes
     /**
      * Delete a tax
      *
-     * Delete a tax. Fails with 409 if the tax is referenced by existing documents. System taxes (is_system=true) cannot be deleted.
+     * Delete a tax owned by your company. Fails with 422 `tax_in_use` if existing documents reference it or it is configured as one of your company's defaults. System taxes respond 422 `system_tax_undeletable`; other global taxes, 403 `global_tax_read_only`.
      *
      * @param  string  $tax
      * @param  string  $idempotencyKey
@@ -1164,7 +1164,7 @@ class Taxes
     /**
      * Check whether a tax is in use
      *
-     * Return whether the tax is referenced by existing documents. Useful for safe-deletion checks before calling DELETE.
+     * Return whether your company uses the tax: documents, products, contacts and company defaults of your company only (usage by other companies is not counted). Useful for safe-deletion checks before calling DELETE.
      *
      * @param  string  $tax
      * @param  ?LocalDate  $factuareaVersion
@@ -1287,7 +1287,7 @@ class Taxes
     /**
      * List all taxes
      *
-     * List the tax rates available to your company (Spanish IVA, IRPF, recargo, etc.).
+     * List the taxes visible to your company: the global platform catalog (Spanish IVA, IRPF, recargo, etc.) plus the taxes your company created. Each tax carries `ownership` (`global` or `company`) and can be filtered by it. `is_default` and `default_for_documents` reflect your company's effective defaults, not other companies'.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TaxesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesListResponse
@@ -1406,7 +1406,7 @@ class Taxes
     /**
      * Mark a tax as the default for its type
      *
-     * Promote a tax to the system-wide default for its category (vat, retention or surcharge). If another tax was the default for the same type it is demoted automatically.
+     * Set a visible tax (global or owned by your company) as your company's default for its category (vat, retention or surcharge) in every compatible document type. It only changes your company's configuration; the global catalog and other companies are not affected. Inactive taxes respond 422 `tax_inactive_cannot_be_default`, and a tax that cannot be default for a document type, 422 `tax_not_defaultable_for_document`. It is written only in the compatible document types where the category is switched on for your company; if it is switched off in all of them, 422 `tax_default_axis_disabled`.
      *
      * @param  string  $tax
      * @param  ?string  $idempotencyKey
@@ -1495,7 +1495,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1531,7 +1531,7 @@ class Taxes
     /**
      * Set tax default for a document type
      *
-     * Assign a tax as the default for a specific document type (invoice, quote, proforma, delivery_note, purchase_invoice, recurring_invoice).
+     * Set a visible tax as your company's default for one document type (invoice, quote, proforma, delivery_note, purchase_invoice). `recurring_invoice` inherits from invoice and responds 422 `tax_not_defaultable_for_document`, as do type `other` and an incompatible `applies_to`. If the tax category is switched off for that document in your company, 422 `tax_default_axis_disabled`. It only changes your company's configuration.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesSetDefaultForDocumentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesSetDefaultForDocumentResponse
@@ -1611,7 +1611,7 @@ class Taxes
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1647,7 +1647,7 @@ class Taxes
     /**
      * Retrieve a tax
      *
-     * Retrieve a tax rate by its `uuid`.
+     * Retrieve a tax visible to your company by its `uuid`. Taxes owned by another company respond 404. `is_default` and `default_for_documents` are your company's effective defaults.
      *
      * @param  string  $tax
      * @param  ?LocalDate  $factuareaVersion
@@ -1891,7 +1891,7 @@ class Taxes
     /**
      * Toggle tax active state
      *
-     * Flip a tax between active and inactive. Inactive taxes are hidden from selectors but stay available for already-issued documents.
+     * Flip a tax owned by your company between active and inactive. Inactive taxes are hidden from selectors but stay available for already-issued documents. Global catalog taxes respond 403 `global_tax_read_only`.
      *
      * @param  string  $tax
      * @param  ?string  $idempotencyKey
@@ -2016,7 +2016,7 @@ class Taxes
     /**
      * Update a tax
      *
-     * Partial update of a tax: name, code, rate, applies_to, country and description. System taxes (is_system=true) are not editable.
+     * Partial update of a tax owned by your company. System taxes (is_system=true) respond 422 `system_tax_immutable_field` when a definition field changes; any other change to the global catalog (for example `is_active`) responds 403 `global_tax_read_only`. `default_for_documents` is accepted on any visible tax and writes your company's defaults only.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesUpdateResponse

@@ -1,0 +1,11 @@
+# ActiveRules
+
+Current active rules and the cap enforced when activating a rule. Draft, paused and deleted rules do not consume this cap.
+
+
+## Fields
+
+| Field                                                                                                                                 | Type                                                                                                                                  | Required                                                                                                                              | Description                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `count`                                                                                                                               | *int*                                                                                                                                 | :heavy_check_mark:                                                                                                                    | Active, non-deleted rules belonging to this company.                                                                                  |
+| `limit`                                                                                                                               | *int*                                                                                                                                 | :heavy_check_mark:                                                                                                                    | Active-rule cap of the plan. Zero permits no activations; null means no automatic ceiling. Enterprise capacity is agreed by contract. |

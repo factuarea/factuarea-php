@@ -13,6 +13,25 @@ namespace Factuarea\Sdk\Models\Components;
 class Details
 {
     /**
+     * Operation in the authenticated company that must be resolved before another employee-seat mutation.
+     *
+     * @var ?string $operationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $operationId = null;
+
+    /**
+     * Employee-batch validation failures identified by the stable row_id; no employee was charged or created.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\RowError> $rowErrors
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('row_errors')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\RowError>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $rowErrors = null;
+
+    /**
      * Review fields that must be corrected before a purchase scan can be converted. Keys use public identifiers, for example supplier_id or lines.0.tax_rate.
      *
      * @var ?array<string, array<string>> $fieldErrors
@@ -78,6 +97,53 @@ class Details
     public ?float $received = null;
 
     /**
+     * Current active automation rule count on automation_active_rules_limit_exceeded.
+     *
+     * @var ?int $activeRules
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_rules')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $activeRules = null;
+
+    /**
+     * Plan limit reached, including the active automation rule cap on automation_active_rules_limit_exceeded.
+     *
+     * @var ?int $limit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('limit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $limit = null;
+
+    /**
+     * Resource whose quota was reached on plan_limit_exceeded, for example documents_year or users.
+     *
+     * @var ?string $resource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('resource')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $resource = null;
+
+    /**
+     * Current usage of the resource on plan_limit_exceeded.
+     *
+     * @var ?int $current
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('current')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $current = null;
+
+    /**
+     * End of the quota period on plan_limit_exceeded; null for resources without a period, including platform users.
+     *
+     * @var ?\DateTime $periodEnd
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('period_end')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?\DateTime $periodEnd = null;
+
+    /**
+     * @param  ?string  $operationId
+     * @param  ?array<\Factuarea\Sdk\Models\Components\RowError>  $rowErrors
      * @param  ?array<string, array<string>>  $fieldErrors
      * @param  ?string  $existingResourceId
      * @param  ?string  $paymentSetupUrl
@@ -85,10 +151,17 @@ class Details
      * @param  ?string  $offendingField
      * @param  ?float  $expected
      * @param  ?float  $received
+     * @param  ?int  $activeRules
+     * @param  ?int  $limit
+     * @param  ?string  $resource
+     * @param  ?int  $current
+     * @param  ?\DateTime  $periodEnd
      * @phpstan-pure
      */
-    public function __construct(?array $fieldErrors = null, ?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null)
+    public function __construct(?string $operationId = null, ?array $rowErrors = null, ?array $fieldErrors = null, ?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null, ?int $activeRules = null, ?int $limit = null, ?string $resource = null, ?int $current = null, ?\DateTime $periodEnd = null)
     {
+        $this->operationId = $operationId;
+        $this->rowErrors = $rowErrors;
         $this->fieldErrors = $fieldErrors;
         $this->existingResourceId = $existingResourceId;
         $this->paymentSetupUrl = $paymentSetupUrl;
@@ -96,5 +169,10 @@ class Details
         $this->offendingField = $offendingField;
         $this->expected = $expected;
         $this->received = $received;
+        $this->activeRules = $activeRules;
+        $this->limit = $limit;
+        $this->resource = $resource;
+        $this->current = $current;
+        $this->periodEnd = $periodEnd;
     }
 }
