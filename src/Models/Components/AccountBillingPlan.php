@@ -50,7 +50,7 @@ class AccountBillingPlan
     public int $gracePeriodDaysRemaining;
 
     /**
-     * Plan identifier (e.g. `emprendedor`, `empresario`, `enterprise`, `gestionada`).
+     * Plan identifier (e.g. `emprendedor`, `empresario`, `integral`, `enterprise`, `gestionada`).
      *
      * @var ?string $slug
      */

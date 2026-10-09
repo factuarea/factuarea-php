@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /** Where the reversal came from: `gateway` when the payment provider reported a return, dispute or chargeback (a bank movement already happened); `manual` when a user recorded it. */
-enum Origin: string
+enum EventDataPaymentReversedOrigin: string
 {
     case Gateway = 'gateway';
     case Manual = 'manual';

@@ -120,6 +120,14 @@ class Quote
     public string $currency;
 
     /**
+     * VAT operation regime of the quote (`general`, `intracomunitaria`, `importacion_exportacion`, `isp`).
+     *
+     * @var string $operationRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_regime')]
+    public string $operationRegime;
+
+    /**
      * $lines
      *
      * @var array<\Factuarea\Sdk\Models\Components\QuoteLine> $lines
@@ -237,6 +245,14 @@ class Quote
     public ?string $terms;
 
     /**
+     * Origin number of the document (e.g. the number it had in a previous system when imported). `null` if not set.
+     *
+     * @var ?string $reference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reference')]
+    public ?string $reference;
+
+    /**
      * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
      *
      * @var ?string $externalId
@@ -279,6 +295,7 @@ class Quote
      * @param  float  $totalSurcharge
      * @param  float  $total
      * @param  string  $currency
+     * @param  string  $operationRegime
      * @param  array<\Factuarea\Sdk\Models\Components\QuoteLine>  $lines
      * @param  array<string>  $tags
      * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
@@ -294,12 +311,13 @@ class Quote
      * @param  ?string  $convertedInvoiceNumber
      * @param  ?string  $notes
      * @param  ?string  $terms
+     * @param  ?string  $reference
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, string $currency, string $operationRegime, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $reference = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -315,6 +333,7 @@ class Quote
         $this->totalSurcharge = $totalSurcharge;
         $this->total = $total;
         $this->currency = $currency;
+        $this->operationRegime = $operationRegime;
         $this->lines = $lines;
         $this->tags = $tags;
         $this->customFields = $customFields;
@@ -330,6 +349,7 @@ class Quote
         $this->convertedInvoiceNumber = $convertedInvoiceNumber;
         $this->notes = $notes;
         $this->terms = $terms;
+        $this->reference = $reference;
         $this->externalId = $externalId;
         $this->metadata = $metadata;
         $this->linkExpiresAt = $linkExpiresAt;

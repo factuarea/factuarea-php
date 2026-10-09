@@ -538,7 +538,7 @@ class Stores
     /**
      * Update store settings
      *
-     * Update the settings of a connected store: its `name`, the series it numbers into (`series_id`; `null` falls back to the default series of your company), the simplified-invoice threshold, whether the buyer tax ID is required, whether prices already include taxes, whether paid orders are invoiced and emailed automatically, its `remote_base_url` and its `environment`. All fields are optional; omitted ones keep their value. Neither the provider nor the `external_store_id` can be changed: they are the identity of the store.
+     * Update the settings of a connected store: its `name`, the series it numbers into (`series_id`; `null` falls back to the default series of your company), the simplified-invoice threshold, whether the buyer tax ID is required, whether prices already include taxes, whether paid orders are invoiced and emailed automatically, its `remote_base_url`, its `environment` and the optional `invoice_note` (up to 500 characters) written in the notes of its automatic invoices (`null` or an empty string clears it; no note by default). All fields are optional; omitted ones keep their value. Neither the provider nor the `external_store_id` can be changed: they are the identity of the store.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StoresUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StoresUpdateResponse

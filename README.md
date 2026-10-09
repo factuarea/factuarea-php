@@ -671,6 +671,15 @@ if ($response->object !== null) {
 * [publicApiV1EmailsList](docs/sdks/emails/README.md#publicapiv1emailslist) - List sent emails
 * [publicApiV1EmailsShow](docs/sdks/emails/README.md#publicapiv1emailsshow) - Retrieve a sent email
 
+### [EmployeeBatches](docs/sdks/employeebatches/README.md)
+
+* [publicApiV1EmployeeBatchesCancel](docs/sdks/employeebatches/README.md#publicapiv1employeebatchescancel) - Cancel an employee batch
+* [publicApiV1EmployeeBatchesConfirm](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesconfirm) - Confirm an employee batch
+* [publicApiV1EmployeeBatchesList](docs/sdks/employeebatches/README.md#publicapiv1employeebatcheslist) - List an employee batch
+* [publicApiV1EmployeeBatchesPrepare](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesprepare) - Prepare an employee batch
+* [publicApiV1EmployeeBatchesRefreshQuote](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesrefreshquote) - Refresh the quote for an employee batch
+* [publicApiV1EmployeeBatchesShow](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesshow) - Retrieve an employee batch
+
 ### [EmployeeInvitations](docs/sdks/employeeinvitations/README.md)
 
 * [publicApiV1EmployeeInvitationsCancel](docs/sdks/employeeinvitations/README.md#publicapiv1employeeinvitationscancel) - Cancel an employee invitation
@@ -785,7 +794,7 @@ if ($response->object !== null) {
 
 #### [Invoices.Quarterly](docs/sdks/quarterly/README.md)
 
-* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters with invoices
+* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters to export
 * [publicApiV1InvoicesQuarterlyDownloadZip](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlydownloadzip) - Generate quarterly ZIP archive
 * [publicApiV1InvoicesQuarterlySendEmail](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlysendemail) - Email quarterly ZIP to accountant
 
@@ -1094,6 +1103,18 @@ if ($response->object !== null) {
 * [publicApiV1StripeAutoinvoicingAccountsShow](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsshow) - Retrieve a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsUpdate](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsupdate) - Update a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsList](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountslist) - List connected Stripe accounts
+
+#### [StripeAutoinvoicing.Accounts.ChargeRules](docs/sdks/chargerules/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulescreate) - Create a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesList](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargeruleslist) - List charge treatment rules of a connected Stripe account
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesDelete](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesdelete) - Delete a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesupdate) - Update a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesreorder) - Reorder the charge treatment rules
+
+#### [StripeAutoinvoicing.Accounts.NonInvoicedCharges](docs/sdks/noninvoicedcharges/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList](docs/sdks/noninvoicedcharges/README.md#publicapiv1stripeautoinvoicingaccountsnoninvoicedchargeslist) - List non-invoiced charges of a connected Stripe account
 
 ### [StripeAutoinvoicing.Config](docs/sdks/config/README.md)
 

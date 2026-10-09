@@ -1732,14 +1732,15 @@ class Contacts
     /**
      * Download the contact import template
      *
-     * Download the CSV template accepted by `POST /contacts/import`, including canonical identity, role and directional-profile headers. The response is a UTF-8 CSV attachment and contains no company data.
+     * Download the template accepted by `POST /contacts/import`, generated from the same column descriptors as the importer. `?format=csv` (default) is a UTF-8 CSV attachment with only the headers; `?format=xlsx` is a workbook with the Data, Instructions, Examples and Allowed values sheets. It contains no company data.
      *
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsImportTemplateFormat  $format
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ContactsImportTemplateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ContactsImportTemplate(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ContactsImportTemplateResponse
+    public function publicApiV1ContactsImportTemplate(?Operations\PublicApiV1ContactsImportTemplateFormat $format = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ContactsImportTemplateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1767,6 +1768,7 @@ class Contacts
             ];
         }
         $request = new Operations\PublicApiV1ContactsImportTemplateRequest(
+            format: $format,
             factuareaVersion: $factuareaVersion,
             xActiveProfile: $xActiveProfile,
         );
@@ -1774,15 +1776,18 @@ class Contacts
         $url = Utils\Utils::generateUrl($baseUrl, '/contacts/import/template');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1ContactsImportTemplateRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
-        $httpOptions['headers']['Accept'] = 'text/csv';
+        $httpOptions['headers']['Accept'] = 'text/csv;q=1, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;q=0';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.contacts.import_template', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -1811,6 +1816,17 @@ class Contacts
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
                     res: $obj);
+            } elseif (Utils\Utils::matchContentType($contentType, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $obj = $httpResponse->getBody()->getContents();
+
+                return new Operations\PublicApiV1ContactsImportTemplateResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    bytes: $obj);
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }

@@ -86,6 +86,24 @@ class ConnectedAccount
     public bool $subscriptionAutoinvoicingEnabled;
 
     /**
+     * How the account was linked to Stripe: `account_links` (Stripe Connect onboarding) or `stripe_app` (Stripe App). Read-only.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ConnectionMethod $connectionMethod
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('connection_method')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ConnectionMethod')]
+    public ConnectionMethod $connectionMethod;
+
+    /**
+     * Authorization state of the link with Stripe: `authorized`, `reauthorization_required` (the account must be linked again) or `revoked`. Read-only.
+     *
+     * @var \Factuarea\Sdk\Models\Components\AuthorizationStatus $authorizationStatus
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('authorization_status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AuthorizationStatus')]
+    public AuthorizationStatus $authorizationStatus;
+
+    /**
      * Account status. `active` while connected; `disconnected` (terminal) after disconnecting (invoices and history are kept).
      *
      * @var \Factuarea\Sdk\Models\Components\ConnectedAccountStatus $status
@@ -111,6 +129,22 @@ class ConnectedAccount
     public ?string $seriesId;
 
     /**
+     * Default concept of the single line created for charges whose lines cannot be recovered, or `null` if not configured. Editable with `PUT /v1/connected-accounts/{account}`.
+     *
+     * @var ?string $defaultLineConcept
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('default_line_concept')]
+    public ?string $defaultLineConcept;
+
+    /**
+     * Optional note written in the notes of the invoices auto-created from this account, or `null` when none is configured (the default: invoices carry no note). When a charge needed a currency conversion to EUR, the conversion trace is appended to the note. Editable with `PUT`; `null` or an empty string clears it.
+     *
+     * @var ?string $invoiceNote
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_note')]
+    public ?string $invoiceNote;
+
+    /**
      * When the account was connected (ISO 8601), or `null` if unknown.
      *
      * @var ?\DateTime $connectedAt
@@ -128,13 +162,17 @@ class ConnectedAccount
      * @param  bool  $requireNif
      * @param  bool  $refundsEnabled
      * @param  bool  $subscriptionAutoinvoicingEnabled
+     * @param  \Factuarea\Sdk\Models\Components\ConnectionMethod  $connectionMethod
+     * @param  \Factuarea\Sdk\Models\Components\AuthorizationStatus  $authorizationStatus
      * @param  \Factuarea\Sdk\Models\Components\ConnectedAccountStatus  $status
      * @param  ?string  $externalAccountName
      * @param  ?string  $seriesId
+     * @param  ?string  $defaultLineConcept
+     * @param  ?string  $invoiceNote
      * @param  ?\DateTime  $connectedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ConnectedAccountObject $object, string $name, string $externalAccountId, bool $autoinvoicingEnabled, int $simplifiedThresholdCents, bool $requireNif, bool $refundsEnabled, bool $subscriptionAutoinvoicingEnabled, ConnectedAccountStatus $status, ?string $externalAccountName = null, ?string $seriesId = null, ?\DateTime $connectedAt = null)
+    public function __construct(string $id, ConnectedAccountObject $object, string $name, string $externalAccountId, bool $autoinvoicingEnabled, int $simplifiedThresholdCents, bool $requireNif, bool $refundsEnabled, bool $subscriptionAutoinvoicingEnabled, ConnectionMethod $connectionMethod, AuthorizationStatus $authorizationStatus, ConnectedAccountStatus $status, ?string $externalAccountName = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null, ?\DateTime $connectedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -145,9 +183,13 @@ class ConnectedAccount
         $this->requireNif = $requireNif;
         $this->refundsEnabled = $refundsEnabled;
         $this->subscriptionAutoinvoicingEnabled = $subscriptionAutoinvoicingEnabled;
+        $this->connectionMethod = $connectionMethod;
+        $this->authorizationStatus = $authorizationStatus;
         $this->status = $status;
         $this->externalAccountName = $externalAccountName;
         $this->seriesId = $seriesId;
+        $this->defaultLineConcept = $defaultLineConcept;
+        $this->invoiceNote = $invoiceNote;
         $this->connectedAt = $connectedAt;
     }
 }

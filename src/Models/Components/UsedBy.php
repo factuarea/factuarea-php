@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UsedBy - Number of references by kind of resource. Purchase invoice lines (they store a rate, not a tax reference) and recurring invoices (their lines are stored as a template) are not counted. */
+/** UsedBy - Number of references by kind of resource. Purchase invoice lines (they store a rate, not a tax reference) are not counted. */
 class UsedBy
 {
     /**
@@ -27,6 +27,14 @@ class UsedBy
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('suppliers')]
     public int $suppliers;
+
+    /**
+     * Supplier contact profiles that use the tax as their default tax and are not already counted in `suppliers` (a supplier is never counted twice).
+     *
+     * @var int $supplierProfiles
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_profiles')]
+    public int $supplierProfiles;
 
     /**
      * Invoice lines that reference the tax as VAT, withholding, surcharge or generic tax.
@@ -58,21 +66,43 @@ class UsedBy
     public int $deliveryNoteLines;
 
     /**
+     * Recurring invoice templates with at least one line that references the tax (each template counts once).
+     *
+     * @var int $recurringInvoices
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_invoices')]
+    public int $recurringInvoices;
+
+    /**
+     * Document and category slots of your company tax configuration that use the tax as the default.
+     *
+     * @var int $companyTaxDefaults
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('company_tax_defaults')]
+    public int $companyTaxDefaults;
+
+    /**
      * @param  int  $products
      * @param  int  $suppliers
+     * @param  int  $supplierProfiles
      * @param  int  $invoiceLines
      * @param  int  $quoteLines
      * @param  int  $proformaLines
      * @param  int  $deliveryNoteLines
+     * @param  int  $recurringInvoices
+     * @param  int  $companyTaxDefaults
      * @phpstan-pure
      */
-    public function __construct(int $products, int $suppliers, int $invoiceLines, int $quoteLines, int $proformaLines, int $deliveryNoteLines)
+    public function __construct(int $products, int $suppliers, int $supplierProfiles, int $invoiceLines, int $quoteLines, int $proformaLines, int $deliveryNoteLines, int $recurringInvoices, int $companyTaxDefaults)
     {
         $this->products = $products;
         $this->suppliers = $suppliers;
+        $this->supplierProfiles = $supplierProfiles;
         $this->invoiceLines = $invoiceLines;
         $this->quoteLines = $quoteLines;
         $this->proformaLines = $proformaLines;
         $this->deliveryNoteLines = $deliveryNoteLines;
+        $this->recurringInvoices = $recurringInvoices;
+        $this->companyTaxDefaults = $companyTaxDefaults;
     }
 }

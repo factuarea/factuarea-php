@@ -53,7 +53,7 @@ class TaxStats
     public int $systemCount;
 
     /**
-     * Company-specific taxes (`is_system=false`).
+     * Visible taxes with `is_system=false` (usually your company's own taxes).
      *
      * @var int $customCount
      */

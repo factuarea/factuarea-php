@@ -66,6 +66,14 @@ class Proforma
     public LocalDate $issuedOn;
 
     /**
+     * VAT operation regime of the proforma (`general`, `intracomunitaria`, `importacion_exportacion`, `isp`).
+     *
+     * @var string $operationRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_regime')]
+    public string $operationRegime;
+
+    /**
      *
      * @var float $subtotal
      */
@@ -322,6 +330,7 @@ class Proforma
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
      * @param  string  $status
      * @param  LocalDate  $issuedOn
+     * @param  string  $operationRegime
      * @param  float  $subtotal
      * @param  float  $taxesTotal
      * @param  float  $totalVat
@@ -355,7 +364,7 @@ class Proforma
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $shippingCost, float $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $operationRegime, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $shippingCost, float $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -364,6 +373,7 @@ class Proforma
         $this->client = $client;
         $this->status = $status;
         $this->issuedOn = $issuedOn;
+        $this->operationRegime = $operationRegime;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
         $this->totalVat = $totalVat;

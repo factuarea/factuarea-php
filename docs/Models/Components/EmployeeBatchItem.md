@@ -1,0 +1,12 @@
+# EmployeeBatchItem
+
+
+## Fields
+
+| Field                                                                               | Type                                                                                | Required                                                                            | Description                                                                         |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `rowId`                                                                             | *string*                                                                            | :heavy_check_mark:                                                                  | N/A                                                                                 |
+| `employeeId`                                                                        | *?string*                                                                           | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `profile`                                                                           | [?Components\EmployeeBatchProfile](../../Models/Components/EmployeeBatchProfile.md) | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `paidUntil`                                                                         | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                       | :heavy_minus_sign:                                                                  | N/A                                                                                 |
+| `coverage`                                                                          | [?Components\Coverage](../../Models/Components/Coverage.md)                         | :heavy_minus_sign:                                                                  | N/A                                                                                 |

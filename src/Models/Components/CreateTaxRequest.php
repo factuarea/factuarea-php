@@ -133,7 +133,7 @@ class CreateTaxRequest
     public ?CreateTaxRequestCountryAeatZone $countryAeatZone = null;
 
     /**
-     * FK to the linked equivalence-surcharge tax. UUID v7 value referencing the global `taxes` catalog.
+     * FK to the linked equivalence-surcharge tax. UUID v7 value referencing the Factuarea catalog plus your company's own taxes.
      *
      * @var ?string $linkedSurchargeTaxesId
      */

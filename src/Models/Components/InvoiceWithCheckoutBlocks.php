@@ -248,6 +248,15 @@ class InvoiceWithCheckoutBlocks
     public bool $isSent;
 
     /**
+     * Where the invoice comes from: `native` (issued in Factuarea) or `historical_import` (a historical invoice registered by import: literal number from the file, no series counter and no VeriFactu record).
+     *
+     * @var \Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksOrigin $origin
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('origin')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksOrigin')]
+    public InvoiceWithCheckoutBlocksOrigin $origin;
+
+    /**
      *
      * @var \DateTime $createdAt
      */
@@ -520,6 +529,7 @@ class InvoiceWithCheckoutBlocks
      * @param  \Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksPayments  $payments
      * @param  bool  $isCorrective
      * @param  bool  $isSent
+     * @param  \Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksOrigin  $origin
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $number
@@ -552,7 +562,7 @@ class InvoiceWithCheckoutBlocks
      * @param  ?string  $publicUrl
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceWithCheckoutBlocksObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceWithCheckoutBlocksStatus $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, InvoiceWithCheckoutBlocksPayments $payments, bool $isCorrective, bool $isSent, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceWithCheckoutBlocksSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceWithCheckoutBlocksScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?Verifactu $verifactu = null, ?Pdf $pdf = null, ?string $publicUrl = null)
+    public function __construct(string $id, InvoiceWithCheckoutBlocksObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceWithCheckoutBlocksStatus $status, LocalDate $issuedOn, float $subtotal, float $taxesTotal, float $totalVat, float $totalRetention, float $totalSurcharge, float $total, float $totalDisbursements, float $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, float $paidAmount, float $pendingAmount, InvoiceWithCheckoutBlocksPayments $payments, bool $isCorrective, bool $isSent, InvoiceWithCheckoutBlocksOrigin $origin, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidAt = null, ?LocalDate $paidOn = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceWithCheckoutBlocksSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceWithCheckoutBlocksScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?Verifactu $verifactu = null, ?Pdf $pdf = null, ?string $publicUrl = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -583,6 +593,7 @@ class InvoiceWithCheckoutBlocks
         $this->payments = $payments;
         $this->isCorrective = $isCorrective;
         $this->isSent = $isSent;
+        $this->origin = $origin;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->number = $number;
