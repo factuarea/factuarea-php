@@ -1,0 +1,391 @@
+{
+    "classification": "source-handler-interfaces",
+    "sources": [
+        {
+            "path": "app/BusinessContact/Infrastructure/Crm/CrmCapabilityManifest.php",
+            "sha256": "09a1c84c31ba289a62fbcd8936927b2627ce63b9f65853b137062de8d9dad0a8"
+        },
+        {
+            "path": "app/Lead/Infrastructure/Crm/CrmCapabilityManifest.php",
+            "sha256": "89b5553241c4c9edd57c3e2498ffae050261ecb408ddc7bd0981d555c997807f"
+        },
+        {
+            "path": "app/Pipeline/Infrastructure/Crm/CrmCapabilityManifest.php",
+            "sha256": "2f871a494c43d9588cb935cdce363e42285bfea06ea757b64b41ab38051f55f1"
+        }
+    ],
+    "operations": {
+        "crm_contact_people.archive": {
+            "handler_class": "App\\BusinessContact\\Application\\Command\\ArchiveContactPerson\\ArchiveContactPersonCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_contact_people.create": {
+            "handler_class": "App\\BusinessContact\\Application\\Command\\CreateContactPerson\\CreateContactPersonCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_contact_people.duplicates": {
+            "handler_class": "App\\BusinessContact\\Application\\Query\\FindContactPersonDuplicates\\FindContactPersonDuplicatesQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_contact_people.index": {
+            "handler_class": "App\\BusinessContact\\Application\\Query\\ListContactPeople\\ListContactPeopleQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_contact_people.merge": {
+            "handler_class": "App\\BusinessContact\\Application\\Command\\MergeContactPeople\\MergeContactPeopleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_contact_people.merge_preview": {
+            "handler_class": "App\\BusinessContact\\Application\\Query\\PreviewContactPeopleMerge\\PreviewContactPeopleMergeQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_contact_people.normalize": {
+            "handler_class": "App\\BusinessContact\\Application\\Query\\PreviewContactNormalization\\PreviewContactNormalizationQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_contact_people.options": {
+            "handler_class": "App\\BusinessContact\\Application\\Query\\GetContactRelationshipOptions\\GetContactRelationshipOptionsQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_contact_people.relationships": {
+            "handler_class": "App\\BusinessContact\\Application\\Command\\ReplaceContactRelationships\\ReplaceContactRelationshipsCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_contact_people.show": {
+            "handler_class": "App\\BusinessContact\\Application\\Query\\FindContactPerson\\FindContactPersonQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_contact_people.update": {
+            "handler_class": "App\\BusinessContact\\Application\\Command\\UpdateContactPerson\\UpdateContactPersonCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.apply_score_recalculation": {
+            "handler_class": "App\\Lead\\Application\\CommandHandler\\ApplyLeadScoreRecalculationCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.assign": {
+            "handler_class": "App\\Lead\\Application\\Command\\AssignLead\\AssignLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.consent": {
+            "handler_class": "App\\Lead\\Application\\Command\\RecordLeadConsent\\RecordLeadConsentCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.conversion_preview": {
+            "handler_class": "App\\Lead\\Application\\Query\\PreviewLeadConversion\\PreviewLeadConversionQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.convert": {
+            "handler_class": "App\\Lead\\Application\\Command\\ConvertLead\\ConvertLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.create": {
+            "handler_class": "App\\Lead\\Application\\Command\\CreateLead\\CreateLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.delete": {
+            "handler_class": "App\\Lead\\Application\\Command\\DeleteLead\\DeleteLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.disqualify": {
+            "handler_class": "App\\Lead\\Application\\Command\\DisqualifyLead\\DisqualifyLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.duplicates": {
+            "handler_class": "App\\Lead\\Application\\Query\\FindLeadDuplicates\\FindLeadDuplicatesQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.erasure_preview": {
+            "handler_class": "App\\Lead\\Application\\Query\\PreviewLeadErasure\\PreviewLeadErasureQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.export": {
+            "handler_class": "App\\Lead\\Application\\Query\\ExportLeadData\\ExportLeadDataQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.find_score_recalculation_run": {
+            "handler_class": "App\\Lead\\Application\\QueryHandler\\FindLeadScoreRecalculationRunQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.history": {
+            "handler_class": "App\\Lead\\Application\\Query\\GetLeadHistory\\GetLeadHistoryQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.index": {
+            "handler_class": "App\\Lead\\Application\\Query\\ListLeads\\ListLeadsQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.preview_score_recalculation": {
+            "handler_class": "App\\Lead\\Application\\CommandHandler\\PreviewLeadScoreRecalculationCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.qualify": {
+            "handler_class": "App\\Lead\\Application\\Command\\QualifyLead\\QualifyLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.reopen": {
+            "handler_class": "App\\Lead\\Application\\Command\\ReopenLead\\ReopenLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.score": {
+            "handler_class": "App\\Lead\\Application\\Command\\RecalculateLeadScore\\RecalculateLeadScoreCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.search": {
+            "handler_class": "App\\Lead\\Application\\Query\\SearchLeads\\SearchLeadsQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.show": {
+            "handler_class": "App\\Lead\\Application\\Query\\FindLead\\FindLeadQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.stage": {
+            "handler_class": "App\\Lead\\Application\\Command\\ChangeLeadStage\\ChangeLeadStageCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_leads.stats": {
+            "handler_class": "App\\Lead\\Application\\Query\\GetLeadStats\\GetLeadStatsQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_leads.update": {
+            "handler_class": "App\\Lead\\Application\\Command\\UpdateLead\\UpdateLeadCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.archive": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\ArchivePipeline\\ArchivePipelineCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.archive_stage": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\ArchivePipelineStage\\ArchivePipelineStageCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.create": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\CreatePipeline\\CreatePipelineCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.create_playbook": {
+            "handler_class": "App\\Pipeline\\Application\\CommandHandler\\CreateCrmStagePlaybookCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.find_playbook": {
+            "handler_class": "App\\Pipeline\\Application\\QueryHandler\\FindCrmStagePlaybookQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_pipelines.index": {
+            "handler_class": "App\\Pipeline\\Application\\Query\\ListPipelines\\ListPipelinesQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_pipelines.preview_remap": {
+            "handler_class": "App\\Pipeline\\Application\\Query\\PreviewStageRemap\\PreviewStageRemapQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_pipelines.publish_playbook": {
+            "handler_class": "App\\Pipeline\\Application\\CommandHandler\\PublishCrmStagePlaybookCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.reorder_stages": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\ReorderPipelineStages\\ReorderPipelineStagesCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.save_health_configuration": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\SaveStageHealthConfiguration\\SaveStageHealthConfigurationCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.save_loss_reason": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\SaveLossReason\\SaveLossReasonCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.save_playbook": {
+            "handler_class": "App\\Pipeline\\Application\\CommandHandler\\SaveCrmStagePlaybookCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.save_stage": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\SavePipelineStage\\SavePipelineStageCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "crm_pipelines.show": {
+            "handler_class": "App\\Pipeline\\Application\\Query\\GetPipeline\\GetPipelineQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "crm_pipelines.update": {
+            "handler_class": "App\\Pipeline\\Application\\Command\\UpdatePipeline\\UpdatePipelineCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        }
+    }
+}
