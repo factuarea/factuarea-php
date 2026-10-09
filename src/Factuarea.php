@@ -125,6 +125,8 @@ class Factuarea
 
     public TaskLabels $taskLabels;
 
+    public ServiceLevel $serviceLevel;
+
     public WebhookEndpoints $webhookEndpoints;
 
     public StripeAutoinvoicing $stripeAutoinvoicing;
@@ -224,6 +226,7 @@ class Factuarea
         $this->employees = new Employees($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->taskLabels = new TaskLabels($this->sdkConfiguration);
+        $this->serviceLevel = new ServiceLevel($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
