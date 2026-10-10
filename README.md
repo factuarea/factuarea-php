@@ -1592,3 +1592,7 @@ if ($response->object !== null) {
 <!-- End Server Selection [server] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
+
+## Native CRM source extension
+
+Current ContactPeople, Lead, Pipeline, KnowledgeBase and PublicHelpCenter administration methods and typed DTOs are available through the additive [`Custom\Crm\CrmClient`](docs/CRM.md), sharing the configured SDK client. See the native contract inventory and sandbox example in that guide. Package publication and server activation are separate steps.
