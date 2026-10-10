@@ -15,11 +15,17 @@ final readonly class CrmClient
 
     public Pipelines $pipelines;
 
+    public KnowledgeBase $knowledgeBase;
+
+    public PublicHelpCenter $publicHelpCenter;
+
     public function __construct(Factuarea $sdk)
     {
         $transport = new Transport($sdk->sdkConfiguration);
         $this->contactPeople = new ContactPeople($transport);
         $this->leads = new Leads($transport);
         $this->pipelines = new Pipelines($transport);
+        $this->knowledgeBase = new KnowledgeBase($transport);
+        $this->publicHelpCenter = new PublicHelpCenter($transport);
     }
 }

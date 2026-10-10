@@ -21,6 +21,8 @@ $manifests = [
     'App\\BusinessContact\\Infrastructure\\Crm\\CrmCapabilityManifest',
     'App\\Lead\\Infrastructure\\Crm\\CrmCapabilityManifest',
     'App\\Pipeline\\Infrastructure\\Crm\\CrmCapabilityManifest',
+    'App\\KnowledgeBase\\Infrastructure\\Crm\\CrmCapabilityManifest',
+    'App\\PublicHelpCenter\\Infrastructure\\Crm\\CrmCapabilityManifest',
 ];
 $operations = [];
 $sources = [];

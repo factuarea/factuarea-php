@@ -12,6 +12,14 @@
         {
             "path": "app/Pipeline/Infrastructure/Crm/CrmCapabilityManifest.php",
             "sha256": "2f871a494c43d9588cb935cdce363e42285bfea06ea757b64b41ab38051f55f1"
+        },
+        {
+            "path": "app/KnowledgeBase/Infrastructure/Crm/CrmCapabilityManifest.php",
+            "sha256": "d1c8bc4238e709f0fa636e8e6c630752b986b984e1e791e794967c9da15e7046"
+        },
+        {
+            "path": "app/PublicHelpCenter/Infrastructure/Crm/CrmCapabilityManifest.php",
+            "sha256": "a5e411a6aac1607365ad2cc65bf0c3407c79a012d39ed037d8aab368e2bfd2d7"
         }
     ],
     "operations": {
@@ -386,6 +394,206 @@
                 "App\\Shared\\Application\\Bus\\Command\\TransactionalCommandHandlerInterface",
                 "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
             ]
+        },
+        "knowledge_articles.approve": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\ApproveKnowledgeArticle\\ApproveKnowledgeArticleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.archive": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\ArchiveKnowledgeArticle\\ArchiveKnowledgeArticleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.categories": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\ListKnowledgeCategories\\ListKnowledgeCategoriesQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.category_receipt": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeCategoryReceipt\\RecoverKnowledgeCategoryReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.category_save": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\SaveKnowledgeCategoryTransport\\SaveKnowledgeCategoryTransportCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.create": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\SaveKnowledgeArticle\\SaveKnowledgeArticleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.link": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\LinkKnowledgeArticle\\LinkKnowledgeArticleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.publish": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\PublishKnowledgeArticleVersion\\PublishKnowledgeArticleVersionCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_approve": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_archive": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_create": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_link": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_publish": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_save": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_submit": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.receipt_unpublish": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\RecoverKnowledgeArticleTransportReceipt\\RecoverKnowledgeArticleTransportReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.save": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\SaveKnowledgeArticle\\SaveKnowledgeArticleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.search": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\SearchKnowledgeArticles\\SearchKnowledgeArticlesQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.show": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\GetKnowledgeArticle\\GetKnowledgeArticleQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.submit": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\SubmitKnowledgeArticleReview\\SubmitKnowledgeArticleReviewCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.suggest": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\SuggestServiceArticles\\SuggestServiceArticlesQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "knowledge_articles.unpublish": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Command\\UnpublishKnowledgeArticle\\UnpublishKnowledgeArticleCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "knowledge_articles.versions": {
+            "handler_class": "App\\KnowledgeBase\\Application\\Query\\GetKnowledgeArticleVersions\\GetKnowledgeArticleVersionsQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "public_help_centers.administration_get": {
+            "handler_class": "App\\PublicHelpCenter\\Application\\Query\\GetHelpCenterAdministration\\GetHelpCenterAdministrationQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "public_help_centers.publish": {
+            "handler_class": "App\\PublicHelpCenter\\Application\\Command\\PublishHelpCenter\\PublishHelpCenterCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "public_help_centers.publish_receipt": {
+            "handler_class": "App\\PublicHelpCenter\\Application\\Query\\GetHelpCenterAdministrativeReceipt\\GetHelpCenterAdministrativeReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
+        },
+        "public_help_centers.unpublish": {
+            "handler_class": "App\\PublicHelpCenter\\Application\\Command\\UnpublishHelpCenter\\UnpublishHelpCenterCommandHandler",
+            "effect": true,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Command\\CommandHandlerInterface"
+            ]
+        },
+        "public_help_centers.unpublish_receipt": {
+            "handler_class": "App\\PublicHelpCenter\\Application\\Query\\GetHelpCenterAdministrativeReceipt\\GetHelpCenterAdministrativeReceiptQueryHandler",
+            "effect": false,
+            "interfaces": [
+                "App\\Shared\\Application\\Bus\\Query\\QueryHandlerInterface"
+            ]
         }
+    },
+    "native_handoff": {
+        "sha256": "6b525e771920defba62d7edef59d89bc5cf820f5a51f4ea93250e602eb55b661",
+        "classification": "handler_contracts_by_crm_operation; Command/Query interfaces, not verb or scope"
     }
 }

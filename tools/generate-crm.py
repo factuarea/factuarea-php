@@ -51,6 +51,13 @@ def describe(schema, name):
     if '$ref' in schema:
         ref = schema['$ref'].split('/')[-1]
         return describe(schemas[ref], pascal(ref))
+    if 'allOf' in schema and 'type' not in schema:
+        # Native receipt snapshots narrow a referenced DTO with extra constraints.
+        # Keep its real type; the enclosing SCHEMA validates every conjunct.
+        bases = [branch for branch in schema['allOf'] if '$ref' in branch or 'type' in branch]
+        if len(bases) != 1:
+            raise ValueError('An allOf field needs one native typed base: ' + name)
+        return describe(bases[0], name)
     if isinstance(schema.get('type'), list) and len(schema['type']) > 1:
         choices = [describe(dict(schema, type=variant), name) for variant in schema['type']]
         return (join_types([x[0] for x in choices]), join_types([x[1] for x in choices]), {'union': [x[2] for x in choices]})
@@ -148,7 +155,7 @@ def page_shape(schema, prefix=None):
                 return shape
     return None
 
-apis = {'ContactPeople' : [], 'Leads': [], 'Pipelines': []}
+apis = {'ContactPeople' : [], 'Leads': [], 'Pipelines': [], 'KnowledgeBase': [], 'PublicHelpCenter': []}
 operation_map = []
 for path, item in document['paths'].items():
     for method, operation in item.items():
@@ -161,12 +168,17 @@ for path, item in document['paths'].items():
             group = 'Leads'
         elif key.startswith('crm_pipelines.'):
             group = 'Pipelines'
+        elif key.startswith('knowledge_articles.'):
+            group = 'KnowledgeBase'
+        elif key.startswith('public_help_centers.'):
+            group = 'PublicHelpCenter'
         else:
             raise ValueError('An operation outside the approved CRM owners was exported: ' + key)
         effect = effects[key]['effect']
         if not isinstance(effect, bool):
             raise ValueError('The native handler effect classification is missing.')
         op_id = operation['operationId']
+        method_name = op_id if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', op_id) else camel(op_id)
         class_name = pascal(op_id)
         request_props, request_required = {}, []
         parameters = [local_reference(p) for p in operation.get('parameters', [])]
@@ -180,8 +192,10 @@ for path, item in document['paths'].items():
         if body:
             request_props['body'] = body
             request_required.append('body')
-        if method != 'get':
-            request_props['idempotency_key'] = {'type': 'string', 'minLength': 1, 'maxLength': 255, 'pattern': '^[ -~]+$'}
+        original_key = next((p for p in parameters if p['in'] == 'header' and p['name'].lower() == 'idempotency-key'), None)
+        has_key = method != 'get' or original_key is not None
+        if has_key:
+            request_props['idempotency_key'] = original_key['schema'] if original_key else {'type': 'string', 'minLength': 1, 'maxLength': 255, 'pattern': '^[ -~]+$'}
             request_required.append('idempotency_key')
         request_schema = {'type': 'object', 'additionalProperties': False, 'properties': request_props, 'required': request_required}
         request_name = class_name + 'Parameters'
@@ -203,7 +217,7 @@ for path, item in document['paths'].items():
                 path_expr = 'str_replace(' + php(token) + ', rawurlencode($request->' + camel(parameter['name']) + '), ' + path_expr + ')'
         query = {p['name']: p for p in parameters if p['in'] == 'query'}
         lines = ['    /** @return CrmResponse<Model\\' + response_name + '> */\n',
-                 '    public function ' + op_id + '(Model\\' + request_name + ' $request): CrmResponse\n    {\n',
+                 '    public function ' + method_name + '(Model\\' + request_name + ' $request): CrmResponse\n    {\n',
                  '        $request->validate();\n        $query = [];\n']
         for wire, parameter_schema in query.items():
             attr = camel(wire)
@@ -226,7 +240,7 @@ for path, item in document['paths'].items():
             else:
                 lines += ['        if ($request->' + attr + ' !== Omitted::Value) {\n',
                           '            $headers[' + php(parameter['name']) + '] = $request->' + attr + ';\n', '        }\n']
-        lines.append('        return $this->transport->request(' + php(method.upper()) + ', ' + path_expr + ', ' + php(op_id) + ', Model\\' + response_name + '::class, $query, ' + ('$request->body' if body else 'null') + ', ' + ('$request->idempotencyKey' if method != 'get' else 'null') + ', ' + php(effect) + ', $headers);\n    }\n')
+        lines.append('        return $this->transport->request(' + php(method.upper()) + ', ' + path_expr + ', ' + php(op_id) + ', Model\\' + response_name + '::class, $query, ' + ('$request->body' if body else 'null') + ', ' + ('$request->idempotencyKey' if has_key else 'null') + ', ' + php(effect) + ', $headers);\n    }\n')
         shape = page_shape(response_schema) if method == 'get' and 'cursor' in query else None
         mode = 'cursor'
         if shape is None and method == 'get' and 'page' in query:
@@ -234,20 +248,27 @@ for path, item in document['paths'].items():
             if root_props.get('data', {}).get('type') == 'array' and 'meta' in root_props:
                 shape = (['data'], root_props['data'].get('items', {}))
                 mode = 'page'
+            elif 'data' in root_props:
+                data_props = resolved(root_props['data']).get('properties', {})
+                if all(k in data_props for k in ['items', 'total', 'page', 'per_page']):
+                    shape = (['data', 'items'], data_props['items'].get('items', {}))
+                    mode = 'numbered'
         if shape:
             items_path, item_schema = shape
             _, item_doc, item_desc = describe(item_schema, class_name + 'ListItem')
             parameter = 'cursor' if mode == 'cursor' else 'page'
             assign = '$cursor' if mode == 'cursor' else '(int) $cursor'
             lines += ['\n    /** @return \\Generator<int, ' + item_doc + '> */\n',
-                      '    public function ' + op_id + 'Items(Model\\' + request_name + ' $request, int $maxPages = 1000): \\Generator\n    {\n',
+                      '    public function ' + method_name + 'Items(Model\\' + request_name + ' $request, int $maxPages = 1000): \\Generator\n    {\n',
                       '        return Pagination::items(function (?string $cursor) use ($request): CrmResponse {\n',
                       '            $page = clone $request;\n',
                       '            if ($cursor !== null) {\n                $page->' + parameter + ' = ' + assign + ';\n            }\n',
-                      '            return $this->' + op_id + '($page);\n',
+                      '            return $this->' + method_name + '($page);\n',
                       '        }, ' + php(items_path) + ', ' + php(item_desc) + ', ' + php(mode) + ', $maxPages);\n    }\n']
         apis[group].append(''.join(lines))
         operation_map.append({'operationId': op_id, 'method': method.upper(), 'path': path, 'group': group, 'request': request_name, 'response': response_name, 'scope': operation.get('x-required-scope'), 'key': key, 'effect': effect})
+        if method_name != op_id:
+            operation_map[-1]['phpMethod'] = method_name
 
 for schema_name, schema in sorted(schemas.items()):
     if schema_name != 'Error':

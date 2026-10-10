@@ -1582,4 +1582,4 @@ if ($response->object !== null) {
 
 ## Native CRM source extension
 
-Current ContactPeople, Lead and Pipeline methods and typed DTOs are available through the additive [`Custom\Crm\CrmClient`](docs/CRM.md), sharing the configured SDK client. See the native contract inventory and sandbox example in that guide. Package publication and server activation are separate steps.
+Current ContactPeople, Lead, Pipeline, KnowledgeBase and PublicHelpCenter administration methods and typed DTOs are available through the additive [`Custom\Crm\CrmClient`](docs/CRM.md), sharing the configured SDK client. See the native contract inventory and sandbox example in that guide. Package publication and server activation are separate steps.

@@ -297,6 +297,29 @@
     "effect": false
   },
   {
+    "operationId": "public-api.v1.crm-public-help-center.get",
+    "method": "GET",
+    "path": "/crm/public-help-center",
+    "group": "PublicHelpCenter",
+    "request": "PublicApiV1CrmPublicHelpCenterGetParameters",
+    "response": "PublicApiV1CrmPublicHelpCenterGetResult",
+    "scope": "public_help_centers:write",
+    "key": "public_help_centers.administration_get",
+    "effect": false,
+    "phpMethod": "publicApiV1CrmPublicHelpCenterGet"
+  },
+  {
+    "operationId": "crmGetKnowledgeArticleVersions",
+    "method": "GET",
+    "path": "/crm/knowledge/articles/{article}/versions",
+    "group": "KnowledgeBase",
+    "request": "CrmGetKnowledgeArticleVersionsParameters",
+    "response": "CrmGetKnowledgeArticleVersionsResult",
+    "scope": "knowledge_articles:read",
+    "key": "knowledge_articles.versions",
+    "effect": false
+  },
+  {
     "operationId": "crmGetLeadHistory",
     "method": "GET",
     "path": "/crm/leads/{lead}/history",
@@ -339,6 +362,17 @@
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.update",
     "effect": true
+  },
+  {
+    "operationId": "listKnowledgeCategories",
+    "method": "GET",
+    "path": "/crm/knowledge/categories",
+    "group": "KnowledgeBase",
+    "request": "ListKnowledgeCategoriesParameters",
+    "response": "ListKnowledgeCategoriesResult",
+    "scope": "knowledge_articles:read",
+    "key": "knowledge_articles.categories",
+    "effect": false
   },
   {
     "operationId": "crmContactPeopleMerge",
@@ -462,6 +496,129 @@
     "effect": true
   },
   {
+    "operationId": "public-api.v1.crm-public-help-center.receipt-publish",
+    "method": "GET",
+    "path": "/crm/public-help-center/receipts/publish",
+    "group": "PublicHelpCenter",
+    "request": "PublicApiV1CrmPublicHelpCenterReceiptPublishParameters",
+    "response": "PublicApiV1CrmPublicHelpCenterReceiptPublishResult",
+    "scope": "public_help_centers:write",
+    "key": "public_help_centers.publish_receipt",
+    "effect": false,
+    "phpMethod": "publicApiV1CrmPublicHelpCenterReceiptPublish"
+  },
+  {
+    "operationId": "public-api.v1.crm-public-help-center.receipt-unpublish",
+    "method": "GET",
+    "path": "/crm/public-help-center/receipts/unpublish",
+    "group": "PublicHelpCenter",
+    "request": "PublicApiV1CrmPublicHelpCenterReceiptUnpublishParameters",
+    "response": "PublicApiV1CrmPublicHelpCenterReceiptUnpublishResult",
+    "scope": "public_help_centers:write",
+    "key": "public_help_centers.unpublish_receipt",
+    "effect": false,
+    "phpMethod": "publicApiV1CrmPublicHelpCenterReceiptUnpublish"
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleCreateReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.create",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleCreateReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleCreateReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_create",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleSaveReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.save",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleSaveReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleSaveReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_save",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleSubmitReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.submit",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleSubmitReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleSubmitReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_submit",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleApproveReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.approve",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleApproveReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleApproveReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_approve",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticlePublishReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.publish",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticlePublishReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticlePublishReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_publish",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleUnpublishReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.unpublish",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleUnpublishReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleUnpublishReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_unpublish",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleArchiveReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.archive",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleArchiveReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleArchiveReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_archive",
+    "effect": false
+  },
+  {
+    "operationId": "crmRecoverKnowledgeArticleLinkReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/receipts/knowledge_articles.link",
+    "group": "KnowledgeBase",
+    "request": "CrmRecoverKnowledgeArticleLinkReceiptParameters",
+    "response": "CrmRecoverKnowledgeArticleLinkReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.receipt_link",
+    "effect": false
+  },
+  {
+    "operationId": "recoverKnowledgeCategoryReceipt",
+    "method": "GET",
+    "path": "/crm/knowledge/categories/receipts/category-save",
+    "group": "KnowledgeBase",
+    "request": "RecoverKnowledgeCategoryReceiptParameters",
+    "response": "RecoverKnowledgeCategoryReceiptResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.category_receipt",
+    "effect": false
+  },
+  {
     "operationId": "crmReopenLead",
     "method": "POST",
     "path": "/crm/leads/{lead}/reopen",
@@ -492,6 +649,17 @@
     "response": "CrmContactPeopleRelationshipsResult",
     "scope": "crm_contact_people:write",
     "key": "crm_contact_people.relationships",
+    "effect": true
+  },
+  {
+    "operationId": "saveKnowledgeCategory",
+    "method": "POST",
+    "path": "/crm/knowledge/categories/save",
+    "group": "KnowledgeBase",
+    "request": "SaveKnowledgeCategoryParameters",
+    "response": "SaveKnowledgeCategoryResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.category_save",
     "effect": true
   },
   {
@@ -528,6 +696,28 @@
     "effect": true
   },
   {
+    "operationId": "crmSearchKnowledgeArticles",
+    "method": "GET",
+    "path": "/crm/knowledge/articles",
+    "group": "KnowledgeBase",
+    "request": "CrmSearchKnowledgeArticlesParameters",
+    "response": "CrmSearchKnowledgeArticlesResult",
+    "scope": "knowledge_articles:read",
+    "key": "knowledge_articles.search",
+    "effect": false
+  },
+  {
+    "operationId": "crmCreateKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles",
+    "group": "KnowledgeBase",
+    "request": "CrmCreateKnowledgeArticleParameters",
+    "response": "CrmCreateKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.create",
+    "effect": true
+  },
+  {
     "operationId": "crmSearchLeads",
     "method": "GET",
     "path": "/crm/leads/search",
@@ -537,5 +727,128 @@
     "scope": "crm_leads:read",
     "key": "crm_leads.search",
     "effect": false
+  },
+  {
+    "operationId": "crmGetKnowledgeArticle",
+    "method": "GET",
+    "path": "/crm/knowledge/articles/{article}",
+    "group": "KnowledgeBase",
+    "request": "CrmGetKnowledgeArticleParameters",
+    "response": "CrmGetKnowledgeArticleResult",
+    "scope": "knowledge_articles:read",
+    "key": "knowledge_articles.show",
+    "effect": false
+  },
+  {
+    "operationId": "crmSaveKnowledgeArticle",
+    "method": "PUT",
+    "path": "/crm/knowledge/articles/{article}",
+    "group": "KnowledgeBase",
+    "request": "CrmSaveKnowledgeArticleParameters",
+    "response": "CrmSaveKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.save",
+    "effect": true
+  },
+  {
+    "operationId": "suggestServiceArticles",
+    "method": "GET",
+    "path": "/crm/knowledge/tickets/{ticket}/suggestions",
+    "group": "KnowledgeBase",
+    "request": "SuggestServiceArticlesParameters",
+    "response": "SuggestServiceArticlesResult",
+    "scope": "knowledge_articles:read",
+    "key": "knowledge_articles.suggest",
+    "effect": false
+  },
+  {
+    "operationId": "public-api.v1.crm-public-help-center.publish",
+    "method": "POST",
+    "path": "/crm/public-help-center/publish",
+    "group": "PublicHelpCenter",
+    "request": "PublicApiV1CrmPublicHelpCenterPublishParameters",
+    "response": "PublicApiV1CrmPublicHelpCenterPublishResult",
+    "scope": "public_help_centers:write",
+    "key": "public_help_centers.publish",
+    "effect": true,
+    "phpMethod": "publicApiV1CrmPublicHelpCenterPublish"
+  },
+  {
+    "operationId": "public-api.v1.crm-public-help-center.unpublish",
+    "method": "POST",
+    "path": "/crm/public-help-center/{center}/unpublish",
+    "group": "PublicHelpCenter",
+    "request": "PublicApiV1CrmPublicHelpCenterUnpublishParameters",
+    "response": "PublicApiV1CrmPublicHelpCenterUnpublishResult",
+    "scope": "public_help_centers:write",
+    "key": "public_help_centers.unpublish",
+    "effect": true,
+    "phpMethod": "publicApiV1CrmPublicHelpCenterUnpublish"
+  },
+  {
+    "operationId": "crmSubmitKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles/{article}/submit",
+    "group": "KnowledgeBase",
+    "request": "CrmSubmitKnowledgeArticleParameters",
+    "response": "CrmSubmitKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.submit",
+    "effect": true
+  },
+  {
+    "operationId": "crmApproveKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles/{article}/approve",
+    "group": "KnowledgeBase",
+    "request": "CrmApproveKnowledgeArticleParameters",
+    "response": "CrmApproveKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.approve",
+    "effect": true
+  },
+  {
+    "operationId": "crmPublishKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles/{article}/publish",
+    "group": "KnowledgeBase",
+    "request": "CrmPublishKnowledgeArticleParameters",
+    "response": "CrmPublishKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.publish",
+    "effect": true
+  },
+  {
+    "operationId": "crmUnpublishKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles/{article}/unpublish",
+    "group": "KnowledgeBase",
+    "request": "CrmUnpublishKnowledgeArticleParameters",
+    "response": "CrmUnpublishKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.unpublish",
+    "effect": true
+  },
+  {
+    "operationId": "crmArchiveKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles/{article}/archive",
+    "group": "KnowledgeBase",
+    "request": "CrmArchiveKnowledgeArticleParameters",
+    "response": "CrmArchiveKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.archive",
+    "effect": true
+  },
+  {
+    "operationId": "crmLinkKnowledgeArticle",
+    "method": "POST",
+    "path": "/crm/knowledge/articles/{article}/link",
+    "group": "KnowledgeBase",
+    "request": "CrmLinkKnowledgeArticleParameters",
+    "response": "CrmLinkKnowledgeArticleResult",
+    "scope": "knowledge_articles:write",
+    "key": "knowledge_articles.link",
+    "effect": true
   }
 ]

@@ -54,6 +54,15 @@ final class Pagination
                 if (! is_bool($hasMore) || ($hasMore && (! is_string($next) || $next === ''))) {
                     throw new \UnexpectedValueException('The CRM cursor metadata is invalid.');
                 }
+            } elseif ($mode === 'numbered') {
+                $page = $parent['page'] ?? null;
+                $perPage = $parent['per_page'] ?? null;
+                $total = $parent['total'] ?? null;
+                if (! is_int($page) || $page < 1 || ! is_int($perPage) || $perPage < 1 || ! is_int($total) || $total < 0) {
+                    throw new \UnexpectedValueException('The CRM numbered page metadata is invalid.');
+                }
+                $hasMore = $page * $perPage < $total;
+                $next = $hasMore ? (string) ($page + 1) : null;
             } else {
                 $meta = (array) ($body['meta'] ?? []);
                 $page = $meta['current_page'] ?? null;
