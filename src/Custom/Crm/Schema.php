@@ -83,7 +83,13 @@ final class Schema
                 self::invalid($path, 'length');
             }
             if (isset($schema['pattern']) && is_string($schema['pattern'])) {
-                $pattern = '~'.str_replace('~', '\\~', $schema['pattern']).'~uD';
+                $sourcePattern = $schema['pattern'];
+                if ($documentName === 'crm-native134-schemas.json') {
+                    // The native JSON Schema uses ECMAScript control escapes; PCRE uses hexadecimal braces.
+                    $sourcePattern = str_replace(['\\u0000', '\\u001F', '\\u007F'],
+                        ['\\x{0000}', '\\x{001F}', '\\x{007F}'], $sourcePattern);
+                }
+                $pattern = '~'.str_replace('~', '\\~', $sourcePattern).'~uD';
                 if (preg_match($pattern, $value) !== 1) {
                     self::invalid($path, 'pattern');
                 }
@@ -143,7 +149,7 @@ final class Schema
     public static function definition(string $name, ?string $documentName = null): array
     {
         $documentName ??= 'crm-openapi.json';
-        if (! in_array($documentName, ['crm-openapi.json', 'crm-native139-schemas.json'], true)) {
+        if (! in_array($documentName, ['crm-openapi.json', 'crm-native139-schemas.json', 'crm-native134-schemas.json'], true)) {
             throw new \LogicException('Select the explicit normal or private native schema profile.');
         }
         if (! isset(self::$documents[$documentName])) {

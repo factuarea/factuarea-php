@@ -14,14 +14,35 @@ import sys
 os.umask(0o022)
 ROOT = Path(__file__).resolve().parent.parent
 arguments = argparse.ArgumentParser(description=__doc__)
-arguments.add_argument('--private-source139', metavar='NATIVE_INPUT_MANIFEST', help='Generate a separate unreleased namespace from the literal native export.')
+source_mode = arguments.add_mutually_exclusive_group()
+source_mode.add_argument('--private-source139', metavar='NATIVE_INPUT_MANIFEST', help='Generate a separate unreleased namespace from the literal native export.')
+source_mode.add_argument('--private-source134', metavar='NATIVE_INPUT_MANIFEST', help='Generate the selected current native consumers without replacing Native139.')
+arguments.add_argument('--sdk-root', type=Path, help='Explicit existing SDK root for a private Source134 packet.')
+arguments.add_argument('--packet-root', type=Path, help='Durable Source134 packet; existing SDK files are written here, never mounted.')
 options = arguments.parse_args()
-PRIVATE = options.private_source139 is not None
-SPEC = ROOT / ('spec/crm-native139-source.json' if PRIVATE else 'spec/crm-openapi.json')
+PRIVATE134 = options.private_source134 is not None
+PRIVATE = options.private_source139 is not None or PRIVATE134
+if PRIVATE134:
+    if options.sdk_root is None or options.packet_root is None:
+        raise ValueError('Source134 requires explicit SDK and durable private packet roots.')
+    ROOT = options.sdk_root.resolve(strict=True)
+    PACKET = options.packet_root.resolve(strict=True)
+    SPEC_ROOT = PACKET / 'old/post/spec'
+    SPEC_ROOT.mkdir(parents=True, exist_ok=True)
+    os.umask(0o077)
+else:
+    if options.sdk_root is not None or options.packet_root is not None:
+        raise ValueError('Explicit roots are reserved for the isolated Source134 packet.')
+    SPEC_ROOT = ROOT / 'spec'
+PREFIX = 'crm-native134' if PRIVATE134 else 'crm-native139'
+SCHEMA_DOCUMENT = PREFIX + '-schemas.json'
+SPEC = SPEC_ROOT / (PREFIX + '-source.json' if PRIVATE else 'crm-openapi.json')
 if PRIVATE:
-    metadata = json.loads(Path(options.private_source139).read_text())
+    metadata = json.loads(Path(options.private_source134 if PRIVATE134 else options.private_source139).read_text())
     metadata['artifact_sha256'] = metadata.get('artifact_sha256', metadata.get('sha256'))
     artifact = Path(metadata['artifact'])
+    if PRIVATE134 and (not artifact.is_file() or metadata.get('group') != 149):
+        raise ValueError('Source134 requires the retained actual Native149 artifact; historical or missing inputs cannot substitute.')
     raw = (artifact if artifact.is_file() else SPEC).read_bytes()
     if hashlib.sha256(raw).hexdigest() != metadata['artifact_sha256']:
         raise ValueError('The literal native export does not match its retained input hash.')
@@ -32,14 +53,33 @@ if PRIVATE:
             or profile.get('name') != 'crm-source-contracts' or profile.get('published') is not False
             or profile.get('ratified') is not False or profile.get('delivery_enabled') is not False):
         raise ValueError('This mode accepts only the explicit private, unreleased native Source profile.')
+    if PRIVATE134:
+        consumer_manifest_bytes = Path(metadata['consumer_manifest']).read_bytes()
+        if hashlib.sha256(consumer_manifest_bytes).hexdigest() != metadata['consumer_manifest_sha256']:
+            raise ValueError('The retained Root-native consumer selection does not match its input hash.')
+        consumer_manifest = json.loads(consumer_manifest_bytes)
+        if consumer_manifest['artifact_sha256'] != metadata['artifact_sha256']:
+            raise ValueError('The Root-native selection must bind this exact producer artifact.')
+        expected_records = consumer_manifest['selected_native_operations']
+        if len(metadata.get('consumer_operations', [])) != len(expected_records):
+            raise ValueError('The Root-native consumer selection must remain exact.')
+        for record, expected in zip(metadata['consumer_operations'], expected_records):
+            if any(record.get(key) != value for key, value in expected.items()):
+                raise ValueError('Source134 cannot replace the approved native consumer selection.')
+        expected_boundary = consumer_manifest['validation_only_boundary']
+        actual_boundaries = metadata.get('validation_only_operations', [])
+        if len(actual_boundaries) != 1 or any(actual_boundaries[0].get(key) != (value.lower() if key == 'method' else value)
+                for key, value in expected_boundary.items()):
+            raise ValueError('The native restore POST remains a validation-only boundary.')
+        (SPEC_ROOT / (PREFIX + '-consumer-manifest.json')).write_bytes(consumer_manifest_bytes)
     SPEC.write_bytes(raw)
     metadata['source_profile'] = {key: profile[key] for key in ['name', 'source', 'state', 'published', 'ratified', 'delivery_enabled']}
 document = json.loads(SPEC.read_text())
 schemas = document['components']['schemas']
 effects = json.loads((ROOT / 'spec/crm-effects.json').read_text())['operations']
-NAMESPACE = 'Factuarea\\Sdk\\Custom\\Crm\\' + ('Native139\\' if PRIVATE else '') + 'Model\\'
-API_NAMESPACE = 'Factuarea\\Sdk\\Custom\\Crm' + ('\\Native139' if PRIVATE else '')
-OUTPUT = ROOT / 'src/Custom/Crm' / ('Native139' if PRIVATE else '')
+API_NAMESPACE = 'Factuarea\\Sdk\\NativeCrm134' if PRIVATE134 else 'Factuarea\\Sdk\\Custom\\Crm' + ('\\Native139' if PRIVATE else '')
+NAMESPACE = API_NAMESPACE + '\\Model\\'
+OUTPUT = ROOT / 'src/NativeCrm134' if PRIVATE134 else ROOT / 'src/Custom/Crm' / ('Native139' if PRIVATE else '')
 (OUTPUT / 'Model').mkdir(parents=True, exist_ok=True)
 models = {}
 model_schemas = {}
@@ -154,9 +194,9 @@ def render_model(name, schema):
     field_data.sort(key=lambda x: x[5])
     fields = {wire: {'property': attr, 'type': desc} for wire, attr, _, _, desc, _ in field_data}
     header = HEADER.replace('namespace Factuarea\\Sdk\\Custom\\Crm\\Model;', 'namespace ' + NAMESPACE.rstrip('\\') + ';') if PRIVATE else HEADER
-    header = header.replace('from spec/crm-openapi.json.', 'from the private native spec/crm-native139-source.json; unreleased.') if PRIVATE else header
+    header = header.replace('from spec/crm-openapi.json.', 'from the private native spec/' + PREFIX + '-source.json; unreleased.') if PRIVATE else header
     lines = [header, 'final class ' + name + ' extends WireModel\n{\n',
-             ("    public const SCHEMA_DOCUMENT = 'crm-native139-schemas.json';\n\n" if PRIVATE else ''),
+             ("    public const SCHEMA_DOCUMENT = " + php(SCHEMA_DOCUMENT) + ";\n\n" if PRIVATE else ''),
              '    public const FIELDS = ' + php(fields) + ';\n\n    public const SCHEMA = ' + php(schema) + ';\n\n']
     lines.append('    /**\n')
     for _, attr, _, doc_type, _, _ in field_data:
@@ -199,8 +239,27 @@ def page_shape(schema, prefix=None):
                 return shape
     return None
 
-apis = {'ContactPeople' : [], 'Leads': [], 'Pipelines': [], 'KnowledgeBase': [], 'PublicHelpCenter': []}
-if PRIVATE:
+selected_operations = metadata.get('consumer_operations', []) if PRIVATE134 else []
+validation_operations = metadata.get('validation_only_operations', []) if PRIVATE134 else []
+selection = {}
+if PRIVATE134:
+    if not selected_operations or not isinstance(selected_operations, list) or not isinstance(validation_operations, list):
+        raise ValueError('Source134 requires the exact Root-native operation selection.')
+    for record in selected_operations + validation_operations:
+        identity = (record['method'].lower(), record['path'], record['operation_id'])
+        expected_group = {'stage_list': 'StageAdministration', 'stage_update': 'StageAdministration', 'stage_original': 'StageAdministration',
+                          'bulk_options': 'BulkOperations', 'bulk_apply': 'BulkOperations', 'bulk_original': 'BulkOperations',
+                          'restore_original': 'Library', 'restore_validation': 'Library'}.get(record['kind'])
+        if identity in selection or record['group'] != expected_group:
+            raise ValueError('Invalid or duplicate Source134 consumer selection.')
+        native_operation = document['paths'][record['path']][record['method'].lower()]
+        if native_operation['operationId'] != record['operation_id'] or native_operation.get('x-crm-operation') != record['crm_operation']:
+            raise ValueError('A selected operation must identify the literal native path, verb, operation ID and owner key.')
+        if native_operation.get('x-required-scope') != record['required_scope'] or ('oauth_scope' in record and native_operation.get('x-required-oauth-scope') != record['oauth_scope']):
+            raise ValueError('A selected operation must preserve its literal fine/OAuth scopes.')
+        selection[identity] = dict(record, validation_only=record in validation_operations)
+apis = {record['group']: [] for record in selected_operations} if PRIVATE134 else {'ContactPeople' : [], 'Leads': [], 'Pipelines': [], 'KnowledgeBase': [], 'PublicHelpCenter': []}
+if PRIVATE and not PRIVATE134:
     apis.update({'Opportunities': [], 'Activities': [], 'SpreadsheetImports': [], 'Documents': [], 'TaskAgenda': [], 'EntityExports': []})
 operation_map = []
 query_schema_groups = set()
@@ -209,7 +268,13 @@ for path, item in document['paths'].items():
         if method not in ['get', 'post', 'put', 'patch', 'delete']:
             continue
         key = operation.get('x-crm-operation', '')
-        if key.startswith('crm_contact_people.'):
+        if PRIVATE134:
+            selection_record = selection.get((method, path, operation['operationId']))
+            if selection_record is None:
+                continue
+            group = selection_record['group']
+        elif key.startswith('crm_contact_people.'):
+
             group = 'ContactPeople'
         elif key.startswith('crm_leads.'):
             group = 'Leads'
@@ -235,7 +300,7 @@ for path, item in document['paths'].items():
             continue
         else:
             raise ValueError('An operation outside the approved CRM owners was exported: ' + key)
-        original_read = PRIVATE and operation.get('x-crm-original-read') is True
+        original_read = PRIVATE and (selection_record['kind'].endswith('_original') if PRIVATE134 else operation.get('x-crm-original-read') is True)
         effect = False if original_read else effects[key]['effect'] if not PRIVATE or key in effects else method != 'get'
         if not isinstance(effect, bool):
             raise ValueError('The native handler effect classification is missing.')
@@ -282,6 +347,8 @@ for path, item in document['paths'].items():
             raise ValueError('Unsupported success envelope: ' + op_id)
         response_name = class_name + 'Result'
         render_model(response_name, response_schema)
+        if PRIVATE134 and selection_record['validation_only']:
+            continue
         path_expr = php(path.lstrip('/'))
         for parameter in parameters:
             if parameter['in'] == 'path':
@@ -315,12 +382,18 @@ for path, item in document['paths'].items():
         success_statuses = [int(code) for code, response in operation['responses'].items() if str(code).startswith('2') and 'application/json' in response.get('content', {})]
         if PRIVATE and 'x-crm-query-schema' in operation:
             query_schema_groups.add(group)
-            lines.append("        Schema::validate(" + php(operation['x-crm-query-schema']) + ", (object) $query, '$.query', 'crm-native139-schemas.json');\n")
+            lines.append("        Schema::validate(" + php(operation['x-crm-query-schema']) + ", (object) $query, '$.query', " + php(SCHEMA_DOCUMENT) + " );\n")
         retained_hash = "hash('sha256', '')" if original_read else ("hash('sha256', $request->body->toJson())" if PRIVATE and method != 'get' and body else 'null')
         status_argument = ', ' + retained_hash + ', ' + php(success_statuses) if PRIVATE else ''
         lines.append('        ' + ('$response = ' if original_read else 'return ') + '$this->transport->request(' + php(method.upper()) + ', ' + path_expr + ', ' + php(op_id) + ', Model\\' + response_name + '::class, $query, ' + ('$request->body' if body else 'null') + ', ' + ('$request->idempotencyKey' if has_key else 'null') + ', ' + php(effect) + ', $headers' + status_argument + ');\n')
         if original_read:
-            lines.append("        if ($response->body->data->originalBodySha256 !== $request->originalBodySha256) {\n            throw new \\UnexpectedValueException('The native Original must identify the retained request hash.');\n        }\n        return $response;\n")
+            if 'original_body_sha256' in query:
+                lines.append("        if ($response->body->data->originalBodySha256 !== $request->originalBodySha256) {\n            throw new \\UnexpectedValueException('The native Original must identify the retained request hash.');\n        }\n")
+            elif PRIVATE134:
+                pass  # New native Originals expose owner snapshots or explicit unknown states, not a public request hash.
+            else:
+                raise ValueError('An Original consumer needs its native retained hash selector: ' + op_id)
+            lines.append('        return $response;\n')
         lines.append('    }\n')
         shape = page_shape(response_schema) if method == 'get' and 'cursor' in query else None
         mode = 'cursor'
@@ -384,9 +457,9 @@ if PRIVATE:
         retain_references(schema)
     cache = {'x-native-source-sha256': metadata['artifact_sha256'], 'components': {'schemas': dict(sorted(retained.items()))}}
     cache_bytes = (json.dumps(cache, indent=2, ensure_ascii=False) + '\n').encode()
-    (ROOT / 'spec/crm-native139-schemas.json').write_bytes(cache_bytes)
+    (SPEC_ROOT / SCHEMA_DOCUMENT).write_bytes(cache_bytes)
     metadata['schema_cache_sha256'] = hashlib.sha256(cache_bytes).hexdigest()
-    (ROOT / 'spec/crm-native139-provenance.json').write_text(json.dumps(metadata, indent=2) + '\n')
+    (SPEC_ROOT / (PREFIX + '-provenance.json')).write_text(json.dumps(metadata, indent=2) + '\n')
 
 def php_tokens(source):
     # Keep string bytes and lexical boundaries while ignoring formatter-only whitespace/comments.
@@ -417,7 +490,11 @@ final readonly class ''' + name + '''
     if PRIVATE:
         imports = '\n'.join('use Factuarea\\Sdk\\Custom\\Crm\\' + symbol + ';' for symbol in ['CrmResponse', 'Omitted', 'Pagination', 'Transport'] + (['Schema'] if name in query_schema_groups else []))
         source = source.replace('namespace Factuarea\\Sdk\\Custom\\Crm;', 'namespace ' + API_NAMESPACE + ';\n\n' + imports)
-        source = source.replace('from spec/crm-openapi.json.', 'from the private native spec/crm-native139-source.json; unreleased.')
+        source = source.replace('from spec/crm-openapi.json.', 'from the private native spec/' + PREFIX + '-source.json; unreleased.')
     write_generated(OUTPUT / (name + '.php'), source)
-(ROOT / ('spec/crm-native139-operations.json' if PRIVATE else 'spec/crm-operations.json')).write_text(json.dumps(operation_map, indent=2) + '\n')
+(SPEC_ROOT / (PREFIX + '-operations.json' if PRIVATE else 'crm-operations.json')).write_text(json.dumps(operation_map, indent=2) + '\n')
+if PRIVATE134:
+    missing = {record['operation_id'] for record in selected_operations} - {operation['operationId'] for operation in operation_map}
+    if missing:
+        raise ValueError('A selected operation is absent from the literal current export: ' + ', '.join(sorted(missing)))
 print(json.dumps({'operations': len(operation_map), 'models': len(models), 'spec_sha256': hashlib.sha256(SPEC.read_bytes()).hexdigest()}))

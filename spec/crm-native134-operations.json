@@ -1,0 +1,86 @@
+[
+  {
+    "operationId": "applyServiceTicketBulkAction",
+    "method": "POST",
+    "path": "/crm/service-tickets/bulk-actions",
+    "group": "BulkOperations",
+    "request": "ApplyServiceTicketBulkActionParameters",
+    "response": "ApplyServiceTicketBulkActionResult",
+    "scope": "customer_service:write",
+    "key": "customer_service.bulk_action",
+    "effect": true,
+    "oauthScope": "customer_service.write"
+  },
+  {
+    "operationId": "crmGetCommercialDocumentRestoreOriginal",
+    "method": "GET",
+    "path": "/crm/documents/{document}/restore/original",
+    "group": "Library",
+    "request": "CrmGetCommercialDocumentRestoreOriginalParameters",
+    "response": "CrmGetCommercialDocumentRestoreOriginalResult",
+    "scope": "crm_documents:read",
+    "key": "crm_documents.restore_original_get",
+    "effect": false,
+    "oauthScope": "crm_documents.read"
+  },
+  {
+    "operationId": "getOriginalServiceTicketBulkItem",
+    "method": "GET",
+    "path": "/crm/service-tickets/{ticket}/bulk-actions/original",
+    "group": "BulkOperations",
+    "request": "GetOriginalServiceTicketBulkItemParameters",
+    "response": "GetOriginalServiceTicketBulkItemResult",
+    "scope": "customer_service:write",
+    "key": "customer_service.bulk_action",
+    "effect": false,
+    "oauthScope": "customer_service.write"
+  },
+  {
+    "operationId": "getServiceStageOriginal",
+    "method": "GET",
+    "path": "/crm/service-stages/{stage}/original",
+    "group": "StageAdministration",
+    "request": "GetServiceStageOriginalParameters",
+    "response": "GetServiceStageOriginalResult",
+    "scope": "customer_service:write",
+    "key": "customer_service.update_stage",
+    "effect": false,
+    "oauthScope": "customer_service.write"
+  },
+  {
+    "operationId": "getServiceTicketBulkOptions",
+    "method": "GET",
+    "path": "/crm/service-tickets/bulk-actions/tag-options",
+    "group": "BulkOperations",
+    "request": "GetServiceTicketBulkOptionsParameters",
+    "response": "GetServiceTicketBulkOptionsResult",
+    "scope": "customer_service:read",
+    "key": "customer_service.bulk_options",
+    "effect": false,
+    "oauthScope": "customer_service.read"
+  },
+  {
+    "operationId": "listServiceStages",
+    "method": "GET",
+    "path": "/crm/service-stages",
+    "group": "StageAdministration",
+    "request": "ListServiceStagesParameters",
+    "response": "ListServiceStagesResult",
+    "scope": "customer_service:read",
+    "key": "customer_service.list_stages",
+    "effect": false,
+    "oauthScope": "customer_service.read"
+  },
+  {
+    "operationId": "updateServiceStage",
+    "method": "PATCH",
+    "path": "/crm/service-stages/{stage}",
+    "group": "StageAdministration",
+    "request": "UpdateServiceStageParameters",
+    "response": "UpdateServiceStageResult",
+    "scope": "customer_service:write",
+    "key": "customer_service.update_stage",
+    "effect": true,
+    "oauthScope": "customer_service.write"
+  }
+]

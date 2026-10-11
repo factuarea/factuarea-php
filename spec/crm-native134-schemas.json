@@ -1,0 +1,125 @@
+{
+  "x-native-source-sha256": "3667e01b82dea255c23b2eecb80e6e600baa445b5b7a2beb5a65eb978a1fc073",
+  "components": {
+    "schemas": {
+      "CrmDocumentRestoreOriginal": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "state": {
+                "type": "string",
+                "const": "unknown"
+              },
+              "document": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                  },
+                  "expected_version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775806
+                  }
+                },
+                "required": [
+                  "id",
+                  "expected_version"
+                ]
+              },
+              "restore_original": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "state",
+              "document",
+              "restore_original"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "state": {
+                "type": "string",
+                "const": "confirmed"
+              },
+              "document": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                  },
+                  "expected_version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775806
+                  }
+                },
+                "required": [
+                  "id",
+                  "expected_version"
+                ]
+              },
+              "restore_original": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775806
+                  }
+                },
+                "required": [
+                  "id",
+                  "version"
+                ]
+              }
+            },
+            "required": [
+              "state",
+              "document",
+              "restore_original"
+            ]
+          }
+        ],
+        "title": "CrmDocumentRestoreOriginal"
+      },
+      "CrmPrivateDocumentReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ],
+        "title": "CrmPrivateDocumentReceipt"
+      }
+    }
+  }
+}

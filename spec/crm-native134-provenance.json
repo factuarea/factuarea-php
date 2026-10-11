@@ -1,0 +1,111 @@
+{
+  "group": 149,
+  "artifact": "/home/nando/Proyectos/factuarea-app-worktrees/dev-2-crm/development/runtime-evidence/resume-20261010/native-contract149/artifacts/openapi-source.json",
+  "artifact_sha256": "3667e01b82dea255c23b2eecb80e6e600baa445b5b7a2beb5a65eb978a1fc073",
+  "bytes": 25231744,
+  "operation_count": 967,
+  "carrier_count": 372,
+  "catalog_sha256": "f033c9debb1e41c21bba79bb57de9ff3a23370befdc1aa13a4e7e48b653dbcd3",
+  "consumer_manifest": "/home/nando/Proyectos/factuarea-app-worktrees/dev-2-crm/development/runtime-evidence/resume-20261010/native-contract149/consumer-manifest149.json",
+  "consumer_manifest_sha256": "653247d4492095fb40e06c36e20a61ec4e0ba32165d0f393378eeffe9872d901",
+  "export_result": "/home/nando/Proyectos/factuarea-app-worktrees/dev-2-crm/development/runtime-evidence/resume-20261010/native-contract149/execution-result.json",
+  "export_result_sha256": "924fb45d98195e54162e5a7db0b543d654d5436c38a5e3b915d4defc2f99d71d",
+  "published": false,
+  "ratified": false,
+  "delivery_enabled": false,
+  "capabilities": [],
+  "generation": "actual Native149 PASS attempt6 after shared151 + causal154/156, supplied by Root",
+  "consumer_operations": [
+    {
+      "kind": "stage_list",
+      "method": "get",
+      "path": "/crm/service-stages",
+      "operation_id": "listServiceStages",
+      "required_scope": "customer_service:read",
+      "oauth_scope": "customer_service.read",
+      "crm_operation": "customer_service.list_stages",
+      "group": "StageAdministration"
+    },
+    {
+      "kind": "stage_update",
+      "method": "patch",
+      "path": "/crm/service-stages/{stage}",
+      "operation_id": "updateServiceStage",
+      "required_scope": "customer_service:write",
+      "oauth_scope": "customer_service.write",
+      "crm_operation": "customer_service.update_stage",
+      "group": "StageAdministration"
+    },
+    {
+      "kind": "stage_original",
+      "method": "get",
+      "path": "/crm/service-stages/{stage}/original",
+      "operation_id": "getServiceStageOriginal",
+      "required_scope": "customer_service:write",
+      "oauth_scope": "customer_service.write",
+      "crm_operation": "customer_service.update_stage",
+      "group": "StageAdministration"
+    },
+    {
+      "kind": "bulk_options",
+      "method": "get",
+      "path": "/crm/service-tickets/bulk-actions/tag-options",
+      "operation_id": "getServiceTicketBulkOptions",
+      "required_scope": "customer_service:read",
+      "oauth_scope": "customer_service.read",
+      "crm_operation": "customer_service.bulk_options",
+      "group": "BulkOperations"
+    },
+    {
+      "kind": "bulk_apply",
+      "method": "post",
+      "path": "/crm/service-tickets/bulk-actions",
+      "operation_id": "applyServiceTicketBulkAction",
+      "required_scope": "customer_service:write",
+      "oauth_scope": "customer_service.write",
+      "crm_operation": "customer_service.bulk_action",
+      "group": "BulkOperations"
+    },
+    {
+      "kind": "bulk_original",
+      "method": "get",
+      "path": "/crm/service-tickets/{ticket}/bulk-actions/original",
+      "operation_id": "getOriginalServiceTicketBulkItem",
+      "required_scope": "customer_service:write",
+      "oauth_scope": "customer_service.write",
+      "crm_operation": "customer_service.bulk_action",
+      "group": "BulkOperations"
+    },
+    {
+      "kind": "restore_original",
+      "method": "get",
+      "path": "/crm/documents/{document}/restore/original",
+      "operation_id": "crmGetCommercialDocumentRestoreOriginal",
+      "required_scope": "crm_documents:read",
+      "oauth_scope": "crm_documents.read",
+      "crm_operation": "crm_documents.restore_original_get",
+      "group": "Library"
+    }
+  ],
+  "validation_only_operations": [
+    {
+      "method": "post",
+      "path": "/crm/documents/{document}/restore",
+      "operation_id": "crmRestoreCommercialDocument",
+      "required_scope": "crm_documents:write",
+      "group": "Library",
+      "kind": "restore_validation",
+      "crm_operation": "crm_documents.restore"
+    }
+  ],
+  "usage": "private Source134 PHP consumers only; no installation/publication claim",
+  "source_profile": {
+    "name": "crm-source-contracts",
+    "source": "Source",
+    "state": "unreleased",
+    "published": false,
+    "ratified": false,
+    "delivery_enabled": false
+  },
+  "schema_cache_sha256": "cf4d759f1ef433536ba703a7096790949c5220d05516e4db08cb808dd15aa97e"
+}
