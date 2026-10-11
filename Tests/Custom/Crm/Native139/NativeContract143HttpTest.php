@@ -42,7 +42,7 @@ final class NativeContract143HttpTest extends TestCase
         $stack = HandlerStack::create(new MockHandler($responses));
         $stack->push(Middleware::history($this->history));
         $sdk = Factuarea::builder()->setServerUrl('https://native-source143.invalid/v1')
-            ->setSecuritySource(static fn (): Security => new Security(bearerAuth: $credentials->token))
+            ->setSecuritySource(fn (): Security => new Security(bearerAuth: $credentials->token))
             ->setClient(new IdempotencyClient(new Client(['handler' => $stack])))
             ->setRetryConfig(new RetryConfigNone())->build();
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
@@ -57,7 +57,7 @@ final class NativeContract143HttpTest extends TestCase
     }
 
     /** @return array<string,mixed> */
-    private function run(string $id, ?string $parent = null): array
+    private function runSnapshot(string $id, ?string $parent = null): array
     {
         $run = ['id' => $id, 'source_blob_id' => self::CORRECTED, 'entity_type' => 'person', 'version' => 2,
             'state' => 'applying', 'preview_hash' => str_repeat('a', 64), 'counts' => (object) ['total' => 1, 'applied' => 0],
@@ -84,7 +84,7 @@ final class NativeContract143HttpTest extends TestCase
         $intent = ApplyIntent::reviewed(strtoupper(self::RUN), $body, 'source143 retained apply');
         $body->expectedVersion = 99;
         $body->correctedSourceBlobId = self::RUN;
-        $run = $this->run(self::CHILD, self::RUN);
+        $run = $this->runSnapshot(self::CHILD, self::RUN);
         $originalBytes = json_encode(['data' => $run], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         $current = [...$run, 'version' => 3, 'state' => 'completed', 'counts' => (object) ['total' => 1, 'failed' => 1],
             'progress' => ['total' => 1, 'processed' => 1, 'pending' => 0],

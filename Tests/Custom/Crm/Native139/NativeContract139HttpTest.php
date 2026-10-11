@@ -40,7 +40,7 @@ final class NativeContract139HttpTest extends TestCase
         $stack = HandlerStack::create(new MockHandler($responses));
         $stack->push(Middleware::history($this->history));
         $sdk = Factuarea::builder()->setServerUrl('https://native-source139.invalid/v1')
-            ->setSecuritySource(static fn (): Security => new Security(bearerAuth: $credentials->token))
+            ->setSecuritySource(fn (): Security => new Security(bearerAuth: $credentials->token))
             ->setClient(new IdempotencyClient(new Client(['handler' => $stack])))
             ->setRetryConfig(new RetryConfigNone())->build();
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
