@@ -16,13 +16,16 @@ abstract class WireModel implements \JsonSerializable
     /** @var array<string, mixed> */
     public const SCHEMA = [];
 
+    /** Only private native generated DTOs opt into a separate schema document. */
+    public const SCHEMA_DOCUMENT = null;
+
     /** @var array<string, mixed> */
     private array $additional = [];
 
     /** @param array<string, mixed> $values */
     final public static function fromArray(array $values): static
     {
-        Schema::validate(static::SCHEMA, (object) $values);
+        Schema::validate(static::SCHEMA, (object) $values, '$', static::SCHEMA_DOCUMENT);
         $arguments = [];
         foreach (static::FIELDS as $wire => $field) {
             if (array_key_exists($wire, $values)) {
@@ -58,7 +61,7 @@ abstract class WireModel implements \JsonSerializable
 
     final public function validate(): void
     {
-        Schema::validate(static::SCHEMA, $this->jsonSerialize());
+        Schema::validate(static::SCHEMA, $this->jsonSerialize(), '$', static::SCHEMA_DOCUMENT);
     }
 
     final public function jsonSerialize(): object

@@ -21,7 +21,7 @@ use Speakeasy\Serializer\DeserializationContext;
 /** Uses the SDK's configured HTTP client, security, hooks and native error hierarchy. */
 final readonly class Transport
 {
-    public function __construct(private SDKConfiguration $configuration)
+    public function __construct(private SDKConfiguration $configuration, private bool $currentSecurity = false)
     {
     }
 
@@ -30,10 +30,11 @@ final readonly class Transport
      * @param  array<string, scalar|null>  $query
      * @param  class-string<T>  $responseType
      * @param  array<string, string>  $headers
+     * @param  list<int>|null  $successStatuses  Explicit native Source statuses; the normal profile keeps its existing behavior.
      * @return CrmResponse<T>
      */
     public function request(string $method, string $path, string $operationId, string $responseType,
-        array $query = [], ?WireModel $body = null, ?string $idempotencyKey = null, bool $hasEffect = true, array $headers = [], ?string $originalBodySha256 = null): CrmResponse
+        array $query = [], ?WireModel $body = null, ?string $idempotencyKey = null, bool $hasEffect = true, array $headers = [], ?string $originalBodySha256 = null, ?array $successStatuses = null): CrmResponse
     {
         $mutating = $method !== 'GET';
         if ($mutating && ($idempotencyKey === null || preg_match('/^[\x20-\x7e]{1,255}$/D', $idempotencyKey) !== 1)) {
@@ -60,13 +61,13 @@ final readonly class Transport
             throw new \LogicException('The original export method, URI, key and wire bytes cannot be replaced by a hook.');
         }
         $options = Utils::convertHeadersToOptions($request, ['http_errors' => false, 'query' => $query]);
-        if ($originalBodySha256 !== null) {
+        if ($originalBodySha256 !== null || $this->currentSecurity) {
             $options['allow_redirects'] = false;
         }
         $request = Utils::removeHeaders($request);
         $client = $this->configuration->client ?? throw new \LogicException('Build the canonical Factuarea client before using CRM.');
         try {
-            $send = fn () => ($originalBodySha256 !== null ? $this->currentClient() : $client)->send($request, $options);
+            $send = fn () => ($originalBodySha256 !== null || $this->currentSecurity ? $this->currentClient() : $client)->send($request, $options);
             $retry = $this->configuration->retryConfig ?? new RetryConfigBackoff(500, 60000, 1.5, 3600000, true);
             $response = ($mutating || $retry->strategy === RetryStrategy::NONE) ? $send()
                 : RetryUtils::retryWrapper($send, $retry, ['429', '5xx']);
@@ -99,7 +100,13 @@ final readonly class Transport
         if ($status < 200 || $status >= 300) {
             throw new APIException('Unknown status code received', $status, (string) $response->getBody(), $response);
         }
+        if ($successStatuses !== null && ! in_array($status, $successStatuses, true)) {
+            throw new APIException('The status code does not match the native Source operation.', $status, (string) $response->getBody(), $response);
+        }
         $response = $this->configuration->hooks->afterSuccess(new Hooks\AfterSuccessContext($context), $response);
+        if ($successStatuses !== null && ! in_array($response->getStatusCode(), $successStatuses, true)) {
+            throw new APIException('The hook must retain a native Source success status.', $response->getStatusCode(), (string) $response->getBody(), $response);
+        }
         $values = json_decode((string) $response->getBody(), false, 512, JSON_THROW_ON_ERROR);
         if (! $values instanceof \stdClass) {
             throw new \UnexpectedValueException('The CRM response must be an object.');
@@ -109,14 +116,18 @@ final readonly class Transport
     }
 
     /** Read the native binary using the configured SDK client/security/hooks/error hierarchy. */
-    public function requestStream(string $path, string $operationId, string $idempotencyKey): ResponseInterface
+    public function requestStream(string $path, string $operationId, ?string $idempotencyKey = null): ResponseInterface
     {
         $baseUrl = rtrim($this->configuration->getTemplatedServerUrl(), '/');
         $context = new Hooks\HookContext($this->configuration, $baseUrl, $operationId, null, $this->configuration->securitySource);
+        $headers = ['Accept' => 'text/csv', 'user-agent' => $this->configuration->userAgent];
+        if ($idempotencyKey !== null) {
+            $headers['Idempotency-Key'] = $idempotencyKey;
+        }
         $request = $this->configuration->hooks->beforeRequest(new Hooks\BeforeRequestContext($context),
-            new Request('GET', $baseUrl.'/'.$path, ['Accept' => 'text/csv', 'user-agent' => $this->configuration->userAgent, 'Idempotency-Key' => $idempotencyKey]));
+            new Request('GET', $baseUrl.'/'.$path, $headers));
         if ($request->getMethod() !== 'GET' || (string) $request->getUri() !== $baseUrl.'/'.$path
-            || $request->getHeaderLine('Idempotency-Key') !== $idempotencyKey || (string) $request->getBody() !== '') {
+            || $request->getHeaderLine('Idempotency-Key') !== ($idempotencyKey ?? '') || (string) $request->getBody() !== '') {
             throw new \LogicException('A native export download is the same Query-only GET.');
         }
         $options = Utils::convertHeadersToOptions($request, ['http_errors' => false, 'allow_redirects' => false, 'stream' => true]);

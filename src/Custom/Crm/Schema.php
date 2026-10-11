@@ -7,15 +7,15 @@ namespace Factuarea\Sdk\Custom\Crm;
 /** Validates DTO values against the frozen owner's JSON Schema without coercion. */
 final class Schema
 {
-    /** @var array<string, mixed>|null */
-    private static ?array $document = null;
+    /** @var array<string,array<string,mixed>> */
+    private static array $documents = [];
 
     /** @param array<string, mixed> $schema */
-    public static function validate(array $schema, mixed $value, string $path = '$'): void
+    public static function validate(array $schema, mixed $value, string $path = '$', ?string $documentName = null): void
     {
         if (isset($schema['$ref']) && is_string($schema['$ref'])) {
             $name = substr($schema['$ref'], strlen('#/components/schemas/'));
-            self::validate(self::definition($name), $value, $path);
+            self::validate(self::definition($name, $documentName), $value, $path, $documentName);
 
             return;
         }
@@ -27,7 +27,7 @@ final class Schema
                         throw new \LogicException('Invalid generated CRM schema.');
                     }
                     try {
-                        self::validate($candidate, $value, $path);
+                        self::validate($candidate, $value, $path, $documentName);
                         $matches++;
                     } catch (\InvalidArgumentException) {
                         // Each branch is the native owner's schema, including closed variants.
@@ -39,13 +39,13 @@ final class Schema
                 }
             }
         }
-        if (isset($schema['not']) && is_array($schema['not']) && self::matches($schema['not'], $value)) {
+        if (isset($schema['not']) && is_array($schema['not']) && self::matches($schema['not'], $value, $documentName)) {
             self::invalid($path, 'not');
         }
         if (isset($schema['if']) && is_array($schema['if'])) {
-            $branch = self::matches($schema['if'], $value) ? 'then' : 'else';
+            $branch = self::matches($schema['if'], $value, $documentName) ? 'then' : 'else';
             if (isset($schema[$branch]) && is_array($schema[$branch])) {
-                self::validate($schema[$branch], $value, $path);
+                self::validate($schema[$branch], $value, $path, $documentName);
             }
         }
         if (array_key_exists('const', $schema) && $value !== $schema['const']) {
@@ -74,6 +74,9 @@ final class Schema
             }
         }
         if (is_string($value)) {
+            if ($documentName !== null) {
+                self::nativeFormat($schema['format'] ?? null, $value, $path);
+            }
             $length = mb_strlen($value);
             if ((isset($schema['minLength']) && $length < $schema['minLength'])
                 || (isset($schema['maxLength']) && $length > $schema['maxLength'])) {
@@ -105,14 +108,14 @@ final class Schema
             }
             foreach ($fields as $key => $item) {
                 if (isset($schema['propertyNames']) && is_array($schema['propertyNames'])) {
-                    self::validate($schema['propertyNames'], (string) $key, $path);
+                    self::validate($schema['propertyNames'], (string) $key, $path, $documentName);
                 }
                 if (isset($properties[$key]) && is_array($properties[$key])) {
-                    self::validate($properties[$key], $item, $path.'.'.$key);
+                    self::validate($properties[$key], $item, $path.'.'.$key, $documentName);
                 } elseif (($schema['additionalProperties'] ?? true) === false) {
                     self::invalid($path.'.'.$key, 'unknown field');
                 } elseif (isset($schema['additionalProperties']) && is_array($schema['additionalProperties'])) {
-                    self::validate($schema['additionalProperties'], $item, $path.'.'.$key);
+                    self::validate($schema['additionalProperties'], $item, $path.'.'.$key, $documentName);
                 }
             }
             if ((isset($schema['minProperties']) && count($fields) < $schema['minProperties'])
@@ -130,23 +133,27 @@ final class Schema
             }
             if (isset($schema['items']) && is_array($schema['items'])) {
                 foreach ($value as $index => $item) {
-                    self::validate($schema['items'], $item, $path.'.'.$index);
+                    self::validate($schema['items'], $item, $path.'.'.$index, $documentName);
                 }
             }
         }
     }
 
     /** @return array<string, mixed> */
-    public static function definition(string $name): array
+    public static function definition(string $name, ?string $documentName = null): array
     {
-        if (self::$document === null) {
-            $contents = file_get_contents(dirname(__DIR__, 3).'/spec/crm-openapi.json');
+        $documentName ??= 'crm-openapi.json';
+        if (! in_array($documentName, ['crm-openapi.json', 'crm-native139-schemas.json'], true)) {
+            throw new \LogicException('Select the explicit normal or private native schema profile.');
+        }
+        if (! isset(self::$documents[$documentName])) {
+            $contents = file_get_contents(dirname(__DIR__, 3).'/spec/'.$documentName);
             if ($contents === false) {
                 throw new \LogicException('The frozen CRM contract is missing.');
             }
-            self::$document = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
+            self::$documents[$documentName] = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
         }
-        $definition = self::$document['components']['schemas'][$name] ?? null;
+        $definition = self::$documents[$documentName]['components']['schemas'][$name] ?? null;
         if (! is_array($definition)) {
             throw new \LogicException('The CRM schema is missing: '.$name);
         }
@@ -154,11 +161,24 @@ final class Schema
         return $definition;
     }
 
+    private static function nativeFormat(mixed $format, string $value, string $path): void
+    {
+        if ($format === 'uuid' && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/Di', $value) !== 1) {
+            self::invalid($path, 'uuid');
+        }
+        if ($format === 'date') {
+            if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/D', $value, $parts) !== 1
+                || ! checkdate((int) $parts[2], (int) $parts[3], (int) $parts[1])) {
+                self::invalid($path, 'date');
+            }
+        }
+    }
+
     /** @param array<string, mixed> $schema */
-    private static function matches(array $schema, mixed $value): bool
+    private static function matches(array $schema, mixed $value, ?string $documentName = null): bool
     {
         try {
-            self::validate($schema, $value);
+            self::validate($schema, $value, '$', $documentName);
 
             return true;
         } catch (\InvalidArgumentException) {

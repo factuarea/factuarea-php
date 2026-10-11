@@ -1,0 +1,28 @@
+{
+  "group": 139,
+  "at": "2026-10-11T10:45:46.667225+00:00",
+  "state": "private-native-unreleased-source-contract",
+  "artifact": "/home/nando/Proyectos/factuarea-app-worktrees/dev-2-crm/development/runtime-evidence/resume-20261010/native-contract139/openapi-source.json",
+  "artifact_sha256": "438b12b53be7ae7535cd6c85ba7dea06c76d84a33024db0e0232ac8ba279be63",
+  "bytes": 25027771,
+  "operation_count": 958,
+  "contract_carrier_count": 363,
+  "catalog_sha256": "78aee740427c76d2e009d8ff010f1784c1d1df02b86cbda4ad60c7a761972fbb",
+  "ratified": false,
+  "capabilities": [],
+  "published": false,
+  "delivery_enabled": false,
+  "generated_by": "native public-api:export-spec --api public-api --crm-contracts",
+  "source_result": "/home/nando/Proyectos/factuarea-app-worktrees/dev-2-crm/development/runtime-evidence/resume-20261010/root-openapi-source-contracts139-native-selector-instance-fixed-result.json",
+  "generation_pass": true,
+  "runtime_or_installation_certification": false,
+  "source_profile": {
+    "name": "crm-source-contracts",
+    "source": "Source",
+    "state": "unreleased",
+    "published": false,
+    "ratified": false,
+    "delivery_enabled": false
+  },
+  "schema_cache_sha256": "da9de81581a458392f1f124ce0eb9b473423074216077da6311b0e745beaeb38"
+}
