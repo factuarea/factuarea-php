@@ -14,19 +14,27 @@ final class PublicApiV1CrmSpreadsheetImportsShowParameters extends WireModel
 {
     public const SCHEMA_DOCUMENT = 'crm-native139-schemas.json';
 
-    public const FIELDS = ['run' => ['property' => 'run', 'type' => ['scalar' => 'string']], 'Factuarea-Version' => ['property' => 'factuareaVersion', 'type' => ['scalar' => 'string']], 'X-Active-Profile' => ['property' => 'xActiveProfile', 'type' => ['scalar' => 'string']]];
+    public const FIELDS = ['run' => ['property' => 'run', 'type' => ['scalar' => 'string']], 'Factuarea-Version' => ['property' => 'factuareaVersion', 'type' => ['scalar' => 'string']], 'X-Active-Profile' => ['property' => 'xActiveProfile', 'type' => ['scalar' => 'string']], 'cursor' => ['property' => 'cursor', 'type' => ['scalar' => 'string']], 'limit' => ['property' => 'limit', 'type' => ['scalar' => 'int']], 'report_format' => ['property' => 'reportFormat', 'type' => ['scalar' => 'string']], 'expected_version' => ['property' => 'expectedVersion', 'type' => ['scalar' => 'int']]];
 
-    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['run' => ['type' => 'string'], 'Factuarea-Version' => ['type' => 'string', 'format' => 'date', 'example' => '2026-06-01'], 'X-Active-Profile' => ['type' => 'string', 'format' => 'uuid', 'example' => '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c']], 'required' => ['run']];
+    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['Factuarea-Version' => ['type' => 'string', 'format' => 'date', 'example' => '2026-06-01'], 'X-Active-Profile' => ['type' => 'string', 'format' => 'uuid', 'example' => '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'], 'run' => ['type' => 'string', 'format' => 'uuid', 'pattern' => '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'], 'cursor' => ['type' => 'string', 'maxLength' => 512, 'minLength' => 1, 'pattern' => '^[A-Za-z0-9_-]+$', 'description' => 'Current JSON read mode; cannot be combined with report_format or expected_version.'], 'limit' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 100, 'description' => 'Current JSON read mode; cannot be combined with report_format or expected_version.'], 'report_format' => ['type' => 'string', 'const' => 'csv', 'description' => 'CSV read mode: report_format=csv and expected_version are required together; cursor and limit are forbidden.'], 'expected_version' => ['type' => 'integer', 'minimum' => 1, 'description' => 'CSV read mode: report_format=csv and expected_version are required together; cursor and limit are forbidden.']], 'required' => ['run']];
 
     /**
      * @param  string  $run
      * @param  string|Omitted  $factuareaVersion
      * @param  string|Omitted  $xActiveProfile
+     * @param  string|Omitted  $cursor
+     * @param  int|Omitted  $limit
+     * @param  string|Omitted  $reportFormat
+     * @param  int|Omitted  $expectedVersion
      */
     public function __construct(
         public string $run,
         public string|Omitted $factuareaVersion = Omitted::Value,
         public string|Omitted $xActiveProfile = Omitted::Value,
+        public string|Omitted $cursor = Omitted::Value,
+        public int|Omitted $limit = Omitted::Value,
+        public string|Omitted $reportFormat = Omitted::Value,
+        public int|Omitted $expectedVersion = Omitted::Value,
     ) {
         Schema::validate(self::SCHEMA, $this->jsonSerialize(), '$', self::SCHEMA_DOCUMENT);
     }

@@ -1,5 +1,5 @@
 {
-  "x-native-source-sha256": "438b12b53be7ae7535cd6c85ba7dea06c76d84a33024db0e0232ac8ba279be63",
+  "x-native-source-sha256": "59b6cd2664aa8524e96a7600565b70b5eae5f6beaa7527913d703adf653a2fca",
   "components": {
     "schemas": {
       "AgendaItem": {
@@ -4488,9 +4488,25 @@
         ],
         "title": "CrmPrivateDocumentList"
       },
-      "CrmSpreadsheetImportResource": {
-        "type": "string",
-        "title": "CrmSpreadsheetImportResource"
+      "CrmPrivateDocumentReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ],
+        "title": "CrmPrivateDocumentReceipt"
       },
       "KnowledgeArticle": {
         "type": "object",

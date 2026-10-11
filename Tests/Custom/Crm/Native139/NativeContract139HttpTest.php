@@ -59,11 +59,11 @@ final class NativeContract139HttpTest extends TestCase
         $bytes = '{"confirmed":true,"effect_uuid":"019d75c3-7139-7000-8000-000000000140","expected_version":1,"mode":"import","preview_hash":"'.str_repeat('a', 64).'"}';
         $intent = ApplyOriginalIntent::restore(self::RUN, $bytes, hash('sha256', $bytes), 'retained-native-import139');
         $original = ['id' => self::RUN, 'source_blob_id' => '019d75c3-7139-7000-8000-000000000141', 'entity_type' => 'person',
-            'version' => 2, 'state' => 'applying', 'preview_hash' => str_repeat('a', 64), 'counts' => (object) ['applied' => 0],
+            'version' => 2, 'state' => 'applying', 'preview_hash' => str_repeat('a', 64), 'counts' => (object) ['total' => 1, 'applied' => 0],
             'blocking_codes' => [], 'progress' => ['total' => 1, 'processed' => 0, 'pending' => 1]];
-        $current = [...$original, 'version' => 3, 'state' => 'completed', 'counts' => (object) ['applied' => 1],
+        $current = [...$original, 'version' => 3, 'state' => 'completed', 'counts' => (object) ['total' => 1, 'applied' => 1],
             'progress' => ['total' => 1, 'processed' => 1, 'pending' => 0],
-            'errors' => ['version' => 1, 'items' => [], 'has_more' => false, 'next_row' => null, 'next_cursor' => null]];
+            'errors' => ['version' => 3, 'items' => [], 'has_more' => false, 'next_row' => null, 'next_cursor' => null]];
         $originalBytes = json_encode(['data' => $original], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         $responses = [];
         foreach (['missing', 'in_progress', 'unconfirmed'] as $state) {

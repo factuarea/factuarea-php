@@ -1,5 +1,18 @@
 [
   {
+    "operationId": "public-api.v1.crm-spreadsheet-imports.apply",
+    "method": "POST",
+    "path": "/crm/imports/{run}/apply",
+    "group": "SpreadsheetImports",
+    "request": "PublicApiV1CrmSpreadsheetImportsApplyParameters",
+    "response": "PublicApiV1CrmSpreadsheetImportsApplyResult",
+    "scope": "crm_imports:write",
+    "key": "crm_imports.apply",
+    "effect": true,
+    "oauthScope": "crm_imports.write",
+    "phpMethod": "publicApiV1CrmSpreadsheetImportsApply"
+  },
+  {
     "operationId": "crmApplyLeadScoreRecalculation",
     "method": "POST",
     "path": "/crm/lead-score-runs/{run}/apply",
@@ -355,9 +368,9 @@
     "request": "PublicApiV1CrmSpreadsheetImportsShowParameters",
     "response": "PublicApiV1CrmSpreadsheetImportsShowResult",
     "scope": "crm_imports:read",
-    "key": "",
+    "key": "crm_imports.show",
     "effect": false,
-    "oauthScope": null,
+    "oauthScope": "crm_imports.read",
     "phpMethod": "publicApiV1CrmSpreadsheetImportsShow"
   },
   {
@@ -918,6 +931,18 @@
     "effect": true,
     "oauthScope": null,
     "phpMethod": "publicApiV1CrmEntityExportsRequest"
+  },
+  {
+    "operationId": "crmRestoreCommercialDocument",
+    "method": "POST",
+    "path": "/crm/documents/{document}/restore",
+    "group": "Documents",
+    "request": "CrmRestoreCommercialDocumentParameters",
+    "response": "CrmRestoreCommercialDocumentResult",
+    "scope": "crm_documents:write",
+    "key": "crm_documents.restore",
+    "effect": true,
+    "oauthScope": "crm_documents.write"
   },
   {
     "operationId": "saveKnowledgeCategory",

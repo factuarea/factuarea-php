@@ -14,15 +14,15 @@ final class PublicApiV1CrmSpreadsheetImportsShowResult extends WireModel
 {
     public const SCHEMA_DOCUMENT = 'crm-native139-schemas.json';
 
-    public const FIELDS = ['data' => ['property' => 'data', 'type' => ['scalar' => 'string']]];
+    public const FIELDS = ['data' => ['property' => 'data', 'type' => ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Native139\\Model\\PublicApiV1CrmSpreadsheetImportsShowResultData']]];
 
-    public const SCHEMA = ['type' => 'object', 'properties' => ['data' => ['$ref' => '#/components/schemas/CrmSpreadsheetImportResource']], 'required' => ['data']];
+    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'required' => ['data'], 'properties' => ['data' => ['type' => 'object', 'additionalProperties' => false, 'required' => ['id', 'source_blob_id', 'entity_type', 'version', 'state', 'preview_hash', 'counts', 'blocking_codes', 'progress', 'errors'], 'properties' => ['id' => ['type' => 'string', 'format' => 'uuid', 'pattern' => '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'], 'source_blob_id' => ['type' => 'string', 'format' => 'uuid', 'pattern' => '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'], 'entity_type' => ['type' => 'string'], 'version' => ['type' => 'integer', 'minimum' => 1], 'state' => ['type' => 'string', 'description' => 'Current native run state, separate from the immutable first apply response.'], 'preview_hash' => ['type' => 'string', 'pattern' => '^[0-9a-f]{64}$'], 'counts' => ['type' => 'object', 'required' => ['total'], 'propertyNames' => ['pattern' => '^[a-z][a-z0-9_]*$'], 'additionalProperties' => ['type' => 'integer', 'minimum' => 0]], 'blocking_codes' => ['type' => 'array', 'items' => ['type' => 'string', 'pattern' => '^[a-z][a-z0-9_]*$']], 'progress' => ['type' => 'object', 'additionalProperties' => false, 'required' => ['total', 'processed', 'pending'], 'properties' => ['total' => ['type' => 'integer', 'minimum' => 0], 'processed' => ['type' => 'integer', 'minimum' => 0], 'pending' => ['type' => 'integer', 'minimum' => 0]]], 'parent_run_id' => ['type' => 'string', 'format' => 'uuid', 'pattern' => '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'], 'errors' => ['type' => 'object', 'additionalProperties' => false, 'required' => ['version', 'items', 'has_more', 'next_row', 'next_cursor'], 'properties' => ['version' => ['type' => 'integer', 'minimum' => 1], 'items' => ['type' => 'array', 'items' => ['type' => 'object', 'additionalProperties' => false, 'required' => ['source_row', 'field', 'codes'], 'properties' => ['source_row' => ['type' => 'integer', 'minimum' => 2], 'field' => ['type' => ['string', 'null']], 'codes' => ['type' => 'array', 'items' => ['type' => 'string', 'pattern' => '^[a-z][a-z0-9_]*$']]]]], 'has_more' => ['type' => 'boolean'], 'next_row' => ['type' => ['integer', 'null'], 'minimum' => 2], 'next_cursor' => ['type' => ['string', 'null'], 'minLength' => 1, 'maxLength' => 512, 'pattern' => '^[A-Za-z0-9_-]+$', 'description' => 'Opaque cursor bound to this run and Current version. A changed version conflicts; it does not reconstruct an Original response.']]]]]]];
 
     /**
-     * @param  string  $data
+     * @param  \Factuarea\Sdk\Custom\Crm\Native139\Model\PublicApiV1CrmSpreadsheetImportsShowResultData  $data
      */
     public function __construct(
-        public string $data,
+        public \Factuarea\Sdk\Custom\Crm\Native139\Model\PublicApiV1CrmSpreadsheetImportsShowResultData $data,
     ) {
         Schema::validate(self::SCHEMA, $this->jsonSerialize(), '$', self::SCHEMA_DOCUMENT);
     }

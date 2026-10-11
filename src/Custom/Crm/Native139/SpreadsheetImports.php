@@ -10,6 +10,7 @@ use Factuarea\Sdk\Custom\Crm\CrmResponse;
 use Factuarea\Sdk\Custom\Crm\Omitted;
 use Factuarea\Sdk\Custom\Crm\Pagination;
 use Factuarea\Sdk\Custom\Crm\Transport;
+use Factuarea\Sdk\Custom\Crm\Schema;
 
 final readonly class SpreadsheetImports
 {
@@ -17,8 +18,8 @@ final readonly class SpreadsheetImports
     {
     }
 
-    /** @return CrmResponse<Model\PublicApiV1CrmSpreadsheetImportsShowResult> */
-    public function publicApiV1CrmSpreadsheetImportsShow(Model\PublicApiV1CrmSpreadsheetImportsShowParameters $request): CrmResponse
+    /** @return CrmResponse<Model\PublicApiV1CrmSpreadsheetImportsApplyResult> */
+    public function publicApiV1CrmSpreadsheetImportsApply(Model\PublicApiV1CrmSpreadsheetImportsApplyParameters $request): CrmResponse
     {
         $request->validate();
         $query = [];
@@ -29,6 +30,35 @@ final readonly class SpreadsheetImports
         if ($request->xActiveProfile !== Omitted::Value) {
             $headers['X-Active-Profile'] = $request->xActiveProfile;
         }
+
+        return $this->transport->request('POST', str_replace('{run}', rawurlencode($request->run), 'crm/imports/{run}/apply'), 'public-api.v1.crm-spreadsheet-imports.apply', Model\PublicApiV1CrmSpreadsheetImportsApplyResult::class, $query, $request->body, $request->idempotencyKey, true, $headers, hash('sha256', $request->body->toJson()), [202]);
+    }
+
+    /** @return CrmResponse<Model\PublicApiV1CrmSpreadsheetImportsShowResult> */
+    public function publicApiV1CrmSpreadsheetImportsShow(Model\PublicApiV1CrmSpreadsheetImportsShowParameters $request): CrmResponse
+    {
+        $request->validate();
+        $query = [];
+        if ($request->cursor !== Omitted::Value) {
+            $query['cursor'] = $request->cursor;
+        }
+        if ($request->limit !== Omitted::Value) {
+            $query['limit'] = $request->limit;
+        }
+        if ($request->reportFormat !== Omitted::Value) {
+            $query['report_format'] = $request->reportFormat;
+        }
+        if ($request->expectedVersion !== Omitted::Value) {
+            $query['expected_version'] = $request->expectedVersion;
+        }
+        $headers = [];
+        if ($request->factuareaVersion !== Omitted::Value) {
+            $headers['Factuarea-Version'] = $request->factuareaVersion;
+        }
+        if ($request->xActiveProfile !== Omitted::Value) {
+            $headers['X-Active-Profile'] = $request->xActiveProfile;
+        }
+        Schema::validate(['oneOf' => [['type' => 'object', 'additionalProperties' => false, 'properties' => ['cursor' => ['type' => 'string', 'maxLength' => 512, 'minLength' => 1, 'pattern' => '^[A-Za-z0-9_-]+$'], 'limit' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 100]], 'required' => []], ['type' => 'object', 'additionalProperties' => false, 'required' => ['report_format', 'expected_version'], 'properties' => ['report_format' => ['type' => 'string', 'const' => 'csv'], 'expected_version' => ['type' => 'integer', 'minimum' => 1]]]]], (object) $query, '$.query', 'crm-native139-schemas.json');
 
         return $this->transport->request('GET', str_replace('{run}', rawurlencode($request->run), 'crm/imports/{run}'), 'public-api.v1.crm-spreadsheet-imports.show', Model\PublicApiV1CrmSpreadsheetImportsShowResult::class, $query, null, null, false, $headers, null, [200]);
     }

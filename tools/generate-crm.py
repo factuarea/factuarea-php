@@ -20,6 +20,7 @@ PRIVATE = options.private_source139 is not None
 SPEC = ROOT / ('spec/crm-native139-source.json' if PRIVATE else 'spec/crm-openapi.json')
 if PRIVATE:
     metadata = json.loads(Path(options.private_source139).read_text())
+    metadata['artifact_sha256'] = metadata.get('artifact_sha256', metadata.get('sha256'))
     artifact = Path(metadata['artifact'])
     raw = (artifact if artifact.is_file() else SPEC).read_bytes()
     if hashlib.sha256(raw).hexdigest() != metadata['artifact_sha256']:
@@ -147,6 +148,8 @@ def render_model(name, schema):
         if optional:
             type_hint = join_types(type_hint.split('|') + ['Omitted'])
             doc_type = join_types(doc_type.split('|') + ['Omitted'])
+        if PRIVATE and len(type_hint.split('|')) == 2 and 'null' in type_hint.split('|'):
+            type_hint = '?' + next(part for part in type_hint.split('|') if part != 'null')
         field_data.append((wire, camel(wire), type_hint, doc_type, desc, optional))
     field_data.sort(key=lambda x: x[5])
     fields = {wire: {'property': attr, 'type': desc} for wire, attr, _, _, desc, _ in field_data}
@@ -200,6 +203,7 @@ apis = {'ContactPeople' : [], 'Leads': [], 'Pipelines': [], 'KnowledgeBase': [],
 if PRIVATE:
     apis.update({'Opportunities': [], 'Activities': [], 'SpreadsheetImports': [], 'Documents': [], 'TaskAgenda': [], 'EntityExports': []})
 operation_map = []
+query_schema_groups = set()
 for path, item in document['paths'].items():
     for method, operation in item.items():
         if method not in ['get', 'post', 'put', 'patch', 'delete']:
@@ -219,9 +223,9 @@ for path, item in document['paths'].items():
             group = 'Opportunities'
         elif PRIVATE and operation['operationId'] in ['crmCreateCrmActivity', 'crmGetCrmActivityCreateOriginal', 'crmGetCrmActivity', 'crmListCrmActivities']:
             group = 'Activities'
-        elif PRIVATE and operation['operationId'] in ['public-api.v1.crm-spreadsheet-imports.apply-original', 'public-api.v1.crm-spreadsheet-imports.show']:
+        elif PRIVATE and operation['operationId'] in ['public-api.v1.crm-spreadsheet-imports.apply', 'public-api.v1.crm-spreadsheet-imports.apply-original', 'public-api.v1.crm-spreadsheet-imports.show']:
             group = 'SpreadsheetImports'
-        elif PRIVATE and key in ['crm_documents.get', 'crm_documents.list']:
+        elif PRIVATE and key in ['crm_documents.get', 'crm_documents.list', 'crm_documents.restore']:
             group = 'Documents'
         elif PRIVATE and operation['operationId'] == 'public-api.v1.agenda.list' and method == 'get':
             group = 'TaskAgenda'
@@ -309,6 +313,9 @@ for path, item in document['paths'].items():
                 lines += ['        if ($request->' + attr + ' !== Omitted::Value) {\n',
                           '            $headers[' + php(parameter['name']) + '] = $request->' + attr + ';\n', '        }\n']
         success_statuses = [int(code) for code, response in operation['responses'].items() if str(code).startswith('2') and 'application/json' in response.get('content', {})]
+        if PRIVATE and 'x-crm-query-schema' in operation:
+            query_schema_groups.add(group)
+            lines.append("        Schema::validate(" + php(operation['x-crm-query-schema']) + ", (object) $query, '$.query', 'crm-native139-schemas.json');\n")
         retained_hash = "hash('sha256', '')" if original_read else ("hash('sha256', $request->body->toJson())" if PRIVATE and method != 'get' and body else 'null')
         status_argument = ', ' + retained_hash + ', ' + php(success_statuses) if PRIVATE else ''
         lines.append('        ' + ('$response = ' if original_read else 'return ') + '$this->transport->request(' + php(method.upper()) + ', ' + path_expr + ', ' + php(op_id) + ', Model\\' + response_name + '::class, $query, ' + ('$request->body' if body else 'null') + ', ' + ('$request->idempotencyKey' if has_key else 'null') + ', ' + php(effect) + ', $headers' + status_argument + ');\n')
@@ -381,8 +388,18 @@ if PRIVATE:
     metadata['schema_cache_sha256'] = hashlib.sha256(cache_bytes).hexdigest()
     (ROOT / 'spec/crm-native139-provenance.json').write_text(json.dumps(metadata, indent=2) + '\n')
 
+def php_tokens(source):
+    # Keep string bytes and lexical boundaries while ignoring formatter-only whitespace/comments.
+    tokens = re.findall(r"'(?:\\[\s\S]|[^'\\])*'|\"(?:\\[\s\S]|[^\"\\])*\"|/\*[\s\S]*?\*/|//[^\n]*|[A-Za-z_][A-Za-z_0-9]*|[0-9]+|[^\s]", source)
+    return [token for token in tokens if not token.startswith(('/*', '//'))]
+
+def write_generated(path, source):
+    if PRIVATE and path.is_file() and php_tokens(path.read_text()) == php_tokens(source):
+        return
+    path.write_text(source)
+
 for name, source in sorted(models.items()):
-    (OUTPUT / 'Model' / (name + '.php')).write_text(source)
+    write_generated(OUTPUT / 'Model' / (name + '.php'), source)
 for name, methods in apis.items():
     source = '''<?php
 
@@ -398,8 +415,9 @@ final readonly class ''' + name + '''
 
 ''' + '\n'.join(methods) + '}\n'
     if PRIVATE:
-        source = source.replace('namespace Factuarea\\Sdk\\Custom\\Crm;', 'namespace ' + API_NAMESPACE + ';\n\nuse Factuarea\\Sdk\\Custom\\Crm\\{CrmResponse, Omitted, Pagination, Transport};')
+        imports = '\n'.join('use Factuarea\\Sdk\\Custom\\Crm\\' + symbol + ';' for symbol in ['CrmResponse', 'Omitted', 'Pagination', 'Transport'] + (['Schema'] if name in query_schema_groups else []))
+        source = source.replace('namespace Factuarea\\Sdk\\Custom\\Crm;', 'namespace ' + API_NAMESPACE + ';\n\n' + imports)
         source = source.replace('from spec/crm-openapi.json.', 'from the private native spec/crm-native139-source.json; unreleased.')
-    (OUTPUT / (name + '.php')).write_text(source)
+    write_generated(OUTPUT / (name + '.php'), source)
 (ROOT / ('spec/crm-native139-operations.json' if PRIVATE else 'spec/crm-operations.json')).write_text(json.dumps(operation_map, indent=2) + '\n')
 print(json.dumps({'operations': len(operation_map), 'models': len(models), 'spec_sha256': hashlib.sha256(SPEC.read_bytes()).hexdigest()}))

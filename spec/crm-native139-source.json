@@ -6332,30 +6332,210 @@
         "/crm/imports/{run}/apply": {
             "post": {
                 "operationId": "public-api.v1.crm-spreadsheet-imports.apply",
-                "description": "Apply Crm Spreadsheet Import V1.",
+                "description": "Aplica el run y preview originales con CAS, efecto y confirmaci\u00f3n humanos. Devuelve 202 del run autorizado; no acredita todas las filas completadas. retry_failed puede crear un run hijo y aceptar un archivo corregido. Conserva Idempotency-Key y los bytes exactos del POST: ante respuesta incierta consulta GET apply/original con su SHA-256 literal, sin reenviar ni inferir \u00e9xito desde Current. Empresa, actor, credencial, sandbox, C7 y campos completos se reautorizan; no se publican celdas ni pruebas privadas.",
+                "tags": [
+                    "CRM Imports"
+                ],
                 "parameters": [
-                    {
-                        "name": "run",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "$ref": "#/components/parameters/FactuareaVersion"
                     },
                     {
                         "$ref": "#/components/parameters/XActiveProfile"
+                    },
+                    {
+                        "name": "run",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                        }
+                    },
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 255,
+                            "pattern": "^[\\x20-\\x7e]+$",
+                            "description": "Optional under the current native admission policy. Required to retain and read the separate apply Original: preserve this exact key and the original POST bytes."
+                        }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "expected_version": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "preview_hash": {
+                                        "type": "string",
+                                        "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "effect_uuid": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                    },
+                                    "mode": {
+                                        "type": "string",
+                                        "enum": [
+                                            "import",
+                                            "retry_failed",
+                                            "compensate"
+                                        ]
+                                    },
+                                    "confirmed": {
+                                        "type": "boolean",
+                                        "const": true
+                                    },
+                                    "corrected_source_blob_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                    }
+                                },
+                                "required": [
+                                    "expected_version",
+                                    "preview_hash",
+                                    "effect_uuid",
+                                    "mode",
+                                    "confirmed"
+                                ],
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "mode": {
+                                                    "const": "retry_failed"
+                                                }
+                                            }
+                                        },
+                                        "else": {
+                                            "not": {
+                                                "required": [
+                                                    "corrected_source_blob_id"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "200": {
-                        "description": "",
+                    "202": {
+                        "description": "Primera respuesta 202 del run autorizado; las filas pendientes permanecen en progress. Original se lee por separado.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": [
+                                        "data"
+                                    ],
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "id",
+                                                "source_blob_id",
+                                                "entity_type",
+                                                "version",
+                                                "state",
+                                                "preview_hash",
+                                                "counts",
+                                                "blocking_codes",
+                                                "progress"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                                },
+                                                "source_blob_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                                },
+                                                "entity_type": {
+                                                    "type": "string"
+                                                },
+                                                "version": {
+                                                    "type": "integer",
+                                                    "minimum": 1
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "description": "Current native run state, separate from the immutable first apply response."
+                                                },
+                                                "preview_hash": {
+                                                    "type": "string",
+                                                    "pattern": "^[0-9a-f]{64}$"
+                                                },
+                                                "counts": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "total"
+                                                    ],
+                                                    "propertyNames": {
+                                                        "pattern": "^[a-z][a-z0-9_]*$"
+                                                    },
+                                                    "additionalProperties": {
+                                                        "type": "integer",
+                                                        "minimum": 0
+                                                    }
+                                                },
+                                                "blocking_codes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "pattern": "^[a-z][a-z0-9_]*$"
+                                                    }
+                                                },
+                                                "progress": {
+                                                    "type": "object",
+                                                    "additionalProperties": false,
+                                                    "required": [
+                                                        "total",
+                                                        "processed",
+                                                        "pending"
+                                                    ],
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "minimum": 0
+                                                        },
+                                                        "processed": {
+                                                            "type": "integer",
+                                                            "minimum": 0
+                                                        },
+                                                        "pending": {
+                                                            "type": "integer",
+                                                            "minimum": 0
+                                                        }
+                                                    }
+                                                },
+                                                "parent_run_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -6429,6 +6609,11 @@
                     }
                 },
                 "x-required-scope": "crm_imports:write",
+                "x-required-oauth-scope": "crm_imports.write",
+                "x-crm-operation": "crm_imports.apply",
+                "x-crm-requires-confirmation": true,
+                "x-crm-requires-claim": true,
+                "x-crm-current-c7": true,
                 "x-speakeasy-group": "crmSpreadsheetImports",
                 "x-speakeasy-retries": {
                     "strategy": "backoff",
@@ -9332,7 +9517,7 @@
         "/crm/documents/{document}/archive": {
             "post": {
                 "operationId": "crmArchiveCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: archive",
                 "tags": [
                     "CRM Private Documents"
@@ -120499,7 +120684,7 @@
         "/crm/documents/{document}/download": {
             "get": {
                 "operationId": "crmDownloadCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: download",
                 "tags": [
                     "CRM Private Documents"
@@ -131619,38 +131804,239 @@
         "/crm/imports/{run}": {
             "get": {
                 "operationId": "public-api.v1.crm-spreadsheet-imports.show",
-                "description": "Find Crm Spreadsheet Import V1.",
+                "description": "Lee Current y sus errores paginados en la misma versi\u00f3n nativa. El cursor queda ligado al run y versi\u00f3n; un cambio devuelve conflicto. Current no sustituye la primera respuesta apply Original. El modo report_format=csv exige expected_version y excluye cursor/limit; devuelve los bytes CSV ya producidos, sin ejecutar filas. Revalida empresa, actor, credencial, sandbox, C7 y m\u00e1scaras; no publica valores de celdas ni autoridad privada.",
+                "tags": [
+                    "CRM Imports"
+                ],
                 "parameters": [
-                    {
-                        "name": "run",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "$ref": "#/components/parameters/FactuareaVersion"
                     },
                     {
                         "$ref": "#/components/parameters/XActiveProfile"
+                    },
+                    {
+                        "name": "run",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                        }
+                    },
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 512,
+                            "minLength": 1,
+                            "pattern": "^[A-Za-z0-9_-]+$",
+                            "description": "Current JSON read mode; cannot be combined with report_format or expected_version."
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "description": "Current JSON read mode; cannot be combined with report_format or expected_version."
+                        }
+                    },
+                    {
+                        "name": "report_format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "const": "csv",
+                            "description": "CSV read mode: report_format=csv and expected_version are required together; cursor and limit are forbidden."
+                        }
+                    },
+                    {
+                        "name": "expected_version",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "description": "CSV read mode: report_format=csv and expected_version are required together; cursor and limit are forbidden."
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "`CrmSpreadsheetImportResource`",
+                        "description": "Current coherente con sus errores y versi\u00f3n; el modo CSV conserva bytes originales y no acredita apply Original.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/CrmSpreadsheetImportResource"
-                                        }
-                                    },
+                                    "additionalProperties": false,
                                     "required": [
                                         "data"
-                                    ]
+                                    ],
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "id",
+                                                "source_blob_id",
+                                                "entity_type",
+                                                "version",
+                                                "state",
+                                                "preview_hash",
+                                                "counts",
+                                                "blocking_codes",
+                                                "progress",
+                                                "errors"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                                },
+                                                "source_blob_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                                },
+                                                "entity_type": {
+                                                    "type": "string"
+                                                },
+                                                "version": {
+                                                    "type": "integer",
+                                                    "minimum": 1
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "description": "Current native run state, separate from the immutable first apply response."
+                                                },
+                                                "preview_hash": {
+                                                    "type": "string",
+                                                    "pattern": "^[0-9a-f]{64}$"
+                                                },
+                                                "counts": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "total"
+                                                    ],
+                                                    "propertyNames": {
+                                                        "pattern": "^[a-z][a-z0-9_]*$"
+                                                    },
+                                                    "additionalProperties": {
+                                                        "type": "integer",
+                                                        "minimum": 0
+                                                    }
+                                                },
+                                                "blocking_codes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "pattern": "^[a-z][a-z0-9_]*$"
+                                                    }
+                                                },
+                                                "progress": {
+                                                    "type": "object",
+                                                    "additionalProperties": false,
+                                                    "required": [
+                                                        "total",
+                                                        "processed",
+                                                        "pending"
+                                                    ],
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "minimum": 0
+                                                        },
+                                                        "processed": {
+                                                            "type": "integer",
+                                                            "minimum": 0
+                                                        },
+                                                        "pending": {
+                                                            "type": "integer",
+                                                            "minimum": 0
+                                                        }
+                                                    }
+                                                },
+                                                "parent_run_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+                                                },
+                                                "errors": {
+                                                    "type": "object",
+                                                    "additionalProperties": false,
+                                                    "required": [
+                                                        "version",
+                                                        "items",
+                                                        "has_more",
+                                                        "next_row",
+                                                        "next_cursor"
+                                                    ],
+                                                    "properties": {
+                                                        "version": {
+                                                            "type": "integer",
+                                                            "minimum": 1
+                                                        },
+                                                        "items": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "additionalProperties": false,
+                                                                "required": [
+                                                                    "source_row",
+                                                                    "field",
+                                                                    "codes"
+                                                                ],
+                                                                "properties": {
+                                                                    "source_row": {
+                                                                        "type": "integer",
+                                                                        "minimum": 2
+                                                                    },
+                                                                    "field": {
+                                                                        "type": [
+                                                                            "string",
+                                                                            "null"
+                                                                        ]
+                                                                    },
+                                                                    "codes": {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "string",
+                                                                            "pattern": "^[a-z][a-z0-9_]*$"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "has_more": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "next_row": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ],
+                                                            "minimum": 2
+                                                        },
+                                                        "next_cursor": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "minLength": 1,
+                                                            "maxLength": 512,
+                                                            "pattern": "^[A-Za-z0-9_-]+$",
+                                                            "description": "Opaque cursor bound to this run and Current version. A changed version conflicts; it does not reconstruct an Original response."
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             },
                             "text/csv; charset=UTF-8": {
@@ -131742,9 +132128,64 @@
                     },
                     "422": {
                         "$ref": "#/components/responses/UnprocessableEntity"
+                    },
+                    "409": {
+                        "description": "Versi\u00f3n, preview, cursor o identidad original cambiados; no reenviar una aplicaci\u00f3n incierta.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 },
                 "x-required-scope": "crm_imports:read",
+                "x-required-oauth-scope": "crm_imports.read",
+                "x-crm-operation": "crm_imports.show",
+                "x-crm-requires-confirmation": false,
+                "x-crm-requires-claim": false,
+                "x-crm-current-c7": true,
+                "x-crm-query-schema": {
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "cursor": {
+                                    "type": "string",
+                                    "maxLength": 512,
+                                    "minLength": 1,
+                                    "pattern": "^[A-Za-z0-9_-]+$"
+                                },
+                                "limit": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 100
+                                }
+                            },
+                            "required": []
+                        },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "report_format",
+                                "expected_version"
+                            ],
+                            "properties": {
+                                "report_format": {
+                                    "type": "string",
+                                    "const": "csv"
+                                },
+                                "expected_version": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                }
+                            }
+                        }
+                    ]
+                },
                 "x-speakeasy-group": "crmSpreadsheetImports",
                 "x-speakeasy-retries": {
                     "strategy": "backoff",
@@ -150280,7 +150721,7 @@
         "/crm/documents/{document}": {
             "get": {
                 "operationId": "crmGetCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: get",
                 "tags": [
                     "CRM Private Documents"
@@ -205005,7 +205446,7 @@
         "/crm/documents/{document}/links": {
             "post": {
                 "operationId": "crmLinkCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: link",
                 "tags": [
                     "CRM Private Documents"
@@ -215317,7 +215758,7 @@
         "/crm/documents": {
             "get": {
                 "operationId": "crmListCommercialDocuments",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: list",
                 "tags": [
                     "CRM Private Documents"
@@ -215477,7 +215918,7 @@
             },
             "post": {
                 "operationId": "crmUploadCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: upload",
                 "tags": [
                     "CRM Private Documents"
@@ -276018,7 +276459,7 @@
         "/crm/documents/{document}/title": {
             "post": {
                 "operationId": "crmRenameCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: rename",
                 "tags": [
                     "CRM Private Documents"
@@ -278204,7 +278645,7 @@
         "/crm/documents/{document}/versions": {
             "post": {
                 "operationId": "crmReplaceCommercialDocumentVersion",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: replace_version",
                 "tags": [
                     "CRM Private Documents"
@@ -284276,6 +284717,130 @@
                 "x-required-scope": "contacts:write"
             }
         },
+        "/crm/documents/{document}/restore": {
+            "post": {
+                "operationId": "crmRestoreCommercialDocument",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "summary": "Biblioteca privada: restore",
+                "tags": [
+                    "CRM Private Documents"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/FactuareaVersion"
+                    },
+                    {
+                        "$ref": "#/components/parameters/XActiveProfile"
+                    },
+                    {
+                        "name": "document",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                        }
+                    },
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "description": "Intenci\u00f3n original: mismos argumentos recuperan el receipt original con permisos actuales; otro contenido devuelve409.",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 255,
+                            "pattern": "^[ -~]+$"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "expected_version": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 9223372036854775806
+                                    },
+                                    "confirmed": {
+                                        "type": "boolean",
+                                        "const": true,
+                                        "description": "Confirmaci\u00f3n humana expl\u00edcita de esta restauraci\u00f3n y revisi\u00f3n; no concede acceso."
+                                    }
+                                },
+                                "required": [
+                                    "expected_version",
+                                    "confirmed"
+                                ],
+                                "additionalProperties": false
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/Forbidden"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/UnprocessableEntity"
+                    },
+                    "409": {
+                        "$ref": "#/components/responses/Conflict"
+                    },
+                    "200": {
+                        "description": "Resultado original autorizado; identidad p\u00fablica id, sin receipt interno ni referencias f\u00edsicas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CrmPrivateDocumentReceipt"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-crm-operation": "crm_documents.restore",
+                "x-required-scope": "crm_documents:write",
+                "x-required-oauth-scope": "crm_documents.write",
+                "x-crm-requires-confirmation": true,
+                "x-speakeasy-group": "crmDocuments",
+                "x-speakeasy-retries": {
+                    "strategy": "backoff",
+                    "backoff": {
+                        "initialInterval": 500,
+                        "maxInterval": 60000,
+                        "maxElapsedTime": 3600000,
+                        "exponent": 1.5
+                    },
+                    "statusCodes": [],
+                    "retryConnectionErrors": false
+                }
+            }
+        },
         "/purchase_scans/{purchase_scan}/restore": {
             "post": {
                 "operationId": "public-api.v1.purchase_scans.restore",
@@ -290331,7 +290896,7 @@
         "/crm/documents/{document}/shares/revoke": {
             "post": {
                 "operationId": "crmRevokeCommercialDocumentShare",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: revoke_share",
                 "tags": [
                     "CRM Private Documents"
@@ -307472,7 +308037,7 @@
         "/crm/documents/{document}/shares": {
             "post": {
                 "operationId": "crmShareCommercialDocument",
-                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular y archivar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
+                "description": "Tenant, actor, realm, credencial y C7 son nativos y se reautorizan antes y despu\u00e9s. Las m\u00e1scaras omiten campos. La revisi\u00f3n CAS es distinta del n\u00famero de contenido; ninguna versi\u00f3n hist\u00f3rica se fabrica. Escrituras con clave recuperan identidad y recibo originales durables. Un productor ambiguo devuelve unavailable. Los blobs conservan una cuota f\u00edsica \u00fanica en Vault; no se copian PDFs fiscales. Renombrar, sustituir, vincular, archivar y restaurar requieren crm:read y crm_documents:read adem\u00e1s de escritura para releer la postcondici\u00f3n por Query. La pareja opcional linked_entity_type/linked_entity_id de descarga exige acceso actual a la ficha y a la versi\u00f3n fijada por el v\u00ednculo; nunca concede audiencia. Sin document_version, una pareja con varios contenidos exige seleccionar uno expl\u00edcitamente. Descarga binaria autenticada, sin URL ni handle p\u00fablico.",
                 "summary": "Biblioteca privada: share",
                 "tags": [
                     "CRM Private Documents"
@@ -357000,6 +357565,7 @@
                                         "booking.list_services",
                                         "booking.public_configuration",
                                         "booking.public_receipt",
+                                        "booking.recover_projection",
                                         "booking.reschedule_public",
                                         "booking.save_service",
                                         "booking.sequence_stop_decision",
@@ -412125,6 +412691,204 @@
                             }
                         ]
                     },
+                    "participants": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                                },
+                                "role": {
+                                    "type": "string",
+                                    "enum": [
+                                        "requester",
+                                        "cc"
+                                    ]
+                                },
+                                "person_id": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "verified_at": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "format": "date-time"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "role"
+                            ]
+                        }
+                    },
+                    "tasks": {
+                        "type": "array",
+                        "maxItems": 25,
+                        "description": "Hasta 25 Task actuales autorizadas; tasks_total usa el universo completo, no los v\u00ednculos privados.",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "binding_id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                                },
+                                "binding_version": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "task_id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                                },
+                                "task_version": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "task_key": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "task_title": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 500
+                                },
+                                "task_status": {
+                                    "type": "string",
+                                    "enum": [
+                                        "planned",
+                                        "active",
+                                        "archived"
+                                    ]
+                                },
+                                "task_completed": {
+                                    "type": "boolean"
+                                },
+                                "task_start_on": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "format": "date"
+                                },
+                                "task_due_on": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "format": "date"
+                                }
+                            },
+                            "required": [
+                                "binding_id",
+                                "binding_version",
+                                "task_id",
+                                "task_version"
+                            ]
+                        }
+                    },
+                    "tasks_total": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "next_action": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "kind": {
+                                        "type": "string",
+                                        "const": "task"
+                                    },
+                                    "binding_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                                    },
+                                    "binding_version": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "task_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                                    },
+                                    "task_version": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "task_key": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "task_title": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 500
+                                    },
+                                    "task_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "planned",
+                                            "active",
+                                            "archived"
+                                        ]
+                                    },
+                                    "task_completed": {
+                                        "type": "boolean"
+                                    },
+                                    "task_start_on": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date"
+                                    },
+                                    "task_due_on": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date"
+                                    }
+                                },
+                                "required": [
+                                    "kind",
+                                    "binding_id",
+                                    "binding_version",
+                                    "task_id",
+                                    "task_version",
+                                    "task_status",
+                                    "task_completed",
+                                    "task_start_on",
+                                    "task_due_on"
+                                ]
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Siguiente Task abierta del universo completo autorizado; omitida si falta la lectura de selecci\u00f3n. No muta Task ni acredita env\u00edo."
+                    },
                     "writable_fields": {
                         "type": "array",
                         "readOnly": true,
@@ -448674,7 +449438,7 @@
         "published": false,
         "ratified": false,
         "delivery_enabled": false,
-        "catalog_sha256": "78aee740427c76d2e009d8ff010f1784c1d1df02b86cbda4ad60c7a761972fbb",
+        "catalog_sha256": "814cc0ad9a994af2acfdb25e1633557469cfacc869d49792a478d3a869b8699e",
         "carriers": [
             {
                 "route_name": "public-api.v1.crm-activities.comment",
@@ -449451,6 +450215,24 @@
                     "App\\CrmDocument\\Infrastructure\\Http\\Middleware\\RenderCommercialDocumentErrors",
                     "App\\PublicApi\\Infrastructure\\OAuthCrmBatch77\\NativePublicApiScope:crm_documents:write",
                     "App\\Shared\\Infrastructure\\Crm\\EnforceCrmOperation:crm_documents.replace_version,document"
+                ]
+            },
+            {
+                "route_name": "public-api.v1.crm-documents.restore",
+                "operation_id": "crmRestoreCommercialDocument",
+                "operation_key": "crm_documents.restore",
+                "uri": "v1/crm/documents/{document}/restore",
+                "methods": [
+                    "POST"
+                ],
+                "current_middleware": [
+                    "App\\PublicApi\\Infrastructure\\Http\\Middleware\\EnforceContentLength",
+                    "App\\PublicApi\\Infrastructure\\Http\\Middleware\\EnforceJsonContentType",
+                    "App\\PublicApi\\Infrastructure\\OAuthCrmBatch77\\NativePublicApiCredentialPipeline",
+                    "App\\Shared\\Infrastructure\\Http\\Middleware\\CaptureRequestActor",
+                    "App\\CrmDocument\\Infrastructure\\Http\\Middleware\\RenderCommercialDocumentErrors",
+                    "App\\PublicApi\\Infrastructure\\OAuthCrmBatch77\\NativePublicApiScope:crm_documents:write",
+                    "App\\Shared\\Infrastructure\\Crm\\EnforceCrmOperation:crm_documents.restore,document"
                 ]
             },
             {

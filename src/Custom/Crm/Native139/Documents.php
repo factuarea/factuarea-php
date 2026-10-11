@@ -82,4 +82,20 @@ final readonly class Documents
             return $this->crmListCommercialDocuments($page);
         }, ['data', 'items'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Native139\\Model\\CrmPrivateDocument'], 'numbered', $maxPages);
     }
+
+    /** @return CrmResponse<Model\CrmRestoreCommercialDocumentResult> */
+    public function crmRestoreCommercialDocument(Model\CrmRestoreCommercialDocumentParameters $request): CrmResponse
+    {
+        $request->validate();
+        $query = [];
+        $headers = [];
+        if ($request->factuareaVersion !== Omitted::Value) {
+            $headers['Factuarea-Version'] = $request->factuareaVersion;
+        }
+        if ($request->xActiveProfile !== Omitted::Value) {
+            $headers['X-Active-Profile'] = $request->xActiveProfile;
+        }
+
+        return $this->transport->request('POST', str_replace('{document}', rawurlencode($request->document), 'crm/documents/{document}/restore'), 'crmRestoreCommercialDocument', Model\CrmRestoreCommercialDocumentResult::class, $query, $request->body, $request->idempotencyKey, true, $headers, hash('sha256', $request->body->toJson()), [200]);
+    }
 }

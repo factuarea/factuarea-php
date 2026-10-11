@@ -18,6 +18,7 @@ final readonly class SourceClient
     public Opportunities $opportunities;
     public Activities $activities;
     public Documents $documents;
+    public Documents\RestoreClient $documentRestores;
     public TaskAgenda $agenda;
     public SpreadsheetImports\ApplyOriginalClient $imports;
     public NativeEntityExportClient $entityExports;
@@ -53,6 +54,7 @@ final readonly class SourceClient
         $this->opportunities = new Opportunities($transport);
         $this->activities = new Activities($transport);
         $this->documents = new Documents($transport);
+        $this->documentRestores = new Documents\RestoreClient($this->documents);
         $this->agenda = new TaskAgenda($transport);
         $this->imports = new SpreadsheetImports\ApplyOriginalClient($transport, new SpreadsheetImports($transport));
         $this->entityExports = new NativeEntityExportClient($transport);
