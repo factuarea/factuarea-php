@@ -36,12 +36,21 @@ final readonly class SourceClient
             || ($provenance['capabilities'] ?? null) !== []) {
             throw new \LogicException('This entry point requires the explicit unreleased Native149 Source profile.');
         }
-        foreach (['source' => 'artifact_sha256', 'schemas' => 'schema_cache_sha256', 'consumer-manifest' => 'consumer_manifest_sha256'] as $file => $field) {
+        foreach (['schemas' => 'schema_cache_sha256', 'consumer-manifest' => 'consumer_manifest_sha256'] as $file => $field) {
             $expected = $provenance[$field] ?? null;
             $actual = hash_file('sha256', $directory.'crm-native134-'.$file.'.json');
             if (! is_string($expected) || $actual === false || ! hash_equals($expected, $actual)) {
                 throw new \LogicException('The private Native149 input must retain its exact exported bytes and native selection.');
             }
+        }
+        // Full native export is a private generator input; installed consumers use the pinned schema cache.
+        $nativeInput = $directory.'crm-native134-source.json';
+        $sourceHash = $provenance['artifact_sha256'] ?? null;
+        $cache = json_decode((string) file_get_contents($directory.'crm-native134-schemas.json'), true, 512, JSON_THROW_ON_ERROR);
+        if (! is_string($sourceHash) || ! preg_match('/^[a-f0-9]{64}$/D', $sourceHash)
+            || ($cache['x-native-source-sha256'] ?? null) !== $sourceHash
+            || (is_file($nativeInput) && ! hash_equals($sourceHash, (string) hash_file('sha256', $nativeInput)))) {
+            throw new \LogicException('The native generation provenance must match the installed schema cache.');
         }
         $transport = new Transport($sdk->sdkConfiguration, currentSecurity: true);
         $this->stageOperations = new StageAdministration($transport);

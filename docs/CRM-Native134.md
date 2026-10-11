@@ -26,3 +26,5 @@ python3 tools/generate-crm.py --private-source134 NATIVE149_INPUT_MANIFEST \
 ```
 
 The generator verifies literal artifact and Root selection bytes, writes only new `src/NativeCrm134` leaves directly, and puts existing SDK-path inputs/metadata under the private packet's `old/post/spec`. Handwritten intent adapters remain outside regeneration. Root performs the serial private mount. No installation, external API call, publication, activation or test result is certified by these consumers.
+
+El export completo `spec/crm-native134-source.json` es un input privado de regeneración, conservado fuera de Git. El consumidor instalado requiere los DTO y caches/manifiesto versionados; valida el hash de origen en la cache y, si existe el input completo local, también valida sus bytes. No necesita el export completo para ejecutar las siete operaciones.
