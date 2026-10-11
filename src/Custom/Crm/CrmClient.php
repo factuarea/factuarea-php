@@ -19,6 +19,8 @@ final readonly class CrmClient
 
     public PublicHelpCenter $publicHelpCenter;
 
+    public EntityExports\ExportClient $entityExports;
+
     public function __construct(Factuarea $sdk)
     {
         $transport = new Transport($sdk->sdkConfiguration);
@@ -27,5 +29,6 @@ final readonly class CrmClient
         $this->pipelines = new Pipelines($transport);
         $this->knowledgeBase = new KnowledgeBase($transport);
         $this->publicHelpCenter = new PublicHelpCenter($transport);
+        $this->entityExports = new EntityExports\ExportClient($transport);
     }
 }

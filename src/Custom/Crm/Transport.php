@@ -15,6 +15,7 @@ use Factuarea\Sdk\Utils\Retry\RetryUtils;
 use Factuarea\Sdk\Utils\Utils;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 use Speakeasy\Serializer\DeserializationContext;
 
 /** Uses the SDK's configured HTTP client, security, hooks and native error hierarchy. */
@@ -32,7 +33,7 @@ final readonly class Transport
      * @return CrmResponse<T>
      */
     public function request(string $method, string $path, string $operationId, string $responseType,
-        array $query = [], ?WireModel $body = null, ?string $idempotencyKey = null, bool $hasEffect = true, array $headers = []): CrmResponse
+        array $query = [], ?WireModel $body = null, ?string $idempotencyKey = null, bool $hasEffect = true, array $headers = [], ?string $originalBodySha256 = null): CrmResponse
     {
         $mutating = $method !== 'GET';
         if ($mutating && ($idempotencyKey === null || preg_match('/^[\x20-\x7e]{1,255}$/D', $idempotencyKey) !== 1)) {
@@ -52,11 +53,20 @@ final readonly class Transport
         $context = new Hooks\HookContext($this->configuration, $baseUrl, $operationId, null, $this->configuration->securitySource);
         $request = new Request($method, $baseUrl.'/'.$path, $headers, $payload);
         $request = $this->configuration->hooks->beforeRequest(new Hooks\BeforeRequestContext($context), $request);
+        if ($originalBodySha256 !== null && ($request->getMethod() !== $method
+            || (string) $request->getUri() !== $baseUrl.'/'.$path
+            || $request->getHeaderLine('Idempotency-Key') !== $idempotencyKey
+            || ! hash_equals($originalBodySha256, hash('sha256', (string) $request->getBody())))) {
+            throw new \LogicException('The original export method, URI, key and wire bytes cannot be replaced by a hook.');
+        }
         $options = Utils::convertHeadersToOptions($request, ['http_errors' => false, 'query' => $query]);
+        if ($originalBodySha256 !== null) {
+            $options['allow_redirects'] = false;
+        }
         $request = Utils::removeHeaders($request);
         $client = $this->configuration->client ?? throw new \LogicException('Build the canonical Factuarea client before using CRM.');
         try {
-            $send = static fn () => $client->send($request, $options);
+            $send = fn () => ($originalBodySha256 !== null ? $this->currentClient() : $client)->send($request, $options);
             $retry = $this->configuration->retryConfig ?? new RetryConfigBackoff(500, 60000, 1.5, 3600000, true);
             $response = ($mutating || $retry->strategy === RetryStrategy::NONE) ? $send()
                 : RetryUtils::retryWrapper($send, $retry, ['429', '5xx']);
@@ -96,5 +106,57 @@ final readonly class Transport
         }
 
         return new CrmResponse($responseType::fromArray((array) $values), $response, $idempotencyKey);
+    }
+
+    /** Read the native binary using the configured SDK client/security/hooks/error hierarchy. */
+    public function requestStream(string $path, string $operationId, string $idempotencyKey): ResponseInterface
+    {
+        $baseUrl = rtrim($this->configuration->getTemplatedServerUrl(), '/');
+        $context = new Hooks\HookContext($this->configuration, $baseUrl, $operationId, null, $this->configuration->securitySource);
+        $request = $this->configuration->hooks->beforeRequest(new Hooks\BeforeRequestContext($context),
+            new Request('GET', $baseUrl.'/'.$path, ['Accept' => 'text/csv', 'user-agent' => $this->configuration->userAgent, 'Idempotency-Key' => $idempotencyKey]));
+        if ($request->getMethod() !== 'GET' || (string) $request->getUri() !== $baseUrl.'/'.$path
+            || $request->getHeaderLine('Idempotency-Key') !== $idempotencyKey || (string) $request->getBody() !== '') {
+            throw new \LogicException('A native export download is the same Query-only GET.');
+        }
+        $options = Utils::convertHeadersToOptions($request, ['http_errors' => false, 'allow_redirects' => false, 'stream' => true]);
+        $request = Utils::removeHeaders($request);
+        $client = $this->currentClient();
+        try {
+            $response = $client->send($request, $options);
+        } catch (GuzzleException $exception) {
+            $response = $this->configuration->hooks->afterError(new Hooks\AfterErrorContext($context), null, $exception);
+        }
+        if ($response->getStatusCode() >= 400) {
+            $response = $this->configuration->hooks->afterError(new Hooks\AfterErrorContext($context), $response, null);
+        }
+        if ($response->getStatusCode() >= 400 && Utils::matchContentType($response->getHeaderLine('Content-Type'), 'application/json')) {
+            $error = JSON::createSerializer()->deserialize((string) $response->getBody(), Error::class, 'json',
+                DeserializationContext::create()->setRequireAllRequiredProperties(true));
+            if ($error instanceof Error) {
+                $error->rawResponse = $response;
+                throw $error->toException();
+            }
+        }
+        if ($response->getStatusCode() !== 200 || ! Utils::matchContentType($response->getHeaderLine('Content-Type'), 'text/csv')) {
+            throw new APIException('The native export download requires a ready CSV stream.', $response->getStatusCode(), '', $response);
+        }
+
+        $response = $this->configuration->hooks->afterSuccess(new Hooks\AfterSuccessContext($context), $response);
+        if ($response->getStatusCode() !== 200 || ! Utils::matchContentType($response->getHeaderLine('Content-Type'), 'text/csv')) {
+            throw new APIException('The native download hook must preserve its ready CSV response.', $response->getStatusCode(), '', $response);
+        }
+
+        return $response;
+    }
+
+    /** Resolve the configured native security source immediately before factual export I/O. */
+    private function currentClient(): \GuzzleHttp\ClientInterface
+    {
+        $client = $this->configuration->defaultClient ?? $this->configuration->client
+            ?? throw new \LogicException('Build the canonical Factuarea client before using CRM.');
+
+        return $this->configuration->hasSecurity()
+            ? Utils::configureSecurityClient($client, $this->configuration->getSecurity()) : $client;
     }
 }
