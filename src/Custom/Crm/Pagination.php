@@ -16,14 +16,15 @@ final class Pagination
      * @param  array<string, mixed>  $itemType
      * @return \Generator<int, WireModel>
      */
-    public static function items(callable $fetch, array $itemsPath, array $itemType, string $mode, int $maxPages): \Generator
+    public static function items(callable $fetch, array $itemsPath, array $itemType, string $mode, int $maxPages,
+        ?string $initialPosition = null): \Generator
     {
         if ($maxPages < 1) {
             throw new \InvalidArgumentException('maxPages must be positive.');
         }
         $pages = 0;
         $seen = 0;
-        $seenCursors = [];
+        $seenCursors = $initialPosition === null ? [] : [$initialPosition => true];
         $nativeItems = [];
         $iterator = new PageIterator(static function (?string $cursor) use ($fetch, $itemsPath, $mode, $maxPages, &$pages, &$seen, &$seenCursors, &$nativeItems): Response {
             if (++$pages > $maxPages) {

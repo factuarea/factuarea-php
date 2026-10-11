@@ -35,7 +35,8 @@ final readonly class Transport
         array $query = [], ?WireModel $body = null, ?string $idempotencyKey = null, bool $hasEffect = true, array $headers = []): CrmResponse
     {
         $mutating = $method !== 'GET';
-        if ($mutating && ($idempotencyKey === null || preg_match('/^[\x20-\x7e]{1,255}$/D', $idempotencyKey) !== 1)) {
+        if (($mutating && $hasEffect && $idempotencyKey === null)
+            || ($idempotencyKey !== null && preg_match('/^[\x20-\x7e]{1,255}$/D', $idempotencyKey) !== 1)) {
             throw new \InvalidArgumentException('Supply the original printable ASCII Idempotency-Key (1–255 characters).');
         }
         $baseUrl = rtrim($this->configuration->getTemplatedServerUrl(), '/');
@@ -52,8 +53,18 @@ final readonly class Transport
         $context = new Hooks\HookContext($this->configuration, $baseUrl, $operationId, null, $this->configuration->securitySource);
         $request = new Request($method, $baseUrl.'/'.$path, $headers, $payload);
         $request = $this->configuration->hooks->beforeRequest(new Hooks\BeforeRequestContext($context), $request);
-        $options = Utils::convertHeadersToOptions($request, ['http_errors' => false, 'query' => $query]);
-        $request = Utils::removeHeaders($request);
+        $queryOnlyPost = $mutating && ! $hasEffect && $idempotencyKey === null;
+        if ($queryOnlyPost) {
+            $request = $request->withoutHeader('Idempotency-Key');
+        }
+        $options = Utils::convertHeadersToOptions($request, ['http_errors' => false, 'query' => $query, 'allow_redirects' => false]);
+        if ($queryOnlyPost) {
+            // Preserve current authentication on the PSR request while suppressing configured default keys.
+            $options['headers'] = null;
+            $options['factuarea_no_auto_idempotency'] = true;
+        } else {
+            $request = Utils::removeHeaders($request);
+        }
         $client = $this->configuration->client ?? throw new \LogicException('Build the canonical Factuarea client before using CRM.');
         try {
             $send = static fn () => $client->send($request, $options);
@@ -64,7 +75,7 @@ final readonly class Transport
             try {
                 $response = $this->configuration->hooks->afterError(new Hooks\AfterErrorContext($context), null, $exception);
             } catch (\Throwable $failure) {
-                if ($mutating && $hasEffect) {
+                if ($mutating && $hasEffect && $idempotencyKey !== null) {
                     throw new UnconfirmedMutationException($operationId, $idempotencyKey, $failure);
                 }
                 throw $failure;

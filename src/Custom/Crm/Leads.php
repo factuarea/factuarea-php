@@ -131,9 +131,9 @@ final readonly class Leads
             if ($cursor !== null) {
                 $page->cursor = $cursor;
             }
-
             return $this->crmListLeads($page);
-        }, ['data', 'data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\Lead'], 'cursor', $maxPages);
+        }, ['data', 'data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\Lead'], 'cursor', $maxPages,
+            $request->cursor === Omitted::Value ? null : (string) $request->cursor);
     }
 
     /** @return CrmResponse<Model\CrmDeleteLeadResult> */
@@ -246,9 +246,9 @@ final readonly class Leads
             if ($cursor !== null) {
                 $page->cursor = $cursor;
             }
-
             return $this->crmFindLeadDuplicates($page);
-        }, ['data', 'data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadDuplicate'], 'cursor', $maxPages);
+        }, ['data', 'data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadDuplicate'], 'cursor', $maxPages,
+            $request->cursor === Omitted::Value ? null : (string) $request->cursor);
     }
 
     /** @return CrmResponse<Model\CrmFindLeadScoreRecalculationRunResult> */
@@ -281,9 +281,9 @@ final readonly class Leads
             if ($cursor !== null) {
                 $page->cursor = $cursor;
             }
-
             return $this->crmFindLeadScoreRecalculationRun($page);
-        }, ['data', 'results'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmFindLeadScoreRecalculationRunListItem'], 'cursor', $maxPages);
+        }, ['data', 'results'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmFindLeadScoreRecalculationRunListItem'], 'cursor', $maxPages,
+            $request->cursor === Omitted::Value ? null : (string) $request->cursor);
     }
 
     /** @return CrmResponse<Model\CrmGetLeadHistoryResult> */
@@ -316,9 +316,9 @@ final readonly class Leads
             if ($cursor !== null) {
                 $page->cursor = $cursor;
             }
-
             return $this->crmGetLeadHistory($page);
-        }, ['data', 'data'], ['union' => [['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadHistoryItemVariant1'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadHistoryItemVariant2'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadHistoryItemVariant3']]], 'cursor', $maxPages);
+        }, ['data', 'data'], ['union' => [['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadHistoryItemVariant1'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadHistoryItemVariant2'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\LeadHistoryItemVariant3']]], 'cursor', $maxPages,
+            $request->cursor === Omitted::Value ? null : (string) $request->cursor);
     }
 
     /** @return CrmResponse<Model\CrmGetLeadStatsResult> */
@@ -491,8 +491,8 @@ final readonly class Leads
             if ($cursor !== null) {
                 $page->cursor = $cursor;
             }
-
             return $this->crmSearchLeads($page);
-        }, ['data', 'data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\Lead'], 'cursor', $maxPages);
+        }, ['data', 'data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\Lead'], 'cursor', $maxPages,
+            $request->cursor === Omitted::Value ? null : (string) $request->cursor);
     }
 }

@@ -107,9 +107,9 @@ final readonly class ContactPeople
             if ($cursor !== null) {
                 $page->page = (int) $cursor;
             }
-
             return $this->crmContactPeopleIndex($page);
-        }, ['data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmContactPersonListItem'], 'page', $maxPages);
+        }, ['data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmContactPersonListItem'], 'page', $maxPages,
+            $request->page === Omitted::Value ? null : (string) $request->page);
     }
 
     /** @return CrmResponse<Model\CrmContactPeopleDuplicatesResult> */
@@ -139,9 +139,9 @@ final readonly class ContactPeople
             if ($cursor !== null) {
                 $page->page = (int) $cursor;
             }
-
             return $this->crmContactPeopleDuplicates($page);
-        }, ['data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmContactPersonDuplicate'], 'page', $maxPages);
+        }, ['data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmContactPersonDuplicate'], 'page', $maxPages,
+            $request->page === Omitted::Value ? null : (string) $request->page);
     }
 
     /** @return CrmResponse<Model\CrmContactPeopleShowResult> */
@@ -216,9 +216,9 @@ final readonly class ContactPeople
             if ($cursor !== null) {
                 $page->page = (int) $cursor;
             }
-
             return $this->crmContactPeopleOptions($page);
-        }, ['data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmContactRelationshipOption'], 'page', $maxPages);
+        }, ['data'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\CrmContactRelationshipOption'], 'page', $maxPages,
+            $request->page === Omitted::Value ? null : (string) $request->page);
     }
 
     /** @return CrmResponse<Model\CrmContactPeopleMergeResult> */
@@ -250,7 +250,7 @@ final readonly class ContactPeople
             $headers['X-Active-Profile'] = $request->xActiveProfile;
         }
 
-        return $this->transport->request('POST', 'crm/contact-people/normalization-preview', 'crmContactPeopleNormalize', Model\CrmContactPeopleNormalizeResult::class, $query, $request->body, $request->idempotencyKey, false, $headers);
+        return $this->transport->request('POST', 'crm/contact-people/normalization-preview', 'crmContactPeopleNormalize', Model\CrmContactPeopleNormalizeResult::class, $query, $request->body, null, false, $headers);
     }
 
     /** @return CrmResponse<Model\CrmContactPeopleMergePreviewResult> */
@@ -266,7 +266,7 @@ final readonly class ContactPeople
             $headers['X-Active-Profile'] = $request->xActiveProfile;
         }
 
-        return $this->transport->request('POST', 'crm/contact-people/merge-preview', 'crmContactPeopleMergePreview', Model\CrmContactPeopleMergePreviewResult::class, $query, $request->body, $request->idempotencyKey, false, $headers);
+        return $this->transport->request('POST', 'crm/contact-people/merge-preview', 'crmContactPeopleMergePreview', Model\CrmContactPeopleMergePreviewResult::class, $query, $request->body, null, false, $headers);
     }
 
     /** @return CrmResponse<Model\CrmContactPeopleRelationshipsResult> */

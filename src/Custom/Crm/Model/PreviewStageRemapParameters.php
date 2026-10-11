@@ -12,21 +12,19 @@ use Factuarea\Sdk\Custom\Crm\WireModel;
 
 final class PreviewStageRemapParameters extends WireModel
 {
-    public const FIELDS = ['pipeline' => ['property' => 'pipeline', 'type' => ['scalar' => 'string']], 'body' => ['property' => 'body', 'type' => ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\PipelinePreviewStageRemapRequest']], 'idempotency_key' => ['property' => 'idempotencyKey', 'type' => ['scalar' => 'string']], 'Factuarea-Version' => ['property' => 'factuareaVersion', 'type' => ['scalar' => 'string']], 'X-Active-Profile' => ['property' => 'xActiveProfile', 'type' => ['scalar' => 'string']]];
+    public const FIELDS = ['pipeline' => ['property' => 'pipeline', 'type' => ['scalar' => 'string']], 'body' => ['property' => 'body', 'type' => ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\PipelinePreviewStageRemapRequest']], 'Factuarea-Version' => ['property' => 'factuareaVersion', 'type' => ['scalar' => 'string']], 'X-Active-Profile' => ['property' => 'xActiveProfile', 'type' => ['scalar' => 'string']]];
 
-    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['Factuarea-Version' => ['type' => 'string', 'format' => 'date', 'example' => '2026-06-01'], 'X-Active-Profile' => ['type' => 'string', 'format' => 'uuid', 'example' => '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'], 'pipeline' => ['type' => 'string', 'format' => 'uuid', 'pattern' => '^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'], 'body' => ['$ref' => '#/components/schemas/PipelinePreviewStageRemapRequest'], 'idempotency_key' => ['type' => 'string', 'minLength' => 1, 'maxLength' => 255, 'pattern' => '^[ -~]+$']], 'required' => ['pipeline', 'body', 'idempotency_key']];
+    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['Factuarea-Version' => ['type' => 'string', 'format' => 'date', 'example' => '2026-06-01'], 'X-Active-Profile' => ['type' => 'string', 'format' => 'uuid', 'example' => '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'], 'pipeline' => ['type' => 'string', 'format' => 'uuid', 'pattern' => '^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'], 'body' => ['$ref' => '#/components/schemas/PipelinePreviewStageRemapRequest']], 'required' => ['pipeline', 'body']];
 
     /**
      * @param  string  $pipeline
      * @param  \Factuarea\Sdk\Custom\Crm\Model\PipelinePreviewStageRemapRequest  $body
-     * @param  string  $idempotencyKey
      * @param  string|Omitted  $factuareaVersion
      * @param  string|Omitted  $xActiveProfile
      */
     public function __construct(
         public string $pipeline,
         public \Factuarea\Sdk\Custom\Crm\Model\PipelinePreviewStageRemapRequest $body,
-        public string $idempotencyKey,
         public string|Omitted $factuareaVersion = Omitted::Value,
         public string|Omitted $xActiveProfile = Omitted::Value,
     ) {

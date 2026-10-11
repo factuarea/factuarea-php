@@ -8,7 +8,8 @@
     "response": "CrmApplyLeadScoreRecalculationResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.apply_score_recalculation",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmContactPeopleArchive",
@@ -19,7 +20,8 @@
     "response": "CrmContactPeopleArchiveResult",
     "scope": "crm_contact_people:delete",
     "key": "crm_contact_people.archive",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "archivePipelineStage",
@@ -30,7 +32,8 @@
     "response": "ArchivePipelineStageResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.archive_stage",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "archivePipeline",
@@ -41,7 +44,8 @@
     "response": "ArchivePipelineResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.archive",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmAssignLead",
@@ -52,7 +56,8 @@
     "response": "CrmAssignLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.assign",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmChangeLeadStage",
@@ -63,7 +68,8 @@
     "response": "CrmChangeLeadStageResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.stage",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmConvertLead",
@@ -74,7 +80,8 @@
     "response": "CrmConvertLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.convert",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmContactPeopleCreate",
@@ -85,7 +92,8 @@
     "response": "CrmContactPeopleCreateResult",
     "scope": "crm_contact_people:write",
     "key": "crm_contact_people.create",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmContactPeopleIndex",
@@ -96,7 +104,8 @@
     "response": "CrmContactPeopleIndexResult",
     "scope": "crm_contact_people:read",
     "key": "crm_contact_people.index",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "createCrmStagePlaybook",
@@ -107,7 +116,8 @@
     "response": "CreateCrmStagePlaybookResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.create_playbook",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "findCrmStagePlaybook",
@@ -118,7 +128,8 @@
     "response": "FindCrmStagePlaybookResult",
     "scope": "crm_pipelines:read",
     "key": "crm_pipelines.find_playbook",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "saveCrmStagePlaybook",
@@ -129,7 +140,8 @@
     "response": "SaveCrmStagePlaybookResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.save_playbook",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmCreateLead",
@@ -140,7 +152,8 @@
     "response": "CrmCreateLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.create",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmListLeads",
@@ -151,7 +164,8 @@
     "response": "CrmListLeadsResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.index",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "createPipeline",
@@ -162,7 +176,8 @@
     "response": "CreatePipelineResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.create",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "listPipelines",
@@ -173,7 +188,8 @@
     "response": "ListPipelinesResult",
     "scope": "crm_pipelines:read",
     "key": "crm_pipelines.index",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmDeleteLead",
@@ -184,7 +200,8 @@
     "response": "CrmDeleteLeadResult",
     "scope": "crm_leads:delete",
     "key": "crm_leads.delete",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmFindLead",
@@ -195,7 +212,8 @@
     "response": "CrmFindLeadResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.show",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmUpdateLead",
@@ -206,7 +224,8 @@
     "response": "CrmUpdateLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.update",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmDisqualifyLead",
@@ -217,7 +236,8 @@
     "response": "CrmDisqualifyLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.disqualify",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmExportLeadData",
@@ -228,7 +248,8 @@
     "response": "CrmExportLeadDataResult",
     "scope": "crm_leads:export",
     "key": "crm_leads.export",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmContactPeopleDuplicates",
@@ -239,7 +260,8 @@
     "response": "CrmContactPeopleDuplicatesResult",
     "scope": "crm_contact_people:read",
     "key": "crm_contact_people.duplicates",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmContactPeopleShow",
@@ -250,7 +272,8 @@
     "response": "CrmContactPeopleShowResult",
     "scope": "crm_contact_people:read",
     "key": "crm_contact_people.show",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmContactPeopleUpdate",
@@ -261,7 +284,8 @@
     "response": "CrmContactPeopleUpdateResult",
     "scope": "crm_contact_people:write",
     "key": "crm_contact_people.update",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmFindLeadDuplicates",
@@ -272,7 +296,8 @@
     "response": "CrmFindLeadDuplicatesResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.duplicates",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmFindLeadScoreRecalculationRun",
@@ -283,7 +308,8 @@
     "response": "CrmFindLeadScoreRecalculationRunResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.find_score_recalculation_run",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmContactPeopleOptions",
@@ -294,7 +320,8 @@
     "response": "CrmContactPeopleOptionsResult",
     "scope": "crm_contact_people:read",
     "key": "crm_contact_people.options",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "public-api.v1.crm-public-help-center.get",
@@ -306,6 +333,7 @@
     "scope": "public_help_centers:write",
     "key": "public_help_centers.administration_get",
     "effect": false,
+    "idempotencyKey": false,
     "phpMethod": "publicApiV1CrmPublicHelpCenterGet"
   },
   {
@@ -317,7 +345,8 @@
     "response": "CrmGetKnowledgeArticleVersionsResult",
     "scope": "knowledge_articles:read",
     "key": "knowledge_articles.versions",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmGetLeadHistory",
@@ -328,7 +357,8 @@
     "response": "CrmGetLeadHistoryResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.history",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmGetLeadStats",
@@ -339,7 +369,8 @@
     "response": "CrmGetLeadStatsResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.stats",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "getPipeline",
@@ -350,7 +381,8 @@
     "response": "GetPipelineResult",
     "scope": "crm_pipelines:read",
     "key": "crm_pipelines.show",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "updatePipeline",
@@ -361,7 +393,8 @@
     "response": "UpdatePipelineResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.update",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "listKnowledgeCategories",
@@ -372,7 +405,8 @@
     "response": "ListKnowledgeCategoriesResult",
     "scope": "knowledge_articles:read",
     "key": "knowledge_articles.categories",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmContactPeopleMerge",
@@ -383,7 +417,8 @@
     "response": "CrmContactPeopleMergeResult",
     "scope": "crm_contact_people:write",
     "key": "crm_contact_people.merge",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmContactPeopleNormalize",
@@ -394,7 +429,8 @@
     "response": "CrmContactPeopleNormalizeResult",
     "scope": "crm_contact_people:read",
     "key": "crm_contact_people.normalize",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmContactPeopleMergePreview",
@@ -405,7 +441,8 @@
     "response": "CrmContactPeopleMergePreviewResult",
     "scope": "crm_contact_people:read",
     "key": "crm_contact_people.merge_preview",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmPreviewLeadConversion",
@@ -416,7 +453,8 @@
     "response": "CrmPreviewLeadConversionResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.conversion_preview",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmPreviewLeadErasure",
@@ -427,7 +465,8 @@
     "response": "CrmPreviewLeadErasureResult",
     "scope": "crm_leads:delete",
     "key": "crm_leads.erasure_preview",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmPreviewLeadScoreRecalculation",
@@ -438,7 +477,8 @@
     "response": "CrmPreviewLeadScoreRecalculationResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.preview_score_recalculation",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "previewStageRemap",
@@ -449,7 +489,8 @@
     "response": "PreviewStageRemapResult",
     "scope": "crm_pipelines:read",
     "key": "crm_pipelines.preview_remap",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "publishCrmStagePlaybook",
@@ -460,7 +501,8 @@
     "response": "PublishCrmStagePlaybookResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.publish_playbook",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmQualifyLead",
@@ -471,7 +513,8 @@
     "response": "CrmQualifyLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.qualify",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecalculateLeadScore",
@@ -482,7 +525,8 @@
     "response": "CrmRecalculateLeadScoreResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.score",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecordLeadConsent",
@@ -493,7 +537,8 @@
     "response": "CrmRecordLeadConsentResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.consent",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "public-api.v1.crm-public-help-center.receipt-publish",
@@ -505,6 +550,7 @@
     "scope": "public_help_centers:write",
     "key": "public_help_centers.publish_receipt",
     "effect": false,
+    "idempotencyKey": true,
     "phpMethod": "publicApiV1CrmPublicHelpCenterReceiptPublish"
   },
   {
@@ -517,6 +563,7 @@
     "scope": "public_help_centers:write",
     "key": "public_help_centers.unpublish_receipt",
     "effect": false,
+    "idempotencyKey": true,
     "phpMethod": "publicApiV1CrmPublicHelpCenterReceiptUnpublish"
   },
   {
@@ -528,7 +575,8 @@
     "response": "CrmRecoverKnowledgeArticleCreateReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_create",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticleSaveReceipt",
@@ -539,7 +587,8 @@
     "response": "CrmRecoverKnowledgeArticleSaveReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_save",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticleSubmitReceipt",
@@ -550,7 +599,8 @@
     "response": "CrmRecoverKnowledgeArticleSubmitReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_submit",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticleApproveReceipt",
@@ -561,7 +611,8 @@
     "response": "CrmRecoverKnowledgeArticleApproveReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_approve",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticlePublishReceipt",
@@ -572,7 +623,8 @@
     "response": "CrmRecoverKnowledgeArticlePublishReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_publish",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticleUnpublishReceipt",
@@ -583,7 +635,8 @@
     "response": "CrmRecoverKnowledgeArticleUnpublishReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_unpublish",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticleArchiveReceipt",
@@ -594,7 +647,8 @@
     "response": "CrmRecoverKnowledgeArticleArchiveReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_archive",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmRecoverKnowledgeArticleLinkReceipt",
@@ -605,7 +659,8 @@
     "response": "CrmRecoverKnowledgeArticleLinkReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.receipt_link",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "recoverKnowledgeCategoryReceipt",
@@ -616,7 +671,8 @@
     "response": "RecoverKnowledgeCategoryReceiptResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.category_receipt",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmReopenLead",
@@ -627,7 +683,8 @@
     "response": "CrmReopenLeadResult",
     "scope": "crm_leads:write",
     "key": "crm_leads.reopen",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "reorderPipelineStages",
@@ -638,7 +695,8 @@
     "response": "ReorderPipelineStagesResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.reorder_stages",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmContactPeopleRelationships",
@@ -649,7 +707,8 @@
     "response": "CrmContactPeopleRelationshipsResult",
     "scope": "crm_contact_people:write",
     "key": "crm_contact_people.relationships",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "saveKnowledgeCategory",
@@ -660,7 +719,8 @@
     "response": "SaveKnowledgeCategoryResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.category_save",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "saveLossReason",
@@ -671,7 +731,8 @@
     "response": "SaveLossReasonResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.save_loss_reason",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "savePipelineStage",
@@ -682,7 +743,8 @@
     "response": "SavePipelineStageResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.save_stage",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "saveStageHealthConfiguration",
@@ -693,7 +755,8 @@
     "response": "SaveStageHealthConfigurationResult",
     "scope": "crm_pipelines:write",
     "key": "crm_pipelines.save_health_configuration",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmSearchKnowledgeArticles",
@@ -704,7 +767,8 @@
     "response": "CrmSearchKnowledgeArticlesResult",
     "scope": "knowledge_articles:read",
     "key": "knowledge_articles.search",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmCreateKnowledgeArticle",
@@ -715,7 +779,8 @@
     "response": "CrmCreateKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.create",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmSearchLeads",
@@ -726,7 +791,8 @@
     "response": "CrmSearchLeadsResult",
     "scope": "crm_leads:read",
     "key": "crm_leads.search",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmGetKnowledgeArticle",
@@ -737,7 +803,8 @@
     "response": "CrmGetKnowledgeArticleResult",
     "scope": "knowledge_articles:read",
     "key": "knowledge_articles.show",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "crmSaveKnowledgeArticle",
@@ -748,7 +815,8 @@
     "response": "CrmSaveKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.save",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "suggestServiceArticles",
@@ -759,7 +827,8 @@
     "response": "SuggestServiceArticlesResult",
     "scope": "knowledge_articles:read",
     "key": "knowledge_articles.suggest",
-    "effect": false
+    "effect": false,
+    "idempotencyKey": false
   },
   {
     "operationId": "public-api.v1.crm-public-help-center.publish",
@@ -771,6 +840,7 @@
     "scope": "public_help_centers:write",
     "key": "public_help_centers.publish",
     "effect": true,
+    "idempotencyKey": true,
     "phpMethod": "publicApiV1CrmPublicHelpCenterPublish"
   },
   {
@@ -783,6 +853,7 @@
     "scope": "public_help_centers:write",
     "key": "public_help_centers.unpublish",
     "effect": true,
+    "idempotencyKey": true,
     "phpMethod": "publicApiV1CrmPublicHelpCenterUnpublish"
   },
   {
@@ -794,7 +865,8 @@
     "response": "CrmSubmitKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.submit",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmApproveKnowledgeArticle",
@@ -805,7 +877,8 @@
     "response": "CrmApproveKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.approve",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmPublishKnowledgeArticle",
@@ -816,7 +889,8 @@
     "response": "CrmPublishKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.publish",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmUnpublishKnowledgeArticle",
@@ -827,7 +901,8 @@
     "response": "CrmUnpublishKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.unpublish",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmArchiveKnowledgeArticle",
@@ -838,7 +913,8 @@
     "response": "CrmArchiveKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.archive",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   },
   {
     "operationId": "crmLinkKnowledgeArticle",
@@ -849,6 +925,7 @@
     "response": "CrmLinkKnowledgeArticleResult",
     "scope": "knowledge_articles:write",
     "key": "knowledge_articles.link",
-    "effect": true
+    "effect": true,
+    "idempotencyKey": true
   }
 ]

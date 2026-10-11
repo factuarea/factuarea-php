@@ -74,6 +74,9 @@ final class IdempotencyClient implements ClientInterface
      */
     private function withIdempotencyKey(RequestInterface $request, array $options): array
     {
+        if (($options['factuarea_no_auto_idempotency'] ?? false) === true) {
+            return $options;
+        }
         if (! in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'], true)
             || $request->hasHeader('Idempotency-Key')
             || self::hasHeader($options['headers'] ?? [], 'Idempotency-Key')

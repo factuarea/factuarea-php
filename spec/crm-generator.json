@@ -1,0 +1,35 @@
+{
+  "generator": "tools/generate-crm.py",
+  "namespace": "Factuarea\\Sdk\\Custom\\Crm",
+  "model_namespace": "Factuarea\\Sdk\\Custom\\Crm\\Model",
+  "package": "factuarea/factuarea-php",
+  "package_sdk_version": "0.5.0",
+  "php_minimum": "8.2",
+  "openapi": {
+    "path": "spec/crm-openapi.json",
+    "sha256": "4a2cb151faef526aa8c8fd26c29a1d3f6acd019335e13b058b86671f40eb609f"
+  },
+  "effects": {
+    "path": "spec/crm-effects.json",
+    "sha256": "fe8fc780e346f366b9376496f4da595cd197ba4ad0eea8c7b5515bc870f35f19",
+    "classification": "source-handler-interfaces"
+  },
+  "groups": {
+    "crm_contact_people": "ContactPeople",
+    "crm_leads": "Leads",
+    "crm_pipelines": "Pipelines",
+    "knowledge_articles": "KnowledgeBase",
+    "public_help_centers": "PublicHelpCenter"
+  },
+  "outputs": {
+    "inventory": "spec/crm-operations.json",
+    "manifest": "spec/crm-generation.json",
+    "models": "src/Custom/Crm/Model",
+    "apis": "src/Custom/Crm"
+  },
+  "source": {
+    "sdk_base_revision": "68efc9187a71f98580cdfde33f077d095fd64aca",
+    "status": "frozen-native-source-fragment",
+    "public_availability": "Current server release, scope, record and field admission remain authoritative."
+  }
+}

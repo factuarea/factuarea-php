@@ -61,3 +61,38 @@ $originalVersion = $receipt->body->data->article->version;
 The extension is reproducible with `python3 tools/generate-crm.py` followed by `vendor/bin/pint src/Custom/Crm` from [crm-openapi.json](../spec/crm-openapi.json), a separately frozen native fragment. Effect classification comes from [crm-effects.json](../spec/crm-effects.json), checked against the frozen native handler handoff; a fresh source inventory can be exported with `php tools/export-crm-effects.php /path/to/app/backend`; it distinguishes Command/Query handler interfaces rather than inferring effects from scopes or HTTP verbs. It leaves the pinned full public spec, generated Speakeasy core and existing package version intact. `src/Custom/` and `Tests/` survive Speakeasy regeneration; rerun the CRM renderer when its native fragment changes. The fragment supplies source contracts, not proof of public availability: server release/plan/ACL gates remain authoritative.
 
 This delivery does not implement Opportunity or Activity, run a real sandbox workflow, regenerate the full Speakeasy distribution, publish to Packagist, ratify plans or activate CRM in production. The [source evidence](CRM-SOURCE-EVIDENCE.json) lists the executed local checks and those remaining steps separately.
+
+## Pinned additive generation
+
+[crm-generator.json](../spec/crm-generator.json) records the existing Composer package,
+PHP minimum (`8.2`), SDK namespace and declared SDK version (`0.5.0`), the native
+OpenAPI/effect input paths and exact SHA-256 hashes, and the explicit owner groups.
+`python3 tools/generate-crm.py` rejects a changed input or incompatible package
+configuration before writing generated files. It uses only the local frozen
+Source fragment and the native Command/Query classification; it fetches no live
+contract and changes no credential, package release or server capability.
+[crm-generation.json](../spec/crm-generation.json) records the generator/configuration
+hashes and every generated method/model artifact. The full Speakeasy workflow,
+core source and full public spec retain their existing pins.
+
+A native POST Query without an `Idempotency-Key` parameter has no generated key
+argument. The shared transport removes automatically supplied keys for that
+query, preserves the configured client's current authentication/version hooks,
+and marks it as having no effect. A native original-receipt read still requires
+and sends its retained original key. Effects continue to require explicit stable
+keys and never receive automatic retry or redirect forwarding. HTTP failures
+retain the canonical SDK error hierarchy, status and request ID.
+
+Cursor iterators retain the caller's initial resume position, filters and limit.
+If a page returns the same position, iteration fails before requesting it again;
+the caller's DTO remains unchanged. An explicit page budget still fails visibly
+rather than returning a truncated listing.
+
+This generated fragment remains the existing 77-operation Source handoff. It is
+not the complete current CRM inventory. Expanding it requires a freshly frozen
+native OpenAPI plus its corresponding handler-effect classification and explicit
+owner configuration; this generator rejects owners absent from that handoff.
+`Tests/Custom/Crm/Develop105/GeneratedClientTest.php` prepares two new fake-HTTP
+cases for query authentication/key suppression and initial-cursor repetition.
+They have not been executed in DEVELOPMENT105. No clean install, live API,
+PHP 8.2 execution or publication is claimed by this source generation.

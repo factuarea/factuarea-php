@@ -12,19 +12,17 @@ use Factuarea\Sdk\Custom\Crm\WireModel;
 
 final class CrmContactPeopleMergePreviewParameters extends WireModel
 {
-    public const FIELDS = ['body' => ['property' => 'body', 'type' => ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\PreviewContactPeopleMergeV1Request']], 'idempotency_key' => ['property' => 'idempotencyKey', 'type' => ['scalar' => 'string']], 'Factuarea-Version' => ['property' => 'factuareaVersion', 'type' => ['scalar' => 'string']], 'X-Active-Profile' => ['property' => 'xActiveProfile', 'type' => ['scalar' => 'string']]];
+    public const FIELDS = ['body' => ['property' => 'body', 'type' => ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\PreviewContactPeopleMergeV1Request']], 'Factuarea-Version' => ['property' => 'factuareaVersion', 'type' => ['scalar' => 'string']], 'X-Active-Profile' => ['property' => 'xActiveProfile', 'type' => ['scalar' => 'string']]];
 
-    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['Factuarea-Version' => ['type' => 'string', 'format' => 'date', 'example' => '2026-06-01'], 'X-Active-Profile' => ['type' => 'string', 'format' => 'uuid', 'example' => '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'], 'body' => ['$ref' => '#/components/schemas/PreviewContactPeopleMergeV1Request'], 'idempotency_key' => ['type' => 'string', 'minLength' => 1, 'maxLength' => 255, 'pattern' => '^[ -~]+$']], 'required' => ['body', 'idempotency_key']];
+    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['Factuarea-Version' => ['type' => 'string', 'format' => 'date', 'example' => '2026-06-01'], 'X-Active-Profile' => ['type' => 'string', 'format' => 'uuid', 'example' => '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'], 'body' => ['$ref' => '#/components/schemas/PreviewContactPeopleMergeV1Request']], 'required' => ['body']];
 
     /**
      * @param  \Factuarea\Sdk\Custom\Crm\Model\PreviewContactPeopleMergeV1Request  $body
-     * @param  string  $idempotencyKey
      * @param  string|Omitted  $factuareaVersion
      * @param  string|Omitted  $xActiveProfile
      */
     public function __construct(
         public \Factuarea\Sdk\Custom\Crm\Model\PreviewContactPeopleMergeV1Request $body,
-        public string $idempotencyKey,
         public string|Omitted $factuareaVersion = Omitted::Value,
         public string|Omitted $xActiveProfile = Omitted::Value,
     ) {

@@ -153,9 +153,9 @@ final readonly class Pipelines
             if ($cursor !== null) {
                 $page->cursor = $cursor;
             }
-
             return $this->listPipelines($page);
-        }, ['data', 'items'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\Pipeline'], 'cursor', $maxPages);
+        }, ['data', 'items'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\Pipeline'], 'cursor', $maxPages,
+            $request->cursor === Omitted::Value ? null : (string) $request->cursor);
     }
 
     /** @return CrmResponse<Model\GetPipelineResult> */
@@ -206,7 +206,7 @@ final readonly class Pipelines
             $headers['X-Active-Profile'] = $request->xActiveProfile;
         }
 
-        return $this->transport->request('POST', str_replace('{pipeline}', rawurlencode($request->pipeline), 'crm/pipelines/{pipeline}/archive-preview'), 'previewStageRemap', Model\PreviewStageRemapResult::class, $query, $request->body, $request->idempotencyKey, false, $headers);
+        return $this->transport->request('POST', str_replace('{pipeline}', rawurlencode($request->pipeline), 'crm/pipelines/{pipeline}/archive-preview'), 'previewStageRemap', Model\PreviewStageRemapResult::class, $query, $request->body, null, false, $headers);
     }
 
     /** @return CrmResponse<Model\PublishCrmStagePlaybookResult> */

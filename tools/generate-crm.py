@@ -12,11 +12,42 @@ import sys
 
 os.umask(0o022)
 ROOT = Path(__file__).resolve().parent.parent
-SPEC = ROOT / 'spec/crm-openapi.json'
+CONFIG_PATH = ROOT / 'spec/crm-generator.json'
+config = json.loads(CONFIG_PATH.read_text())
+
+def owner_path(value):
+    path = (ROOT / value).resolve()
+    if not path.is_relative_to(ROOT) or path == ROOT:
+        raise ValueError('Generator paths must stay inside the SDK repository.')
+    return path
+
+def pinned_input(name):
+    value = config[name]
+    path = owner_path(value['path'])
+    if hashlib.sha256(path.read_bytes()).hexdigest() != value['sha256']:
+        raise ValueError('The frozen ' + name + ' hash changed; pin the native handoff before generation.')
+    return path
+
+composer = json.loads((ROOT / 'composer.json').read_text())
+if composer['name'] != config['package'] or composer['require']['php'] != '>=' + config['php_minimum']:
+    raise ValueError('CRM generation must retain the native Composer package and PHP compatibility.')
+if composer['autoload']['psr-4'].get('Factuarea\\Sdk\\') != 'src/' or config['namespace'] != 'Factuarea\\Sdk\\Custom\\Crm':
+    raise ValueError('CRM generation must use the installed SDK namespace.')
+if config['model_namespace'] != config['namespace'] + '\\Model':
+    raise ValueError('The generated models must remain in the native CRM model namespace.')
+if re.search(r'^  version: ' + re.escape(config['package_sdk_version']) + r'$',
+             (ROOT / '.speakeasy/gen.yaml').read_text(), re.MULTILINE) is None:
+    raise ValueError('Pin the real SDK package version without publishing or inventing a release.')
+SPEC = pinned_input('openapi')
 document = json.loads(SPEC.read_text())
+if document['openapi'] != '3.1.0':
+    raise ValueError('The current CRM renderer requires a frozen OpenAPI 3.1 document.')
 schemas = document['components']['schemas']
-effects = json.loads((ROOT / 'spec/crm-effects.json').read_text())['operations']
-NAMESPACE = 'Factuarea\\Sdk\\Custom\\Crm\\Model\\'
+effect_source = json.loads(pinned_input('effects').read_text())
+if effect_source['classification'] != config['effects']['classification'] or effect_source['classification'] != 'source-handler-interfaces':
+    raise ValueError('Effect classification must come from the native Command/Query handlers.')
+effects = effect_source['operations']
+NAMESPACE = config['model_namespace'] + '\\'
 models = {}
 rendering = set()
 
@@ -115,11 +146,16 @@ def render_model(name, schema):
     fields = {wire: {'property': attr, 'type': desc} for wire, attr, _, _, desc, _ in field_data}
     lines = [HEADER, 'final class ' + name + ' extends WireModel\n{\n',
              '    public const FIELDS = ' + php(fields) + ';\n\n    public const SCHEMA = ' + php(schema) + ';\n\n']
-    lines.append('    /**\n')
-    for _, attr, _, doc_type, _, _ in field_data:
-        lines.append('     * @param ' + doc_type + ' $' + attr + '\n')
-    lines.append('     */\n    public function __construct(\n')
+    if field_data:
+        lines.append('    /**\n')
+        for _, attr, _, doc_type, _, _ in field_data:
+            lines.append('     * @param  ' + doc_type + '  $' + attr + '\n')
+        lines.append('     */\n')
+    lines.append('    public function __construct(\n')
     for _, attr, type_hint, _, _, optional in field_data:
+        variants = type_hint.split('|')
+        if len(variants) == 2 and 'null' in variants:
+            type_hint = '?' + next(value for value in variants if value != 'null')
         lines.append('        public ' + type_hint + ' $' + attr + (' = Omitted::Value' if optional else '') + ',\n')
     lines.append('    ) {\n        Schema::validate(self::SCHEMA, $this->jsonSerialize());\n    }\n}\n')
     models[name] = ''.join(lines)
@@ -155,33 +191,34 @@ def page_shape(schema, prefix=None):
                 return shape
     return None
 
-apis = {'ContactPeople' : [], 'Leads': [], 'Pipelines': [], 'KnowledgeBase': [], 'PublicHelpCenter': []}
+apis = {group: [] for group in config['groups'].values()}
+if any(re.fullmatch(r'[A-Z][A-Za-z0-9]*', group) is None for group in apis):
+    raise ValueError('Each approved owner group needs a PHP class name inside the native SDK namespace.')
 operation_map = []
+operation_ids = set()
+method_names = {group: set() for group in apis}
 for path, item in document['paths'].items():
     for method, operation in item.items():
         if method not in ['get', 'post', 'put', 'patch', 'delete']:
             continue
         key = operation.get('x-crm-operation', '')
-        if key.startswith('crm_contact_people.'):
-            group = 'ContactPeople'
-        elif key.startswith('crm_leads.'):
-            group = 'Leads'
-        elif key.startswith('crm_pipelines.'):
-            group = 'Pipelines'
-        elif key.startswith('knowledge_articles.'):
-            group = 'KnowledgeBase'
-        elif key.startswith('public_help_centers.'):
-            group = 'PublicHelpCenter'
-        else:
+        group = config['groups'].get(key.split('.')[0])
+        if group is None:
             raise ValueError('An operation outside the approved CRM owners was exported: ' + key)
         effect = effects[key]['effect']
         if not isinstance(effect, bool):
             raise ValueError('The native handler effect classification is missing.')
         op_id = operation['operationId']
+        if op_id in operation_ids:
+            raise ValueError('An operationId was exported twice: ' + op_id)
+        operation_ids.add(op_id)
         method_name = op_id if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', op_id) else camel(op_id)
+        if method_name.casefold() in method_names[group]:
+            raise ValueError('Native operationIds collide in the PHP API: ' + op_id)
+        method_names[group].add(method_name.casefold())
         class_name = pascal(op_id)
         request_props, request_required = {}, []
-        parameters = [local_reference(p) for p in operation.get('parameters', [])]
+        parameters = [local_reference(p) for p in item.get('parameters', []) + operation.get('parameters', [])]
         for parameter in parameters:
             if parameter['in'] not in ['query', 'path', 'header'] or parameter['name'].lower() == 'idempotency-key':
                 continue
@@ -193,7 +230,7 @@ for path, item in document['paths'].items():
             request_props['body'] = body
             request_required.append('body')
         original_key = next((p for p in parameters if p['in'] == 'header' and p['name'].lower() == 'idempotency-key'), None)
-        has_key = method != 'get' or original_key is not None
+        has_key = effect or original_key is not None
         if has_key:
             request_props['idempotency_key'] = original_key['schema'] if original_key else {'type': 'string', 'minLength': 1, 'maxLength': 255, 'pattern': '^[ -~]+$'}
             request_required.append('idempotency_key')
@@ -240,7 +277,7 @@ for path, item in document['paths'].items():
             else:
                 lines += ['        if ($request->' + attr + ' !== Omitted::Value) {\n',
                           '            $headers[' + php(parameter['name']) + '] = $request->' + attr + ';\n', '        }\n']
-        lines.append('        return $this->transport->request(' + php(method.upper()) + ', ' + path_expr + ', ' + php(op_id) + ', Model\\' + response_name + '::class, $query, ' + ('$request->body' if body else 'null') + ', ' + ('$request->idempotencyKey' if has_key else 'null') + ', ' + php(effect) + ', $headers);\n    }\n')
+        lines.append('\n        return $this->transport->request(' + php(method.upper()) + ', ' + path_expr + ', ' + php(op_id) + ', Model\\' + response_name + '::class, $query, ' + ('$request->body' if body else 'null') + ', ' + ('$request->idempotencyKey' if has_key else 'null') + ', ' + php(effect) + ', $headers);\n    }\n')
         shape = page_shape(response_schema) if method == 'get' and 'cursor' in query else None
         mode = 'cursor'
         if shape is None and method == 'get' and 'page' in query:
@@ -258,15 +295,21 @@ for path, item in document['paths'].items():
             _, item_doc, item_desc = describe(item_schema, class_name + 'ListItem')
             parameter = 'cursor' if mode == 'cursor' else 'page'
             assign = '$cursor' if mode == 'cursor' else '(int) $cursor'
+            position = '$request->' + parameter
+            unset = [position + ' === Omitted::Value'] if parameter not in request_required else []
+            if 'null' in query[parameter].get('schema', {}).get('type', []):
+                unset.append(position + ' === null')
+            initial = (' || '.join(unset) + ' ? null : ') if unset else ''
             lines += ['\n    /** @return \\Generator<int, ' + item_doc + '> */\n',
                       '    public function ' + method_name + 'Items(Model\\' + request_name + ' $request, int $maxPages = 1000): \\Generator\n    {\n',
                       '        return Pagination::items(function (?string $cursor) use ($request): CrmResponse {\n',
                       '            $page = clone $request;\n',
                       '            if ($cursor !== null) {\n                $page->' + parameter + ' = ' + assign + ';\n            }\n',
                       '            return $this->' + method_name + '($page);\n',
-                      '        }, ' + php(items_path) + ', ' + php(item_desc) + ', ' + php(mode) + ', $maxPages);\n    }\n']
+                      '        }, ' + php(items_path) + ', ' + php(item_desc) + ', ' + php(mode) + ', $maxPages,\n',
+                      '            ' + initial + '(string) ' + position + ');\n    }\n']
         apis[group].append(''.join(lines))
-        operation_map.append({'operationId': op_id, 'method': method.upper(), 'path': path, 'group': group, 'request': request_name, 'response': response_name, 'scope': operation.get('x-required-scope'), 'key': key, 'effect': effect})
+        operation_map.append({'operationId': op_id, 'method': method.upper(), 'path': path, 'group': group, 'request': request_name, 'response': response_name, 'scope': operation.get('x-required-scope'), 'key': key, 'effect': effect, 'idempotencyKey': has_key})
         if method_name != op_id:
             operation_map[-1]['phpMethod'] = method_name
 
@@ -274,8 +317,11 @@ for schema_name, schema in sorted(schemas.items()):
     if schema_name != 'Error':
         describe(schema, pascal(schema_name))
 
+generated = {}
+model_path = owner_path(config['outputs']['models'])
+api_path = owner_path(config['outputs']['apis'])
 for name, source in sorted(models.items()):
-    (ROOT / 'src/Custom/Crm/Model' / (name + '.php')).write_text(source)
+    generated[model_path / (name + '.php')] = source
 for name, methods in apis.items():
     source = '''<?php
 
@@ -287,9 +333,24 @@ namespace Factuarea\\Sdk\\Custom\\Crm;
 
 final readonly class ''' + name + '''
 {
-    public function __construct(private Transport $transport) {}
+    public function __construct(private Transport $transport)
+    {
+    }
 
 ''' + '\n'.join(methods) + '}\n'
-    (ROOT / 'src/Custom/Crm' / (name + '.php')).write_text(source)
-(ROOT / 'spec/crm-operations.json').write_text(json.dumps(operation_map, indent=2) + '\n')
+    generated[api_path / (name + '.php')] = source
+generated[owner_path(config['outputs']['inventory'])] = json.dumps(operation_map, indent=2) + '\n'
+manifest = {'generator': config['generator'], 'generator_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'configuration_sha256': hashlib.sha256(CONFIG_PATH.read_bytes()).hexdigest(),
+            'openapi_sha256': config['openapi']['sha256'], 'effects_sha256': config['effects']['sha256'],
+            'package': config['package'], 'package_sdk_version': config['package_sdk_version'],
+            'namespace': config['namespace'], 'php_minimum': config['php_minimum'],
+            'operations': len(operation_map), 'models': len(models),
+            'files': {str(path.relative_to(ROOT)): hashlib.sha256(source.encode()).hexdigest()
+                      for path, source in sorted(generated.items())}}
+# Every contract is validated before writing the first generated artifact.
+for path, source in generated.items():
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(source)
+owner_path(config['outputs']['manifest']).write_text(json.dumps(manifest, indent=2) + '\n')
 print(json.dumps({'operations': len(operation_map), 'models': len(models), 'spec_sha256': hashlib.sha256(SPEC.read_bytes()).hexdigest()}))

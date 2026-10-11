@@ -240,9 +240,9 @@ final readonly class KnowledgeBase
             if ($cursor !== null) {
                 $page->page = (int) $cursor;
             }
-
             return $this->crmSearchKnowledgeArticles($page);
-        }, ['data', 'items'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\KnowledgeArticle'], 'numbered', $maxPages);
+        }, ['data', 'items'], ['model' => 'Factuarea\\Sdk\\Custom\\Crm\\Model\\KnowledgeArticle'], 'numbered', $maxPages,
+            $request->page === Omitted::Value ? null : (string) $request->page);
     }
 
     /** @return CrmResponse<Model\CrmCreateKnowledgeArticleResult> */
