@@ -1,0 +1,4607 @@
+{
+  "classification": "Source implemented and locally verified; external release and production activation pending",
+  "change": "crm-php-sdk-delivery",
+  "authoritative_owners": [
+    "ContactPeople",
+    "Lead",
+    "Pipeline",
+    "KnowledgeBase",
+    "PublicHelpCenter"
+  ],
+  "base_head": "94d48593817223569133927a24cd0b2aceda0bdf",
+  "branch": "feature/dev-2-crm-php-sdk-source-20261009",
+  "native_contract": {
+    "path": "spec/crm-openapi.json",
+    "sha256": "4a2cb151faef526aa8c8fd26c29a1d3f6acd019335e13b058b86671f40eb609f",
+    "native_producer": {
+      "command": "public-api:export-spec",
+      "profile": "public-api",
+      "generator": "Dedoc\\Scramble\\Generator",
+      "document_transformers": "Existing PublicApiServiceProvider callbacks, all existing tagged native contributors, WebhooksBlockTransformer",
+      "native_route_scope_selector": "Every actual nonexcluded v1 surface of the five current owner manifests, intersected with the unchanged real native public resolver; all selected routes asserted present",
+      "all_requested_routes_preserved": true,
+      "schemas_rebuilt_or_corrected_by_hand": false,
+      "unsupported_extension_added": false,
+      "operation_ids_renamed": false
+    },
+    "operations": 77,
+    "paths": 66,
+    "schemas": 106,
+    "input_handoff_sha256": "6b525e771920defba62d7edef59d89bc5cf820f5a51f4ea93250e602eb55b661",
+    "sql_attempts": 0,
+    "sql_executed": 0,
+    "pdo_attempts": 0,
+    "pdo_connections_opened": 0,
+    "source_contracts_only": true,
+    "superseded_sha256": "9759f8e07cdbd4ba7b477e7f3f785c1b2d198f0657f64dc97c87bdea542bc837"
+  },
+  "implemented": {
+    "entrypoint": "src/Custom/Crm/CrmClient.php",
+    "groups": {
+      "Leads": 23,
+      "ContactPeople": 11,
+      "Pipelines": 15,
+      "KnowledgeBase": 23,
+      "PublicHelpCenter": 5
+    },
+    "typed_model_classes": 370,
+    "operation_inventory": "spec/crm-operations.json",
+    "effect_inventory": "spec/crm-effects.json",
+    "effect_contracts": {
+      "commands": 40,
+      "queries": 37,
+      "native_handler_matches": 77
+    },
+    "canonical_reuse": [
+      "SDKConfiguration configured client/security source",
+      "existing hooks and version hook",
+      "native Error/ErrorThrowable and rawResponse",
+      "existing RetryUtils for GET backoff; direct GET send when canonical retry strategy is NONE",
+      "Custom Pagination PageIterator",
+      "Custom IdempotencyClient preserving supplied keys"
+    ],
+    "wire_contracts": [
+      "public UUIDv7 id and reference patterns exactly from native schemas",
+      "omitted and null remain distinct",
+      "decimal Money and probability strings remain exact",
+      "native typed CAS expected_version fields",
+      "opaque Lead/Pipeline cursors and native ContactPeople page metadata",
+      "explicit maxPages failure and repeated cursor guard",
+      "original Idempotency-Key required unchanged for every non-GET",
+      "native confirmed representation or minimal receipt and Idempotent-Replayed header",
+      "transport failure on native Command handler becomes unconfirmed with original key",
+      "company actor environment and entitlements remain server authority",
+      "optional native X-Active-Profile and Factuarea-Version are explicit header parameters",
+      "JSON numeric object keys and distinct empty object/array shapes survive both direct responses and iteration",
+      "KnowledgeBase original effect UUID operation expected CAS and original masked snapshots preserved through explicit GET recovery with original header key",
+      "native category creation omits id and carries explicit null expected_version and parent_id with original taxonomy CAS",
+      "typed required nullable PublicHelpCenter administration and typed allOf publish/unpublish center snapshot",
+      "native conditional PublicHelpCenter confirmed and ID/CAS rules without generating identities",
+      "five punctuation-bearing PublicHelpCenter native operationIds preserved in transport hooks and mapped to valid PHP method names",
+      "KnowledgeBase numbered search Items preserves original query locale page size and caller request"
+    ]
+  },
+  "generation": {
+    "command": [
+      "python3 tools/generate-crm.py",
+      "vendor/bin/pint src/Custom/Crm"
+    ],
+    "native_local_parameter_refs_resolved": true,
+    "reproduction": {
+      "status": "PASS",
+      "generated_files": 376,
+      "model_classes": 370,
+      "drift": [],
+      "renderer_exit": 0,
+      "renderer_output": "{\"operations\": 77, \"models\": 370, \"spec_sha256\": \"4a2cb151faef526aa8c8fd26c29a1d3f6acd019335e13b058b86671f40eb609f\"}\n",
+      "pint_exit": 0
+    },
+    "native_parity": {
+      "status": "PASS",
+      "operations": 77,
+      "paths": 66,
+      "schemas": 106,
+      "commands": 40,
+      "queries": 37,
+      "old49": {
+        "operation_count": 49,
+        "schema_count": 73,
+        "generated_file_count": 284,
+        "drift": {
+          "operations": [],
+          "schemas": [],
+          "inventory": [],
+          "generated_files": []
+        }
+      },
+      "native_handler_matches": 77,
+      "native_operations_and_scopes_unchanged": true,
+      "new_models": 89
+    },
+    "speakeasy_managed_files_changed": false,
+    "full_distribution_regenerated": false,
+    "package_version_bumped": false,
+    "runtime_sdk_version": "0.4.1",
+    "generator_configuration_version": "0.5.0",
+    "baseline_version_difference_unchanged": true,
+    "native_schema_fix_delta": {
+      "status": "PASS",
+      "native_diff_count": 2,
+      "native_diff": [
+        {
+          "path": "$.components.schemas.crmCreateLeadRequest.properties.metadata.properties",
+          "before": [],
+          "after": "<omitted>"
+        },
+        {
+          "path": "$.components.schemas.crmUpdateLeadRequest.properties.metadata.properties",
+          "before": [],
+          "after": "<omitted>"
+        }
+      ],
+      "generated_files": 285,
+      "generated_files_byte_identical": 283,
+      "generated_schema_only_files_changed": [
+        "src/Custom/Crm/Model/CrmCreateLeadRequest.php",
+        "src/Custom/Crm/Model/CrmUpdateLeadRequest.php"
+      ],
+      "models_semantically_identical": 281,
+      "semantic_comparison": "All FIELDS descriptors, constructor types/names/defaults and exact SCHEMA normalized only by dropping empty properties arrays",
+      "changed_php_syntax": "PASS",
+      "directed_suite_repeated": false,
+      "retained_directed_results": {
+        "tests": 47,
+        "assertions": 148
+      },
+      "native_artifact_sha256": "9759f8e07cdbd4ba7b477e7f3f785c1b2d198f0657f64dc97c87bdea542bc837",
+      "native_handoff_sha256": "f64897dff09b6baf2188d31dac9936c037e254ff3d06073477c5cc89e28b5661"
+    },
+    "previous49_reproduction": {
+      "checked_files": 285,
+      "model_classes": 281,
+      "drift": [],
+      "status": "PASS",
+      "input_spec_sha256": "78b338eb939cf3855a0bf8545fde95a95770e6198c502caced09f0cb0d71d786",
+      "retained_prior_baseline": true
+    },
+    "previous49_native_parity": {
+      "status": "PASS",
+      "native_handler_matches": 49,
+      "command_handlers": 29,
+      "query_handlers": 20,
+      "operations": 49,
+      "groups": {
+        "Leads": 23,
+        "ContactPeople": 11,
+        "Pipelines": 15
+      },
+      "native_paths": 40,
+      "native_schemas": 73
+    }
+  },
+  "verification": [
+    {
+      "command": "vendor/bin/phpunit Tests/Custom/Crm/KnowledgeBaseHttpTest.php --colors=never --do-not-cache-result",
+      "exit_code": 0,
+      "tests": 67,
+      "assertions": 476,
+      "scope": "28 new native operations and directly affected contracts only; previous 47 green tests not repeated",
+      "runtime": "PHP 8.3.35 / PHPUnit 12.5.38"
+    },
+    {
+      "command": "vendor/bin/phpstan analyse src/Custom/Crm tools/export-crm-effects.php --level=5 --no-progress --error-format=json --memory-limit=1G",
+      "exit_code": 0,
+      "errors": 0
+    },
+    {
+      "command": "php -l on changed and new PHP source/test/exporter files",
+      "exit_code": 0,
+      "php_files": 95,
+      "errors": 0
+    },
+    {
+      "command": "vendor/bin/pint --test --format=json src/Custom/Crm Tests/Custom/Crm/KnowledgeBaseHttpTest.php tools/export-crm-effects.php",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "command": "native77 vs previous49 deep parity; native handler interface metadata vs 77 operation/effect/scope entries",
+      "exit_code": 0,
+      "old_operations_preserved": 49,
+      "old_schemas_preserved": 73,
+      "old_generated_files_byte_identical": 284,
+      "native_handler_matches": 77
+    },
+    {
+      "command": "python3 tools/generate-crm.py followed by vendor/bin/pint src/Custom/Crm --format=json; generated SHA256 comparison",
+      "exit_code": 0,
+      "generated_files": 376,
+      "drift": []
+    },
+    {
+      "command": "git diff --check and source/core hash and modes audit",
+      "exit_code": 0,
+      "source_files_mode": "0644",
+      "new_directories_mode": "0755"
+    }
+  ],
+  "fixture_mapping": {
+    "source": "Tests/Custom/Crm/CrmHttpTest.php",
+    "native_contract_fixtures": [
+      "current real create routes in all three groups",
+      "confirmed full body and minimal receipt with original replay key",
+      "nullable and omitted CAS patch fields and large exact decimal",
+      "closed DTO tenant authority injection rejection",
+      "native 403 404 409 422 429 errors and request ID",
+      "non-GET 500 no automatic effect retry",
+      "connection timeout unconfirmed original key",
+      "invalid UUIDv7 rejection",
+      "multi-page opaque cursor with native nested Lead/Pipeline envelopes",
+      "multi-page ContactPeople page metadata",
+      "repeated cursor and explicit maxPages failures",
+      "native QueryHandler POST preview stays read-only on transport failure",
+      "typed Lead filters across pages",
+      "scope revocation between pages",
+      "native empty JSON-object preview body",
+      "explicit active profile and API version headers",
+      "complete native Lead response and cursor pages preserve numeric metadata keys and []/{} shape",
+      "GET transport exception identity is preserved with RetryConfigNone"
+    ],
+    "external_upstream_code_imported": false,
+    "license": "repository MIT; no BottleCRM code copied or translated",
+    "additional_source": "Tests/Custom/Crm/KnowledgeBaseHttpTest.php",
+    "additional_native_contract_fixtures": [
+      "28 real new routes and actual operation IDs, typed body contracts and unchanged original keys",
+      "article save original receipt recovery after newer head",
+      "article/revision/suggestion masked fields and nullable publication facts",
+      "category original taxonomy CAS, conditional omitted id and required explicit nulls",
+      "PublicHelpCenter administration null and typed original enabled/disabled snapshots",
+      "native allOf and conditional literal confirmation and ID/CAS constraints",
+      "numbered search pagination preserving query locale and page size, repeated page and maxPages failures",
+      "native HTTP errors with validation field details request ID and Retry-After; no write retry",
+      "ambiguous center effect preserves original key followed only by explicit GET recovery"
+    ]
+  },
+  "not_executed_or_implemented": [
+    "Opportunity and Activity APIs: outside this current native export; no prospective methods added",
+    "real sandbox A/B workflow and Lead to Opportunity to Activity journey",
+    "real server tenant ACL, plan, actor revocation and cross-tenant isolation verification",
+    "sandbox CLI network execution",
+    "PHP 8.2 runtime validation",
+    "full Speakeasy regeneration and distribution release build",
+    "external clean-install acceptance and Packagist publication",
+    "app tests, SQL workloads, full repository suites and make pr",
+    "public artifact publication, commits, pushes, plan ratification and production activation",
+    "CRM Applied or complete change assertion"
+  ],
+  "persisted_activation": {
+    "modified": false,
+    "source_native_handoff": false,
+    "current_source_release_policy": "OFF / not activated",
+    "native_export_private_test_premise_restored": true,
+    "company_credentials_flags_or_database_modified": false
+  },
+  "source_freeze": {
+    "sha256": "a6be8de2e6958aa9dde52931dddfaf1f9a5a00160d7cc6d758fdd4f4e9b597d6",
+    "algorithm": "SHA256 of UTF-8 JSON file manifest with sorted keys and compact separators",
+    "includes": "394 cumulative source files including previous49 delivery and current28 extension; excludes this evidence file to avoid a circular hash",
+    "files": [
+      {
+        "path": "CHANGELOG.md",
+        "sha256": "d5aa0ec510a25cb13ca484f7be5bb255a8fcc1acec3e3795ecb06f088a512ce7",
+        "mode": "0644",
+        "bytes": 20510
+      },
+      {
+        "path": "README.md",
+        "sha256": "59b7a54309c2b0894e1215d74843a9cc0d992759ce5d252d68a6b4ba6417ea2f",
+        "mode": "0644",
+        "bytes": 102303
+      },
+      {
+        "path": "Tests/Custom/Crm/CrmHttpTest.php",
+        "sha256": "05f3589fb42c709d76561ea52bfa8918ed1f8d77be8b5f2c27a11921ddc4b440",
+        "mode": "0644",
+        "bytes": 22441
+      },
+      {
+        "path": "Tests/Custom/Crm/KnowledgeBaseHttpTest.php",
+        "sha256": "729efeaab51cb8e61827789f6f1b76a0e0868862cd555e9b226accbbdc672e37",
+        "mode": "0644",
+        "bytes": 31144
+      },
+      {
+        "path": "docs/CRM.md",
+        "sha256": "82fd92e63bf5a04781b7e83223395c3140d7321ce5263b5c844dac7491143980",
+        "mode": "0644",
+        "bytes": 8139
+      },
+      {
+        "path": "examples/crm.php",
+        "sha256": "bb9ed9f231699ac22b731465518f9b15f238b3c749a56b4592b4482ede347202",
+        "mode": "0644",
+        "bytes": 1562
+      },
+      {
+        "path": "spec/crm-effects.json",
+        "sha256": "fe8fc780e346f366b9376496f4da595cd197ba4ad0eea8c7b5515bc870f35f19",
+        "mode": "0644",
+        "bytes": 29386
+      },
+      {
+        "path": "spec/crm-openapi.json",
+        "sha256": "4a2cb151faef526aa8c8fd26c29a1d3f6acd019335e13b058b86671f40eb609f",
+        "mode": "0644",
+        "bytes": 1055221
+      },
+      {
+        "path": "spec/crm-operations.json",
+        "sha256": "4f1d5a2268e3cc20412260e3197931121772ba3ae70ab3298c6fa88e823bb98b",
+        "mode": "0644",
+        "bytes": 27506
+      },
+      {
+        "path": "src/Custom/Crm/ContactPeople.php",
+        "sha256": "efa6364a8d3d80319733bc4fb2779c530e01dfde5edbf6acab49a42fe2442dd7",
+        "mode": "0644",
+        "bytes": 13024
+      },
+      {
+        "path": "src/Custom/Crm/CrmClient.php",
+        "sha256": "d33e893da53cf52b742a5e59efd4f5311022336352f797f59d209706a960be82",
+        "mode": "0644",
+        "bytes": 818
+      },
+      {
+        "path": "src/Custom/Crm/CrmResponse.php",
+        "sha256": "0496f79b7f089cf21bd1e57c7d9b1c1e0bb5f5800bceee8530eee8bfb4252a7b",
+        "mode": "0644",
+        "bytes": 740
+      },
+      {
+        "path": "src/Custom/Crm/KnowledgeBase.php",
+        "sha256": "a45da77d0ad8e7cdb0b0847ee9e0fd06344874ae8bb0e7d9b66258bb936cb530",
+        "mode": "0644",
+        "bytes": 20809
+      },
+      {
+        "path": "src/Custom/Crm/Leads.php",
+        "sha256": "56ef33544a2ed7117900d7b47a9c84ca58f24923313d5f021f553b6c118dc8be",
+        "mode": "0644",
+        "bytes": 23046
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchiveContactPersonV1Request.php",
+        "sha256": "5e9aa64084821617b1d324e4d50ffab22a25fb4d9232e1e9df0629e28305d055",
+        "mode": "0644",
+        "bytes": 911
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineParameters.php",
+        "sha256": "a2aaadb13346ef235defcf72e2010c70ad01ef87615a3006199bbcef6cb1bea5",
+        "mode": "0644",
+        "bytes": 2183
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineResult.php",
+        "sha256": "0864aa2484dd6a9b74a823c6949faab84d8c0e141771e4aaa27a872798eacb9c",
+        "mode": "0644",
+        "bytes": 1167
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineStageParameters.php",
+        "sha256": "a5b8f37f57f0001896075610286d912c1301a665e7fd927bd052ef2d737800df",
+        "mode": "0644",
+        "bytes": 2486
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineStageResult.php",
+        "sha256": "581702b35a4ba93903b9bf783893a63d7183a1740f1645c3c3b3415deb66ec0c",
+        "mode": "0644",
+        "bytes": 1172
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1Request.php",
+        "sha256": "c1c537048f3f853c6c6506378db76b73b5ee8fc9642a19ed5e87d9f1878b3e69",
+        "mode": "0644",
+        "bytes": 12702
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestAccess.php",
+        "sha256": "8a852604ef439c47b0d6f507be62417335801cc307e1e29fd18c8015f646ddcc",
+        "mode": "0644",
+        "bytes": 2812
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestAddressesItem.php",
+        "sha256": "f5217a2c098d805b62748ec68cb6fcebeaddb6042a6fd2944ff32aa09016a908",
+        "mode": "0644",
+        "bytes": 6853
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestChannelsItem.php",
+        "sha256": "a663600eee8d2d81f91a915db2a08115f9a88053545a9d349517cd5c172becdb",
+        "mode": "0644",
+        "bytes": 3575
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestOrigin.php",
+        "sha256": "dbd29423e115302050cdec8145c9aeb1eeb0b7eed3ae52a91dcc65805fd73b50",
+        "mode": "0644",
+        "bytes": 1583
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestTypedFields.php",
+        "sha256": "c8d8c670c8d7eec9f69d5d4d21ef27626fe3afd2d5ed6c2cef104be28d1a6357",
+        "mode": "0644",
+        "bytes": 2176
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestTypedFieldsValues.php",
+        "sha256": "b52efb20462552b1f21822c7b70651c9e90c4bb6c3961f5c911f1340b6412103",
+        "mode": "0644",
+        "bytes": 1882
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestTypedFieldsValuesValuesItem.php",
+        "sha256": "c1cfd5e10ba997978a4d5463fdd8d34df415dd21959a826606765c43d06c0bd4",
+        "mode": "0644",
+        "bytes": 1742
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateCrmStagePlaybookParameters.php",
+        "sha256": "f3e12d894fe5df5ef1dfe4f91d664b5e2e83141b21fb33e9693988d988e9d3b0",
+        "mode": "0644",
+        "bytes": 2200
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateCrmStagePlaybookResult.php",
+        "sha256": "64c491268425464c01d96b5d4a717c2712ee8ede3b5787cd56877e229cde09f0",
+        "mode": "0644",
+        "bytes": 1242
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreatePipelineParameters.php",
+        "sha256": "9f6bf5e90dd5db680771f59017167351daa0749a159cddba851d9dfefa580a78",
+        "mode": "0644",
+        "bytes": 1882
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreatePipelineResult.php",
+        "sha256": "240009dca9fe3c01ab20329ea78bdcdcc0ad2c6a517e55eb34e843343b810c98",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApplyLeadScoreRecalculationParameters.php",
+        "sha256": "3eb4146f7ca73ff0496c24eafe974609c2a293c745d2962713b92cc56a7bc850",
+        "mode": "0644",
+        "bytes": 2196
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApplyLeadScoreRecalculationRequest.php",
+        "sha256": "807f4a149272f95ecea3043052eec583a0dcab5072e7a19ef691d60856823251",
+        "mode": "0644",
+        "bytes": 1377
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApplyLeadScoreRecalculationResult.php",
+        "sha256": "9ca541ff25a28dc1fde76f942ef7d972dfb9bf3bdb542038a47da63f2e7590b3",
+        "mode": "0644",
+        "bytes": 1234
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApproveKnowledgeArticleParameters.php",
+        "sha256": "fad3c1a8470474be01fe5447a98905cc39f5eb148464034c7dae6f19ec1cd4ad",
+        "mode": "0644",
+        "bytes": 2188
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApproveKnowledgeArticleResult.php",
+        "sha256": "3d15bc3686ab5de98eff600baa4f9948d72e70093413dca1f94558a581f0fe86",
+        "mode": "0644",
+        "bytes": 1016
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmArchiveKnowledgeArticleParameters.php",
+        "sha256": "8873c4c3357cdbbb209aa602e65e2e7a52e8520dc17c7382ba9831ec8b4066b4",
+        "mode": "0644",
+        "bytes": 2188
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmArchiveKnowledgeArticleResult.php",
+        "sha256": "ef28a9c5b370efe29e13e2f5933868235154345da466237cb60f7cd4875d0376",
+        "mode": "0644",
+        "bytes": 1016
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmAssignLeadParameters.php",
+        "sha256": "4b87b7db27f648cfb4066cb230d9cdb1f4c5a10905ab0b8a85a5e0aa7082b88c",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmAssignLeadRequest.php",
+        "sha256": "cf778c3c2248754e1d35454b2bb01a50a06bfa77654da411c7b27301d64150ab",
+        "mode": "0644",
+        "bytes": 1579
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmAssignLeadResult.php",
+        "sha256": "ab180252b269d5e4ab648507db537b698f0f79be3c727339338ea1cb89657760",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmChangeLeadStageParameters.php",
+        "sha256": "6c70874d80f76a1aaf0dff46e20824579d9e73876e2f6bd32fd1420efe451750",
+        "mode": "0644",
+        "bytes": 2142
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmChangeLeadStageRequest.php",
+        "sha256": "3f70ff7d44b7b5e2c69f46d8d7789265051a71a7607630def049d42569f6be72",
+        "mode": "0644",
+        "bytes": 1140
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmChangeLeadStageResult.php",
+        "sha256": "2b0222e858dc74727fc26321b54d9d3f88415f77f8ac6accd3aec57bef32104e",
+        "mode": "0644",
+        "bytes": 1138
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreview.php",
+        "sha256": "1876d0143aa8f7265b6d394b497d7a4aed4462d1c270436d436f889a5f742cb7",
+        "mode": "0644",
+        "bytes": 12162
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValues.php",
+        "sha256": "a3a2d8ba31a4fec798385a2a9eb38787c1b30ab14f64795fc805045bceafed8e",
+        "mode": "0644",
+        "bytes": 13950
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesAccess.php",
+        "sha256": "f185163c05efb348261b2e7b01231b76cae29748541b77c657782bf072482d4d",
+        "mode": "0644",
+        "bytes": 2828
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesAddressesItem.php",
+        "sha256": "6627deaadde83672fdb0bd251b703ba3c065d65813f122f821e68008c2d3443f",
+        "mode": "0644",
+        "bytes": 5475
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesChannelsItem.php",
+        "sha256": "41602fa3f24e68d50c05b255c8dbe76ca8a327e6988950ab7a52f67b3fdabaee",
+        "mode": "0644",
+        "bytes": 3864
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesOrigin.php",
+        "sha256": "a0eafaf373d617e3f757000db425cbbc7244c49a11f47d0317a3fb0716deb159",
+        "mode": "0644",
+        "bytes": 1599
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesRelationshipsItem.php",
+        "sha256": "bc5ed31eb8c776512c79a65638cf4f83288ab922cc7f6989468622fbf456e2dc",
+        "mode": "0644",
+        "bytes": 3876
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesTypedFields.php",
+        "sha256": "79b27bbca959a68cd2e543fbc7b2ee845dd8e9724aee85740c6b22d3b4d47786",
+        "mode": "0644",
+        "bytes": 2240
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesTypedFieldsValues.php",
+        "sha256": "964cff6663015302dee8afed86ebcd0e306e0dd7a4d14d17539bced44e0c1b56",
+        "mode": "0644",
+        "bytes": 1930
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesTypedFieldsValuesValuesItem.php",
+        "sha256": "941433ba03d9c9db408d2dcfb709f1d2b06e051f078726b5961b1c029aed6867",
+        "mode": "0644",
+        "bytes": 1758
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewConflictsItem.php",
+        "sha256": "b2e1cba6fe30bb70ce2ae36df7521f7f1f1bd577926413980b0a7b85908841f6",
+        "mode": "0644",
+        "bytes": 2366
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleArchiveParameters.php",
+        "sha256": "dbd865e44f80e8e2f0ae725c3ec4bdb796e5f5a0b45ae50c6689960bcd2a05bb",
+        "mode": "0644",
+        "bytes": 2192
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleArchiveResult.php",
+        "sha256": "a3be6842818185cfe12e58782e8c93740cdd4c838343e25916a6225aae58f558",
+        "mode": "0644",
+        "bytes": 1239
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleCreateParameters.php",
+        "sha256": "92a862b38f204fa9eb868553b8c8c5d04ce8fbf08569f8b004ca1ade022cffd2",
+        "mode": "0644",
+        "bytes": 1886
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleCreateResult.php",
+        "sha256": "a100b485d01983ed1ffe1cfe186e4f406b55aea2ba93652532504736f92a9546",
+        "mode": "0644",
+        "bytes": 1238
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleDuplicatesParameters.php",
+        "sha256": "618da16ed2ec161ce79263d9d1e9333a247fa055b616ffb311043b89a3a2cff5",
+        "mode": "0644",
+        "bytes": 1765
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleDuplicatesResult.php",
+        "sha256": "b515e41a8310f78e348fe795fd8cf2692cad7fe6198de278ede8a2086729a042",
+        "mode": "0644",
+        "bytes": 1517
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleDuplicatesResultMeta.php",
+        "sha256": "91b3cc2eff4c57e2e9a8507f80372a978bc8057650cd88f4abb554579066d010",
+        "mode": "0644",
+        "bytes": 1005
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleIndexParameters.php",
+        "sha256": "dd81418711d9c19f8d36e12e15c2e0dd88c3fbc111c7ad5ac0d0527a7867b337",
+        "mode": "0644",
+        "bytes": 6393
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleIndexResult.php",
+        "sha256": "583cd0384079c0199c22b60c41451d3972de8828c21f35f64f6f86058d23c512",
+        "mode": "0644",
+        "bytes": 1644
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleIndexResultMeta.php",
+        "sha256": "5742f753cc3fa835b8a00d2cd255e7cac4a686e2dd49a57f18aa7691b4e09d34",
+        "mode": "0644",
+        "bytes": 1414
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergeParameters.php",
+        "sha256": "688d8f19459b9443304487b25c6b8afbffcc4c45d10ea9fa90506a339d9b1e75",
+        "mode": "0644",
+        "bytes": 1881
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreview.php",
+        "sha256": "5925d5e6cd97a7095cebfed2ca17d49692058a1d5941c68fb382f6669311c75b",
+        "mode": "0644",
+        "bytes": 4039
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewConflictsItem.php",
+        "sha256": "802ba35de7456e5aaa2ca7a939d569eae9453b3bfd8ef3496616cd36101d563e",
+        "mode": "0644",
+        "bytes": 2364
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewParameters.php",
+        "sha256": "eb07b42fab81fc0bbc16450caec04526dac51e6ec548a0bf8d0fbb79c339ffad",
+        "mode": "0644",
+        "bytes": 1916
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewPreservedReferencesItem.php",
+        "sha256": "6715b37d7db9850916c0d9c5fd3fb5e9a4d9650a258ebe8e787f6b24f6ed434d",
+        "mode": "0644",
+        "bytes": 1513
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewResult.php",
+        "sha256": "f0cd36931ff0b3eb102f1aaf2805c40f4442f5fe511d3e00c4433d25589796f9",
+        "mode": "0644",
+        "bytes": 978
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergeResult.php",
+        "sha256": "e7b89486cbdd289709e79d99a031ac02f920ca56914d4b07ec830529e967a6ab",
+        "mode": "0644",
+        "bytes": 1237
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleNormalizeParameters.php",
+        "sha256": "3d5f0e348eebea698a86293026b6a1563fb7a9bd4a631c860d29ac7f94212752",
+        "mode": "0644",
+        "bytes": 1921
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleNormalizeResult.php",
+        "sha256": "b2113122aafe12fd22540d43113b54a4c33abd0cf6bbd239cd9aff65c0d14cf0",
+        "mode": "0644",
+        "bytes": 983
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleOptionsParameters.php",
+        "sha256": "6c6c8b265a31cf8a26f5c1deefbe527ab3630112bfc82d6b504f36d8186190e1",
+        "mode": "0644",
+        "bytes": 3927
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleOptionsResult.php",
+        "sha256": "526db34b590f76e113ca8548060890353c0c45b393e87ac677b1979deebb9c65",
+        "mode": "0644",
+        "bytes": 1514
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleOptionsResultMeta.php",
+        "sha256": "98b0eb5d81e72245d173e49f5f940525612f97ba1a2082b5d4c21259948d2b35",
+        "mode": "0644",
+        "bytes": 1002
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleRelationshipsParameters.php",
+        "sha256": "b64e64d1e124536fc6a161c81edb1961b556926512b9c9cb4a6230291a5b2c21",
+        "mode": "0644",
+        "bytes": 2226
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleRelationshipsResult.php",
+        "sha256": "b87161ac59046f1dc9957f8ac09f279889230a78cc6cbc5fdffec1d1c2e2270a",
+        "mode": "0644",
+        "bytes": 1245
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleShowParameters.php",
+        "sha256": "6964357097fa8d3a05676a9ac8ac99723b31b032efbb12ed0ddebe41c0003337",
+        "mode": "0644",
+        "bytes": 1782
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleShowResult.php",
+        "sha256": "852d72bc4bcf1fc3640cf564bec9e5fd47f14d43a2b781744c043d9d330897f6",
+        "mode": "0644",
+        "bytes": 922
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleUpdateParameters.php",
+        "sha256": "c2e0ecd4d3fbdda3aa5d45854964df46ad2b8eb655b6710d8835ac39751b3a6c",
+        "mode": "0644",
+        "bytes": 2187
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleUpdateResult.php",
+        "sha256": "dbd487647042ddc922932f65751df2110cdc9555937d4e488ae784db5e86c4f1",
+        "mode": "0644",
+        "bytes": 1238
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPerson.php",
+        "sha256": "1ca116a9b385f1c6208af5b18918983bd6595340d2e711ef40a790aefc3b42a9",
+        "mode": "0644",
+        "bytes": 8807
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonAccess.php",
+        "sha256": "b14471d2e357812d4cc74349b5f6b3d862683d11d334d84d7b6e3eba392cd6f3",
+        "mode": "0644",
+        "bytes": 2800
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonAddress.php",
+        "sha256": "b2b4f3e6f867ff5860056537a14aa12d1e955dcb14f476e9970f8b7870cbebbe",
+        "mode": "0644",
+        "bytes": 6126
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonChannel.php",
+        "sha256": "4eb92e0531b4ff9da5a29fd0188c8b524f704af9eaa0c01eaa966c372bd3426c",
+        "mode": "0644",
+        "bytes": 2061
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonConfirmedReceipt.php",
+        "sha256": "f2bbe575c1b1ab386e8b912518a3bb8d8546c360ba1db2322f8a747b6620138d",
+        "mode": "0644",
+        "bytes": 1430
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonDuplicate.php",
+        "sha256": "f77a3027c740ac7179ee607f32fe107b11c080552742e5e0bcfd34330f587b0b",
+        "mode": "0644",
+        "bytes": 1862
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItem.php",
+        "sha256": "b6cf8546269ad4e006b7e83f71e883f53528bfd067adbdd575b1cb3461afcdb8",
+        "mode": "0644",
+        "bytes": 9139
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemAccess.php",
+        "sha256": "be4d20e34bbb908173c89f63ea093919df43884b57f8e22426d3c98084218e8e",
+        "mode": "0644",
+        "bytes": 2808
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemOrigin.php",
+        "sha256": "3984b431e39c3a6cee749989b53de69327186835202ff02634bdeb11da951b09",
+        "mode": "0644",
+        "bytes": 1579
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant1.php",
+        "sha256": "2d9696afd09034f6b0d5dee853e1b63848039db527e199afc825766503a40d67",
+        "mode": "0644",
+        "bytes": 2147
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant1Values.php",
+        "sha256": "eba8cc4d40c7f0e491ce9e24c00be52d8a43eb2780a939addbb4a75d5f65f032",
+        "mode": "0644",
+        "bytes": 1894
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant1ValuesValuesItem.php",
+        "sha256": "9183bc1642d1f9c4b2e77e4721a44710401976fb8beb609938b3c3d705590fce",
+        "mode": "0644",
+        "bytes": 1746
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant2.php",
+        "sha256": "4214e321efa40076142a48c3387eaae2ad38733cace8d42994f477a86337c915",
+        "mode": "0644",
+        "bytes": 1319
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant2Values.php",
+        "sha256": "717526b5af4fef40eca85d4ee3f1943d4a0169cf6c73326ad4e19bd741d546d1",
+        "mode": "0644",
+        "bytes": 593
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant3.php",
+        "sha256": "ddf624162a80215430e8ed6b7193683450c0a5a1e3ae575d3bab4a90eb4b37f3",
+        "mode": "0644",
+        "bytes": 587
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonOrigin.php",
+        "sha256": "34433eafaa2b890ba5a6b5b246c1c1dd40b2adaf1f46d312afec3b115d6fc7a0",
+        "mode": "0644",
+        "bytes": 1571
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant1.php",
+        "sha256": "46c473818a18d2ab33bbeeb535fba0566a7f6b6baaffc5f44064d719d40ed468",
+        "mode": "0644",
+        "bytes": 2115
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant1Values.php",
+        "sha256": "450f4dc4a4b0e31a61ba7fd26d6cd98543ee45f9e5a5fcb4a8cebc2aab73dd9e",
+        "mode": "0644",
+        "bytes": 1870
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant1ValuesValuesItem.php",
+        "sha256": "6e8b794dcd66b0eca6463ad44ab712732d534a59fd015f26d502987b174d24e2",
+        "mode": "0644",
+        "bytes": 1738
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant2.php",
+        "sha256": "fd667049f9d5d68e39ec39bb129a344640cb42f6ebdd01ddb970f43b8de2b67e",
+        "mode": "0644",
+        "bytes": 1287
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant2Values.php",
+        "sha256": "a50a231ef0bddc9540e9af371e388b6b54749d2d7921ead6ba79fcd2ced42f75",
+        "mode": "0644",
+        "bytes": 585
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant3.php",
+        "sha256": "e4c30974d0e7b72309a4ff6cd0c61339afb444844ed8ee7c986445c71848a58d",
+        "mode": "0644",
+        "bytes": 579
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactRelationship.php",
+        "sha256": "7428c8fcd6b4d9d41b3c27e8e8f3bf7820b00a387eea2ac873e11be1f37db38c",
+        "mode": "0644",
+        "bytes": 4668
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactRelationshipOption.php",
+        "sha256": "0a493796888b94611af792938434005f3dd2e58583b1038fc0c5df296cf2d909",
+        "mode": "0644",
+        "bytes": 3998
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadParameters.php",
+        "sha256": "d78674fca0269cec2c175714486107a519e5fda8e32b25d126737920165dbc85",
+        "mode": "0644",
+        "bytes": 2122
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadRequest.php",
+        "sha256": "4cecfb309857140f8a3b70057eb220ba33975c3c1f1c162d63da981eb7cde4bd",
+        "mode": "0644",
+        "bytes": 7145
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadRequestContact.php",
+        "sha256": "a8c9818daf6eec22d19f800aafc1ea0e5049b6e2d0c5236e5364484ea2f168f9",
+        "mode": "0644",
+        "bytes": 921
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadResult.php",
+        "sha256": "57a352fc904e3f5a3f56fba49b085fcbce291878fcc72370debbe3e2bb197f95",
+        "mode": "0644",
+        "bytes": 1134
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateKnowledgeArticleParameters.php",
+        "sha256": "0946936fe291f2688ee45768123bd22027d48c77084b5873a06e3ca557c04885",
+        "mode": "0644",
+        "bytes": 1893
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateKnowledgeArticleResult.php",
+        "sha256": "29846bcc1c77a64bb52a9bdb79a939ecf326a4494322e9d8484b35c815d4d3fb",
+        "mode": "0644",
+        "bytes": 1011
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadParameters.php",
+        "sha256": "9305161b3172dc1731e89869b1cf132cf1041d0b97e381bafc70d176c50bbbad",
+        "mode": "0644",
+        "bytes": 1845
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequest.php",
+        "sha256": "698531acaf9ab986f602a679d28a0e41577553d99ebcad0a72e233e9133a0b4b",
+        "mode": "0644",
+        "bytes": 7497
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestAddress.php",
+        "sha256": "9841a281f82df5b9e89640a9f704ce5d9045901c81d81ca060ff4019b519b737",
+        "mode": "0644",
+        "bytes": 3940
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestEstimatedValue.php",
+        "sha256": "1206a5fccc03f245b4e430a6abce7d09cbdb4be1409b65d4883ad06c883f6222",
+        "mode": "0644",
+        "bytes": 1045
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestTypedFields.php",
+        "sha256": "26ea2421cff579beb60f8f06ab45e33413c0f237124c76cb189b363449332682",
+        "mode": "0644",
+        "bytes": 1943
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestTypedFieldsValues.php",
+        "sha256": "19469d61d76757e18dc7a6d628984057a6aea22356f0f2170c80eb1ed02fd875",
+        "mode": "0644",
+        "bytes": 1657
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestTypedFieldsValuesValuesItem.php",
+        "sha256": "2d6091560917579b1d04eaf576483aaa1fa5919fe9af7f4ac26c4196cb76282b",
+        "mode": "0644",
+        "bytes": 1576
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadResult.php",
+        "sha256": "67024bd2f5b03f0ac05c8a9b4035c6dfe78a00cd76424fc62b1aa9da08fab0ee",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDeleteLeadParameters.php",
+        "sha256": "10b86d4ad6474ecc8cd1d79da48d5bd886d2f4a1e65b56a93923b8a2ce4ab075",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDeleteLeadRequest.php",
+        "sha256": "b080106b32c58a2c934d662d500b774c7477ac4b373adf517beb7b8ac8c5e01e",
+        "mode": "0644",
+        "bytes": 1101
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDeleteLeadResult.php",
+        "sha256": "eebb75b7b6a5a69220fb6eb6a59c1c57cd8033259906bd4d0423371dbf67d80a",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDisqualifyLeadParameters.php",
+        "sha256": "16fc5ef92506d2c8c0ba8d2a48a0419703e385eef7fb8bd4d89521d387353a67",
+        "mode": "0644",
+        "bytes": 2137
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDisqualifyLeadRequest.php",
+        "sha256": "fe5e819a1bec7847399d43eecb35eb868ae691b66e6a768a4c06b9f85ae31531",
+        "mode": "0644",
+        "bytes": 1117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDisqualifyLeadResult.php",
+        "sha256": "0794fe403e2cd939fb03ba267cd0871522f72bc596e3d8c55c715efb369f4214",
+        "mode": "0644",
+        "bytes": 1137
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmExportLeadDataParameters.php",
+        "sha256": "3bf51695f9280457a8035dcd4ed9114b566d1ccca716b984810b70803c0db0a8",
+        "mode": "0644",
+        "bytes": 1487
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmExportLeadDataResult.php",
+        "sha256": "7b4d3ed36de70f5a7c929703f59266b19ac85ca06f7afd456a7a2e361fd00e4d",
+        "mode": "0644",
+        "bytes": 895
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadDuplicatesParameters.php",
+        "sha256": "821a40edbc954eed99a3d5c6e9a2a1335201aaf1af30208044620ee8136c1e54",
+        "mode": "0644",
+        "bytes": 1970
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadDuplicatesResult.php",
+        "sha256": "055a046ffeffba2dc8dbe71df8fe94f59e41b20d2e98ceb4a5e1202029e40e58",
+        "mode": "0644",
+        "bytes": 931
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadParameters.php",
+        "sha256": "3e2fc16242fb23b62dfdbeadf7319a6ac0aba1580cfc9a8777f650d1e3b7360e",
+        "mode": "0644",
+        "bytes": 1481
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadResult.php",
+        "sha256": "a92732fce306c722667939271c9ca8673e27246f749023c4a1eccb4b8e73351c",
+        "mode": "0644",
+        "bytes": 865
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadScoreRecalculationRunListItem.php",
+        "sha256": "59f4fd128ed2f213cdf2b89f79177cd5ff28bf6016d80f7f4770e15029ac5630",
+        "mode": "0644",
+        "bytes": 1960
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadScoreRecalculationRunParameters.php",
+        "sha256": "382ca370be4371221d38f17b21b46ee8535ef8e8cb4668c0641c02af5220a17c",
+        "mode": "0644",
+        "bytes": 1975
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadScoreRecalculationRunResult.php",
+        "sha256": "4107c70df4194c400683265444f2f624191bdb4c11f992f772373a2c4e1dc3e7",
+        "mode": "0644",
+        "bytes": 970
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetKnowledgeArticleParameters.php",
+        "sha256": "42cf3557445e907f7b5905b7b27dfce17a7a946a326d5855f7e709c63bb50e4b",
+        "mode": "0644",
+        "bytes": 1510
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetKnowledgeArticleResult.php",
+        "sha256": "c61c87cecdcc897c62d89a83c4431d3db20bbef8c4e6645abf55c39901d00493",
+        "mode": "0644",
+        "bytes": 924
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetKnowledgeArticleVersionsParameters.php",
+        "sha256": "52f64a0cb72554acebc1499e646843ca9dbca5fb170398a894dbb9e721d66cee",
+        "mode": "0644",
+        "bytes": 1518
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetKnowledgeArticleVersionsResult.php",
+        "sha256": "d708289979da2dbc648b347d986a74511e2f5329cf90cdb879b804cc3769d164",
+        "mode": "0644",
+        "bytes": 988
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadHistoryParameters.php",
+        "sha256": "d53e5ec5c50d3aad785543923f340cb78cb21a03c8a72779d76dd724d3890f06",
+        "mode": "0644",
+        "bytes": 1966
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadHistoryResult.php",
+        "sha256": "9b90fc79558572897504c7bc9244726a60b10a9ad5663466c7e8485dd99985f1",
+        "mode": "0644",
+        "bytes": 915
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadStatsParameters.php",
+        "sha256": "570df3d26fd6ed72008d9a558a15dcea1d81424b1af6bfbf7724d31a710ab4d3",
+        "mode": "0644",
+        "bytes": 1695
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadStatsResult.php",
+        "sha256": "9c97889c9dd829869f1a918f4435a6a3748dad7027accbcce7698ce74d435571",
+        "mode": "0644",
+        "bytes": 889
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmLinkKnowledgeArticleParameters.php",
+        "sha256": "f9911aae4db2b5bcaf1a1d0fbf15e9dbd7e7215f39709e04dd00831b7cba9979",
+        "mode": "0644",
+        "bytes": 2173
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmLinkKnowledgeArticleResult.php",
+        "sha256": "3e697c4230a9b4d77c0a03829c5dc7ba5a6afedef1212ecdf8f93ea7f2ca9058",
+        "mode": "0644",
+        "bytes": 1001
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmListLeadsParameters.php",
+        "sha256": "93b475ba8730b1c974f19d87694480ff56aef248595751deb6567df30914afdf",
+        "mode": "0644",
+        "bytes": 2735
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmListLeadsResult.php",
+        "sha256": "0d1704b6b44f09cfab973f697625de0b3245ffd0a063ab0a8502d69191ea8b0a",
+        "mode": "0644",
+        "bytes": 882
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionParameters.php",
+        "sha256": "72fe3aa88f4dd54418bc53e9afb6cc44ac31f053d1fcad19db23ab7f9dcd6066",
+        "mode": "0644",
+        "bytes": 2172
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionRequest.php",
+        "sha256": "b227535ea631fd7e5070c18d8d9bf642c6e9fa8be8f5d071314aec12e3f1b01d",
+        "mode": "0644",
+        "bytes": 5484
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionRequestContact.php",
+        "sha256": "776a0c8a0e92e69ae61aac82e618b5b256e7473766536649246fc7fb4d6bce51",
+        "mode": "0644",
+        "bytes": 931
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionResult.php",
+        "sha256": "9959997fccb2b18f598b95e79cc6aafea2b636669e5eec3251e77fb8d711ac2d",
+        "mode": "0644",
+        "bytes": 946
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadErasureParameters.php",
+        "sha256": "65736f5d54c2db69431bcb949528a0e5c95c7f738031711adbecd04b4bac2748",
+        "mode": "0644",
+        "bytes": 2157
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadErasureRequest.php",
+        "sha256": "6b0fbebf147b43fe4d4f33b55bb572d808f29c3f51386def4f21cd2aaabec5af",
+        "mode": "0644",
+        "bytes": 611
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadErasureResult.php",
+        "sha256": "651246f14a97154bfd38dad8f0427cd0c0b39b3769d64901a7954e5930d2aa05",
+        "mode": "0644",
+        "bytes": 931
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationParameters.php",
+        "sha256": "0f9fae2d25612a1cbf874d5b2b3f6780a04e90958a7b3853ecf93a95c93f1339",
+        "mode": "0644",
+        "bytes": 1940
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationRequest.php",
+        "sha256": "71896a34d6414bb06bdfbd3c0d9391875e2628a8456ecb3681e853fb100d9111",
+        "mode": "0644",
+        "bytes": 3322
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationRequestFilters.php",
+        "sha256": "2b8b99a6d6b51e8b37cb33bb2d50a4b43fdae41f59b800d5f876048f22994001",
+        "mode": "0644",
+        "bytes": 5078
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationResult.php",
+        "sha256": "48320de2521c97b917a432f7945d8053d16858f73f8da350d410b3cca062a0e2",
+        "mode": "0644",
+        "bytes": 1236
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPublishKnowledgeArticleParameters.php",
+        "sha256": "ecf656cd3ab70baebef0cbe7822dae8bd45cc3a3d77618a2bad606f9db22c73d",
+        "mode": "0644",
+        "bytes": 2188
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPublishKnowledgeArticleResult.php",
+        "sha256": "791e328a5e14825400998fe66860a457bed92ccd0fd860a58e8ab537cfd269ed",
+        "mode": "0644",
+        "bytes": 1016
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmQualifyLeadParameters.php",
+        "sha256": "bea6067037d95ab438356a761782c20ee6c013ca8e4c24aa0aa475fbbd0546e7",
+        "mode": "0644",
+        "bytes": 2122
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmQualifyLeadRequest.php",
+        "sha256": "ffa5193fad2d6a5dae41d388f885c37299bfa81c470230d8d32361f0d1c4d474",
+        "mode": "0644",
+        "bytes": 895
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmQualifyLeadResult.php",
+        "sha256": "3120b93134014cd9bd1560b30335417e745e8c101d069314362c4cdf657257e4",
+        "mode": "0644",
+        "bytes": 1134
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecalculateLeadScoreParameters.php",
+        "sha256": "304032bdba186ca3d29bfa0235bccbdea74913d69418c45c2d0b76c233541ef3",
+        "mode": "0644",
+        "bytes": 2167
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecalculateLeadScoreRequest.php",
+        "sha256": "0662fbfc390e2cc9522874417e3703eff3ddedef211d17e13a7ad9364a8901b7",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecalculateLeadScoreResult.php",
+        "sha256": "db01648752106f0b1157f058d1d9807e9b1882b3496390330b23185d88dd7f43",
+        "mode": "0644",
+        "bytes": 1143
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecordLeadConsentParameters.php",
+        "sha256": "b3b5a8533b8be41a0becb0cb439e6bca3bd7459c78eb5819f3db50710176dbb3",
+        "mode": "0644",
+        "bytes": 2152
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecordLeadConsentRequest.php",
+        "sha256": "937d951f22639f6c65687cf9a5e5963a1e61ef0db2221ee9c18e1b706f3ffd21",
+        "mode": "0644",
+        "bytes": 4741
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecordLeadConsentResult.php",
+        "sha256": "206e665259cf40f3b70b69fac960723094a7396e4ff703af57fe08ccfcc74b43",
+        "mode": "0644",
+        "bytes": 1140
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleApproveReceiptParameters.php",
+        "sha256": "2e51ec114f718c7df7e0b3f7237cfeea6845d59acad707c2cf0f2507bd26a8d2",
+        "mode": "0644",
+        "bytes": 1530
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleApproveReceiptResult.php",
+        "sha256": "474ab30af99b78f678003bf12acc101b3ef821be1ee4de70bfde1178aa561dd0",
+        "mode": "0644",
+        "bytes": 1030
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleArchiveReceiptParameters.php",
+        "sha256": "764c168cf3b28e548443761994f79b9bc41a8427c74bd7f3aec054760a8d4ba8",
+        "mode": "0644",
+        "bytes": 1530
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleArchiveReceiptResult.php",
+        "sha256": "4f8a3a888305a016de27fb3db55f564abfd611fd6a5e49136134900d68862a18",
+        "mode": "0644",
+        "bytes": 1030
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleCreateReceiptParameters.php",
+        "sha256": "8817128d6d5d74483f2d725af427f9138c3776adc031565aa140277a4729735f",
+        "mode": "0644",
+        "bytes": 1529
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleCreateReceiptResult.php",
+        "sha256": "6c86da229ab5d7645f374ec9197d10285e70fbd608d103dcac79f3decd04122b",
+        "mode": "0644",
+        "bytes": 1025
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleLinkReceiptParameters.php",
+        "sha256": "e723b40418e859b2cb2ef40b03fcc56e3e84063dec1ae4ebe1116bf77c185d17",
+        "mode": "0644",
+        "bytes": 1527
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleLinkReceiptResult.php",
+        "sha256": "feeda2ebc6b4999fc0c5c3eeb141dfc7b1b41aecc94cfdc7c4511a981a5187af",
+        "mode": "0644",
+        "bytes": 1015
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticlePublishReceiptParameters.php",
+        "sha256": "8d25c40567cbc267577f99a58c1165b7c92308c1b055c18331ba9a44d8c1af41",
+        "mode": "0644",
+        "bytes": 1530
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticlePublishReceiptResult.php",
+        "sha256": "83d28e7faae028017cffa12d47d4d640c97b52a18a6cabf48f141caa73737803",
+        "mode": "0644",
+        "bytes": 1030
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleSaveReceiptParameters.php",
+        "sha256": "467c6ff6e322985bb816007d571aa61cb4cf3fdf6cd428fd613e963721999fd2",
+        "mode": "0644",
+        "bytes": 1527
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleSaveReceiptResult.php",
+        "sha256": "cd4dc02604f4e8e33ba7eb2f71e506705e8f53a0686992ade553096ccfc24b62",
+        "mode": "0644",
+        "bytes": 1015
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleSubmitReceiptParameters.php",
+        "sha256": "2d457a0a00bb7e60d015306e4a0292622f4b4fdffe78c94b00d0ecd15465039a",
+        "mode": "0644",
+        "bytes": 1529
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleSubmitReceiptResult.php",
+        "sha256": "07d56e1317bae5de31e659f75007e4f09f3316a6486e28607f97d3a6cbdc53f9",
+        "mode": "0644",
+        "bytes": 1025
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleUnpublishReceiptParameters.php",
+        "sha256": "251cfa94c0b911746bb2f3badb7c7c45d6e0abc73c8ff666ba4e6083f54fa905",
+        "mode": "0644",
+        "bytes": 1532
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecoverKnowledgeArticleUnpublishReceiptResult.php",
+        "sha256": "ddcb6b10cd6c7d8dba349c59e941792e3db160721f17930265fd293daa419e3a",
+        "mode": "0644",
+        "bytes": 1040
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmReopenLeadParameters.php",
+        "sha256": "d999e14c94f8b1b0d52c4ad7b5de0931cd955afce627e3e67ec25ad34f9b5683",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmReopenLeadRequest.php",
+        "sha256": "bc787a8c47b811911bec970574c4d6cd69c96699f7e6277b0df1bf334a71698a",
+        "mode": "0644",
+        "bytes": 893
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmReopenLeadResult.php",
+        "sha256": "de338df3f5d40a49f47fb5f3f75148cf00b2a83c09c8f9ece9868a4f4917eeb7",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSaveKnowledgeArticleParameters.php",
+        "sha256": "d37528214ec739fee0e5f585ee5a2c76f0e59c37738101fc7c1b411d97636d1d",
+        "mode": "0644",
+        "bytes": 2173
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSaveKnowledgeArticleResult.php",
+        "sha256": "41ebdee814b9bc0a823ab2348e84cc526428537e5ec4cd2c5c54c44f63b2682a",
+        "mode": "0644",
+        "bytes": 1001
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSearchKnowledgeArticlesParameters.php",
+        "sha256": "097655352d797f642e821379af84b660a7d53b60105231d976b901a1ad0f5b13",
+        "mode": "0644",
+        "bytes": 2241
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSearchKnowledgeArticlesResult.php",
+        "sha256": "9e3e75194ddb391c69001c614d8673c394e36ccce4c91b6bc4ed3ff6d0a096c4",
+        "mode": "0644",
+        "bytes": 976
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSearchLeadsParameters.php",
+        "sha256": "c789cdd53dd0c2e5c6d14b44f842222be9c4169ed8a02c37557effb29b53edfa",
+        "mode": "0644",
+        "bytes": 2737
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSearchLeadsResult.php",
+        "sha256": "ce1c4db97eb207e097fe29624f149d3723f336e62d9acb00129502ad54403fd4",
+        "mode": "0644",
+        "bytes": 884
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSubmitKnowledgeArticleParameters.php",
+        "sha256": "61a0b746e18317004702b67d12589c08d2b8f19fa300c9af31aaf0c71243779a",
+        "mode": "0644",
+        "bytes": 2183
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSubmitKnowledgeArticleResult.php",
+        "sha256": "9c551e4c194b9de261e4a363ebed5977f626e988ff89b712cb8b1e1dbaea9b86",
+        "mode": "0644",
+        "bytes": 1011
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUnpublishKnowledgeArticleParameters.php",
+        "sha256": "3877361ed834a116f58b00e4be75530bb009cb815c8fba3bfcc0e558b3e4559f",
+        "mode": "0644",
+        "bytes": 2198
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUnpublishKnowledgeArticleResult.php",
+        "sha256": "d4af1cbb9485d90df2e8feb786895fedb042144c81560da34281773d748c11c0",
+        "mode": "0644",
+        "bytes": 1026
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadParameters.php",
+        "sha256": "4ed607f215081e1b8e68b1533427e8dd1700b7eb371dd8105121b3abefe8ff83",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequest.php",
+        "sha256": "ce144cde4b7c07a7c89e6c670270aa71d2946362c1b9ff46dcfabf5fe9f3dd64",
+        "mode": "0644",
+        "bytes": 6129
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestAddress.php",
+        "sha256": "6632ffeacdf0bbebfb322938ac199499b4555c24929383c3ac007cfece372041",
+        "mode": "0644",
+        "bytes": 3940
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestEstimatedValue.php",
+        "sha256": "1d289ef7a3d1fe6db8052ab1d44083821b1cf3f1b42e941b2bfb9f066c39e281",
+        "mode": "0644",
+        "bytes": 1045
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestTypedFields.php",
+        "sha256": "884cd1ab84155b2316e40b8c6cc75aff528cee08870ca22426f3cd1c5d9e4312",
+        "mode": "0644",
+        "bytes": 1943
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestTypedFieldsValues.php",
+        "sha256": "a7911edbdfa1212d384cf3d20fe88e95d38f7e899dc9b515ce164c6547ef8508",
+        "mode": "0644",
+        "bytes": 1657
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestTypedFieldsValuesValuesItem.php",
+        "sha256": "e7d0608bba6e15f8817ed753fb6f44ef810793b4eb16d670e3199bc1418875c5",
+        "mode": "0644",
+        "bytes": 1576
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadResult.php",
+        "sha256": "dc98dc57c2f64d3a374730446c18ed1eb8b72a6efdc31ca27dbc88c1ededeac0",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/FindCrmStagePlaybookParameters.php",
+        "sha256": "01bd909da7605c776a1763954c753ea174d503367b3c41c77a30d82873e120f6",
+        "mode": "0644",
+        "bytes": 1710
+      },
+      {
+        "path": "src/Custom/Crm/Model/FindCrmStagePlaybookResult.php",
+        "sha256": "bb577f221ee64a5cc43b26a1bc87dbacb54679aba588ba1520c59f55293651c1",
+        "mode": "0644",
+        "bytes": 942
+      },
+      {
+        "path": "src/Custom/Crm/Model/GetPipelineParameters.php",
+        "sha256": "914b965730c9c05b44b3e85044cc52ddd95e8a8127928b0649a17e857bac9196",
+        "mode": "0644",
+        "bytes": 1748
+      },
+      {
+        "path": "src/Custom/Crm/Model/GetPipelineResult.php",
+        "sha256": "8e7ec193b52d8c04d96e6b109297064708e55c3a129ab5d76038aa699915cc5b",
+        "mode": "0644",
+        "bytes": 881
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticle.php",
+        "sha256": "5e9eba19a17bc3ed9192f840324d908774276ed0bb8128008b49a499a39f8b06",
+        "mode": "0644",
+        "bytes": 4587
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleApproveOriginalReceipt.php",
+        "sha256": "9052423ecfb0c08e1f6370dbb88de65691cb25e91aea62ca1f5eee492de39204",
+        "mode": "0644",
+        "bytes": 2261
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleApproveRequest.php",
+        "sha256": "055740f8119dc5f2d64a45ced306dbf184f59f5a836297669d8634b2439e578c",
+        "mode": "0644",
+        "bytes": 922
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleArchiveOriginalReceipt.php",
+        "sha256": "730984e5dee2d47600d550bccd7d9681ea0914392d92f3037621fa4582219fe1",
+        "mode": "0644",
+        "bytes": 2261
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleArchiveRequest.php",
+        "sha256": "1ec26c874057bda41c94cbcc01be68d09a0f9403a0d158a90a69edbdbc61d5d2",
+        "mode": "0644",
+        "bytes": 922
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleCreateOriginalReceipt.php",
+        "sha256": "0be5aff4583f1ae4dbef766419cbd446f3b058616cbb8246369dda908ec2e3e8",
+        "mode": "0644",
+        "bytes": 2240
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleCreateRequest.php",
+        "sha256": "94d35dafbda52d8187cd3abe8e1b6791263c4f17142483f63a2af5a12391070c",
+        "mode": "0644",
+        "bytes": 2239
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleLinkOriginalReceipt.php",
+        "sha256": "087ebfcec113c9eb0c434ab3d5c380f18a0cfe9a7134ee168cc2fae1f55777b0",
+        "mode": "0644",
+        "bytes": 2252
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleLinkRequest.php",
+        "sha256": "514d59978f2be3af9bfa3d77bdc497d7f7de388ced8bfe40a53efb087db0c6e6",
+        "mode": "0644",
+        "bytes": 1719
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticlePublishOriginalReceipt.php",
+        "sha256": "af176a71d8bffec2e78038e2ba36ec8627c24f897315aa0f547f682555389d41",
+        "mode": "0644",
+        "bytes": 2261
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticlePublishRequest.php",
+        "sha256": "a1397248208dd320a676314eeeeae8337d2230ca911e50612e73781b3fda663a",
+        "mode": "0644",
+        "bytes": 1439
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleRevision.php",
+        "sha256": "338dddd4df1c888251e0af5262319116baf2524de382a0c7ab2921a1722ceacc",
+        "mode": "0644",
+        "bytes": 2830
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSaveOriginalReceipt.php",
+        "sha256": "f72301074eb8af0da094158cd38fe255f5405ca3fe73b97dd1507d6c60452c9f",
+        "mode": "0644",
+        "bytes": 2252
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSaveRequest.php",
+        "sha256": "28ac38edddb9ef902dccc8bc41f72b34a0e6e3f79159ef6941bdc2bd21c0bb66",
+        "mode": "0644",
+        "bytes": 2006
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSearchResult.php",
+        "sha256": "cbb90619e1b0ce147a81b9f178b07d892b728640b9aa85fdbb1cbcaf23cdd9b9",
+        "mode": "0644",
+        "bytes": 1623
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSubmitOriginalReceipt.php",
+        "sha256": "61fb3759ab32dcb302758b720adb7e58f6fb44127e04b08a6b7ffb637b7a7a70",
+        "mode": "0644",
+        "bytes": 2258
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSubmitRequest.php",
+        "sha256": "eb848484e6de5e516893b40e2e0b53a2a95a8c15d767555d7298a65b8044c3bd",
+        "mode": "0644",
+        "bytes": 920
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSuggestion.php",
+        "sha256": "680de641e27ccca7469db825e8ef5bb09dce4bf38953a834350b7b8a79903099",
+        "mode": "0644",
+        "bytes": 3178
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleSuggestionsResult.php",
+        "sha256": "ee6085b36387fb5327af4258c9750f2efd5d15c67bb68e13796c86ee86be8179",
+        "mode": "0644",
+        "bytes": 2051
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleUnpublishOriginalReceipt.php",
+        "sha256": "ed3b8d6e138c2c742fef209f55e5db4d61f4714e5041e5181e012b6783c2649c",
+        "mode": "0644",
+        "bytes": 2267
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleUnpublishRequest.php",
+        "sha256": "5af449fe84f44920e88bf3d4e8b27c8aaee74d95e499b8226922a25a9a634cee",
+        "mode": "0644",
+        "bytes": 926
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeArticleVersionsResult.php",
+        "sha256": "67c956235424e2148074e54230be9093fd8a4a825440a78742dc4a2bfc6101ec",
+        "mode": "0644",
+        "bytes": 1009
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeCategoriesResult.php",
+        "sha256": "a3545a0e7d781be08e18b38d358c74b5bd29d2f00ad209b58180c309e5c4ca3c",
+        "mode": "0644",
+        "bytes": 1192
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeCategory.php",
+        "sha256": "7d8b134e95d64ab1fd317a5923f4b8c42402f5b3e625efaca46cb8d8943394dc",
+        "mode": "0644",
+        "bytes": 2767
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeCategoryOriginalReceipt.php",
+        "sha256": "5c4f482c26ed7f090c5f92bf01e94472e433c765e236bbe04bbefb7a86ed00c6",
+        "mode": "0644",
+        "bytes": 2839
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeCategoryOriginalReceiptCategory.php",
+        "sha256": "f9a73e86edd7ad39e6272bad0d47121215b514af3bb8810eae7a09ba7020835e",
+        "mode": "0644",
+        "bytes": 3382
+      },
+      {
+        "path": "src/Custom/Crm/Model/KnowledgeCategorySaveRequest.php",
+        "sha256": "462fdcc8497e50349af0860e20eee880212a10601ca18cd90b6089ad2b83e96b",
+        "mode": "0644",
+        "bytes": 3869
+      },
+      {
+        "path": "src/Custom/Crm/Model/Lead.php",
+        "sha256": "3582b74658d46b9fae12a81884bd18509737b8a6b321892899c25ef3cfbb9b8a",
+        "mode": "0644",
+        "bytes": 12288
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadAddress.php",
+        "sha256": "4b53b0e5b17162527e894825bc907d8c1d20199d32ed5b1fe5898cfa25f334f4",
+        "mode": "0644",
+        "bytes": 3846
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadAttributionVariant1.php",
+        "sha256": "6afbcc1d6d5dcc3c292e8427fcd0d2be6f48888e0fb47d9dfd64e071304d77f9",
+        "mode": "0644",
+        "bytes": 4630
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadAttributionVariant2.php",
+        "sha256": "d764d3960e603ae0176f56934f6a54ffa3dd2370245d99cf3aca2d38bbc1aa67",
+        "mode": "0644",
+        "bytes": 563
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConfirmedReceipt.php",
+        "sha256": "63d9b44a32e40a8a638fe0f0358a10138681993f7884ae3fe7ea9bfdaf40ea8e",
+        "mode": "0644",
+        "bytes": 1389
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConsentItem.php",
+        "sha256": "1ea18aec2f465e729c519d468e4ff028dd38c6b26423583a89fcd4a0d42bd5f0",
+        "mode": "0644",
+        "bytes": 1880
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactData.php",
+        "sha256": "7efa51abe2c154c5b5097fa539414df7ffabd1925072c39f605f33b3871a9c89",
+        "mode": "0644",
+        "bytes": 4102
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDataAddressVariant1.php",
+        "sha256": "8b455a538c5949fd6554ef7db9064612501d5e208b6f07674e84f497fce71c47",
+        "mode": "0644",
+        "bytes": 3839
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDataEstimatedValueVariant1.php",
+        "sha256": "51c0562b3905ffe22596fca5bd4640c2ad56fed33c27f6c2540de76dae06364f",
+        "mode": "0644",
+        "bytes": 1048
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraft.php",
+        "sha256": "18b0d52411341f09b487789925086c6815e7795f278a849d914a1d23e331a3ea",
+        "mode": "0644",
+        "bytes": 13009
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraftBankAccountsItem.php",
+        "sha256": "0cf727437de38c2cfcc6f8b9728f2293569e82757d7eeed6b29f9476c1cdbe1d",
+        "mode": "0644",
+        "bytes": 2358
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraftCustomerProfileVariant1.php",
+        "sha256": "b1e8bf7bdad7acce8291ff60bd1f9a235e083ed52b91e2d0977d3d9ecba1f281",
+        "mode": "0644",
+        "bytes": 4504
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraftSupplierProfileVariant1.php",
+        "sha256": "3eb6d9318f340135277999fb51df5ee94fcfcd7550d7130ad456b290736a9114",
+        "mode": "0644",
+        "bytes": 3323
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConversionPreview.php",
+        "sha256": "f33581a6dcb950d118858696818a60919709316dba5effc98a42d5949b7c7604",
+        "mode": "0644",
+        "bytes": 4135
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConversionPreviewConflictsItem.php",
+        "sha256": "97c9a20a6a8471b68aad575dd8e50c0f2841b75cb27bb501646312c0fb32e24d",
+        "mode": "0644",
+        "bytes": 1149
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConversionPreviewNormalizedDraftVariant2.php",
+        "sha256": "e00d73a22061828bc4287b85d22622f811e415870aa8740770026473b2d68f6d",
+        "mode": "0644",
+        "bytes": 584
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadDuplicate.php",
+        "sha256": "19beb8d3367ad599f91121f36dac3946ff700df1719d119ef7f46ae209d27a7e",
+        "mode": "0644",
+        "bytes": 2005
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadDuplicatesPage.php",
+        "sha256": "87fb64d25e14ff4018f49c5016d8055eb4895d95c5441d64ba331c62b031967e",
+        "mode": "0644",
+        "bytes": 1469
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadErasurePreview.php",
+        "sha256": "87c164f64f503e17d2d5886b842cc923525696913833c7f7bab796e7e6b6e588",
+        "mode": "0644",
+        "bytes": 2564
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExport.php",
+        "sha256": "b72b805b9d72687b5c7a67696463d5f8126c9facb2f5922123f270be5cc60574",
+        "mode": "0644",
+        "bytes": 7209
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportData.php",
+        "sha256": "d36d65ae6d5563c640c28bbefca6beaa3600f85a51d87799d6e3ef05dababfcf",
+        "mode": "0644",
+        "bytes": 7786
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataConsentRecordsItem.php",
+        "sha256": "d221ec82b7fa26e4ba574458d9dd8185120c672f6dedf7d30695a98f8d8983dc",
+        "mode": "0644",
+        "bytes": 4410
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataLead.php",
+        "sha256": "55b122d9d891b87b72e33a54a37fdb069b1c24eca915846fee0150a4c706f091",
+        "mode": "0644",
+        "bytes": 7597
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataOriginVariant1.php",
+        "sha256": "2a75b1141e758e3b234d7a9dbaa8607db0fbc5fe4a32c1bd7c4d0817d28a6ad6",
+        "mode": "0644",
+        "bytes": 3153
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataTypedFieldsVariant2.php",
+        "sha256": "e34e840811be1dc7d0555ae23c7c9eb057389a8d817f0ae29ad5af8b2ff5ffdc",
+        "mode": "0644",
+        "bytes": 573
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadFilters.php",
+        "sha256": "c023c8da0aabe0400d940fd51e5fcd35a8fcd35ffe3ec53655e6e1f7d74fe658",
+        "mode": "0644",
+        "bytes": 5069
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant1.php",
+        "sha256": "f2a9f799bf68fae3eedabf9b3d4579322382b5a9e4eb793aeff3b792306cd36f",
+        "mode": "0644",
+        "bytes": 2974
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant1Snapshot.php",
+        "sha256": "b901df24f8a470c46d13abd55f04d419a51921f1406ca6f1ea9654f91b3d615a",
+        "mode": "0644",
+        "bytes": 2145
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant2.php",
+        "sha256": "3b802f6cddf951cd7291918f0ef9983d173a50e61ff30613e48fe0de29de5da7",
+        "mode": "0644",
+        "bytes": 3190
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant2Snapshot.php",
+        "sha256": "5e2806bfc8d50c93314080011040fef25553694f60c557e5f18f12df4e945492",
+        "mode": "0644",
+        "bytes": 2735
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant3.php",
+        "sha256": "21986a40e289f3e0894213d25a403556189ea4107ad6b3e9da02163db7c401f0",
+        "mode": "0644",
+        "bytes": 2589
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant3Snapshot.php",
+        "sha256": "74c8c719f3206dc209286dd2280da519c46685225983f9442fc3bed36c6281f5",
+        "mode": "0644",
+        "bytes": 991
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryPage.php",
+        "sha256": "ef62d7e45d6ffc4ac59d4340d2a8bd16414903c04f60efa2636878dbd99abc5b",
+        "mode": "0644",
+        "bytes": 1764
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadNextAction.php",
+        "sha256": "3bead748e94c026d7432581d869dfb639c1451cbf61bd2389ed475790846da40",
+        "mode": "0644",
+        "bytes": 3163
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadPage.php",
+        "sha256": "b4c6656da48c58bc8021602d28ab5ed8677bceaf335687d26000a0e227484576",
+        "mode": "0644",
+        "bytes": 1422
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadRouting.php",
+        "sha256": "87c78545efbd9a4b926ca0b28521c60e55c17a0fb62ff1d2957503f186fc5a02",
+        "mode": "0644",
+        "bytes": 3214
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadRoutingCandidateVariant1.php",
+        "sha256": "f00bd42e1458b3e83d29c23e2be84e89e3a72acfd3b4d3ae9bb5dd682db4aece",
+        "mode": "0644",
+        "bytes": 1342
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadRoutingReservation.php",
+        "sha256": "0e68674d2325dad7b7c4288d805d0d8b3563b359772920933f68c7bac851ed38",
+        "mode": "0644",
+        "bytes": 1240
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreFactor.php",
+        "sha256": "39ac5905c61766188660848aa26e8d2bfd95d03983a6043c16f82416d6ced16c",
+        "mode": "0644",
+        "bytes": 1210
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreRecalculationRun.php",
+        "sha256": "a0b08c235d2258d19c70f1088783a4c555803d6aa2869eb13e33f2f614ba3231",
+        "mode": "0644",
+        "bytes": 6024
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreRecalculationRunCounts.php",
+        "sha256": "5b27fa08031287c0433055d1d9b44f32dc6a8fb363eda7c2fe8e3e6b7f552cc3",
+        "mode": "0644",
+        "bytes": 1795
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreRecalculationRunResultsItem.php",
+        "sha256": "36d345cf06b7c8562b5704ed2c71f974908553ada0d275667a1c39eb36ab3dae",
+        "mode": "0644",
+        "bytes": 1956
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStats.php",
+        "sha256": "bda2b211eec6a4d69a7a3908de4be373021eae0b736c2713683df66822038845",
+        "mode": "0644",
+        "bytes": 3692
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsBySourceItem.php",
+        "sha256": "b750b9ac961d76466d6f58137ac7bf7d504f21aeda0a4cbab06439b9affdfbad",
+        "mode": "0644",
+        "bytes": 1468
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsByStage.php",
+        "sha256": "ddd14134638b6af4774c0587930e65c9b1cedf02cdb5506e6048ee6956ce398d",
+        "mode": "0644",
+        "bytes": 1174
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsByStatus.php",
+        "sha256": "c4ede2a061f404ffde016c2c4d6cf5337774205dc82327d8409194543305f93f",
+        "mode": "0644",
+        "bytes": 1379
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsScoreVersionsItem.php",
+        "sha256": "6caac23c9c500d176f6cf9d6bbff3ddb3c44f292903343c29752d198dc91e59c",
+        "mode": "0644",
+        "bytes": 1710
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadTypedConflict.php",
+        "sha256": "7e9a15f5499911887edb5d02b72da7aad55af3b49318c928d466ae05f9939ed7",
+        "mode": "0644",
+        "bytes": 1655
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadTypedFieldsVariant2.php",
+        "sha256": "ec4ab8ff48fef3be26c749b30ab5bd513adda11261e9edaf08a78dd580502764",
+        "mode": "0644",
+        "bytes": 563
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadTypedProjection.php",
+        "sha256": "96e98b2fa59e916a68e64c3cfea61e0f317e396b5afa730c6de1513fba775f1a",
+        "mode": "0644",
+        "bytes": 3160
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadValues.php",
+        "sha256": "acad618ac9c259087daae0ce80367a811dd6101add4625cb1fb588e9b26092e1",
+        "mode": "0644",
+        "bytes": 2064
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadValuesValuesItem.php",
+        "sha256": "3312085afbb1aa6ffb0e6c208df097cfc2887fedd6a2549f5e50053de5826595",
+        "mode": "0644",
+        "bytes": 1714
+      },
+      {
+        "path": "src/Custom/Crm/Model/ListKnowledgeCategoriesParameters.php",
+        "sha256": "8d849d4888139b68cda6501e3e259fd0052546f25b1ce4d191d2f8dbb34cd92b",
+        "mode": "0644",
+        "bytes": 1223
+      },
+      {
+        "path": "src/Custom/Crm/Model/ListKnowledgeCategoriesResult.php",
+        "sha256": "de55c21083b69b9ad08faa81cc1c011b4599230105518bf29d3bba1453eda8aa",
+        "mode": "0644",
+        "bytes": 961
+      },
+      {
+        "path": "src/Custom/Crm/Model/ListPipelinesParameters.php",
+        "sha256": "c53a0d90ac40ab0c505978bdc7e0f21a74a74daeb3f5b272564baff6bfb683fe",
+        "mode": "0644",
+        "bytes": 2639
+      },
+      {
+        "path": "src/Custom/Crm/Model/ListPipelinesResult.php",
+        "sha256": "80245f71fb1dc44b31d847fa0ca03df682fd43e61d0a15a205c7084c4496269d",
+        "mode": "0644",
+        "bytes": 899
+      },
+      {
+        "path": "src/Custom/Crm/Model/MergeContactPeopleV1Request.php",
+        "sha256": "59a7155e89b4288cff0440358666355477f32cbe5584888d92c75f142a21ea0a",
+        "mode": "0644",
+        "bytes": 3153
+      },
+      {
+        "path": "src/Custom/Crm/Model/MergeContactPeopleV1RequestResolutions.php",
+        "sha256": "f6c2568ea4531db78265b076402f7908077b47647a52a4c400b0a1d9394c1a18",
+        "mode": "0644",
+        "bytes": 2320
+      },
+      {
+        "path": "src/Custom/Crm/Model/Pipeline.php",
+        "sha256": "ae1b5111c2d597d114d81bff6544c3100b54990090f0fc121a5fee400a0b41a3",
+        "mode": "0644",
+        "bytes": 5189
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineArchivePipelineRequest.php",
+        "sha256": "7b8e22d079553996734c36716f09c8af3b35a677a2b008f0b4dbd50eba693cf0",
+        "mode": "0644",
+        "bytes": 1336
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineArchivePipelineStageRequest.php",
+        "sha256": "e1c598a30515acc4bbc060a5b321f79dbaf81613439b9255a22fb464e1de87d3",
+        "mode": "0644",
+        "bytes": 1663
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineConfirmedReceipt.php",
+        "sha256": "f5598da9218c8ee5b5ff1807040c09bdeb5dafe9990f1884e45cdcb31dfc9ebe",
+        "mode": "0644",
+        "bytes": 1397
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineCreateCrmStagePlaybookRequest.php",
+        "sha256": "4c5d9e8cc08be5f1e1e368e95bc66c0ae52aa3c2ad5f108816b7907184fc32f8",
+        "mode": "0644",
+        "bytes": 1490
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineCreatePipelineRequest.php",
+        "sha256": "1239c552cee0517ce7d70738dad4b913d8ec3ff41607f63949d1bed0a986643f",
+        "mode": "0644",
+        "bytes": 2920
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineCreatePipelineRequestInitialStage.php",
+        "sha256": "ece90332a34f4527bbaf51102b976a07ba31a8356cb20f94cff745ca48b99707",
+        "mode": "0644",
+        "bytes": 2050
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineLossReasonsItem.php",
+        "sha256": "50856871b074873c1e07da9ac7eee5d4dac4049a3e5b18ff06297336c397b511",
+        "mode": "0644",
+        "bytes": 1529
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelinePage.php",
+        "sha256": "8db6cec000826200bada4adb9af6a6f087bef7f12214a5c6bd0212de2763534f",
+        "mode": "0644",
+        "bytes": 1365
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelinePreviewStageRemapRequest.php",
+        "sha256": "54e2ef871bbffc2fb1a5b6be0e90f91e2e5a5222ac4fbe986feeded09f938ae1",
+        "mode": "0644",
+        "bytes": 1716
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelinePublishCrmStagePlaybookRequest.php",
+        "sha256": "c7c760893f60405ebff54248986615638c949f25656e2eeb28197f2553bcd28e",
+        "mode": "0644",
+        "bytes": 901
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineReorderPipelineStagesRequest.php",
+        "sha256": "28ba1ade0d85a4e44f9a42190e37889bc159949febe6ac4aa5b1fc209cec619c",
+        "mode": "0644",
+        "bytes": 1222
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineSaveCrmStagePlaybookRequest.php",
+        "sha256": "779339e038897dcab15d16e09c66c609ae670871ee81d8352a79d7f3ba637671",
+        "mode": "0644",
+        "bytes": 1726
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineSaveLossReasonRequest.php",
+        "sha256": "f26eb348fd644582ccc117aa378afa2a1dafa236cf40d753244831748b4d84af",
+        "mode": "0644",
+        "bytes": 2317
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineSavePipelineStageRequest.php",
+        "sha256": "9fcfa2900350307a31dd82c2b3cb353da0cec5ff612930e02566815b9ff512b6",
+        "mode": "0644",
+        "bytes": 2684
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybook.php",
+        "sha256": "e19f57860ad669479ee217db9fced1a51beb1c62d0cb3282e572f9e65431b78b",
+        "mode": "0644",
+        "bytes": 4831
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookBlockingRulesItemVariant1.php",
+        "sha256": "268a77847234be509d4ee84a65ac36db02311ea99295df2993b520d3fdd4ab90",
+        "mode": "0644",
+        "bytes": 1025
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookBlockingRulesItemVariant2.php",
+        "sha256": "7b30b8f0aea817059630e3e81da3dd13e2bf2b3a32ff642d4fdd90685864a34a",
+        "mode": "0644",
+        "bytes": 1031
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookBlockingRulesItemVariant3.php",
+        "sha256": "6516c5fce3ccecffd2bbdf751cb1f988a3910896389e05659bf4b00f1f5d0b28",
+        "mode": "0644",
+        "bytes": 1031
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookQuestionsItem.php",
+        "sha256": "0b493cba4d9333c82ee511df4932cf56306be1a6c239afcfff153227528133dc",
+        "mode": "0644",
+        "bytes": 1957
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookQuestionsItemOptionsItem.php",
+        "sha256": "b46c28c890ee4050eca87720a4f59dc0f7294fbf659011af3749f41d882510fc",
+        "mode": "0644",
+        "bytes": 985
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookReceipt.php",
+        "sha256": "4a0a0d68d69ffd7b0d3aaa9064f8730768d2f767da8e5aa56e1d35b52d61cb1c",
+        "mode": "0644",
+        "bytes": 1438
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStageUsagePreview.php",
+        "sha256": "b3e309e1e9bb5b7543223a6a717beb35f0aaf191ad7a45abfd42255d284baa21",
+        "mode": "0644",
+        "bytes": 3821
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStageUsagePreviewItemsItem.php",
+        "sha256": "99728b4ea0c0e6af7feb8b23e2fdf0a91ac1f23b18be6915f26c0830438658d4",
+        "mode": "0644",
+        "bytes": 1854
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagesItem.php",
+        "sha256": "606a91e448970d17d4b8c0067873961a63eb95dc585892c190862f511a494332",
+        "mode": "0644",
+        "bytes": 3811
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagesItemHealthConfiguration.php",
+        "sha256": "cdee94db91870632b66053dd592b21d4e60f02e64cd9176e5c8885961feeb68a",
+        "mode": "0644",
+        "bytes": 1458
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineUpdatePipelineRequest.php",
+        "sha256": "88efa74a92f39607f4bc855db23b6d4546729e0e98cd7e15637656b0950ff5b9",
+        "mode": "0644",
+        "bytes": 2239
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1Request.php",
+        "sha256": "cc4a6edef0fb35445c9ccc8482010a498966fc00b3696ca97542b758e413d1cb",
+        "mode": "0644",
+        "bytes": 13960
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestAccess.php",
+        "sha256": "92435dcadafe1155173ba938d6b0fe9fd0e9dfe96aa0e46481be6358fbbd81b2",
+        "mode": "0644",
+        "bytes": 2820
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestAddressesItem.php",
+        "sha256": "2665b6442481c5bf9fb0ec3ff550b00f9c8221a7979dccd1a83183b3130ac0f9",
+        "mode": "0644",
+        "bytes": 5467
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestChannelsItem.php",
+        "sha256": "f0aec9ef990787d5a94e0f460c1172b59b45e924447568c46dc84470cb827d70",
+        "mode": "0644",
+        "bytes": 3583
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestOrigin.php",
+        "sha256": "5dd141128eac69c6a6f58fce405426971eac1669f0f3c47a459d1ee26ac76257",
+        "mode": "0644",
+        "bytes": 1591
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestRelationshipsItem.php",
+        "sha256": "9ac1e35055f641e2bf69170b90f5dfc0b5f4ca70093a85a3639ec64fb9b4f5fd",
+        "mode": "0644",
+        "bytes": 3868
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestTypedFields.php",
+        "sha256": "0066b990b5a77a593bac46452f8f5871311ffdd9b2372d6894dac576a72ec432",
+        "mode": "0644",
+        "bytes": 2208
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestTypedFieldsValues.php",
+        "sha256": "c9b4fefd47b7ce375171c9e332442f977c7635d2703d2c7331c78cc63e3da086",
+        "mode": "0644",
+        "bytes": 1906
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestTypedFieldsValuesValuesItem.php",
+        "sha256": "dd61160d3c5eb4dac98b361fda5f12bb0855a6cf5ed25e427cdb4ea5feeb53c1",
+        "mode": "0644",
+        "bytes": 1750
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactPeopleMergeV1Request.php",
+        "sha256": "d1fd7046b3a2950326af959fcbabed5de9546c248241fac066990c497937975f",
+        "mode": "0644",
+        "bytes": 1430
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewStageRemapParameters.php",
+        "sha256": "2c4863ca2f66c3d366cc5dcfaeb4295d56b35714e5d77ac3706c9d0bbc30419f",
+        "mode": "0644",
+        "bytes": 2193
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewStageRemapResult.php",
+        "sha256": "14e329486bfe15d64e84701d898bb466abba3c933d1bf447d4ab8688a8ea2b90",
+        "mode": "0644",
+        "bytes": 955
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterGetParameters.php",
+        "sha256": "e299596171a772c2466a9b4adb2dcf9ec30230b9d30b6710b171a3f84d6acde6",
+        "mode": "0644",
+        "bytes": 1233
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterGetResult.php",
+        "sha256": "6de94085d0518e7d0dc32183289e02bfa233eb6aa783694d1c76ebf7715dc76d",
+        "mode": "0644",
+        "bytes": 991
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterPublishParameters.php",
+        "sha256": "e9794692256392d5094de8bff17cc39b205ce73c6d71e55fade79564b169f3d0",
+        "mode": "0644",
+        "bytes": 1965
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterPublishResult.php",
+        "sha256": "d370f98e098da4abaa3639acc5478d578f507b2a9334737492b5d241b808527a",
+        "mode": "0644",
+        "bytes": 1027
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterReceiptPublishParameters.php",
+        "sha256": "5083a1c6192992931c7fe055c7b34b3ea939d3658e3511691391e9fe96885d32",
+        "mode": "0644",
+        "bytes": 1534
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterReceiptPublishResult.php",
+        "sha256": "0856e538643178a6b3a2d5009960254253675ecb9ef9e8bfed1e13c2ae5d3557",
+        "mode": "0644",
+        "bytes": 1034
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterReceiptUnpublishParameters.php",
+        "sha256": "9add643b460909adaf765c5956451b4f6fef8fe41ced9e9f4a8eb6e7649423bf",
+        "mode": "0644",
+        "bytes": 1536
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterReceiptUnpublishResult.php",
+        "sha256": "3c84169957be10df9b994a54aa1d276386c77563def28ab8aa73f7c326d2a14a",
+        "mode": "0644",
+        "bytes": 1044
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterUnpublishParameters.php",
+        "sha256": "afaca33740fcf77dc441490eb76a8f4248bd431eaf98206b89efc22e99329e79",
+        "mode": "0644",
+        "bytes": 2276
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicApiV1CrmPublicHelpCenterUnpublishResult.php",
+        "sha256": "6870ed5eec93bf34de60fc9bd081cc996fd9f5f987aa290e0fc65d7114dab249",
+        "mode": "0644",
+        "bytes": 1037
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicHelpCenterAdministration.php",
+        "sha256": "74f4c824a4b3744429abf0c452d1a8a3bcffba54294a1bb943dfed47ea1c962c",
+        "mode": "0644",
+        "bytes": 1141
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicHelpCenterAdministrativeCenter.php",
+        "sha256": "86b560197801ce569e59d87838029981d326f3a0e303a7950222e5cd2d979be6",
+        "mode": "0644",
+        "bytes": 2676
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicHelpCenterAdministrativePublishRequest.php",
+        "sha256": "59c85715c6fcd29c09f9531e028be930b843de5bedb3348cdfb906225562f3e2",
+        "mode": "0644",
+        "bytes": 3235
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicHelpCenterAdministrativeUnpublishRequest.php",
+        "sha256": "8c7efa64a43c05749eed558df931cb8e4e7441d78ae07f7bf4819d9a076afe8a",
+        "mode": "0644",
+        "bytes": 1359
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicHelpCenterOriginalPublishReceipt.php",
+        "sha256": "b2588dbec8af8c2e09c41b142e0903c9ff701a80ece13f76a28a49da523bff93",
+        "mode": "0644",
+        "bytes": 2503
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublicHelpCenterOriginalUnpublishReceipt.php",
+        "sha256": "751967c3028450d98b8ac4f74b7f62ee1eee7ec11b3187b1c3058945136e2d3e",
+        "mode": "0644",
+        "bytes": 2512
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublishCrmStagePlaybookParameters.php",
+        "sha256": "69b35ae811cdb355e2165ef0436b424e21dd020267c80551093fbe35d74609df",
+        "mode": "0644",
+        "bytes": 2205
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublishCrmStagePlaybookResult.php",
+        "sha256": "db28786e6ea20e6407c569cdf7947a4a9b4bdba4250fa126c4df47b2b8cb33e0",
+        "mode": "0644",
+        "bytes": 1243
+      },
+      {
+        "path": "src/Custom/Crm/Model/RecoverKnowledgeCategoryReceiptParameters.php",
+        "sha256": "956d00c37105657d73e9e5d92e89d59fc6278d4380571d01832c608fcc3dabcf",
+        "mode": "0644",
+        "bytes": 1521
+      },
+      {
+        "path": "src/Custom/Crm/Model/RecoverKnowledgeCategoryReceiptResult.php",
+        "sha256": "e7f579c8cceb1cd1211ba21c5d35b0ab00e2d4957829f8922116d917cc73bb5c",
+        "mode": "0644",
+        "bytes": 997
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReorderPipelineStagesParameters.php",
+        "sha256": "41ac0e9152ccd6059961214efa723249c20f16409511697b701fe8941322608c",
+        "mode": "0644",
+        "bytes": 2213
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReorderPipelineStagesResult.php",
+        "sha256": "b5d2082a557d60c88aabf67e338cf0a9d03e47a4916ebf2edeaac48e3bb1cea6",
+        "mode": "0644",
+        "bytes": 1173
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReplaceContactRelationshipsV1Request.php",
+        "sha256": "98b0e5b7268fadc815301d9941f203f580cca115473b7889e23bbbccf7c029d2",
+        "mode": "0644",
+        "bytes": 3180
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReplaceContactRelationshipsV1RequestRelationshipsItem.php",
+        "sha256": "3f51655850dde0889f34de1c6c37e0902bcc919caa07455a63db39ebaca1391c",
+        "mode": "0644",
+        "bytes": 3868
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveCrmStagePlaybookParameters.php",
+        "sha256": "0e310e88f7097d0921bffaff76a116c5e0524aa6faa0c7271d159c7382664aa1",
+        "mode": "0644",
+        "bytes": 2190
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveCrmStagePlaybookResult.php",
+        "sha256": "4c4b1c74f2df8b8070578b1cc2476225230c8dcd75b631eff92a2bd8e589dd88",
+        "mode": "0644",
+        "bytes": 1240
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveKnowledgeCategoryParameters.php",
+        "sha256": "669561486e597fe1010b752e0afb882b8971b835d56723d19beea61ede19385d",
+        "mode": "0644",
+        "bytes": 1885
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveKnowledgeCategoryResult.php",
+        "sha256": "616cb3902af1b6786ecd6f14e3a0e257746a43303f688412b7f63b143a60fd62",
+        "mode": "0644",
+        "bytes": 987
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveLossReasonParameters.php",
+        "sha256": "7916448a22d5d449350ef4b5fbdf0a142035e3201936a5c03e26a6cf3bb8ecb9",
+        "mode": "0644",
+        "bytes": 2178
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveLossReasonResult.php",
+        "sha256": "f5c8ceeb9447ed0f82295b981b7cd67f288547b3585d52975b72097b1e13a31f",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Model/SavePipelineStageParameters.php",
+        "sha256": "4eac36f4dec330d7060a0d74657286f58a24d59cc948c4038f4e76091240a7d8",
+        "mode": "0644",
+        "bytes": 2193
+      },
+      {
+        "path": "src/Custom/Crm/Model/SavePipelineStageResult.php",
+        "sha256": "eafd826670cb9b205dc7eecdeed9eda9ffa305fdebae5438491a7c6797afd1f8",
+        "mode": "0644",
+        "bytes": 1169
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationParameters.php",
+        "sha256": "942af3c43d673c0f475eefa26bf92a7488c26f3d03bbfbf8a42754b897ef2801",
+        "mode": "0644",
+        "bytes": 2357
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationParametersBody.php",
+        "sha256": "c7838704036f442348db5d7e52aa7bf61cd69c2fc374367c4dc6daf3b2fa8d61",
+        "mode": "0644",
+        "bytes": 2070
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationParametersBodyHealthConfiguration.php",
+        "sha256": "1aab6fc2c1e5aecf4937dbe8fedcf78a8e6c3600aabc307d0c658b5417f57069",
+        "mode": "0644",
+        "bytes": 1482
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationResult.php",
+        "sha256": "79dc3659507a32ac74470d7ed3ab27e76ad7d09d964e94abba048b706469029c",
+        "mode": "0644",
+        "bytes": 1771
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationResultData.php",
+        "sha256": "999c90a339319815873f4c1cfdc5e727c5cf20a9cbc9599d2a7bc468c9746f8b",
+        "mode": "0644",
+        "bytes": 2435
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationResultDataHealthConfiguration.php",
+        "sha256": "993404c0836ae8ab4a45a770bd838a94b1ebf6d66320699a0d758f9441bb63ca",
+        "mode": "0644",
+        "bytes": 1478
+      },
+      {
+        "path": "src/Custom/Crm/Model/SuggestServiceArticlesParameters.php",
+        "sha256": "63f23d07583083b0c64aef963d36431e90b5b8b7675b65e01588232bcf9c2bf7",
+        "mode": "0644",
+        "bytes": 2814
+      },
+      {
+        "path": "src/Custom/Crm/Model/SuggestServiceArticlesResult.php",
+        "sha256": "39f0a8a62d4b7bb04a0e1ac6957bf8bfc0e9ee2d8456fe46ebedf48ebc609636",
+        "mode": "0644",
+        "bytes": 992
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1Request.php",
+        "sha256": "7bd69c5d546f017436545b710a56bd6b51b2fd48b199bbf5e62336f5fbbaafa0",
+        "mode": "0644",
+        "bytes": 11766
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestAccess.php",
+        "sha256": "14a9a512ecc517dbd0b7f548987fa911599ee0b9fee3d4112afda99944fd9a34",
+        "mode": "0644",
+        "bytes": 2812
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestAddressesItem.php",
+        "sha256": "b1eb699f4200302909bce7438df2ba37ebf0aed88e622597c6d3fe0703871625",
+        "mode": "0644",
+        "bytes": 6853
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestChannelsItem.php",
+        "sha256": "99b635212d194af81317a4e9692eea262fcbfbad8f27dfdd0898ecf0cc2873e0",
+        "mode": "0644",
+        "bytes": 3575
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestTypedFields.php",
+        "sha256": "34bf50c762c10326519436d880b86c07d5fc221428d0a2f9b3fd2c52b0fb8a0a",
+        "mode": "0644",
+        "bytes": 2176
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestTypedFieldsValues.php",
+        "sha256": "4ea19bb7d46c46823f9037203cc121831de7ade31b267c80efd8055d03ba96d1",
+        "mode": "0644",
+        "bytes": 1882
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestTypedFieldsValuesValuesItem.php",
+        "sha256": "5f8382e5203740f6b01229e82fd003065007c03bb49c513cf02a29eb98e910e8",
+        "mode": "0644",
+        "bytes": 1742
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdatePipelineParameters.php",
+        "sha256": "a4a8433b39ac72b681a8844dad7100ad7c9722c4aa2fdaf6861f9e3548d11d04",
+        "mode": "0644",
+        "bytes": 2178
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdatePipelineResult.php",
+        "sha256": "86439f00ae5198398ed720bb1a178a0e3c101090ba2ecc59e74741faf49f32a4",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Omitted.php",
+        "sha256": "c5147319eba6c548f24b390e940cbd3c929ad76b57c3d871556ccc9d1ca949bf",
+        "mode": "0644",
+        "bytes": 181
+      },
+      {
+        "path": "src/Custom/Crm/Pagination.php",
+        "sha256": "527b51d272fe85fa1b47d3a17e575f960edd351fcc5da78ba9647b2b0f0a85be",
+        "mode": "0644",
+        "bytes": 5097
+      },
+      {
+        "path": "src/Custom/Crm/Pipelines.php",
+        "sha256": "0a702e2495517c94aef342627f3da18c03340b21dfa1d6d545aeca6ffaf072ec",
+        "mode": "0644",
+        "bytes": 13392
+      },
+      {
+        "path": "src/Custom/Crm/PublicHelpCenter.php",
+        "sha256": "dd52f083b9fe01798270bda441c1e67eaad78a2c088925ea8fc47ef1de8b4c56",
+        "mode": "0644",
+        "bytes": 4569
+      },
+      {
+        "path": "src/Custom/Crm/Schema.php",
+        "sha256": "a710b947eed755cab5def80649c107baf9598a6427e611d0debabc250ed71f53",
+        "mode": "0644",
+        "bytes": 7680
+      },
+      {
+        "path": "src/Custom/Crm/Transport.php",
+        "sha256": "2cc62d5171c8f075340c519732482e7d65b9f836fdfc624a98eb17176265844b",
+        "mode": "0644",
+        "bytes": 5099
+      },
+      {
+        "path": "src/Custom/Crm/UnconfirmedMutationException.php",
+        "sha256": "e1fbe630a3a18d54316a69046c0bccbde9c0e85b8382fa133763380c140ca81b",
+        "mode": "0644",
+        "bytes": 624
+      },
+      {
+        "path": "src/Custom/Crm/WireModel.php",
+        "sha256": "fe2591a16b410b65b10e64226ba03fc49efb7211ae7a47c09416ad47fbbb2cb6",
+        "mode": "0644",
+        "bytes": 4842
+      },
+      {
+        "path": "tools/export-crm-effects.php",
+        "sha256": "41851819dc1f6f420694910f05448da08a4b1b9f96a0d3b917fb8b468028bcfa",
+        "mode": "0644",
+        "bytes": 3144
+      },
+      {
+        "path": "tools/generate-crm.py",
+        "sha256": "5d745bc720a7b6e48109081c7c4969c990aa862dc9b8f44f574967448df2901b",
+        "mode": "0644",
+        "bytes": 15493
+      }
+    ],
+    "canonical_core_unchanged": {
+      "spec/openapi.json": "79d667ccae54b0ca7cf19448ab6ffca2a09f13c87a5a8256ba83ce20336bfa87",
+      ".speakeasy/gen.lock": "171c3bca1d6dc9054a9d4f37ba84027e125d4ce90c74e16cb3ee6298ff58637a",
+      ".speakeasy/gen.yaml": "269b7ba3b2534bb9281a4dc1b85e2708600c75878459d6f2c42b7b7df9593876",
+      ".speakeasy/workflow.yaml": "649a3d2dfb4b45b30a130b0015a7d2ffdc635b4bcbbd50024a2ceca5d1cd7990",
+      "src/SDKConfiguration.php": "b7c4cfc5cbbdad663460097e1f4612eebad90a221049a010704079bb770a60b5",
+      "composer.json": "7ac340077a5c29fea867c7ef3f60a0f4299d069cf29378dd9f1438d773bbf37f"
+    }
+  },
+  "previous49_native_contract": {
+    "path": "spec/crm-openapi.json",
+    "sha256": "9759f8e07cdbd4ba7b477e7f3f785c1b2d198f0657f64dc97c87bdea542bc837",
+    "native_producer": {
+      "command": "public-api:export-spec",
+      "profile": "public-api",
+      "generator": "Dedoc\\Scramble\\Generator",
+      "document_transformers": "Existing PublicApiServiceProvider callbacks, all existing tagged native contributors, WebhooksBlockTransformer",
+      "native_route_scope_selector": "All requested owner manifest route names, intersected with unchanged native public resolver; all selected routes asserted present",
+      "all_requested_routes_preserved": true,
+      "schemas_rebuilt_or_corrected_by_hand": false,
+      "unsupported_extension_added": false,
+      "operation_ids_renamed": false
+    },
+    "operations": 49,
+    "paths": 40,
+    "schemas": 73,
+    "input_handoff_sha256": "f64897dff09b6baf2188d31dac9936c037e254ff3d06073477c5cc89e28b5661",
+    "sql_attempts": 0,
+    "sql_executed": 0,
+    "pdo_attempts": 0,
+    "pdo_connections_opened": 0,
+    "source_contracts_only": true,
+    "superseded_sha256": "78b338eb939cf3855a0bf8545fde95a95770e6198c502caced09f0cb0d71d786"
+  },
+  "previous49_verification": [
+    {
+      "command": "composer install --no-interaction --prefer-dist",
+      "exit_code": 0,
+      "runtime": "PHP 8.3.35 / Composer 2.10.3",
+      "packages_installed": 47,
+      "scope": "local ignored vendor and lock, no publication"
+    },
+    {
+      "command": "vendor/bin/phpunit Tests/Custom --filter 'CrmHttpTest|PageIteratorTest|IdempotencyClientTest|HttpBehaviourTest|FactuareaVersionHookTest' --colors=never",
+      "exit_code": 0,
+      "tests": 47,
+      "assertions": 148,
+      "scope": "own repository directed CRM and canonical helper regressions"
+    },
+    {
+      "command": "vendor/bin/phpstan analyse src/Custom/Crm tools/export-crm-effects.php examples/crm.php --level=5 --no-progress --error-format=json",
+      "exit_code": 0,
+      "errors": 0
+    },
+    {
+      "command": "php -l for own CRM source, tests, example and effects exporter",
+      "exit_code": 0,
+      "php_files": 295,
+      "errors": 0
+    },
+    {
+      "command": "vendor/bin/pint --test --format=json src/Custom/Crm Tests/Custom/Crm examples tools/export-crm-effects.php",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "command": "composer validate --no-check-publish --no-check-lock",
+      "exit_code": 0,
+      "baseline_warnings": [
+        "unbounded galbar/jsonpath",
+        "unbounded brick/date-time",
+        "unbounded phpdocumentor/type-resolver",
+        "unbounded brick/math"
+      ]
+    },
+    {
+      "command": "git diff --check and unchanged canonical core hash check",
+      "exit_code": 0,
+      "source_files_mode": "0644",
+      "new_directories_mode": "0755"
+    },
+    {
+      "command": "native deep delta, regenerate python/Pint, 281 reflected model descriptors/schema comparison, php -l on 2 changed DTOs",
+      "exit_code": 0,
+      "source_delta": "exactly 2 empty metadata.properties arrays removed by native producer",
+      "generated_byte_identical": 283,
+      "generated_schema_constants_only_changed": 2,
+      "dto_model_semantic_drift": 0,
+      "directed_suite_repeated": false,
+      "prior_directed_results_retained": {
+        "tests": 47,
+        "assertions": 148
+      }
+    }
+  ],
+  "previous49_source_freeze": {
+    "sha256": "8d94812682fe5377e15610c6fa34ea04c784593be060d7f7b3a9f9e0c763b435",
+    "algorithm": "SHA256 of UTF-8 JSON file manifest with sorted keys and compact separators",
+    "includes": "302 changed/new source files including README, changelog and CRM guide; excludes this evidence file to avoid a circular hash",
+    "files": [
+      {
+        "path": "CHANGELOG.md",
+        "sha256": "9520c0bcb67bb3804dcbd8280a918ebb9ed551871fbc2028b5fa6ee16cf3f3ff",
+        "mode": "0644",
+        "bytes": 20202
+      },
+      {
+        "path": "README.md",
+        "sha256": "8acaa1961599ac13efad7fbd3e5aec11ca656510c35884a1c5ceff609cc86d75",
+        "mode": "0644",
+        "bytes": 102255
+      },
+      {
+        "path": "Tests/Custom/Crm/CrmHttpTest.php",
+        "sha256": "05f3589fb42c709d76561ea52bfa8918ed1f8d77be8b5f2c27a11921ddc4b440",
+        "mode": "0644",
+        "bytes": 22441
+      },
+      {
+        "path": "docs/CRM.md",
+        "sha256": "da31e2712ab2a73541b16fc6743d9779d615eb194b62efd763b9199dc3598d97",
+        "mode": "0644",
+        "bytes": 5045
+      },
+      {
+        "path": "examples/crm.php",
+        "sha256": "bb9ed9f231699ac22b731465518f9b15f238b3c749a56b4592b4482ede347202",
+        "mode": "0644",
+        "bytes": 1562
+      },
+      {
+        "path": "spec/crm-effects.json",
+        "sha256": "5fec476e5884c63555ae380a03e4b52d781e4702478f7a39927483382228fef1",
+        "mode": "0644",
+        "bytes": 18921
+      },
+      {
+        "path": "spec/crm-openapi.json",
+        "sha256": "9759f8e07cdbd4ba7b477e7f3f785c1b2d198f0657f64dc97c87bdea542bc837",
+        "mode": "0644",
+        "bytes": 821397
+      },
+      {
+        "path": "spec/crm-operations.json",
+        "sha256": "b5ff5f374ccb6dad2af50a975faace5b1440f4adf9e633fb1ab5c963563ae574",
+        "mode": "0644",
+        "bytes": 16094
+      },
+      {
+        "path": "src/Custom/Crm/ContactPeople.php",
+        "sha256": "efa6364a8d3d80319733bc4fb2779c530e01dfde5edbf6acab49a42fe2442dd7",
+        "mode": "0644",
+        "bytes": 13024
+      },
+      {
+        "path": "src/Custom/Crm/CrmClient.php",
+        "sha256": "b3492846881c9f19c4713ba4a6b2a3d160968c332fdc24cd76043e38e9de4985",
+        "mode": "0644",
+        "bytes": 598
+      },
+      {
+        "path": "src/Custom/Crm/CrmResponse.php",
+        "sha256": "0496f79b7f089cf21bd1e57c7d9b1c1e0bb5f5800bceee8530eee8bfb4252a7b",
+        "mode": "0644",
+        "bytes": 740
+      },
+      {
+        "path": "src/Custom/Crm/Leads.php",
+        "sha256": "56ef33544a2ed7117900d7b47a9c84ca58f24923313d5f021f553b6c118dc8be",
+        "mode": "0644",
+        "bytes": 23046
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchiveContactPersonV1Request.php",
+        "sha256": "5e9aa64084821617b1d324e4d50ffab22a25fb4d9232e1e9df0629e28305d055",
+        "mode": "0644",
+        "bytes": 911
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineParameters.php",
+        "sha256": "a2aaadb13346ef235defcf72e2010c70ad01ef87615a3006199bbcef6cb1bea5",
+        "mode": "0644",
+        "bytes": 2183
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineResult.php",
+        "sha256": "0864aa2484dd6a9b74a823c6949faab84d8c0e141771e4aaa27a872798eacb9c",
+        "mode": "0644",
+        "bytes": 1167
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineStageParameters.php",
+        "sha256": "a5b8f37f57f0001896075610286d912c1301a665e7fd927bd052ef2d737800df",
+        "mode": "0644",
+        "bytes": 2486
+      },
+      {
+        "path": "src/Custom/Crm/Model/ArchivePipelineStageResult.php",
+        "sha256": "581702b35a4ba93903b9bf783893a63d7183a1740f1645c3c3b3415deb66ec0c",
+        "mode": "0644",
+        "bytes": 1172
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1Request.php",
+        "sha256": "c1c537048f3f853c6c6506378db76b73b5ee8fc9642a19ed5e87d9f1878b3e69",
+        "mode": "0644",
+        "bytes": 12702
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestAccess.php",
+        "sha256": "8a852604ef439c47b0d6f507be62417335801cc307e1e29fd18c8015f646ddcc",
+        "mode": "0644",
+        "bytes": 2812
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestAddressesItem.php",
+        "sha256": "f5217a2c098d805b62748ec68cb6fcebeaddb6042a6fd2944ff32aa09016a908",
+        "mode": "0644",
+        "bytes": 6853
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestChannelsItem.php",
+        "sha256": "a663600eee8d2d81f91a915db2a08115f9a88053545a9d349517cd5c172becdb",
+        "mode": "0644",
+        "bytes": 3575
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestOrigin.php",
+        "sha256": "dbd29423e115302050cdec8145c9aeb1eeb0b7eed3ae52a91dcc65805fd73b50",
+        "mode": "0644",
+        "bytes": 1583
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestTypedFields.php",
+        "sha256": "c8d8c670c8d7eec9f69d5d4d21ef27626fe3afd2d5ed6c2cef104be28d1a6357",
+        "mode": "0644",
+        "bytes": 2176
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestTypedFieldsValues.php",
+        "sha256": "b52efb20462552b1f21822c7b70651c9e90c4bb6c3961f5c911f1340b6412103",
+        "mode": "0644",
+        "bytes": 1882
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateContactPersonV1RequestTypedFieldsValuesValuesItem.php",
+        "sha256": "c1cfd5e10ba997978a4d5463fdd8d34df415dd21959a826606765c43d06c0bd4",
+        "mode": "0644",
+        "bytes": 1742
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateCrmStagePlaybookParameters.php",
+        "sha256": "f3e12d894fe5df5ef1dfe4f91d664b5e2e83141b21fb33e9693988d988e9d3b0",
+        "mode": "0644",
+        "bytes": 2200
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreateCrmStagePlaybookResult.php",
+        "sha256": "64c491268425464c01d96b5d4a717c2712ee8ede3b5787cd56877e229cde09f0",
+        "mode": "0644",
+        "bytes": 1242
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreatePipelineParameters.php",
+        "sha256": "9f6bf5e90dd5db680771f59017167351daa0749a159cddba851d9dfefa580a78",
+        "mode": "0644",
+        "bytes": 1882
+      },
+      {
+        "path": "src/Custom/Crm/Model/CreatePipelineResult.php",
+        "sha256": "240009dca9fe3c01ab20329ea78bdcdcc0ad2c6a517e55eb34e843343b810c98",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApplyLeadScoreRecalculationParameters.php",
+        "sha256": "3eb4146f7ca73ff0496c24eafe974609c2a293c745d2962713b92cc56a7bc850",
+        "mode": "0644",
+        "bytes": 2196
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApplyLeadScoreRecalculationRequest.php",
+        "sha256": "807f4a149272f95ecea3043052eec583a0dcab5072e7a19ef691d60856823251",
+        "mode": "0644",
+        "bytes": 1377
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmApplyLeadScoreRecalculationResult.php",
+        "sha256": "9ca541ff25a28dc1fde76f942ef7d972dfb9bf3bdb542038a47da63f2e7590b3",
+        "mode": "0644",
+        "bytes": 1234
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmAssignLeadParameters.php",
+        "sha256": "4b87b7db27f648cfb4066cb230d9cdb1f4c5a10905ab0b8a85a5e0aa7082b88c",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmAssignLeadRequest.php",
+        "sha256": "cf778c3c2248754e1d35454b2bb01a50a06bfa77654da411c7b27301d64150ab",
+        "mode": "0644",
+        "bytes": 1579
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmAssignLeadResult.php",
+        "sha256": "ab180252b269d5e4ab648507db537b698f0f79be3c727339338ea1cb89657760",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmChangeLeadStageParameters.php",
+        "sha256": "6c70874d80f76a1aaf0dff46e20824579d9e73876e2f6bd32fd1420efe451750",
+        "mode": "0644",
+        "bytes": 2142
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmChangeLeadStageRequest.php",
+        "sha256": "3f70ff7d44b7b5e2c69f46d8d7789265051a71a7607630def049d42569f6be72",
+        "mode": "0644",
+        "bytes": 1140
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmChangeLeadStageResult.php",
+        "sha256": "2b0222e858dc74727fc26321b54d9d3f88415f77f8ac6accd3aec57bef32104e",
+        "mode": "0644",
+        "bytes": 1138
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreview.php",
+        "sha256": "1876d0143aa8f7265b6d394b497d7a4aed4462d1c270436d436f889a5f742cb7",
+        "mode": "0644",
+        "bytes": 12162
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValues.php",
+        "sha256": "a3a2d8ba31a4fec798385a2a9eb38787c1b30ab14f64795fc805045bceafed8e",
+        "mode": "0644",
+        "bytes": 13950
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesAccess.php",
+        "sha256": "f185163c05efb348261b2e7b01231b76cae29748541b77c657782bf072482d4d",
+        "mode": "0644",
+        "bytes": 2828
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesAddressesItem.php",
+        "sha256": "6627deaadde83672fdb0bd251b703ba3c065d65813f122f821e68008c2d3443f",
+        "mode": "0644",
+        "bytes": 5475
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesChannelsItem.php",
+        "sha256": "41602fa3f24e68d50c05b255c8dbe76ca8a327e6988950ab7a52f67b3fdabaee",
+        "mode": "0644",
+        "bytes": 3864
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesOrigin.php",
+        "sha256": "a0eafaf373d617e3f757000db425cbbc7244c49a11f47d0317a3fb0716deb159",
+        "mode": "0644",
+        "bytes": 1599
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesRelationshipsItem.php",
+        "sha256": "bc5ed31eb8c776512c79a65638cf4f83288ab922cc7f6989468622fbf456e2dc",
+        "mode": "0644",
+        "bytes": 3876
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesTypedFields.php",
+        "sha256": "79b27bbca959a68cd2e543fbc7b2ee845dd8e9724aee85740c6b22d3b4d47786",
+        "mode": "0644",
+        "bytes": 2240
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesTypedFieldsValues.php",
+        "sha256": "964cff6663015302dee8afed86ebcd0e306e0dd7a4d14d17539bced44e0c1b56",
+        "mode": "0644",
+        "bytes": 1930
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewAcceptedValuesTypedFieldsValuesValuesItem.php",
+        "sha256": "941433ba03d9c9db408d2dcfb709f1d2b06e051f078726b5961b1c029aed6867",
+        "mode": "0644",
+        "bytes": 1758
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactNormalizationPreviewConflictsItem.php",
+        "sha256": "b2e1cba6fe30bb70ce2ae36df7521f7f1f1bd577926413980b0a7b85908841f6",
+        "mode": "0644",
+        "bytes": 2366
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleArchiveParameters.php",
+        "sha256": "dbd865e44f80e8e2f0ae725c3ec4bdb796e5f5a0b45ae50c6689960bcd2a05bb",
+        "mode": "0644",
+        "bytes": 2192
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleArchiveResult.php",
+        "sha256": "a3be6842818185cfe12e58782e8c93740cdd4c838343e25916a6225aae58f558",
+        "mode": "0644",
+        "bytes": 1239
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleCreateParameters.php",
+        "sha256": "92a862b38f204fa9eb868553b8c8c5d04ce8fbf08569f8b004ca1ade022cffd2",
+        "mode": "0644",
+        "bytes": 1886
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleCreateResult.php",
+        "sha256": "a100b485d01983ed1ffe1cfe186e4f406b55aea2ba93652532504736f92a9546",
+        "mode": "0644",
+        "bytes": 1238
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleDuplicatesParameters.php",
+        "sha256": "618da16ed2ec161ce79263d9d1e9333a247fa055b616ffb311043b89a3a2cff5",
+        "mode": "0644",
+        "bytes": 1765
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleDuplicatesResult.php",
+        "sha256": "b515e41a8310f78e348fe795fd8cf2692cad7fe6198de278ede8a2086729a042",
+        "mode": "0644",
+        "bytes": 1517
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleDuplicatesResultMeta.php",
+        "sha256": "91b3cc2eff4c57e2e9a8507f80372a978bc8057650cd88f4abb554579066d010",
+        "mode": "0644",
+        "bytes": 1005
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleIndexParameters.php",
+        "sha256": "dd81418711d9c19f8d36e12e15c2e0dd88c3fbc111c7ad5ac0d0527a7867b337",
+        "mode": "0644",
+        "bytes": 6393
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleIndexResult.php",
+        "sha256": "583cd0384079c0199c22b60c41451d3972de8828c21f35f64f6f86058d23c512",
+        "mode": "0644",
+        "bytes": 1644
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleIndexResultMeta.php",
+        "sha256": "5742f753cc3fa835b8a00d2cd255e7cac4a686e2dd49a57f18aa7691b4e09d34",
+        "mode": "0644",
+        "bytes": 1414
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergeParameters.php",
+        "sha256": "688d8f19459b9443304487b25c6b8afbffcc4c45d10ea9fa90506a339d9b1e75",
+        "mode": "0644",
+        "bytes": 1881
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreview.php",
+        "sha256": "5925d5e6cd97a7095cebfed2ca17d49692058a1d5941c68fb382f6669311c75b",
+        "mode": "0644",
+        "bytes": 4039
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewConflictsItem.php",
+        "sha256": "802ba35de7456e5aaa2ca7a939d569eae9453b3bfd8ef3496616cd36101d563e",
+        "mode": "0644",
+        "bytes": 2364
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewParameters.php",
+        "sha256": "eb07b42fab81fc0bbc16450caec04526dac51e6ec548a0bf8d0fbb79c339ffad",
+        "mode": "0644",
+        "bytes": 1916
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewPreservedReferencesItem.php",
+        "sha256": "6715b37d7db9850916c0d9c5fd3fb5e9a4d9650a258ebe8e787f6b24f6ed434d",
+        "mode": "0644",
+        "bytes": 1513
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergePreviewResult.php",
+        "sha256": "f0cd36931ff0b3eb102f1aaf2805c40f4442f5fe511d3e00c4433d25589796f9",
+        "mode": "0644",
+        "bytes": 978
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleMergeResult.php",
+        "sha256": "e7b89486cbdd289709e79d99a031ac02f920ca56914d4b07ec830529e967a6ab",
+        "mode": "0644",
+        "bytes": 1237
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleNormalizeParameters.php",
+        "sha256": "3d5f0e348eebea698a86293026b6a1563fb7a9bd4a631c860d29ac7f94212752",
+        "mode": "0644",
+        "bytes": 1921
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleNormalizeResult.php",
+        "sha256": "b2113122aafe12fd22540d43113b54a4c33abd0cf6bbd239cd9aff65c0d14cf0",
+        "mode": "0644",
+        "bytes": 983
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleOptionsParameters.php",
+        "sha256": "6c6c8b265a31cf8a26f5c1deefbe527ab3630112bfc82d6b504f36d8186190e1",
+        "mode": "0644",
+        "bytes": 3927
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleOptionsResult.php",
+        "sha256": "526db34b590f76e113ca8548060890353c0c45b393e87ac677b1979deebb9c65",
+        "mode": "0644",
+        "bytes": 1514
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleOptionsResultMeta.php",
+        "sha256": "98b0eb5d81e72245d173e49f5f940525612f97ba1a2082b5d4c21259948d2b35",
+        "mode": "0644",
+        "bytes": 1002
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleRelationshipsParameters.php",
+        "sha256": "b64e64d1e124536fc6a161c81edb1961b556926512b9c9cb4a6230291a5b2c21",
+        "mode": "0644",
+        "bytes": 2226
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleRelationshipsResult.php",
+        "sha256": "b87161ac59046f1dc9957f8ac09f279889230a78cc6cbc5fdffec1d1c2e2270a",
+        "mode": "0644",
+        "bytes": 1245
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleShowParameters.php",
+        "sha256": "6964357097fa8d3a05676a9ac8ac99723b31b032efbb12ed0ddebe41c0003337",
+        "mode": "0644",
+        "bytes": 1782
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleShowResult.php",
+        "sha256": "852d72bc4bcf1fc3640cf564bec9e5fd47f14d43a2b781744c043d9d330897f6",
+        "mode": "0644",
+        "bytes": 922
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleUpdateParameters.php",
+        "sha256": "c2e0ecd4d3fbdda3aa5d45854964df46ad2b8eb655b6710d8835ac39751b3a6c",
+        "mode": "0644",
+        "bytes": 2187
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPeopleUpdateResult.php",
+        "sha256": "dbd487647042ddc922932f65751df2110cdc9555937d4e488ae784db5e86c4f1",
+        "mode": "0644",
+        "bytes": 1238
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPerson.php",
+        "sha256": "1ca116a9b385f1c6208af5b18918983bd6595340d2e711ef40a790aefc3b42a9",
+        "mode": "0644",
+        "bytes": 8807
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonAccess.php",
+        "sha256": "b14471d2e357812d4cc74349b5f6b3d862683d11d334d84d7b6e3eba392cd6f3",
+        "mode": "0644",
+        "bytes": 2800
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonAddress.php",
+        "sha256": "b2b4f3e6f867ff5860056537a14aa12d1e955dcb14f476e9970f8b7870cbebbe",
+        "mode": "0644",
+        "bytes": 6126
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonChannel.php",
+        "sha256": "4eb92e0531b4ff9da5a29fd0188c8b524f704af9eaa0c01eaa966c372bd3426c",
+        "mode": "0644",
+        "bytes": 2061
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonConfirmedReceipt.php",
+        "sha256": "f2bbe575c1b1ab386e8b912518a3bb8d8546c360ba1db2322f8a747b6620138d",
+        "mode": "0644",
+        "bytes": 1430
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonDuplicate.php",
+        "sha256": "f77a3027c740ac7179ee607f32fe107b11c080552742e5e0bcfd34330f587b0b",
+        "mode": "0644",
+        "bytes": 1862
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItem.php",
+        "sha256": "b6cf8546269ad4e006b7e83f71e883f53528bfd067adbdd575b1cb3461afcdb8",
+        "mode": "0644",
+        "bytes": 9139
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemAccess.php",
+        "sha256": "be4d20e34bbb908173c89f63ea093919df43884b57f8e22426d3c98084218e8e",
+        "mode": "0644",
+        "bytes": 2808
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemOrigin.php",
+        "sha256": "3984b431e39c3a6cee749989b53de69327186835202ff02634bdeb11da951b09",
+        "mode": "0644",
+        "bytes": 1579
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant1.php",
+        "sha256": "2d9696afd09034f6b0d5dee853e1b63848039db527e199afc825766503a40d67",
+        "mode": "0644",
+        "bytes": 2147
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant1Values.php",
+        "sha256": "eba8cc4d40c7f0e491ce9e24c00be52d8a43eb2780a939addbb4a75d5f65f032",
+        "mode": "0644",
+        "bytes": 1894
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant1ValuesValuesItem.php",
+        "sha256": "9183bc1642d1f9c4b2e77e4721a44710401976fb8beb609938b3c3d705590fce",
+        "mode": "0644",
+        "bytes": 1746
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant2.php",
+        "sha256": "4214e321efa40076142a48c3387eaae2ad38733cace8d42994f477a86337c915",
+        "mode": "0644",
+        "bytes": 1319
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant2Values.php",
+        "sha256": "717526b5af4fef40eca85d4ee3f1943d4a0169cf6c73326ad4e19bd741d546d1",
+        "mode": "0644",
+        "bytes": 593
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonListItemTypedFieldsVariant3.php",
+        "sha256": "ddf624162a80215430e8ed6b7193683450c0a5a1e3ae575d3bab4a90eb4b37f3",
+        "mode": "0644",
+        "bytes": 587
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonOrigin.php",
+        "sha256": "34433eafaa2b890ba5a6b5b246c1c1dd40b2adaf1f46d312afec3b115d6fc7a0",
+        "mode": "0644",
+        "bytes": 1571
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant1.php",
+        "sha256": "46c473818a18d2ab33bbeeb535fba0566a7f6b6baaffc5f44064d719d40ed468",
+        "mode": "0644",
+        "bytes": 2115
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant1Values.php",
+        "sha256": "450f4dc4a4b0e31a61ba7fd26d6cd98543ee45f9e5a5fcb4a8cebc2aab73dd9e",
+        "mode": "0644",
+        "bytes": 1870
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant1ValuesValuesItem.php",
+        "sha256": "6e8b794dcd66b0eca6463ad44ab712732d534a59fd015f26d502987b174d24e2",
+        "mode": "0644",
+        "bytes": 1738
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant2.php",
+        "sha256": "fd667049f9d5d68e39ec39bb129a344640cb42f6ebdd01ddb970f43b8de2b67e",
+        "mode": "0644",
+        "bytes": 1287
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant2Values.php",
+        "sha256": "a50a231ef0bddc9540e9af371e388b6b54749d2d7921ead6ba79fcd2ced42f75",
+        "mode": "0644",
+        "bytes": 585
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactPersonTypedFieldsVariant3.php",
+        "sha256": "e4c30974d0e7b72309a4ff6cd0c61339afb444844ed8ee7c986445c71848a58d",
+        "mode": "0644",
+        "bytes": 579
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactRelationship.php",
+        "sha256": "7428c8fcd6b4d9d41b3c27e8e8f3bf7820b00a387eea2ac873e11be1f37db38c",
+        "mode": "0644",
+        "bytes": 4668
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmContactRelationshipOption.php",
+        "sha256": "0a493796888b94611af792938434005f3dd2e58583b1038fc0c5df296cf2d909",
+        "mode": "0644",
+        "bytes": 3998
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadParameters.php",
+        "sha256": "d78674fca0269cec2c175714486107a519e5fda8e32b25d126737920165dbc85",
+        "mode": "0644",
+        "bytes": 2122
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadRequest.php",
+        "sha256": "4cecfb309857140f8a3b70057eb220ba33975c3c1f1c162d63da981eb7cde4bd",
+        "mode": "0644",
+        "bytes": 7145
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadRequestContact.php",
+        "sha256": "a8c9818daf6eec22d19f800aafc1ea0e5049b6e2d0c5236e5364484ea2f168f9",
+        "mode": "0644",
+        "bytes": 921
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmConvertLeadResult.php",
+        "sha256": "57a352fc904e3f5a3f56fba49b085fcbce291878fcc72370debbe3e2bb197f95",
+        "mode": "0644",
+        "bytes": 1134
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadParameters.php",
+        "sha256": "9305161b3172dc1731e89869b1cf132cf1041d0b97e381bafc70d176c50bbbad",
+        "mode": "0644",
+        "bytes": 1845
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequest.php",
+        "sha256": "698531acaf9ab986f602a679d28a0e41577553d99ebcad0a72e233e9133a0b4b",
+        "mode": "0644",
+        "bytes": 7497
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestAddress.php",
+        "sha256": "9841a281f82df5b9e89640a9f704ce5d9045901c81d81ca060ff4019b519b737",
+        "mode": "0644",
+        "bytes": 3940
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestEstimatedValue.php",
+        "sha256": "1206a5fccc03f245b4e430a6abce7d09cbdb4be1409b65d4883ad06c883f6222",
+        "mode": "0644",
+        "bytes": 1045
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestTypedFields.php",
+        "sha256": "26ea2421cff579beb60f8f06ab45e33413c0f237124c76cb189b363449332682",
+        "mode": "0644",
+        "bytes": 1943
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestTypedFieldsValues.php",
+        "sha256": "19469d61d76757e18dc7a6d628984057a6aea22356f0f2170c80eb1ed02fd875",
+        "mode": "0644",
+        "bytes": 1657
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadRequestTypedFieldsValuesValuesItem.php",
+        "sha256": "2d6091560917579b1d04eaf576483aaa1fa5919fe9af7f4ac26c4196cb76282b",
+        "mode": "0644",
+        "bytes": 1576
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmCreateLeadResult.php",
+        "sha256": "67024bd2f5b03f0ac05c8a9b4035c6dfe78a00cd76424fc62b1aa9da08fab0ee",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDeleteLeadParameters.php",
+        "sha256": "10b86d4ad6474ecc8cd1d79da48d5bd886d2f4a1e65b56a93923b8a2ce4ab075",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDeleteLeadRequest.php",
+        "sha256": "b080106b32c58a2c934d662d500b774c7477ac4b373adf517beb7b8ac8c5e01e",
+        "mode": "0644",
+        "bytes": 1101
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDeleteLeadResult.php",
+        "sha256": "eebb75b7b6a5a69220fb6eb6a59c1c57cd8033259906bd4d0423371dbf67d80a",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDisqualifyLeadParameters.php",
+        "sha256": "16fc5ef92506d2c8c0ba8d2a48a0419703e385eef7fb8bd4d89521d387353a67",
+        "mode": "0644",
+        "bytes": 2137
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDisqualifyLeadRequest.php",
+        "sha256": "fe5e819a1bec7847399d43eecb35eb868ae691b66e6a768a4c06b9f85ae31531",
+        "mode": "0644",
+        "bytes": 1117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmDisqualifyLeadResult.php",
+        "sha256": "0794fe403e2cd939fb03ba267cd0871522f72bc596e3d8c55c715efb369f4214",
+        "mode": "0644",
+        "bytes": 1137
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmExportLeadDataParameters.php",
+        "sha256": "3bf51695f9280457a8035dcd4ed9114b566d1ccca716b984810b70803c0db0a8",
+        "mode": "0644",
+        "bytes": 1487
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmExportLeadDataResult.php",
+        "sha256": "7b4d3ed36de70f5a7c929703f59266b19ac85ca06f7afd456a7a2e361fd00e4d",
+        "mode": "0644",
+        "bytes": 895
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadDuplicatesParameters.php",
+        "sha256": "821a40edbc954eed99a3d5c6e9a2a1335201aaf1af30208044620ee8136c1e54",
+        "mode": "0644",
+        "bytes": 1970
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadDuplicatesResult.php",
+        "sha256": "055a046ffeffba2dc8dbe71df8fe94f59e41b20d2e98ceb4a5e1202029e40e58",
+        "mode": "0644",
+        "bytes": 931
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadParameters.php",
+        "sha256": "3e2fc16242fb23b62dfdbeadf7319a6ac0aba1580cfc9a8777f650d1e3b7360e",
+        "mode": "0644",
+        "bytes": 1481
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadResult.php",
+        "sha256": "a92732fce306c722667939271c9ca8673e27246f749023c4a1eccb4b8e73351c",
+        "mode": "0644",
+        "bytes": 865
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadScoreRecalculationRunListItem.php",
+        "sha256": "59f4fd128ed2f213cdf2b89f79177cd5ff28bf6016d80f7f4770e15029ac5630",
+        "mode": "0644",
+        "bytes": 1960
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadScoreRecalculationRunParameters.php",
+        "sha256": "382ca370be4371221d38f17b21b46ee8535ef8e8cb4668c0641c02af5220a17c",
+        "mode": "0644",
+        "bytes": 1975
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmFindLeadScoreRecalculationRunResult.php",
+        "sha256": "4107c70df4194c400683265444f2f624191bdb4c11f992f772373a2c4e1dc3e7",
+        "mode": "0644",
+        "bytes": 970
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadHistoryParameters.php",
+        "sha256": "d53e5ec5c50d3aad785543923f340cb78cb21a03c8a72779d76dd724d3890f06",
+        "mode": "0644",
+        "bytes": 1966
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadHistoryResult.php",
+        "sha256": "9b90fc79558572897504c7bc9244726a60b10a9ad5663466c7e8485dd99985f1",
+        "mode": "0644",
+        "bytes": 915
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadStatsParameters.php",
+        "sha256": "570df3d26fd6ed72008d9a558a15dcea1d81424b1af6bfbf7724d31a710ab4d3",
+        "mode": "0644",
+        "bytes": 1695
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmGetLeadStatsResult.php",
+        "sha256": "9c97889c9dd829869f1a918f4435a6a3748dad7027accbcce7698ce74d435571",
+        "mode": "0644",
+        "bytes": 889
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmListLeadsParameters.php",
+        "sha256": "93b475ba8730b1c974f19d87694480ff56aef248595751deb6567df30914afdf",
+        "mode": "0644",
+        "bytes": 2735
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmListLeadsResult.php",
+        "sha256": "0d1704b6b44f09cfab973f697625de0b3245ffd0a063ab0a8502d69191ea8b0a",
+        "mode": "0644",
+        "bytes": 882
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionParameters.php",
+        "sha256": "72fe3aa88f4dd54418bc53e9afb6cc44ac31f053d1fcad19db23ab7f9dcd6066",
+        "mode": "0644",
+        "bytes": 2172
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionRequest.php",
+        "sha256": "b227535ea631fd7e5070c18d8d9bf642c6e9fa8be8f5d071314aec12e3f1b01d",
+        "mode": "0644",
+        "bytes": 5484
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionRequestContact.php",
+        "sha256": "776a0c8a0e92e69ae61aac82e618b5b256e7473766536649246fc7fb4d6bce51",
+        "mode": "0644",
+        "bytes": 931
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadConversionResult.php",
+        "sha256": "9959997fccb2b18f598b95e79cc6aafea2b636669e5eec3251e77fb8d711ac2d",
+        "mode": "0644",
+        "bytes": 946
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadErasureParameters.php",
+        "sha256": "65736f5d54c2db69431bcb949528a0e5c95c7f738031711adbecd04b4bac2748",
+        "mode": "0644",
+        "bytes": 2157
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadErasureRequest.php",
+        "sha256": "6b0fbebf147b43fe4d4f33b55bb572d808f29c3f51386def4f21cd2aaabec5af",
+        "mode": "0644",
+        "bytes": 611
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadErasureResult.php",
+        "sha256": "651246f14a97154bfd38dad8f0427cd0c0b39b3769d64901a7954e5930d2aa05",
+        "mode": "0644",
+        "bytes": 931
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationParameters.php",
+        "sha256": "0f9fae2d25612a1cbf874d5b2b3f6780a04e90958a7b3853ecf93a95c93f1339",
+        "mode": "0644",
+        "bytes": 1940
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationRequest.php",
+        "sha256": "71896a34d6414bb06bdfbd3c0d9391875e2628a8456ecb3681e853fb100d9111",
+        "mode": "0644",
+        "bytes": 3322
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationRequestFilters.php",
+        "sha256": "2b8b99a6d6b51e8b37cb33bb2d50a4b43fdae41f59b800d5f876048f22994001",
+        "mode": "0644",
+        "bytes": 5078
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmPreviewLeadScoreRecalculationResult.php",
+        "sha256": "48320de2521c97b917a432f7945d8053d16858f73f8da350d410b3cca062a0e2",
+        "mode": "0644",
+        "bytes": 1236
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmQualifyLeadParameters.php",
+        "sha256": "bea6067037d95ab438356a761782c20ee6c013ca8e4c24aa0aa475fbbd0546e7",
+        "mode": "0644",
+        "bytes": 2122
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmQualifyLeadRequest.php",
+        "sha256": "ffa5193fad2d6a5dae41d388f885c37299bfa81c470230d8d32361f0d1c4d474",
+        "mode": "0644",
+        "bytes": 895
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmQualifyLeadResult.php",
+        "sha256": "3120b93134014cd9bd1560b30335417e745e8c101d069314362c4cdf657257e4",
+        "mode": "0644",
+        "bytes": 1134
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecalculateLeadScoreParameters.php",
+        "sha256": "304032bdba186ca3d29bfa0235bccbdea74913d69418c45c2d0b76c233541ef3",
+        "mode": "0644",
+        "bytes": 2167
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecalculateLeadScoreRequest.php",
+        "sha256": "0662fbfc390e2cc9522874417e3703eff3ddedef211d17e13a7ad9364a8901b7",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecalculateLeadScoreResult.php",
+        "sha256": "db01648752106f0b1157f058d1d9807e9b1882b3496390330b23185d88dd7f43",
+        "mode": "0644",
+        "bytes": 1143
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecordLeadConsentParameters.php",
+        "sha256": "b3b5a8533b8be41a0becb0cb439e6bca3bd7459c78eb5819f3db50710176dbb3",
+        "mode": "0644",
+        "bytes": 2152
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecordLeadConsentRequest.php",
+        "sha256": "937d951f22639f6c65687cf9a5e5963a1e61ef0db2221ee9c18e1b706f3ffd21",
+        "mode": "0644",
+        "bytes": 4741
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmRecordLeadConsentResult.php",
+        "sha256": "206e665259cf40f3b70b69fac960723094a7396e4ff703af57fe08ccfcc74b43",
+        "mode": "0644",
+        "bytes": 1140
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmReopenLeadParameters.php",
+        "sha256": "d999e14c94f8b1b0d52c4ad7b5de0931cd955afce627e3e67ec25ad34f9b5683",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmReopenLeadRequest.php",
+        "sha256": "bc787a8c47b811911bec970574c4d6cd69c96699f7e6277b0df1bf334a71698a",
+        "mode": "0644",
+        "bytes": 893
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmReopenLeadResult.php",
+        "sha256": "de338df3f5d40a49f47fb5f3f75148cf00b2a83c09c8f9ece9868a4f4917eeb7",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSearchLeadsParameters.php",
+        "sha256": "c789cdd53dd0c2e5c6d14b44f842222be9c4169ed8a02c37557effb29b53edfa",
+        "mode": "0644",
+        "bytes": 2737
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmSearchLeadsResult.php",
+        "sha256": "ce1c4db97eb207e097fe29624f149d3723f336e62d9acb00129502ad54403fd4",
+        "mode": "0644",
+        "bytes": 884
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadParameters.php",
+        "sha256": "4ed607f215081e1b8e68b1533427e8dd1700b7eb371dd8105121b3abefe8ff83",
+        "mode": "0644",
+        "bytes": 2117
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequest.php",
+        "sha256": "ce144cde4b7c07a7c89e6c670270aa71d2946362c1b9ff46dcfabf5fe9f3dd64",
+        "mode": "0644",
+        "bytes": 6129
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestAddress.php",
+        "sha256": "6632ffeacdf0bbebfb322938ac199499b4555c24929383c3ac007cfece372041",
+        "mode": "0644",
+        "bytes": 3940
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestEstimatedValue.php",
+        "sha256": "1d289ef7a3d1fe6db8052ab1d44083821b1cf3f1b42e941b2bfb9f066c39e281",
+        "mode": "0644",
+        "bytes": 1045
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestTypedFields.php",
+        "sha256": "884cd1ab84155b2316e40b8c6cc75aff528cee08870ca22426f3cd1c5d9e4312",
+        "mode": "0644",
+        "bytes": 1943
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestTypedFieldsValues.php",
+        "sha256": "a7911edbdfa1212d384cf3d20fe88e95d38f7e899dc9b515ce164c6547ef8508",
+        "mode": "0644",
+        "bytes": 1657
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadRequestTypedFieldsValuesValuesItem.php",
+        "sha256": "e7d0608bba6e15f8817ed753fb6f44ef810793b4eb16d670e3199bc1418875c5",
+        "mode": "0644",
+        "bytes": 1576
+      },
+      {
+        "path": "src/Custom/Crm/Model/CrmUpdateLeadResult.php",
+        "sha256": "dc98dc57c2f64d3a374730446c18ed1eb8b72a6efdc31ca27dbc88c1ededeac0",
+        "mode": "0644",
+        "bytes": 1133
+      },
+      {
+        "path": "src/Custom/Crm/Model/FindCrmStagePlaybookParameters.php",
+        "sha256": "01bd909da7605c776a1763954c753ea174d503367b3c41c77a30d82873e120f6",
+        "mode": "0644",
+        "bytes": 1710
+      },
+      {
+        "path": "src/Custom/Crm/Model/FindCrmStagePlaybookResult.php",
+        "sha256": "bb577f221ee64a5cc43b26a1bc87dbacb54679aba588ba1520c59f55293651c1",
+        "mode": "0644",
+        "bytes": 942
+      },
+      {
+        "path": "src/Custom/Crm/Model/GetPipelineParameters.php",
+        "sha256": "914b965730c9c05b44b3e85044cc52ddd95e8a8127928b0649a17e857bac9196",
+        "mode": "0644",
+        "bytes": 1748
+      },
+      {
+        "path": "src/Custom/Crm/Model/GetPipelineResult.php",
+        "sha256": "8e7ec193b52d8c04d96e6b109297064708e55c3a129ab5d76038aa699915cc5b",
+        "mode": "0644",
+        "bytes": 881
+      },
+      {
+        "path": "src/Custom/Crm/Model/Lead.php",
+        "sha256": "3582b74658d46b9fae12a81884bd18509737b8a6b321892899c25ef3cfbb9b8a",
+        "mode": "0644",
+        "bytes": 12288
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadAddress.php",
+        "sha256": "4b53b0e5b17162527e894825bc907d8c1d20199d32ed5b1fe5898cfa25f334f4",
+        "mode": "0644",
+        "bytes": 3846
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadAttributionVariant1.php",
+        "sha256": "6afbcc1d6d5dcc3c292e8427fcd0d2be6f48888e0fb47d9dfd64e071304d77f9",
+        "mode": "0644",
+        "bytes": 4630
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadAttributionVariant2.php",
+        "sha256": "d764d3960e603ae0176f56934f6a54ffa3dd2370245d99cf3aca2d38bbc1aa67",
+        "mode": "0644",
+        "bytes": 563
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConfirmedReceipt.php",
+        "sha256": "63d9b44a32e40a8a638fe0f0358a10138681993f7884ae3fe7ea9bfdaf40ea8e",
+        "mode": "0644",
+        "bytes": 1389
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConsentItem.php",
+        "sha256": "1ea18aec2f465e729c519d468e4ff028dd38c6b26423583a89fcd4a0d42bd5f0",
+        "mode": "0644",
+        "bytes": 1880
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactData.php",
+        "sha256": "7efa51abe2c154c5b5097fa539414df7ffabd1925072c39f605f33b3871a9c89",
+        "mode": "0644",
+        "bytes": 4102
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDataAddressVariant1.php",
+        "sha256": "8b455a538c5949fd6554ef7db9064612501d5e208b6f07674e84f497fce71c47",
+        "mode": "0644",
+        "bytes": 3839
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDataEstimatedValueVariant1.php",
+        "sha256": "51c0562b3905ffe22596fca5bd4640c2ad56fed33c27f6c2540de76dae06364f",
+        "mode": "0644",
+        "bytes": 1048
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraft.php",
+        "sha256": "18b0d52411341f09b487789925086c6815e7795f278a849d914a1d23e331a3ea",
+        "mode": "0644",
+        "bytes": 13009
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraftBankAccountsItem.php",
+        "sha256": "0cf727437de38c2cfcc6f8b9728f2293569e82757d7eeed6b29f9476c1cdbe1d",
+        "mode": "0644",
+        "bytes": 2358
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraftCustomerProfileVariant1.php",
+        "sha256": "b1e8bf7bdad7acce8291ff60bd1f9a235e083ed52b91e2d0977d3d9ecba1f281",
+        "mode": "0644",
+        "bytes": 4504
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadContactDraftSupplierProfileVariant1.php",
+        "sha256": "3eb6d9318f340135277999fb51df5ee94fcfcd7550d7130ad456b290736a9114",
+        "mode": "0644",
+        "bytes": 3323
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConversionPreview.php",
+        "sha256": "f33581a6dcb950d118858696818a60919709316dba5effc98a42d5949b7c7604",
+        "mode": "0644",
+        "bytes": 4135
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConversionPreviewConflictsItem.php",
+        "sha256": "97c9a20a6a8471b68aad575dd8e50c0f2841b75cb27bb501646312c0fb32e24d",
+        "mode": "0644",
+        "bytes": 1149
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadConversionPreviewNormalizedDraftVariant2.php",
+        "sha256": "e00d73a22061828bc4287b85d22622f811e415870aa8740770026473b2d68f6d",
+        "mode": "0644",
+        "bytes": 584
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadDuplicate.php",
+        "sha256": "19beb8d3367ad599f91121f36dac3946ff700df1719d119ef7f46ae209d27a7e",
+        "mode": "0644",
+        "bytes": 2005
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadDuplicatesPage.php",
+        "sha256": "87fb64d25e14ff4018f49c5016d8055eb4895d95c5441d64ba331c62b031967e",
+        "mode": "0644",
+        "bytes": 1469
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadErasurePreview.php",
+        "sha256": "87c164f64f503e17d2d5886b842cc923525696913833c7f7bab796e7e6b6e588",
+        "mode": "0644",
+        "bytes": 2564
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExport.php",
+        "sha256": "b72b805b9d72687b5c7a67696463d5f8126c9facb2f5922123f270be5cc60574",
+        "mode": "0644",
+        "bytes": 7209
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportData.php",
+        "sha256": "d36d65ae6d5563c640c28bbefca6beaa3600f85a51d87799d6e3ef05dababfcf",
+        "mode": "0644",
+        "bytes": 7786
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataConsentRecordsItem.php",
+        "sha256": "d221ec82b7fa26e4ba574458d9dd8185120c672f6dedf7d30695a98f8d8983dc",
+        "mode": "0644",
+        "bytes": 4410
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataLead.php",
+        "sha256": "55b122d9d891b87b72e33a54a37fdb069b1c24eca915846fee0150a4c706f091",
+        "mode": "0644",
+        "bytes": 7597
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataOriginVariant1.php",
+        "sha256": "2a75b1141e758e3b234d7a9dbaa8607db0fbc5fe4a32c1bd7c4d0817d28a6ad6",
+        "mode": "0644",
+        "bytes": 3153
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadExportDataTypedFieldsVariant2.php",
+        "sha256": "e34e840811be1dc7d0555ae23c7c9eb057389a8d817f0ae29ad5af8b2ff5ffdc",
+        "mode": "0644",
+        "bytes": 573
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadFilters.php",
+        "sha256": "c023c8da0aabe0400d940fd51e5fcd35a8fcd35ffe3ec53655e6e1f7d74fe658",
+        "mode": "0644",
+        "bytes": 5069
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant1.php",
+        "sha256": "f2a9f799bf68fae3eedabf9b3d4579322382b5a9e4eb793aeff3b792306cd36f",
+        "mode": "0644",
+        "bytes": 2974
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant1Snapshot.php",
+        "sha256": "b901df24f8a470c46d13abd55f04d419a51921f1406ca6f1ea9654f91b3d615a",
+        "mode": "0644",
+        "bytes": 2145
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant2.php",
+        "sha256": "3b802f6cddf951cd7291918f0ef9983d173a50e61ff30613e48fe0de29de5da7",
+        "mode": "0644",
+        "bytes": 3190
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant2Snapshot.php",
+        "sha256": "5e2806bfc8d50c93314080011040fef25553694f60c557e5f18f12df4e945492",
+        "mode": "0644",
+        "bytes": 2735
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant3.php",
+        "sha256": "21986a40e289f3e0894213d25a403556189ea4107ad6b3e9da02163db7c401f0",
+        "mode": "0644",
+        "bytes": 2589
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryItemVariant3Snapshot.php",
+        "sha256": "74c8c719f3206dc209286dd2280da519c46685225983f9442fc3bed36c6281f5",
+        "mode": "0644",
+        "bytes": 991
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadHistoryPage.php",
+        "sha256": "ef62d7e45d6ffc4ac59d4340d2a8bd16414903c04f60efa2636878dbd99abc5b",
+        "mode": "0644",
+        "bytes": 1764
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadNextAction.php",
+        "sha256": "3bead748e94c026d7432581d869dfb639c1451cbf61bd2389ed475790846da40",
+        "mode": "0644",
+        "bytes": 3163
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadPage.php",
+        "sha256": "b4c6656da48c58bc8021602d28ab5ed8677bceaf335687d26000a0e227484576",
+        "mode": "0644",
+        "bytes": 1422
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadRouting.php",
+        "sha256": "87c78545efbd9a4b926ca0b28521c60e55c17a0fb62ff1d2957503f186fc5a02",
+        "mode": "0644",
+        "bytes": 3214
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadRoutingCandidateVariant1.php",
+        "sha256": "f00bd42e1458b3e83d29c23e2be84e89e3a72acfd3b4d3ae9bb5dd682db4aece",
+        "mode": "0644",
+        "bytes": 1342
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadRoutingReservation.php",
+        "sha256": "0e68674d2325dad7b7c4288d805d0d8b3563b359772920933f68c7bac851ed38",
+        "mode": "0644",
+        "bytes": 1240
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreFactor.php",
+        "sha256": "39ac5905c61766188660848aa26e8d2bfd95d03983a6043c16f82416d6ced16c",
+        "mode": "0644",
+        "bytes": 1210
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreRecalculationRun.php",
+        "sha256": "a0b08c235d2258d19c70f1088783a4c555803d6aa2869eb13e33f2f614ba3231",
+        "mode": "0644",
+        "bytes": 6024
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreRecalculationRunCounts.php",
+        "sha256": "5b27fa08031287c0433055d1d9b44f32dc6a8fb363eda7c2fe8e3e6b7f552cc3",
+        "mode": "0644",
+        "bytes": 1795
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadScoreRecalculationRunResultsItem.php",
+        "sha256": "36d345cf06b7c8562b5704ed2c71f974908553ada0d275667a1c39eb36ab3dae",
+        "mode": "0644",
+        "bytes": 1956
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStats.php",
+        "sha256": "bda2b211eec6a4d69a7a3908de4be373021eae0b736c2713683df66822038845",
+        "mode": "0644",
+        "bytes": 3692
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsBySourceItem.php",
+        "sha256": "b750b9ac961d76466d6f58137ac7bf7d504f21aeda0a4cbab06439b9affdfbad",
+        "mode": "0644",
+        "bytes": 1468
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsByStage.php",
+        "sha256": "ddd14134638b6af4774c0587930e65c9b1cedf02cdb5506e6048ee6956ce398d",
+        "mode": "0644",
+        "bytes": 1174
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsByStatus.php",
+        "sha256": "c4ede2a061f404ffde016c2c4d6cf5337774205dc82327d8409194543305f93f",
+        "mode": "0644",
+        "bytes": 1379
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadStatsScoreVersionsItem.php",
+        "sha256": "6caac23c9c500d176f6cf9d6bbff3ddb3c44f292903343c29752d198dc91e59c",
+        "mode": "0644",
+        "bytes": 1710
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadTypedConflict.php",
+        "sha256": "7e9a15f5499911887edb5d02b72da7aad55af3b49318c928d466ae05f9939ed7",
+        "mode": "0644",
+        "bytes": 1655
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadTypedFieldsVariant2.php",
+        "sha256": "ec4ab8ff48fef3be26c749b30ab5bd513adda11261e9edaf08a78dd580502764",
+        "mode": "0644",
+        "bytes": 563
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadTypedProjection.php",
+        "sha256": "96e98b2fa59e916a68e64c3cfea61e0f317e396b5afa730c6de1513fba775f1a",
+        "mode": "0644",
+        "bytes": 3160
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadValues.php",
+        "sha256": "acad618ac9c259087daae0ce80367a811dd6101add4625cb1fb588e9b26092e1",
+        "mode": "0644",
+        "bytes": 2064
+      },
+      {
+        "path": "src/Custom/Crm/Model/LeadValuesValuesItem.php",
+        "sha256": "3312085afbb1aa6ffb0e6c208df097cfc2887fedd6a2549f5e50053de5826595",
+        "mode": "0644",
+        "bytes": 1714
+      },
+      {
+        "path": "src/Custom/Crm/Model/ListPipelinesParameters.php",
+        "sha256": "c53a0d90ac40ab0c505978bdc7e0f21a74a74daeb3f5b272564baff6bfb683fe",
+        "mode": "0644",
+        "bytes": 2639
+      },
+      {
+        "path": "src/Custom/Crm/Model/ListPipelinesResult.php",
+        "sha256": "80245f71fb1dc44b31d847fa0ca03df682fd43e61d0a15a205c7084c4496269d",
+        "mode": "0644",
+        "bytes": 899
+      },
+      {
+        "path": "src/Custom/Crm/Model/MergeContactPeopleV1Request.php",
+        "sha256": "59a7155e89b4288cff0440358666355477f32cbe5584888d92c75f142a21ea0a",
+        "mode": "0644",
+        "bytes": 3153
+      },
+      {
+        "path": "src/Custom/Crm/Model/MergeContactPeopleV1RequestResolutions.php",
+        "sha256": "f6c2568ea4531db78265b076402f7908077b47647a52a4c400b0a1d9394c1a18",
+        "mode": "0644",
+        "bytes": 2320
+      },
+      {
+        "path": "src/Custom/Crm/Model/Pipeline.php",
+        "sha256": "ae1b5111c2d597d114d81bff6544c3100b54990090f0fc121a5fee400a0b41a3",
+        "mode": "0644",
+        "bytes": 5189
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineArchivePipelineRequest.php",
+        "sha256": "7b8e22d079553996734c36716f09c8af3b35a677a2b008f0b4dbd50eba693cf0",
+        "mode": "0644",
+        "bytes": 1336
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineArchivePipelineStageRequest.php",
+        "sha256": "e1c598a30515acc4bbc060a5b321f79dbaf81613439b9255a22fb464e1de87d3",
+        "mode": "0644",
+        "bytes": 1663
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineConfirmedReceipt.php",
+        "sha256": "f5598da9218c8ee5b5ff1807040c09bdeb5dafe9990f1884e45cdcb31dfc9ebe",
+        "mode": "0644",
+        "bytes": 1397
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineCreateCrmStagePlaybookRequest.php",
+        "sha256": "4c5d9e8cc08be5f1e1e368e95bc66c0ae52aa3c2ad5f108816b7907184fc32f8",
+        "mode": "0644",
+        "bytes": 1490
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineCreatePipelineRequest.php",
+        "sha256": "1239c552cee0517ce7d70738dad4b913d8ec3ff41607f63949d1bed0a986643f",
+        "mode": "0644",
+        "bytes": 2920
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineCreatePipelineRequestInitialStage.php",
+        "sha256": "ece90332a34f4527bbaf51102b976a07ba31a8356cb20f94cff745ca48b99707",
+        "mode": "0644",
+        "bytes": 2050
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineLossReasonsItem.php",
+        "sha256": "50856871b074873c1e07da9ac7eee5d4dac4049a3e5b18ff06297336c397b511",
+        "mode": "0644",
+        "bytes": 1529
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelinePage.php",
+        "sha256": "8db6cec000826200bada4adb9af6a6f087bef7f12214a5c6bd0212de2763534f",
+        "mode": "0644",
+        "bytes": 1365
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelinePreviewStageRemapRequest.php",
+        "sha256": "54e2ef871bbffc2fb1a5b6be0e90f91e2e5a5222ac4fbe986feeded09f938ae1",
+        "mode": "0644",
+        "bytes": 1716
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelinePublishCrmStagePlaybookRequest.php",
+        "sha256": "c7c760893f60405ebff54248986615638c949f25656e2eeb28197f2553bcd28e",
+        "mode": "0644",
+        "bytes": 901
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineReorderPipelineStagesRequest.php",
+        "sha256": "28ba1ade0d85a4e44f9a42190e37889bc159949febe6ac4aa5b1fc209cec619c",
+        "mode": "0644",
+        "bytes": 1222
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineSaveCrmStagePlaybookRequest.php",
+        "sha256": "779339e038897dcab15d16e09c66c609ae670871ee81d8352a79d7f3ba637671",
+        "mode": "0644",
+        "bytes": 1726
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineSaveLossReasonRequest.php",
+        "sha256": "f26eb348fd644582ccc117aa378afa2a1dafa236cf40d753244831748b4d84af",
+        "mode": "0644",
+        "bytes": 2317
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineSavePipelineStageRequest.php",
+        "sha256": "9fcfa2900350307a31dd82c2b3cb353da0cec5ff612930e02566815b9ff512b6",
+        "mode": "0644",
+        "bytes": 2684
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybook.php",
+        "sha256": "e19f57860ad669479ee217db9fced1a51beb1c62d0cb3282e572f9e65431b78b",
+        "mode": "0644",
+        "bytes": 4831
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookBlockingRulesItemVariant1.php",
+        "sha256": "268a77847234be509d4ee84a65ac36db02311ea99295df2993b520d3fdd4ab90",
+        "mode": "0644",
+        "bytes": 1025
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookBlockingRulesItemVariant2.php",
+        "sha256": "7b30b8f0aea817059630e3e81da3dd13e2bf2b3a32ff642d4fdd90685864a34a",
+        "mode": "0644",
+        "bytes": 1031
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookBlockingRulesItemVariant3.php",
+        "sha256": "6516c5fce3ccecffd2bbdf751cb1f988a3910896389e05659bf4b00f1f5d0b28",
+        "mode": "0644",
+        "bytes": 1031
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookQuestionsItem.php",
+        "sha256": "0b493cba4d9333c82ee511df4932cf56306be1a6c239afcfff153227528133dc",
+        "mode": "0644",
+        "bytes": 1957
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookQuestionsItemOptionsItem.php",
+        "sha256": "b46c28c890ee4050eca87720a4f59dc0f7294fbf659011af3749f41d882510fc",
+        "mode": "0644",
+        "bytes": 985
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagePlaybookReceipt.php",
+        "sha256": "4a0a0d68d69ffd7b0d3aaa9064f8730768d2f767da8e5aa56e1d35b52d61cb1c",
+        "mode": "0644",
+        "bytes": 1438
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStageUsagePreview.php",
+        "sha256": "b3e309e1e9bb5b7543223a6a717beb35f0aaf191ad7a45abfd42255d284baa21",
+        "mode": "0644",
+        "bytes": 3821
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStageUsagePreviewItemsItem.php",
+        "sha256": "99728b4ea0c0e6af7feb8b23e2fdf0a91ac1f23b18be6915f26c0830438658d4",
+        "mode": "0644",
+        "bytes": 1854
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagesItem.php",
+        "sha256": "606a91e448970d17d4b8c0067873961a63eb95dc585892c190862f511a494332",
+        "mode": "0644",
+        "bytes": 3811
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineStagesItemHealthConfiguration.php",
+        "sha256": "cdee94db91870632b66053dd592b21d4e60f02e64cd9176e5c8885961feeb68a",
+        "mode": "0644",
+        "bytes": 1458
+      },
+      {
+        "path": "src/Custom/Crm/Model/PipelineUpdatePipelineRequest.php",
+        "sha256": "88efa74a92f39607f4bc855db23b6d4546729e0e98cd7e15637656b0950ff5b9",
+        "mode": "0644",
+        "bytes": 2239
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1Request.php",
+        "sha256": "cc4a6edef0fb35445c9ccc8482010a498966fc00b3696ca97542b758e413d1cb",
+        "mode": "0644",
+        "bytes": 13960
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestAccess.php",
+        "sha256": "92435dcadafe1155173ba938d6b0fe9fd0e9dfe96aa0e46481be6358fbbd81b2",
+        "mode": "0644",
+        "bytes": 2820
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestAddressesItem.php",
+        "sha256": "2665b6442481c5bf9fb0ec3ff550b00f9c8221a7979dccd1a83183b3130ac0f9",
+        "mode": "0644",
+        "bytes": 5467
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestChannelsItem.php",
+        "sha256": "f0aec9ef990787d5a94e0f460c1172b59b45e924447568c46dc84470cb827d70",
+        "mode": "0644",
+        "bytes": 3583
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestOrigin.php",
+        "sha256": "5dd141128eac69c6a6f58fce405426971eac1669f0f3c47a459d1ee26ac76257",
+        "mode": "0644",
+        "bytes": 1591
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestRelationshipsItem.php",
+        "sha256": "9ac1e35055f641e2bf69170b90f5dfc0b5f4ca70093a85a3639ec64fb9b4f5fd",
+        "mode": "0644",
+        "bytes": 3868
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestTypedFields.php",
+        "sha256": "0066b990b5a77a593bac46452f8f5871311ffdd9b2372d6894dac576a72ec432",
+        "mode": "0644",
+        "bytes": 2208
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestTypedFieldsValues.php",
+        "sha256": "c9b4fefd47b7ce375171c9e332442f977c7635d2703d2c7331c78cc63e3da086",
+        "mode": "0644",
+        "bytes": 1906
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactNormalizationV1RequestTypedFieldsValuesValuesItem.php",
+        "sha256": "dd61160d3c5eb4dac98b361fda5f12bb0855a6cf5ed25e427cdb4ea5feeb53c1",
+        "mode": "0644",
+        "bytes": 1750
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewContactPeopleMergeV1Request.php",
+        "sha256": "d1fd7046b3a2950326af959fcbabed5de9546c248241fac066990c497937975f",
+        "mode": "0644",
+        "bytes": 1430
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewStageRemapParameters.php",
+        "sha256": "2c4863ca2f66c3d366cc5dcfaeb4295d56b35714e5d77ac3706c9d0bbc30419f",
+        "mode": "0644",
+        "bytes": 2193
+      },
+      {
+        "path": "src/Custom/Crm/Model/PreviewStageRemapResult.php",
+        "sha256": "14e329486bfe15d64e84701d898bb466abba3c933d1bf447d4ab8688a8ea2b90",
+        "mode": "0644",
+        "bytes": 955
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublishCrmStagePlaybookParameters.php",
+        "sha256": "69b35ae811cdb355e2165ef0436b424e21dd020267c80551093fbe35d74609df",
+        "mode": "0644",
+        "bytes": 2205
+      },
+      {
+        "path": "src/Custom/Crm/Model/PublishCrmStagePlaybookResult.php",
+        "sha256": "db28786e6ea20e6407c569cdf7947a4a9b4bdba4250fa126c4df47b2b8cb33e0",
+        "mode": "0644",
+        "bytes": 1243
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReorderPipelineStagesParameters.php",
+        "sha256": "41ac0e9152ccd6059961214efa723249c20f16409511697b701fe8941322608c",
+        "mode": "0644",
+        "bytes": 2213
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReorderPipelineStagesResult.php",
+        "sha256": "b5d2082a557d60c88aabf67e338cf0a9d03e47a4916ebf2edeaac48e3bb1cea6",
+        "mode": "0644",
+        "bytes": 1173
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReplaceContactRelationshipsV1Request.php",
+        "sha256": "98b0e5b7268fadc815301d9941f203f580cca115473b7889e23bbbccf7c029d2",
+        "mode": "0644",
+        "bytes": 3180
+      },
+      {
+        "path": "src/Custom/Crm/Model/ReplaceContactRelationshipsV1RequestRelationshipsItem.php",
+        "sha256": "3f51655850dde0889f34de1c6c37e0902bcc919caa07455a63db39ebaca1391c",
+        "mode": "0644",
+        "bytes": 3868
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveCrmStagePlaybookParameters.php",
+        "sha256": "0e310e88f7097d0921bffaff76a116c5e0524aa6faa0c7271d159c7382664aa1",
+        "mode": "0644",
+        "bytes": 2190
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveCrmStagePlaybookResult.php",
+        "sha256": "4c4b1c74f2df8b8070578b1cc2476225230c8dcd75b631eff92a2bd8e589dd88",
+        "mode": "0644",
+        "bytes": 1240
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveLossReasonParameters.php",
+        "sha256": "7916448a22d5d449350ef4b5fbdf0a142035e3201936a5c03e26a6cf3bb8ecb9",
+        "mode": "0644",
+        "bytes": 2178
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveLossReasonResult.php",
+        "sha256": "f5c8ceeb9447ed0f82295b981b7cd67f288547b3585d52975b72097b1e13a31f",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Model/SavePipelineStageParameters.php",
+        "sha256": "4eac36f4dec330d7060a0d74657286f58a24d59cc948c4038f4e76091240a7d8",
+        "mode": "0644",
+        "bytes": 2193
+      },
+      {
+        "path": "src/Custom/Crm/Model/SavePipelineStageResult.php",
+        "sha256": "eafd826670cb9b205dc7eecdeed9eda9ffa305fdebae5438491a7c6797afd1f8",
+        "mode": "0644",
+        "bytes": 1169
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationParameters.php",
+        "sha256": "942af3c43d673c0f475eefa26bf92a7488c26f3d03bbfbf8a42754b897ef2801",
+        "mode": "0644",
+        "bytes": 2357
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationParametersBody.php",
+        "sha256": "c7838704036f442348db5d7e52aa7bf61cd69c2fc374367c4dc6daf3b2fa8d61",
+        "mode": "0644",
+        "bytes": 2070
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationParametersBodyHealthConfiguration.php",
+        "sha256": "1aab6fc2c1e5aecf4937dbe8fedcf78a8e6c3600aabc307d0c658b5417f57069",
+        "mode": "0644",
+        "bytes": 1482
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationResult.php",
+        "sha256": "79dc3659507a32ac74470d7ed3ab27e76ad7d09d964e94abba048b706469029c",
+        "mode": "0644",
+        "bytes": 1771
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationResultData.php",
+        "sha256": "999c90a339319815873f4c1cfdc5e727c5cf20a9cbc9599d2a7bc468c9746f8b",
+        "mode": "0644",
+        "bytes": 2435
+      },
+      {
+        "path": "src/Custom/Crm/Model/SaveStageHealthConfigurationResultDataHealthConfiguration.php",
+        "sha256": "993404c0836ae8ab4a45a770bd838a94b1ebf6d66320699a0d758f9441bb63ca",
+        "mode": "0644",
+        "bytes": 1478
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1Request.php",
+        "sha256": "7bd69c5d546f017436545b710a56bd6b51b2fd48b199bbf5e62336f5fbbaafa0",
+        "mode": "0644",
+        "bytes": 11766
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestAccess.php",
+        "sha256": "14a9a512ecc517dbd0b7f548987fa911599ee0b9fee3d4112afda99944fd9a34",
+        "mode": "0644",
+        "bytes": 2812
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestAddressesItem.php",
+        "sha256": "b1eb699f4200302909bce7438df2ba37ebf0aed88e622597c6d3fe0703871625",
+        "mode": "0644",
+        "bytes": 6853
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestChannelsItem.php",
+        "sha256": "99b635212d194af81317a4e9692eea262fcbfbad8f27dfdd0898ecf0cc2873e0",
+        "mode": "0644",
+        "bytes": 3575
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestTypedFields.php",
+        "sha256": "34bf50c762c10326519436d880b86c07d5fc221428d0a2f9b3fd2c52b0fb8a0a",
+        "mode": "0644",
+        "bytes": 2176
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestTypedFieldsValues.php",
+        "sha256": "4ea19bb7d46c46823f9037203cc121831de7ade31b267c80efd8055d03ba96d1",
+        "mode": "0644",
+        "bytes": 1882
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdateContactPersonV1RequestTypedFieldsValuesValuesItem.php",
+        "sha256": "5f8382e5203740f6b01229e82fd003065007c03bb49c513cf02a29eb98e910e8",
+        "mode": "0644",
+        "bytes": 1742
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdatePipelineParameters.php",
+        "sha256": "a4a8433b39ac72b681a8844dad7100ad7c9722c4aa2fdaf6861f9e3548d11d04",
+        "mode": "0644",
+        "bytes": 2178
+      },
+      {
+        "path": "src/Custom/Crm/Model/UpdatePipelineResult.php",
+        "sha256": "86439f00ae5198398ed720bb1a178a0e3c101090ba2ecc59e74741faf49f32a4",
+        "mode": "0644",
+        "bytes": 1166
+      },
+      {
+        "path": "src/Custom/Crm/Omitted.php",
+        "sha256": "c5147319eba6c548f24b390e940cbd3c929ad76b57c3d871556ccc9d1ca949bf",
+        "mode": "0644",
+        "bytes": 181
+      },
+      {
+        "path": "src/Custom/Crm/Pagination.php",
+        "sha256": "fb0568905c6ccf2027f6a5da547af25f5c18a5f7f07d00973a344429f2f008ea",
+        "mode": "0644",
+        "bytes": 4532
+      },
+      {
+        "path": "src/Custom/Crm/Pipelines.php",
+        "sha256": "0a702e2495517c94aef342627f3da18c03340b21dfa1d6d545aeca6ffaf072ec",
+        "mode": "0644",
+        "bytes": 13392
+      },
+      {
+        "path": "src/Custom/Crm/Schema.php",
+        "sha256": "a710b947eed755cab5def80649c107baf9598a6427e611d0debabc250ed71f53",
+        "mode": "0644",
+        "bytes": 7680
+      },
+      {
+        "path": "src/Custom/Crm/Transport.php",
+        "sha256": "2cc62d5171c8f075340c519732482e7d65b9f836fdfc624a98eb17176265844b",
+        "mode": "0644",
+        "bytes": 5099
+      },
+      {
+        "path": "src/Custom/Crm/UnconfirmedMutationException.php",
+        "sha256": "e1fbe630a3a18d54316a69046c0bccbde9c0e85b8382fa133763380c140ca81b",
+        "mode": "0644",
+        "bytes": 624
+      },
+      {
+        "path": "src/Custom/Crm/WireModel.php",
+        "sha256": "fe2591a16b410b65b10e64226ba03fc49efb7211ae7a47c09416ad47fbbb2cb6",
+        "mode": "0644",
+        "bytes": 4842
+      },
+      {
+        "path": "tools/export-crm-effects.php",
+        "sha256": "01bccd56ec2aa39f01145844c0c20f1bc2338ea030aac25a4de4d7f49a0fa2b5",
+        "mode": "0644",
+        "bytes": 3001
+      },
+      {
+        "path": "tools/generate-crm.py",
+        "sha256": "da2a092922d3c23890b28e8244ad13d237bf2006184c72293ac43e6c689b62f2",
+        "mode": "0644",
+        "bytes": 14059
+      }
+    ],
+    "canonical_core_unchanged": {
+      "spec/openapi.json": "79d667ccae54b0ca7cf19448ab6ffca2a09f13c87a5a8256ba83ce20336bfa87",
+      ".speakeasy/gen.lock": "171c3bca1d6dc9054a9d4f37ba84027e125d4ce90c74e16cb3ee6298ff58637a",
+      ".speakeasy/gen.yaml": "269b7ba3b2534bb9281a4dc1b85e2708600c75878459d6f2c42b7b7df9593876",
+      ".speakeasy/workflow.yaml": "649a3d2dfb4b45b30a130b0015a7d2ffdc635b4bcbbd50024a2ceca5d1cd7990",
+      "src/SDKConfiguration.php": "b7c4cfc5cbbdad663460097e1f4612eebad90a221049a010704079bb770a60b5",
+      "composer.json": "7ac340077a5c29fea867c7ef3f60a0f4299d069cf29378dd9f1438d773bbf37f"
+    }
+  },
+  "previous49_independent_read_only_review": {
+    "native_contract_matches": 49,
+    "handler_commands": 29,
+    "handler_queries": 20,
+    "findings_resolved_by_directed_regressions": [
+      {
+        "finding": "Associative JSON decoding lost numeric object keys and empty array/object shapes",
+        "regression": "test_native_json_object_keys_and_empty_array_shapes_survive_response_and_pagination",
+        "result": "PASS"
+      },
+      {
+        "finding": "Canonical RetryUtils NONE strategy could throw a null previous exception on GET connection failure",
+        "regression": "test_get_without_retries_preserves_the_native_connection_exception",
+        "result": "PASS",
+        "generated_core_modified": false
+      }
+    ]
+  },
+  "current_extension": {
+    "base_head": "cc0ca35f7883627c88c0a97a5cb0fe11498a7ad5",
+    "additional_operations": 28,
+    "additional_models": 89,
+    "retained_previous49_checks": true,
+    "previous47_suite_repeated": false,
+    "native_handoff_source_edits": [],
+    "native_handoff_persisted_activation": false,
+    "committed": false,
+    "pushed": false,
+    "released": false,
+    "app_runtime_or_database_access": false
+  }
+}

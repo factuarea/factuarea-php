@@ -492,3 +492,10 @@ Initial pre-GA release.
   the OpenAPI spec frozen in P0, source commit `e822661bc`).
 - Pre-GA `0.x`: the public surface may change before `1.0.0`, which is tied to the
   API's GA event. See `SUPPORT.md` and `docs/VERSIONING.md`.
+
+## Unreleased — native CRM source
+
+- Add current ContactPeople, Lead and Pipeline methods/typed DTOs through `Custom\Crm\CrmClient`, generated from a frozen native fragment.
+- Preserve omitted/null, UUID identities, decimal strings, original idempotency keys and confirmed receipts; adapt native CRM pagination through the existing page iterator.
+- Share the existing HTTP/auth/hooks/errors and avoid automatic retries of non-GET operations. This source update does not publish a package or activate server availability.
+- Extend the native CRM source client with 23 KnowledgeBase and 5 PublicHelpCenter administration operations, preserving original recovery headers, article/taxonomy CAS, masked optional fields and typed nullable center snapshots. The 49 previous operations are preserved; no distribution version is changed.
