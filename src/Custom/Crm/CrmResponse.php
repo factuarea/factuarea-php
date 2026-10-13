@@ -22,6 +22,14 @@ final readonly class CrmResponse
         return $this->rawResponse->getStatusCode();
     }
 
+    /** Native request correlation metadata from the response header. */
+    public function requestId(): ?string
+    {
+        $requestId = $this->rawResponse->getHeaderLine('X-Request-Id');
+
+        return $requestId === '' ? null : $requestId;
+    }
+
     /** Native replay headers are evidence; a matching entity ID alone is not. */
     public function replayed(): bool
     {

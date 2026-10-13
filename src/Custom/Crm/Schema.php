@@ -13,9 +13,21 @@ final class Schema
     /** @param array<string, mixed> $schema */
     public static function validate(array $schema, mixed $value, string $path = '$'): void
     {
+        self::validateSchema($schema, $value, $path, false);
+    }
+
+    /** @param array<string, mixed> $schema */
+    public static function validateResponse(array $schema, mixed $value, string $path = '$'): void
+    {
+        self::validateSchema($schema, $value, $path, true);
+    }
+
+    /** @param array<string, mixed> $schema */
+    private static function validateSchema(array $schema, mixed $value, string $path, bool $allowUnknownEnumStrings): void
+    {
         if (isset($schema['$ref']) && is_string($schema['$ref'])) {
             $name = substr($schema['$ref'], strlen('#/components/schemas/'));
-            self::validate(self::definition($name), $value, $path);
+            self::validateSchema(self::definition($name), $value, $path, $allowUnknownEnumStrings);
 
             return;
         }
@@ -27,7 +39,7 @@ final class Schema
                         throw new \LogicException('Invalid generated CRM schema.');
                     }
                     try {
-                        self::validate($candidate, $value, $path);
+                        self::validateSchema($candidate, $value, $path, $allowUnknownEnumStrings);
                         $matches++;
                     } catch (\InvalidArgumentException) {
                         // Each branch is the native owner's schema, including closed variants.
@@ -39,20 +51,24 @@ final class Schema
                 }
             }
         }
-        if (isset($schema['not']) && is_array($schema['not']) && self::matches($schema['not'], $value)) {
+        if (isset($schema['not']) && is_array($schema['not']) && self::matches($schema['not'], $value, $allowUnknownEnumStrings)) {
             self::invalid($path, 'not');
         }
         if (isset($schema['if']) && is_array($schema['if'])) {
-            $branch = self::matches($schema['if'], $value) ? 'then' : 'else';
+            $branch = self::matches($schema['if'], $value, $allowUnknownEnumStrings) ? 'then' : 'else';
             if (isset($schema[$branch]) && is_array($schema[$branch])) {
-                self::validate($schema[$branch], $value, $path);
+                self::validateSchema($schema[$branch], $value, $path, $allowUnknownEnumStrings);
             }
         }
         if (array_key_exists('const', $schema) && $value !== $schema['const']) {
             self::invalid($path, 'const');
         }
         if (isset($schema['enum']) && is_array($schema['enum']) && ! in_array($value, $schema['enum'], true)) {
-            self::invalid($path, 'enum');
+            $stringEnum = $allowUnknownEnumStrings && is_string($value)
+                && count(array_filter($schema['enum'], 'is_string')) === count($schema['enum']);
+            if (! $stringEnum) {
+                self::invalid($path, 'enum');
+            }
         }
         if (isset($schema['type'])) {
             $types = is_array($schema['type']) ? $schema['type'] : [$schema['type']];
@@ -105,14 +121,14 @@ final class Schema
             }
             foreach ($fields as $key => $item) {
                 if (isset($schema['propertyNames']) && is_array($schema['propertyNames'])) {
-                    self::validate($schema['propertyNames'], (string) $key, $path);
+                    self::validateSchema($schema['propertyNames'], (string) $key, $path, $allowUnknownEnumStrings);
                 }
                 if (isset($properties[$key]) && is_array($properties[$key])) {
-                    self::validate($properties[$key], $item, $path.'.'.$key);
+                    self::validateSchema($properties[$key], $item, $path.'.'.$key, $allowUnknownEnumStrings);
                 } elseif (($schema['additionalProperties'] ?? true) === false) {
                     self::invalid($path.'.'.$key, 'unknown field');
                 } elseif (isset($schema['additionalProperties']) && is_array($schema['additionalProperties'])) {
-                    self::validate($schema['additionalProperties'], $item, $path.'.'.$key);
+                    self::validateSchema($schema['additionalProperties'], $item, $path.'.'.$key, $allowUnknownEnumStrings);
                 }
             }
             if ((isset($schema['minProperties']) && count($fields) < $schema['minProperties'])
@@ -130,7 +146,7 @@ final class Schema
             }
             if (isset($schema['items']) && is_array($schema['items'])) {
                 foreach ($value as $index => $item) {
-                    self::validate($schema['items'], $item, $path.'.'.$index);
+                    self::validateSchema($schema['items'], $item, $path.'.'.$index, $allowUnknownEnumStrings);
                 }
             }
         }
@@ -155,10 +171,10 @@ final class Schema
     }
 
     /** @param array<string, mixed> $schema */
-    private static function matches(array $schema, mixed $value): bool
+    private static function matches(array $schema, mixed $value, bool $allowUnknownEnumStrings): bool
     {
         try {
-            self::validate($schema, $value);
+            self::validateSchema($schema, $value, '$', $allowUnknownEnumStrings);
 
             return true;
         } catch (\InvalidArgumentException) {

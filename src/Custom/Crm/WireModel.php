@@ -22,14 +22,38 @@ abstract class WireModel implements \JsonSerializable
     /** @param array<string, mixed> $values */
     final public static function fromArray(array $values): static
     {
-        Schema::validate(static::SCHEMA, (object) $values);
+        return self::hydrateFromArray($values, false);
+    }
+
+    /** @param array<string, mixed> $values */
+    final public static function fromResponseArray(array $values): static
+    {
+        return self::hydrateFromArray($values, true);
+    }
+
+    /** @param array<string, mixed> $values */
+    private static function hydrateFromArray(array $values, bool $allowUnknownEnumStrings): static
+    {
+        if ($allowUnknownEnumStrings) {
+            Schema::validateResponse(static::SCHEMA, (object) $values);
+        } else {
+            Schema::validate(static::SCHEMA, (object) $values);
+        }
         $arguments = [];
         foreach (static::FIELDS as $wire => $field) {
             if (array_key_exists($wire, $values)) {
-                $arguments[$field['property']] = self::hydrate($values[$wire], $field['type']);
+                $arguments[$field['property']] = self::hydrate($values[$wire], $field['type'], $allowUnknownEnumStrings);
             }
         }
-        $model = (new \ReflectionClass(static::class))->newInstanceArgs($arguments);
+        $reflection = new \ReflectionClass(static::class);
+        $model = $reflection->newInstanceWithoutConstructor();
+        foreach (static::FIELDS as $field) {
+            $property = $reflection->getProperty($field['property']);
+            $value = array_key_exists($field['property'], $arguments)
+                ? $arguments[$field['property']]
+                : Omitted::Value;
+            $property->setValue($model, $value);
+        }
         $model->additional = array_diff_key($values, static::FIELDS);
 
         return $model;
@@ -69,11 +93,11 @@ abstract class WireModel implements \JsonSerializable
     /** @param array<string, mixed> $type */
     final public static function hydrateValue(mixed $value, array $type): mixed
     {
-        return self::hydrate($value, $type);
+        return self::hydrate($value, $type, false);
     }
 
     /** @param array<string, mixed> $type */
-    private static function hydrate(mixed $value, array $type): mixed
+    private static function hydrate(mixed $value, array $type, bool $allowUnknownEnumStrings): mixed
     {
         if ($value === null) {
             return null;
@@ -91,7 +115,7 @@ abstract class WireModel implements \JsonSerializable
                     continue;
                 }
                 try {
-                    return self::hydrate($value, $variant);
+                    return self::hydrate($value, $variant, $allowUnknownEnumStrings);
                 } catch (\TypeError|\InvalidArgumentException|\ArgumentCountError) {
                     // Select a native success variant by its required fields.
                 }
@@ -107,14 +131,16 @@ abstract class WireModel implements \JsonSerializable
                 throw new \LogicException('The generated CRM DTO type is invalid.');
             }
 
-            return $class::fromArray((array) $value);
+            return $allowUnknownEnumStrings
+                ? $class::fromResponseArray((array) $value)
+                : $class::fromArray((array) $value);
         }
         if (isset($type['items']) && is_array($type['items'])) {
             if (! is_array($value)) {
                 throw new \InvalidArgumentException('A CRM array was expected.');
             }
 
-            return array_map(static fn (mixed $item): mixed => self::hydrate($item, $type['items']), $value);
+            return array_map(static fn (mixed $item): mixed => self::hydrate($item, $type['items'], $allowUnknownEnumStrings), $value);
         }
         if (isset($type['scalar']) && is_string($type['scalar'])) {
             $valid = match ($type['scalar']) {

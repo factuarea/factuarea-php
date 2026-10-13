@@ -87,6 +87,28 @@ final class CrmHttpTest extends TestCase
         }
     }
 
+    public function test_response_exposes_native_request_id_header_when_present(): void
+    {
+        $client = $this->client([$this->response($this->receipt(), 201, ['x-request-id' => self::ID])]);
+        $response = $client->leads->crmCreateLead(new Model\CrmCreateLeadParameters(
+            body: new Model\CrmCreateLeadRequest(name: 'SDK fixture'),
+            idempotencyKey: 'request-id-fixture',
+        ));
+
+        self::assertSame(self::ID, $response->requestId());
+    }
+
+    public function test_response_request_id_is_null_when_header_is_absent(): void
+    {
+        $client = $this->client([$this->response($this->receipt(), 201)]);
+        $response = $client->leads->crmCreateLead(new Model\CrmCreateLeadParameters(
+            body: new Model\CrmCreateLeadRequest(name: 'SDK fixture'),
+            idempotencyKey: 'request-id-absent-fixture',
+        ));
+
+        self::assertNull($response->requestId());
+    }
+
     public function test_people_and_pipeline_creation_use_real_routes_and_decimal_strings(): void
     {
         $client = $this->client([$this->response($this->receipt(), 201), $this->response($this->receipt(), 201)]);

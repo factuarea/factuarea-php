@@ -106,6 +106,6 @@ final readonly class Transport
             throw new \UnexpectedValueException('The CRM response must be an object.');
         }
 
-        return new CrmResponse($responseType::fromArray((array) $values), $response, $idempotencyKey);
+        return new CrmResponse($responseType::fromResponseArray((array) $values), $response, $idempotencyKey);
     }
 }
