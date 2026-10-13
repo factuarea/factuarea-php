@@ -44,6 +44,65 @@ use GuzzleHttp\Client;
  */
 final class FactuareaClient
 {
+    /** Native OAuth bearer authentication. The token provider is explicit; failures never replay a mutation. */
+    public static function createOAuth(string|\Closure $accessToken, ?string $baseUrl = null, ?\GuzzleHttp\ClientInterface $http = null): Factuarea
+    {
+        $source = function () use ($accessToken): Security {
+            $token = $accessToken instanceof \Closure ? $accessToken() : $accessToken;
+            if (!is_string($token) || preg_match('/^[\x21-\x7e]+$/D', $token) !== 1 || str_starts_with($token, 'fact_test_') || str_starts_with($token, 'fact_live_')) {
+                throw new \InvalidArgumentException('A native OAuth access token is required.');
+            }
+
+            return new Security(bearerAuth: $token);
+        };
+        if (is_string($accessToken)) {
+            $source();
+        }
+        $native = new \Factuarea\Sdk\Custom\Crm\OAuthOriginals\OAuthBearerClient($http ?? new Client(['timeout' => 60, 'allow_redirects' => false]), $source);
+        $builder = Factuarea::builder()->setClient($native)
+            ->setRetryConfig(new \Factuarea\Sdk\Utils\Retry\RetryConfigNone());
+        if ($baseUrl !== null) {
+            $builder->setServerUrl(rtrim($baseUrl, '/'));
+        }
+        $sdk = $builder->build();
+        $sdk->sdkConfiguration->securitySource = $source;
+        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
+
+        return $sdk;
+    }
+    public static function oauthOriginals(Factuarea $sdk): \Factuarea\Sdk\Custom\Crm\OAuthOriginals\Transport
+    {
+        return new \Factuarea\Sdk\Custom\Crm\OAuthOriginals\Transport($sdk->sdkConfiguration);
+    }
+
+    public static function whatsapp(Factuarea $sdk): \Factuarea\Sdk\Custom\Crm\WhatsApp\Transport
+    {
+        return new \Factuarea\Sdk\Custom\Crm\WhatsApp\Transport($sdk->sdkConfiguration);
+    }
+
+    /** Native Meta human configuration. Each method uses the current SDK credential without automatic follow-up or retry. */
+    public static function meta(Factuarea $sdk): \Factuarea\Sdk\Custom\CrmMetaNativeBatch80\Client
+    {
+        return new \Factuarea\Sdk\Custom\CrmMetaNativeBatch80\Client($sdk->sdkConfiguration);
+    }
+
+    /** Native sales owner routes with explicit first-wire intent and no automatic write retry. */
+    public static function crmSales(Factuarea $sdk): \Factuarea\Sdk\Custom\Crm\SalesBatch81\Client
+    {
+        return new \Factuarea\Sdk\Custom\Crm\SalesBatch81\Client($sdk->sdkConfiguration);
+    }
+
+    /** Hand-written document contracts share the SDK's configured HTTP/authentication client. */
+    public static function libraryDocuments(Factuarea $sdk): \Factuarea\Sdk\Custom\Crm\Documents\LibraryDocuments
+    {
+        return new \Factuarea\Sdk\Custom\Crm\Documents\LibraryDocuments($sdk->sdkConfiguration);
+    }
+
+    public static function opportunityDocuments(Factuarea $sdk): \Factuarea\Sdk\Custom\Crm\Documents\OpportunityDocuments
+    {
+        return new \Factuarea\Sdk\Custom\Crm\Documents\OpportunityDocuments($sdk->sdkConfiguration);
+    }
+
     /**
      * Build a Factuarea client authenticated with the given API key.
      *

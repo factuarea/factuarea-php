@@ -1,0 +1,5 @@
+speakeasyVersion: 1.800.0
+targets:
+    factuarea:
+        codeSamples:
+            disabled: true
