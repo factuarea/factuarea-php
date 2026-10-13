@@ -33,12 +33,12 @@ final class CrmHttpTest extends TestCase
     private array $history = [];
 
     /** @param list<Response|\Throwable> $responses */
-    private function client(array $responses): CrmClient
+    private function client(array $responses, string $token = 'fact_test_fixture'): CrmClient
     {
         $stack = HandlerStack::create(new MockHandler($responses));
         $stack->push(Middleware::history($this->history));
         $sdk = Factuarea::builder()
-            ->setSecurity(new Security(bearerAuth: 'fact_test_fixture'))
+            ->setSecurity(new Security(bearerAuth: $token))
             ->setClient(new IdempotencyClient(new Client(['handler' => $stack])))
             ->setRetryConfig(new RetryConfigNone())
             ->build();
@@ -166,6 +166,21 @@ final class CrmHttpTest extends TestCase
             self::assertSame('5', $error->retryAfter);
             self::assertStringNotContainsString('fact_test_fixture', (string) $error);
             self::assertCount(1, $this->history);
+        }
+    }
+
+    public function test_client_serialization_never_exposes_the_configured_credential(): void
+    {
+        $credential = 'fact_live_secret_crm_fixture';
+        $client = $this->client([], $credential);
+
+        $json = json_encode($client, JSON_THROW_ON_ERROR);
+        self::assertFalse(str_contains($json, $credential));
+        try {
+            $serialized = serialize($client);
+            self::assertFalse(str_contains($serialized, $credential));
+        } catch (\Throwable $serializationError) {
+            self::assertFalse(str_contains($serializationError->getMessage(), $credential));
         }
     }
 
