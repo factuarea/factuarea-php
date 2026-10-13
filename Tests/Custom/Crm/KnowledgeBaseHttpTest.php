@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Tests\Custom\Crm;
 
 use Factuarea\Sdk\Custom\Crm\CrmClient;
+use Factuarea\Sdk\Custom\Crm\CrmApiException;
 use Factuarea\Sdk\Custom\Crm\Model;
 use Factuarea\Sdk\Custom\Crm\Omitted;
 use Factuarea\Sdk\Custom\Crm\UnconfirmedMutationException;
@@ -15,7 +16,6 @@ use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Hooks\BeforeRequestContext;
 use Factuarea\Sdk\Hooks\BeforeRequestHook;
 use Factuarea\Sdk\Models\Components\Security;
-use Factuarea\Sdk\Models\Errors\ErrorThrowable;
 use Factuarea\Sdk\Utils\Retry\RetryConfigNone;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
@@ -411,13 +411,13 @@ final class KnowledgeBaseHttpTest extends TestCase
             $client->knowledgeBase->crmArchiveKnowledgeArticle(new Model\CrmArchiveKnowledgeArticleParameters(article: self::ID,
                 body: new Model\KnowledgeArticleArchiveRequest(expectedVersion: 7), idempotencyKey: self::KEY));
             self::fail('Expected the native HTTP error.');
-        } catch (ErrorThrowable $error) {
-            self::assertSame($code, $error->container->error->code);
-            self::assertSame('expected_version', $error->container->error->param);
-            self::assertSame('expected_version', $error->container->error->errors[0]->param);
-            self::assertSame('req_knowledge_fixture', $error->container->error->requestId);
-            self::assertSame($status, $error->container->rawResponse->getStatusCode());
-            self::assertSame('5', $error->container->rawResponse->getHeaderLine('Retry-After'));
+        } catch (CrmApiException $error) {
+            self::assertSame($code, $error->machineCode);
+            self::assertSame('expected_version', $error->param);
+            self::assertSame('req_knowledge_fixture', $error->requestId);
+            self::assertSame($status, $error->statusCode);
+            self::assertSame('5', $error->retryAfter);
+            self::assertStringNotContainsString('Native CAS', (string) $error);
             self::assertSame(self::KEY, $this->history[0]['request']->getHeaderLine('Idempotency-Key'));
             self::assertCount(1, $this->history);
         }

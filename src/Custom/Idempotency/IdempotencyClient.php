@@ -36,12 +36,16 @@ final class IdempotencyClient implements ClientInterface
     /** @param array<string, mixed> $options */
     public function send(RequestInterface $request, array $options = []): ResponseInterface
     {
+        [$request, $options] = $this->prepareSend($request, $options);
+
         return $this->client->send($request, $this->withIdempotencyKey($request, $options));
     }
 
     /** @param array<string, mixed> $options */
     public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface
     {
+        [$request, $options] = $this->prepareSend($request, $options);
+
         return $this->client->sendAsync($request, $this->withIdempotencyKey($request, $options));
     }
 
@@ -69,11 +73,68 @@ final class IdempotencyClient implements ClientInterface
     }
 
     /**
+     * The security wrapper has already merged its headers into options here.
+     * Keep those headers and the client's other defaults on the SAME request,
+     * then suppress Guzzle defaults so a void control cannot acquire a key.
+     *
+     * @param  array<string, mixed>  $options
+     * @return array{RequestInterface, array<string, mixed>}
+     */
+    private function prepareSend(RequestInterface $request, array $options): array
+    {
+        if (($options['factuarea_no_auto_idempotency'] ?? false) !== true) {
+            return [$request, $options];
+        }
+
+        $request = self::copyControlHeaders($request, $this->client->getConfig('headers') ?? [], true);
+        $request = self::copyControlHeaders($request, $options['headers'] ?? [], false);
+        $request = $request->withoutHeader('Idempotency-Key');
+        $options['headers'] = null;
+
+        return [$request, $options];
+    }
+
+    private static function copyControlHeaders(RequestInterface $request, mixed $headers, bool $onlyMissing): RequestInterface
+    {
+        if (! is_array($headers)) {
+            throw new \InvalidArgumentException('Canonical request headers must be an array.');
+        }
+        foreach ($headers as $name => $values) {
+            if (! is_string($name)) {
+                throw new \InvalidArgumentException('Canonical header names must be strings.');
+            }
+            if (strcasecmp($name, 'Idempotency-Key') === 0 || ($onlyMissing && $request->hasHeader($name))) {
+                continue;
+            }
+            if (is_array($values)) {
+                $qualifiedValues = [];
+                foreach ($values as $value) {
+                    if (! is_string($value)) {
+                        throw new \InvalidArgumentException('Canonical header values must be strings.');
+                    }
+                    $qualifiedValues[] = $value;
+                }
+                $values = $qualifiedValues;
+            } elseif (! is_string($values)) {
+                throw new \InvalidArgumentException('Canonical header values must be strings.');
+            }
+            $request = $request->withHeader($name, $values);
+        }
+
+        return $request;
+    }
+
+    /**
      * @param  array<string, mixed>  $options
      * @return array<string, mixed>
      */
     private function withIdempotencyKey(RequestInterface $request, array $options): array
     {
+        $noAutomaticKey = ($options['factuarea_no_auto_idempotency'] ?? false) === true;
+        unset($options['factuarea_no_auto_idempotency']);
+        if ($noAutomaticKey) {
+            return $options;
+        }
         if (! in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'], true)
             || $request->hasHeader('Idempotency-Key')
             || self::hasHeader($options['headers'] ?? [], 'Idempotency-Key')
@@ -82,7 +143,12 @@ final class IdempotencyClient implements ClientInterface
         }
 
         $this->generatedKeys[$request] ??= IdempotencyHook::uuidV4();
-        $options['headers']['Idempotency-Key'] = $this->generatedKeys[$request];
+        $headers = $options['headers'] ?? [];
+        if (! is_array($headers)) {
+            throw new \InvalidArgumentException('Canonical request headers must be an array.');
+        }
+        $headers['Idempotency-Key'] = $this->generatedKeys[$request];
+        $options['headers'] = $headers;
 
         return $options;
     }

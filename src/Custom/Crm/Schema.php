@@ -85,6 +85,10 @@ final class Schema
                     self::invalid($path, 'pattern');
                 }
             }
+            if (isset($schema['format']) && is_string($schema['format'])
+                && ! self::validFormat($schema['format'], $value)) {
+                self::invalid($path, 'format');
+            }
         }
         if (is_int($value) || is_float($value)) {
             if ((isset($schema['minimum']) && $value < $schema['minimum'])
@@ -164,6 +168,49 @@ final class Schema
         } catch (\InvalidArgumentException) {
             return false;
         }
+    }
+
+    private static function validFormat(string $format, string $value): bool
+    {
+        return match ($format) {
+            'uuid' => preg_match('/^[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/D', $value) === 1,
+            'date' => self::validDate($value),
+            'date-time' => self::validDateTime($value),
+            'email' => filter_var($value, FILTER_VALIDATE_EMAIL) !== false,
+            'uri' => preg_match('/^[A-Za-z][A-Za-z0-9+.-]*:[^\x00-\x20<>"{}|^`]*$/D', $value) === 1 && ! str_contains($value, '\\'),
+            default => true,
+        };
+    }
+
+    private static function validDate(string $value): bool
+    {
+        if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/D', $value, $matches) !== 1) {
+            return false;
+        }
+
+        return self::validDateParts((int) $matches[1], (int) $matches[2], (int) $matches[3]);
+    }
+
+    private static function validDateTime(string $value): bool
+    {
+        if (preg_match('/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-](\d{2}):(\d{2}))$/D', $value, $matches) !== 1
+            || ! self::validDateParts((int) $matches[1], (int) $matches[2], (int) $matches[3])
+            || (int) $matches[4] > 23 || (int) $matches[5] > 59 || (int) $matches[6] > 59) {
+            return false;
+        }
+
+        return ! isset($matches[7]) || ((int) $matches[7] <= 23 && (int) $matches[8] <= 59);
+    }
+
+    private static function validDateParts(int $year, int $month, int $day): bool
+    {
+        if ($month < 1 || $month > 12 || $day < 1) {
+            return false;
+        }
+        $leap = $year % 4 === 0 && ($year % 100 !== 0 || $year % 400 === 0);
+        $days = [31, $leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        return $day <= $days[$month - 1];
     }
 
     private static function invalid(string $path, string $reason): never

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Tests\Custom\Crm;
 
 use Factuarea\Sdk\Custom\Crm\CrmClient;
+use Factuarea\Sdk\Custom\Crm\CrmApiException;
 use Factuarea\Sdk\Custom\Crm\Model;
 use Factuarea\Sdk\Custom\Crm\UnconfirmedMutationException;
 use Factuarea\Sdk\Custom\Idempotency\IdempotencyClient;
 use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
-use Factuarea\Sdk\Models\Errors\ErrorThrowable;
 use Factuarea\Sdk\Utils\Retry\RetryConfigNone;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
@@ -159,11 +159,11 @@ final class CrmHttpTest extends TestCase
         try {
             $client->leads->crmFindLead(new Model\CrmFindLeadParameters(lead: self::ID));
             self::fail('The native typed error was expected.');
-        } catch (ErrorThrowable $error) {
-            self::assertSame($code, $error->container->error->code);
-            self::assertSame('req_crm_fixture', $error->container->error->requestId);
-            self::assertSame($status, $error->container->rawResponse->getStatusCode());
-            self::assertSame('5', $error->container->rawResponse->getHeaderLine('Retry-After'));
+        } catch (CrmApiException $error) {
+            self::assertSame($code, $error->machineCode);
+            self::assertSame('req_crm_fixture', $error->requestId);
+            self::assertSame($status, $error->statusCode);
+            self::assertSame('5', $error->retryAfter);
             self::assertStringNotContainsString('fact_test_fixture', (string) $error);
             self::assertCount(1, $this->history);
         }
@@ -179,8 +179,9 @@ final class CrmHttpTest extends TestCase
                 body: new Model\CrmCreateLeadRequest(name: 'SDK fixture'), idempotencyKey: 'original-failed',
             ));
             self::fail('The native error was expected.');
-        } catch (ErrorThrowable $error) {
-            self::assertSame(500, $error->container->rawResponse->getStatusCode());
+        } catch (CrmApiException $error) {
+            self::assertSame(500, $error->statusCode);
+            self::assertTrue($error->unconfirmed);
             self::assertCount(1, $this->history);
             self::assertSame('original-failed', $this->history[0]['request']->getHeaderLine('Idempotency-Key'));
         }
@@ -316,8 +317,9 @@ final class CrmHttpTest extends TestCase
         try {
             iterator_to_array($client->leads->crmListLeadsItems(new Model\CrmListLeadsParameters()));
             self::fail('The second page must retain the current scope denial.');
-        } catch (ErrorThrowable $error) {
-            self::assertSame('insufficient_scope', $error->container->error->code);
+        } catch (CrmApiException $error) {
+            self::assertSame('insufficient_scope', $error->machineCode);
+            self::assertSame(403, $error->statusCode);
             self::assertCount(2, $this->history);
         }
     }
@@ -330,7 +332,8 @@ final class CrmHttpTest extends TestCase
                 lead: self::ID, body: new Model\CrmPreviewLeadErasureRequest(), idempotencyKey: 'erasure-preview-original',
             ));
             self::fail('The native scope denial was expected.');
-        } catch (ErrorThrowable) {
+        } catch (CrmApiException $error) {
+            self::assertSame(403, $error->statusCode);
             self::assertSame('{}', (string) $this->history[0]['request']->getBody());
             self::assertSame('POST', $this->history[0]['request']->getMethod());
         }
@@ -344,8 +347,9 @@ final class CrmHttpTest extends TestCase
                 lead: self::ID, xActiveProfile: self::SECOND, factuareaVersion: '2026-10-01',
             ));
             self::fail('The native managed-profile denial was expected.');
-        } catch (ErrorThrowable $error) {
-            self::assertSame('profile_not_found', $error->container->error->code);
+        } catch (CrmApiException $error) {
+            self::assertSame('profile_not_found', $error->machineCode);
+            self::assertSame(404, $error->statusCode);
             $request = $this->history[0]['request'];
             self::assertSame(self::SECOND, $request->getHeaderLine('X-Active-Profile'));
             self::assertSame('2026-10-01', $request->getHeaderLine('Factuarea-Version'));

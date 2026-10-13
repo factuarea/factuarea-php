@@ -14,10 +14,10 @@ final class LeadHistoryItemVariant3Snapshot extends WireModel
 {
     public const FIELDS = ['type' => ['property' => 'type', 'type' => ['scalar' => 'string']]];
 
-    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['type' => ['type' => 'string', 'enum' => ['lead.created', 'lead.updated', 'lead.assigned', 'lead.stage_changed', 'lead.qualified', 'lead.disqualified', 'lead.reopened', 'lead.converted', 'lead.deleted', 'lead.consent_changed', 'lead.score_recalculated']]], 'required' => ['type']];
+    public const SCHEMA = ['type' => 'object', 'additionalProperties' => false, 'properties' => ['type' => ['type' => 'string']], 'required' => ['type']];
 
     /**
-     * @param  string  $type
+     * @param  string $type
      */
     public function __construct(
         public string $type,

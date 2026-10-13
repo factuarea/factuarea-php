@@ -3,6 +3,7 @@
 
 Does not touch any Speakeasy-managed file, infer operations or fetch a live spec.
 """
+import argparse
 import hashlib
 import json
 import os
@@ -19,6 +20,7 @@ effects = json.loads((ROOT / 'spec/crm-effects.json').read_text())['operations']
 NAMESPACE = 'Factuarea\\Sdk\\Custom\\Crm\\Model\\'
 models = {}
 rendering = set()
+model_directions = {}
 
 def pascal(value):
     return ''.join(piece[:1].upper() + piece[1:] for piece in re.split(r'[^A-Za-z0-9]', value) if piece)
@@ -47,32 +49,32 @@ def join_types(types):
     values = list(dict.fromkeys(part for value in values for part in value.split('|')))
     return 'mixed' if 'mixed' in values else '|'.join(values)
 
-def describe(schema, name):
+def describe(schema, name, direction='request'):
     if '$ref' in schema:
         ref = schema['$ref'].split('/')[-1]
-        return describe(schemas[ref], pascal(ref))
+        return describe(schemas[ref], pascal(ref), component_direction(ref))
     if 'allOf' in schema and 'type' not in schema:
         # Native receipt snapshots narrow a referenced DTO with extra constraints.
         # Keep its real type; the enclosing SCHEMA validates every conjunct.
         bases = [branch for branch in schema['allOf'] if '$ref' in branch or 'type' in branch]
         if len(bases) != 1:
             raise ValueError('An allOf field needs one native typed base: ' + name)
-        return describe(bases[0], name)
+        return describe(bases[0], name, direction)
     if isinstance(schema.get('type'), list) and len(schema['type']) > 1:
-        choices = [describe(dict(schema, type=variant), name) for variant in schema['type']]
+        choices = [describe(dict(schema, type=variant), name, direction) for variant in schema['type']]
         return (join_types([x[0] for x in choices]), join_types([x[1] for x in choices]), {'union': [x[2] for x in choices]})
     schema_types = schema.get('type', [])
     nullable = isinstance(schema_types, list) and 'null' in schema_types
     schema_type = next((x for x in schema_types if x != 'null'), None) if isinstance(schema_types, list) else schema_types
     if schema_type == 'object' and (schema.get('properties') or schema.get('additionalProperties') is False):
-        render_model(name, schema)
+        render_model(name, schema, direction)
         result = ('\\' + NAMESPACE + name, '\\' + NAMESPACE + name, {'model': NAMESPACE + name})
     elif 'anyOf' in schema or 'oneOf' in schema:
         variants = schema.get('anyOf', schema.get('oneOf'))
-        choices = [describe(s, name + 'Variant' + str(i + 1)) for i, s in enumerate(variants)]
+        choices = [describe(s, name + 'Variant' + str(i + 1), direction) for i, s in enumerate(variants)]
         result = (join_types([x[0] for x in choices]), join_types([x[1] for x in choices]), {'union': [x[2] for x in choices]})
     elif schema_type == 'array':
-        item = describe(schema.get('items', {}), name + 'Item')
+        item = describe(schema.get('items', {}), name + 'Item', direction)
         result = ('array', 'list<' + item[1] + '>', {'items': item[2]})
     elif schema_type == 'object':
         result = ('\\stdClass', '\\stdClass', {'object': True})
@@ -97,15 +99,43 @@ use Factuarea\\Sdk\\Custom\\Crm\\WireModel;
 
 '''
 
-def render_model(name, schema):
-    if name in models or name in rendering:
+def response_validation_schema(schema, seen=frozenset()):
+    """Relax enum constraints only in response DTO validation schemas."""
+    if isinstance(schema, dict):
+        reference = schema.get('$ref')
+        if isinstance(reference, str) and reference.startswith('#/components/schemas/'):
+            ref = reference.rsplit('/', 1)[-1]
+            if component_has_enum(ref):
+                if ref in seen:
+                    raise ValueError('A response enum cannot be opened through a recursive schema: ' + ref)
+                expanded = response_validation_schema(schemas[ref], seen | {ref})
+                siblings = {key: value for key, value in schema.items() if key != '$ref'}
+                if siblings:
+                    expanded.update(response_validation_schema(siblings, seen))
+                return expanded
+        return {key: response_validation_schema(value, seen) for key, value in schema.items() if key != 'enum'}
+    if isinstance(schema, list):
+        return [response_validation_schema(value, seen) for value in schema]
+    return schema
+
+
+def render_model(name, schema, direction='request'):
+    if name in rendering:
         return
+    previous_direction = model_directions.get(name)
+    if previous_direction == 'request' or previous_direction == direction:
+        return
+    if previous_direction == 'response' and direction == 'request':
+        models.pop(name, None)
+    elif previous_direction is not None:
+        return
+    model_directions[name] = direction
     rendering.add(name)
     props = schema.get('properties') or {}
     required = schema.get('required', [])
     field_data = []
     for wire, field in props.items():
-        type_hint, doc_type, desc = describe(field, name + pascal(wire))
+        type_hint, doc_type, desc = describe(field, name + pascal(wire), direction)
         optional = wire not in required
         if optional:
             type_hint = join_types(type_hint.split('|') + ['Omitted'])
@@ -113,11 +143,12 @@ def render_model(name, schema):
         field_data.append((wire, camel(wire), type_hint, doc_type, desc, optional))
     field_data.sort(key=lambda x: x[5])
     fields = {wire: {'property': attr, 'type': desc} for wire, attr, _, _, desc, _ in field_data}
+    validation_schema = response_validation_schema(schema) if direction == 'response' else schema
     lines = [HEADER, 'final class ' + name + ' extends WireModel\n{\n',
-             '    public const FIELDS = ' + php(fields) + ';\n\n    public const SCHEMA = ' + php(schema) + ';\n\n']
+             '    public const FIELDS = ' + php(fields) + ';\n\n    public const SCHEMA = ' + php(validation_schema) + ';\n\n']
     lines.append('    /**\n')
     for _, attr, _, doc_type, _, _ in field_data:
-        lines.append('     * @param ' + doc_type + ' $' + attr + '\n')
+        lines.append('     * @param  ' + doc_type + ' $' + attr + '\n')
     lines.append('     */\n    public function __construct(\n')
     for _, attr, type_hint, _, _, optional in field_data:
         lines.append('        public ' + type_hint + ' $' + attr + (' = Omitted::Value' if optional else '') + ',\n')
@@ -135,6 +166,72 @@ def local_reference(value):
     for token in reference[2:].split('/'):
         target = target[token.replace('~1', '/').replace('~0', '~')]
     return local_reference(target)
+
+
+component_directions = {name: set() for name in schemas}
+
+
+def collect_component_directions(value, direction, visited=frozenset()):
+    if isinstance(value, dict):
+        reference = value.get('$ref')
+        if isinstance(reference, str) and reference.startswith('#/components/schemas/'):
+            name = reference.rsplit('/', 1)[-1]
+            if name in schemas:
+                component_directions[name].add(direction)
+                if name not in visited:
+                    collect_component_directions(schemas[name], direction, visited | {name})
+        for key, item in value.items():
+            if key != '$ref':
+                collect_component_directions(item, direction, visited)
+    elif isinstance(value, list):
+        for item in value:
+            collect_component_directions(item, direction, visited)
+
+
+def component_direction(name):
+    directions = component_directions.get(name, set())
+    if directions == {'response'}:
+        return 'response'
+    if directions == {'request'}:
+        return 'request'
+    # A shared or unreferenced component stays strict so request validation
+    # cannot be weakened by response compatibility.
+    return 'request'
+
+
+def component_has_enum(name, visited=frozenset()):
+    if name not in schemas or name in visited:
+        return False
+    return schema_has_enum(schemas[name], visited | {name})
+
+
+def schema_has_enum(value, visited=frozenset()):
+    if isinstance(value, dict):
+        if 'enum' in value:
+            return True
+        reference = value.get('$ref')
+        if isinstance(reference, str) and reference.startswith('#/components/schemas/'):
+            name = reference.rsplit('/', 1)[-1]
+            if name not in visited and component_has_enum(name, visited):
+                return True
+        return any(schema_has_enum(item, visited) for key, item in value.items() if key != '$ref')
+    if isinstance(value, list):
+        return any(schema_has_enum(item, visited) for item in value)
+    return False
+
+
+for path_item in document['paths'].values():
+    for method, operation in path_item.items():
+        if method not in ['get', 'post', 'put', 'patch', 'delete']:
+            continue
+        for parameter in operation.get('parameters', []):
+            collect_component_directions(local_reference(parameter), 'request')
+        request_body = operation.get('requestBody')
+        if request_body is not None:
+            collect_component_directions(request_body, 'request')
+        for status, response in operation.get('responses', {}).items():
+            if str(status).startswith('2'):
+                collect_component_directions(response, 'response')
 
 def resolved(schema):
     return schemas[schema['$ref'].split('/')[-1]] if '$ref' in schema else schema
@@ -199,7 +296,7 @@ for path, item in document['paths'].items():
             request_required.append('idempotency_key')
         request_schema = {'type': 'object', 'additionalProperties': False, 'properties': request_props, 'required': request_required}
         request_name = class_name + 'Parameters'
-        render_model(request_name, request_schema)
+        render_model(request_name, request_schema, 'request')
         successes = [r['content']['application/json']['schema'] for code, r in operation['responses'].items() if str(code).startswith('2') and 'content' in r]
         response_schema = successes[0]
         if any(s != response_schema for s in successes):
@@ -209,7 +306,7 @@ for path, item in document['paths'].items():
         if response_schema.get('type') != 'object':
             raise ValueError('Unsupported success envelope: ' + op_id)
         response_name = class_name + 'Result'
-        render_model(response_name, response_schema)
+        render_model(response_name, response_schema, 'response')
         path_expr = php(path.lstrip('/'))
         for parameter in parameters:
             if parameter['in'] == 'path':
@@ -255,7 +352,7 @@ for path, item in document['paths'].items():
                     mode = 'numbered'
         if shape:
             items_path, item_schema = shape
-            _, item_doc, item_desc = describe(item_schema, class_name + 'ListItem')
+            _, item_doc, item_desc = describe(item_schema, class_name + 'ListItem', 'response')
             parameter = 'cursor' if mode == 'cursor' else 'page'
             assign = '$cursor' if mode == 'cursor' else '(int) $cursor'
             lines += ['\n    /** @return \\Generator<int, ' + item_doc + '> */\n',
@@ -272,12 +369,22 @@ for path, item in document['paths'].items():
 
 for schema_name, schema in sorted(schemas.items()):
     if schema_name != 'Error':
-        describe(schema, pascal(schema_name))
+        describe(schema, pascal(schema_name), component_direction(schema_name))
 
-for name, source in sorted(models.items()):
+parser = argparse.ArgumentParser(description='Generate models from the pinned CRM OpenAPI fragment.')
+parser.add_argument('--model', action='append', dest='selected_models', help='Write only this generated model; repeat to select several.')
+arguments = parser.parse_args()
+selected = set(arguments.selected_models) if arguments.selected_models is not None else None
+unknown_models = selected.difference(models) if selected is not None else set()
+if unknown_models:
+    parser.error('unknown generated model(s): ' + ', '.join(sorted(unknown_models)))
+written_models = {name: source for name, source in models.items() if selected is None or name in selected}
+
+for name, source in sorted(written_models.items()):
     (ROOT / 'src/Custom/Crm/Model' / (name + '.php')).write_text(source)
-for name, methods in apis.items():
-    source = '''<?php
+if selected is None:
+    for name, methods in apis.items():
+        source = '''<?php
 
 /** Generated by tools/generate-crm.py from spec/crm-openapi.json. */
 
@@ -290,6 +397,6 @@ final readonly class ''' + name + '''
     public function __construct(private Transport $transport) {}
 
 ''' + '\n'.join(methods) + '}\n'
-    (ROOT / 'src/Custom/Crm' / (name + '.php')).write_text(source)
-(ROOT / 'spec/crm-operations.json').write_text(json.dumps(operation_map, indent=2) + '\n')
-print(json.dumps({'operations': len(operation_map), 'models': len(models), 'spec_sha256': hashlib.sha256(SPEC.read_bytes()).hexdigest()}))
+        (ROOT / 'src/Custom/Crm' / (name + '.php')).write_text(source)
+    (ROOT / 'spec/crm-operations.json').write_text(json.dumps(operation_map, indent=2) + '\n')
+print(json.dumps({'operations': len(operation_map) if selected is None else 0, 'models': len(written_models), 'spec_sha256': hashlib.sha256(SPEC.read_bytes()).hexdigest()}))
