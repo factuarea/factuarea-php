@@ -62,6 +62,16 @@
 | `DeliveryNoteConverted`              | delivery_note.converted              |
 | `DeliveryNoteEmailSent`              | delivery_note.email_sent             |
 | `DeliveryNoteEmailFailed`            | delivery_note.email_failed           |
+| `TransportDocumentCreated`           | transport_document.created           |
+| `TransportDocumentUpdated`           | transport_document.updated           |
+| `TransportDocumentIssued`            | transport_document.issued            |
+| `TransportDocumentModified`          | transport_document.modified          |
+| `TransportDocumentClosed`            | transport_document.closed            |
+| `TransportDocumentReopened`          | transport_document.reopened          |
+| `TransportDocumentCancelled`         | transport_document.cancelled         |
+| `TransportDocumentSuperseded`        | transport_document.superseded        |
+| `TransportDocumentEmailSent`         | transport_document.email_sent        |
+| `TransportDocumentEmailFailed`       | transport_document.email_failed      |
 | `PurchaseInvoiceCreated`             | purchase_invoice.created             |
 | `PurchaseInvoiceUpdated`             | purchase_invoice.updated             |
 | `PurchaseInvoicePaid`                | purchase_invoice.paid                |

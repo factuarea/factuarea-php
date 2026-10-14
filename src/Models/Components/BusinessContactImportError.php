@@ -13,38 +13,89 @@ class BusinessContactImportError
 {
     /**
      *
-     * @var ?string $code
+     * @var int $row
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('code')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $code = null;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('row')]
+    public int $row;
 
     /**
      *
-     * @var ?string $message
+     * @var string $code
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('code')]
+    public string $code;
+
+    /**
+     *
+     * @var string $message
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('message')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $message = null;
+    public string $message;
 
     /**
      *
      * @var ?string $field
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('field')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $field = null;
+    public ?string $field;
 
     /**
-     * @param  ?string  $code
-     * @param  ?string  $message
+     * Only present on warnings; errors omit it.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\OutcomeSeverity $severity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('severity')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\OutcomeSeverity|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?OutcomeSeverity $severity = null;
+
+    /**
+     * $params
+     *
+     * @var ?array<string, mixed> $params
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('params')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, mixed>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $params = null;
+
+    /**
+     * Received cell value, truncated to 120 characters.
+     *
+     * @var ?string $receivedValue
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('received_value')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $receivedValue = null;
+
+    /**
+     *
+     * @var ?string $column
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('column')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $column = null;
+
+    /**
+     * @param  int  $row
+     * @param  string  $code
+     * @param  string  $message
      * @param  ?string  $field
+     * @param  ?\Factuarea\Sdk\Models\Components\OutcomeSeverity  $severity
+     * @param  ?array<string, mixed>  $params
+     * @param  ?string  $receivedValue
+     * @param  ?string  $column
      * @phpstan-pure
      */
-    public function __construct(?string $code = null, ?string $message = null, ?string $field = null)
+    public function __construct(int $row, string $code, string $message, ?string $field = null, ?OutcomeSeverity $severity = null, ?array $params = null, ?string $receivedValue = null, ?string $column = null)
     {
+        $this->row = $row;
         $this->code = $code;
         $this->message = $message;
         $this->field = $field;
+        $this->severity = $severity;
+        $this->params = $params;
+        $this->receivedValue = $receivedValue;
+        $this->column = $column;
     }
 }

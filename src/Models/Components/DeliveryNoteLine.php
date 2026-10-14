@@ -241,6 +241,15 @@ class DeliveryNoteLine
     public ?DeliveryNoteLineIndirectTaxRegime $indirectTaxRegime = null;
 
     /**
+     * Gross transport weight of the whole line in kg (decimal string, scale 4): quantity × the weight per commercial unit frozen when the line was created or edited in draft. `null` for services, free-text lines and products without a known weight. It does not change after delivery even if the catalog weight changes.
+     *
+     * @var ?string $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $grossWeightKg = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\DeliveryNoteLineObject  $object
      * @param  float  $quantity
      * @param  float  $unitPrice
@@ -271,9 +280,10 @@ class DeliveryNoteLine
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @param  ?\Factuarea\Sdk\Models\Components\DeliveryNoteLineIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(DeliveryNoteLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?DeliveryNoteLineVariant $variant = null, ?DeliveryNoteLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?DeliveryNoteLineConfiguration $configuration = null, ?DeliveryNoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?DeliveryNoteLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(DeliveryNoteLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?DeliveryNoteLineVariant $variant = null, ?DeliveryNoteLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?DeliveryNoteLineConfiguration $configuration = null, ?DeliveryNoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?DeliveryNoteLineIndirectTaxRegime $indirectTaxRegime = null, ?string $grossWeightKg = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -305,5 +315,6 @@ class DeliveryNoteLine
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

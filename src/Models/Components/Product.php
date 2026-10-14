@@ -289,6 +289,15 @@ class Product
     public ?\DateTime $updatedAt;
 
     /**
+     * Gross transport weight in kg per BASE unit (decimal string, up to 4 decimals, greater than 0), packaging included; `null` when unknown. Rejected with 422 `gross_weight_not_allowed` for services and for products whose base unit is a mass unit (`KGM`, `GRM`), where the weight is the quantity itself. A variant weight replaces it for that variant; a fixed presentation may declare its own weight per commercial unit.
+     *
+     * @var ?string $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $grossWeightKg = null;
+
+    /**
      * External integration key (ERP/CRM/e-commerce) mapping this product to a record in a third-party system. Free-format, unique per company, orthogonal to the catalog `sku` (a product may have both, neither, or either).
      *
      * @var ?string $externalId
@@ -342,10 +351,11 @@ class Product
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
+     * @param  ?string  $grossWeightKg
      * @param  ?string  $externalId
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, string $stock, ProductItemKind $itemKind, string $baseUnit, array $gallery, bool $isActive, array $tags, int $presentationCount, int $variantCount, int $supplierOfferCount, int $optionGroupCount, int $configurationCount, ProductCatalogAvailabilityMode $catalogAvailabilityMode, array $presentations, array $variants, array $supplierOffers, array $optionGroups, array $configurations, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $externalId = null, ?bool $manageStock = false)
+    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, string $stock, ProductItemKind $itemKind, string $baseUnit, array $gallery, bool $isActive, array $tags, int $presentationCount, int $variantCount, int $supplierOfferCount, int $optionGroupCount, int $configurationCount, ProductCatalogAvailabilityMode $catalogAvailabilityMode, array $presentations, array $variants, array $supplierOffers, array $optionGroups, array $configurations, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $grossWeightKg = null, ?string $externalId = null, ?bool $manageStock = false)
     {
         $this->id = $id;
         $this->object = $object;
@@ -381,6 +391,7 @@ class Product
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->grossWeightKg = $grossWeightKg;
         $this->externalId = $externalId;
         $this->manageStock = $manageStock;
     }

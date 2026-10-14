@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class AccountPlan
 {
     /**
-     * Plan identifier (e.g. `emprendedor`, `empresario`, `enterprise`).
+     * Plan identifier (e.g. `emprendedor`, `empresario`, `integral`, `enterprise`).
      *
      * @var string $slug
      */

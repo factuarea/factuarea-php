@@ -23,18 +23,18 @@ class Reversal
     /**
      * Where the reversal came from: `gateway` when the payment provider reported a return, dispute or chargeback (a bank movement already happened); `manual` when a user recorded it.
      *
-     * @var \Factuarea\Sdk\Models\Components\Origin $origin
+     * @var \Factuarea\Sdk\Models\Components\EventDataPaymentReversedOrigin $origin
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('origin')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Origin')]
-    public Origin $origin;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataPaymentReversedOrigin')]
+    public EventDataPaymentReversedOrigin $origin;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\EventDataPaymentReversedReason  $reason
-     * @param  \Factuarea\Sdk\Models\Components\Origin  $origin
+     * @param  \Factuarea\Sdk\Models\Components\EventDataPaymentReversedOrigin  $origin
      * @phpstan-pure
      */
-    public function __construct(EventDataPaymentReversedReason $reason, Origin $origin)
+    public function __construct(EventDataPaymentReversedReason $reason, EventDataPaymentReversedOrigin $origin)
     {
         $this->reason = $reason;
         $this->origin = $origin;

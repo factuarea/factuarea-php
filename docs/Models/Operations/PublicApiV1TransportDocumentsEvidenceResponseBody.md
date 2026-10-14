@@ -1,0 +1,9 @@
+# PublicApiV1TransportDocumentsEvidenceResponseBody
+
+
+## Fields
+
+| Field                                                                                               | Type                                                                                                | Required                                                                                            | Description                                                                                         |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `data`                                                                                              | array<[Components\TransportDocumentEvidence](../../Models/Components/TransportDocumentEvidence.md)> | :heavy_check_mark:                                                                                  | N/A                                                                                                 |
+| `meta`                                                                                              | [Operations\Meta](../../Models/Operations/Meta.md)                                                  | :heavy_check_mark:                                                                                  | N/A                                                                                                 |

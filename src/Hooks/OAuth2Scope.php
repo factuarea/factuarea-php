@@ -85,6 +85,14 @@ enum OAuth2Scope: string
 
     case DeliveryNotesGdprForget = 'delivery_notes:gdpr_forget';
 
+    case TransportDocumentsRead = 'transport_documents:read';
+
+    case TransportDocumentsWrite = 'transport_documents:write';
+
+    case TransportDocumentsDelete = 'transport_documents:delete';
+
+    case TransportDocumentsTransition = 'transport_documents:transition';
+
     case PurchaseInvoicesRead = 'purchase_invoices:read';
 
     case PurchaseInvoicesWrite = 'purchase_invoices:write';

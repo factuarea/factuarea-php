@@ -389,7 +389,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -423,7 +423,6 @@ This SDK supports the following security schemes globally:
 
 | Name         | Type   | Scheme       |
 | ------------ | ------ | ------------ |
-| `http`       | http   | HTTP Bearer  |
 | `bearerAuth` | http   | HTTP Bearer  |
 | `apiKeyAuth` | apiKey | API key      |
 | `oAuth2`     | oauth2 | OAuth2 token |
@@ -442,7 +441,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -671,6 +670,15 @@ if ($response->object !== null) {
 * [publicApiV1EmailsList](docs/sdks/emails/README.md#publicapiv1emailslist) - List sent emails
 * [publicApiV1EmailsShow](docs/sdks/emails/README.md#publicapiv1emailsshow) - Retrieve a sent email
 
+### [EmployeeBatches](docs/sdks/employeebatches/README.md)
+
+* [publicApiV1EmployeeBatchesCancel](docs/sdks/employeebatches/README.md#publicapiv1employeebatchescancel) - Cancel an employee batch
+* [publicApiV1EmployeeBatchesConfirm](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesconfirm) - Confirm an employee batch
+* [publicApiV1EmployeeBatchesList](docs/sdks/employeebatches/README.md#publicapiv1employeebatcheslist) - List an employee batch
+* [publicApiV1EmployeeBatchesPrepare](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesprepare) - Prepare an employee batch
+* [publicApiV1EmployeeBatchesRefreshQuote](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesrefreshquote) - Refresh the quote for an employee batch
+* [publicApiV1EmployeeBatchesShow](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesshow) - Retrieve an employee batch
+
 ### [EmployeeInvitations](docs/sdks/employeeinvitations/README.md)
 
 * [publicApiV1EmployeeInvitationsCancel](docs/sdks/employeeinvitations/README.md#publicapiv1employeeinvitationscancel) - Cancel an employee invitation
@@ -785,7 +793,7 @@ if ($response->object !== null) {
 
 #### [Invoices.Quarterly](docs/sdks/quarterly/README.md)
 
-* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters with invoices
+* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters to export
 * [publicApiV1InvoicesQuarterlyDownloadZip](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlydownloadzip) - Generate quarterly ZIP archive
 * [publicApiV1InvoicesQuarterlySendEmail](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlysendemail) - Email quarterly ZIP to accountant
 
@@ -1095,6 +1103,18 @@ if ($response->object !== null) {
 * [publicApiV1StripeAutoinvoicingAccountsUpdate](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsupdate) - Update a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsList](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountslist) - List connected Stripe accounts
 
+#### [StripeAutoinvoicing.Accounts.ChargeRules](docs/sdks/chargerules/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulescreate) - Create a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesList](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargeruleslist) - List charge treatment rules of a connected Stripe account
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesDelete](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesdelete) - Delete a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesupdate) - Update a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesreorder) - Reorder the charge treatment rules
+
+#### [StripeAutoinvoicing.Accounts.NonInvoicedCharges](docs/sdks/noninvoicedcharges/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList](docs/sdks/noninvoicedcharges/README.md#publicapiv1stripeautoinvoicingaccountsnoninvoicedchargeslist) - List non-invoiced charges of a connected Stripe account
+
 ### [StripeAutoinvoicing.Config](docs/sdks/config/README.md)
 
 * [publicApiV1StripeAutoinvoicingConfigShow](docs/sdks/config/README.md#publicapiv1stripeautoinvoicingconfigshow) - Retrieve Stripe autoinvoicing config
@@ -1272,6 +1292,26 @@ if ($response->object !== null) {
 * [publicApiV1TimeTrackingSettingsShow](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsshow) - Retrieve the time tracking settings
 * [publicApiV1TimeTrackingSettingsUpdate](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsupdate) - Update the time tracking settings
 
+### [TransportDocuments](docs/sdks/transportdocuments/README.md)
+
+* [publicApiV1TransportDocumentsCancel](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentscancel) - Cancel a transport document
+* [publicApiV1TransportDocumentsClose](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsclose) - Close a transport document
+* [publicApiV1TransportDocumentsCreate](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentscreate) - Create a transport document
+* [publicApiV1TransportDocumentsIndex](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsindex) - List all transport documents
+* [publicApiV1TransportDocumentsDelete](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsdelete) - Delete a draft transport document
+* [publicApiV1TransportDocumentsShow](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsshow) - Retrieve a transport document
+* [publicApiV1TransportDocumentsUpdate](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsupdate) - Update a draft transport document
+* [publicApiV1TransportDocumentsIssuanceProof](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsissuanceproof) - Download transport document issuance proof
+* [publicApiV1TransportDocumentsPdf](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentspdf) - Download transport document PDF
+* [publicApiV1TransportDocumentsEvidence](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsevidence) - List transport document issuance evidence
+* [publicApiV1TransportDocumentsQr](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsqr) - Download transport document QR code
+* [publicApiV1TransportDocumentsStatuses](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsstatuses) - List transport document statuses
+* [publicApiV1TransportDocumentsIssue](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsissue) - Issue a transport document
+* [publicApiV1TransportDocumentsModify](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsmodify) - Modify an issued transport document
+* [publicApiV1TransportDocumentsReopen](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsreopen) - Reopen a transport document
+* [publicApiV1TransportDocumentsSend](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentssend) - Send a transport document by email
+* [publicApiV1TransportDocumentsSupersede](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentssupersede) - Mark a transport document as superseded
+
 ### [Users](docs/sdks/users/README.md)
 
 * [publicApiV1UsersMe](docs/sdks/users/README.md#publicapiv1usersme) - Retrieve the current user
@@ -1391,7 +1431,7 @@ use Factuarea\Sdk\Utils\Retry;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1447,7 +1487,7 @@ $sdk = Sdk\Factuarea::builder()
   )
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1510,7 +1550,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1566,7 +1606,7 @@ $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

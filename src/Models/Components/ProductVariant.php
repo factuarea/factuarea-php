@@ -106,6 +106,15 @@ class ProductVariant
     public ?string $lowStockThreshold;
 
     /**
+     * Own gross transport weight in kg per BASE unit (decimal string, up to 4 decimals, greater than 0) that replaces the product weight for this variant; `null` inherits the product weight. Rejected with 422 `gross_weight_not_allowed` when the product base unit is a mass unit.
+     *
+     * @var ?string $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $grossWeightKg = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ProductVariantObject  $object
      * @param  string  $productId
@@ -119,9 +128,10 @@ class ProductVariant
      * @param  ?float  $basePriceOverride
      * @param  ?float  $unitCostOverride
      * @param  ?string  $lowStockThreshold
+     * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductVariantObject $object, string $productId, string $name, bool $manageStock, string $stock, array $specifications, bool $active, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?string $lowStockThreshold = null)
+    public function __construct(string $id, ProductVariantObject $object, string $productId, string $name, bool $manageStock, string $stock, array $specifications, bool $active, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?string $lowStockThreshold = null, ?string $grossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -136,5 +146,6 @@ class ProductVariant
         $this->basePriceOverride = $basePriceOverride;
         $this->unitCostOverride = $unitCostOverride;
         $this->lowStockThreshold = $lowStockThreshold;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

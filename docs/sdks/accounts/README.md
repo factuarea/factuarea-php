@@ -28,7 +28,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -88,7 +88,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -129,7 +129,7 @@ if ($response->object !== null) {
 
 ## publicApiV1StripeAutoinvoicingAccountsUpdate
 
-Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`). All fields are optional; omitted ones keep their value.
+Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`) and the optional `invoice_note` (up to 500 characters) written in the notes of the auto-created invoices (`null` clears it; no note by default). All fields are optional; omitted ones keep their value.
 
 ### Example Usage
 
@@ -147,7 +147,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -205,7 +205,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
