@@ -94,6 +94,15 @@ class Tax
     public bool $isSystem;
 
     /**
+     * Who owns the tax: `global` (Factuarea catalog, read-only for companies) or `company` (a tax created by your company, which only your company sees and can edit or delete).
+     *
+     * @var \Factuarea\Sdk\Models\Components\Ownership $ownership
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('ownership')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Ownership')]
+    public Ownership $ownership;
+
+    /**
      * Map `DocumentType -> bool` indicating for which document types this tax is default. Replaces the 5 legacy booleans `is_default_invoice/quote/delivery_note/proforma/purchase_invoice`.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxDefaultForDocuments $defaultForDocuments
@@ -222,6 +231,7 @@ class Tax
      * @param  bool  $isDefault
      * @param  bool  $isActive
      * @param  bool  $isSystem
+     * @param  \Factuarea\Sdk\Models\Components\Ownership  $ownership
      * @param  \Factuarea\Sdk\Models\Components\TaxDefaultForDocuments  $defaultForDocuments
      * @param  bool  $reverseCharge
      * @param  ?string  $country
@@ -238,7 +248,7 @@ class Tax
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, TaxObject $object, string $name, string $code, float $rate, TaxType $type, TaxAppliesTo $appliesTo, bool $isDefault, bool $isActive, bool $isSystem, TaxDefaultForDocuments $defaultForDocuments, bool $reverseCharge, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?ExternalReference $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?TaxCountryAeatZone $countryAeatZone = null, ?TaxIndirectTaxRegime $indirectTaxRegime = null, ?string $linkedSurchargeTaxesId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, TaxObject $object, string $name, string $code, float $rate, TaxType $type, TaxAppliesTo $appliesTo, bool $isDefault, bool $isActive, bool $isSystem, Ownership $ownership, TaxDefaultForDocuments $defaultForDocuments, bool $reverseCharge, ?string $country = null, ?string $description = null, ?string $customerVisibleLabel = null, ?ExternalReference $externalReference = null, ?LocalDate $validFrom = null, ?LocalDate $validUntil = null, ?TaxCountryAeatZone $countryAeatZone = null, ?TaxIndirectTaxRegime $indirectTaxRegime = null, ?string $linkedSurchargeTaxesId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -250,6 +260,7 @@ class Tax
         $this->isDefault = $isDefault;
         $this->isActive = $isActive;
         $this->isSystem = $isSystem;
+        $this->ownership = $ownership;
         $this->defaultForDocuments = $defaultForDocuments;
         $this->reverseCharge = $reverseCharge;
         $this->country = $country;

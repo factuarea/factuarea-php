@@ -1,0 +1,14 @@
+# BusinessContactImportAction
+
+
+## Values
+
+| Name             | Value            |
+| ---------------- | ---------------- |
+| `Create`         | create           |
+| `Update`         | update           |
+| `AddRole`        | add_role         |
+| `MergeCandidate` | merge_candidate  |
+| `Skip`           | skip             |
+| `Conflict`       | conflict         |
+| `Invalid`        | invalid          |

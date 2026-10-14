@@ -101,6 +101,15 @@ class ProductPresentation
     public ?string $commercialPriceOverride;
 
     /**
+     * Own gross transport weight in kg per COMMERCIAL unit (decimal string, up to 4 decimals, greater than 0), packaging included; it overrides any derivation from the product or variant weight. `null` when the presentation declares none. Rejected with 422 `gross_weight_not_allowed` on `variable_measure` presentations.
+     *
+     * @var ?string $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $grossWeightKg = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ProductPresentationObject  $object
      * @param  string  $productId
@@ -113,9 +122,10 @@ class ProductPresentation
      * @param  ?string  $nominalBaseQuantity
      * @param  ?string  $barcode
      * @param  ?string  $commercialPriceOverride
+     * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductPresentationObject $object, string $productId, string $name, ProductPresentationMode $mode, string $unit, array $specifications, bool $active, ?string $conversionFactor = null, ?string $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null)
+    public function __construct(string $id, ProductPresentationObject $object, string $productId, string $name, ProductPresentationMode $mode, string $unit, array $specifications, bool $active, ?string $conversionFactor = null, ?string $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null, ?string $grossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -129,5 +139,6 @@ class ProductPresentation
         $this->nominalBaseQuantity = $nominalBaseQuantity;
         $this->barcode = $barcode;
         $this->commercialPriceOverride = $commercialPriceOverride;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

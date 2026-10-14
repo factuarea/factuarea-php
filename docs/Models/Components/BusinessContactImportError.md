@@ -3,8 +3,13 @@
 
 ## Fields
 
-| Field              | Type               | Required           | Description        |
-| ------------------ | ------------------ | ------------------ | ------------------ |
-| `field`            | *?string*          | :heavy_minus_sign: | N/A                |
-| `code`             | *?string*          | :heavy_minus_sign: | N/A                |
-| `message`          | *?string*          | :heavy_minus_sign: | N/A                |
+| Field                                                                     | Type                                                                      | Required                                                                  | Description                                                               |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `row`                                                                     | *int*                                                                     | :heavy_check_mark:                                                        | N/A                                                                       |
+| `field`                                                                   | *string*                                                                  | :heavy_check_mark:                                                        | N/A                                                                       |
+| `code`                                                                    | *string*                                                                  | :heavy_check_mark:                                                        | N/A                                                                       |
+| `message`                                                                 | *string*                                                                  | :heavy_check_mark:                                                        | N/A                                                                       |
+| `severity`                                                                | [?Components\OutcomeSeverity](../../Models/Components/OutcomeSeverity.md) | :heavy_minus_sign:                                                        | Only present on warnings; errors omit it.                                 |
+| `params`                                                                  | array<string, *mixed*>                                                    | :heavy_minus_sign:                                                        | N/A                                                                       |
+| `receivedValue`                                                           | *?string*                                                                 | :heavy_minus_sign:                                                        | Received cell value, truncated to 120 characters.                         |
+| `column`                                                                  | *?string*                                                                 | :heavy_minus_sign:                                                        | N/A                                                                       |

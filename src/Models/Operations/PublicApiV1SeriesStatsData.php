@@ -47,19 +47,28 @@ class PublicApiV1SeriesStatsData
     public int $proforma;
 
     /**
+     *
+     * @var int $transportDocument
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('transport_document')]
+    public int $transportDocument;
+
+    /**
      * @param  int  $total
      * @param  int  $invoice
      * @param  int  $quote
      * @param  int  $deliveryNote
      * @param  int  $proforma
+     * @param  int  $transportDocument
      * @phpstan-pure
      */
-    public function __construct(int $total, int $invoice, int $quote, int $deliveryNote, int $proforma)
+    public function __construct(int $total, int $invoice, int $quote, int $deliveryNote, int $proforma, int $transportDocument)
     {
         $this->total = $total;
         $this->invoice = $invoice;
         $this->quote = $quote;
         $this->deliveryNote = $deliveryNote;
         $this->proforma = $proforma;
+        $this->transportDocument = $transportDocument;
     }
 }

@@ -115,6 +115,21 @@ class CreateProductVariantRequest
     public ?array $specifications = null;
 
     /**
+     * Own gross transport weight of the variant, in kilograms PER BASE
+     *
+     * UNIT: up to four decimal places, greater than zero. It overrides
+     * the product weight for this variant. Omit it to keep the current
+     * value; send `null` to clear it and inherit the product weight
+     * again. Rejected with 422 `gross_weight_not_allowed` for services
+     * and mass base units (`KGM`, `GRM`).
+     *
+     * @var ?float $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $grossWeightKg = null;
+
+    /**
      * @param  string  $name
      * @param  bool  $manageStock
      * @param  float  $stock
@@ -127,9 +142,10 @@ class CreateProductVariantRequest
      * @param  ?float  $costOverride
      * @param  ?float  $lowStockThreshold
      * @param  ?array<string, mixed>  $specifications
+     * @param  ?float  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $name, bool $manageStock, float $stock, ?bool $active = null, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?float $priceOverride = null, ?float $costOverride = null, ?float $lowStockThreshold = null, ?array $specifications = null)
+    public function __construct(string $name, bool $manageStock, float $stock, ?bool $active = null, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?float $priceOverride = null, ?float $costOverride = null, ?float $lowStockThreshold = null, ?array $specifications = null, ?float $grossWeightKg = null)
     {
         $this->name = $name;
         $this->manageStock = $manageStock;
@@ -143,5 +159,6 @@ class CreateProductVariantRequest
         $this->costOverride = $costOverride;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->specifications = $specifications;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

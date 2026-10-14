@@ -19,9 +19,10 @@ namespace Factuarea\Sdk\Models\Components;
  * shop— cannot be changed here: pointing an existing store at a different shop
  * would keep the invoicing history of the old one.
  *
- * Two fields accept an explicit `null` and it means something: `series_id: null`
- * goes back to the default series of your company, and `remote_base_url: null`
- * removes the declared address. Omitting either one leaves it untouched.
+ * Three fields accept an explicit `null` and it means something: `series_id: null`
+ * goes back to the default series of your company, `remote_base_url: null`
+ * removes the declared address, and `invoice_note: null` removes the note of the
+ * automatic invoices. Omitting either one leaves it untouched.
  * `simplified_threshold` is expressed in EUROS and capped at the legal maximum
  * for a simplified invoice.
  */
@@ -119,6 +120,15 @@ class UpdateStoreV1Request
     public ?string $remoteBaseUrl = null;
 
     /**
+     * Note written in the notes of every invoice issued automatically from this store (up to 500 characters). Send `null` or an empty string to remove it: invoices then carry no note.
+     *
+     * @var ?string $invoiceNote
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_note')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $invoiceNote = null;
+
+    /**
      * @param  ?string  $name
      * @param  ?float  $simplifiedThreshold
      * @param  ?bool  $requireTaxId
@@ -129,9 +139,10 @@ class UpdateStoreV1Request
      * @param  ?bool  $authorizeRemoteHost
      * @param  ?string  $seriesId
      * @param  ?string  $remoteBaseUrl
+     * @param  ?string  $invoiceNote
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?float $simplifiedThreshold = null, ?bool $requireTaxId = null, ?bool $pricesIncludeTax = null, ?bool $autoinvoicingEnabled = null, ?bool $autosendEnabled = null, ?UpdateStoreV1RequestEnvironment $environment = null, ?bool $authorizeRemoteHost = null, ?string $seriesId = null, ?string $remoteBaseUrl = null)
+    public function __construct(?string $name = null, ?float $simplifiedThreshold = null, ?bool $requireTaxId = null, ?bool $pricesIncludeTax = null, ?bool $autoinvoicingEnabled = null, ?bool $autosendEnabled = null, ?UpdateStoreV1RequestEnvironment $environment = null, ?bool $authorizeRemoteHost = null, ?string $seriesId = null, ?string $remoteBaseUrl = null, ?string $invoiceNote = null)
     {
         $this->name = $name;
         $this->simplifiedThreshold = $simplifiedThreshold;
@@ -143,5 +154,6 @@ class UpdateStoreV1Request
         $this->authorizeRemoteHost = $authorizeRemoteHost;
         $this->seriesId = $seriesId;
         $this->remoteBaseUrl = $remoteBaseUrl;
+        $this->invoiceNote = $invoiceNote;
     }
 }

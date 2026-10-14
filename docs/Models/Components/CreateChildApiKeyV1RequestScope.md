@@ -33,6 +33,10 @@
 | `DeliveryNotesDelete`          | delivery_notes:delete          |
 | `DeliveryNotesTransition`      | delivery_notes:transition      |
 | `DeliveryNotesGdprForget`      | delivery_notes:gdpr_forget     |
+| `TransportDocumentsRead`       | transport_documents:read       |
+| `TransportDocumentsWrite`      | transport_documents:write      |
+| `TransportDocumentsDelete`     | transport_documents:delete     |
+| `TransportDocumentsTransition` | transport_documents:transition |
 | `PurchaseInvoicesRead`         | purchase_invoices:read         |
 | `PurchaseInvoicesWrite`        | purchase_invoices:write        |
 | `PurchaseInvoicesDelete`       | purchase_invoices:delete       |

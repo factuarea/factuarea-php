@@ -13,6 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1ContactsImportsShowResponseBody
 {
     /**
+     * Tracking of a contact import. `outcomes` lists at most 500 rows (`outcomes_truncated`); `skip_reasons` counts the skipped rows by reason.
      *
      * @var \Factuarea\Sdk\Models\Components\BusinessContactImport $data
      */

@@ -4,6 +4,110 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.7.0] — 2026-10-14
+
+Regenerated from the public OpenAPI spec that adds the transport control
+document (DeCA), Stripe charge rules, employee batches and seat offer
+redemptions: **+41 operations, −0 operations** in the spec (612 operations over
+494 paths, up from 571 over 461). No operation was removed. 29 of the new
+operations are generated; the 12 seat offer redemption operations are not (see
+*Known gaps*). Some generated classes gain required fields or are renamed (see
+*Changed — breaking*). `Factuarea-Version` stays at `2026-10-01`
+(`FactuareaVersionHook::DEFAULT_VERSION` is unchanged).
+
+### Added
+
+**Operations** (29 generated):
+
+- `$sdk->transportDocuments` (new `TransportDocuments` accessor, 17 operations)
+  for the electronic control document of Spanish public road freight (DeCA):
+  `publicApiV1TransportDocumentsIndex()` (cursor list with `status`,
+  `transport_date[gte|lte]`, `company_role`, `carrier_tax_id`,
+  `delivery_note_id`, `q` and `sort`), `Statuses()`, `Show()`, `Create()`
+  (`CreateTransportDocumentRequest`; only `company_role` is required, and
+  `delivery_note_ids` pre-fills one shipment per delivery note), `Update()` and
+  `Delete()` (drafts only), `Issue()`, `Modify()`
+  (`ModifyTransportDocumentRequest`, with `reason` and `data_origin`), `Close()`,
+  `Reopen()`, `Cancel()`, `Supersede()`, `Send()`, `Evidence()`, and the
+  `Pdf()`, `Qr()` and `IssuanceProof()` downloads. Issuing, modifying,
+  cancelling, superseding and sending are irreversible: send an
+  `Idempotency-Key`. Scopes `transport_documents:read|write|transition|delete`,
+  and `pdfs:read` for the PDF.
+- `$sdk->stripeAutoinvoicing->accounts->chargeRules` (new `ChargeRules`
+  accessor, 5 operations): `publicApiV1StripeAutoinvoicingAccountsChargeRulesList()`,
+  `Create()`, `Update()`, `Delete()` and `Reorder()` manage the charge treatment
+  rules of a connected account: the first matching rule decides how a charge is
+  treated, for example excluding it from invoicing.
+- `$sdk->stripeAutoinvoicing->accounts->nonInvoicedCharges->publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList()`
+  lists the charges a treatment rule excluded from invoicing, with
+  `refunded_amount`, `refunded_at` and `net_amount`.
+- `$sdk->employeeBatches` (new `EmployeeBatches` accessor, 6 operations):
+  `publicApiV1EmployeeBatchesPrepare()`, `List()`, `Show()`, `RefreshQuote()`,
+  `Confirm()` and `Cancel()` provision 1 to 100 employees, new or inactive, in
+  one quoted purchase of their seats. Preparing and refreshing never charge;
+  confirm the reviewed `quote_version` with a stable `Idempotency-Key`.
+
+**Models and fields**:
+
+- **DeCA**: `TransportDocument` with its parties, shipments, goods, versions
+  (`TransportDocumentVersion`, with the `sha256` of each PDF) and changes, the
+  issuance evidence (`TransportDocumentEvidence`) and the request of each step.
+  Series accept the `transport_document` document type, and
+  `PublicApiV1SeriesStatsData` reports `transport_document`. The ten
+  `transport_document.*` events have their payloads and are test event types
+  (`SendTestEventRequestType`).
+- **Gross transport weight**: products, variants and presentations accept and
+  publish `gross_weight_kg`; delivery note lines publish their frozen weight and
+  the delivery note `total_gross_weight_kg` and `lines_without_weight_count`.
+- **Contact imports**: `BusinessContactImport` gains `updated_count`,
+  `warnings_count`, `skip_reasons`, `first_diagnostics` and
+  `outcomes_truncated`, and `BusinessContactImportPreview` gains `skip`,
+  `updated_count`, `warnings_count`, `skip_reasons` and `outcome_kind`.
+- **Taxes**: `Tax.ownership` tells the company's own taxes from the read-only
+  Factuarea catalog; the tax list filters by `ownership`.
+- **Invoices and documents**: `Invoice` publishes `origin`; quotes and pro-formas
+  publish `operation_regime`; stores and Stripe accounts accept an
+  `invoice_note`; the quarterly dossier accepts `include_non_invoiced_charges`.
+
+### Changed — breaking
+
+No operation disappears, but some generated classes follow the contract:
+
+- New required constructor arguments, so build these classes with named
+  arguments: `AutomationUsage` (`activeRules`), `BusinessContactImport`,
+  `BusinessContactImportError` (`row`), `BusinessContactImportPreview`
+  (`skip`, `skipReasons`), `ConnectedAccount` (`connectionMethod`,
+  `authorizationStatus`), `Invoice` and `InvoiceWithCheckoutBlocks` (`origin`),
+  `Proforma` and `Quote` (`operationRegime`), `ProjectTasksImport`
+  (`warningsTruncated`, `warningsTotal`), `Tax` (`ownership`), `UsedBy`
+  (`supplierProfiles`, `recurringInvoices`, `companyTaxDefaults`) and
+  `PublicApiV1SeriesStatsData` (`transportDocument`).
+- `BusinessContactImport::$startedAt` and `$finishedAt` are `?\DateTime`
+  instead of `?string`, and `$object` and `$entityType` are enumerations
+  (`BusinessContactImportObject`, `BusinessContactImportEntityType`).
+  `BusinessContactImportError::$code` and `$message` are no longer nullable.
+- Renamed classes: `Components\Origin` is now
+  `Components\EventDataPaymentReversedOrigin` (`Reversal::$origin` changes type
+  accordingly) and `Components\Outcome` is
+  `Components\BusinessContactImportOutcome` (`BusinessContactImport::$outcomes`).
+- `Components\Security` loses the duplicated `http` scheme, which the published
+  spec no longer declares. Authenticate with `bearerAuth`, `apiKeyAuth` or
+  `oAuth2` as before.
+- `Event::$data` and `WebhookDelivery::$payload` accept the new
+  `transport_document.*` payloads.
+
+### Known gaps
+
+- The seat offer redemption operations (`/employee-seat-offer-redemptions` and
+  `/gestoria-seat-offer-redemptions`, 6 each) are not generated: their offer
+  schema uses the JSON Schema `not` keyword, which the generator does not
+  support. Call them over HTTP until the contract or an overlay removes it.
+
+### Notes
+
+- The hand-written layer (`FactuareaClient`, `PageIterator`, `IdempotencyHook`,
+  `FactuareaVersionHook`, `WebhookVerifier`) and its tests are unchanged.
+
 ## [0.6.0] — 2026-10-05
 
 Regenerated from the public OpenAPI spec that adds unattended checkout on

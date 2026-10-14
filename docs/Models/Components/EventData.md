@@ -518,6 +518,96 @@ Components\EventDataDeliveryNoteEmailSent $value = /* values here */
 Components\EventDataDeliveryNoteEmailFailed $value = /* values here */
 ```
 
+### `Components\EventDataTransportDocumentCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentCreated
+*/
+Components\EventDataTransportDocumentCreated $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentUpdated
+*/
+Components\EventDataTransportDocumentUpdated $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentIssued`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentIssued
+*/
+Components\EventDataTransportDocumentIssued $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentModified`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentModified
+*/
+Components\EventDataTransportDocumentModified $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentClosed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentClosed
+*/
+Components\EventDataTransportDocumentClosed $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentReopened`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentReopened
+*/
+Components\EventDataTransportDocumentReopened $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentCancelled
+*/
+Components\EventDataTransportDocumentCancelled $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentSuperseded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentSuperseded
+*/
+Components\EventDataTransportDocumentSuperseded $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentEmailSent
+*/
+Components\EventDataTransportDocumentEmailSent $value = /* values here */
+```
+
+### `Components\EventDataTransportDocumentEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataTransportDocumentEmailFailed
+*/
+Components\EventDataTransportDocumentEmailFailed $value = /* values here */
+```
+
 ### `Components\EventDataPurchaseInvoiceCreated`
 
 ```php
