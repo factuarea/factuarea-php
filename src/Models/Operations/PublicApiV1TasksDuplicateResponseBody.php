@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1TasksDuplicateResponseBody - Task duplicated successfully. The `Location` header contains the canonical URL of the NEW task created. */
 class PublicApiV1TasksDuplicateResponseBody
 {
     /**

@@ -84,7 +84,7 @@ class Tasks
     /**
      * Assign a task
      *
-     * Assign a task to a member of your company (`assignee_id`). A user who is not a member returns 422 `task_assignee_not_member`. Use `GET /v1/users` to find member ids.
+     * Assign a task to a person of your company (`assignee_id`): a member, or a person of another account who reaches the company through an account relation with `operate` access (for example, the accountancy firm that manages it), whose account is not published. A user who is neither returns 422 `task_assignee_not_member`, also for people with view-only relation access. Use `GET /v1/companies/{company}/users` to find the assignable ids.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAssignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAssignResponse
@@ -118,7 +118,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/assign', Operations\PublicApiV1TasksAssignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/assign', Operations\PublicApiV1TasksAssignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -169,7 +169,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -208,13 +208,13 @@ class Tasks
      * Permanently delete up to 200 tasks (`task_ids`) with their comments, attachments and time entries. Tasks that no longer exist are skipped; the result reports how many were deleted. If any task in the selection has invoiced hours the whole request is rejected with 422 `task_time_entry_invoiced` and nothing is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteTasksV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksBulkDelete(Components\BulkDeleteTasksV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksBulkDeleteResponse
+    public function publicApiV1TasksBulkDelete(Components\BulkDeleteTasksV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -242,13 +242,13 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksBulkDeleteRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/bulk-delete');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/bulk-delete', Operations\PublicApiV1TasksBulkDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -299,7 +299,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -338,13 +338,13 @@ class Tasks
      * Move up to 200 tasks (`task_ids`) to one board target: a `column_id` or a virtual `status`. Tasks that no longer exist or were moved are skipped silently; the result reports how many changed. More than 200 ids returns 422 `bulk_task_selection_too_large`. Requires an `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkChangeTaskStatusV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksBulkStatus(Components\BulkChangeTaskStatusV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksBulkStatusResponse
+    public function publicApiV1TasksBulkStatus(Components\BulkChangeTaskStatusV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -372,13 +372,13 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksBulkStatusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/bulk-status');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/bulk-status', Operations\PublicApiV1TasksBulkStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -429,7 +429,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -468,13 +468,13 @@ class Tasks
      * Apply the same change to up to 200 tasks (`task_ids`): `priority`, `assignee_id` (`null` unassigns), `due_on` (`null` clears it), `add_label_id` and/or `remove_label_id`. A key you do not send is left untouched. Sending no change, or adding and removing the same label, returns 422. Requires an `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkUpdateTasksV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksBulkUpdateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksBulkUpdate(Components\BulkUpdateTasksV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksBulkUpdateResponse
+    public function publicApiV1TasksBulkUpdate(Components\BulkUpdateTasksV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksBulkUpdateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -502,13 +502,13 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksBulkUpdateRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/bulk-update');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/bulk-update', Operations\PublicApiV1TasksBulkUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -559,7 +559,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -598,13 +598,13 @@ class Tasks
      * Create a task in a project. `project_id` and `title` are required. The task starts in the first column unless you send a `column_id` or a virtual `status` (`planned` for the backlog). Optional: `description` (Markdown), `priority`, `start_on`, `due_on`, `assignee_id` (a member of your company), `label_ids`, `custom_fields` (values keyed by field `id`) and `entity_link`: an object with `type` (from the entity-link vocabulary) and `id` that links the task to a document or contact in the same transaction; if that entity does not exist, belongs to another company or its module is not accessible, the call returns 404 `linked_entity_not_found` and the task is not created.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTaskV1Request  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksCreate(Components\CreateTaskV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksCreateResponse
+    public function publicApiV1TasksCreate(Components\CreateTaskV1Request $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -632,13 +632,13 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks', Operations\PublicApiV1TasksCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -689,7 +689,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -727,14 +727,14 @@ class Tasks
      *
      * Permanently delete a task with its comments, attachments, relations and time entries. A task that has invoiced hours cannot be deleted (422 `task_time_entry_invoiced`) until the invoice is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksDelete(string $task, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksDeleteResponse
+    public function publicApiV1TasksDelete(string $company, string $task, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -762,13 +762,13 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksDeleteRequest(
+            company: $company,
             task: $task,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}', Operations\PublicApiV1TasksDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}', Operations\PublicApiV1TasksDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -814,7 +814,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -884,7 +884,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/duplicate', Operations\PublicApiV1TasksDuplicateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/duplicate', Operations\PublicApiV1TasksDuplicateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -934,7 +934,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -973,12 +973,12 @@ class Tasks
      * Look up a task by its key (`DEV-12`) sent in the request body. Previous keys of a task keep working after moving it to another project or renaming the project key. Returns 404 `task_not_found` when no task of your company matches; a malformed key returns 422 `invalid_task_key`. A read-only lookup: no `Idempotency-Key` needed.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindTaskByKeyV1Request  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksFindByKeyResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksFindByKey(Components\FindTaskByKeyV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksFindByKeyResponse
+    public function publicApiV1TasksFindByKey(Components\FindTaskByKeyV1Request $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksFindByKeyResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1006,12 +1006,12 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksFindByKeyRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/find-by-key');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/find-by-key', Operations\PublicApiV1TasksFindByKeyRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1062,7 +1062,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1132,7 +1132,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/linked');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/linked', Operations\PublicApiV1TasksLinkedRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1181,7 +1181,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1251,7 +1251,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/move', Operations\PublicApiV1TasksMoveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/move', Operations\PublicApiV1TasksMoveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1302,7 +1302,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1372,7 +1372,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/reposition', Operations\PublicApiV1TasksRepositionRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/reposition', Operations\PublicApiV1TasksRepositionRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1422,7 +1422,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1460,11 +1460,11 @@ class Tasks
      *
      * Search the tasks of your company across projects. Filters: `q` (free text; a value shaped like a task key such as `DEV-12` also matches that key), `project_id`, `status` (`planned`, `active`, `archived`), `column_id`, `priority`, `assignee_id` (a member UUID or `me`), `label_id`, `due_before`, `due_after` and `completed`. `sort` accepts `created_at`, `updated_at`, `due_on`, `priority` or `number`, with a `-` prefix for descending (default `-created_at`); ties are broken by `id` so the order is stable. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksSearch(?Operations\PublicApiV1TasksSearchRequest $request = null, ?Options $options = null): Operations\PublicApiV1TasksSearchResponse
+    public function publicApiV1TasksSearch(Operations\PublicApiV1TasksSearchRequest $request, ?Options $options = null): Operations\PublicApiV1TasksSearchResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1492,7 +1492,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks', Operations\PublicApiV1TasksSearchRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1541,7 +1541,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1579,13 +1579,13 @@ class Tasks
      *
      * Retrieve a task with its key, board status and column, priority, dates, assignee, labels, custom field values and counters. A task of another company returns 404 `task_not_found`.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksShow(string $task, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksShowResponse
+    public function publicApiV1TasksShow(string $company, string $task, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1613,12 +1613,12 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksShowRequest(
+            company: $company,
             task: $task,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}', Operations\PublicApiV1TasksShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}', Operations\PublicApiV1TasksShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1664,7 +1664,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1700,7 +1700,7 @@ class Tasks
     /**
      * Change task status
      *
-     * Move a task to a board target: a `column_id` of its project, or a virtual `status` (`planned` for the backlog, `archived`). Moving it into a final column completes it; moving it out reopens it. It is placed at the end of the target; use `POST /v1/tasks/{task}/reposition` to choose the position.
+     * Move a task to a board target: a `column_id` of its project, or a virtual `status` (`planned` for the backlog, `archived`). Moving it into a final column completes it; moving it out reopens it. It is placed at the end of the target; use `POST /v1/companies/{company}/tasks/{task}/reposition` to choose the position.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksStatusRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksStatusResponse
@@ -1734,7 +1734,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/status', Operations\PublicApiV1TasksStatusRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/status', Operations\PublicApiV1TasksStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1784,7 +1784,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1822,14 +1822,14 @@ class Tasks
      *
      * Remove the assignee of a task. No request body. Unassigning a task that has no assignee is a no-op.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksUnassignResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksUnassign(string $task, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksUnassignResponse
+    public function publicApiV1TasksUnassign(string $company, string $task, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksUnassignResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1857,13 +1857,13 @@ class Tasks
             ];
         }
         $request = new Operations\PublicApiV1TasksUnassignRequest(
+            company: $company,
             task: $task,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/unassign', Operations\PublicApiV1TasksUnassignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/unassign', Operations\PublicApiV1TasksUnassignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1909,7 +1909,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1945,7 +1945,7 @@ class Tasks
     /**
      * Update a task
      *
-     * Partially update a task (`PUT` with partial semantics): only the fields you send change. `title`, `priority`, `description` (Markdown), `start_on`, `due_on` and `assignee_id`; an explicit `null` clears `description`, `start_on`, `due_on` and `assignee_id` (`priority` cannot be null). `start_on` after `due_on` returns 422 `invalid_task_schedule`.
+     * Partially update a task (`PATCH` semantics): only the fields you send change. `title`, `priority`, `description` (Markdown), `start_on`, `due_on` and `assignee_id`; an explicit `null` clears `description`, `start_on`, `due_on` and `assignee_id` (`priority` cannot be null). `start_on` after `due_on` returns 422 `invalid_task_schedule`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksUpdateResponse
@@ -1979,7 +1979,7 @@ class Tasks
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}', Operations\PublicApiV1TasksUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}', Operations\PublicApiV1TasksUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1992,7 +1992,7 @@ class Tasks
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.tasks.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -2029,7 +2029,7 @@ class Tasks
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

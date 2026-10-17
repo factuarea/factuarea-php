@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseInvoicesPaymentReceiptRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the purchase invoice.
      *
      * @var string $purchaseInvoice
      */
@@ -28,23 +37,25 @@ class PublicApiV1PurchaseInvoicesPaymentReceiptRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
+     * ID (UUID v7) of the expense payment whose receipt you want. Without it, the most recent active payment.
      *
-     * @var ?string $xActiveProfile
+     * @var ?string $paymentId
      */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=payment_id')]
+    public ?string $paymentId = null;
 
     /**
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?string  $paymentId
      * @phpstan-pure
      */
-    public function __construct(string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $company, string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $paymentId = null)
     {
+        $this->company = $company;
         $this->purchaseInvoice = $purchaseInvoice;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
+        $this->paymentId = $paymentId;
     }
 }

@@ -12,33 +12,36 @@ namespace Factuarea\Sdk\Models\Components;
 class RecurringInvoicePreviewDocumentTotals
 {
     /**
+     * Taxable base of the next invoice (EUR), as a 2-decimal string.
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
+     * VAT of the next invoice (EUR), as a 2-decimal string.
      *
-     * @var float $tax
+     * @var string $tax
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax')]
-    public float $tax;
+    public string $tax;
 
     /**
+     * Total of the next invoice (EUR), as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
-     * @param  float  $subtotal
-     * @param  float  $tax
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $tax
+     * @param  string  $total
      * @phpstan-pure
      */
-    public function __construct(float $subtotal, float $tax, float $total)
+    public function __construct(string $subtotal, string $tax, string $total)
     {
         $this->subtotal = $subtotal;
         $this->tax = $tax;

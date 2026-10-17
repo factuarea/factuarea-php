@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class EventDataDeliveryNoteConverted
 {
     /**
-     * A delivery note tracking goods delivered to a customer. The delivery address fields, `transport_details` and `reference_number` are both accepted on write and returned here; `delivery_city`, `delivery_province` and `delivery_postal_code` are also filterable on `GET /v1/delivery_notes`. Empty strings are normalized to `null`.
+     * A delivery note tracking goods delivered to a customer. The delivery address fields, `transport_details` and `reference_number` are both accepted on write and returned here; `delivery_city`, `delivery_province` and `delivery_postal_code` are also filterable on `GET /v1/companies/{company}/delivery-notes`. Empty strings are normalized to `null`.
      *
      * @var \Factuarea\Sdk\Models\Components\DeliveryNote $object
      */

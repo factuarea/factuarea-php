@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuStats - Aggregated summary of the VeriFactu records of the authenticated company: counts by status and breakdown by type. Returned by `GET /v1/verifactu/stats`. */
+/** VeriFactuStats - Aggregated summary of the VeriFactu records of the authenticated company: counts by status and breakdown by type. Returned by `GET /v1/companies/{company}/verifactu/stats`. */
 class VeriFactuStats
 {
     /**
@@ -95,7 +95,7 @@ class VeriFactuStats
     public int $pendingIncidentCount;
 
     /**
-     * Of the pending records, the BLOCKED ones: `error` with NO automatic retry (missing certificate or representation, presenter not enabled by AEAT, or a client-side rejection). They do not go out until someone reactivates them (`POST /v1/verifactu/records/retry-blocked`) and they hold back the chain of the company. It is a subset of `pending_incident_count`; the query filters never affect it.
+     * Of the pending records, the BLOCKED ones: `error` with NO automatic retry (missing certificate or representation, presenter not enabled by AEAT, or a client-side rejection). They do not go out until someone reactivates them (`POST /v1/companies/{company}/verifactu/records/retry-blocked`) and they hold back the chain of the company. It is a subset of `pending_incident_count`; the query filters never affect it.
      *
      * @var int $blockedIncidentCount
      */

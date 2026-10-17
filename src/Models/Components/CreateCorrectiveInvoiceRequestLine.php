@@ -154,7 +154,7 @@ class CreateCorrectiveInvoiceRequestLine
     public ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null;
 
     /**
-     * Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one.
+     * Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/companies/{company}/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason
      */
@@ -179,6 +179,14 @@ class CreateCorrectiveInvoiceRequestLine
     #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $configurationUuid = null;
+
+    /**
+     *
+     * @var ?float $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $countedQuantity = null;
 
     /**
      * $options
@@ -211,10 +219,11 @@ class CreateCorrectiveInvoiceRequestLine
      * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestExemptionReason  $exemptionReason
      * @param  ?string  $exemptionReasonText
      * @param  ?string  $configurationUuid
+     * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestOption>  $options
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $additionalDescription = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?string $unit = null, ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null, ?CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason = null, ?string $exemptionReasonText = null, ?string $configurationUuid = null, ?array $options = null)
+    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $additionalDescription = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?string $unit = null, ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null, ?CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason = null, ?string $exemptionReasonText = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
@@ -236,6 +245,7 @@ class CreateCorrectiveInvoiceRequestLine
         $this->exemptionReason = $exemptionReason;
         $this->exemptionReasonText = $exemptionReasonText;
         $this->configurationUuid = $configurationUuid;
+        $this->countedQuantity = $countedQuantity;
         $this->options = $options;
     }
 }

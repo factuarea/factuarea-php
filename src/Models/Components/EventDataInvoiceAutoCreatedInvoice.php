@@ -19,11 +19,12 @@ class EventDataInvoiceAutoCreatedInvoice
     public string $uuid;
 
     /**
+     * Total amount of the invoice (EUR), as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      *
@@ -49,13 +50,13 @@ class EventDataInvoiceAutoCreatedInvoice
 
     /**
      * @param  string  $uuid
-     * @param  float  $total
+     * @param  string  $total
      * @param  string  $source
      * @param  ?string  $number
      * @param  ?string  $clientUuid
      * @phpstan-pure
      */
-    public function __construct(string $uuid, float $total, string $source, ?string $number = null, ?string $clientUuid = null)
+    public function __construct(string $uuid, string $total, string $source, ?string $number = null, ?string $clientUuid = null)
     {
         $this->uuid = $uuid;
         $this->total = $total;

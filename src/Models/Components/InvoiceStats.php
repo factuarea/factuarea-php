@@ -40,18 +40,18 @@ class InvoiceStats
     /**
      * Total amount invoiced in the period.
      *
-     * @var float $revenueTotal
+     * @var string $revenueTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('revenue_total')]
-    public float $revenueTotal;
+    public string $revenueTotal;
 
     /**
      * Total amount pending collection.
      *
-     * @var float $pendingAmount
+     * @var string $pendingAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_amount')]
-    public float $pendingAmount;
+    public string $pendingAmount;
 
     /**
      * Number of overdue and unpaid invoices.
@@ -64,10 +64,10 @@ class InvoiceStats
     /**
      * Total amount overdue and unpaid.
      *
-     * @var float $overdueAmount
+     * @var string $overdueAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('overdue_amount')]
-    public float $overdueAmount;
+    public string $overdueAmount;
 
     /**
      * Number of corrective invoices issued in the period.
@@ -98,16 +98,16 @@ class InvoiceStats
      * @param  \Factuarea\Sdk\Models\Components\InvoiceStatsObject  $object
      * @param  int  $totalCount
      * @param  array<string, int>  $byStatus
-     * @param  float  $revenueTotal
-     * @param  float  $pendingAmount
+     * @param  string  $revenueTotal
+     * @param  string  $pendingAmount
      * @param  int  $overdueCount
-     * @param  float  $overdueAmount
+     * @param  string  $overdueAmount
      * @param  int  $correctiveCount
      * @param  \Factuarea\Sdk\Models\Components\InvoiceStatsPeriod  $period
      * @param  ?float  $averagePaymentDays
      * @phpstan-pure
      */
-    public function __construct(InvoiceStatsObject $object, int $totalCount, array $byStatus, float $revenueTotal, float $pendingAmount, int $overdueCount, float $overdueAmount, int $correctiveCount, InvoiceStatsPeriod $period, ?float $averagePaymentDays = null)
+    public function __construct(InvoiceStatsObject $object, int $totalCount, array $byStatus, string $revenueTotal, string $pendingAmount, int $overdueCount, string $overdueAmount, int $correctiveCount, InvoiceStatsPeriod $period, ?float $averagePaymentDays = null)
     {
         $this->object = $object;
         $this->totalCount = $totalCount;

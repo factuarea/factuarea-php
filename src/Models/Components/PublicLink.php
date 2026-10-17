@@ -29,7 +29,7 @@ class PublicLink
     public string $url;
 
     /**
-     * UUID (v7) of the document the link points to.
+     * UUID v7 of the document the link points to.
      *
      * @var string $id
      */

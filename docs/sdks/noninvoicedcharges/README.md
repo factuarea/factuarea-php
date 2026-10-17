@@ -12,7 +12,7 @@ List the charges of a connected Stripe account that were deliberately not invoic
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.non_invoiced_charges.list" method="get" path="/connected-accounts/{account}/non-invoiced-charges" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.non_invoiced_charges.list" method="get" path="/companies/{company}/connected-accounts/{account}/non-invoiced-charges" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,9 +32,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesListRequest(
-    account: '14667545',
+    company: '26aac878-0789-46b2-8f88-0da60330271d',
+    account: '0a566bdb-e9c0-41ba-a7a7-54284df34b62',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->stripeAutoinvoicing->accounts->nonInvoicedCharges->publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList(
@@ -58,8 +58,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

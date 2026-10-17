@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Only price lists in this status: `active` or `inactive`. */
 enum PublicApiV1PriceListsListStatus: string
 {
     case Active = 'active';

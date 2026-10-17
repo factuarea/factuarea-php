@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TransportDocumentsIndexRequest
 {
     /**
-     * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -21,7 +29,7 @@ class PublicApiV1TransportDocumentsIndexRequest
     public ?string $startingAfter = null;
 
     /**
-     * Cursor for backward pagination. Use the `uuid` of the first object on the current page.
+     * Cursor for backward pagination: pass the `id` of the first object on the current page.
      *
      * @var ?string $endingBefore
      */
@@ -93,7 +101,7 @@ class PublicApiV1TransportDocumentsIndexRequest
     public ?string $q = null;
 
     /**
-     * Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `transport_date`, `number`, `created`, `updated`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, documents are ordered by transport date, newest first.
+     * Sort order: `transport_date`, `number`, `created`, `updated` ascending, or with a `-` prefix for descending (default: documents are ordered by transport date, newest first).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIndexSort $sort
      */
@@ -109,15 +117,7 @@ class PublicApiV1TransportDocumentsIndexRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -125,6 +125,7 @@ class PublicApiV1TransportDocumentsIndexRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -138,11 +139,11 @@ class PublicApiV1TransportDocumentsIndexRequest
      * @param  ?string  $q
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIndexSort  $sort
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?PublicApiV1TransportDocumentsIndexStatus $status = null, ?string $statusIn = null, ?LocalDate $transportDateGte = null, ?LocalDate $transportDateLte = null, ?CompanyRole $companyRole = null, ?string $carrierTaxId = null, ?string $deliveryNoteId = null, ?string $q = null, ?PublicApiV1TransportDocumentsIndexSort $sort = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?PublicApiV1TransportDocumentsIndexStatus $status = null, ?string $statusIn = null, ?LocalDate $transportDateGte = null, ?LocalDate $transportDateLte = null, ?CompanyRole $companyRole = null, ?string $carrierTaxId = null, ?string $deliveryNoteId = null, ?string $q = null, ?PublicApiV1TransportDocumentsIndexSort $sort = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->status = $status;
@@ -155,7 +156,6 @@ class PublicApiV1TransportDocumentsIndexRequest
         $this->q = $q;
         $this->sort = $sort;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

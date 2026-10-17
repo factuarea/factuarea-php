@@ -1,6 +1,6 @@
 # PreviewTaxReportV1Request
 
-Compute the breakdown of a tax report without persisting any generation or file. Useful to show what is about to be declared before confirming. `303` and `347` are accepted as aliases of `modelo_303` and `modelo_347`, consistent with `POST /v1/tax_reports/303` and `POST /v1/tax_reports/347`.
+Compute the breakdown of a tax report without persisting any generation or file. Useful to show what is about to be declared before confirming. `303` and `347` are accepted as aliases of `modelo_303` and `modelo_347`, consistent with `POST /v1/companies/{company}/tax-reports/303` and `POST /v1/companies/{company}/tax-reports/347`.
 
 
 ## Fields

@@ -28,9 +28,9 @@ entirely in `src/Custom/` for this reason.
 ## The pinned spec
 
 `spec/openapi.json` is a copy of the Factuarea public OpenAPI document, pinned to
-the reviewed contract of `factuarea-app` PR **#1010**
-(`backend/public/docs/openapi-public.json`, OpenAPI 3.1, 483 operations).
-The pinned file SHA-256 is `10c3da86466f99a4be7c064bbfd1e74774f6fe46dde41eeb80e2e5b94ef05d7e`. It is
+the axis contract exported from the `feat/epic-nif-axis-api` branch of
+`factuarea-app` at commit `e639f925ff` (OpenAPI 3.1, 664 operations).
+The pinned file SHA-256 is `fcf93063ad922ca774e78e3d22f2e7b45a711a387fe1a5e72add5ff6c9685848`. It is
 committed so the SDK is fully reproducible from this repo alone.
 
 To update the SDK to a newer API version, replace `spec/openapi.json` with the new

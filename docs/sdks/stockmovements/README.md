@@ -12,7 +12,7 @@ Read the append-only stock ledger of a product, from the most recently applied m
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.stock_movements.list" method="get" path="/products/{product}/stock-movements" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.stock_movements.list" method="get" path="/companies/{company}/products/{product}/stock-movements" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,9 +32,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsStockMovementsListRequest(
+    company: 'McGlynn, Hegmann and McLaughlin',
     product: 'Refined Plastic Computer',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->stockMovements->publicApiV1ProductsStockMovementsList(
@@ -58,8 +58,8 @@ if ($response->paginatedList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

@@ -66,16 +66,16 @@ class Projects
     /**
      * Archive a project
      *
-     * Archive a project: it leaves the default listings and stops accepting new tasks (422 `project_archived`), but everything is kept and can be read. Reversible with `POST /v1/projects/{project}/unarchive`.
+     * Archive a project: it leaves the default listings and stops accepting new tasks (422 `project_archived`), but everything is kept and can be read. Reversible with `POST /v1/companies/{company}/projects/{project}/unarchive`.
      *
+     * @param  string  $company
      * @param  string  $project
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsArchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsArchive(string $project, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsArchiveResponse
+    public function publicApiV1ProjectsArchive(string $company, string $project, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsArchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -103,13 +103,13 @@ class Projects
             ];
         }
         $request = new Operations\PublicApiV1ProjectsArchiveRequest(
+            company: $company,
             project: $project,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}/archive', Operations\PublicApiV1ProjectsArchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}/archive', Operations\PublicApiV1ProjectsArchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -155,7 +155,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -194,13 +194,13 @@ class Projects
      * Create a task project with a `name`, a unique `key` (an uppercase letter followed by up to nine uppercase letters or digits, used in task keys such as `DEV-12`), an optional `icon` and `description`. The project is created with the default board columns. A `key` already used by another project of your company returns 409 `project_key_in_use`.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateProjectV1Request  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsCreate(Components\CreateProjectV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsCreateResponse
+    public function publicApiV1ProjectsCreate(Components\CreateProjectV1Request $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -228,13 +228,13 @@ class Projects
             ];
         }
         $request = new Operations\PublicApiV1ProjectsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects', Operations\PublicApiV1ProjectsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -285,7 +285,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -323,14 +323,14 @@ class Projects
      *
      * Permanently delete a project together with all its tasks, comments, attachments and time entries. A project that has invoiced hours (in a live time-invoicing batch or on any of its tasks) cannot be deleted: 422 `task_time_entry_invoiced` and nothing is removed until the invoice is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
      *
+     * @param  string  $company
      * @param  string  $project
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsDelete(string $project, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsDeleteResponse
+    public function publicApiV1ProjectsDelete(string $company, string $project, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -358,13 +358,13 @@ class Projects
             ];
         }
         $request = new Operations\PublicApiV1ProjectsDeleteRequest(
+            company: $company,
             project: $project,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}', Operations\PublicApiV1ProjectsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}', Operations\PublicApiV1ProjectsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -410,7 +410,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -449,12 +449,12 @@ class Projects
      * Look up a project by its `key` sent in the request body (case-insensitive). Returns 404 `project_not_found` when no project of your company has that key. A read-only lookup: it does not change anything and does not need an `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindProjectByKeyV1Request  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsFindByKeyResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsFindByKey(Components\FindProjectByKeyV1Request $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsFindByKeyResponse
+    public function publicApiV1ProjectsFindByKey(Components\FindProjectByKeyV1Request $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsFindByKeyResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -482,12 +482,12 @@ class Projects
             ];
         }
         $request = new Operations\PublicApiV1ProjectsFindByKeyRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/find-by-key');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/find-by-key', Operations\PublicApiV1ProjectsFindByKeyRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -538,7 +538,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -576,11 +576,11 @@ class Projects
      *
      * List the task projects of your company, ordered by their position (the order shown in the app) with a stable tie-break by `id`. Archived projects are left out unless `include_archived=true`. Each project carries its task statistics (total, completed, completion percentage and next due date). Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsList(?Operations\PublicApiV1ProjectsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1ProjectsListResponse
+    public function publicApiV1ProjectsList(Operations\PublicApiV1ProjectsListRequest $request, ?Options $options = null): Operations\PublicApiV1ProjectsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -608,7 +608,7 @@ class Projects
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects', Operations\PublicApiV1ProjectsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -657,7 +657,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -693,15 +693,15 @@ class Projects
     /**
      * Retrieve a project
      *
-     * Retrieve a project with its billing settings and task statistics. Its columns are read with `GET /v1/projects/{project}/columns`. A project of another company, or an `id` that does not exist, returns 404 `project_not_found`.
+     * Retrieve a project with its billing settings and task statistics. Its columns are read with `GET /v1/companies/{company}/projects/{project}/columns`. A project of another company, or an `id` that does not exist, returns 404 `project_not_found`.
      *
+     * @param  string  $company
      * @param  string  $project
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsShow(string $project, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsShowResponse
+    public function publicApiV1ProjectsShow(string $company, string $project, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -729,12 +729,12 @@ class Projects
             ];
         }
         $request = new Operations\PublicApiV1ProjectsShowRequest(
+            company: $company,
             project: $project,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}', Operations\PublicApiV1ProjectsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}', Operations\PublicApiV1ProjectsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -780,7 +780,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -818,14 +818,14 @@ class Projects
      *
      * Restore an archived project so it shows up again in the listings and accepts new tasks. Unarchiving a project that is not archived is a no-op that returns the project unchanged.
      *
+     * @param  string  $company
      * @param  string  $project
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsUnarchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProjectsUnarchive(string $project, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProjectsUnarchiveResponse
+    public function publicApiV1ProjectsUnarchive(string $company, string $project, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProjectsUnarchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -853,13 +853,13 @@ class Projects
             ];
         }
         $request = new Operations\PublicApiV1ProjectsUnarchiveRequest(
+            company: $company,
             project: $project,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}/unarchive', Operations\PublicApiV1ProjectsUnarchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}/unarchive', Operations\PublicApiV1ProjectsUnarchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -905,7 +905,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -941,7 +941,7 @@ class Projects
     /**
      * Update a project
      *
-     * Partially update a project: only the fields you send change (`PUT` with partial semantics). You can change the `name`, the `key` (tasks keep answering to their previous key as an alias), the `icon`, the `description` (explicit `null` clears it) and the billing defaults used to invoice logged time (`billing_contact_id`, `billing_product_id`, `billing_hourly_rate`, up to 99,999,999.99 per hour so that the tax of one hour always fits an invoice line). A `key` already in use returns 409 `project_key_in_use`.
+     * Partially update a project: only the fields you send change (`PATCH` semantics). You can change the `name`, the `key` (tasks keep answering to their previous key as an alias), the `icon`, the `description` (explicit `null` clears it) and the billing defaults used to invoice logged time (`billing_contact_id`, `billing_product_id`, `billing_hourly_rate`, up to 99,999,999.99 per hour so that the tax of one hour always fits an invoice line). A `key` already in use returns 409 `project_key_in_use`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsUpdateResponse
@@ -975,7 +975,7 @@ class Projects
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/projects/{project}', Operations\PublicApiV1ProjectsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/projects/{project}', Operations\PublicApiV1ProjectsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -988,7 +988,7 @@ class Projects
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.projects.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -1025,7 +1025,7 @@ class Projects
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

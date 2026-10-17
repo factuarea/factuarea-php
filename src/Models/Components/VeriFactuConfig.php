@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** VeriFactuConfig - VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/verifactu/config` and `PUT /v1/verifactu/settings`. The certificate password is never exposed. */
+/** VeriFactuConfig - VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/companies/{company}/verifactu/config` and `PATCH /v1/companies/{company}/verifactu/settings`. The certificate password is never exposed. */
 class VeriFactuConfig
 {
     /**
@@ -70,7 +70,7 @@ class VeriFactuConfig
     public bool $hasActiveCertificate;
 
     /**
-     * Who remits your records to AEAT: `own_certificate` (the default: your own certificate), `social_collaborator` (Factuarea remits with its certificate as social collaborator, annex I of the Resolution of 18-12-2024) or `power_of_attorney` (Factuarea remits under a power of attorney registered with AEAT). A third-party mode requires an active representation of the kind it asks for (`POST /v1/verifactu/representation`); change it with `PUT /v1/verifactu/settings`.
+     * Who remits your records to AEAT: `own_certificate` (the default: your own certificate), `social_collaborator` (Factuarea remits with its certificate as social collaborator, annex I of the Resolution of 18-12-2024) or `power_of_attorney` (Factuarea remits under a power of attorney registered with AEAT). A third-party mode requires an active representation of the kind it asks for (`POST /v1/companies/{company}/verifactu/representation`); change it with `PATCH /v1/companies/{company}/verifactu/settings`.
      *
      * @var \Factuarea\Sdk\Models\Components\VeriFactuConfigRemissionMode $remissionMode
      */
@@ -95,7 +95,7 @@ class VeriFactuConfig
     public bool $activeRepresentationIsExpired;
 
     /**
-     * Whether this instance offers the `social_collaborator` remission mode (the social-collaboration agreement with AEAT is in force). It is a fact of the instance, the same for every company: while it is `false`, `PUT /v1/verifactu/settings` with that mode returns 422 `social_collaborator_unavailable` and `power_of_attorney` covers the same use case.
+     * Whether this instance offers the `social_collaborator` remission mode (the social-collaboration agreement with AEAT is in force). It is a fact of the instance, the same for every company: while it is `false`, `PATCH /v1/companies/{company}/verifactu/settings` with that mode returns 422 `social_collaborator_unavailable` and `power_of_attorney` covers the same use case.
      *
      * @var bool $socialCollaboratorAvailable
      */
@@ -120,7 +120,7 @@ class VeriFactuConfig
     public ?\DateTime $isLockedUntil;
 
     /**
-     * UUID (v7) of the active certificate, or `null` if there is none.
+     * UUID v7 of the active certificate, or `null` if there is none.
      *
      * @var ?string $activeCertificateId
      */
@@ -135,7 +135,7 @@ class VeriFactuConfig
     public ?\DateTime $updatedAt;
 
     /**
-     * UUID (v7) of the current (not revoked) representation, even if it has expired, or `null` if there is none.
+     * UUID v7 of the current (not revoked) representation, even if it has expired, or `null` if there is none.
      *
      * @var ?string $activeRepresentationId
      */

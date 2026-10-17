@@ -1,6 +1,6 @@
 # SendDeliveryNoteRequest
 
-Email a delivery note. Required body: `email`. Optional: `subject`, `message` (max 2000 characters) and `template_id` (id of the email template). `template_id` is the integer id of the shared catalog of email templates, so it does NOT follow the UUID convention of the other identifiers.
+Email a delivery note. Required: `email`. Optional: `subject`, `message` (up to 2,000 characters) and `template_id`, the integer identifier of an email template of the global catalog (a shared system catalog, so it is not a UUID v7).
 
 
 ## Fields

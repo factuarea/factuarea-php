@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TasksActivitiesListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the task.
      *
      * @var string $task
      */
@@ -28,7 +37,7 @@ class PublicApiV1TasksActivitiesListRequest
     public ?int $limit = null;
 
     /**
-     * Opaque cursor for forward pagination: pass back the `next_cursor` of the previous page as is. Activity entries have no `id` of their own, so this is not a UUID; never build one yourself. An unreadable cursor restarts from the first page.
+     * Cursor for forward pagination: the `id` of the last activity entry you received.
      *
      * @var ?string $startingAfter
      */
@@ -44,27 +53,19 @@ class PublicApiV1TasksActivitiesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * @param  string  $company
      * @param  string  $task
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(string $task, ?int $limit = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $company, string $task, ?int $limit = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null)
     {
+        $this->company = $company;
         $this->task = $task;
         $this->limit = $limit;
         $this->startingAfter = $startingAfter;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
     }
 }

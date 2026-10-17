@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** NonInvoicedCharge - A Stripe charge that a charge rule left out of invoicing. No invoice or VERI*FACTU record is generated, but the charge is kept with its reason. The public `id` is the UUID (v7); `transaction_id` (`pi_xxx`) is the external Stripe id. */
+/** NonInvoicedCharge - A Stripe charge that a charge rule left out of invoicing. No invoice or VERI*FACTU record is generated, but the charge is kept with its reason. The public `id` is the UUID v7; `transaction_id` (`pi_xxx`) is the external Stripe id. */
 class NonInvoicedCharge
 {
     /**
-     * UUID (v7) of the record. Public identity (KEY `id`).
+     * UUID v7 of the record. Public identity (KEY `id`).
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class NonInvoicedCharge
     public NonInvoicedChargeObject $object;
 
     /**
-     * UUID (v7) of the connected account.
+     * UUID v7 of the connected account.
      *
      * @var string $connectedAccountId
      */
@@ -46,28 +46,28 @@ class NonInvoicedCharge
     public string $transactionId;
 
     /**
-     * Amount in major units of `currency`, at Stripe's decimal scale for that currency (3,000 JPY → `3000`, 30.00 EUR → `30`, 5.124 KWD → `5.124`).
+     * Decimal string in major units of `currency`, at Stripe's decimal scale for that currency (3,000 JPY → `"3000"`, 30.00 EUR → `"30.00"`, 5.124 KWD → `"5.124"`), like every other v1 amount.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Cumulative amount refunded by Stripe for this charge (succeeded and pending refunds), in the same format as `amount`. `0` if nothing has been refunded. It never exceeds `amount`, and it goes down if a pending refund later fails or is canceled.
      *
-     * @var float $refundedAmount
+     * @var string $refundedAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('refunded_amount')]
-    public float $refundedAmount;
+    public string $refundedAmount;
 
     /**
      * Net amount of the charge, what the merchant keeps: `amount` minus `refunded_amount`, in the same format as `amount`.
      *
-     * @var float $netAmount
+     * @var string $netAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('net_amount')]
-    public float $netAmount;
+    public string $netAmount;
 
     /**
      * ISO 4217 currency code, uppercase.
@@ -103,7 +103,7 @@ class NonInvoicedCharge
     public ?string $description;
 
     /**
-     * UUID (v7) of the rule that decided it, or `null` if the rule was deleted afterwards.
+     * UUID v7 of the rule that decided it, or `null` if the rule was deleted afterwards.
      *
      * @var ?string $chargeRuleId
      */
@@ -123,9 +123,9 @@ class NonInvoicedCharge
      * @param  \Factuarea\Sdk\Models\Components\NonInvoicedChargeObject  $object
      * @param  string  $connectedAccountId
      * @param  string  $transactionId
-     * @param  float  $amount
-     * @param  float  $refundedAmount
-     * @param  float  $netAmount
+     * @param  string  $amount
+     * @param  string  $refundedAmount
+     * @param  string  $netAmount
      * @param  string  $currency
      * @param  \Factuarea\Sdk\Models\Components\NonInvoicedChargeReason  $reason
      * @param  \DateTime  $occurredAt
@@ -134,7 +134,7 @@ class NonInvoicedCharge
      * @param  ?\DateTime  $refundedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, NonInvoicedChargeObject $object, string $connectedAccountId, string $transactionId, float $amount, float $refundedAmount, float $netAmount, string $currency, NonInvoicedChargeReason $reason, \DateTime $occurredAt, ?string $description = null, ?string $chargeRuleId = null, ?\DateTime $refundedAt = null)
+    public function __construct(string $id, NonInvoicedChargeObject $object, string $connectedAccountId, string $transactionId, string $amount, string $refundedAmount, string $netAmount, string $currency, NonInvoicedChargeReason $reason, \DateTime $occurredAt, ?string $description = null, ?string $chargeRuleId = null, ?\DateTime $refundedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

@@ -30,7 +30,7 @@ class AutomationStepRun
     public AutomationStepRunObject $object;
 
     /**
-     * Zero-based position of the step inside its run, unique within the run. It is the identity of the step: it is what `automation_run.step_dead_lettered` publishes as `data.step_index`, and what `POST /v1/automations/runs/{run}/steps/{step_index}/replay` takes.
+     * Zero-based position of the step inside its run, unique within the run. It is the identity of the step: it is what `automation_run.step_dead_lettered` publishes as `data.step_index`, and what `POST /v1/companies/{company}/automations/runs/{run}/steps/{step_index}/replay` takes.
      *
      * @var int $stepIndex
      */

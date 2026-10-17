@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1TaxesCalculateResponseBody
 {
     /**
-     * Result of applying a tax to a base amount. Returned by `POST /v1/taxes/calculate`.
+     * Result of applying a tax to a base amount. Returned by `POST /v1/companies/{company}/taxes/calculate`.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxCalculation $data
      */

@@ -1,5 +1,7 @@
 # FilterStatus
 
+Only scans in this status: `received`, `queued`, `processing`, `needs_review`, `duplicate`, `failed`, `auto_created`, `created` or `archived`.
+
 
 ## Values
 

@@ -21,6 +21,8 @@ class StripeAutoinvoicing
 
     public Payments $payments;
 
+    public Authorizations $authorizations;
+
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
@@ -31,6 +33,7 @@ class StripeAutoinvoicing
         $this->config = new Config($this->sdkConfiguration);
         $this->correctives = new Correctives($this->sdkConfiguration);
         $this->payments = new Payments($this->sdkConfiguration);
+        $this->authorizations = new Authorizations($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl

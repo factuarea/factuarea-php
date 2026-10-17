@@ -13,24 +13,24 @@ class Purchases
 {
     /**
      *
-     * @var float $purchasedAmount
+     * @var string $purchasedAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('purchased_amount')]
-    public float $purchasedAmount;
+    public string $purchasedAmount;
 
     /**
      *
-     * @var float $paidAmount
+     * @var string $paidAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('paid_amount')]
-    public float $paidAmount;
+    public string $paidAmount;
 
     /**
      *
-     * @var float $payableAmount
+     * @var string $payableAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('payable_amount')]
-    public float $payableAmount;
+    public string $payableAmount;
 
     /**
      *
@@ -40,13 +40,13 @@ class Purchases
     public string $currency;
 
     /**
-     * @param  float  $purchasedAmount
-     * @param  float  $paidAmount
-     * @param  float  $payableAmount
+     * @param  string  $purchasedAmount
+     * @param  string  $paidAmount
+     * @param  string  $payableAmount
      * @param  string  $currency
      * @phpstan-pure
      */
-    public function __construct(float $purchasedAmount, float $paidAmount, float $payableAmount, string $currency)
+    public function __construct(string $purchasedAmount, string $paidAmount, string $payableAmount, string $currency)
     {
         $this->purchasedAmount = $purchasedAmount;
         $this->paidAmount = $paidAmount;

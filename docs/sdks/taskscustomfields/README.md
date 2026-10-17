@@ -12,7 +12,7 @@ Set the value of one custom field of the task's project. The value must fit the 
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.custom_fields.set" method="put" path="/tasks/{task}/custom-fields/{field}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.custom_fields.set" method="put" path="/companies/{company}/tasks/{task}/custom-fields/{field}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -32,11 +32,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCustomFieldsSetRequest(
+    company: 'Spencer - White',
     task: '<value>',
     field: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\SetTaskCustomFieldValueV1Request(
         value: [],
     ),
@@ -52,7 +52,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.custom_fields.set" method="put" path="/tasks/{task}/custom-fields/{field}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.custom_fields.set" method="put" path="/companies/{company}/tasks/{task}/custom-fields/{field}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -72,11 +72,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksCustomFieldsSetRequest(
+    company: 'Runolfsson Group',
     task: '<value>',
     field: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\SetTaskCustomFieldValueV1Request(
         value: [],
     ),
@@ -105,6 +105,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

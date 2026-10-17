@@ -40,6 +40,7 @@ class PublicApiV1MonthlyTimeRecordClosesCreateResponse
     public array $headers;
 
     /**
+     * Month closed. The `Location` header contains the canonical URL of the new monthly close.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesCreateResponseBody $object
      */

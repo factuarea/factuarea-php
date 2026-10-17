@@ -40,6 +40,7 @@ class PublicApiV1MonthlyTimeRecordClosesSealResponse
     public array $headers;
 
     /**
+     * Monthly close sealed. The `Location` header contains the URL of the signature of that close.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1MonthlyTimeRecordClosesSealResponseBody $object
      */

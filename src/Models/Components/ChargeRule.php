@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ChargeRule - A charge treatment rule of a connected Stripe account. Rules are evaluated in `position` order and the first one that matches decides whether the charge is invoiced or left out. The public `id` is the rule UUID (v7). */
+/** ChargeRule - A charge treatment rule of a connected Stripe account. Rules are evaluated in `position` order and the first one that matches decides whether the charge is invoiced or left out. The public `id` is the rule UUID v7. */
 class ChargeRule
 {
     /**
-     * UUID (v7) of the rule. Public identity (KEY `id`).
+     * UUID v7 of the rule. Public identity (KEY `id`).
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class ChargeRule
     public ChargeRuleObject $object;
 
     /**
-     * Evaluation order within the account, starting at 1. Change it with `PUT /v1/connected-accounts/{account}/charge-rules/order`.
+     * Evaluation order within the account, starting at 1. Change it with `PUT /v1/companies/{company}/connected-accounts/{account}/charge-rules/order`.
      *
      * @var int $position
      */

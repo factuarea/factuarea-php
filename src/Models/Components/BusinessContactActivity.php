@@ -96,11 +96,12 @@ class BusinessContactActivity
     public ?string $relatedResourceId;
 
     /**
+     * Amount of the movement in EUR as a 2-decimal string, or `null` when the activity carries no amount.
      *
-     * @var ?float $amount
+     * @var ?string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public ?float $amount;
+    public ?string $amount;
 
     /**
      *
@@ -135,13 +136,13 @@ class BusinessContactActivity
      * @param  ?string  $description
      * @param  ?string  $relatedResourceType
      * @param  ?string  $relatedResourceId
-     * @param  ?float  $amount
+     * @param  ?string  $amount
      * @param  ?string  $currency
      * @param  ?string  $performedById
      * @param  ?string  $performedByName
      * @phpstan-pure
      */
-    public function __construct(BusinessContactActivityObject $object, string $id, BusinessContactActivityDirection $direction, string $eventType, string $title, \DateTime $occurredAt, array $metadata, array $changedSections, ?string $description = null, ?string $relatedResourceType = null, ?string $relatedResourceId = null, ?float $amount = null, ?string $currency = null, ?string $performedById = null, ?string $performedByName = null)
+    public function __construct(BusinessContactActivityObject $object, string $id, BusinessContactActivityDirection $direction, string $eventType, string $title, \DateTime $occurredAt, array $metadata, array $changedSections, ?string $description = null, ?string $relatedResourceType = null, ?string $relatedResourceId = null, ?string $amount = null, ?string $currency = null, ?string $performedById = null, ?string $performedByName = null)
     {
         $this->object = $object;
         $this->id = $id;

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CompanyCertificate
 {
     /**
-     * UUID (v7) of the certificate.
+     * UUID v7 of the certificate.
      *
      * @var string $id
      */

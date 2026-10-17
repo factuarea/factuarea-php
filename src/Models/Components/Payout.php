@@ -26,11 +26,12 @@ class Payout
     public string $stripePayoutId;
 
     /**
+     * Net amount settled by the payout, as a 2-decimal string in the payout currency.
      *
-     * @var float $amountNet
+     * @var string $amountNet
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount_net')]
-    public float $amountNet;
+    public string $amountNet;
 
     /**
      *
@@ -49,12 +50,12 @@ class Payout
     /**
      * @param  string  $uuid
      * @param  string  $stripePayoutId
-     * @param  float  $amountNet
+     * @param  string  $amountNet
      * @param  string  $currency
      * @param  string  $bankTransactionRef
      * @phpstan-pure
      */
-    public function __construct(string $uuid, string $stripePayoutId, float $amountNet, string $currency, string $bankTransactionRef)
+    public function __construct(string $uuid, string $stripePayoutId, string $amountNet, string $currency, string $bankTransactionRef)
     {
         $this->uuid = $uuid;
         $this->stripePayoutId = $stripePayoutId;

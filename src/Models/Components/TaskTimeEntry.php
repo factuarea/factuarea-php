@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaskTimeEntry - Time logged on a task. Unrelated to the working-day records of the time tracking module (`/v1/time-entries`). */
+/** TaskTimeEntry - Time logged on a task. Unrelated to the working-day records of the time tracking module (`/v1/companies/{company}/time-entries`). */
 class TaskTimeEntry
 {
     /**
-     * UUID (v7) of the time entry.
+     * UUID v7 of the time entry.
      *
      * @var string $id
      */

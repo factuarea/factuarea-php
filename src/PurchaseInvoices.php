@@ -85,7 +85,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/attach-file', Operations\PublicApiV1PurchaseInvoicesAttachFileRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/attach-file', Operations\PublicApiV1PurchaseInvoicesAttachFileRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'multipart');
@@ -136,7 +136,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -175,13 +175,13 @@ class PurchaseInvoices
      * Delete up to 100 expenses by UUID in a single request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each entry that could not be deleted.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeletePurchaseInvoicesRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesBulkDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesBulkDelete(Components\BulkDeletePurchaseInvoicesRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkDeleteResponse
+    public function publicApiV1PurchaseInvoicesBulkDelete(Components\BulkDeletePurchaseInvoicesRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,13 +209,13 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesBulkDeleteRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/bulk-delete');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/bulk-delete', Operations\PublicApiV1PurchaseInvoicesBulkDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -266,7 +266,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -305,13 +305,13 @@ class PurchaseInvoices
      * Transition up to 50 expenses (by id) to `paid` in one call, each through the document state guard. The required `payment_date` is propagated as-is to every expense (never `now()`). Returns a `BulkPartialSuccessResult`; expenses that could not transition (not found or already paid) come back in `failures[]`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusPurchaseInvoicesV1Request  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesBulkStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesBulkStatus(Components\BulkStatusPurchaseInvoicesV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkStatusResponse
+    public function publicApiV1PurchaseInvoicesBulkStatus(Components\BulkStatusPurchaseInvoicesV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesBulkStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -339,13 +339,13 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesBulkStatusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/bulk-status');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/bulk-status', Operations\PublicApiV1PurchaseInvoicesBulkStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -396,7 +396,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -435,13 +435,13 @@ class PurchaseInvoices
      * Record an invoice received from a supplier. Catalog lines accept `product_id`, `variant_id`, `presentation_id`, `supplier_offer_id` and an optional `confirmed_base_quantity`. When `supplier_offer_id` is provided, the supplier cost, purchase unit and base-unit conversion are frozen in the invoice line snapshot; `unit_price` may be omitted. Creating the invoice as `pending` registers the inbound stock once. A `draft` invoice does not affect stock until it is later marked as paid.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesCreate(Components\CreatePurchaseInvoiceRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesCreateResponse
+    public function publicApiV1PurchaseInvoicesCreate(Components\CreatePurchaseInvoiceRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -469,13 +469,13 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices', Operations\PublicApiV1PurchaseInvoicesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -526,7 +526,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -564,14 +564,14 @@ class PurchaseInvoices
      *
      * Delete an expense.
      *
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesDelete(string $purchaseInvoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesDeleteResponse
+    public function publicApiV1PurchaseInvoicesDelete(string $company, string $purchaseInvoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -599,13 +599,13 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesDeleteRequest(
+            company: $company,
             purchaseInvoice: $purchaseInvoice,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}', Operations\PublicApiV1PurchaseInvoicesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}', Operations\PublicApiV1PurchaseInvoicesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -641,7 +641,7 @@ class PurchaseInvoices
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -679,14 +679,14 @@ class PurchaseInvoices
      *
      * Delete the original file attached to an expense and release its storage. Idempotent: succeeds even when no file was attached.
      *
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesDeleteFileResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesDeleteFile(string $purchaseInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesDeleteFileResponse
+    public function publicApiV1PurchaseInvoicesDeleteFile(string $company, string $purchaseInvoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesDeleteFileResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -714,13 +714,13 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesDeleteFileRequest(
+            company: $company,
             purchaseInvoice: $purchaseInvoice,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/file', Operations\PublicApiV1PurchaseInvoicesDeleteFileRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/file', Operations\PublicApiV1PurchaseInvoicesDeleteFileRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -756,7 +756,7 @@ class PurchaseInvoices
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -794,12 +794,12 @@ class PurchaseInvoices
      *
      * List the expense categories available to your company. Use the returned `id` as the scanner review field `expense_category`. The complete catalog is returned in `data`, without pagination.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesExpenseCategories(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesResponse
+    public function publicApiV1PurchaseInvoicesExpenseCategories(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -827,11 +827,11 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/expense_categories');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/expense-categories', Operations\PublicApiV1PurchaseInvoicesExpenseCategoriesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -877,7 +877,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -915,13 +915,13 @@ class PurchaseInvoices
      *
      * Stream the original file attached to the expense when it was uploaded — a PDF or a scanned image (`image/jpeg`, `image/png`), the formats accepted on upload. Returns 404 if no attachment is present.
      *
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFileResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesFile(string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesFileResponse
+    public function publicApiV1PurchaseInvoicesFile(string $company, string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesFileResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -949,12 +949,12 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesFileRequest(
+            company: $company,
             purchaseInvoice: $purchaseInvoice,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/file', Operations\PublicApiV1PurchaseInvoicesFileRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/file', Operations\PublicApiV1PurchaseInvoicesFileRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1019,7 +1019,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1058,12 +1058,12 @@ class PurchaseInvoices
      * Look up a single expense by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Orthogonal to the supplier-provided `external_invoice_number` (the vendor's fiscal number). Returns the matching expense or 404 `purchase_invoice_not_found` if none uses that external_id within your company.
      *
      * @param  \Factuarea\Sdk\Models\Components\FindPurchaseInvoiceByExternalIdRequest  $body
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesFindByExternalIdResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesFindByExternalId(Components\FindPurchaseInvoiceByExternalIdRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesFindByExternalIdResponse
+    public function publicApiV1PurchaseInvoicesFindByExternalId(Components\FindPurchaseInvoiceByExternalIdRequest $body, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesFindByExternalIdResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1091,12 +1091,12 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesFindByExternalIdRequest(
+            company: $company,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/find-by-external-id');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/find-by-external-id', Operations\PublicApiV1PurchaseInvoicesFindByExternalIdRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1147,7 +1147,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1185,11 +1185,11 @@ class PurchaseInvoices
      *
      * List expenses recorded from suppliers with cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesList(?Operations\PublicApiV1PurchaseInvoicesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesListResponse
+    public function publicApiV1PurchaseInvoicesList(Operations\PublicApiV1PurchaseInvoicesListRequest $request, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1217,7 +1217,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices', Operations\PublicApiV1PurchaseInvoicesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1266,7 +1266,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1304,13 +1304,13 @@ class PurchaseInvoices
      *
      * Return the full payment ledger of an expense as `{ "data": [...] }`, ordered by payment date descending. The ledger of a single expense is bounded, so the complete set is returned without cursor pagination. An expense with no payments returns an empty array, never a `404`; a `404` here means the expense does not exist or belongs to another company.
      *
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListPaymentsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesListPayments(string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesListPaymentsResponse
+    public function publicApiV1PurchaseInvoicesListPayments(string $company, string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesListPaymentsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1338,12 +1338,12 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesListPaymentsRequest(
+            company: $company,
             purchaseInvoice: $purchaseInvoice,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/payments', Operations\PublicApiV1PurchaseInvoicesListPaymentsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/payments', Operations\PublicApiV1PurchaseInvoicesListPaymentsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1389,7 +1389,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1459,7 +1459,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/mark_paid', Operations\PublicApiV1PurchaseInvoicesMarkPaidRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/mark-paid', Operations\PublicApiV1PurchaseInvoicesMarkPaidRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1509,7 +1509,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1547,11 +1547,11 @@ class PurchaseInvoices
      *
      * Return expenses whose due date has passed and are still unpaid.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesOverdueRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesOverdueRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesOverdueResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesOverdue(?Operations\PublicApiV1PurchaseInvoicesOverdueRequest $request = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesOverdueResponse
+    public function publicApiV1PurchaseInvoicesOverdue(Operations\PublicApiV1PurchaseInvoicesOverdueRequest $request, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesOverdueResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1579,7 +1579,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/overdue');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/overdue', Operations\PublicApiV1PurchaseInvoicesOverdueRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1628,7 +1628,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1662,17 +1662,18 @@ class PurchaseInvoices
     }
 
     /**
-     * Download an expense payment receipt
+     * Download the receipt PDF of an expense payment
      *
-     * Stream the PDF payment receipt for a paid expense. Returns 409 if the expense has not been paid yet.
+     * Streams the PDF receipt of ONE payment of an expense, partial payments included: every active payment has its own receipt, which shows the expense as it stood right after that payment (payments up to it, amount paid and amount pending). Without `payment_id` it returns the receipt of the most recent active payment (by payment date, then by registration). Returns 422 when the expense has no active payments or when the requested payment has been reversed, and 404 when the expense or `payment_id` does not exist.
      *
+     * @param  string  $company
      * @param  string  $purchaseInvoice
+     * @param  ?string  $paymentId
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesPaymentReceipt(string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse
+    public function publicApiV1PurchaseInvoicesPaymentReceipt(string $company, string $purchaseInvoice, ?string $paymentId = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1700,14 +1701,17 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest(
+            company: $company,
             purchaseInvoice: $purchaseInvoice,
+            paymentId: $paymentId,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/payment-receipt', Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/payment-receipt', Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -1717,6 +1721,7 @@ class PurchaseInvoices
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.purchase_invoices.payment_receipt', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -1748,7 +1753,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1786,11 +1791,11 @@ class PurchaseInvoices
      *
      * Return expenses in pending payment status, paginated.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPendingRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPendingRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPendingResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesPending(?Operations\PublicApiV1PurchaseInvoicesPendingRequest $request = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesPendingResponse
+    public function publicApiV1PurchaseInvoicesPending(Operations\PublicApiV1PurchaseInvoicesPendingRequest $request, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesPendingResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1818,7 +1823,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/pending');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/pending', Operations\PublicApiV1PurchaseInvoicesPendingRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1867,7 +1872,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1937,7 +1942,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}/payments', Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/payments', Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1988,7 +1993,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2024,15 +2029,15 @@ class PurchaseInvoices
     /**
      * Retrieve an expense
      *
-     * Retrieve an expense by its `uuid`.
+     * Retrieve an expense by its `id`.
      *
+     * @param  string  $company
      * @param  string  $purchaseInvoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesShow(string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesShowResponse
+    public function publicApiV1PurchaseInvoicesShow(string $company, string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2060,12 +2065,12 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesShowRequest(
+            company: $company,
             purchaseInvoice: $purchaseInvoice,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}', Operations\PublicApiV1PurchaseInvoicesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}', Operations\PublicApiV1PurchaseInvoicesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2111,7 +2116,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2149,12 +2154,12 @@ class PurchaseInvoices
      *
      * Aggregated KPIs for your expenses: total count and amount, counts per status, pending and overdue totals, and amounts by supplier. Returned as `{ "data": PurchaseInvoiceStats }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesStatsResponse
+    public function publicApiV1PurchaseInvoicesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -2182,11 +2187,11 @@ class PurchaseInvoices
             ];
         }
         $request = new Operations\PublicApiV1PurchaseInvoicesStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/stats', Operations\PublicApiV1PurchaseInvoicesStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -2232,7 +2237,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2302,7 +2307,7 @@ class PurchaseInvoices
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_invoices/{purchase_invoice}', Operations\PublicApiV1PurchaseInvoicesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}', Operations\PublicApiV1PurchaseInvoicesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2315,7 +2320,7 @@ class PurchaseInvoices
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.purchase_invoices.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -2352,7 +2357,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

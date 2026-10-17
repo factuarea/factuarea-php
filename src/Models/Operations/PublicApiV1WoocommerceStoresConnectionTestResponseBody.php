@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1WoocommerceStoresConnectionTestResponseBody
 {
     /**
-     * The outcome of testing the connection with one of your connected WooCommerce stores. The public `id` is the UUID (v7) of the STORE that was tested, so you can tell which shop this diagnosis is about. Nothing is stored: this resource is a diagnosis, not a record. Read `reachable` and `credential_accepted` together — `reachable: false` means the shop did not answer, while `reachable: true` with `credential_accepted: false` means it answered and rejected the credential — and read `failure_code` for the concrete cause, which is what tells «your key is not valid» apart from «your REST API is not published».
+     * The outcome of testing the connection with one of your connected WooCommerce stores. The public `id` is the UUID v7 of the STORE that was tested, so you can tell which shop this diagnosis is about. Nothing is stored: this resource is a diagnosis, not a record. Read `reachable` and `credential_accepted` together — `reachable: false` means the shop did not answer, while `reachable: true` with `credential_accepted: false` means it answered and rejected the credential — and read `failure_code` for the concrete cause, which is what tells «your key is not valid» apart from «your REST API is not published».
      *
      * @var \Factuarea\Sdk\Models\Components\WooCommerceConnectionCheck $data
      */

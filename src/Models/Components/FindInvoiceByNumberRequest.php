@@ -10,7 +10,7 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * FindInvoiceByNumberRequest - Public REST API v1 — POST /v1/invoices/find-by-number.
+ * FindInvoiceByNumberRequest - Public REST API v1 — POST /v1/companies/{company}/invoices/find-by-number.
  *
  *
  * Body: `number` (invoice number, required) plus TWO optional discriminators,
@@ -41,7 +41,7 @@ class FindInvoiceByNumberRequest
     public ?int $year = null;
 
     /**
-     * Identifier of the series that issued the invoice. Disambiguates when two series share the same number.
+     * Public identifier (UUID v7) of the series that issued the invoice; it tells apart two series that share a number.
      *
      * @var ?string $seriesId
      */

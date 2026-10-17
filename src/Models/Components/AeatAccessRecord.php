@@ -53,7 +53,7 @@ class AeatAccessRecord
     public string $disclosureScope;
 
     /**
-     * UUID (v7) of the underlying billing record (used only for ordering/cursoring).
+     * UUID v7 of the underlying billing record (used only for ordering/cursoring).
      *
      * @var ?string $id
      */

@@ -15,7 +15,7 @@ Create a variant under a product with its own SKU, barcode, optional price overr
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.create" method="post" path="/products/{product}/variants" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.create" method="post" path="/companies/{company}/products/{product}/variants" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -35,10 +35,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVariantsCreateRequest(
+    company: 'Rolfson and Sons',
     product: 'Refined Soft Sausages',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateProductVariantRequest(
         name: '<value>',
         manageStock: false,
@@ -56,7 +56,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.create" method="post" path="/products/{product}/variants" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.create" method="post" path="/companies/{company}/products/{product}/variants" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -76,10 +76,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVariantsCreateRequest(
+    company: 'Hilll, Nienow and Nitzsche',
     product: 'Oriental Plastic Hat',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateProductVariantRequest(
         name: '<value>',
         manageStock: false,
@@ -110,7 +110,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -120,7 +120,7 @@ List the variants configured for a product, including optional price and stock o
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.list" method="get" path="/products/{product}/variants" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.list" method="get" path="/companies/{company}/products/{product}/variants" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -140,9 +140,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVariantsListRequest(
+    company: 'Littel - Berge',
     product: 'Ergonomic Metal Ball',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->variants->publicApiV1ProductsVariantsList(
@@ -166,11 +166,11 @@ if ($response->paginatedList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ProductsVariantsDelete
 
@@ -178,7 +178,7 @@ Retire a product variant while preserving the immutable snapshots stored on hist
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.delete" method="delete" path="/products/{product}/variants/{variant}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.delete" method="delete" path="/companies/{company}/products/{product}/variants/{variant}" -->
 ```php
 declare(strict_types=1);
 
@@ -198,11 +198,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVariantsDeleteRequest(
+    company: 'Hahn LLC',
     product: 'Handmade Fresh Sausages',
     variant: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->variants->publicApiV1ProductsVariantsDelete(
@@ -228,7 +228,7 @@ if ($response->statusCode === 200) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -238,7 +238,7 @@ Update the selected product variant and its optional price or stock overrides.
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.update" method="put" path="/products/{product}/variants/{variant}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.update" method="patch" path="/companies/{company}/products/{product}/variants/{variant}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -258,11 +258,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVariantsUpdateRequest(
+    company: 'Bernier, Kilback and Stracke',
     product: 'Bespoke Granite Soap',
     variant: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateProductVariantRequest(
         name: '<value>',
         manageStock: false,
@@ -280,7 +280,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.update" method="put" path="/products/{product}/variants/{variant}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.variants.update" method="patch" path="/companies/{company}/products/{product}/variants/{variant}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -300,11 +300,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsVariantsUpdateRequest(
+    company: 'Reinger, Hodkiewicz and Konopelski',
     product: 'Handmade Granite Tuna',
     variant: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateProductVariantRequest(
         name: '<value>',
         manageStock: false,
@@ -335,6 +335,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

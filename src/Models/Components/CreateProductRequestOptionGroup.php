@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateProductRequestOptionGroup
 {
     /**
+     * Public identifier (UUID v7) of the option group. A new group sent with another UUID version is rejected with 422.
      *
      * @var string $id
      */

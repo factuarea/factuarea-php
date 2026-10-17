@@ -12,19 +12,19 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1AccountShowResponseBody
 {
     /**
-     * Snapshot of the company, plan, Developer API entitlement and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call.
+     * Introspection of the credential authenticating the request: who it is, the account it belongs to, what it can actually do, and which tax IDs it reaches. Use it to validate a credential and discover its scope in a single call. It never carries per-tax-ID settings, nor any pricing, quota or usage field.
      *
-     * @var \Factuarea\Sdk\Models\Components\Account $data
+     * @var \Factuarea\Sdk\Models\Components\Me $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Account')]
-    public Components\Account $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Me')]
+    public Components\Me $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Account  $data
+     * @param  \Factuarea\Sdk\Models\Components\Me  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Account $data)
+    public function __construct(Components\Me $data)
     {
         $this->data = $data;
     }

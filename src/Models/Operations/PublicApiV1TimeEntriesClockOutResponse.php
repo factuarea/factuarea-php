@@ -40,6 +40,7 @@ class PublicApiV1TimeEntriesClockOutResponse
     public array $headers;
 
     /**
+     * Clock-out recorded. The `Location` header contains the canonical URL of the new time entry.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesClockOutResponseBody $object
      */

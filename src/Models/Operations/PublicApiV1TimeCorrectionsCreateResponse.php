@@ -40,6 +40,7 @@ class PublicApiV1TimeCorrectionsCreateResponse
     public array $headers;
 
     /**
+     * Time correction requested. The `Location` header contains the canonical URL of the new correction request.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsCreateResponseBody $object
      */

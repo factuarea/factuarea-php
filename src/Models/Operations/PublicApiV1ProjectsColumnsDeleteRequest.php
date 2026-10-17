@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProjectsColumnsDeleteRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the project.
      *
      * @var string $project
      */
@@ -20,6 +29,7 @@ class PublicApiV1ProjectsColumnsDeleteRequest
     public string $project;
 
     /**
+     * Public identifier (UUID v7) of the project column.
      *
      * @var string $column
      */
@@ -27,7 +37,7 @@ class PublicApiV1ProjectsColumnsDeleteRequest
     public string $column;
 
     /**
-     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
+     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
      *
      * @var string $idempotencyKey
      */
@@ -43,15 +53,7 @@ class PublicApiV1ProjectsColumnsDeleteRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * UUID of another column of the same project that receives the tasks of the deleted column. Required when the column still has tasks: without it the call returns 409 `column_has_tasks`; a column that does not exist, belongs to another project or is the one being deleted returns 422 `invalid_move_target_column`. With a valid target, the tasks are appended to the end of that column, in their order, and the column is deleted in the same transaction.
+     * Public identifier (UUID v7) of the column that receives the tasks of the one you delete. Required when it still has tasks.
      *
      * @var ?string $moveToColumnId
      */
@@ -59,21 +61,21 @@ class PublicApiV1ProjectsColumnsDeleteRequest
     public ?string $moveToColumnId = null;
 
     /**
+     * @param  string  $company
      * @param  string  $project
      * @param  string  $column
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $moveToColumnId
      * @phpstan-pure
      */
-    public function __construct(string $project, string $column, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $moveToColumnId = null)
+    public function __construct(string $company, string $project, string $column, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $moveToColumnId = null)
     {
+        $this->company = $company;
         $this->project = $project;
         $this->column = $column;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->moveToColumnId = $moveToColumnId;
     }
 }

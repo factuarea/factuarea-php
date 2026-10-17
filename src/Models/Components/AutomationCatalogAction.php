@@ -38,7 +38,7 @@ class AutomationCatalogAction
     public array $parameters;
 
     /**
-     * Whether this action can be used in a rule whose `scope` is `cartera`. Actions that notify you —or that touch no record at all— can; actions whose subject would be a record of the managed company cannot, because a portfolio rule never operates on its behalf. Creating a portfolio rule with an action marked `false` is rejected with `automation_portfolio_scope_forbids_action`.
+     * Whether this action can be used in a rule whose `scope` is `cartera`. Actions that notify you —or that touch no record at all— can; actions whose subject would be a record of another tax ID cannot, because a portfolio rule never operates on behalf of another tax ID. Creating a portfolio rule with an action marked `false` is rejected with `automation_portfolio_scope_forbids_action`.
      *
      * @var bool $supportsPortfolioScope
      */

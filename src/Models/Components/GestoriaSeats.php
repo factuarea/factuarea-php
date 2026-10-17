@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** GestoriaSeats - Gestoría seat subscription of the account, or null when the tenant does not manage companies. Amounts are in minor currency units (cents) and are null when the recurring cost is not resolvable (enterprise outside Stripe, sandbox, no active plan) — never a misleading 0. */
+/** GestoriaSeats - Additional NIF subscription of the account (one seat per active additional tax ID; the field keeps its original public name `gestoria_seats` for compatibility), or null when the account has no additional tax IDs. Amounts are in euros as 2-decimal strings and are null when the recurring cost is not resolvable (enterprise outside Stripe, sandbox, no active plan) — never a misleading 0. */
 class GestoriaSeats
 {
     /**
-     * Status of the seat subscription (`active`, `past_due`, …), or `none` when there is no seat subscription yet (e.g. trial: active children are free).
+     * Status of the additional NIF subscription (`active`, `past_due`, …), or `none` when there is no subscription yet (e.g. trial: additional tax IDs are free).
      *
      * @var ?string $status
      */
@@ -21,7 +21,7 @@ class GestoriaSeats
     public ?string $status;
 
     /**
-     * Number of billed seats in the seat subscription.
+     * Number of billed seats (one per active additional tax ID) in the additional NIF subscription.
      *
      * @var ?int $quantity
      */
@@ -29,7 +29,7 @@ class GestoriaSeats
     public ?int $quantity;
 
     /**
-     * Number of ACTIVE managed child companies of the account.
+     * Number of ACTIVE additional tax IDs of the account.
      *
      * @var ?int $activeCompanies
      */
@@ -37,12 +37,12 @@ class GestoriaSeats
     public ?int $activeCompanies;
 
     /**
-     * Taxable base of one seat per billing cycle, in cents.
+     * Taxable base of one seat per billing cycle, in euros as a 2-decimal string.
      *
-     * @var ?int $unitAmount
+     * @var ?string $unitAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_amount')]
-    public ?int $unitAmount;
+    public ?string $unitAmount;
 
     /**
      * Applied VAT rate (e.g. 21), or null when not resolved.
@@ -53,28 +53,28 @@ class GestoriaSeats
     public ?int $taxRate;
 
     /**
-     * VAT amount of one seat, in cents.
+     * VAT amount of one seat, in euros as a 2-decimal string.
      *
-     * @var ?int $taxAmount
+     * @var ?string $taxAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount')]
-    public ?int $taxAmount;
+    public ?string $taxAmount;
 
     /**
-     * Base + VAT of one seat, in cents.
+     * Base + VAT of one seat, in euros as a 2-decimal string.
      *
-     * @var ?int $totalPerSeat
+     * @var ?string $totalPerSeat
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_per_seat')]
-    public ?int $totalPerSeat;
+    public ?string $totalPerSeat;
 
     /**
-     * Projected recurring total (`total_per_seat` × `quantity`), in cents. Null when VAT is not resolved.
+     * Projected recurring total (`total_per_seat` × `quantity`), in euros as a 2-decimal string. Null when VAT is not resolved.
      *
-     * @var ?int $recurringTotal
+     * @var ?string $recurringTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_total')]
-    public ?int $recurringTotal;
+    public ?string $recurringTotal;
 
     /**
      * ISO 4217 currency code.
@@ -94,7 +94,7 @@ class GestoriaSeats
     public ?GestoriaSeatsBillingInterval $billingInterval;
 
     /**
-     * Next invoice date of the seat subscription (ISO 8601), or null.
+     * Next invoice date of the additional NIF subscription (ISO 8601), or null.
      *
      * @var ?\DateTime $nextInvoiceAt
      */
@@ -102,7 +102,7 @@ class GestoriaSeats
     public ?\DateTime $nextInvoiceAt;
 
     /**
-     * Scheduled end of the seat subscription (ISO 8601) when cancelled at period end, or null.
+     * Scheduled end of the additional NIF subscription (ISO 8601) when cancelled at period end, or null.
      *
      * @var ?\DateTime $endsAt
      */
@@ -113,18 +113,18 @@ class GestoriaSeats
      * @param  ?string  $status
      * @param  ?int  $quantity
      * @param  ?int  $activeCompanies
-     * @param  ?int  $unitAmount
+     * @param  ?string  $unitAmount
      * @param  ?int  $taxRate
-     * @param  ?int  $taxAmount
-     * @param  ?int  $totalPerSeat
-     * @param  ?int  $recurringTotal
+     * @param  ?string  $taxAmount
+     * @param  ?string  $totalPerSeat
+     * @param  ?string  $recurringTotal
      * @param  ?string  $currency
      * @param  ?\Factuarea\Sdk\Models\Components\GestoriaSeatsBillingInterval  $billingInterval
      * @param  ?\DateTime  $nextInvoiceAt
      * @param  ?\DateTime  $endsAt
      * @phpstan-pure
      */
-    public function __construct(?string $status = null, ?int $quantity = null, ?int $activeCompanies = null, ?int $unitAmount = null, ?int $taxRate = null, ?int $taxAmount = null, ?int $totalPerSeat = null, ?int $recurringTotal = null, ?string $currency = null, ?GestoriaSeatsBillingInterval $billingInterval = null, ?\DateTime $nextInvoiceAt = null, ?\DateTime $endsAt = null)
+    public function __construct(?string $status = null, ?int $quantity = null, ?int $activeCompanies = null, ?string $unitAmount = null, ?int $taxRate = null, ?string $taxAmount = null, ?string $totalPerSeat = null, ?string $recurringTotal = null, ?string $currency = null, ?GestoriaSeatsBillingInterval $billingInterval = null, ?\DateTime $nextInvoiceAt = null, ?\DateTime $endsAt = null)
     {
         $this->status = $status;
         $this->quantity = $quantity;

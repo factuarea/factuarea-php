@@ -12,7 +12,7 @@ Create a single-use link to upload files to a task from a phone or by someone wi
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.upload_links.create" method="post" path="/tasks/{task}/upload-links" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.upload_links.create" method="post" path="/companies/{company}/tasks/{task}/upload-links" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,10 +32,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1TasksUploadLinksCreateRequest(
+    company: 'Goyette - Smitham',
     task: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->tasks->uploadLinks->publicApiV1TasksUploadLinksCreate(
@@ -59,8 +59,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |

@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1RecurringInvoicesStatsResponseBody
 {
     /**
-     * Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/recurring_invoices/stats`.
+     * Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/companies/{company}/recurring-invoices/stats`.
      *
      * @var \Factuarea\Sdk\Models\Components\RecurringInvoiceStats $data
      */

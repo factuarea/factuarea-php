@@ -12,6 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateProductRequestOptionGroup
 {
     /**
+     * Public identifier (UUID v7) of the option group. A new group must be a UUID v7 (422 otherwise); an existing one keeps its identifier.
      *
      * @var string $id
      */

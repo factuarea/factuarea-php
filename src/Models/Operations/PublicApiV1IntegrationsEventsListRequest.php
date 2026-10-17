@@ -13,6 +13,14 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1IntegrationsEventsListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * Payment gateway or integration that produced the event.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\Provider $provider
@@ -69,7 +77,7 @@ class PublicApiV1IntegrationsEventsListRequest
     public ?\DateTime $createdAtLte = null;
 
     /**
-     * Cursor for forward pagination: pass back the `next_cursor` of the previous page. Treat it as opaque — unlike the rest of the v1 listings it is a numeric string, not a UUID v7. A malformed cursor returns 400.
+     * Cursor for forward pagination: the `next_cursor` of the previous page, an opaque numeric string (not a UUID v7). A malformed cursor returns 400.
      *
      * @var ?string $startingAfter
      */
@@ -85,15 +93,7 @@ class PublicApiV1IntegrationsEventsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Number of events to return. Integer between 1 and 100. Defaults to 25. A non-integer or out-of-range value returns 400.
+     * Number of events to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -101,6 +101,7 @@ class PublicApiV1IntegrationsEventsListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?\Factuarea\Sdk\Models\Operations\Provider  $provider
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1IntegrationsEventsListStatus  $status
      * @param  ?string  $eventType
@@ -111,11 +112,11 @@ class PublicApiV1IntegrationsEventsListRequest
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?Provider $provider = null, ?PublicApiV1IntegrationsEventsListStatus $status = null, ?string $eventType = null, ?DiscardReason $discardReason = null, ?bool $isParked = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?Provider $provider = null, ?PublicApiV1IntegrationsEventsListStatus $status = null, ?string $eventType = null, ?DiscardReason $discardReason = null, ?bool $isParked = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->provider = $provider;
         $this->status = $status;
         $this->eventType = $eventType;
@@ -125,7 +126,6 @@ class PublicApiV1IntegrationsEventsListRequest
         $this->createdAtLte = $createdAtLte;
         $this->startingAfter = $startingAfter;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

@@ -40,6 +40,7 @@ class PublicApiV1TimeEntriesManualResponse
     public array $headers;
 
     /**
+     * Manual time entry recorded. The `Location` header contains the canonical URL of the new time entry.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeEntriesManualResponseBody $object
      */

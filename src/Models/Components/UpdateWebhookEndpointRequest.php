@@ -32,6 +32,16 @@ class UpdateWebhookEndpointRequest
     public ?array $customHeaders = null;
 
     /**
+     * Optional endpoint status: `active` re-enables the endpoint and `disabled` pauses it; omit it to leave the status unchanged. `degraded` cannot be set by hand. Re-enabling an endpoint that was paused because its company tax ID was transferred to another account makes the caller its new owner, so the degraded-endpoint email reaches that person from then on.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestStatus $status
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestStatus|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateWebhookEndpointRequestStatus $status = null;
+
+    /**
      *
      * @var ?string $url
      */
@@ -58,7 +68,7 @@ class UpdateWebhookEndpointRequest
     public ?array $ipAllowlist = null;
 
     /**
-     * New payload version (date-based, `YYYY-MM-DD`) pinned for the events delivered to this endpoint. Supported values: `2026-05-22` and `2026-10-01`. Omit the field to keep the current value; send `null` to unpin the endpoint, which then receives the payload version of the default REST version (currently `2026-05-22`), never the latest one. Endpoints that existed before version `2026-10-01` was released were pinned to `2026-05-22`, so they keep receiving invoices in the previous vocabulary until you change this value. A value that is not a `YYYY-MM-DD` date returns 422 (subcode `api_version_invalid_format`), and an unsupported one 422 (subcode `api_version_unsupported`).
+     * New payload version (date-based, `YYYY-MM-DD`) pinned for the events delivered to this endpoint. Supported values: `2026-05-22`, `2026-10-01` and `2026-10-05`. Omit the field to keep the current value; send `null` to unpin the endpoint, which then receives the payload version of the default REST version (currently `2026-05-22`), never the latest one. Endpoints that existed before version `2026-10-01` was released were pinned to `2026-05-22`, so they keep receiving invoices in the previous vocabulary until you change this value. A value that is not a `YYYY-MM-DD` date returns 422 (subcode `api_version_invalid_format`), and an unsupported one 422 (subcode `api_version_unsupported`).
      *
      * @var ?string $apiVersion
      */
@@ -90,6 +100,7 @@ class UpdateWebhookEndpointRequest
     /**
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestEnabledEvent>  $enabledEvents
      * @param  ?array<string, string>  $customHeaders
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateWebhookEndpointRequestStatus  $status
      * @param  ?string  $url
      * @param  ?string  $description
      * @param  ?array<string>  $ipAllowlist
@@ -98,10 +109,11 @@ class UpdateWebhookEndpointRequest
      * @param  ?int  $timeoutSeconds
      * @phpstan-pure
      */
-    public function __construct(?array $enabledEvents = null, ?array $customHeaders = null, ?string $url = null, ?string $description = null, ?array $ipAllowlist = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null)
+    public function __construct(?array $enabledEvents = null, ?array $customHeaders = null, ?UpdateWebhookEndpointRequestStatus $status = null, ?string $url = null, ?string $description = null, ?array $ipAllowlist = null, ?string $apiVersion = null, ?array $metadata = null, ?int $timeoutSeconds = null)
     {
         $this->enabledEvents = $enabledEvents;
         $this->customHeaders = $customHeaders;
+        $this->status = $status;
         $this->url = $url;
         $this->description = $description;
         $this->ipAllowlist = $ipAllowlist;

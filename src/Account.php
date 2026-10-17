@@ -19,9 +19,23 @@ use Speakeasy\Serializer\DeserializationContext;
 class Account
 {
     private SDKConfiguration $sdkConfiguration;
-    public AccountApiKeys $apiKeys;
+    public NifTransfers $nifTransfers;
+
+    public Members $members;
+
+    public ConnectReturnDomains $connectReturnDomains;
+
+    public Invitations $invitations;
+
+    public Webhooks $webhooks;
+
+    public ApiKeys $apiKeys;
+
+    public AccountRequestLogs $requestLogs;
 
     public Personalization $personalization;
+
+    public Owner $owner;
 
     /**
      * @param  SDKConfiguration  $sdkConfig
@@ -29,8 +43,15 @@ class Account
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
-        $this->apiKeys = new AccountApiKeys($this->sdkConfiguration);
+        $this->nifTransfers = new NifTransfers($this->sdkConfiguration);
+        $this->members = new Members($this->sdkConfiguration);
+        $this->connectReturnDomains = new ConnectReturnDomains($this->sdkConfiguration);
+        $this->invitations = new Invitations($this->sdkConfiguration);
+        $this->webhooks = new Webhooks($this->sdkConfiguration);
+        $this->apiKeys = new ApiKeys($this->sdkConfiguration);
+        $this->requestLogs = new AccountRequestLogs($this->sdkConfiguration);
         $this->personalization = new Personalization($this->sdkConfiguration);
+        $this->owner = new Owner($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -56,14 +77,14 @@ class Account
     /**
      * Retrieve account billing details
      *
-     * Returns the subscription billing snapshot of the authenticated company: base plan subscription (status, trial, current period end, pending plan change), gestoría seats subscription (quantity, active managed companies, per-seat cost with VAT, recurring total, next invoice) and default payment method. Managed companies (plan `gestionada`) receive `managed: true` without the master's billing data. Amounts are integer cents; unresolved amounts are `null`, never a misleading 0.
+     * Returns the subscription billing snapshot of the authenticated company: base plan subscription (status, trial, current period end, pending plan change), additional NIF subscription (quantity, active additional tax IDs, per-NIF cost with VAT, recurring total, next invoice; `null` when the account has no additional tax IDs) and default payment method. A tax ID whose billing is paid by another account receives `managed: true` with plan `gestionada`, without an additional NIF subscription or payment method: what the payer pays is never shown to it. Amounts are euros as 2-decimal strings; unresolved amounts are `null`, never a misleading 0.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountBillingResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountBilling(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountBillingResponse
+    public function publicApiV1AccountBilling(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountBillingResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,11 +112,11 @@ class Account
             ];
         }
         $request = new Operations\PublicApiV1AccountBillingRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/account/billing');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/billing', Operations\PublicApiV1AccountBillingRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -141,7 +162,7 @@ class Account
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -175,16 +196,136 @@ class Account
     }
 
     /**
-     * Retrieve account details
+     * Retrieve provisioning usage
      *
-     * Stripe-like account endpoint: returns the authenticated company together with its plan, add-ons, and the metadata of the API key in use (environment, scopes). Use it to introspect what the current key can do.
+     * Retrieve the provisioning usage of YOUR account as a provider: managed accounts with the management in force by environment (`managed_accounts.live` and `managed_accounts.test`; test ones never count towards the limit), your managed account `limit` and the `remaining` live ones (never negative), the live ones by plan (`managed_accounts_by_plan`, always with every plan of the catalog), and what your account pays for them on top of their fee (`provider_paid_additional_nifs` and `provider_paid_employee_seats`). It only answers for your own account: `{account}` is the credential account, and any other returns 404 `account_not_found`. Requires the privileged `accounts:read` scope, which `*` does not cover (403 `privileged_scope_required` otherwise).
+     *
+     * @param  string  $account
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountProvisioningUsageResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1AccountProvisioningUsage(string $account, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountProvisioningUsageResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1AccountProvisioningUsageRequest(
+            account: $account,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/provisioning-usage', Operations\PublicApiV1AccountProvisioningUsageRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.provisioning_usage', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountProvisioningUsageResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountProvisioningUsageResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retrieve the calling credential
+     *
+     * Introspect the credential authenticating the request: its public identity, the account it belongs to, its environment (`live`/`test`), its rate-limit tier, its EFFECTIVE scopes (a scope trimmed by the plan of the scoped tax IDs is not listed) and the tax IDs it reaches, each with its opaque identifier and its fiscal identifier. Use it to validate a credential and discover its scope in a single call — including the single-tax-ID case, where it is how you learn your own opaque identifier. `account` also carries its `name`, its `environment`, whether it is an account provider (`is_provider`) and the privileged scopes Factuarea granted it (`privileged_scopes`), and `client_accounts[]` lists the accounts of your clients the credential account reaches through a relation (granted or provisioned), with their access level, status, whether your account pays them and their environment. `client_accounts[]` is filled only when the credential has the privileged `accounts:read` scope in effect (otherwise it is empty and `client_accounts_visible` is `false`) and holds at most 100 accounts (`client_accounts_has_more` tells whether there are more; `GET /v1/accounts` lists them all). It never returns per-tax-ID settings (personalization, plan, add-ons): those belong to the company axis.
      *
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountShow(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountShowResponse
+    public function publicApiV1AccountShow(?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -213,10 +354,9 @@ class Account
         }
         $request = new Operations\PublicApiV1AccountShowRequest(
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/account');
+        $url = Utils\Utils::generateUrl($baseUrl, '/me');
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -262,7 +402,128 @@ class Account
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retrieve account usage for the current period
+     *
+     * Retrieve the API usage of your account for the CURRENT period: total requests, total documents, and the per-tax-ID breakdown over every tax ID the credential reaches. The subject is the ACCOUNT, never the tax ID acting on the request, so the answer is the same whichever one is effective — narrowing it by the effective company would turn an account read into a company read and the breakdown would stop adding up to its own total. This is a different counter from automation run usage, which lives on the company axis and IS scoped to the credential company; the two coexist and neither replaces the other. The period is not a parameter: it is resolved server-side, so this is not a historical report. An account identifier that is not yours returns 404 `account_not_found`, indistinguishable from one that does not exist.
+     *
+     * @param  string  $account
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountUsageResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1AccountUsage(string $account, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountUsageResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1AccountUsageRequest(
+            account: $account,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/usage', Operations\PublicApiV1AccountUsageRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.usage', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountUsageResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountUsageResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -300,13 +561,13 @@ class Account
      *
      * Check the persisted company name + tax ID pair against the AEAT census (VNifV2) to anticipate VeriFactu 4104 rejections. No request body: the endpoint always verifies the account's persisted fiscal data. Fail-open — if AEAT is unreachable the call returns 200 with `status: unavailable`. Test keys (`fact_test_`) return deterministic statuses per magic NIF without contacting AEAT.
      *
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountVerifyCensusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1AccountVerifyCensus(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1AccountVerifyCensusResponse
+    public function publicApiV1AccountVerifyCensus(string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountVerifyCensusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -334,12 +595,12 @@ class Account
             ];
         }
         $request = new Operations\PublicApiV1AccountVerifyCensusRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/account/census-verification');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/census-verification', Operations\PublicApiV1AccountVerifyCensusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -385,7 +646,7 @@ class Account
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

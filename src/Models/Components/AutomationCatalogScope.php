@@ -29,7 +29,7 @@ class AutomationCatalogScope
     public string $label;
 
     /**
-     * Whether the company behind the credential can create rules with this scope. `empresa` is always available; `cartera` requires the accountancy-practice module and a company that is not itself managed by another one.
+     * Whether the company behind the credential can create rules with this scope. `empresa` is always available; `cartera` requires the titular company of an account with the gestoría module.
      *
      * @var bool $available
      */
@@ -37,7 +37,7 @@ class AutomationCatalogScope
     public bool $available;
 
     /**
-     * Why the scope is not available, or `null` when it is. `module_not_granted` means the company does not have the accountancy-practice module (upgrading the plan grants it); `company_is_managed_child` means the company is itself managed by an accountancy practice, and the hierarchy is one level deep, so no plan unlocks it.
+     * Why the scope is not available, or `null` when it is. `module_not_granted` means the company does not have the gestoría module (upgrading the plan grants it); `company_is_managed_child` means the company is not the titular company of its account: the portfolio belongs to the account and its titular represents it, so no plan unlocks it for an additional tax ID.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UnavailableReason $unavailableReason
      */

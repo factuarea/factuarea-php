@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesPdfLinkRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the invoice.
      *
      * @var string $invoice
      */
@@ -28,15 +37,7 @@ class PublicApiV1InvoicesPdfLinkRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Paper of the PDF the signed link serves: `a4` (default, with the company template), `ticket_80` (80 mm thermal roll) or `ticket_58` (58 mm roll). Any other value returns 422 with a `parameter_invalid_enum` entry (and its `allowed_values`) in `error.errors[]`. Each format is rendered and cached separately.
+     * Paper of the PDF the signed link serves: `a4` (default), `ticket_80` (80 mm roll) or `ticket_58` (58 mm roll).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkFormat $format
      */
@@ -44,17 +45,17 @@ class PublicApiV1InvoicesPdfLinkRequest
     public ?PublicApiV1InvoicesPdfLinkFormat $format = null;
 
     /**
+     * @param  string  $company
      * @param  string  $invoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkFormat  $format
      * @phpstan-pure
      */
-    public function __construct(string $invoice, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1InvoicesPdfLinkFormat $format = null)
+    public function __construct(string $company, string $invoice, ?LocalDate $factuareaVersion = null, ?PublicApiV1InvoicesPdfLinkFormat $format = null)
     {
+        $this->company = $company;
         $this->invoice = $invoice;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->format = $format;
     }
 }

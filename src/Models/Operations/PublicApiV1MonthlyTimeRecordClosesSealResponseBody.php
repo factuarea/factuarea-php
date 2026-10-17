@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1MonthlyTimeRecordClosesSealResponseBody - Monthly close sealed. The `Location` header contains the URL of the signature of that close. */
 class PublicApiV1MonthlyTimeRecordClosesSealResponseBody
 {
     /**

@@ -6,6 +6,11 @@ actions:
   # Speakeasy flattens nested PHP groups into root classes. products.options
   # would generate Factuarea\Sdk\Options, which imports Utils\Options under
   # the same short name and cannot be loaded. Keep the public spec unchanged.
-  - target: $.paths['/products/{product}/options'].get
+  #
+  # The target carries the COMPANY AXIS: since the v1 re-anchored every company
+  # resource under /companies/{company}/…, the flat path no longer exists and an
+  # overlay still pointing at it matches nothing — the collision comes back
+  # silently and only PHPStan (`class.nameInUse`) catches it.
+  - target: $.paths['/companies/{company}/products/{product}/options'].get
     update:
       x-speakeasy-group: products.productOptions

@@ -61,9 +61,7 @@ class GenerateModelo130V1Request
     public ?int $pagosFraccionadosAnterioresOverrideCentimos = null;
 
     /**
-     * Net income of the PREVIOUS fiscal year, in cents (basis of the reduction of art. 110.3.c of the IRPF regulation).
-     *
-     * It may be negative: the previous year may have closed with a loss.
+     * Box [13]: net income of the PREVIOUS fiscal year, in cents (base of the reduction of art. 110.3.c RIRPF). It can be negative, because that year may have closed with a loss.
      *
      * @var ?int $rendimientoNetoEjercicioAnteriorCentimos
      */

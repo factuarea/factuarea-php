@@ -9,9 +9,10 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Lifecycle status: `active` (operational) or `archived` (no longer accepts operations). */
+/** Status of the tax ID in the account: `active` (operational), `inactive` (deactivated, data preserved, can be reactivated) or `archived` (no longer accepts operations). */
 enum CompanyStatus: string
 {
     case Active = 'active';
+    case Inactive = 'inactive';
     case Archived = 'archived';
 }

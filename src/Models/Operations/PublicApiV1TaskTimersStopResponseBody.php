@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1TaskTimersStopResponseBody
 {
     /**
-     * Time logged on a task. Unrelated to the working-day records of the time tracking module (`/v1/time-entries`).
+     * Time logged on a task. Unrelated to the working-day records of the time tracking module (`/v1/companies/{company}/time-entries`).
      *
      * @var \Factuarea\Sdk\Models\Components\TaskTimeEntry $data
      */

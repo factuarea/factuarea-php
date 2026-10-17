@@ -1,5 +1,7 @@
 # PublicApiV1WorkSchedulesCreateResponseBody
 
+Work schedule created. The `Location` header contains the canonical URL of the new work schedule.
+
 
 ## Fields
 

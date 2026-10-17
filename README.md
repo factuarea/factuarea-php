@@ -384,7 +384,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -394,18 +393,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -421,11 +414,10 @@ if ($response->object !== null) {
 
 This SDK supports the following security schemes globally:
 
-| Name         | Type   | Scheme       |
-| ------------ | ------ | ------------ |
-| `bearerAuth` | http   | HTTP Bearer  |
-| `apiKeyAuth` | apiKey | API key      |
-| `oAuth2`     | oauth2 | OAuth2 token |
+| Name         | Type   | Scheme      |
+| ------------ | ------ | ----------- |
+| `bearerAuth` | http   | HTTP Bearer |
+| `apiKeyAuth` | apiKey | API key     |
 
 You can set the security parameters through the `setSecurity` function on the `SDKBuilder` when initializing the SDK. The selected scheme will be used by default to authenticate with the API for all operations that support it. For example:
 ```php
@@ -436,7 +428,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -446,18 +437,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -514,22 +499,92 @@ if ($response->object !== null) {
 
 ### [Account](docs/sdks/account/README.md)
 
-* [publicApiV1AccountShow](docs/sdks/account/README.md#publicapiv1accountshow) - Retrieve account details
 * [publicApiV1AccountBilling](docs/sdks/account/README.md#publicapiv1accountbilling) - Retrieve account billing details
+* [publicApiV1AccountUsage](docs/sdks/account/README.md#publicapiv1accountusage) - Retrieve account usage for the current period
+* [publicApiV1AccountShow](docs/sdks/account/README.md#publicapiv1accountshow) - Retrieve the calling credential
+* [publicApiV1AccountProvisioningUsage](docs/sdks/account/README.md#publicapiv1accountprovisioningusage) - Retrieve provisioning usage
 * [publicApiV1AccountVerifyCensus](docs/sdks/account/README.md#publicapiv1accountverifycensus) - Verify account against the AEAT census
 
-#### [Account.ApiKeys](docs/sdks/accountapikeys/README.md)
+#### [Account.ApiKeys](docs/sdks/apikeys/README.md)
 
-* [publicApiV1AccountApiKeysCreate](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
-* [publicApiV1AccountApiKeysList](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
-* [publicApiV1AccountApiKeysRevoke](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
-* [publicApiV1AccountApiKeysRotateSecret](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
-* [publicApiV1AccountApiKeysShow](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
+* [publicApiV1AccountApiKeysCreate](docs/sdks/apikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
+* [publicApiV1AccountApiKeysList](docs/sdks/apikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
+* [publicApiV1AccountApiKeysUsage](docs/sdks/apikeys/README.md#publicapiv1accountapikeysusage) - Retrieve the daily usage of an API key
+* [publicApiV1AccountApiKeysRevoke](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
+* [publicApiV1AccountApiKeysRotateSecret](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
+* [publicApiV1AccountApiKeysShow](docs/sdks/apikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
+* [publicApiV1AccountApiKeysUpdateNifScope](docs/sdks/apikeys/README.md#publicapiv1accountapikeysupdatenifscope) - Change the tax IDs an API key reaches
+
+#### [Account.ConnectReturnDomains](docs/sdks/connectreturndomains/README.md)
+
+* [publicApiV1AccountConnectReturnDomainsCreate](docs/sdks/connectreturndomains/README.md#publicapiv1accountconnectreturndomainscreate) - Add a Stripe Connect return domain
+* [publicApiV1AccountConnectReturnDomainsList](docs/sdks/connectreturndomains/README.md#publicapiv1accountconnectreturndomainslist) - List Stripe Connect return domains
+* [publicApiV1AccountConnectReturnDomainsDelete](docs/sdks/connectreturndomains/README.md#publicapiv1accountconnectreturndomainsdelete) - Remove a Stripe Connect return domain
+
+#### [Account.Invitations](docs/sdks/invitations/README.md)
+
+* [publicApiV1AccountInvitationsCancel](docs/sdks/invitations/README.md#publicapiv1accountinvitationscancel) - Revoke an account invitation
+* [publicApiV1AccountInvitationsShow](docs/sdks/invitations/README.md#publicapiv1accountinvitationsshow) - Retrieve an account invitation
+* [publicApiV1AccountInvitationsCreate](docs/sdks/invitations/README.md#publicapiv1accountinvitationscreate) - Send an account invitation
+* [publicApiV1AccountInvitationsList](docs/sdks/invitations/README.md#publicapiv1accountinvitationslist) - List account invitations
+* [publicApiV1AccountInvitationsResend](docs/sdks/invitations/README.md#publicapiv1accountinvitationsresend) - Resend an account invitation
+
+#### [Account.Members](docs/sdks/members/README.md)
+
+* [publicApiV1AccountMembersCreate](docs/sdks/members/README.md#publicapiv1accountmemberscreate) - Add a member to the account
+* [publicApiV1AccountMembersList](docs/sdks/members/README.md#publicapiv1accountmemberslist) - List account members
+* [publicApiV1AccountMembersUpdate](docs/sdks/members/README.md#publicapiv1accountmembersupdate) - Change an account member role
+* [publicApiV1AccountMembersDelete](docs/sdks/members/README.md#publicapiv1accountmembersdelete) - Remove a member from the account
+* [publicApiV1AccountMembersShow](docs/sdks/members/README.md#publicapiv1accountmembersshow) - Retrieve an account member
+
+##### [Account.Members.Grants](docs/sdks/grants/README.md)
+
+* [publicApiV1AccountMembersGrantsList](docs/sdks/grants/README.md#publicapiv1accountmembersgrantslist) - List the grants of an account member
+* [publicApiV1AccountMembersGrantsDelete](docs/sdks/grants/README.md#publicapiv1accountmembersgrantsdelete) - Revoke an account member grant
+* [publicApiV1AccountMembersGrantsUpdate](docs/sdks/grants/README.md#publicapiv1accountmembersgrantsupdate) - Set an account member grant
+* [publicApiV1AccountMembersGrantsShow](docs/sdks/grants/README.md#publicapiv1accountmembersgrantsshow) - Retrieve an account member grant
+
+##### [Account.Members.ModuleAccess](docs/sdks/moduleaccess/README.md)
+
+* [publicApiV1AccountMembersModuleAccessShow](docs/sdks/moduleaccess/README.md#publicapiv1accountmembersmoduleaccessshow) - Retrieve a member module access level
+* [publicApiV1AccountMembersModuleAccessUpdate](docs/sdks/moduleaccess/README.md#publicapiv1accountmembersmoduleaccessupdate) - Set a member module access level
+
+#### [Account.NifTransfers](docs/sdks/niftransfers/README.md)
+
+* [publicApiV1AccountNifTransfersAccept](docs/sdks/niftransfers/README.md#publicapiv1accountniftransfersaccept) - Accept a tax ID transfer
+* [publicApiV1AccountNifTransfersCreate](docs/sdks/niftransfers/README.md#publicapiv1accountniftransferscreate) - Issue a tax ID transfer
+* [publicApiV1AccountNifTransfersList](docs/sdks/niftransfers/README.md#publicapiv1accountniftransferslist) - List issued tax ID transfers
+* [publicApiV1AccountNifTransfersRevoke](docs/sdks/niftransfers/README.md#publicapiv1accountniftransfersrevoke) - Revoke a tax ID transfer
+
+#### [Account.Owner](docs/sdks/owner/README.md)
+
+* [publicApiV1AccountOwnerTransfer](docs/sdks/owner/README.md#publicapiv1accountownertransfer) - Transfer account ownership
 
 #### [Account.Personalization](docs/sdks/personalization/README.md)
 
 * [publicApiV1AccountPersonalizationTemplates](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationtemplates) - List available personalization templates
 * [publicApiV1AccountPersonalizationUpdate](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationupdate) - Update account personalization
+
+#### [Account.RequestLogs](docs/sdks/accountrequestlogs/README.md)
+
+* [publicApiV1AccountRequestLogsList](docs/sdks/accountrequestlogs/README.md#publicapiv1accountrequestlogslist) - List your account API request logs
+* [publicApiV1AccountRequestLogsShow](docs/sdks/accountrequestlogs/README.md#publicapiv1accountrequestlogsshow) - Retrieve an account API request log
+
+#### [Account.Webhooks](docs/sdks/webhooks/README.md)
+
+* [publicApiV1AccountWebhooksCreate](docs/sdks/webhooks/README.md#publicapiv1accountwebhookscreate) - Create an account webhook endpoint
+* [publicApiV1AccountWebhooksList](docs/sdks/webhooks/README.md#publicapiv1accountwebhookslist) - List account webhook endpoints
+* [publicApiV1AccountWebhooksDelete](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksdelete) - Delete an account webhook endpoint
+* [publicApiV1AccountWebhooksShow](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksshow) - Retrieve an account webhook endpoint
+* [publicApiV1AccountWebhooksUpdate](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksupdate) - Update an account webhook endpoint
+* [publicApiV1AccountWebhooksRotateSecret](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksrotatesecret) - Rotate an account webhook secret
+* [publicApiV1AccountWebhooksTest](docs/sdks/webhooks/README.md#publicapiv1accountwebhookstest) - Send a test event to an account webhook endpoint
+
+##### [Account.Webhooks.Deliveries](docs/sdks/webhooksdeliveries/README.md)
+
+* [publicApiV1AccountWebhooksDeliveriesList](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliverieslist) - List account webhook deliveries
+* [publicApiV1AccountWebhooksDeliveriesRetry](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliveriesretry) - Retry an account webhook delivery
+* [publicApiV1AccountWebhooksDeliveriesShow](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliveriesshow) - Retrieve an account webhook delivery
 
 ### [Agenda](docs/sdks/agenda/README.md)
 
@@ -573,25 +628,19 @@ if ($response->object !== null) {
 
 ### [Companies](docs/sdks/companies/README.md)
 
-* [publicApiV1CompaniesActivateBatch](docs/sdks/companies/README.md#publicapiv1companiesactivatebatch) - Activate several managed companies
-* [publicApiV1CompaniesActivate](docs/sdks/companies/README.md#publicapiv1companiesactivate) - Activate a managed company
-* [publicApiV1CompaniesCreate](docs/sdks/companies/README.md#publicapiv1companiescreate) - Create a managed company
-* [publicApiV1CompaniesList](docs/sdks/companies/README.md#publicapiv1companieslist) - List your managed companies
-* [publicApiV1CompaniesDeactivate](docs/sdks/companies/README.md#publicapiv1companiesdeactivate) - Deactivate a managed company
-* [publicApiV1CompaniesDelete](docs/sdks/companies/README.md#publicapiv1companiesdelete) - Archive a managed company
-* [publicApiV1CompaniesShow](docs/sdks/companies/README.md#publicapiv1companiesshow) - Retrieve a managed company
-* [publicApiV1CompaniesUpdate](docs/sdks/companies/README.md#publicapiv1companiesupdate) - Update a managed company
-* [publicApiV1CompaniesCreationStatus](docs/sdks/companies/README.md#publicapiv1companiescreationstatus) - Retrieve the creation status of a managed company
+* [publicApiV1CompaniesActivateBatch](docs/sdks/companies/README.md#publicapiv1companiesactivatebatch) - Activate several tax IDs of the account
+* [publicApiV1CompaniesActivate](docs/sdks/companies/README.md#publicapiv1companiesactivate) - Activate a tax ID of the account
+* [publicApiV1CompaniesDeactivate](docs/sdks/companies/README.md#publicapiv1companiesdeactivate) - Deactivate a tax ID of the account
+* [publicApiV1CompaniesDelete](docs/sdks/companies/README.md#publicapiv1companiesdelete) - Archive a tax ID of the account
+* [publicApiV1CompaniesShow](docs/sdks/companies/README.md#publicapiv1companiesshow) - Retrieve a tax ID of the account
+* [publicApiV1CompaniesUpdate](docs/sdks/companies/README.md#publicapiv1companiesupdate) - Update a tax ID of the account
+* [publicApiV1CompaniesStats](docs/sdks/companies/README.md#publicapiv1companiesstats) - Retrieve invoicing statistics per company
+* [publicApiV1CompaniesCreationStatus](docs/sdks/companies/README.md#publicapiv1companiescreationstatus) - Retrieve the creation status of a tax ID
+* [publicApiV1CompaniesIssuingReadiness](docs/sdks/companies/README.md#publicapiv1companiesissuingreadiness) - Check whether a portfolio NIF can issue
 * [publicApiV1CompaniesSeatChargePreview](docs/sdks/companies/README.md#publicapiv1companiesseatchargepreview) - Preview the seat charge of adding a company
-* [publicApiV1CompaniesVerifyCreation](docs/sdks/companies/README.md#publicapiv1companiesverifycreation) - Verify the creation of a managed company
-
-#### [Companies.ApiKeys](docs/sdks/companiesapikeys/README.md)
-
-* [publicApiV1CompaniesApiKeysCreate](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeyscreate) - Create a child API key
-* [publicApiV1CompaniesApiKeysList](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeyslist) - List child API keys
-* [publicApiV1CompaniesApiKeysRevoke](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrevoke) - Revoke a child API key
-* [publicApiV1CompaniesApiKeysShow](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysshow) - Retrieve a child API key
-* [publicApiV1CompaniesApiKeysRotateSecret](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrotatesecret) - Rotate a child API key secret
+* [publicApiV1CompaniesList](docs/sdks/companies/README.md#publicapiv1companieslist) - List the tax IDs of your account
+* [publicApiV1CompaniesCreate](docs/sdks/companies/README.md#publicapiv1companiescreate) - Register a tax ID in the account
+* [publicApiV1CompaniesVerifyCreation](docs/sdks/companies/README.md#publicapiv1companiesverifycreation) - Verify the creation of a tax ID
 
 ### [Contacts](docs/sdks/contacts/README.md)
 
@@ -623,10 +672,10 @@ if ($response->object !== null) {
 * [publicApiV1ContactsUpdateSupplierProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatesupplierprofile) - Update a supplier profile
 * [publicApiV1ContactsVerifyCensus](docs/sdks/contacts/README.md#publicapiv1contactsverifycensus) - Verify a contact against the AEAT census
 
-#### [Contacts.Imports](docs/sdks/imports/README.md)
+#### [Contacts.Imports](docs/sdks/contactsimports/README.md)
 
-* [publicApiV1ContactsImportsErrors](docs/sdks/imports/README.md#publicapiv1contactsimportserrors) - Download contact import errors
-* [publicApiV1ContactsImportsShow](docs/sdks/imports/README.md#publicapiv1contactsimportsshow) - Retrieve a contact import
+* [publicApiV1ContactsImportsErrors](docs/sdks/contactsimports/README.md#publicapiv1contactsimportserrors) - Download contact import errors
+* [publicApiV1ContactsImportsShow](docs/sdks/contactsimports/README.md#publicapiv1contactsimportsshow) - Retrieve a contact import
 
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
@@ -659,10 +708,10 @@ if ($response->object !== null) {
 
 * [publicApiV1DeliveryNotesSignatureAuditsForget](docs/sdks/signatureaudits/README.md#publicapiv1deliverynotessignatureauditsforget) - Forget delivery note signature PII
 
-### [Developers.RequestLogs](docs/sdks/requestlogs/README.md)
+### [Developers.RequestLogs](docs/sdks/developersrequestlogs/README.md)
 
-* [publicApiV1DevelopersRequestLogsList](docs/sdks/requestlogs/README.md#publicapiv1developersrequestlogslist) - List your API request logs
-* [publicApiV1DevelopersRequestLogsShow](docs/sdks/requestlogs/README.md#publicapiv1developersrequestlogsshow) - Retrieve an API request log
+* [publicApiV1DevelopersRequestLogsList](docs/sdks/developersrequestlogs/README.md#publicapiv1developersrequestlogslist) - List your API request logs
+* [publicApiV1DevelopersRequestLogsShow](docs/sdks/developersrequestlogs/README.md#publicapiv1developersrequestlogsshow) - Retrieve an API request log
 
 ### [Emails](docs/sdks/emails/README.md)
 
@@ -775,7 +824,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesMarkSent](docs/sdks/invoices/README.md#publicapiv1invoicesmarksent) - Mark an invoice as sent
 * [publicApiV1InvoicesPdfPreview](docs/sdks/invoices/README.md#publicapiv1invoicespdfpreview) - Preview an invoice draft PDF
 * [publicApiV1InvoicesReminderPreview](docs/sdks/invoices/README.md#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
-* [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download payment receipt PDF
+* [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download the receipt PDF of a payment
 * [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
 * [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
 * [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
@@ -796,6 +845,36 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters to export
 * [publicApiV1InvoicesQuarterlyDownloadZip](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlydownloadzip) - Generate quarterly ZIP archive
 * [publicApiV1InvoicesQuarterlySendEmail](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlysendemail) - Email quarterly ZIP to accountant
+
+### [ManagedAccounts](docs/sdks/managedaccounts/README.md)
+
+* [publicApiV1ManagedAccountsList](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountslist) - List managed accounts
+* [publicApiV1ManagedAccountsCreate](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountscreate) - Provision a managed account
+* [publicApiV1ManagedAccountsProvisioningPreview](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountsprovisioningpreview) - Preview the provisioning of a managed account
+* [publicApiV1ManagedAccountsShow](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountsshow) - Retrieve a managed account
+
+#### [ManagedAccounts.AccessLevel](docs/sdks/accesslevel/README.md)
+
+* [publicApiV1ManagedAccountsAccessLevelUpdate](docs/sdks/accesslevel/README.md#publicapiv1managedaccountsaccesslevelupdate) - Change the access level on a managed account
+
+#### [ManagedAccounts.ClaimTokens](docs/sdks/claimtokens/README.md)
+
+* [publicApiV1ManagedAccountsClaimTokensCreate](docs/sdks/claimtokens/README.md#publicapiv1managedaccountsclaimtokenscreate) - Reissue the claim voucher of a managed account
+
+#### [ManagedAccounts.Imports](docs/sdks/managedaccountsimports/README.md)
+
+* [publicApiV1ManagedAccountsImportsCreate](docs/sdks/managedaccountsimports/README.md#publicapiv1managedaccountsimportscreate) - Apply a bulk import of managed accounts
+* [publicApiV1ManagedAccountsImportsTemplate](docs/sdks/managedaccountsimports/README.md#publicapiv1managedaccountsimportstemplate) - Download the bulk import template
+* [publicApiV1ManagedAccountsImportsPreview](docs/sdks/managedaccountsimports/README.md#publicapiv1managedaccountsimportspreview) - Preview a bulk import of managed accounts
+
+#### [ManagedAccounts.Management](docs/sdks/management/README.md)
+
+* [publicApiV1ManagedAccountsManagementEnd](docs/sdks/management/README.md#publicapiv1managedaccountsmanagementend) - End the management of an account
+
+#### [ManagedAccounts.Plan](docs/sdks/plan/README.md)
+
+* [publicApiV1ManagedAccountsPlanUpdate](docs/sdks/plan/README.md#publicapiv1managedaccountsplanupdate) - Change the plan of a managed account
+* [publicApiV1ManagedAccountsPlanPreview](docs/sdks/plan/README.md#publicapiv1managedaccountsplanpreview) - Preview a managed account plan change
 
 ### [MonthlyTimeRecordCloses](docs/sdks/monthlytimerecordcloses/README.md)
 
@@ -873,6 +952,11 @@ if ($response->object !== null) {
 * [publicApiV1ProductsSearch](docs/sdks/products/README.md#publicapiv1productssearch) - Search products
 * [publicApiV1ProductsToggleActive](docs/sdks/products/README.md#publicapiv1productstoggleactive) - Toggle product active state
 * [publicApiV1ProductsUpdateStock](docs/sdks/products/README.md#publicapiv1productsupdatestock) - Update product stock
+
+#### [Products.BaseUnitReplacement](docs/sdks/baseunitreplacement/README.md)
+
+* [publicApiV1ProductsBaseUnitReplacementPreview](docs/sdks/baseunitreplacement/README.md#publicapiv1productsbaseunitreplacementpreview) - Preview a base unit replacement
+* [publicApiV1ProductsBaseUnitReplacementCreate](docs/sdks/baseunitreplacement/README.md#publicapiv1productsbaseunitreplacementcreate) - Replace a product by changing its base unit
 
 #### [Products.Configurations](docs/sdks/configurations/README.md)
 
@@ -996,7 +1080,7 @@ if ($response->object !== null) {
 * [publicApiV1PurchaseInvoicesUpdate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesupdate) - Update an expense
 * [publicApiV1PurchaseInvoicesDeleteFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdeletefile) - Remove an expense file
 * [publicApiV1PurchaseInvoicesFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfile) - Download the original expense file
-* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download an expense payment receipt
+* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download the receipt PDF of an expense payment
 * [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find an expense by external ID
 * [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get expense stats
 * [publicApiV1PurchaseInvoicesExpenseCategories](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesexpensecategories) - List expense categories
@@ -1114,6 +1198,10 @@ if ($response->object !== null) {
 #### [StripeAutoinvoicing.Accounts.NonInvoicedCharges](docs/sdks/noninvoicedcharges/README.md)
 
 * [publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList](docs/sdks/noninvoicedcharges/README.md#publicapiv1stripeautoinvoicingaccountsnoninvoicedchargeslist) - List non-invoiced charges of a connected Stripe account
+
+### [StripeAutoinvoicing.Authorizations](docs/sdks/authorizations/README.md)
+
+* [publicApiV1StripeAutoinvoicingAuthorizationsCreate](docs/sdks/authorizations/README.md#publicapiv1stripeautoinvoicingauthorizationscreate) - Start a Stripe Connect authorization
 
 ### [StripeAutoinvoicing.Config](docs/sdks/config/README.md)
 
@@ -1384,11 +1472,11 @@ if ($response->object !== null) {
 * [publicApiV1WebhookEndpointsRotateSecret](docs/sdks/webhookendpoints/README.md#publicapiv1webhookendpointsrotatesecret) - Rotate webhook secret
 * [publicApiV1WebhookEndpointsTestEvent](docs/sdks/webhookendpoints/README.md#publicapiv1webhookendpointstestevent) - Send a test event
 
-#### [WebhookEndpoints.Deliveries](docs/sdks/deliveries/README.md)
+#### [WebhookEndpoints.Deliveries](docs/sdks/webhookendpointsdeliveries/README.md)
 
-* [publicApiV1WebhookEndpointsDeliveriesList](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliverieslist) - List webhook deliveries
-* [publicApiV1WebhookEndpointsDeliveriesReplay](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliveriesreplay) - Replay webhook delivery
-* [publicApiV1WebhookEndpointsDeliveriesShow](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliveriesshow) - Retrieve webhook delivery
+* [publicApiV1WebhookEndpointsDeliveriesList](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliverieslist) - List webhook deliveries
+* [publicApiV1WebhookEndpointsDeliveriesReplay](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliveriesreplay) - Replay webhook delivery
+* [publicApiV1WebhookEndpointsDeliveriesShow](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliveriesshow) - Retrieve webhook delivery
 
 ### [Woocommerce.Stores](docs/sdks/woocommercestores/README.md)
 
@@ -1425,7 +1513,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Retry;
 
 $sdk = Sdk\Factuarea::builder()
@@ -1436,18 +1523,11 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request,
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
     options: Utils\Options->builder()->setRetryConfig(
         new Retry\RetryConfigBackoff(
             initialInterval: 1,
@@ -1456,6 +1536,7 @@ $response = $sdk->proformas->publicApiV1ProformasAccept(
             maxElapsedTime:  100,
             retryConnectionErrors: false,
         ))->build()
+
 );
 
 if ($response->object !== null) {
@@ -1472,7 +1553,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Retry;
 
 $sdk = Sdk\Factuarea::builder()
@@ -1492,18 +1572,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -1526,13 +1600,13 @@ By default an API error will raise a `Errors\APIException` exception, which has 
 | `$rawResponse` | *?\Psr\Http\Message\ResponseInterface*  | The raw HTTP response |
 | `$body`        | *string*                                | The response content  |
 
-When custom error responses are specified for an operation, the SDK may also throw their associated exception. You can refer to respective *Errors* tables in SDK docs for more details on possible exception types for each operation. For example, the `publicApiV1ProformasAccept` method throws the following exceptions:
+When custom error responses are specified for an operation, the SDK may also throw their associated exception. You can refer to respective *Errors* tables in SDK docs for more details on possible exception types for each operation. For example, the `publicApiV1AccountBilling` method throws the following exceptions:
 
-| Error Type          | Status Code                  | Content Type     |
-| ------------------- | ---------------------------- | ---------------- |
-| Errors\Error        | 401, 403, 404, 409, 422, 429 | application/json |
-| Errors\Error        | 500                          | application/json |
-| Errors\APIException | 4XX, 5XX                     | \*/\*            |
+| Error Type          | Status Code             | Content Type     |
+| ------------------- | ----------------------- | ---------------- |
+| Errors\Error        | 400, 401, 403, 404, 429 | application/json |
+| Errors\Error        | 500                     | application/json |
+| Errors\APIException | 4XX, 5XX                | \*/\*            |
 
 ### Example
 
@@ -1545,7 +1619,6 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Errors;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -1556,18 +1629,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 try {
-    $request = new Operations\PublicApiV1ProformasAcceptRequest(
-        proforma: '<value>',
-        idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-        factuareaVersion: LocalDate::parse('2026-06-01'),
-        xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-        body: new Components\AcceptProformaRequest(
-            reason: 'Cliente confirma pedido por telefono',
-        ),
-    );
+    $response = $sdk->account->publicApiV1AccountBilling(
+        company: 'Gerlach - Schroeder',
+        factuareaVersion: LocalDate::parse('2026-06-01')
 
-    $response = $sdk->proformas->publicApiV1ProformasAccept(
-        request: $request
     );
 
     if ($response->object !== null) {
@@ -1600,7 +1665,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
@@ -1611,18 +1675,12 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {

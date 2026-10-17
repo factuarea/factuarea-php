@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ProductsSupplierOffersListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the product.
      *
      * @var string $product
      */
@@ -20,6 +29,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public string $product;
 
     /**
+     * Public identifier (UUID v7) of the supplier to filter by.
      *
      * @var ?string $supplierId
      */
@@ -27,6 +37,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?string $supplierId = null;
 
     /**
+     * Public identifier (UUID v7) of the product variant to filter by.
      *
      * @var ?string $variantId
      */
@@ -34,6 +45,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?string $variantId = null;
 
     /**
+     * Only offers with this availability: `available`, `unavailable`, `unknown`, `seasonal` or `store_dependent`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\Availability $availability
      */
@@ -41,6 +53,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?Availability $availability = null;
 
     /**
+     * `true` returns only the preferred offer and `false` only the rest.
      *
      * @var ?bool $preferred
      */
@@ -48,6 +61,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?bool $preferred = null;
 
     /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -63,14 +77,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -78,6 +85,7 @@ class PublicApiV1ProductsSupplierOffersListRequest
     public ?string $startingAfter = null;
 
     /**
+     * @param  string  $company
      * @param  string  $product
      * @param  ?string  $supplierId
      * @param  ?string  $variantId
@@ -85,12 +93,12 @@ class PublicApiV1ProductsSupplierOffersListRequest
      * @param  ?bool  $preferred
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(string $product, ?string $supplierId = null, ?string $variantId = null, ?Availability $availability = null, ?bool $preferred = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null)
+    public function __construct(string $company, string $product, ?string $supplierId = null, ?string $variantId = null, ?Availability $availability = null, ?bool $preferred = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
     {
+        $this->company = $company;
         $this->product = $product;
         $this->supplierId = $supplierId;
         $this->variantId = $variantId;
@@ -98,7 +106,6 @@ class PublicApiV1ProductsSupplierOffersListRequest
         $this->preferred = $preferred;
         $this->limit = $limit;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;
     }
 }

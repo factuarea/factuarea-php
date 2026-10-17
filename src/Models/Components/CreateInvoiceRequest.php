@@ -56,12 +56,12 @@ class CreateInvoiceRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Options $options
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions $options
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Options|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?Options $options = null;
+    public ?CreateInvoiceRequestOptions $options = null;
 
     /**
      * Invoice type: `F1` (complete invoice, the default) or `F2` (simplified invoice, the ticket of a terminal). A simplified invoice needs simplified invoices enabled for the company (422 `simplified_invoices_disabled`) and cannot exceed the absolute cap of 3,000 € VAT included (422 `simplified_invoice_not_allowed`).
@@ -171,7 +171,7 @@ class CreateInvoiceRequest
      * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
      * @param  ?string  $clientId
      * @param  ?\Factuarea\Sdk\Models\Components\Payment  $payment
-     * @param  ?\Factuarea\Sdk\Models\Components\Options  $options
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions  $options
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestType  $type
      * @param  ?bool  $pricesIncludeTax
      * @param  ?LocalDate  $operationOn
@@ -185,7 +185,7 @@ class CreateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?string $clientId = null, ?Payment $payment = null, ?Options $options = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?string $clientId = null, ?Payment $payment = null, ?CreateInvoiceRequestOptions $options = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;

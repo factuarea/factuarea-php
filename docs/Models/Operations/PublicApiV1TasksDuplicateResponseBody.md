@@ -1,5 +1,7 @@
 # PublicApiV1TasksDuplicateResponseBody
 
+Task duplicated successfully. The `Location` header contains the canonical URL of the NEW task created.
+
 
 ## Fields
 

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ProformaStats - Aggregated summary of the proformas of the authenticated company: total, accumulated amount, breakdown by status (with count and amount), conversion-to-invoice ratio, those about to expire and average value. Returned by `GET /v1/proformas/stats`. */
+/** ProformaStats - Aggregated summary of the proformas of the authenticated company: total, accumulated amount, breakdown by status (with count and amount), conversion-to-invoice ratio, those about to expire and average value. Returned by `GET /v1/companies/{company}/proformas/stats`. */
 class ProformaStats
 {
     /**
@@ -21,12 +21,12 @@ class ProformaStats
     public int $totalCount;
 
     /**
-     * Aggregate amount of the proformas (EUR).
+     * Aggregate amount of the proformas (EUR), as a 2-decimal string.
      *
-     * @var float $totalAmount
+     * @var string $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public float $totalAmount;
+    public string $totalAmount;
 
     /**
      * Breakdown by status. Keys: `draft`, `accepted`, `rejected`, `cancelled`, `expired`, `converted`.
@@ -38,7 +38,7 @@ class ProformaStats
     public array $byStatus;
 
     /**
-     * Conversion-to-invoice ratio (converted proformas / total), as a fraction.
+     * Conversion-to-invoice ratio (invoiced proformas / total), as a percentage from 0 to 100 with up to 2 decimals.
      *
      * @var float $conversionRate
      */
@@ -54,23 +54,23 @@ class ProformaStats
     public int $expiringSoon;
 
     /**
-     * Average value of the proformas (EUR).
+     * Average value of the proformas (EUR), as a 2-decimal string.
      *
-     * @var float $averageValue
+     * @var string $averageValue
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('average_value')]
-    public float $averageValue;
+    public string $averageValue;
 
     /**
      * @param  int  $totalCount
-     * @param  float  $totalAmount
+     * @param  string  $totalAmount
      * @param  array<string, \Factuarea\Sdk\Models\Components\ProformaStatsByStatus>  $byStatus
      * @param  float  $conversionRate
      * @param  int  $expiringSoon
-     * @param  float  $averageValue
+     * @param  string  $averageValue
      * @phpstan-pure
      */
-    public function __construct(int $totalCount, float $totalAmount, array $byStatus, float $conversionRate, int $expiringSoon, float $averageValue)
+    public function __construct(int $totalCount, string $totalAmount, array $byStatus, float $conversionRate, int $expiringSoon, string $averageValue)
     {
         $this->totalCount = $totalCount;
         $this->totalAmount = $totalAmount;

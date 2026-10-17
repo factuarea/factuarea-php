@@ -49,12 +49,12 @@ class SavePurchaseScanReviewV1RequestLineFields2
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\PriceUnitCode2 $priceUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestPriceUnitCode2 $priceUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PriceUnitCode2|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestPriceUnitCode2|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?PriceUnitCode2 $priceUnitCode = null;
+    public ?SavePurchaseScanReviewV1RequestPriceUnitCode2 $priceUnitCode = null;
 
     /**
      *
@@ -205,7 +205,7 @@ class SavePurchaseScanReviewV1RequestLineFields2
      * @param  ?\Factuarea\Sdk\Models\Components\AdditionalDescription2  $additionalDescription
      * @param  ?\Factuarea\Sdk\Models\Components\SupplierSku2  $supplierSku
      * @param  ?\Factuarea\Sdk\Models\Components\UnitCode2  $unitCode
-     * @param  ?\Factuarea\Sdk\Models\Components\PriceUnitCode2  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestPriceUnitCode2  $priceUnitCode
      * @param  ?\Factuarea\Sdk\Models\Components\PackageQuantity2  $packageQuantity
      * @param  ?\Factuarea\Sdk\Models\Components\MeasuredBaseQuantity2  $measuredBaseQuantity
      * @param  ?\Factuarea\Sdk\Models\Components\SavePurchaseScanReviewV1RequestQuantity2  $quantity
@@ -224,7 +224,7 @@ class SavePurchaseScanReviewV1RequestLineFields2
      * @param  ?\Factuarea\Sdk\Models\Components\LineTotal2  $lineTotal
      * @phpstan-pure
      */
-    public function __construct(?Description2 $description = null, ?AdditionalDescription2 $additionalDescription = null, ?SupplierSku2 $supplierSku = null, ?UnitCode2 $unitCode = null, ?PriceUnitCode2 $priceUnitCode = null, ?PackageQuantity2 $packageQuantity = null, ?MeasuredBaseQuantity2 $measuredBaseQuantity = null, ?SavePurchaseScanReviewV1RequestQuantity2 $quantity = null, ?SavePurchaseScanReviewV1RequestUnitPrice2 $unitPrice = null, ?DiscountRate2 $discountRate = null, ?TaxRate2 $taxRate = null, ?RetentionRate2 $retentionRate = null, ?SurchargeRate2 $surchargeRate = null, ?VatDeductible2 $vatDeductible = null, ?SavePurchaseScanReviewV1RequestIndirectTaxRegime2 $indirectTaxRegime = null, ?SavePurchaseScanReviewV1RequestExemptionReason2 $exemptionReason = null, ?LineSubtotal2 $lineSubtotal = null, ?TaxAmount2 $taxAmount = null, ?RetentionAmount2 $retentionAmount = null, ?SurchargeAmount2 $surchargeAmount = null, ?LineTotal2 $lineTotal = null)
+    public function __construct(?Description2 $description = null, ?AdditionalDescription2 $additionalDescription = null, ?SupplierSku2 $supplierSku = null, ?UnitCode2 $unitCode = null, ?SavePurchaseScanReviewV1RequestPriceUnitCode2 $priceUnitCode = null, ?PackageQuantity2 $packageQuantity = null, ?MeasuredBaseQuantity2 $measuredBaseQuantity = null, ?SavePurchaseScanReviewV1RequestQuantity2 $quantity = null, ?SavePurchaseScanReviewV1RequestUnitPrice2 $unitPrice = null, ?DiscountRate2 $discountRate = null, ?TaxRate2 $taxRate = null, ?RetentionRate2 $retentionRate = null, ?SurchargeRate2 $surchargeRate = null, ?VatDeductible2 $vatDeductible = null, ?SavePurchaseScanReviewV1RequestIndirectTaxRegime2 $indirectTaxRegime = null, ?SavePurchaseScanReviewV1RequestExemptionReason2 $exemptionReason = null, ?LineSubtotal2 $lineSubtotal = null, ?TaxAmount2 $taxAmount = null, ?RetentionAmount2 $retentionAmount = null, ?SurchargeAmount2 $surchargeAmount = null, ?LineTotal2 $lineTotal = null)
     {
         $this->description = $description;
         $this->additionalDescription = $additionalDescription;

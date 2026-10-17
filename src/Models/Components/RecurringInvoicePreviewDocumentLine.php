@@ -19,11 +19,12 @@ class RecurringInvoicePreviewDocumentLine
     public float $quantity;
 
     /**
+     * Unit price (EUR), as a decimal string with the four-decimal scale of the column.
      *
-     * @var float $unitPrice
+     * @var string $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    public string $unitPrice;
 
     /**
      *
@@ -54,25 +55,28 @@ class RecurringInvoicePreviewDocumentLine
     public float $commercialQuantity;
 
     /**
+     * Line subtotal (EUR), as a 2-decimal string.
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
+     * Line VAT amount (EUR), as a 2-decimal string.
      *
-     * @var float $tax
+     * @var string $tax
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax')]
-    public float $tax;
+    public string $tax;
 
     /**
+     * Line total (EUR), as a 2-decimal string.
      *
-     * @var float $lineTotal
+     * @var string $lineTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('line_total')]
-    public float $lineTotal;
+    public string $lineTotal;
 
     /**
      * $optionLabels
@@ -190,14 +194,14 @@ class RecurringInvoicePreviewDocumentLine
 
     /**
      * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  string  $unitPrice
      * @param  float  $taxRate
      * @param  float  $retentionRate
      * @param  float  $surchargeRate
      * @param  float  $commercialQuantity
-     * @param  float  $subtotal
-     * @param  float  $tax
-     * @param  float  $lineTotal
+     * @param  string  $subtotal
+     * @param  string  $tax
+     * @param  string  $lineTotal
      * @param  array<string>  $optionLabels
      * @param  ?string  $description
      * @param  ?string  $commercialUnitCode
@@ -216,7 +220,7 @@ class RecurringInvoicePreviewDocumentLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $commercialQuantity, float $subtotal, float $tax, float $lineTotal, array $optionLabels, ?string $description = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListUuid = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?string $configurationUuid = null, ?string $configurationName = null, ?string $configurationSignature = null, ?string $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $commercialQuantity, string $subtotal, string $tax, string $lineTotal, array $optionLabels, ?string $description = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListUuid = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?string $configurationUuid = null, ?string $configurationName = null, ?string $configurationSignature = null, ?string $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;

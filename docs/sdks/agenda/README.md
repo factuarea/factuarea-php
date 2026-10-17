@@ -12,7 +12,7 @@ Return a combined agenda between `from` and `to` (at most 93 days, both included
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.agenda.list" method="get" path="/agenda" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.agenda.list" method="get" path="/companies/{company}/agenda" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,10 +32,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1AgendaListRequest(
+    company: 'Crona, Hermiston and Nader',
     from: LocalDate::parse('2026-07-05'),
     to: LocalDate::parse('2024-06-22'),
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->agenda->publicApiV1AgendaList(
@@ -59,8 +59,8 @@ if ($response->agendaList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 400, 401, 403, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

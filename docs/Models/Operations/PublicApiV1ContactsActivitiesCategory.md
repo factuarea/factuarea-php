@@ -1,5 +1,7 @@
 # PublicApiV1ContactsActivitiesCategory
 
+Only activity about this kind of record: `contact`, `invoice`, `quote`, `delivery_note`, `proforma`, `purchase_invoice`, `recurring_invoice` or `contract`.
+
 
 ## Values
 

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Account issuing language (es, en or ca). */
+/** Account issuing language: `es`, `en` or `ca`. */
 enum UpdateAccountPersonalizationRequestLanguage: string
 {
     case Es = 'es';

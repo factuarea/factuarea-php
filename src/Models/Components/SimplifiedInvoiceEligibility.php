@@ -45,22 +45,22 @@ class SimplifiedInvoiceEligibility
     public string $reasonMessage;
 
     /**
-     * Absolute legal limit (EUR) above which a simplified invoice is not allowed.
+     * Absolute legal limit (EUR) above which a simplified invoice is not allowed, as a 2-decimal string.
      *
-     * @var float $sectorLimit
+     * @var string $sectorLimit
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('sector_limit')]
-    public float $sectorLimit;
+    public string $sectorLimit;
 
     /**
      * @param  bool  $canBeSimplified
      * @param  bool  $mustBeComplete
      * @param  string  $reasonCode
      * @param  string  $reasonMessage
-     * @param  float  $sectorLimit
+     * @param  string  $sectorLimit
      * @phpstan-pure
      */
-    public function __construct(bool $canBeSimplified, bool $mustBeComplete, string $reasonCode, string $reasonMessage, float $sectorLimit)
+    public function __construct(bool $canBeSimplified, bool $mustBeComplete, string $reasonCode, string $reasonMessage, string $sectorLimit)
     {
         $this->canBeSimplified = $canBeSimplified;
         $this->mustBeComplete = $mustBeComplete;

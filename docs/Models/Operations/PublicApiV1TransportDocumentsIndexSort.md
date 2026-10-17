@@ -1,6 +1,6 @@
 # PublicApiV1TransportDocumentsIndexSort
 
-Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `transport_date`, `number`, `created`, `updated`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, documents are ordered by transport date, newest first.
+Sort order: `transport_date`, `number`, `created`, `updated` ascending, or with a `-` prefix for descending (default: documents are ordered by transport date, newest first).
 
 
 ## Values

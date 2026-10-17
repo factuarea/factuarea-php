@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** FinancialSummary - Directional sales and purchases totals for this contact. Amounts use the currency declared in each direction. */
+/** FinancialSummary - Directional sales and purchases totals for this contact, as 2-decimal strings. Amounts use the currency declared in each direction. */
 class FinancialSummary
 {
     /**

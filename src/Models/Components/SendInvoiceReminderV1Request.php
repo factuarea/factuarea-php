@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** SendInvoiceReminderV1Request - Fields of the payment reminder, shared by `POST /v1/invoices/{invoice}/send-reminder` and `POST /v1/invoices/{invoice}/reminder-preview`. Every field is optional: without overrides the standard payment reminder template is used. */
+/** SendInvoiceReminderV1Request - Fields of the payment reminder, shared by `POST /v1/companies/{company}/invoices/{invoice}/send-reminder` and `POST /v1/companies/{company}/invoices/{invoice}/reminder-preview`. Every field is optional: without overrides the standard payment reminder template is used. */
 class SendInvoiceReminderV1Request
 {
     /**
@@ -40,7 +40,7 @@ class SendInvoiceReminderV1Request
     public ?string $message = null;
 
     /**
-     * Email addresses in copy (cc).
+     * Carbon copy addresses.
      *
      * @var ?array<string> $cc
      */
@@ -50,7 +50,7 @@ class SendInvoiceReminderV1Request
     public ?array $cc = null;
 
     /**
-     * Email addresses in blind copy (bcc).
+     * Blind carbon copy addresses.
      *
      * @var ?array<string> $bcc
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Only scans in this status: `received`, `queued`, `processing`, `needs_review`, `duplicate`, `failed`, `auto_created`, `created` or `archived`. */
 enum FilterStatus: string
 {
     case Received = 'received';

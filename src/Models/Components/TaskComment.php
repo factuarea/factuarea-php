@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaskComment
 {
     /**
-     * UUID (v7) of the comment.
+     * UUID v7 of the comment.
      *
      * @var string $id
      */

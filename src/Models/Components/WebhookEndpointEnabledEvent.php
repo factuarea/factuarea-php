@@ -111,6 +111,7 @@ enum WebhookEndpointEnabledEvent: string
     case ContactSupplierProfileUpdated = 'contact.supplier_profile.updated';
     case ProductCreated = 'product.created';
     case ProductUpdated = 'product.updated';
+    case ProductReplaced = 'product.replaced';
     case PaymentReceived = 'payment.received';
     case PaymentReversed = 'payment.reversed';
     case TaxMetadataChanged = 'tax.metadata_changed';

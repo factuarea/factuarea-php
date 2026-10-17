@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1CompaniesCreateResponseBody - Tax ID registered in the account. The `Location` header contains the canonical URL of the new company. */
 class PublicApiV1CompaniesCreateResponseBody
 {
     /**
-     * A managed company (child sub-account) under your master tenant. Created and operated through the gestoría endpoints; its child API keys can only hold a subset of the scopes of the key that created them.
+     * A company (tax ID) of your account, registered and operated through the `/v1/accounts/{account}/companies` endpoints. `readiness` (whether it can issue right now, with the same contract as `GET /v1/accounts/{account}/companies/{company}/issuing-readiness`) is present only when the list is requested with `include=readiness`; otherwise the key is absent.
      *
      * @var \Factuarea\Sdk\Models\Components\Company $data
      */

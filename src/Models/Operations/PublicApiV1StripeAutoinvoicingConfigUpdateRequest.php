@@ -14,19 +14,20 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1StripeAutoinvoicingConfigUpdateRequest
 {
     /**
-     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `409 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
      *
      * @var string $idempotencyKey
      */
     #[SpeakeasyMetadata('header:style=simple,explode=false,name=Idempotency-Key')]
     public string $idempotencyKey;
-
-    /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public Components\UpdateStripeAutoinvoicingConfigRequest $body;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -37,25 +38,24 @@ class PublicApiV1StripeAutoinvoicingConfigUpdateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
      *
-     * @var ?string $xActiveProfile
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest $body
      */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\UpdateStripeAutoinvoicingConfigRequest $body = null;
 
     /**
+     * @param  string  $company
      * @param  string  $idempotencyKey
-     * @param  \Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateStripeAutoinvoicingConfigRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $idempotencyKey, Components\UpdateStripeAutoinvoicingConfigRequest $body, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null)
+    public function __construct(string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Components\UpdateStripeAutoinvoicingConfigRequest $body = null)
     {
+        $this->company = $company;
         $this->idempotencyKey = $idempotencyKey;
-        $this->body = $body;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
+        $this->body = $body;
     }
 }

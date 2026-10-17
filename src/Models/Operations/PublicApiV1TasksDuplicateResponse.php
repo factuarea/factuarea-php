@@ -40,6 +40,7 @@ class PublicApiV1TasksDuplicateResponse
     public array $headers;
 
     /**
+     * Task duplicated successfully. The `Location` header contains the canonical URL of the NEW task created.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TasksDuplicateResponseBody $object
      */

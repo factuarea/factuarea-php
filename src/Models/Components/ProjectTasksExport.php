@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ProjectTasksExport - JSON export of the tasks of a project (`factuarea.tasks.v1`), importable with `POST /v1/projects/{project}/tasks/import`. */
+/** ProjectTasksExport - JSON export of the tasks of a project (`factuarea.tasks.v1`), importable with `POST /v1/companies/{company}/projects/{project}/tasks/import`. */
 class ProjectTasksExport
 {
     /**

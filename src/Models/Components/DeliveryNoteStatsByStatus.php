@@ -28,20 +28,20 @@ class DeliveryNoteStatsByStatus
     public int $count;
 
     /**
-     * Aggregate amount of the delivery notes in that status (EUR).
+     * Aggregate amount of the delivery notes in that status (EUR), as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * @param  string  $status
      * @param  int  $count
-     * @param  float  $total
+     * @param  string  $total
      * @phpstan-pure
      */
-    public function __construct(string $status, int $count, float $total)
+    public function __construct(string $status, int $count, string $total)
     {
         $this->status = $status;
         $this->count = $count;

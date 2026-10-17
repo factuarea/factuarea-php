@@ -1,0 +1,10 @@
+# PublicApiV1AccountWebhooksDeliveriesRetryResponseBody
+
+The delivery was re-armed and queued: the SAME delivery goes back to `pending` and is sent again with the current signing secret. `data.id` is that delivery; read its outcome with the delivery detail.
+
+
+## Fields
+
+| Field                                                                                                                                | Type                                                                                                                                 | Required                                                                                                                             | Description                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `data`                                                                                                                               | [Operations\PublicApiV1AccountWebhooksDeliveriesRetryData](../../Models/Operations/PublicApiV1AccountWebhooksDeliveriesRetryData.md) | :heavy_check_mark:                                                                                                                   | N/A                                                                                                                                  |

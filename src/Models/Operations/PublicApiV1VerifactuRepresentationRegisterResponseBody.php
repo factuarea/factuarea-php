@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1VerifactuRepresentationRegisterResponseBody - The newly registered representation and the remission mode that results. A `Location` header points to `/v1/verifactu/representation`. */
+/** PublicApiV1VerifactuRepresentationRegisterResponseBody - The newly registered representation and the remission mode that results. A `Location` header points to `/v1/companies/{company}/verifactu/representation`. */
 class PublicApiV1VerifactuRepresentationRegisterResponseBody
 {
     /**

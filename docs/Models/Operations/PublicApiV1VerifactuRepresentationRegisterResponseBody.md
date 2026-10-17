@@ -1,6 +1,6 @@
 # PublicApiV1VerifactuRepresentationRegisterResponseBody
 
-The newly registered representation and the remission mode that results. A `Location` header points to `/v1/verifactu/representation`.
+The newly registered representation and the remission mode that results. A `Location` header points to `/v1/companies/{company}/verifactu/representation`.
 
 
 ## Fields
