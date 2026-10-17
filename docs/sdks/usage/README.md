@@ -8,7 +8,9 @@
 
 ## publicApiV1AutomationsUsageShow
 
-Read how many automation runs the company has consumed in the current period, the quota of its plan (`limit: null` means no automatic ceiling; Enterprise capacity is agreed by contract), the instant the counter resets and the consumption percentage at which the account is warned. It takes no parameters: the period, the limit and the reset instant come from the same policy that stops runs, never recomputed here. Use it to anticipate running out of budget — activating a rule deliberately does not pre-check the quota. The number published is the counter the engine enforces, not a sum over the run history, so purging history never moves it.
+Read the automation runs consumed in the current period, the plan quota, the reset instant and the warning percentage.
+- `limit: null` means no automatic ceiling (Enterprise is by contract).
+- It is the counter the engine enforces; purging history never changes it.
 
 ### Example Usage
 

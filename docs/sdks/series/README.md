@@ -80,22 +80,10 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1SeriesBootstrap
 
-Leave a company able to issue documents in one call: for every document type of the public surface (`invoice`, `quote`, `delivery_note`, `proforma`) that has no active series, create its default series with the canonical code and name. No request body.
-
-**What comes back**
-
-- One entry per document type, with a `status` of `created`, `existing` or `no_default`.
-- `no_default` means the type has active series but none marked as default — archiving the default demotes it without promoting a replacement — and the company still cannot issue that document.
-- Treat `no_default` as work still to do, not as success: the active series arrive in `candidates` and you resolve it with `POST /v1/companies/{company}/series/{series}/default`.
-
-**Why it does not choose for you**
-
-Picking which series numbers a company's documents has registry consequences only you can decide, so the bootstrap never promotes one for you.
-
-**Calling it twice**
-
-- Idempotent by business rule: a second call creates nothing, fails nothing and reports the state again.
-- INDEPENDENT of the `Idempotency-Key` header: with the header, a repeated key replays the original body — `created` entries included — instead of reporting the current state.
+Creates the default series for each document type that has no active series. No request body.
+- Returns one entry per type: `created`, `existing` or `no_default`.
+- `no_default` is pending: pick from `candidates` with `POST /v1/companies/{company}/series/{series}/default`.
+- Repeat calls change nothing; a repeated `Idempotency-Key` replays the original body.
 
 ### Example Usage
 
@@ -153,7 +141,9 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesCreate
 
-Create a document numbering series. Optional `number_format` sets the numbering mask (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (≥1) starts the counter to continue an existing numbering. The same code may be reused across document types (multi-series), but not within the same document type. Code, mask and purpose can still be changed with `PATCH /v1/companies/{company}/series/{series}` until the first document is issued; after that they are fixed.
+Creates a document numbering series, optionally with `number_format` (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (>=1).
+- The same `code` can repeat across document types, not within one type.
+- Code, mask and purpose can be changed with `PATCH` until the first document is issued.
 
 ### Example Usage: api_key_revoked
 
@@ -182,6 +172,43 @@ $body = new Components\CreateSeriesRequest(
 
 $response = $sdk->series->publicApiV1SeriesCreate(
     company: 'fcd70115-e512-4325-891f-00734d5c8065',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateSeriesRequest(
+    code: '<value>',
+    documentType: Components\CreateSeriesRequestDocumentType::Proforma,
+);
+
+$response = $sdk->series->publicApiV1SeriesCreate(
+    company: 'df170dfb-3043-4591-b471-a4711e3ac206',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -266,6 +293,43 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateSeriesRequest(
+    code: '<value>',
+    documentType: Components\CreateSeriesRequestDocumentType::Proforma,
+);
+
+$response = $sdk->series->publicApiV1SeriesCreate(
+    company: 'fcd70115-e512-4325-891f-00734d5c8065',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="success" -->
@@ -293,6 +357,43 @@ $body = new Components\CreateSeriesRequest(
 
 $response = $sdk->series->publicApiV1SeriesCreate(
     company: 'Block - Cartwright',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateSeriesRequest(
+    code: '<value>',
+    documentType: Components\CreateSeriesRequestDocumentType::Proforma,
+);
+
+$response = $sdk->series->publicApiV1SeriesCreate(
+    company: 'e66a985b-2fa5-4298-92d6-11022667ce58',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -384,7 +485,9 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1SeriesFindByCode
 
-Look up a series by its `code` (JSON body, case-insensitive). A `code` is not unique across document types (multi-series), so pass `document_type` to resolve the exact `(code, document_type)` series. If you omit it the code is matched across all types: a single match is returned, but an ambiguous code returns 422 `document_type_required_for_ambiguous_code` rather than silently picking one. Returns 404 if none exists.
+Looks up a series by `code` (JSON body, case-insensitive); pass `document_type` to resolve the exact series.
+- Without `document_type`, an ambiguous code returns 422 `document_type_required_for_ambiguous_code`.
+- Returns 404 if none exists.
 
 ### Example Usage: api_key_revoked
 
@@ -412,6 +515,41 @@ $body = new Components\FindSeriesByCodeRequest(
 
 $response = $sdk->series->publicApiV1SeriesFindByCode(
     company: '08d06efd-6a64-476b-8ecd-36c5255b3e0d',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindSeriesByCodeRequest(
+    code: '<value>',
+);
+
+$response = $sdk->series->publicApiV1SeriesFindByCode(
+    company: '479f8dd9-5d82-434b-9b98-1438e9520cdf',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -491,6 +629,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindSeriesByCodeRequest(
+    code: '<value>',
+);
+
+$response = $sdk->series->publicApiV1SeriesFindByCode(
+    company: '08d06efd-6a64-476b-8ecd-36c5255b3e0d',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="success" -->
@@ -526,6 +699,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindSeriesByCodeRequest(
+    code: '<value>',
+);
+
+$response = $sdk->series->publicApiV1SeriesFindByCode(
+    company: 'b156c0f2-c98c-4a96-97c8-8d77cabe7e0c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -549,7 +757,9 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesDefault
 
-Return the default numbering series for the given document type (invoice, quote, proforma, delivery_note). Invoice series have a fixed purpose and the default is per purpose: pass `invoice_kind` (`complete` when omitted, `simplified`, `corrective` or `simplified_corrective`) to get the series an invoice of that purpose will be numbered in. Returns 404 when no default is configured (an invoice series of a purpose is created automatically the first time an invoice of that purpose is issued) and 422 `series_invoice_kind_invalid` for an unknown `invoice_kind`.
+Returns the default numbering series for a document type (invoice, quote, proforma, delivery_note).
+- For invoices, pass `invoice_kind` (default `complete`, `simplified`, `corrective`, `simplified_corrective`).
+- Returns 404 if no default exists; 422 `series_invoice_kind_invalid` for an unknown kind.
 
 ### Example Usage
 
@@ -907,7 +1117,10 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesUpdate
 
-Partially update a series: only the fields you send change (`name`, `code`, `counter_reset`, `number_format`, `initial_number`, `invoice_kind`; `year_reset` is the deprecated alias of `counter_reset`). The same fiscal guards as the web app apply, each one as a 422 `business_rule_violation` with its own `subcode` and nothing changed: `code` and `number_format` only while the series has no documents (`series_code_immutable_with_documents`, `series_format_immutable_with_documents`); once AEAT has accepted a record of one of its invoices, `code`, `number_format` and `initial_number` are locked (`series_locked_by_verifactu`); `initial_number` cannot open a gap (`series_initial_number_creates_gap`); `invoice_kind` is fixed with the first invoice (`series_invoice_kind_locked`) and the default series of a purpose cannot change purpose (`series_default_kind_change`). A `code` already used by another series of the same document type returns 422 with `param=code`; `document_type` cannot be changed. Returns 200 with the updated series, and 404 `series_not_found` if it does not belong to your company.
+Partially updates a series; only the fields you send change.
+- Fiscal guards return 422 `business_rule_violation` with a `subcode`, e.g. `series_locked_by_verifactu`.
+- `code` and `number_format` lock once the series has documents; `initial_number` too after AEAT acceptance.
+- `document_type` cannot change; unknown series returns 404 `series_not_found`.
 
 ### Example Usage
 

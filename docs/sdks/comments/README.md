@@ -13,6 +13,45 @@
 
 Add a comment to a task as the member who owns the API key. `body` is Markdown; mentions of members notify them.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksCommentsCreateRequest(
+    company: 'f0da272e-aa37-4ff2-a869-66447bd1a8d3',
+    task: '0907bb0a-84b4-4bf4-a059-f923747be8a3',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AddTaskCommentV1Request(
+        body: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->comments->publicApiV1TasksCommentsCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="missing_api_key" -->
@@ -52,6 +91,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksCommentsCreateRequest(
+    company: 'da390ae2-a91a-41da-b305-37d49d94a36d',
+    task: 'c4ac11dd-ed27-45c6-a080-b792747591ff',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AddTaskCommentV1Request(
+        body: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->comments->publicApiV1TasksCommentsCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="success" -->
@@ -76,6 +154,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksCommentsCreateRequest(
     company: 'Nolan, Ferry and Mosciski',
     task: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AddTaskCommentV1Request(
+        body: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->comments->publicApiV1TasksCommentsCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.create" method="post" path="/companies/{company}/tasks/{task}/comments" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksCommentsCreateRequest(
+    company: '7fee5cf0-edad-40be-ba4d-a19c6a619bf0',
+    task: '2a4e1dca-ca9a-4ede-b5b6-cd61d9b74d4b',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AddTaskCommentV1Request(
@@ -232,6 +349,46 @@ if ($response->object !== null) {
 
 Edit the body of a comment. Only its author can edit it; comments synchronized from a code forge or imported cannot be edited (422 `task_comment_not_editable`).
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksCommentsUpdateRequest(
+    company: '15c2e1e9-6509-431d-806f-08b02588ab42',
+    task: '58cc1705-2119-4cda-9071-5e7d59ef8f85',
+    comment: '4c4f6f66-2285-4b19-b5a2-d04b458c698e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\EditTaskCommentV1Request(
+        body: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->comments->publicApiV1TasksCommentsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="missing_api_key" -->
@@ -272,6 +429,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksCommentsUpdateRequest(
+    company: 'fc3ab945-c5de-4efb-b014-ac98a3ca9a5c',
+    task: 'c0533173-6169-48a8-b5cd-c4ecd55be97c',
+    comment: 'b9f0e974-0576-4322-9da4-b2815112b914',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\EditTaskCommentV1Request(
+        body: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->comments->publicApiV1TasksCommentsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="success" -->
@@ -297,6 +494,46 @@ $request = new Operations\PublicApiV1TasksCommentsUpdateRequest(
     company: 'Russel, Dickens and Paucek',
     task: '<value>',
     comment: 'The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\EditTaskCommentV1Request(
+        body: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->comments->publicApiV1TasksCommentsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.comments.update" method="put" path="/companies/{company}/tasks/{task}/comments/{comment}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksCommentsUpdateRequest(
+    company: '2872e2bf-ddc1-4874-8b60-ddc1819f045a',
+    task: 'c8c886a4-22c1-4f06-8522-b92bae6a6ab4',
+    comment: '7d82ba39-b7d0-4402-88f1-6b7e3c69fbc6',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\EditTaskCommentV1Request(
