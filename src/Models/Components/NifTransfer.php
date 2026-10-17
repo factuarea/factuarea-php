@@ -63,15 +63,42 @@ class NifTransfer
     public ?string $recipientAccountId;
 
     /**
+     * When the transfer was issued (ISO 8601), or `null` when the instant is not recorded.
+     *
+     * @var ?\DateTime $issuedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('issued_at')]
+    public ?\DateTime $issuedAt;
+
+    /**
+     * When the transfer was accepted (ISO 8601), or `null` while nobody accepted it. It does not say WHICH account accepted it.
+     *
+     * @var ?\DateTime $consumedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('consumed_at')]
+    public ?\DateTime $consumedAt;
+
+    /**
+     * When the issuing account revoked the transfer (ISO 8601), or `null` if it was not revoked.
+     *
+     * @var ?\DateTime $revokedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('revoked_at')]
+    public ?\DateTime $revokedAt;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\NifTransferObject  $object
      * @param  string  $companyId
      * @param  \DateTime  $expiresAt
      * @param  \Factuarea\Sdk\Models\Components\NifTransferStatus  $status
      * @param  ?string  $recipientAccountId
+     * @param  ?\DateTime  $issuedAt
+     * @param  ?\DateTime  $consumedAt
+     * @param  ?\DateTime  $revokedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, NifTransferObject $object, string $companyId, \DateTime $expiresAt, NifTransferStatus $status, ?string $recipientAccountId = null)
+    public function __construct(string $id, NifTransferObject $object, string $companyId, \DateTime $expiresAt, NifTransferStatus $status, ?string $recipientAccountId = null, ?\DateTime $issuedAt = null, ?\DateTime $consumedAt = null, ?\DateTime $revokedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -79,5 +106,8 @@ class NifTransfer
         $this->expiresAt = $expiresAt;
         $this->status = $status;
         $this->recipientAccountId = $recipientAccountId;
+        $this->issuedAt = $issuedAt;
+        $this->consumedAt = $consumedAt;
+        $this->revokedAt = $revokedAt;
     }
 }

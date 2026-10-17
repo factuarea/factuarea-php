@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateAccountWebhookV1Request - Partial update of an account webhook endpoint: only the fields present are applied and the omitted ones keep their value. `url`, `enabled_events` (at least one), `account_relationship` and `api_version` cannot be set to `null`; `description: null` clears the description. The environment is not editable, and the signing secret has its own rotation operation. */
+/** UpdateAccountWebhookV1Request - Partial update of an account webhook endpoint: only the fields present are applied and the omitted ones keep their value. `url`, `enabled_events` (at least one), `account_relationship` and `api_version` cannot be set to `null`; `description: null` clears the description. `status` (`active` or `disabled`) pauses or re-enables the endpoint. The environment is not editable, and the signing secret has its own rotation operation. */
 class UpdateAccountWebhookV1Request
 {
     /**
@@ -51,6 +51,16 @@ class UpdateAccountWebhookV1Request
     public ?string $apiVersion = null;
 
     /**
+     * Optional endpoint status: `active` re-enables the endpoint and `disabled` pauses it; omit it to leave the status unchanged. Cannot be `null`. Re-enabling an endpoint that the engine disabled because its creator lost the capability makes the caller its new creator.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateAccountWebhookV1RequestStatus $status
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateAccountWebhookV1RequestStatus|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateAccountWebhookV1RequestStatus $status = null;
+
+    /**
      * New free text (up to 255 characters); `null` clears it.
      *
      * @var ?string $description
@@ -64,15 +74,17 @@ class UpdateAccountWebhookV1Request
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateAccountWebhookV1RequestEnabledEvent>  $enabledEvents
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateAccountWebhookV1RequestAccountRelationship  $accountRelationship
      * @param  ?string  $apiVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateAccountWebhookV1RequestStatus  $status
      * @param  ?string  $description
      * @phpstan-pure
      */
-    public function __construct(?string $url = null, ?array $enabledEvents = null, ?UpdateAccountWebhookV1RequestAccountRelationship $accountRelationship = null, ?string $apiVersion = null, ?string $description = null)
+    public function __construct(?string $url = null, ?array $enabledEvents = null, ?UpdateAccountWebhookV1RequestAccountRelationship $accountRelationship = null, ?string $apiVersion = null, ?UpdateAccountWebhookV1RequestStatus $status = null, ?string $description = null)
     {
         $this->url = $url;
         $this->enabledEvents = $enabledEvents;
         $this->accountRelationship = $accountRelationship;
         $this->apiVersion = $apiVersion;
+        $this->status = $status;
         $this->description = $description;
     }
 }

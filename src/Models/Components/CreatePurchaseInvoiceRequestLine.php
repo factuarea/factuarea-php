@@ -188,6 +188,14 @@ class CreatePurchaseInvoiceRequestLine
     public ?string $configurationUuid = null;
 
     /**
+     *
+     * @var ?float $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $countedQuantity = null;
+
+    /**
      * $options
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOption> $options
@@ -260,6 +268,7 @@ class CreatePurchaseInvoiceRequestLine
      * @param  ?\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestPriceSource  $priceSource
      * @param  ?int  $sourceLineIndex
      * @param  ?string  $configurationUuid
+     * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequestOption>  $options
      * @param  ?string  $configurationSignature
      * @param  ?string  $configurationName
@@ -268,7 +277,7 @@ class CreatePurchaseInvoiceRequestLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(float $quantity, float $taxRate, ?CreatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?CreatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?CreatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, float $taxRate, ?CreatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?CreatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?CreatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->taxRate = $taxRate;
@@ -291,6 +300,7 @@ class CreatePurchaseInvoiceRequestLine
         $this->priceSource = $priceSource;
         $this->sourceLineIndex = $sourceLineIndex;
         $this->configurationUuid = $configurationUuid;
+        $this->countedQuantity = $countedQuantity;
         $this->options = $options;
         $this->configurationSignature = $configurationSignature;
         $this->configurationName = $configurationName;

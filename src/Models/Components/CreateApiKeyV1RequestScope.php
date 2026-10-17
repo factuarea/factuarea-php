@@ -39,6 +39,10 @@ enum CreateApiKeyV1RequestScope: string
     case DeliveryNotesDelete = 'delivery_notes:delete';
     case DeliveryNotesTransition = 'delivery_notes:transition';
     case DeliveryNotesGdprForget = 'delivery_notes:gdpr_forget';
+    case TransportDocumentsRead = 'transport_documents:read';
+    case TransportDocumentsWrite = 'transport_documents:write';
+    case TransportDocumentsDelete = 'transport_documents:delete';
+    case TransportDocumentsTransition = 'transport_documents:transition';
     case PurchaseInvoicesRead = 'purchase_invoices:read';
     case PurchaseInvoicesWrite = 'purchase_invoices:write';
     case PurchaseInvoicesDelete = 'purchase_invoices:delete';

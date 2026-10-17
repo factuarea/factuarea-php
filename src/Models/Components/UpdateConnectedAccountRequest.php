@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateConnectedAccountRequest - Update a connected Stripe account (multi-store). All fields are optional with merge semantics (an omitted field is left unchanged): `name`, `series_id` (auto-invoicing series UUID; `null` clears it back to the company default), `simplified_threshold_cents` (0-300000), `autoinvoicing_enabled`, `require_nif`, `refunds_enabled` and `subscription_autoinvoicing_enabled`. */
+/** UpdateConnectedAccountRequest - Update a connected Stripe account (multi-store). All fields are optional with merge semantics (an omitted field is left unchanged): `name`, `series_id` (auto-invoicing series UUID; `null` clears it back to the company default), `simplified_threshold_cents` (0-300000), `autoinvoicing_enabled`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled` and `invoice_note` (up to 500 characters, written in the notes of the auto-created invoices; `null` clears it). */
 class UpdateConnectedAccountRequest
 {
     /**
@@ -69,6 +69,22 @@ class UpdateConnectedAccountRequest
     public ?string $seriesId = null;
 
     /**
+     *
+     * @var ?string $defaultLineConcept
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('default_line_concept')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $defaultLineConcept = null;
+
+    /**
+     *
+     * @var ?string $invoiceNote
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_note')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $invoiceNote = null;
+
+    /**
      * @param  ?string  $name
      * @param  ?int  $simplifiedThresholdCents
      * @param  ?bool  $autoinvoicingEnabled
@@ -76,9 +92,11 @@ class UpdateConnectedAccountRequest
      * @param  ?bool  $refundsEnabled
      * @param  ?bool  $subscriptionAutoinvoicingEnabled
      * @param  ?string  $seriesId
+     * @param  ?string  $defaultLineConcept
+     * @param  ?string  $invoiceNote
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?int $simplifiedThresholdCents = null, ?bool $autoinvoicingEnabled = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null)
+    public function __construct(?string $name = null, ?int $simplifiedThresholdCents = null, ?bool $autoinvoicingEnabled = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null)
     {
         $this->name = $name;
         $this->simplifiedThresholdCents = $simplifiedThresholdCents;
@@ -87,5 +105,7 @@ class UpdateConnectedAccountRequest
         $this->refundsEnabled = $refundsEnabled;
         $this->subscriptionAutoinvoicingEnabled = $subscriptionAutoinvoicingEnabled;
         $this->seriesId = $seriesId;
+        $this->defaultLineConcept = $defaultLineConcept;
+        $this->invoiceNote = $invoiceNote;
     }
 }

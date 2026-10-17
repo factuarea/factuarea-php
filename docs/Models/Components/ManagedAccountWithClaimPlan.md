@@ -9,4 +9,5 @@ Current plan of the managed account. `enterprise` is only assigned by Factuarea 
 | ------------- | ------------- |
 | `Emprendedor` | emprendedor   |
 | `Empresario`  | empresario    |
+| `Integral`    | integral      |
 | `Enterprise`  | enterprise    |

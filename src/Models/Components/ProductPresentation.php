@@ -49,11 +49,13 @@ class ProductPresentation
     public ProductPresentationMode $mode;
 
     /**
+     * UN/ECE code of the commercial unit of the presentation. The nine measure units can also be a base unit; the thirteen count and packaging units (`H87` piece, `XPK` pack, `XBX` box, …) are valid only here and in supplier offers. It must be expressible over the base unit of the product: a packaging unit needs a declared equivalence (`conversion_factor` or `nominal_base_quantity`), a measure unit must belong to the same family as the base; otherwise 422 `unit_not_expressible`.
      *
-     * @var string $unit
+     * @var \Factuarea\Sdk\Models\Components\ProductPresentationUnit $unit
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit')]
-    public string $unit;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductPresentationUnit')]
+    public ProductPresentationUnit $unit;
 
     /**
      * Technical specifications OWN to this presentation (informational, not selectable). Empty object `{}` when there are none. The effective sheet combines product < variant < presentation and is composed by the aggregate.
@@ -101,21 +103,31 @@ class ProductPresentation
     public ?string $commercialPriceOverride;
 
     /**
+     * Own gross transport weight in kg per COMMERCIAL unit (decimal string, up to 4 decimals, greater than 0), packaging included; it overrides any derivation from the product or variant weight. `null` when the presentation declares none. Rejected with 422 `gross_weight_not_allowed` on `variable_measure` presentations.
+     *
+     * @var ?string $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $grossWeightKg = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ProductPresentationObject  $object
      * @param  string  $productId
      * @param  string  $name
      * @param  \Factuarea\Sdk\Models\Components\ProductPresentationMode  $mode
-     * @param  string  $unit
+     * @param  \Factuarea\Sdk\Models\Components\ProductPresentationUnit  $unit
      * @param  array<string, mixed>  $specifications
      * @param  bool  $active
      * @param  ?string  $conversionFactor
      * @param  ?string  $nominalBaseQuantity
      * @param  ?string  $barcode
      * @param  ?string  $commercialPriceOverride
+     * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductPresentationObject $object, string $productId, string $name, ProductPresentationMode $mode, string $unit, array $specifications, bool $active, ?string $conversionFactor = null, ?string $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null)
+    public function __construct(string $id, ProductPresentationObject $object, string $productId, string $name, ProductPresentationMode $mode, ProductPresentationUnit $unit, array $specifications, bool $active, ?string $conversionFactor = null, ?string $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null, ?string $grossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -129,5 +141,6 @@ class ProductPresentation
         $this->nominalBaseQuantity = $nominalBaseQuantity;
         $this->barcode = $barcode;
         $this->commercialPriceOverride = $commercialPriceOverride;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

@@ -85,6 +85,21 @@ class UpdateProductPresentationRequest
     public ?array $specifications = null;
 
     /**
+     * Own gross transport weight in kilograms PER COMMERCIAL UNIT,
+     *
+     * packaging included: up to four decimal places, greater than zero.
+     * Only for `fixed` presentations, where it replaces the weight
+     * derived from `conversion_factor`. Omit it to keep the current
+     * value; send `null` to clear it. Rejected with 422
+     * `gross_weight_not_allowed` for `variable_measure` presentations.
+     *
+     * @var ?float $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $grossWeightKg = null;
+
+    /**
      * @param  string  $name
      * @param  \Factuarea\Sdk\Models\Components\UpdateProductPresentationRequestMode  $mode
      * @param  \Factuarea\Sdk\Models\Components\UpdateProductPresentationRequestUnit  $unit
@@ -94,9 +109,10 @@ class UpdateProductPresentationRequest
      * @param  ?string  $barcode
      * @param  ?string  $commercialPriceOverride
      * @param  ?array<string, mixed>  $specifications
+     * @param  ?float  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $name, UpdateProductPresentationRequestMode $mode, UpdateProductPresentationRequestUnit $unit, ?bool $active = null, ?float $conversionFactor = null, ?float $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null, ?array $specifications = null)
+    public function __construct(string $name, UpdateProductPresentationRequestMode $mode, UpdateProductPresentationRequestUnit $unit, ?bool $active = null, ?float $conversionFactor = null, ?float $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null, ?array $specifications = null, ?float $grossWeightKg = null)
     {
         $this->name = $name;
         $this->mode = $mode;
@@ -107,5 +123,6 @@ class UpdateProductPresentationRequest
         $this->barcode = $barcode;
         $this->commercialPriceOverride = $commercialPriceOverride;
         $this->specifications = $specifications;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

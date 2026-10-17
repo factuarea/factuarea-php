@@ -12,6 +12,8 @@ namespace Factuarea\Sdk\Models\Components;
 enum SetAccountMemberModuleAccessV1RequestRestriction: string
 {
     case Access = 'access';
+    case Create = 'create';
+    case Edit = 'edit';
     case Delete = 'delete';
     case Send = 'send';
     case Export = 'export';

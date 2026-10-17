@@ -4,16 +4,48 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
-## [0.7.0] — 2026-10-05
 
-Regenerated from the **final axis contract**, which carries every surface of
-`0.6.0` (tasks and projects, document scanner, notifications, users, agenda,
-unattended checkout, VeriFactu representation, series update, contact imports)
-expressed on the new axes: **613 operations** in **494 paths** (up from 571 in
-461): **+53 / −11**. The default `Factuarea-Version` is unchanged
+## [0.8.0] — 2026-10-17
+
+The SDK moves to the **axis contract** of the public API, on top of the
+published `0.7.0` (which still spoke the flat contract of production). The spec
+now declares **664 operations** over **534 paths** (up from 612 over 494):
+**+57 / −5**. 652 are generated; the 12 seat offer redemption operations are
+still not (see *Known gaps*). The default `Factuarea-Version` is unchanged
 (`FactuareaVersionHook::DEFAULT_VERSION` stays `2026-10-01`). In `0.x` a breaking
-change travels in a `minor`, so this release is `0.7.0`; the section below is the
-full breaking window, measured against `0.6.0`.
+change travels in a `minor`, so this release is `0.8.0`.
+
+What changes for a caller of `0.7.0`:
+
+- **Company resources live under `/v1/companies/{company}/…`** and every company
+  method takes the company `id` (UUID v7). This includes everything `0.7.0`
+  added on flat URLs: the DeCA transport documents, the Stripe charge rules and
+  non-invoiced charges, and the employee batches.
+- **Account resources live under `/v1/accounts/{account}/…`**: members and their
+  grants, invitations, tax ID transfers, owner transfer, webhooks, request logs,
+  provisioning usage and the five API-key operations (which leave the company
+  axis), plus the new managed accounts.
+- **Contacts replace clients and suppliers**: one tax ID is one contact with
+  accumulable `customer` / `supplier` roles, under
+  `/v1/companies/{company}/contacts`.
+- **`X-Active-Profile` is retired**: the `$xActiveProfile` parameter is gone from
+  every signature.
+- **Document amounts are decimal strings** and partial updates use `PATCH`.
+- **The `oAuth2` security scheme is no longer declared** on the operations
+  (the REST API accepts API keys only; the flow authorizes the MCP server):
+  `Components\Security::$oAuth2` and the `Hooks\OAuth2Scope` enum are gone.
+  `bearerAuth` and `apiKeyAuth` are unchanged.
+- The hand-written layer (`src/Custom/`) and its tests are untouched.
+
+The section below is the full breaking window, as measured against `0.6.0`; the
+published `0.7.0` entry that follows it is kept as it was released.
+
+### Known gaps
+
+- The seat offer redemption operations (`/employee-seat-offer-redemptions` and
+  `/gestoria-seat-offer-redemptions`, 6 each) are still not generated: their
+  offer schema uses the JSON Schema `not` keyword, which the generator does not
+  support. Call them over HTTP until the contract or an overlay removes it.
 
 ### Changed — breaking (since 0.6.0)
 
@@ -186,6 +218,110 @@ name stops resolving. Properties and wire format do not change.
   `Members::publicApiV1AccountMembersShow()` and the member grants
   (`Members->grants`: `list`, `show`, `update`, `delete`), plus
   `Companies::publicApiV1CompaniesStats()`.
+
+## [0.7.0] — 2026-10-14
+
+Regenerated from the public OpenAPI spec that adds the transport control
+document (DeCA), Stripe charge rules, employee batches and seat offer
+redemptions: **+41 operations, −0 operations** in the spec (612 operations over
+494 paths, up from 571 over 461). No operation was removed. 29 of the new
+operations are generated; the 12 seat offer redemption operations are not (see
+*Known gaps*). Some generated classes gain required fields or are renamed (see
+*Changed — breaking*). `Factuarea-Version` stays at `2026-10-01`
+(`FactuareaVersionHook::DEFAULT_VERSION` is unchanged).
+
+### Added
+
+**Operations** (29 generated):
+
+- `$sdk->transportDocuments` (new `TransportDocuments` accessor, 17 operations)
+  for the electronic control document of Spanish public road freight (DeCA):
+  `publicApiV1TransportDocumentsIndex()` (cursor list with `status`,
+  `transport_date[gte|lte]`, `company_role`, `carrier_tax_id`,
+  `delivery_note_id`, `q` and `sort`), `Statuses()`, `Show()`, `Create()`
+  (`CreateTransportDocumentRequest`; only `company_role` is required, and
+  `delivery_note_ids` pre-fills one shipment per delivery note), `Update()` and
+  `Delete()` (drafts only), `Issue()`, `Modify()`
+  (`ModifyTransportDocumentRequest`, with `reason` and `data_origin`), `Close()`,
+  `Reopen()`, `Cancel()`, `Supersede()`, `Send()`, `Evidence()`, and the
+  `Pdf()`, `Qr()` and `IssuanceProof()` downloads. Issuing, modifying,
+  cancelling, superseding and sending are irreversible: send an
+  `Idempotency-Key`. Scopes `transport_documents:read|write|transition|delete`,
+  and `pdfs:read` for the PDF.
+- `$sdk->stripeAutoinvoicing->accounts->chargeRules` (new `ChargeRules`
+  accessor, 5 operations): `publicApiV1StripeAutoinvoicingAccountsChargeRulesList()`,
+  `Create()`, `Update()`, `Delete()` and `Reorder()` manage the charge treatment
+  rules of a connected account: the first matching rule decides how a charge is
+  treated, for example excluding it from invoicing.
+- `$sdk->stripeAutoinvoicing->accounts->nonInvoicedCharges->publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList()`
+  lists the charges a treatment rule excluded from invoicing, with
+  `refunded_amount`, `refunded_at` and `net_amount`.
+- `$sdk->employeeBatches` (new `EmployeeBatches` accessor, 6 operations):
+  `publicApiV1EmployeeBatchesPrepare()`, `List()`, `Show()`, `RefreshQuote()`,
+  `Confirm()` and `Cancel()` provision 1 to 100 employees, new or inactive, in
+  one quoted purchase of their seats. Preparing and refreshing never charge;
+  confirm the reviewed `quote_version` with a stable `Idempotency-Key`.
+
+**Models and fields**:
+
+- **DeCA**: `TransportDocument` with its parties, shipments, goods, versions
+  (`TransportDocumentVersion`, with the `sha256` of each PDF) and changes, the
+  issuance evidence (`TransportDocumentEvidence`) and the request of each step.
+  Series accept the `transport_document` document type, and
+  `PublicApiV1SeriesStatsData` reports `transport_document`. The ten
+  `transport_document.*` events have their payloads and are test event types
+  (`SendTestEventRequestType`).
+- **Gross transport weight**: products, variants and presentations accept and
+  publish `gross_weight_kg`; delivery note lines publish their frozen weight and
+  the delivery note `total_gross_weight_kg` and `lines_without_weight_count`.
+- **Contact imports**: `BusinessContactImport` gains `updated_count`,
+  `warnings_count`, `skip_reasons`, `first_diagnostics` and
+  `outcomes_truncated`, and `BusinessContactImportPreview` gains `skip`,
+  `updated_count`, `warnings_count`, `skip_reasons` and `outcome_kind`.
+- **Taxes**: `Tax.ownership` tells the company's own taxes from the read-only
+  Factuarea catalog; the tax list filters by `ownership`.
+- **Invoices and documents**: `Invoice` publishes `origin`; quotes and pro-formas
+  publish `operation_regime`; stores and Stripe accounts accept an
+  `invoice_note`; the quarterly dossier accepts `include_non_invoiced_charges`.
+
+### Changed — breaking
+
+No operation disappears, but some generated classes follow the contract:
+
+- New required constructor arguments, so build these classes with named
+  arguments: `AutomationUsage` (`activeRules`), `BusinessContactImport`,
+  `BusinessContactImportError` (`row`), `BusinessContactImportPreview`
+  (`skip`, `skipReasons`), `ConnectedAccount` (`connectionMethod`,
+  `authorizationStatus`), `Invoice` and `InvoiceWithCheckoutBlocks` (`origin`),
+  `Proforma` and `Quote` (`operationRegime`), `ProjectTasksImport`
+  (`warningsTruncated`, `warningsTotal`), `Tax` (`ownership`), `UsedBy`
+  (`supplierProfiles`, `recurringInvoices`, `companyTaxDefaults`) and
+  `PublicApiV1SeriesStatsData` (`transportDocument`).
+- `BusinessContactImport::$startedAt` and `$finishedAt` are `?\DateTime`
+  instead of `?string`, and `$object` and `$entityType` are enumerations
+  (`BusinessContactImportObject`, `BusinessContactImportEntityType`).
+  `BusinessContactImportError::$code` and `$message` are no longer nullable.
+- Renamed classes: `Components\Origin` is now
+  `Components\EventDataPaymentReversedOrigin` (`Reversal::$origin` changes type
+  accordingly) and `Components\Outcome` is
+  `Components\BusinessContactImportOutcome` (`BusinessContactImport::$outcomes`).
+- `Components\Security` loses the duplicated `http` scheme, which the published
+  spec no longer declares. Authenticate with `bearerAuth`, `apiKeyAuth` or
+  `oAuth2` as before.
+- `Event::$data` and `WebhookDelivery::$payload` accept the new
+  `transport_document.*` payloads.
+
+### Known gaps
+
+- The seat offer redemption operations (`/employee-seat-offer-redemptions` and
+  `/gestoria-seat-offer-redemptions`, 6 each) are not generated: their offer
+  schema uses the JSON Schema `not` keyword, which the generator does not
+  support. Call them over HTTP until the contract or an overlay removes it.
+
+### Notes
+
+- The hand-written layer (`FactuareaClient`, `PageIterator`, `IdempotencyHook`,
+  `FactuareaVersionHook`, `WebhookVerifier`) and its tests are unchanged.
 
 ## [0.6.0] — 2026-10-05
 

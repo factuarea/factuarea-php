@@ -63,6 +63,30 @@ class NifTransferWithSecret
     public ?string $recipientAccountId;
 
     /**
+     * When the transfer was issued (ISO 8601), or `null` when the instant is not recorded.
+     *
+     * @var ?\DateTime $issuedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('issued_at')]
+    public ?\DateTime $issuedAt;
+
+    /**
+     * When the transfer was accepted (ISO 8601), or `null` while nobody accepted it. It does not say WHICH account accepted it.
+     *
+     * @var ?\DateTime $consumedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('consumed_at')]
+    public ?\DateTime $consumedAt;
+
+    /**
+     * When the issuing account revoked the transfer (ISO 8601), or `null` if it was not revoked.
+     *
+     * @var ?\DateTime $revokedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('revoked_at')]
+    public ?\DateTime $revokedAt;
+
+    /**
      * The plaintext secret, returned ONCE and never again. Treat it as a credential: anyone holding it can take the NIF (or only the recipient account, when one is set). `null` only in an idempotent replay of the issuance, because the secret is never stored.
      *
      * @var ?string $secret
@@ -77,10 +101,13 @@ class NifTransferWithSecret
      * @param  \DateTime  $expiresAt
      * @param  \Factuarea\Sdk\Models\Components\NifTransferWithSecretStatus  $status
      * @param  ?string  $recipientAccountId
+     * @param  ?\DateTime  $issuedAt
+     * @param  ?\DateTime  $consumedAt
+     * @param  ?\DateTime  $revokedAt
      * @param  ?string  $secret
      * @phpstan-pure
      */
-    public function __construct(string $id, NifTransferWithSecretObject $object, string $companyId, \DateTime $expiresAt, NifTransferWithSecretStatus $status, ?string $recipientAccountId = null, ?string $secret = null)
+    public function __construct(string $id, NifTransferWithSecretObject $object, string $companyId, \DateTime $expiresAt, NifTransferWithSecretStatus $status, ?string $recipientAccountId = null, ?\DateTime $issuedAt = null, ?\DateTime $consumedAt = null, ?\DateTime $revokedAt = null, ?string $secret = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -88,6 +115,9 @@ class NifTransferWithSecret
         $this->expiresAt = $expiresAt;
         $this->status = $status;
         $this->recipientAccountId = $recipientAccountId;
+        $this->issuedAt = $issuedAt;
+        $this->consumedAt = $consumedAt;
+        $this->revokedAt = $revokedAt;
         $this->secret = $secret;
     }
 }

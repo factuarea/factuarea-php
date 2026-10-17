@@ -28,6 +28,13 @@ class ManagedAccountsByPlan
 
     /**
      *
+     * @var int $integral
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('integral')]
+    public int $integral;
+
+    /**
+     *
      * @var int $enterprise
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('enterprise')]
@@ -46,14 +53,16 @@ class ManagedAccountsByPlan
     /**
      * @param  int  $emprendedor
      * @param  int  $empresario
+     * @param  int  $integral
      * @param  int  $enterprise
      * @param  ?array<string, int>  $additionalProperties
      * @phpstan-pure
      */
-    public function __construct(int $emprendedor, int $empresario, int $enterprise, ?array $additionalProperties = null)
+    public function __construct(int $emprendedor, int $empresario, int $integral, int $enterprise, ?array $additionalProperties = null)
     {
         $this->emprendedor = $emprendedor;
         $this->empresario = $empresario;
+        $this->integral = $integral;
         $this->enterprise = $enterprise;
         $this->additionalProperties = $additionalProperties;
     }

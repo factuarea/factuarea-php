@@ -69,6 +69,15 @@ class ConsolidatedWorkforce
     public int $employeeCount;
 
     /**
+     * Level you hold on the tax ID: `view` (read-only) or `operate`. For a credential, the level of its portfolio.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ConsolidatedWorkforceAccessLevel $accessLevel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('access_level')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ConsolidatedWorkforceAccessLevel')]
+    public ConsolidatedWorkforceAccessLevel $accessLevel;
+
+    /**
      * Status of the current period close: `closed`, `reopened`, or `null` when the company has no close for it.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CurrentPeriodStatus $currentPeriodStatus
@@ -94,6 +103,24 @@ class ConsolidatedWorkforce
     public ?int $lastClosedMonth;
 
     /**
+     * Account the tax ID belongs to: `{id, name}` (your own account for a tax ID of your account), or `null` when the tax ID has no account.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ConsolidatedWorkforceAccount $account
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('account')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ConsolidatedWorkforceAccount|null')]
+    public ?ConsolidatedWorkforceAccount $account;
+
+    /**
+     * How the tax ID reaches you: `granted` (access granted to you), `provisioned` (a managed account your account provisioned) or `null` (a tax ID of your own account).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\RelationOrigin $relationOrigin
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('relation_origin')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RelationOrigin|null')]
+    public ?RelationOrigin $relationOrigin;
+
+    /**
      * @param  string  $id
      * @param  string  $name
      * @param  string  $taxId
@@ -101,12 +128,15 @@ class ConsolidatedWorkforce
      * @param  int  $totalBalanceMinutes
      * @param  int  $totalOvertimeMinutes
      * @param  int  $employeeCount
+     * @param  \Factuarea\Sdk\Models\Components\ConsolidatedWorkforceAccessLevel  $accessLevel
      * @param  ?\Factuarea\Sdk\Models\Components\CurrentPeriodStatus  $currentPeriodStatus
      * @param  ?int  $lastClosedYear
      * @param  ?int  $lastClosedMonth
+     * @param  ?\Factuarea\Sdk\Models\Components\ConsolidatedWorkforceAccount  $account
+     * @param  ?\Factuarea\Sdk\Models\Components\RelationOrigin  $relationOrigin
      * @phpstan-pure
      */
-    public function __construct(string $id, string $name, string $taxId, bool $currentPeriodClosed, int $totalBalanceMinutes, int $totalOvertimeMinutes, int $employeeCount, ?CurrentPeriodStatus $currentPeriodStatus = null, ?int $lastClosedYear = null, ?int $lastClosedMonth = null)
+    public function __construct(string $id, string $name, string $taxId, bool $currentPeriodClosed, int $totalBalanceMinutes, int $totalOvertimeMinutes, int $employeeCount, ConsolidatedWorkforceAccessLevel $accessLevel, ?CurrentPeriodStatus $currentPeriodStatus = null, ?int $lastClosedYear = null, ?int $lastClosedMonth = null, ?ConsolidatedWorkforceAccount $account = null, ?RelationOrigin $relationOrigin = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -115,8 +145,11 @@ class ConsolidatedWorkforce
         $this->totalBalanceMinutes = $totalBalanceMinutes;
         $this->totalOvertimeMinutes = $totalOvertimeMinutes;
         $this->employeeCount = $employeeCount;
+        $this->accessLevel = $accessLevel;
         $this->currentPeriodStatus = $currentPeriodStatus;
         $this->lastClosedYear = $lastClosedYear;
         $this->lastClosedMonth = $lastClosedMonth;
+        $this->account = $account;
+        $this->relationOrigin = $relationOrigin;
     }
 }

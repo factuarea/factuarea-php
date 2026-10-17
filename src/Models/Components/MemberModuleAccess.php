@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** MemberModuleAccess - The module access level of an account member in one tax ID. `restrictions` is a DENY list: it states what has been WITHDRAWN, not what the person can do, so an empty object means no restriction at all and never no access. */
+/** MemberModuleAccess - The module access level of an account member in one tax ID. `restrictions` is a DENY list: it states what has been WITHDRAWN, not what the person can do, so an empty object means no restriction at all and never no access. `grants` lists the administrator-only sections that were GRANTED on top. */
 class MemberModuleAccess
 {
     /**
@@ -47,17 +47,28 @@ class MemberModuleAccess
     public array $restrictions;
 
     /**
+     * Administrator-only sections GRANTED to the member in this tax ID, on top of the User group. Never contains an Administrator key (user management, plan and subscription, API and developers, digital certificate). Empty when nothing was granted, and always empty for an `owner` or `admin`, who hold every permission of their plan. The capabilities inside a granted section are still governed by `restrictions`.
+     *
+     * @var array<string> $grants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('grants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $grants;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\MemberModuleAccessObject  $object
      * @param  string  $memberId
      * @param  string  $companyId
      * @param  array<string, array<\Factuarea\Sdk\Models\Components\MemberModuleAccessRestriction>>  $restrictions
+     * @param  array<string>  $grants
      * @phpstan-pure
      */
-    public function __construct(MemberModuleAccessObject $object, string $memberId, string $companyId, array $restrictions)
+    public function __construct(MemberModuleAccessObject $object, string $memberId, string $companyId, array $restrictions, array $grants)
     {
         $this->object = $object;
         $this->memberId = $memberId;
         $this->companyId = $companyId;
         $this->restrictions = $restrictions;
+        $this->grants = $grants;
     }
 }

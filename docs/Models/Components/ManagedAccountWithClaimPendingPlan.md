@@ -9,3 +9,4 @@ Plan requested by a downgrade that takes effect at the end of the current period
 | ------------- | ------------- |
 | `Emprendedor` | emprendedor   |
 | `Empresario`  | empresario    |
+| `Integral`    | integral      |

@@ -21,12 +21,12 @@ class PublicApiV1ManagedAccountsPlanPreviewRequest
     public string $account;
 
     /**
-     * Requested plan: `emprendedor` or `empresario` (`enterprise` returns 422 `managed_account_plan_not_self_serve`).
+     * Requested plan: `emprendedor`, `empresario` or `integral` (`enterprise` returns 422 `managed_account_plan_not_self_serve`).
      *
-     * @var \Factuarea\Sdk\Models\Operations\Plan $plan
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsPlanPreviewPlan $plan
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=plan')]
-    public Plan $plan;
+    public PublicApiV1ManagedAccountsPlanPreviewPlan $plan;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -38,11 +38,11 @@ class PublicApiV1ManagedAccountsPlanPreviewRequest
 
     /**
      * @param  string  $account
-     * @param  \Factuarea\Sdk\Models\Operations\Plan  $plan
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsPlanPreviewPlan  $plan
      * @param  ?LocalDate  $factuareaVersion
      * @phpstan-pure
      */
-    public function __construct(string $account, Plan $plan, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $account, PublicApiV1ManagedAccountsPlanPreviewPlan $plan, ?LocalDate $factuareaVersion = null)
     {
         $this->account = $account;
         $this->plan = $plan;

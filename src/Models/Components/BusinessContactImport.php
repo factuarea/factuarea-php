@@ -120,10 +120,10 @@ class BusinessContactImport
     /**
      * $outcomes
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Outcome> $outcomes
+     * @var array<\Factuarea\Sdk\Models\Components\BusinessContactImportOutcome> $outcomes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('outcomes')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Outcome>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportOutcome>')]
     public array $outcomes;
 
     /**
@@ -192,7 +192,7 @@ class BusinessContactImport
      * @param  int  $unprocessedCount
      * @param  array<string, int>  $skipReasons
      * @param  array<\Factuarea\Sdk\Models\Components\FirstDiagnostic>  $firstDiagnostics
-     * @param  array<\Factuarea\Sdk\Models\Components\Outcome>  $outcomes
+     * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportOutcome>  $outcomes
      * @param  bool  $outcomesTruncated
      * @param  \DateTime  $createdAt
      * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportOutcomeKind  $outcomeKind

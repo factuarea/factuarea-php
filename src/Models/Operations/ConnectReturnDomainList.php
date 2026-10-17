@@ -30,6 +30,15 @@ class ConnectReturnDomainList
     public bool $hasMore;
 
     /**
+     * Additional information about the collection.
+     *
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1AccountConnectReturnDomainsListMeta $meta
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('meta')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1AccountConnectReturnDomainsListMeta')]
+    public PublicApiV1AccountConnectReturnDomainsListMeta $meta;
+
+    /**
      * Opaque cursor for the next page (pass it as `starting_after`), or `null` when `has_more` is `false`.
      *
      * @var ?string $nextCursor
@@ -40,13 +49,15 @@ class ConnectReturnDomainList
     /**
      * @param  array<\Factuarea\Sdk\Models\Components\ConnectReturnDomain>  $data
      * @param  bool  $hasMore
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountConnectReturnDomainsListMeta  $meta
      * @param  ?string  $nextCursor
      * @phpstan-pure
      */
-    public function __construct(array $data, bool $hasMore, ?string $nextCursor = null)
+    public function __construct(array $data, bool $hasMore, PublicApiV1AccountConnectReturnDomainsListMeta $meta, ?string $nextCursor = null)
     {
         $this->data = $data;
         $this->hasMore = $hasMore;
+        $this->meta = $meta;
         $this->nextCursor = $nextCursor;
     }
 }

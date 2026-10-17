@@ -11,7 +11,7 @@
 
 ## publicApiV1AccountMembersGrantsList
 
-List the per-tax-ID grants of one member with the canonical list envelope. The collection is complete (bounded by the tax IDs of the account), so it always comes with `has_more: false` and `next_cursor: null`. Only grants on tax IDs your credential reads are published; an `owner` or `admin` returns an empty list because they reach every tax ID without a grant. Returns 404 `member_not_found` when the member does not exist or belongs to another account.
+List the per-tax-ID grants of one member with the canonical list envelope. The collection is complete (bounded by the tax IDs of the account), so it always comes with `has_more: false` and `next_cursor: null`. Only grants on tax IDs your credential reads are published; an `owner` or `admin` returns an empty list because they reach every tax ID without a grant. Returns 404 `member_not_found` when the member does not exist or belongs to another account. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -28,7 +28,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -69,7 +69,7 @@ if ($response->accountMemberGrantList !== null) {
 
 ## publicApiV1AccountMembersGrantsDelete
 
-Revoke the grant of a member on one tax ID of the account and return 204. Revoking a grant that does not exist changes nothing and returns the same 204. The member stops reaching that tax ID through the web app, the API and MCP, and its API keys are lowered accordingly; no email or notification is sent. Reversible: set the grant again to restore it. Returns 404 `member_not_found` and 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope.
+Revoke the grant of a member on one tax ID of the account and return 204. Revoking a grant that does not exist changes nothing and returns the same 204. The member stops reaching that tax ID through the web app, the API and MCP, and its API keys are lowered accordingly; no email or notification is sent. Reversible: set the grant again to restore it. Returns 404 `member_not_found` and 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -87,7 +87,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -129,7 +129,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1AccountMembersGrantsUpdate
 
-Create or replace the grant of a `member` on one tax ID of the account with the given `level` (`view` or `operate`), and return 200 with the resulting grant. It is a full replacement of a singular sub-resource addressed entirely by its path, hence `PUT`: repeating it with the same level leaves the same state and sends no email or notification. Lowering a grant also lowers the API keys of that member. Returns 404 `member_not_found`, 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope, and 422 `grants_only_for_member` when the member is an `owner` or `admin`.
+Create or replace the grant of a `member` on one tax ID of the account with the given `level` (`view` or `operate`), and return 200 with the resulting grant. It is a full replacement of a singular sub-resource addressed entirely by its path, hence `PUT`: repeating it with the same level leaves the same state and sends no email or notification. Lowering a grant also lowers the API keys of that member. Returns 404 `member_not_found`, 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope, and 422 `grants_only_for_member` when the member is an `owner` or `admin`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage: api_key_expired
 
@@ -147,7 +147,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -187,7 +187,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -227,7 +227,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -267,7 +267,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -307,7 +307,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -347,7 +347,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -392,7 +392,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountMembersGrantsShow
 
-Retrieve the grant of one member on one tax ID of the account (`company_id` and `level`). A member that does not exist or belongs to another account, a tax ID outside the account or outside what your credential reads, and a missing grant (including any tax ID of an `owner` or `admin`, which carry no grants) all return the same 404 `member_not_found`, so the response never tells them apart.
+Retrieve the grant of one member on one tax ID of the account (`company_id` and `level`). A member that does not exist or belongs to another account, a tax ID outside the account or outside what your credential reads, and a missing grant (including any tax ID of an `owner` or `admin`, which carry no grants) all return the same 404 `member_not_found`, so the response never tells them apart. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -409,7 +409,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

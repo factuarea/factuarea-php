@@ -39,7 +39,7 @@ class CompanyCreationStatus
     public ProvisioningStatus $provisioningStatus;
 
     /**
-     * URL to set up the payment method of the account titular. Only present while `awaiting_payment` and for a production credential that reaches the titular company; `null` otherwise.
+     * URL to set up the payment method of the account titular; when it is saved the person returns to the Companies page of the app (`/companies`). Only present while `awaiting_payment` and for a production credential that reaches the titular company; `null` otherwise.
      *
      * @var ?string $paymentSetupUrl
      */

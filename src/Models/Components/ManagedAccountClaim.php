@@ -46,7 +46,7 @@ class ManagedAccountClaim
     public ?string $claimUrl;
 
     /**
-     * Expiry of the voucher (ISO 8601), or `null` when it was emailed to the holder.
+     * Expiry of the voucher (ISO 8601). It is returned also when the link was emailed to the holder (`send_email: true`): the expiry is not a secret. Always set: a reissue always issues a new voucher.
      *
      * @var ?\DateTime $expiresAt
      */

@@ -31,10 +31,10 @@ class PublicApiV1ContactsActivitiesRequest
     /**
      * Only activity in these directions: `sales`, `purchases` or `relationship` (all three when omitted).
      *
-     * @var array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection> $direction
+     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection> $direction
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=direction[]')]
-    public array $direction;
+    public ?array $direction = null;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -55,12 +55,12 @@ class PublicApiV1ContactsActivitiesRequest
     /**
      * @param  string  $company
      * @param  string  $contact
-     * @param  array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection>  $direction
+     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection>  $direction
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesCategory  $category
      * @phpstan-pure
      */
-    public function __construct(string $company, string $contact, array $direction, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsActivitiesCategory $category = null)
+    public function __construct(string $company, string $contact, ?array $direction = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsActivitiesCategory $category = null)
     {
         $this->company = $company;
         $this->contact = $contact;

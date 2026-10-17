@@ -9,7 +9,7 @@
 
 ## publicApiV1UsersMe
 
-Return the member who owns the API key in the company the call acts on. If the key holder is no longer a member of that company or of the company that owns the key, it returns 404 `route_not_found`.
+Return the person who owns the API key in the company the call acts on: a member of that company or a person of another account with `operate` access to it through an account relation. If the key holder is neither, or is no longer a member of the company that owns the key, it returns 404 `route_not_found`.
 
 ### Example Usage
 
@@ -26,7 +26,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -65,7 +65,7 @@ if ($response->object !== null) {
 
 ## publicApiV1UsersList
 
-List the members of your company (the people tasks can be assigned to), ordered by name, with their `id`, name, email, initials and avatar color. `q` filters by name or email. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+List the people tasks can be assigned to in your company, ordered by name, with their `id`, name, email, initials and avatar color: its members plus the people of other accounts who reach the company through an account relation with `operate` access (for example, the accountancy firm that manages it). People with view-only relation access are not listed. `q` filters by name or email. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
 
 ### Example Usage
 
@@ -83,7 +83,7 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

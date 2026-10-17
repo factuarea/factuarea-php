@@ -44,7 +44,7 @@ class StockMovement
     public string $stockAfter;
 
     /**
-     * Why the movement happened. Closed catalog: `invoice_sent`, `invoice_annulled`, `invoice_unsent`, `corrective_created`, `delivery_note_delivered`, `delivery_note_cancelled`, `purchase_invoice_registered`, `purchase_invoice_reverted`, `manual_adjustment`, `initial`.
+     * Why the movement happened. Closed catalog: `invoice_sent`, `invoice_annulled`, `invoice_unsent`, `corrective_created`, `delivery_note_delivered`, `delivery_note_cancelled`, `purchase_invoice_registered`, `purchase_invoice_reverted`, `manual_adjustment`, `initial`, `base_unit_replacement_out`, `base_unit_replacement_in`. The last two are the pair a base unit replacement writes: `_out` empties the old product (in its unit) and `_in` fills the new one (in its unit).
      *
      * @var string $reason
      */
@@ -52,7 +52,7 @@ class StockMovement
     public string $reason;
 
     /**
-     * Kind of document that caused the movement. `manual` for an adjustment with no source document.
+     * Kind of document that caused the movement. `manual` for an adjustment with no source document; `base_unit_replacement` for the transfer of a base unit replacement.
      *
      * @var \Factuarea\Sdk\Models\Components\SourceType $sourceType
      */
@@ -76,7 +76,7 @@ class StockMovement
     public string $baseUnitCode;
 
     /**
-     * Id of the source document, `null` for a manual adjustment or when the document is no longer reachable.
+     * Id of the source document, `null` for a manual adjustment or when the document is no longer reachable. For `base_unit_replacement` it is the id of the OTHER product of the replacement: the new one on the `_out` row and the old one on the `_in` row.
      *
      * @var ?string $sourceId
      */
@@ -84,7 +84,7 @@ class StockMovement
     public ?string $sourceId;
 
     /**
-     * Human-readable number of the source document.
+     * Human-readable number of the source document. For `base_unit_replacement`, the name of the other product.
      *
      * @var ?string $sourceLabel
      */

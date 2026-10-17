@@ -284,6 +284,15 @@ class DeliveryNote
     public ?ReceivedBy $receivedBy;
 
     /**
+     * Number of product lines without a known weight. Services and free-text lines never count.
+     *
+     * @var ?int $linesWithoutWeightCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('lines_without_weight_count')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $linesWithoutWeightCount = null;
+
+    /**
      *
      * @var ?string $notes
      */
@@ -341,6 +350,15 @@ class DeliveryNote
     public ?\DateTime $updatedAt;
 
     /**
+     * Total gross transport weight in kg (decimal string, scale 4): the sum of the lines that have a weight. `null` when no line has one. Partial when `lines_without_weight_count` is above 0.
+     *
+     * @var ?string $totalGrossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $totalGrossWeightKg = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\DeliveryNoteObject  $object
      * @param  string  $number
@@ -375,6 +393,7 @@ class DeliveryNote
      * @param  ?\Factuarea\Sdk\Models\Components\Driver  $driver
      * @param  ?\Factuarea\Sdk\Models\Components\Tracking  $tracking
      * @param  ?\Factuarea\Sdk\Models\Components\ReceivedBy  $receivedBy
+     * @param  ?int  $linesWithoutWeightCount
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?string  $referenceNumber
@@ -382,9 +401,10 @@ class DeliveryNote
      * @param  ?string  $convertedToId
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
+     * @param  ?string  $totalGrossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?int $linesWithoutWeightCount = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $totalGrossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -420,6 +440,7 @@ class DeliveryNote
         $this->driver = $driver;
         $this->tracking = $tracking;
         $this->receivedBy = $receivedBy;
+        $this->linesWithoutWeightCount = $linesWithoutWeightCount;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->referenceNumber = $referenceNumber;
@@ -427,5 +448,6 @@ class DeliveryNote
         $this->convertedToId = $convertedToId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->totalGrossWeightKg = $totalGrossWeightKg;
     }
 }

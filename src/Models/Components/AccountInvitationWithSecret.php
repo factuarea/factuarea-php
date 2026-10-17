@@ -89,6 +89,31 @@ class AccountInvitationWithSecret
     public \DateTime $expiresAt;
 
     /**
+     * Instant (ISO 8601) the invitation was created, or `null` when it is not known.
+     *
+     * @var ?\DateTime $createdAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('created_at')]
+    public ?\DateTime $createdAt;
+
+    /**
+     * Instant (ISO 8601) of the last send: the creation or the last resend. `null` when it is not known.
+     *
+     * @var ?\DateTime $sentAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sent_at')]
+    public ?\DateTime $sentAt;
+
+    /**
+     * The person who created the invitation. `null` when that person no longer belongs to the account.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\AccountInvitationWithSecretInvitedBy $invitedBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invited_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountInvitationWithSecretInvitedBy|null')]
+    public ?AccountInvitationWithSecretInvitedBy $invitedBy;
+
+    /**
      * The plaintext acceptance secret, returned ONCE for a copy-link invitation (`send_email: false`). Treat it as a credential: anyone holding it can accept the invitation. `null` when the invitation is delivered by email and in an idempotent replay.
      *
      * @var ?string $secret
@@ -114,11 +139,14 @@ class AccountInvitationWithSecret
      * @param  bool  $externalAdvisor
      * @param  \Factuarea\Sdk\Models\Components\AccountInvitationWithSecretStatus  $status
      * @param  \DateTime  $expiresAt
+     * @param  ?\DateTime  $createdAt
+     * @param  ?\DateTime  $sentAt
+     * @param  ?\Factuarea\Sdk\Models\Components\AccountInvitationWithSecretInvitedBy  $invitedBy
      * @param  ?string  $secret
      * @param  ?string  $acceptUrl
      * @phpstan-pure
      */
-    public function __construct(string $id, AccountInvitationWithSecretObjectAccountInvitation $object, string $email, AccountInvitationWithSecretRole $role, array $grants, bool $sendEmail, bool $externalAdvisor, AccountInvitationWithSecretStatus $status, \DateTime $expiresAt, ?string $secret = null, ?string $acceptUrl = null)
+    public function __construct(string $id, AccountInvitationWithSecretObjectAccountInvitation $object, string $email, AccountInvitationWithSecretRole $role, array $grants, bool $sendEmail, bool $externalAdvisor, AccountInvitationWithSecretStatus $status, \DateTime $expiresAt, ?\DateTime $createdAt = null, ?\DateTime $sentAt = null, ?AccountInvitationWithSecretInvitedBy $invitedBy = null, ?string $secret = null, ?string $acceptUrl = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -129,6 +157,9 @@ class AccountInvitationWithSecret
         $this->externalAdvisor = $externalAdvisor;
         $this->status = $status;
         $this->expiresAt = $expiresAt;
+        $this->createdAt = $createdAt;
+        $this->sentAt = $sentAt;
+        $this->invitedBy = $invitedBy;
         $this->secret = $secret;
         $this->acceptUrl = $acceptUrl;
     }

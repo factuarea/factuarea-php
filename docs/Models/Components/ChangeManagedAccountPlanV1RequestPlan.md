@@ -1,6 +1,6 @@
 # ChangeManagedAccountPlanV1RequestPlan
 
-Requested plan: `emprendedor` or `empresario`. `enterprise` returns 422 `managed_account_plan_not_self_serve`.
+Requested plan: `emprendedor`, `empresario` or `integral`. `enterprise` returns 422 `managed_account_plan_not_self_serve`.
 
 
 ## Values
@@ -9,4 +9,5 @@ Requested plan: `emprendedor` or `empresario`. `enterprise` returns 422 `managed
 | ------------- | ------------- |
 | `Emprendedor` | emprendedor   |
 | `Empresario`  | empresario    |
+| `Integral`    | integral      |
 | `Enterprise`  | enterprise    |

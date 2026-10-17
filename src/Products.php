@@ -36,6 +36,8 @@ class Products
 
     public StockMovements $stockMovements;
 
+    public BaseUnitReplacement $baseUnitReplacement;
+
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
@@ -50,6 +52,7 @@ class Products
         $this->configurations = new Configurations($this->sdkConfiguration);
         $this->productOptions = new ProductOptions($this->sdkConfiguration);
         $this->stockMovements = new StockMovements($this->sdkConfiguration);
+        $this->baseUnitReplacement = new BaseUnitReplacement($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -194,7 +197,7 @@ class Products
     /**
      * Delete multiple products in bulk
      *
-     * Delete up to 200 products in one request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`); products included in packs are reported in `failures`. Decrements the plan usage counter accordingly.
+     * Delete up to 200 products in one request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`); products included in packs or taking part in a base unit replacement (`product_in_base_unit_replacement`) are reported in `failures`. Decrements the plan usage counter accordingly.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteProductsRequest  $body
      * @param  string  $company
@@ -714,7 +717,7 @@ class Products
     /**
      * Delete a product
      *
-     * Delete a product. Returns 422 if the product is referenced by any document line.
+     * Delete a product. Returns 422 if the product is referenced by any document line, or with subcode `product_in_base_unit_replacement` if it takes part in a base unit replacement (as the replaced or the new product).
      *
      * @param  string  $company
      * @param  string  $product

@@ -77,6 +77,22 @@ class PublicApiV1AccountRequestLogsListRequest
     public ?\DateTime $createdAtLte = null;
 
     /**
+     * Only requests on your own tax IDs (`own`) or on tax IDs of client accounts (`client`).
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\Relationship $relationship
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=relationship')]
+    public ?Relationship $relationship = null;
+
+    /**
+     * Only requests on one company (its public id), which must be within your account's scope.
+     *
+     * @var ?string $company
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=company')]
+    public ?string $company = null;
+
+    /**
      * Cursor for forward pagination: the `next_cursor` of the previous page, an opaque numeric string (not a UUID v7). A malformed cursor returns 400.
      *
      * @var ?string $startingAfter
@@ -109,12 +125,14 @@ class PublicApiV1AccountRequestLogsListRequest
      * @param  ?string  $pathSearch
      * @param  ?\DateTime  $createdAtGte
      * @param  ?\DateTime  $createdAtLte
+     * @param  ?\Factuarea\Sdk\Models\Operations\Relationship  $relationship
+     * @param  ?string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
      * @phpstan-pure
      */
-    public function __construct(string $account, ?array $method = null, ?array $statusRange = null, ?bool $onlyErrors = null, ?string $apiKeyPrefix = null, ?string $pathSearch = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?int $limit = 50)
+    public function __construct(string $account, ?array $method = null, ?array $statusRange = null, ?bool $onlyErrors = null, ?string $apiKeyPrefix = null, ?string $pathSearch = null, ?\DateTime $createdAtGte = null, ?\DateTime $createdAtLte = null, ?Relationship $relationship = null, ?string $company = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?int $limit = 50)
     {
         $this->account = $account;
         $this->method = $method;
@@ -124,6 +142,8 @@ class PublicApiV1AccountRequestLogsListRequest
         $this->pathSearch = $pathSearch;
         $this->createdAtGte = $createdAtGte;
         $this->createdAtLte = $createdAtLte;
+        $this->relationship = $relationship;
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->factuareaVersion = $factuareaVersion;
         $this->limit = $limit;

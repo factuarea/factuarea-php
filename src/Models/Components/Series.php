@@ -42,7 +42,7 @@ class Series
     public string $name;
 
     /**
-     * invoice, quote, proforma, delivery_note, etc.
+     * Document type the series numbers: `invoice`, `quote`, `delivery_note`, `proforma` or `transport_document` (transport control documents, default code `DC`, created on the first issuance).
      *
      * @var string $documentType
      */

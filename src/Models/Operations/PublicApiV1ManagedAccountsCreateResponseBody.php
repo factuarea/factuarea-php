@@ -13,7 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1ManagedAccountsCreateResponseBody
 {
     /**
-     * The response of provisioning a managed account: the fields of `ManagedAccount` PLUS its claim voucher. `claim_token` and `claim_url` are returned ONCE, only for a new live account provisioned with `send_email: false`. They are `null` when the link was emailed to the holder (`send_email: true`), for a test account, when the `external_ref` was already provisioned (200) and in an idempotent replay: the voucher is never stored in the clear, not even in the idempotency cache.
+     * The response of provisioning a managed account: the fields of `ManagedAccount` PLUS its claim voucher. `claim_token` and `claim_url` are returned ONCE, only for a new live account provisioned with `send_email: false`. They are `null` when the link was emailed to the holder (`send_email: true`), for a test account, when the `external_ref` was already provisioned (200) and in an idempotent replay: the voucher is never stored in the clear, not even in the idempotency cache. `claim_expires_at` is not a secret: it is returned also when the link was emailed and in an idempotent replay of that request. `reactivated` tells that the call reactivated a management that had ended before the holder claimed the account.
      *
      * @var \Factuarea\Sdk\Models\Components\ManagedAccountWithClaim $data
      */

@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1AutomationsUsageShowResponseBody
 {
     /**
-     * How many automation runs your company has consumed this period and what its plan allows. Read it to anticipate running out of budget: this API does not pre-check the quota when you activate a rule, so this is the endpoint that tells you where you stand. The figure comes from the same counter the engine applies when admitting a run, so it advances by exactly N after N admitted runs and does NOT change when run history is purged.
+     * Current active automation rules and automation runs consumed this period, with the limits of the plan. Activating a rule checks the active-rule cap; the execution budget is checked only when admitting a run. Read both counters to anticipate reaching either limit. The figure comes from the same counter the engine applies when admitting a run, so it advances by exactly N after N admitted runs and does NOT change when run history is purged.
      *
      * @var \Factuarea\Sdk\Models\Components\AutomationUsage $data
      */

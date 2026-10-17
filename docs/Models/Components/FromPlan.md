@@ -9,4 +9,5 @@ Current plan of the managed account.
 | ------------- | ------------- |
 | `Emprendedor` | emprendedor   |
 | `Empresario`  | empresario    |
+| `Integral`    | integral      |
 | `Enterprise`  | enterprise    |

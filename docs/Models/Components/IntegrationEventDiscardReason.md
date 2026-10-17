@@ -48,3 +48,10 @@ Typed reason why the event was discarded, from a CLOSED catalogue, or `null` whe
 | `OrderStatusUnknown`                            | order_status_unknown                            |
 | `RefundNotSettled`                              | refund_not_settled                              |
 | `ProtectedCustomerDataUnavailable`              | protected_customer_data_unavailable             |
+| `ExcludedByChargeRule`                          | excluded_by_charge_rule                         |
+| `HandledByStripeInvoice`                        | handled_by_stripe_invoice                       |
+| `StripeAuthorizationRequired`                   | stripe_authorization_required                   |
+| `StripeAppUninstalled`                          | stripe_app_uninstalled                          |
+| `RefundOfNonInvoicedCharge`                     | refund_of_non_invoiced_charge                   |
+| `StripeInvoiceWithoutAmount`                    | stripe_invoice_without_amount                   |
+| `DeauthorizationNotApplicable`                  | deauthorization_not_applicable                  |

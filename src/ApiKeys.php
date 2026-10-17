@@ -51,7 +51,7 @@ class ApiKeys
     /**
      * Create an API key
      *
-     * Create a new API key in your account and return its plaintext `secret` exactly once — store it now, it cannot be retrieved later. Requesting a scope above the plan of the scoped tax IDs or outside the catalog returns 422; the credential cap is counted over the ACCOUNT. Without `scoped_company_ids` the new key reaches the same tax IDs as the credential that creates it, and it can never reach more. Pass `environment: test` to mint a sandbox key (`fact_test_`) that only reaches the sandbox company, with no real-world side effects (declaring `scoped_company_ids` with it returns 422); omit it for a live key (`fact_live_`). Creating against another account returns 404 and persists nothing.
+     * Create a new API key in your account and return its plaintext `secret` exactly once — store it now, it cannot be retrieved later. Requesting a scope above the plan of the scoped tax IDs or outside the catalog returns 422; the credential cap is counted over the ACCOUNT. Without `scoped_company_ids` the new key reaches the same tax IDs as the credential that creates it, and it can never reach more. Pass `environment: test` to mint a sandbox key (`fact_test_`) that only reaches the sandbox company, with no real-world side effects (declaring `scoped_company_ids` with it returns 422); omit it for a live key (`fact_live_`). Creating against another account returns 404 and persists nothing. A key never gives, manages or reveals more power than it has itself: a scope the calling key does not cover or an access level above its own returns 403 `insufficient_scope` and persists nothing. The wildcard `*` does not cover `accounts:*` nor the account-administration scopes (`account:owner`, `members:*`, `invitations:*`, `nif_transfers:*`), so the calling key has to list them explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateApiKeyV1Request  $body
      * @param  string  $account
@@ -302,7 +302,7 @@ class ApiKeys
     /**
      * Revoke an API key
      *
-     * Revoke an API key of your account immediately and irreversibly. Subsequent requests authenticated with that key fail with 401. You may revoke the key currently in use — doing so cuts off your own access. Revoking a key that belongs to another account returns 404 `api_key_not_found`.
+     * Revoke an API key of your account immediately and irreversibly. Subsequent requests authenticated with that key fail with 401. You may revoke the key currently in use — doing so cuts off your own access. Revoking a key that belongs to another account returns 404 `api_key_not_found`; revoking one that has scopes the calling key does not cover returns 403 `insufficient_scope` (`*` does not cover `accounts:*` nor the account-administration scopes, so the calling key lists them explicitly).
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysRevokeRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysRevokeResponse
@@ -422,7 +422,7 @@ class ApiKeys
     /**
      * Rotate an API key secret
      *
-     * Rotate the secret of an API key of your account: generate a fresh `prefix` + `secret` and return the new secret in plaintext exactly once. The previous secret keeps authenticating for a 24-hour grace window and stops afterwards, so you can roll the new one out without downtime; rotating again during the grace window replaces the previous secret at once. Irreversible.
+     * Rotate the secret of an API key of your account: generate a fresh `prefix` + `secret` and return the new secret in plaintext exactly once. The previous secret keeps authenticating for a 24-hour grace window and stops afterwards, so you can roll the new one out without downtime; rotating again during the grace window replaces the previous secret at once. Irreversible. Rotating a key that has scopes the calling key does not cover returns 403 `insufficient_scope` and the secret is neither rotated nor revealed (`*` does not cover `accounts:*` nor the account-administration scopes, so the calling key lists them explicitly).
      *
      * @param  string  $account
      * @param  string  $apiKey
@@ -670,7 +670,7 @@ class ApiKeys
     /**
      * Change the tax IDs an API key reaches
      *
-     * Replace the scope of tax IDs of an API key of your account with `scoped_company_ids`, the complete resulting list (not a delta), and return the resulting scope. Use it to add the companies you manage to a key you already deployed. You can only change keys whose current scope is within yours, and the new scope can never exceed yours. Every scope the key already has is re-checked against the plan of ALL the tax IDs of the new scope; a scope one of them does not allow returns 422 and nothing changes. Test keys and browser-published keys cannot change scope.
+     * Replace the scope of tax IDs of an API key of your account with `scoped_company_ids`, the complete resulting list (not a delta), and return the resulting scope. Use it to add the companies you manage to a key you already deployed. You can only change keys whose current scope is within yours, and the new scope can never exceed yours. Every scope the key already has is re-checked against the plan of ALL the tax IDs of the new scope; a scope one of them does not allow returns 422 and nothing changes. Test keys and browser-published keys cannot change scope. A key whose scopes or access level the calling key does not cover returns 403 `insufficient_scope` and nothing changes (`*` does not cover `accounts:*` nor the account-administration scopes, so the calling key lists them explicitly).
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponse
@@ -745,6 +745,134 @@ class ApiKeys
                 $responseData = (string) $httpResponse->getBody();
                 $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Retrieve the daily usage of an API key
+     *
+     * Retrieve the daily usage of a single API key of your account over the last `days` days (7, 30 or 90; 30 by default). `daily` has one item per day, oldest first, with the requests made, how many succeeded (2xx and 3xx), how many failed with a 4xx status other than 429, how many were rate limited (429) and how many failed with a 5xx status; days without requests appear with every counter at 0. `total` sums the period, and `last_used_at` and `last_used_ip` tell when and from where the key was last used (`null` if it never was). It only returns counters: it never exposes quota, tier limits or prices. The key is looked up like in the retrieve operation: a key that does not exist, belongs to another account or reaches a tax ID outside the scope of the calling credential returns 404 `api_key_not_found`, with the same body in the three cases, and so does an account identifier that is not yours. A `days` value other than 7, 30 or 90 returns 422 and any other query parameter returns 400 `parameter_unknown`. Requires the `account:read` scope.
+     *
+     * @param  string  $account
+     * @param  string  $apiKey
+     * @param  ?\Factuarea\Sdk\Models\Operations\Days  $days
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUsageResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1AccountApiKeysUsage(string $account, string $apiKey, ?Operations\Days $days = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1AccountApiKeysUsageResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1AccountApiKeysUsageRequest(
+            account: $account,
+            apiKey: $apiKey,
+            days: $days,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/api-keys/{api_key}/usage', Operations\PublicApiV1AccountApiKeysUsageRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1AccountApiKeysUsageRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.account.api_keys.usage', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUsageResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1AccountApiKeysUsageResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,

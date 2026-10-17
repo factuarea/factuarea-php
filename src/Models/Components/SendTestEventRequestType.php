@@ -68,6 +68,16 @@ enum SendTestEventRequestType: string
     case DeliveryNoteConverted = 'delivery_note.converted';
     case DeliveryNoteEmailSent = 'delivery_note.email_sent';
     case DeliveryNoteEmailFailed = 'delivery_note.email_failed';
+    case TransportDocumentCreated = 'transport_document.created';
+    case TransportDocumentUpdated = 'transport_document.updated';
+    case TransportDocumentIssued = 'transport_document.issued';
+    case TransportDocumentModified = 'transport_document.modified';
+    case TransportDocumentClosed = 'transport_document.closed';
+    case TransportDocumentReopened = 'transport_document.reopened';
+    case TransportDocumentCancelled = 'transport_document.cancelled';
+    case TransportDocumentSuperseded = 'transport_document.superseded';
+    case TransportDocumentEmailSent = 'transport_document.email_sent';
+    case TransportDocumentEmailFailed = 'transport_document.email_failed';
     case PurchaseInvoiceCreated = 'purchase_invoice.created';
     case PurchaseInvoiceUpdated = 'purchase_invoice.updated';
     case PurchaseInvoicePaid = 'purchase_invoice.paid';
@@ -101,6 +111,7 @@ enum SendTestEventRequestType: string
     case ContactSupplierProfileUpdated = 'contact.supplier_profile.updated';
     case ProductCreated = 'product.created';
     case ProductUpdated = 'product.updated';
+    case ProductReplaced = 'product.replaced';
     case PaymentReceived = 'payment.received';
     case PaymentReversed = 'payment.reversed';
     case TaxMetadataChanged = 'tax.metadata_changed';

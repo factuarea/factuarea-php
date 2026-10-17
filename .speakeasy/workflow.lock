@@ -1,4 +1,4 @@
-speakeasyVersion: 1.800.1
+speakeasyVersion: 1.802.0
 sources:
     Factuarea Public API:
         sourceNamespace: factuarea-public-api
@@ -14,7 +14,7 @@ targets:
         sourceRevisionDigest: sha256:2acb7e2e36a4056ac0c5b53ca609cfe3a26f04d85b5a7c391b614cbba4b93e30
         sourceBlobDigest: sha256:0a9f0254adaa1897f3768ff4dca8715ad504c15cbbe042ff48d7f473383fb7d8
         codeSamplesNamespace: factuarea-public-api-php-code-samples
-        codeSamplesRevisionDigest: sha256:73e6fb97861fcadf5ab75ae0807bb55f90b5ea559792809d2750d56498addafd
+        codeSamplesRevisionDigest: sha256:05c23a48923742631a3c5d651568c4f461bde386e2a68231ed54fa86d8ce64ad
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

@@ -1322,7 +1322,7 @@ class Invoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1618,7 +1618,7 @@ class Invoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1979,7 +1979,7 @@ class Invoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2783,7 +2783,7 @@ class Invoices
     /**
      * Mark invoice as paid
      *
-     * Mark an invoice as fully paid. Idempotent: if already paid, returns the invoice unchanged. Returns 422 if the invoice is in a status that cannot transition to `paid`.
+     * Mark an invoice as fully paid. Idempotent: if already paid, returns the invoice unchanged. Returns 422 if the invoice is in a status that cannot transition to `paid`, or if `paid_on` is later than today. A `paid_on` earlier than the issue date is accepted: it records an advance payment.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesMarkPaidRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesMarkPaidResponse
@@ -3028,17 +3028,18 @@ class Invoices
     }
 
     /**
-     * Download payment receipt PDF
+     * Download the receipt PDF of a payment
      *
-     * Streams the PDF receipt of a paid invoice. Returns 422 if the invoice is not in `paid` status.
+     * Streams the PDF receipt of ONE payment of an invoice, partial payments included: every active payment has its own receipt, which shows the invoice as it stood right after that payment (payments up to it, amount collected and amount pending). Without `payment_id` it returns the receipt of the most recent active payment (by payment date, then by registration). Returns 422 when the invoice has no active payments or when the requested payment has been reversed, and 404 when `payment_id` is not a payment of this invoice. The receipt is not an invoice and carries no VERI*FACTU data.
      *
      * @param  string  $company
      * @param  string  $invoice
+     * @param  ?string  $paymentId
      * @param  ?LocalDate  $factuareaVersion
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentReceiptResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesPaymentReceipt(string $company, string $invoice, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1InvoicesPaymentReceiptResponse
+    public function publicApiV1InvoicesPaymentReceipt(string $company, string $invoice, ?string $paymentId = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1InvoicesPaymentReceiptResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -3068,12 +3069,15 @@ class Invoices
         $request = new Operations\PublicApiV1InvoicesPaymentReceiptRequest(
             company: $company,
             invoice: $invoice,
+            paymentId: $paymentId,
             factuareaVersion: $factuareaVersion,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/invoices/{invoice}/payment-receipt', Operations\PublicApiV1InvoicesPaymentReceiptRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1InvoicesPaymentReceiptRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -3083,6 +3087,7 @@ class Invoices
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.invoices.payment_receipt', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -3114,7 +3119,7 @@ class Invoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -3150,7 +3155,7 @@ class Invoices
     /**
      * Register a payment
      *
-     * Register a partial (or full) payment against an invoice. The invoice transitions to `partially_paid` while the cumulative paid amount is below the total, and to `paid` once it reaches it. Returns 422 if the invoice is in a status that does not accept payments.
+     * Register a partial (or full) payment against an invoice. The invoice transitions to `partially_paid` while the cumulative paid amount is below the total, and to `paid` once it reaches it. Returns 422 if the invoice is in a status that does not accept payments, or if `paid_on` is later than today. A `paid_on` earlier than the issue date is accepted: it records an advance payment.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentsCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentsCreateResponse
@@ -5382,7 +5387,7 @@ class Invoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

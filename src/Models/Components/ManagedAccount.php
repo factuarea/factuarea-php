@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ManagedAccount - An account your account provisioned for one of your clients: a SEPARATE account, with its own tax IDs and plan, that your account manages and pays until its holder claims it and takes over. It never carries the claim voucher: only the provisioning and the reissue return it, once. */
+/** ManagedAccount - An account your account provisioned for one of your clients: a SEPARATE account, with its own tax IDs and plan, that your account manages and pays until its holder claims it and takes over. Its pending claim voucher is read in `claim`, without secret or link: those are returned once, by the provisioning and by the reissue. */
 class ManagedAccount
 {
     /**
@@ -158,6 +158,31 @@ class ManagedAccount
     public ?\DateTime $claimedAt;
 
     /**
+     * The PENDING claim voucher of the account, WITHOUT its secret or its link (those are returned once, by the provisioning and by the reissue). `null` when the account is already claimed, is a test account or has no pending voucher.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ManagedAccountClaim1 $claim
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('claim')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ManagedAccountClaim1|null')]
+    public ?ManagedAccountClaim1 $claim;
+
+    /**
+     * When the holder took over the payment of the account (ISO 8601), or `null` while your account still pays it (`paid_by_provider`).
+     *
+     * @var ?\DateTime $paymentAssumedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_assumed_at')]
+    public ?\DateTime $paymentAssumedAt;
+
+    /**
+     * End of the current billing period of the plan (ISO 8601): when a pending downgrade takes effect and the next periodic invoice is issued. `null` when the account is not charged to your account.
+     *
+     * @var ?\DateTime $planRenewsAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('plan_renews_at')]
+    public ?\DateTime $planRenewsAt;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountObject  $object
      * @param  string  $externalRef
@@ -175,9 +200,12 @@ class ManagedAccount
      * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountPendingPlan  $pendingPlan
      * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountLanguage  $language
      * @param  ?\DateTime  $claimedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountClaim1  $claim
+     * @param  ?\DateTime  $paymentAssumedAt
+     * @param  ?\DateTime  $planRenewsAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ManagedAccountObject $object, string $externalRef, ManagedAccountStatus $status, ManagedAccountEnvironment $environment, ManagedAccountPlan $plan, string $billingInterval, ManagedAccountAccessLevel $accessLevel, string $displayName, array $companies, bool $claimed, ManagedAccountManagement $management, bool $paidByProvider, \DateTime $createdAt, ?ManagedAccountPendingPlan $pendingPlan = null, ?ManagedAccountLanguage $language = null, ?\DateTime $claimedAt = null)
+    public function __construct(string $id, ManagedAccountObject $object, string $externalRef, ManagedAccountStatus $status, ManagedAccountEnvironment $environment, ManagedAccountPlan $plan, string $billingInterval, ManagedAccountAccessLevel $accessLevel, string $displayName, array $companies, bool $claimed, ManagedAccountManagement $management, bool $paidByProvider, \DateTime $createdAt, ?ManagedAccountPendingPlan $pendingPlan = null, ?ManagedAccountLanguage $language = null, ?\DateTime $claimedAt = null, ?ManagedAccountClaim1 $claim = null, ?\DateTime $paymentAssumedAt = null, ?\DateTime $planRenewsAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -196,5 +224,8 @@ class ManagedAccount
         $this->pendingPlan = $pendingPlan;
         $this->language = $language;
         $this->claimedAt = $claimedAt;
+        $this->claim = $claim;
+        $this->paymentAssumedAt = $paymentAssumedAt;
+        $this->planRenewsAt = $planRenewsAt;
     }
 }

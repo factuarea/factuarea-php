@@ -109,17 +109,23 @@ class Factuarea
 
     public Taxes $taxes;
 
+    public EmployeeBatches $employeeBatches;
+
     public EmployeeInvitations $employeeInvitations;
 
     public EmployeeSeats $employeeSeats;
 
     public FaceSubmissions $faceSubmissions;
 
+    public TransportDocuments $transportDocuments;
+
     public TimeEntries $timeEntries;
 
     public MonthlyTimeRecordCloses $monthlyTimeRecordCloses;
 
     public Stores $stores;
+
+    public StripeAutoinvoicing $stripeAutoinvoicing;
 
     public Employees $employees;
 
@@ -128,8 +134,6 @@ class Factuarea
     public TaskLabels $taskLabels;
 
     public WebhookEndpoints $webhookEndpoints;
-
-    public StripeAutoinvoicing $stripeAutoinvoicing;
 
     public TaxReports $taxReports;
 
@@ -218,17 +222,19 @@ class Factuarea
         $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
         $this->products = new Products($this->sdkConfiguration);
         $this->taxes = new Taxes($this->sdkConfiguration);
+        $this->employeeBatches = new EmployeeBatches($this->sdkConfiguration);
         $this->employeeInvitations = new EmployeeInvitations($this->sdkConfiguration);
         $this->employeeSeats = new EmployeeSeats($this->sdkConfiguration);
         $this->faceSubmissions = new FaceSubmissions($this->sdkConfiguration);
+        $this->transportDocuments = new TransportDocuments($this->sdkConfiguration);
         $this->timeEntries = new TimeEntries($this->sdkConfiguration);
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->stores = new Stores($this->sdkConfiguration);
+        $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->taskLabels = new TaskLabels($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
-        $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
         $this->agenda = new Agenda($this->sdkConfiguration);
         $this->gestoria = new Gestoria($this->sdkConfiguration);

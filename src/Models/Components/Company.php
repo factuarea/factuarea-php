@@ -71,6 +71,14 @@ class Company
     public ?string $businessName;
 
     /**
+     * When the tax ID entered its current `inactive` or `archived` status (ISO 8601). `null` for an `active` tax ID and for one whose change predates the lifecycle events: the date is never invented.
+     *
+     * @var ?\DateTime $statusSince
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status_since')]
+    public ?\DateTime $statusSince;
+
+    /**
      * Street address of the fiscal domicile, or `null`.
      *
      * @var ?string $address
@@ -110,6 +118,14 @@ class Company
     #[\Speakeasy\Serializer\Annotation\SerializedName('country_aeat_zone')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CompanyCountryAeatZone|null')]
     public ?CompanyCountryAeatZone $countryAeatZone;
+
+    /**
+     * Country of the fiscal domicile as recorded in the company profile (free text, up to 100 characters), or `null` when it was not set.
+     *
+     * @var ?string $country
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('country')]
+    public ?string $country;
 
     /**
      * Contact email, or `null`.
@@ -178,11 +194,13 @@ class Company
      * @param  \Factuarea\Sdk\Models\Components\CompanyStatus  $status
      * @param  \DateTime  $createdAt
      * @param  ?string  $businessName
+     * @param  ?\DateTime  $statusSince
      * @param  ?string  $address
      * @param  ?string  $city
      * @param  ?string  $postalCode
      * @param  ?string  $province
      * @param  ?\Factuarea\Sdk\Models\Components\CompanyCountryAeatZone  $countryAeatZone
+     * @param  ?string  $country
      * @param  ?string  $email
      * @param  ?string  $phone
      * @param  ?string  $logoUrl
@@ -192,7 +210,7 @@ class Company
      * @param  ?\Factuarea\Sdk\Models\Components\IssuingReadiness  $readiness
      * @phpstan-pure
      */
-    public function __construct(string $id, CompanyObject $object, string $name, string $taxId, CompanyStatus $status, \DateTime $createdAt, ?string $businessName = null, ?string $address = null, ?string $city = null, ?string $postalCode = null, ?string $province = null, ?CompanyCountryAeatZone $countryAeatZone = null, ?string $email = null, ?string $phone = null, ?string $logoUrl = null, ?\DateTime $paidUntil = null, ?SuspensionReason $suspensionReason = null, ?\DateTime $updatedAt = null, ?IssuingReadiness $readiness = null)
+    public function __construct(string $id, CompanyObject $object, string $name, string $taxId, CompanyStatus $status, \DateTime $createdAt, ?string $businessName = null, ?\DateTime $statusSince = null, ?string $address = null, ?string $city = null, ?string $postalCode = null, ?string $province = null, ?CompanyCountryAeatZone $countryAeatZone = null, ?string $country = null, ?string $email = null, ?string $phone = null, ?string $logoUrl = null, ?\DateTime $paidUntil = null, ?SuspensionReason $suspensionReason = null, ?\DateTime $updatedAt = null, ?IssuingReadiness $readiness = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -201,11 +219,13 @@ class Company
         $this->status = $status;
         $this->createdAt = $createdAt;
         $this->businessName = $businessName;
+        $this->statusSince = $statusSince;
         $this->address = $address;
         $this->city = $city;
         $this->postalCode = $postalCode;
         $this->province = $province;
         $this->countryAeatZone = $countryAeatZone;
+        $this->country = $country;
         $this->email = $email;
         $this->phone = $phone;
         $this->logoUrl = $logoUrl;

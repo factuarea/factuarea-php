@@ -143,17 +143,19 @@ class InvoiceLine
 
     /**
      *
-     * @var ?string $commercialUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineCommercialUnitCode $commercialUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('commercial_unit_code')]
-    public ?string $commercialUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineCommercialUnitCode|null')]
+    public ?InvoiceLineCommercialUnitCode $commercialUnitCode;
 
     /**
      *
-     * @var ?string $baseUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineBaseUnitCode $baseUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_code')]
-    public ?string $baseUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineBaseUnitCode|null')]
+    public ?InvoiceLineBaseUnitCode $baseUnitCode;
 
     /**
      *
@@ -192,10 +194,28 @@ class InvoiceLine
 
     /**
      *
-     * @var ?string $priceUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLinePriceUnitCode $priceUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
-    public ?string $priceUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLinePriceUnitCode|null')]
+    public ?InvoiceLinePriceUnitCode $priceUnitCode;
+
+    /**
+     * Pieces the customer asked for on a variable-weight line sold by count (decimal string, scale 4, greater than 0), e.g. `"4.0000"` for four pieces weighing `quantity` kg in total. Informational: the line is charged and the stock is discounted by `quantity` (the real weight), never by the pieces. `null` on any other line. Only accepted on a `variable_measure` presentation whose unit is a count unit.
+     *
+     * @var ?string $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    public ?string $countedQuantity;
+
+    /**
+     * UN/ECE code of the count unit of `counted_quantity` (`H87` piece, `XPK` pack…). `null` exactly when `counted_quantity` is `null`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineCountedUnit $countedUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_unit')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineCountedUnit|null')]
+    public ?InvoiceLineCountedUnit $countedUnit;
 
     /**
      * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
@@ -333,14 +353,16 @@ class InvoiceLine
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineVariant  $variant
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLinePresentation  $presentation
      * @param  ?string  $itemKind
-     * @param  ?string  $commercialUnitCode
-     * @param  ?string  $baseUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineCommercialUnitCode  $commercialUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineBaseUnitCode  $baseUnitCode
      * @param  ?string  $conversionFactor
      * @param  ?string  $baseQuantity
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?string  $priceSource
-     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLinePriceUnitCode  $priceUnitCode
+     * @param  ?string  $countedQuantity
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineCountedUnit  $countedUnit
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineConfiguration  $configuration
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
@@ -356,7 +378,7 @@ class InvoiceLine
      * @param  ?string  $exemptionReasonText
      * @phpstan-pure
      */
-    public function __construct(InvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?InvoiceLineVariant $variant = null, ?InvoiceLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?InvoiceLineConfiguration $configuration = null, ?InvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
+    public function __construct(InvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?InvoiceLineVariant $variant = null, ?InvoiceLinePresentation $presentation = null, ?string $itemKind = null, ?InvoiceLineCommercialUnitCode $commercialUnitCode = null, ?InvoiceLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?InvoiceLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?InvoiceLineCountedUnit $countedUnit = null, ?InvoiceLineConfiguration $configuration = null, ?InvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -383,6 +405,8 @@ class InvoiceLine
         $this->priceListName = $priceListName;
         $this->priceSource = $priceSource;
         $this->priceUnitCode = $priceUnitCode;
+        $this->countedQuantity = $countedQuantity;
+        $this->countedUnit = $countedUnit;
         $this->configuration = $configuration;
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;

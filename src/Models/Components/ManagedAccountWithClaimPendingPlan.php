@@ -14,4 +14,5 @@ enum ManagedAccountWithClaimPendingPlan: string
 {
     case Emprendedor = 'emprendedor';
     case Empresario = 'empresario';
+    case Integral = 'integral';
 }

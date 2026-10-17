@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ManagedAccountImportPreviewTotal - Total of both modes. */
+/** ManagedAccountImportPreviewTotal - Total of both modes. The VAT fields are additive: they are absent from the reports saved by earlier imports. */
 class ManagedAccountImportPreviewTotal
 {
     /**
@@ -29,13 +29,112 @@ class ManagedAccountImportPreviewTotal
     public int $prorationAmountCents;
 
     /**
+     * VAT of the prorated amount charged at once, in cents (the VAT of the batch is the sum of the VAT rounded per account). 0 when nothing is charged.
+     *
+     * @var ?int $taxAmountCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $taxAmountCents = null;
+
+    /**
+     * Prorated amount plus its VAT: what is charged today, in cents.
+     *
+     * @var ?int $totalAmountCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $totalAmountCents = null;
+
+    /**
+     * Whole-number VAT percentage applied, or `null` when no rate can be computed (the VAT is then 0).
+     *
+     * @var ?int $taxRate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tax_rate')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $taxRate = null;
+
+    /**
+     * Date of the next periodic invoice of your subscription (ISO 8601), or `null`.
+     *
+     * @var ?\DateTime $nextInvoiceDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('next_invoice_date')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?\DateTime $nextInvoiceDate = null;
+
+    /**
+     * Units of the joint monthly fee that follows (your whole book plus the rows), or `null` when it cannot be computed.
+     *
+     * @var ?int $recurringQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $recurringQuantity = null;
+
+    /**
+     * Joint monthly fee that follows, taxable base, in cents, or `null`.
+     *
+     * @var ?int $recurringBaseCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_base_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $recurringBaseCents = null;
+
+    /**
+     * Joint monthly fee that follows with VAT, in cents; `null` without a VAT rate.
+     *
+     * @var ?int $recurringTotalCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_total_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $recurringTotalCents = null;
+
+    /**
+     * VAT of the monthly fee the batch ADDS, in cents, or `null` without a VAT rate.
+     *
+     * @var ?int $monthlyTaxAmountCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('monthly_tax_amount_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $monthlyTaxAmountCents = null;
+
+    /**
+     * Monthly fee the batch adds with VAT, in cents, or `null` without a VAT rate.
+     *
+     * @var ?int $monthlyTotalCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('monthly_total_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $monthlyTotalCents = null;
+
+    /**
      * @param  int  $monthlyAmountCents
      * @param  int  $prorationAmountCents
+     * @param  ?int  $taxAmountCents
+     * @param  ?int  $totalAmountCents
+     * @param  ?int  $taxRate
+     * @param  ?\DateTime  $nextInvoiceDate
+     * @param  ?int  $recurringQuantity
+     * @param  ?int  $recurringBaseCents
+     * @param  ?int  $recurringTotalCents
+     * @param  ?int  $monthlyTaxAmountCents
+     * @param  ?int  $monthlyTotalCents
      * @phpstan-pure
      */
-    public function __construct(int $monthlyAmountCents, int $prorationAmountCents)
+    public function __construct(int $monthlyAmountCents, int $prorationAmountCents, ?int $taxAmountCents = null, ?int $totalAmountCents = null, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null, ?int $monthlyTaxAmountCents = null, ?int $monthlyTotalCents = null)
     {
         $this->monthlyAmountCents = $monthlyAmountCents;
         $this->prorationAmountCents = $prorationAmountCents;
+        $this->taxAmountCents = $taxAmountCents;
+        $this->totalAmountCents = $totalAmountCents;
+        $this->taxRate = $taxRate;
+        $this->nextInvoiceDate = $nextInvoiceDate;
+        $this->recurringQuantity = $recurringQuantity;
+        $this->recurringBaseCents = $recurringBaseCents;
+        $this->recurringTotalCents = $recurringTotalCents;
+        $this->monthlyTaxAmountCents = $monthlyTaxAmountCents;
+        $this->monthlyTotalCents = $monthlyTotalCents;
     }
 }

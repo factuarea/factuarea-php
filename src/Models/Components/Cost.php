@@ -21,7 +21,7 @@ class Cost
     public string $currency;
 
     /**
-     * Cost of the new `managed_account` rows, charged on the `managed-accounts` subscription of your account.
+     * Cost of the new `managed_account` rows, charged on the `managed-accounts` subscription of your account. The VAT fields are additive: they are absent from the reports saved by earlier imports.
      *
      * @var \Factuarea\Sdk\Models\Components\ManagedAccountImportPreviewManagedAccount $managedAccount
      */
@@ -30,7 +30,7 @@ class Cost
     public ManagedAccountImportPreviewManagedAccount $managedAccount;
 
     /**
-     * Cost of the new `own_nif` rows, charged as additional tax IDs of your account.
+     * Cost of the new `own_nif` rows, charged as additional tax IDs of your account. The VAT fields are additive: they are absent from the reports saved by earlier imports.
      *
      * @var \Factuarea\Sdk\Models\Components\OwnNif $ownNif
      */
@@ -39,7 +39,7 @@ class Cost
     public OwnNif $ownNif;
 
     /**
-     * Total of both modes.
+     * Total of both modes. The VAT fields are additive: they are absent from the reports saved by earlier imports.
      *
      * @var \Factuarea\Sdk\Models\Components\ManagedAccountImportPreviewTotal $total
      */

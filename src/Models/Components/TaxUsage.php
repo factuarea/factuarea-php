@@ -37,7 +37,7 @@ class TaxUsage
     public bool $inUse;
 
     /**
-     * Sum of the six counters in `used_by`.
+     * Sum of the counters in `used_by`.
      *
      * @var int $totalCount
      */
@@ -45,7 +45,7 @@ class TaxUsage
     public int $totalCount;
 
     /**
-     * Number of references by kind of resource. Purchase invoice lines (they store a rate, not a tax reference) and recurring invoices (their lines are stored as a template) are not counted.
+     * Number of references by kind of resource. Purchase invoice lines (they store a rate, not a tax reference) are not counted.
      *
      * @var \Factuarea\Sdk\Models\Components\UsedBy $usedBy
      */

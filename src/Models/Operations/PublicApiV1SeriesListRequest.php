@@ -37,7 +37,7 @@ class PublicApiV1SeriesListRequest
     public ?string $endingBefore = null;
 
     /**
-     * Document type (invoice, quote, etc.). Exact match on `document_type`.
+     * Document type: `invoice`, `quote`, `delivery_note`, `proforma` or `transport_document`. Exact match on `document_type`.
      *
      * @var ?string $documentType
      */
@@ -45,7 +45,7 @@ class PublicApiV1SeriesListRequest
     public ?string $documentType = null;
 
     /**
-     * Document type (invoice, quote, etc.). Comma-separated list. Any of the values matches.
+     * Document type: `invoice`, `quote`, `delivery_note`, `proforma` or `transport_document`. Comma-separated list. Any of the values matches.
      *
      * @var ?string $documentTypeIn
      */

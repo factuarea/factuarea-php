@@ -66,7 +66,7 @@ class ManagedAccounts
     /**
      * Provision a managed account
      *
-     * Provision a SEPARATE account for one of your clients, with its tax ID (`tax_id`, `legal_name`), its plan (`emprendedor` or `empresario`) and the `access_level` your account keeps on it (`none` by default, `view` or `operate`). Your account pays it: in live mode the account is charged on the `managed-accounts` subscription of your account. `external_ref` is YOUR reference and makes the call idempotent by itself: provisioning an `external_ref` you already provisioned returns 200 with that same account, creates nothing and issues no claim voucher (use the claim-token operation to issue a new one). A new account returns **201 Created** with the claim voucher the holder uses to take the account: with `send_email: false` (the default) `claim_token` and `claim_url` are returned EXACTLY ONCE, for you to deliver; with `send_email: true` the link travels only in the email to `owner_email` and both fields are `null`. An idempotent replay returns them as `null` too: the voucher is never stored in the clear, not even in the idempotency cache. `owner_email` is required with a live key and whenever `send_email` is `true`. The environment is the one of the key: a `fact_test_` key creates a TEST account, with no charge, no voucher (`claim_token` and `claim_url` are `null`) and outside your managed account limit. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`. Returns 402 `payment_method_required` when your account has no payment method to pay a live managed account, 409 `provisioning_account_claimed` when the `external_ref` names an account its holder already claimed, 409 `managed_account_external_ref_in_other_environment` when it names a managed account of the other environment, 422 `managed_account_plan_not_self_serve` for `enterprise` (it is only assigned by Factuarea by contract), 422 `managed_account_provider_in_trial` for a paid plan while your account is in trial (only test accounts), 422 `managed_accounts_limit_reached` at the managed account limit of your account, and 422 `idempotency_key_required` because provisioning is irreversible.
+     * Provision a SEPARATE account for one of your clients, with its tax ID (`tax_id`, `legal_name`), its plan (`emprendedor`, `empresario` or `integral`) and the `access_level` your account keeps on it (`none` by default, `view` or `operate`). Your account pays it: in live mode the account is charged on the `managed-accounts` subscription of your account. `external_ref` is YOUR reference and makes the call idempotent by itself: provisioning an `external_ref` you already provisioned returns 200 with that same account, creates nothing and issues no claim voucher (use the claim-token operation to issue a new one). A new account returns **201 Created** with the claim voucher the holder uses to take the account: with `send_email: false` (the default) `claim_token` and `claim_url` are returned EXACTLY ONCE, for you to deliver; with `send_email: true` the link travels only in the email to `owner_email` and both fields are `null`. An idempotent replay returns them as `null` too: the voucher is never stored in the clear, not even in the idempotency cache. `owner_email` is required with a live key and whenever `send_email` is `true`. The environment is the one of the key: a `fact_test_` key creates a TEST account, with no charge, no voucher (`claim_token` and `claim_url` are `null`) and outside your managed account limit. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`. Returns 402 `payment_method_required` when your account has no payment method to pay a live managed account, 409 `provisioning_account_claimed` when the `external_ref` names an account its holder already claimed, 409 `managed_account_external_ref_in_other_environment` when it names a managed account of the other environment, 422 `managed_account_plan_not_self_serve` for `enterprise` (it is only assigned by Factuarea by contract), 422 `managed_account_provider_in_trial` for a paid plan while your account is in trial (only test accounts), 422 `managed_accounts_limit_reached` at the managed account limit of your account, and 422 `idempotency_key_required` because provisioning is irreversible. The response also carries `claim_expires_at` (returned also when the link is emailed), `reactivated` (`true` when the call reactivated a management that had ended before the holder claimed the account) and, as in every read of the account, `claim` (the pending voucher without its secret), `payment_assumed_at` and `plan_renews_at`.
      *
      * @param  \Factuarea\Sdk\Models\Components\ProvisionManagedAccountV1Request  $body
      * @param  string  $idempotencyKey
@@ -290,6 +290,142 @@ class ManagedAccounts
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Preview the provisioning of a managed account
+     *
+     * Preview, with no effect, provisioning a NEW managed account of the `plan` in the query (`emprendedor`, `empresario` or `integral`) for the account of the credential: what would be charged to your account today (`amount_cents`, `tax_amount_cents` and `total_cents`, with `tax_rate`; when something is charged but the payment gateway returns no VAT rate, `tax_rate`, `tax_amount_cents` and `total_cents` are `null` and the base is never published as the total), the date of the next invoice and the joint monthly fee that follows (`recurring_*`). Amounts are integer cents. Nothing is written, nothing is charged and no account is created, so it needs no `Idempotency-Key`; it is a read-only counterpart of the provisioning operation and applies its same business rules. With a test key (`fact_test_`) every amount is 0. When the charge is real and your account has no payment method, `requires_payment_method` is `true` and the amounts are 0. Returns 400 `parameter_unknown` for a query parameter other than `plan`, 403 `forbidden_action` when the person who issued the key cannot administer your account, 403 `privileged_scope_required` without the account provider privilege granted by Factuarea, 403 `insufficient_scope` without `accounts:read`, 422 on a missing or unknown `plan`, 422 `managed_account_plan_not_self_serve` for `enterprise`, 422 `managed_account_provider_in_trial` while your account is in trial and 422 `managed_accounts_limit_reached` when your account already provisioned its maximum number of managed accounts, and 503 when the payment gateway cannot resolve the unit price (retry later). Requires the privileged `accounts:read` scope, which `*` does not cover.
+     *
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsProvisioningPreviewPlan  $plan
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsProvisioningPreviewResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1ManagedAccountsProvisioningPreview(Operations\PublicApiV1ManagedAccountsProvisioningPreviewPlan $plan, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ManagedAccountsProvisioningPreviewResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1ManagedAccountsProvisioningPreviewRequest(
+            plan: $plan,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/provisioning-preview');
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1ManagedAccountsProvisioningPreviewRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.managed_accounts.provisioning_preview', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsProvisioningPreviewResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1ManagedAccountsProvisioningPreviewResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

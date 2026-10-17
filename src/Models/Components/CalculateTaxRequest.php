@@ -20,7 +20,7 @@ class CalculateTaxRequest
     public float $base;
 
     /**
-     * Identifier (UUID v7) of the tax to apply, from the global `taxes` catalog. A well-formed but non-existent value returns 404 `tax_not_found`.
+     * Identifier (UUID v7) of the tax to apply, from the Factuarea catalog plus your company's own taxes. A well-formed but non-existent value returns 404 `tax_not_found`.
      *
      * @var string $taxesId
      */

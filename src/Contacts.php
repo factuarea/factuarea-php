@@ -173,7 +173,7 @@ class Contacts
     /**
      * Archive a contact
      *
-     * Archive a contact: a reversible removal that parks it out of the day-to-day operations while keeping it fully readable. Archiving is ALWAYS allowed — invoices, contracts or supplier offers referencing the contact never block it — and it is idempotent: archiving an already archived contact returns 200 and keeps the first `archived_at`. The contact keeps its identity, its roles with their status, the directional profiles, the bank accounts, the legacy aliases and every document, stays retrievable by `id` with `is_archived: true`, and can be brought back with `PATCH /companies/{company}/contacts/{contact}/restore`. It requires `contacts:delete`, like the other two removals, because it takes the contact out of the operation. To make the contact disappear from the application instead, use `DELETE /companies/{company}/contacts/{contact}`. A UUID owned by another company returns the same 404 `contact_not_found` as an unknown UUID.
+     * Archive a contact: a reversible removal that parks it out of the day-to-day operations while keeping it fully readable. Archiving is ALWAYS allowed — invoices, contracts or supplier offers referencing the contact never block it — and it is idempotent: archiving an already archived contact returns 200 and keeps the first `archived_at`. The contact keeps its identity, its roles with their status, the directional profiles, the bank accounts, the legacy aliases and every document, stays retrievable by `id` with `is_archived: true`, and can be brought back with `POST /companies/{company}/contacts/{contact}/restore`. It requires `contacts:delete`, like the other two removals, because it takes the contact out of the operation. To make the contact disappear from the application instead, use `DELETE /companies/{company}/contacts/{contact}`. A UUID owned by another company returns the same 404 `contact_not_found` as an unknown UUID.
      *
      * @param  string  $company
      * @param  string  $contact
@@ -335,11 +335,6 @@ class Contacts
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/contacts/{contact}/roles/{role}', Operations\PublicApiV1ContactsAssignContactRoleRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body === null) {
-            throw new \Exception('Request body is required');
-        }
-        $httpOptions = array_merge_recursive($httpOptions, $body);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -419,7 +414,7 @@ class Contacts
     /**
      * Archive contacts in bulk
      *
-     * Archive up to 500 contacts by `ids` with partial success. Archiving is always allowed and reversible: every contact keeps its identity, history, aliases and documents, stays retrievable with `is_archived: true` and can be brought back one by one with `PATCH /companies/{company}/contacts/{contact}/restore`. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. To make the contacts disappear from the application instead, use `POST /companies/{company}/contacts/bulk-delete`.
+     * Archive up to 500 contacts by `ids` with partial success. Archiving is always allowed and reversible: every contact keeps its identity, history, aliases and documents, stays retrievable with `is_archived: true` and can be brought back one by one with `POST /companies/{company}/contacts/{contact}/restore`. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. To make the contacts disappear from the application instead, use `POST /companies/{company}/contacts/bulk-delete`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkArchiveBusinessContactsV1Request  $body
      * @param  string  $company
@@ -2289,8 +2284,6 @@ class Contacts
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/contacts/{contact}/roles/{role}', Operations\PublicApiV1ContactsRemoveContactRoleRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-
-        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1ContactsRemoveContactRoleRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -2300,7 +2293,6 @@ class Contacts
         $httpRequest = new \GuzzleHttp\Psr7\Request('DELETE', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.contacts.remove_contact_role', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
-        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {

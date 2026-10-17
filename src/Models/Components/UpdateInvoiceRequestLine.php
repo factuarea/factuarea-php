@@ -226,6 +226,14 @@ class UpdateInvoiceRequestLine
     public ?string $configurationUuid = null;
 
     /**
+     *
+     * @var ?float $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $countedQuantity = null;
+
+    /**
      * $options
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestOption> $options
@@ -311,6 +319,7 @@ class UpdateInvoiceRequestLine
      * @param  ?string  $exemptionReasonText
      * @param  ?float  $lineTotal
      * @param  ?string  $configurationUuid
+     * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestOption>  $options
      * @param  ?string  $configurationSignature
      * @param  ?string  $configurationName
@@ -320,7 +329,7 @@ class UpdateInvoiceRequestLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?UpdateInvoiceRequestRegimeKey $regimeKey = null, ?UpdateInvoiceRequestExemptionReason $exemptionReason = null, ?UpdateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateInvoiceRequestPriceSource $priceSource = null, ?UpdateInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?UpdateInvoiceRequestRegimeKey $regimeKey = null, ?UpdateInvoiceRequestExemptionReason $exemptionReason = null, ?UpdateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateInvoiceRequestPriceSource $priceSource = null, ?UpdateInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->description = $description;
@@ -347,6 +356,7 @@ class UpdateInvoiceRequestLine
         $this->exemptionReasonText = $exemptionReasonText;
         $this->lineTotal = $lineTotal;
         $this->configurationUuid = $configurationUuid;
+        $this->countedQuantity = $countedQuantity;
         $this->options = $options;
         $this->configurationSignature = $configurationSignature;
         $this->configurationName = $configurationName;

@@ -388,7 +388,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -416,7 +416,6 @@ This SDK supports the following security schemes globally:
 
 | Name         | Type   | Scheme      |
 | ------------ | ------ | ----------- |
-| `http`       | http   | HTTP Bearer |
 | `bearerAuth` | http   | HTTP Bearer |
 | `apiKeyAuth` | apiKey | API key     |
 
@@ -433,7 +432,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -510,6 +509,7 @@ if ($response->object !== null) {
 
 * [publicApiV1AccountApiKeysCreate](docs/sdks/apikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
 * [publicApiV1AccountApiKeysList](docs/sdks/apikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
+* [publicApiV1AccountApiKeysUsage](docs/sdks/apikeys/README.md#publicapiv1accountapikeysusage) - Retrieve the daily usage of an API key
 * [publicApiV1AccountApiKeysRevoke](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
 * [publicApiV1AccountApiKeysRotateSecret](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
 * [publicApiV1AccountApiKeysShow](docs/sdks/apikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
@@ -719,6 +719,15 @@ if ($response->object !== null) {
 * [publicApiV1EmailsList](docs/sdks/emails/README.md#publicapiv1emailslist) - List sent emails
 * [publicApiV1EmailsShow](docs/sdks/emails/README.md#publicapiv1emailsshow) - Retrieve a sent email
 
+### [EmployeeBatches](docs/sdks/employeebatches/README.md)
+
+* [publicApiV1EmployeeBatchesCancel](docs/sdks/employeebatches/README.md#publicapiv1employeebatchescancel) - Cancel an employee batch
+* [publicApiV1EmployeeBatchesConfirm](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesconfirm) - Confirm an employee batch
+* [publicApiV1EmployeeBatchesList](docs/sdks/employeebatches/README.md#publicapiv1employeebatcheslist) - List an employee batch
+* [publicApiV1EmployeeBatchesPrepare](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesprepare) - Prepare an employee batch
+* [publicApiV1EmployeeBatchesRefreshQuote](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesrefreshquote) - Refresh the quote for an employee batch
+* [publicApiV1EmployeeBatchesShow](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesshow) - Retrieve an employee batch
+
 ### [EmployeeInvitations](docs/sdks/employeeinvitations/README.md)
 
 * [publicApiV1EmployeeInvitationsCancel](docs/sdks/employeeinvitations/README.md#publicapiv1employeeinvitationscancel) - Cancel an employee invitation
@@ -815,7 +824,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesMarkSent](docs/sdks/invoices/README.md#publicapiv1invoicesmarksent) - Mark an invoice as sent
 * [publicApiV1InvoicesPdfPreview](docs/sdks/invoices/README.md#publicapiv1invoicespdfpreview) - Preview an invoice draft PDF
 * [publicApiV1InvoicesReminderPreview](docs/sdks/invoices/README.md#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
-* [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download payment receipt PDF
+* [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download the receipt PDF of a payment
 * [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
 * [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
 * [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
@@ -833,7 +842,7 @@ if ($response->object !== null) {
 
 #### [Invoices.Quarterly](docs/sdks/quarterly/README.md)
 
-* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters with invoices
+* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters to export
 * [publicApiV1InvoicesQuarterlyDownloadZip](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlydownloadzip) - Generate quarterly ZIP archive
 * [publicApiV1InvoicesQuarterlySendEmail](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlysendemail) - Email quarterly ZIP to accountant
 
@@ -841,6 +850,7 @@ if ($response->object !== null) {
 
 * [publicApiV1ManagedAccountsList](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountslist) - List managed accounts
 * [publicApiV1ManagedAccountsCreate](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountscreate) - Provision a managed account
+* [publicApiV1ManagedAccountsProvisioningPreview](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountsprovisioningpreview) - Preview the provisioning of a managed account
 * [publicApiV1ManagedAccountsShow](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountsshow) - Retrieve a managed account
 
 #### [ManagedAccounts.AccessLevel](docs/sdks/accesslevel/README.md)
@@ -942,6 +952,11 @@ if ($response->object !== null) {
 * [publicApiV1ProductsSearch](docs/sdks/products/README.md#publicapiv1productssearch) - Search products
 * [publicApiV1ProductsToggleActive](docs/sdks/products/README.md#publicapiv1productstoggleactive) - Toggle product active state
 * [publicApiV1ProductsUpdateStock](docs/sdks/products/README.md#publicapiv1productsupdatestock) - Update product stock
+
+#### [Products.BaseUnitReplacement](docs/sdks/baseunitreplacement/README.md)
+
+* [publicApiV1ProductsBaseUnitReplacementPreview](docs/sdks/baseunitreplacement/README.md#publicapiv1productsbaseunitreplacementpreview) - Preview a base unit replacement
+* [publicApiV1ProductsBaseUnitReplacementCreate](docs/sdks/baseunitreplacement/README.md#publicapiv1productsbaseunitreplacementcreate) - Replace a product by changing its base unit
 
 #### [Products.Configurations](docs/sdks/configurations/README.md)
 
@@ -1065,7 +1080,7 @@ if ($response->object !== null) {
 * [publicApiV1PurchaseInvoicesUpdate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesupdate) - Update an expense
 * [publicApiV1PurchaseInvoicesDeleteFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdeletefile) - Remove an expense file
 * [publicApiV1PurchaseInvoicesFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfile) - Download the original expense file
-* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download an expense payment receipt
+* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download the receipt PDF of an expense payment
 * [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find an expense by external ID
 * [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get expense stats
 * [publicApiV1PurchaseInvoicesExpenseCategories](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesexpensecategories) - List expense categories
@@ -1171,6 +1186,18 @@ if ($response->object !== null) {
 * [publicApiV1StripeAutoinvoicingAccountsShow](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsshow) - Retrieve a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsUpdate](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsupdate) - Update a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsList](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountslist) - List connected Stripe accounts
+
+#### [StripeAutoinvoicing.Accounts.ChargeRules](docs/sdks/chargerules/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulescreate) - Create a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesList](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargeruleslist) - List charge treatment rules of a connected Stripe account
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesDelete](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesdelete) - Delete a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesupdate) - Update a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesreorder) - Reorder the charge treatment rules
+
+#### [StripeAutoinvoicing.Accounts.NonInvoicedCharges](docs/sdks/noninvoicedcharges/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList](docs/sdks/noninvoicedcharges/README.md#publicapiv1stripeautoinvoicingaccountsnoninvoicedchargeslist) - List non-invoiced charges of a connected Stripe account
 
 ### [StripeAutoinvoicing.Authorizations](docs/sdks/authorizations/README.md)
 
@@ -1292,14 +1319,20 @@ if ($response->object !== null) {
 * [publicApiV1TaxesCalculate](docs/sdks/taxes/README.md#publicapiv1taxescalculate) - Calculate a tax over a base amount
 * [publicApiV1TaxesCalculateTotals](docs/sdks/taxes/README.md#publicapiv1taxescalculatetotals) - Calculate totals for a set of lines
 * [publicApiV1TaxesIsInUse](docs/sdks/taxes/README.md#publicapiv1taxesisinuse) - Check whether a tax is in use
+* [publicApiV1TaxesCreate](docs/sdks/taxes/README.md#publicapiv1taxescreate) - Create a tax
+* [publicApiV1TaxesList](docs/sdks/taxes/README.md#publicapiv1taxeslist) - List all taxes
+* [publicApiV1TaxesDelete](docs/sdks/taxes/README.md#publicapiv1taxesdelete) - Delete a tax
+* [publicApiV1TaxesShow](docs/sdks/taxes/README.md#publicapiv1taxesshow) - Retrieve a tax
+* [publicApiV1TaxesUpdate](docs/sdks/taxes/README.md#publicapiv1taxesupdate) - Update a tax
 * [publicApiV1TaxesActive](docs/sdks/taxes/README.md#publicapiv1taxesactive) - List active taxes
 * [publicApiV1TaxesDefaults](docs/sdks/taxes/README.md#publicapiv1taxesdefaults) - Get default taxes for a document type
 * [publicApiV1TaxesStats](docs/sdks/taxes/README.md#publicapiv1taxesstats) - Get tax stats
 * [publicApiV1TaxesByType](docs/sdks/taxes/README.md#publicapiv1taxesbytype) - List taxes filtered by type
 * [publicApiV1TaxesForPurchases](docs/sdks/taxes/README.md#publicapiv1taxesforpurchases) - List taxes applicable to purchases
 * [publicApiV1TaxesForSales](docs/sdks/taxes/README.md#publicapiv1taxesforsales) - List taxes applicable to sales
-* [publicApiV1TaxesList](docs/sdks/taxes/README.md#publicapiv1taxeslist) - List all taxes
-* [publicApiV1TaxesShow](docs/sdks/taxes/README.md#publicapiv1taxesshow) - Retrieve a tax
+* [publicApiV1TaxesSetDefault](docs/sdks/taxes/README.md#publicapiv1taxessetdefault) - Mark a tax as the default for its type
+* [publicApiV1TaxesSetDefaultForDocument](docs/sdks/taxes/README.md#publicapiv1taxessetdefaultfordocument) - Set tax default for a document type
+* [publicApiV1TaxesToggle](docs/sdks/taxes/README.md#publicapiv1taxestoggle) - Toggle tax active state
 
 ### [TaxReports](docs/sdks/taxreports/README.md)
 
@@ -1346,6 +1379,26 @@ if ($response->object !== null) {
 
 * [publicApiV1TimeTrackingSettingsShow](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsshow) - Retrieve the time tracking settings
 * [publicApiV1TimeTrackingSettingsUpdate](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsupdate) - Update the time tracking settings
+
+### [TransportDocuments](docs/sdks/transportdocuments/README.md)
+
+* [publicApiV1TransportDocumentsCancel](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentscancel) - Cancel a transport document
+* [publicApiV1TransportDocumentsClose](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsclose) - Close a transport document
+* [publicApiV1TransportDocumentsCreate](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentscreate) - Create a transport document
+* [publicApiV1TransportDocumentsIndex](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsindex) - List all transport documents
+* [publicApiV1TransportDocumentsDelete](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsdelete) - Delete a draft transport document
+* [publicApiV1TransportDocumentsShow](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsshow) - Retrieve a transport document
+* [publicApiV1TransportDocumentsUpdate](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsupdate) - Update a draft transport document
+* [publicApiV1TransportDocumentsIssuanceProof](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsissuanceproof) - Download transport document issuance proof
+* [publicApiV1TransportDocumentsPdf](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentspdf) - Download transport document PDF
+* [publicApiV1TransportDocumentsEvidence](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsevidence) - List transport document issuance evidence
+* [publicApiV1TransportDocumentsQr](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsqr) - Download transport document QR code
+* [publicApiV1TransportDocumentsStatuses](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsstatuses) - List transport document statuses
+* [publicApiV1TransportDocumentsIssue](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsissue) - Issue a transport document
+* [publicApiV1TransportDocumentsModify](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsmodify) - Modify an issued transport document
+* [publicApiV1TransportDocumentsReopen](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsreopen) - Reopen a transport document
+* [publicApiV1TransportDocumentsSend](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentssend) - Send a transport document by email
+* [publicApiV1TransportDocumentsSupersede](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentssupersede) - Mark a transport document as superseded
 
 ### [Users](docs/sdks/users/README.md)
 
@@ -1465,7 +1518,7 @@ use Factuarea\Sdk\Utils\Retry;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1514,7 +1567,7 @@ $sdk = Sdk\Factuarea::builder()
   )
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1570,7 +1623,7 @@ use Factuarea\Sdk\Models\Errors;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
@@ -1617,7 +1670,7 @@ $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

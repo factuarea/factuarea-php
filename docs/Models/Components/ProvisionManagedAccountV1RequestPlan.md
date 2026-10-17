@@ -1,6 +1,6 @@
 # ProvisionManagedAccountV1RequestPlan
 
-Plan of the managed account: `emprendedor` or `empresario`. `enterprise` returns 422 `managed_account_plan_not_self_serve`.
+Plan of the managed account: `emprendedor`, `empresario` or `integral`. `enterprise` returns 422 `managed_account_plan_not_self_serve`.
 
 
 ## Values
@@ -9,4 +9,5 @@ Plan of the managed account: `emprendedor` or `empresario`. `enterprise` returns
 | ------------- | ------------- |
 | `Emprendedor` | emprendedor   |
 | `Empresario`  | empresario    |
+| `Integral`    | integral      |
 | `Enterprise`  | enterprise    |

@@ -10,7 +10,7 @@
 
 Return, in a single document, the Spanish tax knowledge you need to build a compliant invoicing form: indirect tax regimes (IVA, IGIC, IPSI) with their legal rates and their VeriFactu L1 code, header-level operation regimes with the legal wording each one requires, exemption causes with their AEAT code, legal wording and article of the Spanish VAT Act, the system IRPF withholding rates and the closed matrix of legal VAT/equivalence-surcharge pairs. It replaces the hardcoded table every integration ends up maintaining by hand.
 
-The catalog carries no data of the authenticated company: two different companies receive byte-identical bodies for the same language, and `retention_rates` never includes the custom taxes a company creates through `POST /v1/companies/{company}/taxes`. Withholding rates are published in POSITIVE, so apply them as a deduction from the taxable base.
+The catalog carries no data of the authenticated company: two different companies receive byte-identical bodies for the same language, and `retention_rates` never includes the custom taxes a company creates in the application, which `GET /v1/companies/{company}/taxes` lists. Withholding rates are published in POSITIVE, so apply them as a deduction from the taxable base.
 
 This is the catalog of what the platform supports, NOT an exhaustive normative list of every regime, exemption or withholding rate Spanish law defines. Use it to know what you can send to this API; do not read it as tax advice or as a substitute for the legislation.
 
@@ -31,7 +31,7 @@ use Factuarea\Sdk\Models\Components;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();

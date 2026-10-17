@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1ManagedAccountsPlanUpdateResponseBody
 {
     /**
-     * An account your account provisioned for one of your clients: a SEPARATE account, with its own tax IDs and plan, that your account manages and pays until its holder claims it and takes over. It never carries the claim voucher: only the provisioning and the reissue return it, once.
+     * An account your account provisioned for one of your clients: a SEPARATE account, with its own tax IDs and plan, that your account manages and pays until its holder claims it and takes over. Its pending claim voucher is read in `claim`, without secret or link: those are returned once, by the provisioning and by the reissue.
      *
      * @var \Factuarea\Sdk\Models\Components\ManagedAccount $data
      */

@@ -1425,7 +1425,7 @@ class PurchaseInvoices
     /**
      * Mark expense as paid
      *
-     * Record payment of an expense using the optional `paid_on` date. When a draft expense contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending expense has already registered them, so marking it as paid never duplicates stock.
+     * Record payment of an expense using the optional `paid_on` date (defaults to today; it cannot be later than today, and an earlier date than the supplier document issue date is accepted as an advance payment). When a draft expense contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending expense has already registered them, so marking it as paid never duplicates stock.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidResponse
@@ -1662,17 +1662,18 @@ class PurchaseInvoices
     }
 
     /**
-     * Download an expense payment receipt
+     * Download the receipt PDF of an expense payment
      *
-     * Stream the PDF payment receipt for a paid expense. Returns 409 if the expense has not been paid yet.
+     * Streams the PDF receipt of ONE payment of an expense, partial payments included: every active payment has its own receipt, which shows the expense as it stood right after that payment (payments up to it, amount paid and amount pending). Without `payment_id` it returns the receipt of the most recent active payment (by payment date, then by registration). Returns 422 when the expense has no active payments or when the requested payment has been reversed, and 404 when the expense or `payment_id` does not exist.
      *
      * @param  string  $company
      * @param  string  $purchaseInvoice
+     * @param  ?string  $paymentId
      * @param  ?LocalDate  $factuareaVersion
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseInvoicesPaymentReceipt(string $company, string $purchaseInvoice, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse
+    public function publicApiV1PurchaseInvoicesPaymentReceipt(string $company, string $purchaseInvoice, ?string $paymentId = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseInvoicesPaymentReceiptResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1702,12 +1703,15 @@ class PurchaseInvoices
         $request = new Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest(
             company: $company,
             purchaseInvoice: $purchaseInvoice,
+            paymentId: $paymentId,
             factuareaVersion: $factuareaVersion,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-invoices/{purchase_invoice}/payment-receipt', Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1PurchaseInvoicesPaymentReceiptRequest::class, $request, $urlOverride);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -1717,6 +1721,7 @@ class PurchaseInvoices
         $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.purchase_invoices.payment_receipt', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
@@ -1748,7 +1753,7 @@ class PurchaseInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1903,7 +1908,7 @@ class PurchaseInvoices
     /**
      * Register an expense payment
      *
-     * Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` must fall between the supplier document issue date and today, and a cancelled expense accepts no payments. Once the accumulated payments cover the total, the expense settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
+     * Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` cannot be later than today (an earlier date than the supplier document issue date is accepted as an advance payment), and a cancelled expense accepts no payments. Once the accumulated payments cover the total, the expense settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse

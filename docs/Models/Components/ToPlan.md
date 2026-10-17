@@ -9,4 +9,5 @@ Requested plan.
 | ------------- | ------------- |
 | `Emprendedor` | emprendedor   |
 | `Empresario`  | empresario    |
+| `Integral`    | integral      |
 | `Enterprise`  | enterprise    |

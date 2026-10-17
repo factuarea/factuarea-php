@@ -84,7 +84,7 @@ class Tasks
     /**
      * Assign a task
      *
-     * Assign a task to a member of your company (`assignee_id`). A user who is not a member returns 422 `task_assignee_not_member`. Use `GET /v1/companies/{company}/users` to find member ids.
+     * Assign a task to a person of your company (`assignee_id`): a member, or a person of another account who reaches the company through an account relation with `operate` access (for example, the accountancy firm that manages it), whose account is not published. A user who is neither returns 422 `task_assignee_not_member`, also for people with view-only relation access. Use `GET /v1/companies/{company}/users` to find the assignable ids.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAssignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAssignResponse

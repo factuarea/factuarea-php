@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Requested plan: `emprendedor` or `empresario`. `enterprise` returns 422 `managed_account_plan_not_self_serve`. */
+/** Requested plan: `emprendedor`, `empresario` or `integral`. `enterprise` returns 422 `managed_account_plan_not_self_serve`. */
 enum ChangeManagedAccountPlanV1RequestPlan: string
 {
     case Emprendedor = 'emprendedor';
     case Empresario = 'empresario';
+    case Integral = 'integral';
     case Enterprise = 'enterprise';
 }

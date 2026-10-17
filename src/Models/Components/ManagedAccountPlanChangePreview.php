@@ -73,12 +73,29 @@ class ManagedAccountPlanChangePreview
     public string $currency;
 
     /**
+     * Active additional tax IDs that a downgrade would deactivate. Empty when it deactivates none.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\Deactivate> $deactivates
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deactivates')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Deactivate>')]
+    public array $deactivates;
+
+    /**
      * End of the current period, when a `period_end` change takes effect (ISO 8601); `null` for an immediate change.
      *
      * @var ?\DateTime $effectiveAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('effective_at')]
     public ?\DateTime $effectiveAt;
+
+    /**
+     * End of the current billing period (ISO 8601), also for an upgrade; `null` when the managed account is not charged to your account.
+     *
+     * @var ?\DateTime $renewsAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('renews_at')]
+    public ?\DateTime $renewsAt;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountPlanChangePreviewObject  $object
@@ -88,10 +105,12 @@ class ManagedAccountPlanChangePreview
      * @param  int  $proratedAmountCents
      * @param  int  $nextInvoiceAmountCents
      * @param  string  $currency
+     * @param  array<\Factuarea\Sdk\Models\Components\Deactivate>  $deactivates
      * @param  ?\DateTime  $effectiveAt
+     * @param  ?\DateTime  $renewsAt
      * @phpstan-pure
      */
-    public function __construct(ManagedAccountPlanChangePreviewObject $object, FromPlan $fromPlan, ToPlan $toPlan, Effective $effective, int $proratedAmountCents, int $nextInvoiceAmountCents, string $currency, ?\DateTime $effectiveAt = null)
+    public function __construct(ManagedAccountPlanChangePreviewObject $object, FromPlan $fromPlan, ToPlan $toPlan, Effective $effective, int $proratedAmountCents, int $nextInvoiceAmountCents, string $currency, array $deactivates, ?\DateTime $effectiveAt = null, ?\DateTime $renewsAt = null)
     {
         $this->object = $object;
         $this->fromPlan = $fromPlan;
@@ -100,6 +119,8 @@ class ManagedAccountPlanChangePreview
         $this->proratedAmountCents = $proratedAmountCents;
         $this->nextInvoiceAmountCents = $nextInvoiceAmountCents;
         $this->currency = $currency;
+        $this->deactivates = $deactivates;
         $this->effectiveAt = $effectiveAt;
+        $this->renewsAt = $renewsAt;
     }
 }

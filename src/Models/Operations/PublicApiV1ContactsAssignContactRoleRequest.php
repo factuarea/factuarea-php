@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Brick\DateTime\LocalDate;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1ContactsAssignContactRoleRequest
 {
@@ -38,14 +37,7 @@ class PublicApiV1ContactsAssignContactRoleRequest
     public string $role;
 
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\ContactRoleV1Request $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public Components\ContactRoleV1Request $body;
-
-    /**
-     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency).
+     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency).
      *
      * @var ?string $idempotencyKey
      */
@@ -64,17 +56,15 @@ class PublicApiV1ContactsAssignContactRoleRequest
      * @param  string  $company
      * @param  string  $contact
      * @param  string  $role
-     * @param  \Factuarea\Sdk\Models\Components\ContactRoleV1Request  $body
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @phpstan-pure
      */
-    public function __construct(string $company, string $contact, string $role, Components\ContactRoleV1Request $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $contact, string $role, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null)
     {
         $this->company = $company;
         $this->contact = $contact;
         $this->role = $role;
-        $this->body = $body;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
     }

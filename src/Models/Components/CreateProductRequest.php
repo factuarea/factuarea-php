@@ -108,6 +108,14 @@ class CreateProductRequest
     public ?float $lowStockThreshold = null;
 
     /**
+     *
+     * @var ?float $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $grossWeightKg = null;
+
+    /**
      * Whether this product takes part in document-driven stock movements: with `true`, issuing or receiving a document that includes it moves its stock automatically and the movement is recorded in the stock ledger. It only takes effect if your company also has stock management enabled; absent or `null` means `false`.
      *
      * @var ?bool $manageStock
@@ -204,6 +212,7 @@ class CreateProductRequest
      * @param  ?array<?string>  $specifications
      * @param  ?float  $stock
      * @param  ?float  $lowStockThreshold
+     * @param  ?float  $grossWeightKg
      * @param  ?bool  $manageStock
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
@@ -215,7 +224,7 @@ class CreateProductRequest
      * @param  ?string  $impactToken
      * @phpstan-pure
      */
-    public function __construct(string $name, string $price, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
+    public function __construct(string $name, string $price, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
     {
         $this->name = $name;
         $this->price = $price;
@@ -228,6 +237,7 @@ class CreateProductRequest
         $this->specifications = $specifications;
         $this->stock = $stock;
         $this->lowStockThreshold = $lowStockThreshold;
+        $this->grossWeightKg = $grossWeightKg;
         $this->manageStock = $manageStock;
         $this->currency = $currency;
         $this->taxRateId = $taxRateId;

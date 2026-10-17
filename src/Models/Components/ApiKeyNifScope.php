@@ -32,16 +32,16 @@ class ApiKeyNifScope
     /**
      * Tax IDs the API key reaches, each with its opaque identifier and its fiscal identifier.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeScope> $scope
+     * @var array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeItem> $scope
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('scope')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeScope>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeItem>')]
     public array $scope;
 
     /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ApiKeyNifScopeObject  $object
-     * @param  array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeScope>  $scope
+     * @param  array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeItem>  $scope
      * @phpstan-pure
      */
     public function __construct(string $id, ApiKeyNifScopeObject $object, array $scope)

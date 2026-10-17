@@ -51,7 +51,7 @@ class Companies
     /**
      * Activate a tax ID of the account
      *
-     * Reactivate a deactivated (`inactive`) tax ID of the account. The reactivated tax ID is an ADDITIONAL tax ID of the account, so it goes through the additional tax ID gate before anything changes: the credential must reach the titular company of the account, which pays it (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; the tax ID only becomes `active` if the charge succeeds. A tax ID still covered for the current period is reactivated without a new charge, and trial, enterprise without a paid subscription and a test account are not charged. A tax ID that is not part of the account returns 404, like one outside the credential scope. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Reactivate a deactivated (`inactive`) tax ID of the account. The reactivated tax ID is an ADDITIONAL tax ID of the account, so it goes through the additional tax ID gate before anything changes: the credential must reach the titular company of the account, which pays it (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; the tax ID only becomes `active` if the charge succeeds. A tax ID still covered for the current period is reactivated without a new charge, and trial, enterprise without a paid subscription and a test account are not charged. A tax ID that the system suspended (its payer was blocked or its management ended) cannot be activated by hand, whatever the payment state: it returns 422 `business_rule_violation` with subcode `nif_suspended_by_system` before anything is charged, and it resumes on its own when the payment or the management is resolved. A tax ID that is not part of the account returns 404, like one outside the credential scope. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
      * @param  string  $account
      * @param  string  $company
@@ -140,7 +140,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -164,6 +164,18 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
             throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
@@ -176,7 +188,7 @@ class Companies
     /**
      * Activate several tax IDs of the account
      *
-     * Reactivate several deactivated (`inactive`) tax IDs of the account in one operation, charging the combined additional tax IDs in a single invoice. Pass `company_ids`. The gate is atomic: every tax ID is validated (it belongs to the account and is `inactive`, 422 `business_rule_violation` otherwise) before any charge, so if one is invalid the whole batch is rejected without charging or activating any; a tax ID that is not part of the account returns 404 for the whole batch. The batch then goes through the additional tax ID gate: the credential must reach the titular company of the account (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and keep the resulting active additional tax IDs within its cap (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; no tax ID is activated in either case. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Reactivate several deactivated (`inactive`) tax IDs of the account in one operation, charging the combined additional tax IDs in a single invoice. Pass `company_ids`. The gate is atomic: a tax ID the system suspended (its payer was blocked or its management ended) rejects the whole batch with 422 `business_rule_violation` and subcode `nif_suspended_by_system` before anything is charged; every tax ID is validated (it belongs to the account and is `inactive`, 422 `business_rule_violation` otherwise) before any charge, so if one is invalid the whole batch is rejected without charging or activating any; a tax ID that is not part of the account returns 404 for the whole batch. The batch then goes through the additional tax ID gate: the credential must reach the titular company of the account (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and keep the resulting active additional tax IDs within its cap (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; no tax ID is activated in either case. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
      * @param  \Factuarea\Sdk\Models\Components\ActivateCompaniesBatchV1Request  $body
      * @param  string  $account
@@ -270,7 +282,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -283,6 +295,18 @@ class Companies
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -413,6 +437,18 @@ class Companies
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -648,7 +684,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -763,7 +799,7 @@ class Companies
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1133,6 +1169,18 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['409'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
@@ -1146,6 +1194,18 @@ class Companies
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1420,7 +1480,7 @@ class Companies
     /**
      * Update a tax ID of the account
      *
-     * Update the profile of a tax ID of the account (`name`, `business_name`, address fields, `email`, `phone`). The `tax_id` is immutable after creation (sending it returns 422) and `country_aeat_zone` is derived from the address. Partial update: omitted fields keep their value; send `""` to clear a field. Only an `active` tax ID can be edited (422 `business_rule_violation` otherwise). Editing a profile is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Update the profile of a tax ID of the account (`name`, `business_name`, address fields, `email`, `phone`). The titular company of the account (your own, or the one of a managed account you operate) is edited here too, for these profile fields only: archiving, activating and deactivating do not apply to it. The `tax_id` is immutable after creation (sending it returns 422) and `country_aeat_zone` is derived from the address. Partial update: omitted fields keep their value; send `""` to clear a field. Only an `active` tax ID can be edited (422 `business_rule_violation` otherwise). Editing a profile is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesUpdateResponse
@@ -1629,7 +1689,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

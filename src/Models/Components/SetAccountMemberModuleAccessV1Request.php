@@ -20,7 +20,7 @@ class SetAccountMemberModuleAccessV1Request
     public string $companyId;
 
     /**
-     * Map of section to WITHDRAWN capabilities. Required; it can be empty.
+     * Map of section to WITHDRAWN capabilities (`access`, `create`, `edit`, `delete`, `send`, `export`). Required; it can be empty.
      *
      * @var array<array<\Factuarea\Sdk\Models\Components\SetAccountMemberModuleAccessV1RequestRestriction>> $restrictions
      */
@@ -29,13 +29,25 @@ class SetAccountMemberModuleAccessV1Request
     public array $restrictions;
 
     /**
+     * Administrator-only sections GRANTED to the member in that tax ID (for example `verifactu`); never the Administrator keys (user management, plan and subscription, API and developers, digital certificate). Optional: omitted, the grants are left as they are; sent — even empty — it replaces them entirely.
+     *
+     * @var ?array<string> $grants
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('grants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $grants = null;
+
+    /**
      * @param  string  $companyId
      * @param  array<array<\Factuarea\Sdk\Models\Components\SetAccountMemberModuleAccessV1RequestRestriction>>  $restrictions
+     * @param  ?array<string>  $grants
      * @phpstan-pure
      */
-    public function __construct(string $companyId, array $restrictions)
+    public function __construct(string $companyId, array $restrictions, ?array $grants = null)
     {
         $this->companyId = $companyId;
         $this->restrictions = $restrictions;
+        $this->grants = $grants;
     }
 }

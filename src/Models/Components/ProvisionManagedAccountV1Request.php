@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ProvisionManagedAccountV1Request - Provision a managed account for one of your clients. Required: `external_ref` (your own reference, unique per provider: repeating it returns the same account), `plan` (`emprendedor` or `empresario`), `tax_id` (Spanish tax ID) and `legal_name`. `access_level` is the level your account keeps on it (`none` by default). `owner_email` is required with a live key and whenever `send_email` is `true`; `send_email` is `false` by default, so the claim voucher comes back ONCE in the response for you to deliver. The rest of the fiscal profile (`display_name`, address, `language`) is optional. The provider is always the account of the key and never comes from the body; the environment of the new account is the one of the key. */
+/** ProvisionManagedAccountV1Request - Provision a managed account for one of your clients. Required: `external_ref` (your own reference, unique per provider: repeating it returns the same account), `plan` (`emprendedor`, `empresario` or `integral`), `tax_id` (Spanish tax ID) and `legal_name`. `access_level` is the level your account keeps on it (`none` by default). `owner_email` is required with a live key and whenever `send_email` is `true`; `send_email` is `false` by default, so the claim voucher comes back ONCE in the response for you to deliver. The rest of the fiscal profile (`display_name`, address, `language`) is optional. The provider is always the account of the key and never comes from the body; the environment of the new account is the one of the key. */
 class ProvisionManagedAccountV1Request
 {
     /**
@@ -21,7 +21,7 @@ class ProvisionManagedAccountV1Request
     public string $externalRef;
 
     /**
-     * Plan of the managed account: `emprendedor` or `empresario`. `enterprise` returns 422 `managed_account_plan_not_self_serve`.
+     * Plan of the managed account: `emprendedor`, `empresario` or `integral`. `enterprise` returns 422 `managed_account_plan_not_self_serve`.
      *
      * @var \Factuarea\Sdk\Models\Components\ProvisionManagedAccountV1RequestPlan $plan
      */

@@ -67,12 +67,13 @@ class Product
     public ProductItemKind $itemKind;
 
     /**
-     * UNECE base unit code.
+     * UNECE base unit code. Only the nine measure units can be a base unit (`C62`, `KGM`, `GRM`, `LTR`, `MLT`, `MTR`, `MTK`, `HUR`, `DAY`); a packaging or count unit (`H87`, `XPK`, `XBX`…) can only be the unit of a presentation or a supplier offer. It cannot be edited once the product has history: see `base_unit_change` and `POST /v1/companies/{company}/products/{product}/base-unit-replacement`.
      *
-     * @var string $baseUnit
+     * @var \Factuarea\Sdk\Models\Components\ProductBaseUnit $baseUnit
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit')]
-    public string $baseUnit;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductBaseUnit')]
+    public ProductBaseUnit $baseUnit;
 
     /**
      * Product gallery images.
@@ -289,6 +290,25 @@ class Product
     public ?\DateTime $updatedAt;
 
     /**
+     * Whether the base unit of the product can be edited in place. `mode` is `direct` exactly when there are no blockers; with blockers it is `replacement` and the base unit is changed by replacing the product (`POST /v1/companies/{company}/products/{product}/base-unit-replacement`); an already replaced product is `unavailable` with no blockers. Attempting to edit `base_unit` with blockers is rejected with 422 `business_rule_violation`, subcode `product_base_unit_locked`, and the same `blockers` in `details`. Only calculated on single-product reads (show, create, update, replacement): list responses omit the key.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BaseUnitChange $baseUnitChange
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_change')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BaseUnitChange|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?BaseUnitChange $baseUnitChange = null;
+
+    /**
+     * Gross transport weight in kg per BASE unit (decimal string, up to 4 decimals, greater than 0), packaging included; `null` when unknown. Rejected with 422 `gross_weight_not_allowed` for services and for products whose base unit is a mass unit (`KGM`, `GRM`), where the weight is the quantity itself. A variant weight replaces it for that variant; a fixed presentation may declare its own weight per commercial unit.
+     *
+     * @var ?string $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $grossWeightKg = null;
+
+    /**
      * External integration key (ERP/CRM/e-commerce) mapping this product to a record in a third-party system. Free-format, unique per company, orthogonal to the catalog `sku` (a product may have both, neither, or either).
      *
      * @var ?string $externalId
@@ -296,6 +316,24 @@ class Product
     #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $externalId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProductReplacementLink $replaces
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('replaces')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductReplacementLink|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProductReplacementLink $replaces = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProductReplacementLink $replacedBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('replaced_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductReplacementLink|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProductReplacementLink $replacedBy = null;
 
     /**
      * Whether the product participates in document-driven stock movements (invoices, delivery notes). Requires the company `stock_management` module to be enabled. Defaults to `false`.
@@ -314,7 +352,7 @@ class Product
      * @param  string  $currency
      * @param  string  $stock
      * @param  \Factuarea\Sdk\Models\Components\ProductItemKind  $itemKind
-     * @param  string  $baseUnit
+     * @param  \Factuarea\Sdk\Models\Components\ProductBaseUnit  $baseUnit
      * @param  array<\Factuarea\Sdk\Models\Components\Gallery>  $gallery
      * @param  bool  $isActive
      * @param  array<string>  $tags
@@ -342,10 +380,14 @@ class Product
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\BaseUnitChange  $baseUnitChange
+     * @param  ?string  $grossWeightKg
      * @param  ?string  $externalId
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductReplacementLink  $replaces
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductReplacementLink  $replacedBy
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, string $stock, ProductItemKind $itemKind, string $baseUnit, array $gallery, bool $isActive, array $tags, int $presentationCount, int $variantCount, int $supplierOfferCount, int $optionGroupCount, int $configurationCount, ProductCatalogAvailabilityMode $catalogAvailabilityMode, array $presentations, array $variants, array $supplierOffers, array $optionGroups, array $configurations, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $externalId = null, ?bool $manageStock = false)
+    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, string $stock, ProductItemKind $itemKind, ProductBaseUnit $baseUnit, array $gallery, bool $isActive, array $tags, int $presentationCount, int $variantCount, int $supplierOfferCount, int $optionGroupCount, int $configurationCount, ProductCatalogAvailabilityMode $catalogAvailabilityMode, array $presentations, array $variants, array $supplierOffers, array $optionGroups, array $configurations, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?BaseUnitChange $baseUnitChange = null, ?string $grossWeightKg = null, ?string $externalId = null, ?ProductReplacementLink $replaces = null, ?ProductReplacementLink $replacedBy = null, ?bool $manageStock = false)
     {
         $this->id = $id;
         $this->object = $object;
@@ -381,7 +423,11 @@ class Product
         $this->metadata = $metadata;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->baseUnitChange = $baseUnitChange;
+        $this->grossWeightKg = $grossWeightKg;
         $this->externalId = $externalId;
+        $this->replaces = $replaces;
+        $this->replacedBy = $replacedBy;
         $this->manageStock = $manageStock;
     }
 }

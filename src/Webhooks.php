@@ -795,7 +795,7 @@ class Webhooks
     /**
      * Update an account webhook endpoint
      *
-     * Partially update a webhook endpoint of your ACCOUNT: `url`, `enabled_events`, `account_relationship` (`own`, `managed` or `all`), `description` or `api_version`. Omitted fields keep their value and `description: null` clears it; the environment never changes. Requires a live key: a test key cannot write (403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway). It also requires the same account capability as the creation. An endpoint that does not exist, was deleted or belongs to another account or environment returns 404 `webhook_endpoint_not_found`; an unsupported `api_version` returns 422 with its own subcode.
+     * Partially update a webhook endpoint of your ACCOUNT: `url`, `enabled_events`, `account_relationship` (`own`, `managed` or `all`), `description`, `api_version` or `status` (`active` re-enables the endpoint and `disabled` pauses it). Omitted fields keep their value and `description: null` clears it; the environment never changes. Requires a live key: a test key cannot write (403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway). It also requires the same account capability as the creation. An endpoint that does not exist, was deleted or belongs to another account or environment returns 404 `webhook_endpoint_not_found`; an unsupported `api_version` returns 422 with its own subcode.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountWebhooksUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountWebhooksUpdateResponse

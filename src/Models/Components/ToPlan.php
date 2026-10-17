@@ -14,5 +14,6 @@ enum ToPlan: string
 {
     case Emprendedor = 'emprendedor';
     case Empresario = 'empresario';
+    case Integral = 'integral';
     case Enterprise = 'enterprise';
 }

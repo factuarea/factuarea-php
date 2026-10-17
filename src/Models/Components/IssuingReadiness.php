@@ -23,10 +23,10 @@ class IssuingReadiness
     /**
      * Machine-readable reasons the NIF cannot issue, in no particular order. Empty when `can_issue` is `true`. `verifactu_certificate_missing` means VeriFactu is enabled for the NIF but it has no valid certificate (none, revoked or expired). New reasons may be added over time: treat an unknown one as a blocker you cannot fix through the API.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Blocker> $blockers
+     * @var array<\Factuarea\Sdk\Models\Components\BlockerEnum> $blockers
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('blockers')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Blocker>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BlockerEnum>')]
     public array $blockers;
 
     /**
@@ -80,7 +80,7 @@ class IssuingReadiness
 
     /**
      * @param  bool  $canIssue
-     * @param  array<\Factuarea\Sdk\Models\Components\Blocker>  $blockers
+     * @param  array<\Factuarea\Sdk\Models\Components\BlockerEnum>  $blockers
      * @param  string  $censusStatus
      * @param  bool  $hasDefaultSeries
      * @param  bool  $fiscalProfileComplete

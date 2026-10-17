@@ -51,7 +51,7 @@ class RecurringInvoices
     /**
      * Activate recurring invoice
      *
-     * Activate a paused recurring invoice. The next invoice will be generated according to the schedule. This is a semantic alias of `POST /recurring_invoices/{recurring_invoice}/resume` — both behave identically; neither is deprecated.
+     * Activate a paused recurring invoice. The next invoice will be generated according to the schedule. This is a semantic alias of `POST /companies/{company}/recurring-invoices/{recurring_invoice}/resume` — both behave identically; neither is deprecated.
      *
      * @param  string  $company
      * @param  string  $recurringInvoice
@@ -425,7 +425,7 @@ class RecurringInvoices
     /**
      * Bulk change recurring invoice status
      *
-     * Move up to 50 recurring invoices (by id) to a status from the closed set `[active, paused]`: `paused` pauses the active ones and `active` resumes the paused ones, each through the same single transition —and therefore the same aggregate guards— as `POST /recurring_invoices/{recurring_invoice}/pause` and `/resume`. Returns a `BulkPartialSuccessResult`; nothing aborts the batch: ids that are not found, already in the target status, cancelled or with their occurrences exhausted come back in `failures[]` with their `error_code` and a Spanish `error_message`.
+     * Move up to 50 recurring invoices (by id) to a status from the closed set `[active, paused]`: `paused` pauses the active ones and `active` resumes the paused ones, each through the same single transition —and therefore the same aggregate guards— as `POST /companies/{company}/recurring-invoices/{recurring_invoice}/pause` and `/resume`. Returns a `BulkPartialSuccessResult`; nothing aborts the batch: ids that are not found, already in the target status, cancelled or with their occurrences exhausted come back in `failures[]` with their `error_code` and a Spanish `error_message`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusRecurringInvoicesV1Request  $body
      * @param  string  $company
@@ -1142,7 +1142,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1660,7 +1660,7 @@ class RecurringInvoices
     /**
      * Resume recurring invoice
      *
-     * Resume a paused recurring invoice. This is a semantic alias of `POST /recurring_invoices/{recurring_invoice}/activate` — both behave identically; neither is deprecated.
+     * Resume a paused recurring invoice. This is a semantic alias of `POST /companies/{company}/recurring-invoices/{recurring_invoice}/activate` — both behave identically; neither is deprecated.
      *
      * @param  string  $company
      * @param  string  $recurringInvoice

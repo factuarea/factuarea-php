@@ -39,6 +39,15 @@ class ManagedAccountImportManagedAccountImportRow
     public array $errors;
 
     /**
+     * Stable code of each error of `errors`, with the SAME keys (the column of the file, or `row` / `plan` for an error of the whole row or of its plan change): `required`, `invalid_mode`, `invalid_plan`, `plan_not_allowed`, `invalid_tax_id`, `invalid_email`, `invalid_language`, `invalid_access_level`, `too_long`, `too_short`, `duplicate_in_file`, `tax_id_mismatch`, `unknown_column`, `duplicate_column`, `unnamed_column` and `column_count_mismatch` (column errors), `invalid_value`, `row_rejected` and `row_apply_failed` (`row`), `plan_change_rejected` (`plan`; the concrete reason of `row_rejected` and `plan_change_rejected` is the row `code`). Language-independent: use it, not the Spanish message of `errors`, to react to or translate an error. Always an object, `{}` when there is none.
+     *
+     * @var array<string, \Factuarea\Sdk\Models\Components\ManagedAccountImportErrorCodes> $errorCodes
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('error_codes')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, \Factuarea\Sdk\Models\Components\ManagedAccountImportErrorCodes>')]
+    public array $errorCodes;
+
+    /**
      * Monthly net amount the row adds to your subscription, in cents (0 when it is not charged: test import, row not applicable, already existing, trial).
      *
      * @var int $monthlyAmountCents
@@ -97,7 +106,7 @@ class ManagedAccountImportManagedAccountImportRow
     public ?string $taxId;
 
     /**
-     * Reason of a `WARNING`, `BLOCKED` or `ERROR`, or `null`. Report codes: `managed_account_claimed`, `access_level_below_relation`, `plan_change_not_confirmed`, `plan_change_failed` (`WARNING`; an existing account whose profile was updated but whose confirmed plan change failed is `WARNING` with the reason of that failure in `errors.plan`); `managed_account_plan_not_self_serve`, `managed_account_provider_in_trial`, `managed_accounts_limit_reached`, `billing_not_current`, `payment_method_required`, `nif_transfer_required`, `additional_nif_not_in_plan`, `additional_nif_limit_reached`, `managed_account_external_ref_in_other_environment`, `managed_account_no_longer_managed`, `management_ended`, `access_level_raise_forbidden`, `access_level_above_relation`, `plan_change_not_paid_by_provider`, `plan_change_requires_operate`, `forbidden_action` (`BLOCKED`); `live_credential_required`, `insufficient_scope`, `row_apply_failed` (`ERROR`). A row the domain rejects while being applied is `BLOCKED` with the public code (or subcode) of that rejection, so treat unknown values as a `BLOCKED` reason. A column error is reported in `errors`, with `code` `null`; so is a value the account or tax ID rejects while the row is applied (`ERROR`, message in `errors.row`), which never stops the rest of the import.
+     * Reason of a `WARNING`, `BLOCKED` or `ERROR`, or `null`. Report codes: `managed_account_claimed`, `access_level_below_relation`, `plan_change_not_confirmed`, `plan_change_failed` (`WARNING`; an existing account whose profile was updated but whose confirmed plan change failed is `WARNING` with the reason of that failure in `errors.plan`); `managed_account_plan_not_self_serve`, `managed_account_provider_in_trial`, `managed_accounts_limit_reached`, `billing_not_current`, `payment_method_required`, `nif_transfer_required`, `additional_nif_not_in_plan`, `additional_nif_limit_reached`, `managed_account_external_ref_in_other_environment`, `managed_account_no_longer_managed`, `management_ended`, `access_level_raise_forbidden`, `access_level_above_relation`, `plan_change_not_paid_by_provider`, `plan_change_requires_operate`, `forbidden_action` (`BLOCKED`); `live_credential_required`, `insufficient_scope`, `row_apply_failed` (`ERROR`). A row the domain rejects while being applied is `BLOCKED` with the public code (or subcode) of that rejection, so treat unknown values as a `BLOCKED` reason. A column error is reported in `errors` (and its code in `error_codes`), with `code` `null`; so is a value the account or tax ID rejects while the row is applied (`ERROR`, message in `errors.row`), which never stops the rest of the import.
      *
      * @var ?string $code
      */
@@ -105,7 +114,7 @@ class ManagedAccountImportManagedAccountImportRow
     public ?string $code;
 
     /**
-     * Plan of a `managed_account` row (`emprendedor` or `empresario`), or `null`. An `own_nif` row inherits the plan of your account and carries no plan, and a row of status `ERROR` rejected while reading the file (it carries `errors` per column) carries `null` too; an `ERROR` raised while applying keeps the plan requested.
+     * Plan of a `managed_account` row (`emprendedor`, `empresario` or `integral`), or `null`. An `own_nif` row inherits the plan of your account and carries no plan, and a row of status `ERROR` rejected while reading the file (it carries `errors` per column) carries `null` too; an `ERROR` raised while applying keeps the plan requested.
      *
      * @var ?string $plan
      */
@@ -119,6 +128,22 @@ class ManagedAccountImportManagedAccountImportRow
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('account_id')]
     public ?string $accountId;
+
+    /**
+     * Name of the tax ID read from the file, or `null` when the row carries none. The columns read from the file (`values`) are never published.
+     *
+     * @var ?string $name
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
+    public ?string $name;
+
+    /**
+     * Opaque identifier (UUID v7) of the tax ID the row registered or reconciled, only for `own_nif` rows (the tax ID of a `managed_account` row belongs to ANOTHER account, so it is not published); `null` otherwise.
+     *
+     * @var ?string $companyId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('company_id')]
+    public ?string $companyId;
 
     /**
      * Reason of `customers_status: blocked`: the row itself was not applied (`nif_not_applied`), your account does not `operate` the managed account, the issuer is not an owner or admin of your own tax ID, your own tax ID is outside the tax ID scope of the key and was not registered by this import (`nif_not_in_key_scope`), the key lacks `contacts:write`, or the contact importer failed.
@@ -149,6 +174,7 @@ class ManagedAccountImportManagedAccountImportRow
      * @param  int  $line
      * @param  \Factuarea\Sdk\Models\Components\RowStatus  $status
      * @param  array<string, string>  $errors
+     * @param  array<string, \Factuarea\Sdk\Models\Components\ManagedAccountImportErrorCodes>  $errorCodes
      * @param  int  $monthlyAmountCents
      * @param  int  $prorationAmountCents
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountImportCustomersStatus  $customersStatus
@@ -159,16 +185,19 @@ class ManagedAccountImportManagedAccountImportRow
      * @param  ?string  $code
      * @param  ?string  $plan
      * @param  ?string  $accountId
+     * @param  ?string  $name
+     * @param  ?string  $companyId
      * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountImportCustomersCode  $customersCode
      * @param  ?string  $claimToken
      * @param  ?string  $claimUrl
      * @phpstan-pure
      */
-    public function __construct(int $line, RowStatus $status, array $errors, int $monthlyAmountCents, int $prorationAmountCents, ManagedAccountImportCustomersStatus $customersStatus, int $customersQueued, ?ManagedAccountImportMode $mode = null, ?string $externalRef = null, ?string $taxId = null, ?string $code = null, ?string $plan = null, ?string $accountId = null, ?ManagedAccountImportCustomersCode $customersCode = null, ?string $claimToken = null, ?string $claimUrl = null)
+    public function __construct(int $line, RowStatus $status, array $errors, array $errorCodes, int $monthlyAmountCents, int $prorationAmountCents, ManagedAccountImportCustomersStatus $customersStatus, int $customersQueued, ?ManagedAccountImportMode $mode = null, ?string $externalRef = null, ?string $taxId = null, ?string $code = null, ?string $plan = null, ?string $accountId = null, ?string $name = null, ?string $companyId = null, ?ManagedAccountImportCustomersCode $customersCode = null, ?string $claimToken = null, ?string $claimUrl = null)
     {
         $this->line = $line;
         $this->status = $status;
         $this->errors = $errors;
+        $this->errorCodes = $errorCodes;
         $this->monthlyAmountCents = $monthlyAmountCents;
         $this->prorationAmountCents = $prorationAmountCents;
         $this->customersStatus = $customersStatus;
@@ -179,6 +208,8 @@ class ManagedAccountImportManagedAccountImportRow
         $this->code = $code;
         $this->plan = $plan;
         $this->accountId = $accountId;
+        $this->name = $name;
+        $this->companyId = $companyId;
         $this->customersCode = $customersCode;
         $this->claimToken = $claimToken;
         $this->claimUrl = $claimUrl;

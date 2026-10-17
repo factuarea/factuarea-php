@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ManagedAccountWithClaim - The response of provisioning a managed account: the fields of `ManagedAccount` PLUS its claim voucher. `claim_token` and `claim_url` are returned ONCE, only for a new live account provisioned with `send_email: false`. They are `null` when the link was emailed to the holder (`send_email: true`), for a test account, when the `external_ref` was already provisioned (200) and in an idempotent replay: the voucher is never stored in the clear, not even in the idempotency cache. */
+/** ManagedAccountWithClaim - The response of provisioning a managed account: the fields of `ManagedAccount` PLUS its claim voucher. `claim_token` and `claim_url` are returned ONCE, only for a new live account provisioned with `send_email: false`. They are `null` when the link was emailed to the holder (`send_email: true`), for a test account, when the `external_ref` was already provisioned (200) and in an idempotent replay: the voucher is never stored in the clear, not even in the idempotency cache. `claim_expires_at` is not a secret: it is returned also when the link was emailed and in an idempotent replay of that request. `reactivated` tells that the call reactivated a management that had ended before the holder claimed the account. */
 class ManagedAccountWithClaim
 {
     /**
@@ -132,6 +132,14 @@ class ManagedAccountWithClaim
     public \DateTime $createdAt;
 
     /**
+     * `true` only when provisioning REACTIVATED a management that had ended before the holder claimed the account (it carries no voucher, so `claim_expires_at` is `null`); `false` for a new account or one already in force.
+     *
+     * @var bool $reactivated
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reactivated')]
+    public bool $reactivated;
+
+    /**
      * Plan requested by a downgrade that takes effect at the end of the current period, or `null`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\ManagedAccountWithClaimPendingPlan $pendingPlan
@@ -158,6 +166,31 @@ class ManagedAccountWithClaim
     public ?\DateTime $claimedAt;
 
     /**
+     * The PENDING claim voucher of the account, WITHOUT its secret or its link (those are returned once, by the provisioning and by the reissue). `null` when the account is already claimed, is a test account or has no pending voucher.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ManagedAccountWithClaimClaim $claim
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('claim')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ManagedAccountWithClaimClaim|null')]
+    public ?ManagedAccountWithClaimClaim $claim;
+
+    /**
+     * When the holder took over the payment of the account (ISO 8601), or `null` while your account still pays it (`paid_by_provider`).
+     *
+     * @var ?\DateTime $paymentAssumedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_assumed_at')]
+    public ?\DateTime $paymentAssumedAt;
+
+    /**
+     * End of the current billing period of the plan (ISO 8601): when a pending downgrade takes effect and the next periodic invoice is issued. `null` when the account is not charged to your account.
+     *
+     * @var ?\DateTime $planRenewsAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('plan_renews_at')]
+    public ?\DateTime $planRenewsAt;
+
+    /**
      * Plaintext claim voucher, returned ONCE. Treat it as a credential: whoever holds it can claim the account. `null` when there is no voucher to deliver (see the schema description).
      *
      * @var ?string $claimToken
@@ -174,7 +207,7 @@ class ManagedAccountWithClaim
     public ?string $claimUrl;
 
     /**
-     * Expiry of the voucher (ISO 8601), or `null` when no voucher was returned.
+     * Expiry of the voucher (ISO 8601). It is returned also when the link was emailed to the holder (`send_email: true`): the expiry is not a secret. `null` only when no voucher was issued (test account, idempotent retry or reactivated management).
      *
      * @var ?\DateTime $claimExpiresAt
      */
@@ -196,15 +229,19 @@ class ManagedAccountWithClaim
      * @param  \Factuarea\Sdk\Models\Components\ManagedAccountWithClaimManagement  $management
      * @param  bool  $paidByProvider
      * @param  \DateTime  $createdAt
+     * @param  bool  $reactivated
      * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountWithClaimPendingPlan  $pendingPlan
      * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountWithClaimLanguage  $language
      * @param  ?\DateTime  $claimedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountWithClaimClaim  $claim
+     * @param  ?\DateTime  $paymentAssumedAt
+     * @param  ?\DateTime  $planRenewsAt
      * @param  ?string  $claimToken
      * @param  ?string  $claimUrl
      * @param  ?\DateTime  $claimExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ManagedAccountWithClaimObject $object, string $externalRef, ManagedAccountWithClaimStatus $status, ManagedAccountWithClaimEnvironment $environment, ManagedAccountWithClaimPlan $plan, string $billingInterval, ManagedAccountWithClaimAccessLevel $accessLevel, string $displayName, array $companies, bool $claimed, ManagedAccountWithClaimManagement $management, bool $paidByProvider, \DateTime $createdAt, ?ManagedAccountWithClaimPendingPlan $pendingPlan = null, ?ManagedAccountWithClaimLanguage $language = null, ?\DateTime $claimedAt = null, ?string $claimToken = null, ?string $claimUrl = null, ?\DateTime $claimExpiresAt = null)
+    public function __construct(string $id, ManagedAccountWithClaimObject $object, string $externalRef, ManagedAccountWithClaimStatus $status, ManagedAccountWithClaimEnvironment $environment, ManagedAccountWithClaimPlan $plan, string $billingInterval, ManagedAccountWithClaimAccessLevel $accessLevel, string $displayName, array $companies, bool $claimed, ManagedAccountWithClaimManagement $management, bool $paidByProvider, \DateTime $createdAt, bool $reactivated, ?ManagedAccountWithClaimPendingPlan $pendingPlan = null, ?ManagedAccountWithClaimLanguage $language = null, ?\DateTime $claimedAt = null, ?ManagedAccountWithClaimClaim $claim = null, ?\DateTime $paymentAssumedAt = null, ?\DateTime $planRenewsAt = null, ?string $claimToken = null, ?string $claimUrl = null, ?\DateTime $claimExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -220,9 +257,13 @@ class ManagedAccountWithClaim
         $this->management = $management;
         $this->paidByProvider = $paidByProvider;
         $this->createdAt = $createdAt;
+        $this->reactivated = $reactivated;
         $this->pendingPlan = $pendingPlan;
         $this->language = $language;
         $this->claimedAt = $claimedAt;
+        $this->claim = $claim;
+        $this->paymentAssumedAt = $paymentAssumedAt;
+        $this->planRenewsAt = $planRenewsAt;
         $this->claimToken = $claimToken;
         $this->claimUrl = $claimUrl;
         $this->claimExpiresAt = $claimExpiresAt;

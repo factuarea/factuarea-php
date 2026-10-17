@@ -95,6 +95,24 @@ class ManagedAccountImportStats
     public int $prorationAmountCents;
 
     /**
+     * VAT of the amount charged at once, in cents (already rounded per account). 0 in imports saved before VAT was charged and in test imports.
+     *
+     * @var ?int $taxAmountCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('tax_amount_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $taxAmountCents = null;
+
+    /**
+     * Amount actually charged at once with VAT (prorated amount plus `tax_amount_cents`), in cents. 0 in imports saved before VAT was charged and in test imports.
+     *
+     * @var ?int $totalAmountCents
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount_cents')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $totalAmountCents = null;
+
+    /**
      * @param  int  $totalRows
      * @param  int  $valid
      * @param  int  $warning
@@ -106,9 +124,11 @@ class ManagedAccountImportStats
      * @param  int  $customersQueued
      * @param  int  $monthlyAmountCents
      * @param  int  $prorationAmountCents
+     * @param  ?int  $taxAmountCents
+     * @param  ?int  $totalAmountCents
      * @phpstan-pure
      */
-    public function __construct(int $totalRows, int $valid, int $warning, int $alreadyExists, int $blocked, int $error, int $created, int $reconciled, int $customersQueued, int $monthlyAmountCents, int $prorationAmountCents)
+    public function __construct(int $totalRows, int $valid, int $warning, int $alreadyExists, int $blocked, int $error, int $created, int $reconciled, int $customersQueued, int $monthlyAmountCents, int $prorationAmountCents, ?int $taxAmountCents = null, ?int $totalAmountCents = null)
     {
         $this->totalRows = $totalRows;
         $this->valid = $valid;
@@ -121,5 +141,7 @@ class ManagedAccountImportStats
         $this->customersQueued = $customersQueued;
         $this->monthlyAmountCents = $monthlyAmountCents;
         $this->prorationAmountCents = $prorationAmountCents;
+        $this->taxAmountCents = $taxAmountCents;
+        $this->totalAmountCents = $totalAmountCents;
     }
 }

@@ -51,7 +51,7 @@ class TimeInvoices
     /**
      * Invoice project time
      *
-     * Turn the selected billable time into a DRAFT invoice for the project billing contact, grouped by `grouping`, and mark those entries as invoiced. Requires the `invoices:write` scope (it creates an invoice), not a projects scope. The draft is numbered when issued from the invoice API. Entries already invoiced return 422 `task_time_entry_invoiced`; if the plan has used up its invoices or yearly documents, 402 `limit_exceeded` and nothing is created. Sending the same `batch_id` again with the same request returns the same invoice; reusing a `batch_id` with a different project selection, grouping or entries (or after its invoice was deleted) returns 409 `idempotency_key_reused`. Deleting the draft invoice releases the entries.
+     * Turn the selected billable time into a DRAFT invoice for the project billing contact, grouped by `grouping`, and mark those entries as invoiced. Requires the `invoices:write` scope (it creates an invoice), not a projects scope. The draft is numbered when issued from the invoice API. Entries already invoiced return 422 `task_time_entry_invoiced`; if the plan has used up its invoices or yearly documents, 402 `limit_exceeded` and nothing is created. Sending the same `batch_id` again with the same request returns the same invoice; reusing a `batch_id` with a different project selection, grouping or entries (or after its invoice was deleted) returns 422 `idempotency_key_reused`. Deleting the draft invoice releases the entries.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsTimeInvoicesCreateResponse

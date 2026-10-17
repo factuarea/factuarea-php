@@ -89,6 +89,31 @@ class AccountInvitation
     public \DateTime $expiresAt;
 
     /**
+     * Instant (ISO 8601) the invitation was created, or `null` when it is not known.
+     *
+     * @var ?\DateTime $createdAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('created_at')]
+    public ?\DateTime $createdAt;
+
+    /**
+     * Instant (ISO 8601) of the last send: the creation or the last resend. `null` when it is not known.
+     *
+     * @var ?\DateTime $sentAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sent_at')]
+    public ?\DateTime $sentAt;
+
+    /**
+     * The person who created the invitation. `null` when that person no longer belongs to the account.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\AccountInvitationInvitedBy $invitedBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invited_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountInvitationInvitedBy|null')]
+    public ?AccountInvitationInvitedBy $invitedBy;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\AccountInvitationObject  $object
      * @param  string  $email
@@ -98,9 +123,12 @@ class AccountInvitation
      * @param  bool  $externalAdvisor
      * @param  \Factuarea\Sdk\Models\Components\AccountInvitationStatus  $status
      * @param  \DateTime  $expiresAt
+     * @param  ?\DateTime  $createdAt
+     * @param  ?\DateTime  $sentAt
+     * @param  ?\Factuarea\Sdk\Models\Components\AccountInvitationInvitedBy  $invitedBy
      * @phpstan-pure
      */
-    public function __construct(string $id, AccountInvitationObject $object, string $email, AccountInvitationRole $role, array $grants, bool $sendEmail, bool $externalAdvisor, AccountInvitationStatus $status, \DateTime $expiresAt)
+    public function __construct(string $id, AccountInvitationObject $object, string $email, AccountInvitationRole $role, array $grants, bool $sendEmail, bool $externalAdvisor, AccountInvitationStatus $status, \DateTime $expiresAt, ?\DateTime $createdAt = null, ?\DateTime $sentAt = null, ?AccountInvitationInvitedBy $invitedBy = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -111,5 +139,8 @@ class AccountInvitation
         $this->externalAdvisor = $externalAdvisor;
         $this->status = $status;
         $this->expiresAt = $expiresAt;
+        $this->createdAt = $createdAt;
+        $this->sentAt = $sentAt;
+        $this->invitedBy = $invitedBy;
     }
 }

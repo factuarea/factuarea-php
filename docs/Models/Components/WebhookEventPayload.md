@@ -518,6 +518,96 @@ Components\WebhookEventPayloadDeliveryNoteEmailSent $value = /* values here */
 Components\WebhookEventPayloadDeliveryNoteEmailFailed $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadTransportDocumentCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentCreated
+*/
+Components\WebhookEventPayloadTransportDocumentCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentUpdated
+*/
+Components\WebhookEventPayloadTransportDocumentUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentIssued`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentIssued
+*/
+Components\WebhookEventPayloadTransportDocumentIssued $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentModified`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentModified
+*/
+Components\WebhookEventPayloadTransportDocumentModified $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentClosed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentClosed
+*/
+Components\WebhookEventPayloadTransportDocumentClosed $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentReopened`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentReopened
+*/
+Components\WebhookEventPayloadTransportDocumentReopened $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentCancelled
+*/
+Components\WebhookEventPayloadTransportDocumentCancelled $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentSuperseded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentSuperseded
+*/
+Components\WebhookEventPayloadTransportDocumentSuperseded $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentEmailSent`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentEmailSent
+*/
+Components\WebhookEventPayloadTransportDocumentEmailSent $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadTransportDocumentEmailFailed`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadTransportDocumentEmailFailed
+*/
+Components\WebhookEventPayloadTransportDocumentEmailFailed $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadPurchaseInvoiceCreated`
 
 ```php
@@ -813,6 +903,15 @@ Components\WebhookEventPayloadProductCreated $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProductUpdated
 */
 Components\WebhookEventPayloadProductUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadProductReplaced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProductReplaced
+*/
+Components\WebhookEventPayloadProductReplaced $value = /* values here */
 ```
 
 ### `Components\WebhookEventPayloadPaymentReceived`

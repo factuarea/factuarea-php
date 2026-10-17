@@ -31,21 +31,13 @@ class PublicApiV1ContactsRemoveContactRoleRequest
     /**
      * Contact role: `customer`, `supplier` or `lead`.
      *
-     * @var string $rolePathParameter
+     * @var string $role
      */
     #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=role')]
-    public string $rolePathParameter;
+    public string $role;
 
     /**
-     * Ignored: the role is always read from the `{role}` path segment.
-     *
-     * @var \Factuarea\Sdk\Models\Operations\Role $roleQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=role')]
-    public Role $roleQueryParameter;
-
-    /**
-     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
+     * Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs.
      *
      * @var string $idempotencyKey
      */
@@ -63,18 +55,16 @@ class PublicApiV1ContactsRemoveContactRoleRequest
     /**
      * @param  string  $company
      * @param  string  $contact
-     * @param  string  $rolePathParameter
-     * @param  \Factuarea\Sdk\Models\Operations\Role  $roleQueryParameter
+     * @param  string  $role
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
      * @phpstan-pure
      */
-    public function __construct(string $company, string $contact, string $rolePathParameter, Role $roleQueryParameter, string $idempotencyKey, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $contact, string $role, string $idempotencyKey, ?LocalDate $factuareaVersion = null)
     {
         $this->company = $company;
         $this->contact = $contact;
-        $this->rolePathParameter = $rolePathParameter;
-        $this->roleQueryParameter = $roleQueryParameter;
+        $this->role = $role;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
     }

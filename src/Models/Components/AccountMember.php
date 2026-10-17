@@ -81,6 +81,22 @@ class AccountMember
     public AccountMemberPermissions $permissions;
 
     /**
+     * Instant (ISO 8601) the person joined the account, or `null` when it is not known.
+     *
+     * @var ?\DateTime $joinedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('joined_at')]
+    public ?\DateTime $joinedAt;
+
+    /**
+     * Lower bound (ISO 8601) of the last time the person accessed the account, or `null` if they never did. It reflects the last session, not every request.
+     *
+     * @var ?\DateTime $lastAccessAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('last_access_at')]
+    public ?\DateTime $lastAccessAt;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\AccountMemberObject  $object
      * @param  string  $name
@@ -89,9 +105,11 @@ class AccountMember
      * @param  bool  $externalAdvisor
      * @param  array<\Factuarea\Sdk\Models\Components\AccountMemberGrantAccountMemberGrant>  $grants
      * @param  \Factuarea\Sdk\Models\Components\AccountMemberPermissions  $permissions
+     * @param  ?\DateTime  $joinedAt
+     * @param  ?\DateTime  $lastAccessAt
      * @phpstan-pure
      */
-    public function __construct(string $id, AccountMemberObject $object, string $name, string $email, AccountMemberRole $role, bool $externalAdvisor, array $grants, AccountMemberPermissions $permissions)
+    public function __construct(string $id, AccountMemberObject $object, string $name, string $email, AccountMemberRole $role, bool $externalAdvisor, array $grants, AccountMemberPermissions $permissions, ?\DateTime $joinedAt = null, ?\DateTime $lastAccessAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -101,5 +119,7 @@ class AccountMember
         $this->externalAdvisor = $externalAdvisor;
         $this->grants = $grants;
         $this->permissions = $permissions;
+        $this->joinedAt = $joinedAt;
+        $this->lastAccessAt = $lastAccessAt;
     }
 }

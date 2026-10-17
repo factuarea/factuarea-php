@@ -1,0 +1,10 @@
+# PublicApiV1TaxesCreateResponseBody
+
+Tax created successfully. The `Location` header contains the canonical URL of the newly created resource.
+
+
+## Fields
+
+| Field                                                                                                                                          | Type                                                                                                                                           | Required                                                                                                                                       | Description                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                                                         | [Components\Tax](../../Models/Components/Tax.md)                                                                                               | :heavy_check_mark:                                                                                                                             | A tax rate configuration. Catalog partially global (`is_system=true` for system taxes, without `company_id`) and partially custom per company. |

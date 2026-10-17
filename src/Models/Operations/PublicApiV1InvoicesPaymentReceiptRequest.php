@@ -37,15 +37,25 @@ class PublicApiV1InvoicesPaymentReceiptRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * ID (UUID v7) of the payment whose receipt you want. Without it, the most recent active payment.
+     *
+     * @var ?string $paymentId
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=payment_id')]
+    public ?string $paymentId = null;
+
+    /**
      * @param  string  $company
      * @param  string  $invoice
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $paymentId
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $invoice, ?LocalDate $factuareaVersion = null, ?string $paymentId = null)
     {
         $this->company = $company;
         $this->invoice = $invoice;
         $this->factuareaVersion = $factuareaVersion;
+        $this->paymentId = $paymentId;
     }
 }

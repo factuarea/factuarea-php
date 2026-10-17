@@ -50,7 +50,7 @@ class SignatureAudits
     /**
      * Forget delivery note signature PII
      *
-     * GDPR Art. 17 (right to erasure) — remove the personal data (recipient name/DNI) from a signature audit log entry while preserving the non-PII audit trail required for LSSI-CE compliance. The `{auditId}` is the numeric primary key of the signature audit record.
+     * GDPR Art. 17 (right to erasure) — remove the personal data (recipient name/DNI) from a signature audit log entry while preserving the non-PII audit trail required for LSSI-CE compliance. The `{auditId}` is the UUID of the signature audit record; a numeric id answers 404.
      *
      * @param  string  $company
      * @param  string  $auditId
