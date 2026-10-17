@@ -40,7 +40,7 @@ class PublicApiV1PurchaseInvoicesListPaymentsResponse
     public array $headers;
 
     /**
-     * All payments for the purchase invoice, including reversed payments. An invoice without payments returns an empty collection.
+     * All payments for the expense, including reversed payments. An expense without payments returns an empty collection.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesListPaymentsResponseBody $object
      */

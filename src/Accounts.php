@@ -19,12 +19,18 @@ use Speakeasy\Serializer\DeserializationContext;
 class Accounts
 {
     private SDKConfiguration $sdkConfiguration;
+    public ChargeRules $chargeRules;
+
+    public NonInvoicedCharges $nonInvoicedCharges;
+
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
+        $this->chargeRules = new ChargeRules($this->sdkConfiguration);
+        $this->nonInvoicedCharges = new NonInvoicedCharges($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -52,14 +58,14 @@ class Accounts
      *
      * Disconnect a connected Stripe account without touching the others. The account is marked `disconnected` (its already-issued invoices and history are kept; later webhooks are recorded without processing). Responds 204 with no body. A missing account or one from another company returns 404.
      *
+     * @param  string  $company
      * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingAccountsDisconnect(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectResponse
+    public function publicApiV1StripeAutoinvoicingAccountsDisconnect(string $company, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,13 +93,13 @@ class Accounts
             ];
         }
         $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectRequest(
+            company: $company,
             account: $account,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsDisconnectRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -129,7 +135,7 @@ class Accounts
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -167,12 +173,12 @@ class Accounts
      *
      * List the connected Stripe accounts (Stripe Connect, multi-store) for your company. Each exposes its `id`, `name`, `external_account_id` (`acct_xxx`), the assigned `series_id`, its per-account configuration (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`), `status` and `connected_at`. Charges are auto-invoiced with that account's series and configuration.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingAccountsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsListResponse
+    public function publicApiV1StripeAutoinvoicingAccountsList(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -200,11 +206,11 @@ class Accounts
             ];
         }
         $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsListRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/connected-accounts');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/connected-accounts', Operations\PublicApiV1StripeAutoinvoicingAccountsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -250,7 +256,7 @@ class Accounts
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -288,13 +294,13 @@ class Accounts
      *
      * Retrieve a connected Stripe account by its `id` (UUID v7). Returns its name, external account id, assigned series (`series_id`), effective per-account auto-invoicing configuration and status. Returns 404 if the account does not exist or belongs to another company.
      *
+     * @param  string  $company
      * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1StripeAutoinvoicingAccountsShow(string $account, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsShowResponse
+    public function publicApiV1StripeAutoinvoicingAccountsShow(string $company, string $account, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1StripeAutoinvoicingAccountsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -322,12 +328,12 @@ class Accounts
             ];
         }
         $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsShowRequest(
+            company: $company,
             account: $account,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -373,7 +379,7 @@ class Accounts
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -409,7 +415,7 @@ class Accounts
     /**
      * Update a connected Stripe account
      *
-     * Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`). All fields are optional; omitted ones keep their value.
+     * Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`) and the optional `invoice_note` (up to 500 characters) written in the notes of the auto-created invoices (`null` clears it; no note by default). All fields are optional; omitted ones keep their value.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateResponse
@@ -443,7 +449,7 @@ class Accounts
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/connected-accounts/{account}', Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -456,7 +462,7 @@ class Accounts
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.stripe_autoinvoicing.accounts.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -493,7 +499,7 @@ class Accounts
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

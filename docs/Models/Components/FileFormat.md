@@ -1,6 +1,6 @@
 # FileFormat
 
-Formato de fichero: xlsx o csv.
+File format: `xlsx` or `csv`.
 
 
 ## Values

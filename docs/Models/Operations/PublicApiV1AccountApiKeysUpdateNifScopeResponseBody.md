@@ -1,0 +1,8 @@
+# PublicApiV1AccountApiKeysUpdateNifScopeResponseBody
+
+
+## Fields
+
+| Field                                                                                                           | Type                                                                                                            | Required                                                                                                        | Description                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                          | [Components\ApiKeyNifScope](../../Models/Components/ApiKeyNifScope.md)                                          | :heavy_check_mark:                                                                                              | The tax IDs an API key reaches after changing its scope. The list is the complete resulting scope, not a delta. |

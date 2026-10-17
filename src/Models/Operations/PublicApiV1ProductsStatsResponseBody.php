@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1ProductsStatsResponseBody
 {
     /**
-     * Aggregated summary of the product catalog of the authenticated company: total, active, out of stock and low stock. Returned by `GET /v1/products/stats`.
+     * Aggregated summary of the product catalog of the authenticated company: total, active, out of stock and low stock. Returned by `GET /v1/companies/{company}/products/stats`.
      *
      * @var \Factuarea\Sdk\Models\Components\ProductStats $data
      */

@@ -21,7 +21,7 @@ class SeriesActivity
     public SeriesActivityObject $object;
 
     /**
-     * Tipo de evento de dominio (p. ej. `series.created`, `series.archived`, `series.number_consumed`).
+     * Domain event type (e.g. `series.created`, `series.archived`, `series.number_consumed`).
      *
      * @var string $eventType
      */

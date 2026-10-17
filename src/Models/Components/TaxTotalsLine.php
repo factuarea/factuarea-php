@@ -9,58 +9,58 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxTotalsLine - Calculated breakdown of a single line within `POST /v1/taxes/calculate-totals`. */
+/** TaxTotalsLine - Calculated breakdown of a single line within `POST /v1/companies/{company}/taxes/calculate-totals`. */
 class TaxTotalsLine
 {
     /**
-     * Taxable base of the line (quantity × price − discount).
+     * Taxable base of the line (quantity × price − discount), as a 2-decimal string.
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
-     * VAT amount of the line.
+     * VAT amount of the line, as a 2-decimal string.
      *
-     * @var float $vatAmount
+     * @var string $vatAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('vat_amount')]
-    public float $vatAmount;
+    public string $vatAmount;
 
     /**
-     * Equivalence surcharge amount of the line.
+     * Equivalence surcharge amount of the line, as a 2-decimal string.
      *
-     * @var float $surchargeAmount
+     * @var string $surchargeAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('surcharge_amount')]
-    public float $surchargeAmount;
+    public string $surchargeAmount;
 
     /**
-     * Withholding (IRPF) amount of the line.
+     * Withholding (IRPF) amount of the line, as a 2-decimal string.
      *
-     * @var float $retentionAmount
+     * @var string $retentionAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('retention_amount')]
-    public float $retentionAmount;
+    public string $retentionAmount;
 
     /**
-     * Total of the line (subtotal + vat + surcharge − retention).
+     * Total of the line (subtotal + vat + surcharge − retention), as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
-     * @param  float  $subtotal
-     * @param  float  $vatAmount
-     * @param  float  $surchargeAmount
-     * @param  float  $retentionAmount
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $vatAmount
+     * @param  string  $surchargeAmount
+     * @param  string  $retentionAmount
+     * @param  string  $total
      * @phpstan-pure
      */
-    public function __construct(float $subtotal, float $vatAmount, float $surchargeAmount, float $retentionAmount, float $total)
+    public function __construct(string $subtotal, string $vatAmount, string $surchargeAmount, string $retentionAmount, string $total)
     {
         $this->subtotal = $subtotal;
         $this->vatAmount = $vatAmount;

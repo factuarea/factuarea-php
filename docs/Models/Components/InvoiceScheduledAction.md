@@ -1,11 +1,12 @@
 # InvoiceScheduledAction
 
-Action the scheduler runs when `scheduled_for` is reached: `issue_and_send` (issue and email) or `draft` (issue only). `null` when the invoice is not scheduled.
+Action the scheduler runs when `scheduled_for` is reached: `issue` (issue without sending) or `issue_and_send` (issue and email it). `null` when the invoice is not scheduled. Before API version `2026-10-01` the `issue` action is published as `draft`, its previous name.
 
 
 ## Values
 
 | Name           | Value          |
 | -------------- | -------------- |
-| `Draft`        | draft          |
+| `Issue`        | issue          |
 | `IssueAndSend` | issue_and_send |
+| `Draft`        | draft          |

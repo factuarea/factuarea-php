@@ -40,6 +40,7 @@ class PublicApiV1CompaniesCreateResponse
     public array $headers;
 
     /**
+     * Tax ID registered in the account. The `Location` header contains the canonical URL of the new company.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesCreateResponseBody $object
      */

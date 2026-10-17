@@ -76,6 +76,15 @@ class CreateSeriesRequest
     public ?int $initialNumber = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateSeriesRequestInvoiceKind $invoiceKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateSeriesRequestInvoiceKind|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateSeriesRequestInvoiceKind $invoiceKind = null;
+
+    /**
      * @param  string  $code
      * @param  \Factuarea\Sdk\Models\Components\CreateSeriesRequestDocumentType  $documentType
      * @param  ?string  $name
@@ -84,9 +93,10 @@ class CreateSeriesRequest
      * @param  ?bool  $yearReset
      * @param  ?string  $numberFormat
      * @param  ?int  $initialNumber
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateSeriesRequestInvoiceKind  $invoiceKind
      * @phpstan-pure
      */
-    public function __construct(string $code, CreateSeriesRequestDocumentType $documentType, ?string $name = null, ?string $prefix = null, ?CreateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null)
+    public function __construct(string $code, CreateSeriesRequestDocumentType $documentType, ?string $name = null, ?string $prefix = null, ?CreateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null, ?CreateSeriesRequestInvoiceKind $invoiceKind = null)
     {
         $this->code = $code;
         $this->documentType = $documentType;
@@ -96,5 +106,6 @@ class CreateSeriesRequest
         $this->yearReset = $yearReset;
         $this->numberFormat = $numberFormat;
         $this->initialNumber = $initialNumber;
+        $this->invoiceKind = $invoiceKind;
     }
 }

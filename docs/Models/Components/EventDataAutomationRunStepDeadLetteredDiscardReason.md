@@ -27,5 +27,8 @@ Typed reason the step was parked, from a CLOSED catalogue — never free-form te
 | `DocumentTagLimitExceeded`           | document_tag_limit_exceeded          |
 | `DocumentCustomFieldLimitExceeded`   | document_custom_field_limit_exceeded |
 | `DocumentTypeNotSupported`           | document_type_not_supported          |
+| `TaskTargetNotFound`                 | task_target_not_found                |
+| `TaskProjectNotFound`                | task_project_not_found               |
+| `ModuleNotAccessible`                | module_not_accessible                |
 | `StepAttemptsExhausted`              | step_attempts_exhausted              |
 | `RunExecutionTimeout`                | run_execution_timeout                |

@@ -5,7 +5,7 @@ Create invoices in bulk. `invoices[]` holds up to 100 invoice payloads and `dry_
 
 ## Fields
 
-| Field                  | Type                   | Required               | Description            |
-| ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| `invoices`             | array<array<*string*>> | :heavy_check_mark:     | N/A                    |
-| `dryRun`               | *?bool*                | :heavy_minus_sign:     | N/A                    |
+| Field                                                                                     | Type                                                                                      | Required                                                                                  | Description                                                                               |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `invoices`                                                                                | array<[Components\CreateInvoiceRequest](../../Models/Components/CreateInvoiceRequest.md)> | :heavy_check_mark:                                                                        | N/A                                                                                       |
+| `dryRun`                                                                                  | *?bool*                                                                                   | :heavy_minus_sign:                                                                        | N/A                                                                                       |

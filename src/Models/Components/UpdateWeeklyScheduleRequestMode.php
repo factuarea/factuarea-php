@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Schedule mode: `validated` (assumed fulfilled) or `real_clocking` (computed from real clock entries). */
+/** Schedule mode: `validated` (assumed fulfilled) or `real_clocking` (computed from real clock entries). Optional: when omitted it keeps its current value. */
 enum UpdateWeeklyScheduleRequestMode: string
 {
     case Validated = 'validated';

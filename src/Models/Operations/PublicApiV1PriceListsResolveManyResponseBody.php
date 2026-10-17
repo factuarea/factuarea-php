@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1PriceListsResolveManyResponseBody
 {
     /**
-     * Precios resueltos del lote, uno por selección enviada. El orden no es contrato: emparéjalos por `index`.
+     * Prices resolved for the batch, one per selection sent. The order is not part of the contract: pair them by `index`.
      *
      * @var array<\Factuarea\Sdk\Models\Components\ResolvedCatalogPricePreview> $data
      */

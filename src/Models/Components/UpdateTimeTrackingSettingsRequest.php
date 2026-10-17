@@ -12,37 +12,41 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateTimeTrackingSettingsRequest
 {
     /**
-     * Overtime computation basis: `weekly` or `daily`.
+     * Overtime computation basis: `weekly` or `daily`. Optional: when omitted it keeps its current value.
      *
-     * @var \Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequestOvertimeBasis $overtimeBasis
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequestOvertimeBasis $overtimeBasis
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('overtime_basis')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequestOvertimeBasis')]
-    public UpdateTimeTrackingSettingsRequestOvertimeBasis $overtimeBasis;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequestOvertimeBasis|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateTimeTrackingSettingsRequestOvertimeBasis $overtimeBasis = null;
 
     /**
-     * Overtime rounding tolerance in minutes.
+     * Overtime rounding tolerance in minutes. Optional: when omitted it keeps its current value.
      *
-     * @var int $overtimeToleranceMinutes
+     * @var ?int $overtimeToleranceMinutes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('overtime_tolerance_minutes')]
-    public int $overtimeToleranceMinutes;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $overtimeToleranceMinutes = null;
 
     /**
-     * Whether the missed clock-in reminder is enabled.
+     * Whether the missed clock-in reminder is enabled. Optional: when omitted it keeps its current value.
      *
-     * @var bool $clockInReminderEnabled
+     * @var ?bool $clockInReminderEnabled
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('clock_in_reminder_enabled')]
-    public bool $clockInReminderEnabled;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $clockInReminderEnabled = null;
 
     /**
-     * Grace minutes after the scheduled time before reminding.
+     * Grace minutes after the scheduled time before reminding. Optional: when omitted it keeps its current value.
      *
-     * @var int $clockInReminderGraceMinutes
+     * @var ?int $clockInReminderGraceMinutes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('clock_in_reminder_grace_minutes')]
-    public int $clockInReminderGraceMinutes;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $clockInReminderGraceMinutes = null;
 
     /**
      * Daily overtime threshold in minutes (null = derive from the schedule).
@@ -63,15 +67,15 @@ class UpdateTimeTrackingSettingsRequest
     public ?int $overtimeWeeklyThresholdMinutes = null;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequestOvertimeBasis  $overtimeBasis
-     * @param  int  $overtimeToleranceMinutes
-     * @param  bool  $clockInReminderEnabled
-     * @param  int  $clockInReminderGraceMinutes
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTimeTrackingSettingsRequestOvertimeBasis  $overtimeBasis
+     * @param  ?int  $overtimeToleranceMinutes
+     * @param  ?bool  $clockInReminderEnabled
+     * @param  ?int  $clockInReminderGraceMinutes
      * @param  ?int  $overtimeDailyThresholdMinutes
      * @param  ?int  $overtimeWeeklyThresholdMinutes
      * @phpstan-pure
      */
-    public function __construct(UpdateTimeTrackingSettingsRequestOvertimeBasis $overtimeBasis, int $overtimeToleranceMinutes, bool $clockInReminderEnabled, int $clockInReminderGraceMinutes, ?int $overtimeDailyThresholdMinutes = null, ?int $overtimeWeeklyThresholdMinutes = null)
+    public function __construct(?UpdateTimeTrackingSettingsRequestOvertimeBasis $overtimeBasis = null, ?int $overtimeToleranceMinutes = null, ?bool $clockInReminderEnabled = null, ?int $clockInReminderGraceMinutes = null, ?int $overtimeDailyThresholdMinutes = null, ?int $overtimeWeeklyThresholdMinutes = null)
     {
         $this->overtimeBasis = $overtimeBasis;
         $this->overtimeToleranceMinutes = $overtimeToleranceMinutes;

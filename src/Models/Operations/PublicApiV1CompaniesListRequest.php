@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesListRequest
 {
     /**
-     * Fiscal tax number (NIF/CIF/NIE) of the company. A tax number outside the scope of the API key returns an EMPTY list, never a rejection: telling «not found» apart from «not yours» would turn this filter into a way to enumerate which companies exist on the platform. Exact match on `tax_id`.
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
+     *
+     * @var string $account
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=account')]
+    public string $account;
+
+    /**
+     * Tax ID (NIF/CIF/NIE) of the company. A tax ID outside the scope of your key returns an empty list, never an error. Exact match on `tax_id`.
      *
      * @var ?string $taxId
      */
@@ -21,7 +29,15 @@ class PublicApiV1CompaniesListRequest
     public ?string $taxId = null;
 
     /**
-     * Cursor for forward pagination. NON-STANDARD for this API: unlike the `starting_after` / `ending_before` lists, this endpoint takes a single `cursor`. Use the `id` of the last company on the previous page.
+     * Send `readiness` to add to each company whether it can issue right now (`readiness`, same contract as the issuing-readiness endpoint); it also works with `tax_id`. No other value is accepted.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\IncludeT $include
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=include')]
+    public ?IncludeT $include = null;
+
+    /**
+     * Cursor for forward pagination (this list takes a single `cursor`, not `starting_after`/`ending_before`): the `id` of the last company on the previous page.
      *
      * @var ?string $cursor
      */
@@ -37,15 +53,7 @@ class PublicApiV1CompaniesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Filtrar por estado del vínculo de gestoría. Sin filtro se ocultan las archivadas (solo `active` e `inactive`).
+     * Only companies in this status: `active`, `inactive` or `archived` (archived ones are hidden when omitted).
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus $status
      */
@@ -53,7 +61,7 @@ class PublicApiV1CompaniesListRequest
     public ?PublicApiV1CompaniesListStatus $status = null;
 
     /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -61,20 +69,22 @@ class PublicApiV1CompaniesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $account
      * @param  ?string  $taxId
+     * @param  ?\Factuarea\Sdk\Models\Operations\IncludeT  $include
      * @param  ?int  $limit
      * @param  ?string  $cursor
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus  $status
      * @phpstan-pure
      */
-    public function __construct(?string $taxId = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?PublicApiV1CompaniesListStatus $status = null, ?int $limit = 25)
+    public function __construct(string $account, ?string $taxId = null, ?IncludeT $include = null, ?string $cursor = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1CompaniesListStatus $status = null, ?int $limit = 25)
     {
+        $this->account = $account;
         $this->taxId = $taxId;
+        $this->include = $include;
         $this->cursor = $cursor;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->status = $status;
         $this->limit = $limit;
     }

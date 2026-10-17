@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class InvoiceStatusItem
 {
     /**
-     * Internal status identifier.
+     * Status identifier, in the same order as the catalog. Before API version `2026-10-01` the issued status is listed as `sent` (label «Enviado») in the position of `issued`.
      *
      * @var \Factuarea\Sdk\Models\Components\InvoiceStatusItemValue $value
      */

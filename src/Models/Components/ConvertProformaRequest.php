@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * ConvertProformaRequest - Public REST API v1 — POST /v1/proformas/{uuid}/convert.
- *
- *
- * Required body: `target` ∈ {invoice}. Only conversion to invoice is
- * supported — other targets (`proforma`, `delivery_note`) do NOT apply
- * because a proforma can only be converted to an invoice by BC design.
- */
+/** ConvertProformaRequest - Convert a proforma. Required body: `target`, whose only accepted value is `invoice`: a proforma can only be converted to an invoice, so the other targets (`proforma`, `delivery_note`) do not apply. */
 class ConvertProformaRequest
 {
     /**

@@ -77,7 +77,7 @@ class ResolvedCatalogPrice
     public ?string $presentationId;
 
     /**
-     * Combinación comercial contra la que se resolvió el precio. Puede venir informada aunque la petición solo enviase la firma: una firma que casa con una combinación materializada se normaliza a su identidad antes de valorar.
+     * Commercial combination against which the price was resolved. It may be present even when the request sent only the signature: a signature that matches a materialized combination is normalized to its identity before pricing.
      *
      * @var ?string $configurationId
      */
@@ -85,7 +85,7 @@ class ResolvedCatalogPrice
     public ?string $configurationId;
 
     /**
-     * Firma canónica (64 hexadecimales) de la selección resuelta.
+     * Canonical signature (64 hexadecimal characters) of the resolved selection.
      *
      * @var ?string $selectionSignature
      */
@@ -93,7 +93,7 @@ class ResolvedCatalogPrice
     public ?string $selectionSignature;
 
     /**
-     * Tarifa CONSULTADA, no la fuente del precio: viene informada aunque `source` sea `product`. Para saber de dónde salió el importe, mira `source`.
+     * Price list CONSULTED, not necessarily the source of the price: it is present even when `source` is `product`. To know where the amount came from, look at `source`.
      *
      * @var ?string $priceListId
      */
@@ -108,7 +108,7 @@ class ResolvedCatalogPrice
     public ?string $priceListName;
 
     /**
-     * Semántica del importe de la fuente ganadora. `per_base_unit` se convierte una vez por el factor de la presentación; `per_commercial_unit` nunca se convierte.
+     * Semantics of the amount of the winning source. `per_base_unit` is converted once by the factor of the presentation; `per_commercial_unit` is never converted.
      *
      * @var ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPriceUnitSemantics $unitSemantics
      */
@@ -117,7 +117,7 @@ class ResolvedCatalogPrice
     public ?ResolvedCatalogPriceUnitSemantics $unitSemantics;
 
     /**
-     * Importe de la fuente ganadora, ya convertido a `price_unit` y ANTES de los ajustes de opción: `source_amount + option_adjustment_total = unit_price`.
+     * Amount of the winning source, already converted to `price_unit` and BEFORE the option adjustments: `source_amount + option_adjustment_total = unit_price`.
      *
      * @var ?string $sourceAmount
      */
@@ -125,7 +125,7 @@ class ResolvedCatalogPrice
     public ?string $sourceAmount;
 
     /**
-     * Suma de los ajustes de los valores de opción elegidos, por unidad comercial.
+     * Sum of the adjustments of the chosen option values, per commercial unit.
      *
      * @var ?string $optionAdjustmentTotal
      */
@@ -133,7 +133,7 @@ class ResolvedCatalogPrice
     public ?string $optionAdjustmentTotal;
 
     /**
-     * Si la fuente ganadora ya incluía los ajustes de opción. `null` significa que el resolvedor no se pronunció, nunca `false`.
+     * Whether the winning source already included the option adjustments. `null` means the resolver did not take a position, never `false`.
      *
      * @var ?bool $optionAdjustmentsAbsorbed
      */

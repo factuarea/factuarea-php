@@ -1,0 +1,9 @@
+# CreateTaskUploadLinkV1Request
+
+
+## Fields
+
+| Field                                                                                                             | Type                                                                                                              | Required                                                                                                          | Description                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `target`                                                                                                          | [?Components\CreateTaskUploadLinkV1RequestTarget](../../Models/Components/CreateTaskUploadLinkV1RequestTarget.md) | :heavy_minus_sign:                                                                                                | Where the uploads received through the link are delivered: `comment` (default) or `description`.                  |
+| `note`                                                                                                            | *?string*                                                                                                         | :heavy_minus_sign:                                                                                                | Note for whoever uploads the files.                                                                               |

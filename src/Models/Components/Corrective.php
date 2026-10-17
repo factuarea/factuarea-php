@@ -40,11 +40,12 @@ class Corrective
     public string $provider;
 
     /**
+     * Amount of the individual refund (EUR), as a 2-decimal string.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      *
@@ -58,11 +59,11 @@ class Corrective
      * @param  string  $originalInvoiceUuid
      * @param  string  $refundId
      * @param  string  $provider
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  string  $correctionType
      * @phpstan-pure
      */
-    public function __construct(string $uuid, string $originalInvoiceUuid, string $refundId, string $provider, float $amount, string $correctionType)
+    public function __construct(string $uuid, string $originalInvoiceUuid, string $refundId, string $provider, string $amount, string $correctionType)
     {
         $this->uuid = $uuid;
         $this->originalInvoiceUuid = $originalInvoiceUuid;

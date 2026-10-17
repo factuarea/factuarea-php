@@ -1,5 +1,7 @@
 # VerifactuStatus
 
+VeriFactu status: `no_verifactu`, `pending`, `accepted` or `rejected`.
+
 
 ## Values
 

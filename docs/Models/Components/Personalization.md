@@ -1,12 +1,13 @@
 # Personalization
 
-Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/account/personalization`.
+Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/companies/{company}/personalization`.
 
 
 ## Fields
 
 | Field                                                                          | Type                                                                           | Required                                                                       | Description                                                                    | Example                                                                        |
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `pdfCapabilities`                                                              | [Components\PdfCapabilities](../../Models/Components/PdfCapabilities.md)       | :heavy_check_mark:                                                             | Read-only document branding capabilities of the effective account.             |                                                                                |
 | `language`                                                                     | [Components\AccountLanguage](../../Models/Components/AccountLanguage.md)       | :heavy_check_mark:                                                             | Invoice-emission language of the account. One of `es`, `en`, `ca`.             | es                                                                             |
 | `pdfTemplate`                                                                  | [Components\AccountPdfTemplate](../../Models/Components/AccountPdfTemplate.md) | :heavy_check_mark:                                                             | Slug of the invoice PDF template (closed `PdfTemplate` catalog).               | modern                                                                         |
 | `accentColor`                                                                  | *string*                                                                       | :heavy_check_mark:                                                             | Accent color of the PDF in `#RRGGBB` hex, or null when not configured.         | #1a73e8                                                                        |

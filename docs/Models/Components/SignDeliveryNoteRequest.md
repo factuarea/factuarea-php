@@ -1,16 +1,6 @@
 # SignDeliveryNoteRequest
 
-Public REST API v1 — POST /v1/delivery_notes/{uuid}/sign.
-
-Optional body: `signed_by` (alias of `recipient_name`, BC invariant),
-`recipient_dni` (BC invariant — Spanish DNI/NIE, required by
-`SignatureData`), `signature_image_base64` (raw base64 PNG; decode +
-size + magic bytes are validated by the controller to respond 422
-`payload_too_large`/`invalid_param_format`), `signed_at` (ISO 8601
-optional, default now).
-
-The controller converts `signed_by` → `recipient_name` and prefixes the
-base64 with `data:image/png;base64,` before dispatching to the BC.
+Sign a delivery note on receipt. Required: `signed_by` (name of the person who receives it), `recipient_dni` (Spanish DNI/NIE of the signer) and `signature_image_base64` (the signature as a raw base64 PNG, without the `data:` prefix). Optional: `signed_at` (ISO 8601, defaults to now). A signature image that cannot be decoded or is too large returns 422 `invalid_param_format` or `payload_too_large`.
 
 
 ## Fields

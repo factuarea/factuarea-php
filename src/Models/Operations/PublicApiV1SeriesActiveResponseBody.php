@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1SeriesActiveResponseBody - Active document series, optionally filtered by document_type. */
+/** PublicApiV1SeriesActiveResponseBody - Active document series, optionally filtered by document_type and, for invoice series, by invoice_kind. */
 class PublicApiV1SeriesActiveResponseBody
 {
     /**

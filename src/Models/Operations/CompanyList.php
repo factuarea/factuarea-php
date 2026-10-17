@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** CompanyList - Cursor-paginated list of managed companies (`{ data, has_more, next_cursor }`). */
+/** CompanyList - Cursor-paginated list of the tax IDs of your account (`{ data, has_more, next_cursor }`). */
 class CompanyList
 {
     /**
-     * Page of managed companies.
+     * Page of tax IDs.
      *
      * @var array<\Factuarea\Sdk\Models\Components\Company> $data
      */

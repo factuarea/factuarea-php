@@ -40,6 +40,7 @@ class PublicApiV1PriceListsCreateResponse
     public array $headers;
 
     /**
+     * Price list created successfully. The `Location` header contains the canonical URL of the newly created resource.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsCreateResponseBody $object
      */

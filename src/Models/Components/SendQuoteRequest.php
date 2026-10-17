@@ -9,15 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * SendQuoteRequest - Public REST API v1 — POST /v1/quotes/{uuid}/send.
- *
- *
- * Optional body: `to` (string), `cc[]`, `bcc[]` (arrays of emails),
- * `subject` (max 200), `body` (string). The controller performs the
- * cross-field validation: if the client has no email and `to` is
- * absent, it returns 422 `missing_required_param`.
- */
+/** SendQuoteRequest - Email a quote. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters) and `body` (string). If the client has no email and `to` is absent, it returns 422 `missing_required_param`. */
 class SendQuoteRequest
 {
     /**

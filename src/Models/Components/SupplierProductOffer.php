@@ -41,11 +41,13 @@ class SupplierProductOffer
     public string $supplierId;
 
     /**
+     * UN/ECE code of the unit the supplier sells in. Any of the 22 units; it must be expressible over the base unit of the product (422 `unit_not_expressible` otherwise).
      *
-     * @var string $purchaseUnit
+     * @var \Factuarea\Sdk\Models\Components\SupplierProductOfferPurchaseUnit $purchaseUnit
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('purchase_unit')]
-    public string $purchaseUnit;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SupplierProductOfferPurchaseUnit')]
+    public SupplierProductOfferPurchaseUnit $purchaseUnit;
 
     /**
      *
@@ -122,7 +124,7 @@ class SupplierProductOffer
      * @param  \Factuarea\Sdk\Models\Components\SupplierProductOfferObject  $object
      * @param  string  $productId
      * @param  string  $supplierId
-     * @param  string  $purchaseUnit
+     * @param  \Factuarea\Sdk\Models\Components\SupplierProductOfferPurchaseUnit  $purchaseUnit
      * @param  string  $conversionFactor
      * @param  string  $currency
      * @param  string  $availability
@@ -135,7 +137,7 @@ class SupplierProductOffer
      * @param  ?int  $leadTimeDays
      * @phpstan-pure
      */
-    public function __construct(string $id, SupplierProductOfferObject $object, string $productId, string $supplierId, string $purchaseUnit, string $conversionFactor, string $currency, string $availability, bool $preferred, bool $active, ?string $variantId = null, ?string $supplierSku = null, ?string $unitCost = null, ?string $minimumQuantity = null, ?int $leadTimeDays = null)
+    public function __construct(string $id, SupplierProductOfferObject $object, string $productId, string $supplierId, SupplierProductOfferPurchaseUnit $purchaseUnit, string $conversionFactor, string $currency, string $availability, bool $preferred, bool $active, ?string $variantId = null, ?string $supplierSku = null, ?string $unitCost = null, ?string $minimumQuantity = null, ?int $leadTimeDays = null)
     {
         $this->id = $id;
         $this->object = $object;

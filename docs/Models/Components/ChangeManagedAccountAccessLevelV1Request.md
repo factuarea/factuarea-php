@@ -1,0 +1,10 @@
+# ChangeManagedAccountAccessLevelV1Request
+
+Change the access level your account keeps on the managed account of the path: `level` is `none`, `view` or `operate`. After the holder claims the account it can only be lowered.
+
+
+## Fields
+
+| Field                                                                                                                                | Type                                                                                                                                 | Required                                                                                                                             | Description                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `level`                                                                                                                              | [Components\ChangeManagedAccountAccessLevelV1RequestLevel](../../Models/Components/ChangeManagedAccountAccessLevelV1RequestLevel.md) | :heavy_check_mark:                                                                                                                   | New access level of your account: `none`, `view` (read-only) or `operate`.                                                           |

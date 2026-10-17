@@ -28,6 +28,7 @@ class RecurringInvoiceLine
     public float $quantity;
 
     /**
+     * Unit price as a decimal STRING with 4 decimals (e.g. `"100.0000"`), the scale the template accepts: reading a line and sending it back never changes its price.
      *
      * @var string $unitPrice
      */
@@ -241,10 +242,28 @@ class RecurringInvoiceLine
 
     /**
      *
-     * @var ?string $priceUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceUnitCode $priceUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
-    public ?string $priceUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceUnitCode|null')]
+    public ?RecurringInvoiceLinePriceUnitCode $priceUnitCode;
+
+    /**
+     * Pieces the customer asked for on a variable-weight line sold by count (decimal string, scale 4, greater than 0), e.g. `"4.0000"` for four pieces weighing `quantity` kg in total. Informational: the line is charged and the stock is discounted by `quantity` (the real weight), never by the pieces. `null` on any other line. Only accepted on a `variable_measure` presentation whose unit is a count unit.
+     *
+     * @var ?string $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    public ?string $countedQuantity;
+
+    /**
+     * UN/ECE code of the count unit of `counted_quantity` (`H87` piece, `XPK` pack…). `null` exactly when `counted_quantity` is `null`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineCountedUnit $countedUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_unit')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceLineCountedUnit|null')]
+    public ?RecurringInvoiceLineCountedUnit $countedUnit;
 
     /**
      * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
@@ -331,7 +350,9 @@ class RecurringInvoiceLine
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?string  $priceSource
-     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceUnitCode  $priceUnitCode
+     * @param  ?string  $countedQuantity
+     * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineCountedUnit  $countedUnit
      * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineConfiguration  $configuration
      * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
@@ -340,7 +361,7 @@ class RecurringInvoiceLine
      * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $additionalDescription = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(RecurringInvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?RecurringInvoiceLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?RecurringInvoiceLineCountedUnit $countedUnit = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $additionalDescription = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -374,6 +395,8 @@ class RecurringInvoiceLine
         $this->priceListName = $priceListName;
         $this->priceSource = $priceSource;
         $this->priceUnitCode = $priceUnitCode;
+        $this->countedQuantity = $countedQuantity;
+        $this->countedUnit = $countedUnit;
         $this->configuration = $configuration;
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;

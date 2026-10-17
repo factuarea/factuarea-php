@@ -20,12 +20,8 @@ enum ActionKey: string
     case SendPaymentReminder = 'send_payment_reminder';
     case ChangeStatus = 'change_status';
     case TagEntity = 'tag_entity';
-    case ReserveStock = 'reserve_stock';
-    case ReleaseStockReservation = 'release_stock_reservation';
-    case CreatePurchaseOrder = 'create_purchase_order';
-    case CreateDeliveryNoteFromOrder = 'create_delivery_note_from_order';
-    case PublishCatalogToStore = 'publish_catalog_to_store';
-    case PushPriceToStore = 'push_price_to_store';
-    case PushStockToStore = 'push_stock_to_store';
-    case ApplyPriceList = 'apply_price_list';
+    case CreateTask = 'create_task';
+    case ChangeTaskStatus = 'change_task_status';
+    case AssignTask = 'assign_task';
+    case AddTaskComment = 'add_task_comment';
 }

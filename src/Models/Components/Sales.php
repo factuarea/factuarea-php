@@ -13,24 +13,24 @@ class Sales
 {
     /**
      *
-     * @var float $invoicedAmount
+     * @var string $invoicedAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('invoiced_amount')]
-    public float $invoicedAmount;
+    public string $invoicedAmount;
 
     /**
      *
-     * @var float $collectedAmount
+     * @var string $collectedAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('collected_amount')]
-    public float $collectedAmount;
+    public string $collectedAmount;
 
     /**
      *
-     * @var float $receivableAmount
+     * @var string $receivableAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('receivable_amount')]
-    public float $receivableAmount;
+    public string $receivableAmount;
 
     /**
      *
@@ -40,13 +40,13 @@ class Sales
     public string $currency;
 
     /**
-     * @param  float  $invoicedAmount
-     * @param  float  $collectedAmount
-     * @param  float  $receivableAmount
+     * @param  string  $invoicedAmount
+     * @param  string  $collectedAmount
+     * @param  string  $receivableAmount
      * @param  string  $currency
      * @phpstan-pure
      */
-    public function __construct(float $invoicedAmount, float $collectedAmount, float $receivableAmount, string $currency)
+    public function __construct(string $invoicedAmount, string $collectedAmount, string $receivableAmount, string $currency)
     {
         $this->invoicedAmount = $invoicedAmount;
         $this->collectedAmount = $collectedAmount;

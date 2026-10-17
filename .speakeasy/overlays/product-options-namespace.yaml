@@ -29,9 +29,12 @@ info:
   # check is that a regeneration with this overlay removed leaves
   # `php -l src/Options.php` at exit 0. Tracked in docs/REGENERATION.md.
 actions:
-  - target: $.paths['/products/{product}/options'].get
+  - target: $.paths['/companies/{company}/products/{product}/options'].get
     update:
       x-speakeasy-group: products.productOptions
+  # Both targets carry the COMPANY AXIS: since the v1 re-anchored every company
+  # resource under /companies/{company}/…, a flat path matches nothing and the
+  # collision comes back silently; only PHPStan (`class.nameInUse`) catches it.
   # Added 2026-09-18 with the ERP wave: the storefront catalogue publishes the
   # same sub-resource for the buyer-facing surface and reproduces the same fatal.
   - target: $.paths['/companies/{company}/storefront/products/{product}/options'].get

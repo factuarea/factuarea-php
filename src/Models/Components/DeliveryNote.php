@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** DeliveryNote - A delivery note tracking goods delivered to a customer. The delivery address fields, `transport_details` and `reference_number` are both accepted on write and returned here; `delivery_city`, `delivery_province` and `delivery_postal_code` are also filterable on `GET /v1/delivery_notes`. Empty strings are normalized to `null`. */
+/** DeliveryNote - A delivery note tracking goods delivered to a customer. The delivery address fields, `transport_details` and `reference_number` are both accepted on write and returned here; `delivery_city`, `delivery_province` and `delivery_postal_code` are also filterable on `GET /v1/companies/{company}/delivery-notes`. Empty strings are normalized to `null`. */
 class DeliveryNote
 {
     /**
@@ -60,23 +60,6 @@ class DeliveryNote
     public DeliveryNoteStatus $status;
 
     /**
-     * Status of the PHYSICAL axis of the delivery note — where the goods are — which is ORTHOGONAL to the `status` above: no transition of this axis changes the commercial status and no commercial transition changes this one. It is NEVER `null`: its column is `NOT NULL DEFAULT pending`, so a note that never entered picking publishes the initial status of the catalog. Its closed catalog is published by its own operation (`GET .../delivery-notes/fulfilment-statuses`) and shares no value with the catalog of delivery note statuses.
-     *
-     * @var \Factuarea\Sdk\Models\Components\DeliveryNoteFulfilmentStatus $fulfilmentStatus
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('fulfilment_status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DeliveryNoteFulfilmentStatus')]
-    public DeliveryNoteFulfilmentStatus $fulfilmentStatus;
-
-    /**
-     * Label of the physical status in Spanish, ready to display, from the same single source as the catalog. Never `null`, for the same reason as the status itself.
-     *
-     * @var string $fulfilmentStatusLabel
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('fulfilment_status_label')]
-    public string $fulfilmentStatusLabel;
-
-    /**
      * Additional emails for delivery note dispatch (administration, accounting). Maximum 5. Empty `[]` when there are none.
      *
      * @var array<string> $billingEmails
@@ -93,7 +76,7 @@ class DeliveryNote
     public string $subtotal;
 
     /**
-     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on an expense the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var string $taxesTotal
      */
@@ -181,39 +164,6 @@ class DeliveryNote
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_name')]
     public ?string $priceListName;
-
-    /**
-     * The carrier of the MASTER referenced by this delivery note, or `null` when none is referenced — the key always travels, like `driver`, `tracking` and `received_by`. It does NOT replace `tracking.carrier`: that one is the free text that was typed before the master existed and it travels alongside the reference, which is what makes the migration to the master reversible.
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\DeliveryNoteCarrier $carrier
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('carrier')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DeliveryNoteCarrier|null')]
-    public ?DeliveryNoteCarrier $carrier;
-
-    /**
-     * Date the goods are EXPECTED to be delivered (`YYYY-MM-DD`, a pure date and not a timestamp). It is a forecast of the physical axis and a DIFFERENT thing from `delivery_date`, which is the date of the document. `null` when there is none.
-     *
-     * @var ?LocalDate $expectedDeliveryDate
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_delivery_date')]
-    public ?LocalDate $expectedDeliveryDate;
-
-    /**
-     * Free-text reference of the packages the carrier gave for this shipment (a consignment note, a manifest). `null` when there is none; an empty string is normalised to `null`.
-     *
-     * @var ?string $packagesReference
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('packages_reference')]
-    public ?string $packagesReference;
-
-    /**
-     * Tracking URL, DERIVED on every read from the template of the carrier and the tracking number, with the number URL-escaped, and NEVER stored: changing the template of a carrier changes the published URL of all of its delivery notes without rewriting a single row. `null` when the carrier has no template or the note has no tracking number — never an empty string and never a broken link. Note the deliberate difference with the shipment sub-resource, where this same value is published as an ABSENT key instead of a null: here the six keys of the axis always travel so that the document has one single shape.
-     *
-     * @var ?string $trackingUrl
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('tracking_url')]
-    public ?string $trackingUrl;
 
     /**
      *
@@ -334,6 +284,15 @@ class DeliveryNote
     public ?ReceivedBy $receivedBy;
 
     /**
+     * Number of product lines without a known weight. Services and free-text lines never count.
+     *
+     * @var ?int $linesWithoutWeightCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('lines_without_weight_count')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $linesWithoutWeightCount = null;
+
+    /**
      *
      * @var ?string $notes
      */
@@ -369,7 +328,7 @@ class DeliveryNote
     public ?array $metadata;
 
     /**
-     * UUID (v7) of the invoice this delivery note was converted into.
+     * UUID v7 of the invoice this delivery note was converted into.
      *
      * @var ?string $convertedToId
      */
@@ -391,14 +350,21 @@ class DeliveryNote
     public ?\DateTime $updatedAt;
 
     /**
+     * Total gross transport weight in kg (decimal string, scale 4): the sum of the lines that have a weight. `null` when no line has one. Partial when `lines_without_weight_count` is above 0.
+     *
+     * @var ?string $totalGrossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('total_gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $totalGrossWeightKg = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\DeliveryNoteObject  $object
      * @param  string  $number
      * @param  \Factuarea\Sdk\Models\Components\SeriesRef  $series
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
      * @param  \Factuarea\Sdk\Models\Components\DeliveryNoteStatus  $status
-     * @param  \Factuarea\Sdk\Models\Components\DeliveryNoteFulfilmentStatus  $fulfilmentStatus
-     * @param  string  $fulfilmentStatusLabel
      * @param  array<string>  $billingEmails
      * @param  string  $subtotal
      * @param  string  $taxesTotal
@@ -412,10 +378,6 @@ class DeliveryNote
      * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
-     * @param  ?\Factuarea\Sdk\Models\Components\DeliveryNoteCarrier  $carrier
-     * @param  ?LocalDate  $expectedDeliveryDate
-     * @param  ?string  $packagesReference
-     * @param  ?string  $trackingUrl
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $deliveryDate
      * @param  ?string  $deliveryAddress
@@ -431,6 +393,7 @@ class DeliveryNote
      * @param  ?\Factuarea\Sdk\Models\Components\Driver  $driver
      * @param  ?\Factuarea\Sdk\Models\Components\Tracking  $tracking
      * @param  ?\Factuarea\Sdk\Models\Components\ReceivedBy  $receivedBy
+     * @param  ?int  $linesWithoutWeightCount
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?string  $referenceNumber
@@ -438,9 +401,10 @@ class DeliveryNote
      * @param  ?string  $convertedToId
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
+     * @param  ?string  $totalGrossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, DeliveryNoteFulfilmentStatus $fulfilmentStatus, string $fulfilmentStatusLabel, array $billingEmails, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, ?string $priceListId = null, ?string $priceListName = null, ?DeliveryNoteCarrier $carrier = null, ?LocalDate $expectedDeliveryDate = null, ?string $packagesReference = null, ?string $trackingUrl = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?int $linesWithoutWeightCount = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $totalGrossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -448,8 +412,6 @@ class DeliveryNote
         $this->series = $series;
         $this->client = $client;
         $this->status = $status;
-        $this->fulfilmentStatus = $fulfilmentStatus;
-        $this->fulfilmentStatusLabel = $fulfilmentStatusLabel;
         $this->billingEmails = $billingEmails;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
@@ -463,10 +425,6 @@ class DeliveryNote
         $this->customFields = $customFields;
         $this->priceListId = $priceListId;
         $this->priceListName = $priceListName;
-        $this->carrier = $carrier;
-        $this->expectedDeliveryDate = $expectedDeliveryDate;
-        $this->packagesReference = $packagesReference;
-        $this->trackingUrl = $trackingUrl;
         $this->issuedOn = $issuedOn;
         $this->deliveryDate = $deliveryDate;
         $this->deliveryAddress = $deliveryAddress;
@@ -482,6 +440,7 @@ class DeliveryNote
         $this->driver = $driver;
         $this->tracking = $tracking;
         $this->receivedBy = $receivedBy;
+        $this->linesWithoutWeightCount = $linesWithoutWeightCount;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->referenceNumber = $referenceNumber;
@@ -489,5 +448,6 @@ class DeliveryNote
         $this->convertedToId = $convertedToId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->totalGrossWeightKg = $totalGrossWeightKg;
     }
 }

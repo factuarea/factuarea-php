@@ -15,6 +15,5 @@ enum CreateSeriesRequestDocumentType: string
     case Quote = 'quote';
     case DeliveryNote = 'delivery_note';
     case Proforma = 'proforma';
-    case SalesOrder = 'sales_order';
-    case PurchaseOrder = 'purchase_order';
+    case TransportDocument = 'transport_document';
 }

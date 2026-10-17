@@ -20,20 +20,22 @@ class Component
     public ?string $chargeId = null;
 
     /**
+     * Amount of the component charge, as a 2-decimal string in the payout currency.
      *
-     * @var ?float $amount
+     * @var ?string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $amount = null;
+    public ?string $amount = null;
 
     /**
+     * Fee of the component charge, as a 2-decimal string in the payout currency.
      *
-     * @var ?float $fee
+     * @var ?string $fee
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('fee')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $fee = null;
+    public ?string $fee = null;
 
     /**
      *
@@ -45,12 +47,12 @@ class Component
 
     /**
      * @param  ?string  $chargeId
-     * @param  ?float  $amount
-     * @param  ?float  $fee
+     * @param  ?string  $amount
+     * @param  ?string  $fee
      * @param  ?string  $paymentIntent
      * @phpstan-pure
      */
-    public function __construct(?string $chargeId = null, ?float $amount = null, ?float $fee = null, ?string $paymentIntent = null)
+    public function __construct(?string $chargeId = null, ?string $amount = null, ?string $fee = null, ?string $paymentIntent = null)
     {
         $this->chargeId = $chargeId;
         $this->amount = $amount;

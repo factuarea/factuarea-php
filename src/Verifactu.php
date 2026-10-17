@@ -23,6 +23,8 @@ class Verifactu
 
     public Records $records;
 
+    public Representation $representation;
+
     public Declaracion $declaracion;
 
     public VerifactuEvents $events;
@@ -41,6 +43,7 @@ class Verifactu
         $this->sdkConfiguration = $sdkConfig;
         $this->certificates = new Certificates($this->sdkConfiguration);
         $this->records = new Records($this->sdkConfiguration);
+        $this->representation = new Representation($this->sdkConfiguration);
         $this->declaracion = new Declaracion($this->sdkConfiguration);
         $this->events = new VerifactuEvents($this->sdkConfiguration);
         $this->aeatAccess = new AeatAccess($this->sdkConfiguration);
@@ -71,14 +74,14 @@ class Verifactu
     /**
      * Retrieve VeriFactu config
      *
-     * Return the VeriFactu configuration of your company (mode, environment, enrollment status). The certificate password is never exposed. Returned as `{ "data": VeriFactuConfig }`.
+     * Return the VeriFactu configuration of your company (mode, environment, enrollment status) and how it remits to AEAT: `remission_mode` (`own_certificate`, `social_collaborator` or `power_of_attorney`), whether it has an active representation and its kind, and the state of the certificate that the remission would present (`presenter_certificate_status`: `valid`, `invalid` or `not_configured`). `has_active_representation` is true only for a current representation that has NOT expired; `active_representation_valid_until` and `active_representation_is_expired` describe the current one (even an expired one keeps its id and kind), and `social_collaborator_available` says whether this instance offers the `social_collaborator` mode. The certificate password is never exposed, and neither is anything about the certificate of Factuarea. Returned as `{ "data": VeriFactuConfig }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuConfigResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuConfig(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1VerifactuConfigResponse
+    public function publicApiV1VerifactuConfig(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1VerifactuConfigResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -106,11 +109,11 @@ class Verifactu
             ];
         }
         $request = new Operations\PublicApiV1VerifactuConfigRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/config');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/config', Operations\PublicApiV1VerifactuConfigRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -156,7 +159,7 @@ class Verifactu
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -192,13 +195,13 @@ class Verifactu
     /**
      * Get VeriFactu stats
      *
-     * Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. Returned as `{ "data": VeriFactuStats }`.
+     * Aggregated KPIs of your VeriFactu records: total count, counts per status (pending, submitted, accepted, rejected, error), breakdown by record and invoice type, and last transmission timestamp. Accepts optional `date_from`, `date_to`, and `environment` filters. It also reports the pending-remission alert: `pending_incident_count` — the records still waiting to be remitted to AEAT: pending (or without a state yet), in error of ANY kind, submitted and rejected records that were already subsanados; accepted records and rejected ones still waiting for your correction are not counted, nor are sandbox companies —, `blocked_incident_count` — of those, the blocked ones: errors with no automatic retry that need your action (see `POST /v1/companies/{company}/verifactu/records/retry-blocked`) — and `oldest_pending_at`, the generation time of the oldest pending record. Those three fields are never affected by the filters: they are the figure art. 16 of Order HAC/1177/2024 asks you to show the taxpayer. Returned as `{ "data": VeriFactuStats }`.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1VerifactuStats(?Operations\PublicApiV1VerifactuStatsRequest $request = null, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
+    public function publicApiV1VerifactuStats(Operations\PublicApiV1VerifactuStatsRequest $request, ?Options $options = null): Operations\PublicApiV1VerifactuStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -226,7 +229,7 @@ class Verifactu
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/verifactu/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verifactu/stats', Operations\PublicApiV1VerifactuStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -275,7 +278,7 @@ class Verifactu
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

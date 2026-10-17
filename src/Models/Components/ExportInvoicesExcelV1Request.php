@@ -23,7 +23,7 @@ class ExportInvoicesExcelV1Request
     public ?array $invoiceIds = null;
 
     /**
-     * Invoice status to filter by (draft, sent, paid, overdue, cancelled, annulled, scheduled).
+     * Invoice status to filter by (`draft`, `scheduled`, `issued`, `paid`, `cancelled`, `overdue`, `annulled`). `sent` is accepted as an alias of `issued` in every API version.
      *
      * @var ?\Factuarea\Sdk\Models\Components\ExportInvoicesExcelV1RequestStatus $status
      */
@@ -88,7 +88,7 @@ class ExportInvoicesExcelV1Request
     public ?ExportInvoicesExcelV1RequestFormat $format = null;
 
     /**
-     * Formato de fichero: xlsx o csv.
+     * File format: `xlsx` or `csv`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\FileFormat $fileFormat
      */

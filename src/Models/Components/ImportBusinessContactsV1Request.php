@@ -22,9 +22,9 @@ class ImportBusinessContactsV1Request
     /**
      * $mapping
      *
-     * @var ?array<string> $mapping
+     * @var ?array<string, string> $mapping
      */
-    #[SpeakeasyMetadata('multipartForm:name=mapping')]
+    #[SpeakeasyMetadata('multipartForm:name=mapping,json=true')]
     public ?array $mapping = null;
 
     /**
@@ -51,7 +51,7 @@ class ImportBusinessContactsV1Request
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\ImportBusinessContactsV1RequestFile  $file
-     * @param  ?array<string>  $mapping
+     * @param  ?array<string, string>  $mapping
      * @param  ?array<\Factuarea\Sdk\Models\Components\ImportBusinessContactsV1RequestTargetRole>  $targetRoles
      * @param  ?\Factuarea\Sdk\Models\Components\ImportBusinessContactsV1RequestConflictStrategy  $conflictStrategy
      * @param  ?bool  $dryRun

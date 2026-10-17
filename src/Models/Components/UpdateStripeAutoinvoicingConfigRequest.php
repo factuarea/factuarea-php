@@ -9,15 +9,16 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateStripeAutoinvoicingConfigRequest - Update the Stripe auto-invoicing configuration. `enabled` toggles auto-invoicing; `series_id` (UUID, nullable) sets the series for auto-created invoices (`null` uses the company default); `simplified_threshold_cents` (0-300000), `require_nif`, `refunds_enabled` and `subscription_autoinvoicing_enabled` are optional partial fields. */
+/** UpdateStripeAutoinvoicingConfigRequest - Update the Stripe auto-invoicing configuration. `enabled` toggles auto-invoicing; `series_id` (UUID v7, nullable) sets the series for auto-created invoices (`null` uses the company default); `simplified_threshold_cents` (0-300000), `require_nif`, `refunds_enabled` and `subscription_autoinvoicing_enabled` are optional partial fields. */
 class UpdateStripeAutoinvoicingConfigRequest
 {
     /**
      *
-     * @var bool $enabled
+     * @var ?bool $enabled
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('enabled')]
-    public bool $enabled;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $enabled = null;
 
     /**
      *
@@ -60,7 +61,7 @@ class UpdateStripeAutoinvoicingConfigRequest
     public ?string $seriesId = null;
 
     /**
-     * @param  bool  $enabled
+     * @param  ?bool  $enabled
      * @param  ?int  $simplifiedThresholdCents
      * @param  ?bool  $requireNif
      * @param  ?bool  $refundsEnabled
@@ -68,7 +69,7 @@ class UpdateStripeAutoinvoicingConfigRequest
      * @param  ?string  $seriesId
      * @phpstan-pure
      */
-    public function __construct(bool $enabled, ?int $simplifiedThresholdCents = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null)
+    public function __construct(?bool $enabled = null, ?int $simplifiedThresholdCents = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null)
     {
         $this->enabled = $enabled;
         $this->simplifiedThresholdCents = $simplifiedThresholdCents;

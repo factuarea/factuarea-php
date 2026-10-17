@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateProductRequest - Create a product in your catalog. Required: `name` and `price`. Optional: `sku` (unique per company), `description`, `tags`, `stock` (initial quantity), `low_stock_threshold`, `manage_stock`, `currency` (`EUR` only — any other code returns 422), `tax_rate_id`, `is_active`, `metadata` and `external_id`. Stock changes after creation are made through `PUT /v1/products/{product}/stock`, not through this endpoint. */
+/** CreateProductRequest - Create a product in your catalog. Required: `name` and `price`. Optional: `sku` (unique per company), `description`, `tags`, `stock` (initial quantity), `low_stock_threshold`, `manage_stock`, `currency` (`EUR` only — any other code returns 422), `tax_rate_id`, `is_active`, `metadata` and `external_id`. Stock changes after creation are made through `PATCH /v1/companies/{company}/products/{product}/stock`, not through this endpoint. */
 class CreateProductRequest
 {
     /**
@@ -91,7 +91,7 @@ class CreateProductRequest
     public ?array $specifications = null;
 
     /**
-     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PUT /v1/products/{uuid}`, or move it with `PUT /v1/products/{uuid}/stock` (`set`/`increase`/`decrease`).
+     * Initial stock. Absent → defaults to 0. Later you can set it absolutely with `stock` on `PATCH /v1/companies/{company}/products/{product}`, or move it with `PATCH /v1/companies/{company}/products/{product}/stock` (`set`/`increase`/`decrease`).
      *
      * @var ?float $stock
      */
@@ -106,6 +106,14 @@ class CreateProductRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?float $lowStockThreshold = null;
+
+    /**
+     *
+     * @var ?float $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $grossWeightKg = null;
 
     /**
      * Whether this product takes part in document-driven stock movements: with `true`, issuing or receiving a document that includes it moves its stock automatically and the movement is recorded in the stock ledger. It only takes effect if your company also has stock management enabled; absent or `null` means `false`.
@@ -204,6 +212,7 @@ class CreateProductRequest
      * @param  ?array<?string>  $specifications
      * @param  ?float  $stock
      * @param  ?float  $lowStockThreshold
+     * @param  ?float  $grossWeightKg
      * @param  ?bool  $manageStock
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
@@ -215,7 +224,7 @@ class CreateProductRequest
      * @param  ?string  $impactToken
      * @phpstan-pure
      */
-    public function __construct(string $name, string $price, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
+    public function __construct(string $name, string $price, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
     {
         $this->name = $name;
         $this->price = $price;
@@ -228,6 +237,7 @@ class CreateProductRequest
         $this->specifications = $specifications;
         $this->stock = $stock;
         $this->lowStockThreshold = $lowStockThreshold;
+        $this->grossWeightKg = $grossWeightKg;
         $this->manageStock = $manageStock;
         $this->currency = $currency;
         $this->taxRateId = $taxRateId;

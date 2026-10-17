@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** RecurringInvoiceStats - Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/recurring_invoices/stats`. */
+/** RecurringInvoiceStats - Aggregated summary of the recurring invoices of the authenticated company: counters by status, upcoming due dates, current-month generation/failures, breakdown by frequency, upcoming runs and estimated revenue. Returned by `GET /v1/companies/{company}/recurring-invoices/stats`. */
 class RecurringInvoiceStats
 {
     /**
@@ -21,7 +21,7 @@ class RecurringInvoiceStats
     public RecurringInvoiceStatsObject $object;
 
     /**
-     * Total de recurrencias registradas.
+     * Total number of recurring invoices.
      *
      * @var int $total
      */
@@ -37,7 +37,7 @@ class RecurringInvoiceStats
     public int $active;
 
     /**
-     * Recurrencias pausadas (reanudables).
+     * Paused recurring invoices (they can be resumed).
      *
      * @var int $paused
      */
@@ -45,7 +45,7 @@ class RecurringInvoiceStats
     public int $paused;
 
     /**
-     * Recurrencias canceladas (estado terminal irreversible).
+     * Cancelled recurring invoices (terminal, irreversible status).
      *
      * @var int $cancelled
      */
@@ -85,7 +85,7 @@ class RecurringInvoiceStats
     public int $generatedThisMonth;
 
     /**
-     * Ejecuciones de recurrencia fallidas durante el mes en curso.
+     * Recurrence runs that failed during the current month.
      *
      * @var int $failedThisMonth
      */

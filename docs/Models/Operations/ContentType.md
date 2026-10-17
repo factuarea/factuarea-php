@@ -1,6 +1,6 @@
 # ContentType
 
-MIME type de la imagen.
+MIME type of the image.
 
 
 ## Values

@@ -22,18 +22,18 @@ class LatestActivity
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Direction $direction
+     * @var \Factuarea\Sdk\Models\Components\BusinessContactDirection $direction
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('direction')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Direction')]
-    public Direction $direction;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactDirection')]
+    public BusinessContactDirection $direction;
 
     /**
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      *
@@ -58,14 +58,14 @@ class LatestActivity
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\BusinessContactType  $type
-     * @param  \Factuarea\Sdk\Models\Components\Direction  $direction
-     * @param  float  $amount
+     * @param  \Factuarea\Sdk\Models\Components\BusinessContactDirection  $direction
+     * @param  string  $amount
      * @param  string  $currency
      * @param  \DateTime  $occurredAt
      * @param  string  $relatedResourceUuid
      * @phpstan-pure
      */
-    public function __construct(BusinessContactType $type, Direction $direction, float $amount, string $currency, \DateTime $occurredAt, string $relatedResourceUuid)
+    public function __construct(BusinessContactType $type, BusinessContactDirection $direction, string $amount, string $currency, \DateTime $occurredAt, string $relatedResourceUuid)
     {
         $this->type = $type;
         $this->direction = $direction;

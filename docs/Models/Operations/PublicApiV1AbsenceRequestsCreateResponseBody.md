@@ -1,5 +1,7 @@
 # PublicApiV1AbsenceRequestsCreateResponseBody
 
+Absence request created. The `Location` header contains the canonical URL of the new absence request.
+
 
 ## Fields
 

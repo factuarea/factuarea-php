@@ -28,7 +28,7 @@ class PurchaseInvoice
     public PurchaseInvoiceObject $object;
 
     /**
-     * Whether this is a simplified purchase invoice (expense ticket). When `true`, `supplier` and `external_invoice_number` may be `null`.
+     * Whether this is a simplified supplier invoice (expense ticket). When `true`, `supplier` and `external_invoice_number` may be `null`.
      *
      * @var bool $isSimplified
      */
@@ -57,7 +57,7 @@ class PurchaseInvoice
     public string $subtotal;
 
     /**
-     * VAT BORNE (IVA soportado) of this purchase invoice, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
+     * VAT BORNE (IVA soportado) of this expense, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
      *
      * @var string $taxesTotal
      */
@@ -89,7 +89,7 @@ class PurchaseInvoice
     public string $totalSurcharge;
 
     /**
-     * Total of the purchase invoice. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
+     * Total of the expense. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
      *
      * @var string $total
      */
@@ -104,7 +104,7 @@ class PurchaseInvoice
     public string $currency;
 
     /**
-     * Amount already paid against this purchase invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
+     * Amount already paid against this expense (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
      *
      * @var string $paidAmount
      */
@@ -112,7 +112,7 @@ class PurchaseInvoice
     public string $paidAmount;
 
     /**
-     * Outstanding balance pending payment for this purchase invoice (derived from the payment ledger).
+     * Outstanding balance pending payment for this expense (derived from the payment ledger).
      *
      * @var string $pendingAmount
      */
@@ -122,11 +122,11 @@ class PurchaseInvoice
     /**
      * Derived payment status, NOT a persisted domain state (the model keeps 4 statuses). `overdue` derives from `pending` + `due_date < today` and prevails in presentation.
      *
-     * @var \Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentStatus $paymentStatus
+     * @var \Factuarea\Sdk\Models\Components\PaymentStatus $paymentStatus
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('payment_status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentStatus')]
-    public PurchaseInvoicePaymentStatus $paymentStatus;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PaymentStatus')]
+    public PaymentStatus $paymentStatus;
 
     /**
      * Operation class for the input VAT of Modelo 303. Defaults to `corriente`. `isp` (domestic reverse charge, Art. 84.Uno.2 LIVA) and `intracomunitaria` are self-assessed: the buyer declares both the output VAT and the deductible input VAT.
@@ -138,7 +138,7 @@ class PurchaseInvoice
     public PurchaseInvoiceOperationClass $operationClass;
 
     /**
-     * Declarative per-document flag: whether this purchase invoice is excluded from the annual Modelo 347 report.
+     * Declarative per-document flag: whether this expense is excluded from the annual Modelo 347 report.
      *
      * @var bool $exclude347
      */
@@ -242,11 +242,20 @@ class PurchaseInvoice
     public ?LocalDate $dueOn;
 
     /**
+     * Instant (ISO 8601 with offset) at which the payment that settled the purchase invoice was RECORDED in the ledger. `null` while it is not paid. Not the declared date: see `paid_date`.
      *
-     * @var ?LocalDate $paidRecordedAt
+     * @var ?\DateTime $paidRecordedAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('paid_recorded_at')]
-    public ?LocalDate $paidRecordedAt;
+    public ?\DateTime $paidRecordedAt;
+
+    /**
+     * Declared payment date (YYYY-MM-DD). `null` while the purchase invoice is not paid. The input field of `mark-paid` and `payments` keeps the name `paid_on`.
+     *
+     * @var ?LocalDate $paidDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('paid_date')]
+    public ?LocalDate $paidDate;
 
     /**
      *
@@ -273,7 +282,7 @@ class PurchaseInvoice
     public mixed $bankAccount;
 
     /**
-     * Cuenta contable de gasto asociada, o `null`.
+     * Associated expense ledger account, or `null`.
      *
      * @var ?string $expenseAccount
      */
@@ -281,7 +290,7 @@ class PurchaseInvoice
     public ?string $expenseAccount;
 
     /**
-     * UUID (v7) of the associated expense category, or `null`.
+     * UUID v7 of the associated expense category, or `null`.
      *
      * @var ?string $expenseCategoryId
      */
@@ -354,7 +363,7 @@ class PurchaseInvoice
      * @param  string  $currency
      * @param  string  $paidAmount
      * @param  string  $pendingAmount
-     * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoicePaymentStatus  $paymentStatus
+     * @param  \Factuarea\Sdk\Models\Components\PaymentStatus  $paymentStatus
      * @param  \Factuarea\Sdk\Models\Components\PurchaseInvoiceOperationClass  $operationClass
      * @param  bool  $exclude347
      * @param  bool  $isReverseCharge
@@ -369,7 +378,8 @@ class PurchaseInvoice
      * @param  ?\Factuarea\Sdk\Models\Components\SupplierRef  $supplier
      * @param  ?LocalDate  $receivedOn
      * @param  ?LocalDate  $dueOn
-     * @param  ?LocalDate  $paidRecordedAt
+     * @param  ?\DateTime  $paidRecordedAt
+     * @param  ?LocalDate  $paidDate
      * @param  ?string  $paymentMethod
      * @param  ?int  $paymentTermsDays
      * @param  mixed  $bankAccount
@@ -383,7 +393,7 @@ class PurchaseInvoice
      * @param  ?string  $notes
      * @phpstan-pure
      */
-    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $paidAmount, string $pendingAmount, PurchaseInvoicePaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?LocalDate $paidRecordedAt = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
+    public function __construct(string $id, PurchaseInvoiceObject $object, bool $isSimplified, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $paidAmount, string $pendingAmount, PaymentStatus $paymentStatus, PurchaseInvoiceOperationClass $operationClass, bool $exclude347, bool $isReverseCharge, array $tags, array $customFields, array $lines, \DateTime $createdAt, \DateTime $updatedAt, ?string $externalInvoiceNumber = null, ?string $externalId = null, ?string $internalCode = null, ?SupplierRef $supplier = null, ?LocalDate $receivedOn = null, ?LocalDate $dueOn = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, mixed $bankAccount = null, ?string $expenseAccount = null, ?string $expenseCategoryId = null, ?float $deductiblePercentage = null, ?string $taxPeriod = null, ?string $internalNotes = null, ?PurchaseInvoiceAttachment $attachment = null, ?array $metadata = null, ?string $notes = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -415,6 +425,7 @@ class PurchaseInvoice
         $this->receivedOn = $receivedOn;
         $this->dueOn = $dueOn;
         $this->paidRecordedAt = $paidRecordedAt;
+        $this->paidDate = $paidDate;
         $this->paymentMethod = $paymentMethod;
         $this->paymentTermsDays = $paymentTermsDays;
         $this->bankAccount = $bankAccount;

@@ -28,6 +28,7 @@ class QuoteLine
     public float $quantity;
 
     /**
+     * Unit price as a decimal STRING with the 4-decimal scale of its column (e.g. `"0.0125"`, `"100.0000"`): it is returned exactly as it was accepted and stored, so reading a line and sending it back never changes its price. Derived amounts (`subtotal`, `taxes`, `total`) keep 2 decimals.
      *
      * @var string $unitPrice
      */
@@ -142,17 +143,19 @@ class QuoteLine
 
     /**
      *
-     * @var ?string $commercialUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLineCommercialUnitCode $commercialUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('commercial_unit_code')]
-    public ?string $commercialUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLineCommercialUnitCode|null')]
+    public ?QuoteLineCommercialUnitCode $commercialUnitCode;
 
     /**
      *
-     * @var ?string $baseUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLineBaseUnitCode $baseUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_code')]
-    public ?string $baseUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLineBaseUnitCode|null')]
+    public ?QuoteLineBaseUnitCode $baseUnitCode;
 
     /**
      *
@@ -191,10 +194,28 @@ class QuoteLine
 
     /**
      *
-     * @var ?string $priceUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLinePriceUnitCode $priceUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
-    public ?string $priceUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLinePriceUnitCode|null')]
+    public ?QuoteLinePriceUnitCode $priceUnitCode;
+
+    /**
+     * Pieces the customer asked for on a variable-weight line sold by count (decimal string, scale 4, greater than 0), e.g. `"4.0000"` for four pieces weighing `quantity` kg in total. Informational: the line is charged and the stock is discounted by `quantity` (the real weight), never by the pieces. `null` on any other line. Only accepted on a `variable_measure` presentation whose unit is a count unit.
+     *
+     * @var ?string $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    public ?string $countedQuantity;
+
+    /**
+     * UN/ECE code of the count unit of `counted_quantity` (`H87` piece, `XPK` pack…). `null` exactly when `counted_quantity` is `null`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuoteLineCountedUnit $countedUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_unit')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuoteLineCountedUnit|null')]
+    public ?QuoteLineCountedUnit $countedUnit;
 
     /**
      * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
@@ -258,14 +279,16 @@ class QuoteLine
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineVariant  $variant
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLinePresentation  $presentation
      * @param  ?string  $itemKind
-     * @param  ?string  $commercialUnitCode
-     * @param  ?string  $baseUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineCommercialUnitCode  $commercialUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineBaseUnitCode  $baseUnitCode
      * @param  ?string  $conversionFactor
      * @param  ?string  $baseQuantity
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?string  $priceSource
-     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLinePriceUnitCode  $priceUnitCode
+     * @param  ?string  $countedQuantity
+     * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineCountedUnit  $countedUnit
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineConfiguration  $configuration
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
@@ -273,7 +296,7 @@ class QuoteLine
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(QuoteLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?QuoteLineVariant $variant = null, ?QuoteLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?QuoteLineConfiguration $configuration = null, ?QuoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(QuoteLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?QuoteLineVariant $variant = null, ?QuoteLinePresentation $presentation = null, ?string $itemKind = null, ?QuoteLineCommercialUnitCode $commercialUnitCode = null, ?QuoteLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?QuoteLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?QuoteLineCountedUnit $countedUnit = null, ?QuoteLineConfiguration $configuration = null, ?QuoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -300,6 +323,8 @@ class QuoteLine
         $this->priceListName = $priceListName;
         $this->priceSource = $priceSource;
         $this->priceUnitCode = $priceUnitCode;
+        $this->countedQuantity = $countedQuantity;
+        $this->countedUnit = $countedUnit;
         $this->configuration = $configuration;
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;

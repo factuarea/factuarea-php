@@ -10,9 +10,9 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * QuarterlyDownloadV1Request - Public REST API v1 — POST /v1/invoices/quarterly/download-zip
+ * QuarterlyDownloadV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/quarterly/download-zip
  *
- * and POST /v1/invoices/quarterly/send-email (shared fields).
+ * and POST /v1/companies/{company}/invoices/quarterly/send-email (shared fields).
  *
  * The canonical recipient field is `email`. We accept
  * `to_email` as a deprecated alias for compatibility with older clients.
@@ -43,6 +43,14 @@ class QuarterlyDownloadV1Request
 
     /**
      *
+     * @var ?bool $includeNonInvoicedCharges
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('include_non_invoiced_charges')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $includeNonInvoicedCharges = null;
+
+    /**
+     *
      * @var ?string $email
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('email')]
@@ -61,15 +69,17 @@ class QuarterlyDownloadV1Request
      * @param  int  $year
      * @param  int  $quarter
      * @param  ?bool  $includeIndex
+     * @param  ?bool  $includeNonInvoicedCharges
      * @param  ?string  $email
      * @param  ?string  $message
      * @phpstan-pure
      */
-    public function __construct(int $year, int $quarter, ?bool $includeIndex = null, ?string $email = null, ?string $message = null)
+    public function __construct(int $year, int $quarter, ?bool $includeIndex = null, ?bool $includeNonInvoicedCharges = null, ?string $email = null, ?string $message = null)
     {
         $this->year = $year;
         $this->quarter = $quarter;
         $this->includeIndex = $includeIndex;
+        $this->includeNonInvoicedCharges = $includeNonInvoicedCharges;
         $this->email = $email;
         $this->message = $message;
     }

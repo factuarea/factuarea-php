@@ -5,7 +5,7 @@
 [![Spec sync](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml/badge.svg)](https://github.com/factuarea/factuarea-php/actions/workflows/spec-sync.yml)
 
 Official PHP SDK for the [Factuarea](https://factuarea.com) public API — invoicing,
-quotes, proformas, delivery notes, products, clients, suppliers, taxes, VeriFactu
+quotes, proformas, delivery notes, products, contacts, taxes, VeriFactu
 and webhooks for Spanish businesses.
 
 Type-safe, PSR-4, built on Guzzle, with automatic retries, automatic idempotency,
@@ -210,47 +210,12 @@ The full, generated reference for all resources and operations lives in
 `operationId → method` mapping (e.g. `public-api.v1.invoices.mark_paid` →
 `$factuarea->invoices->publicApiV1InvoicesMarkPaid(...)`).
 
-### ERP and omnichannel families
-
-The 2026-09-18 regeneration added **184 operations** (470 → 654 over 532 paths)
-covering the order-to-cash and stock side of the platform, plus the buyer-facing
-storefront. They are reached from the client like any other family:
-
-| Family | Entry point | Operations |
-| --- | --- | --- |
-| Sales orders | `$factuarea->salesOrders` (`->lines`, `->buyer`, `->shippingAddress`) | 24 |
-| Purchase orders | `$factuarea->purchaseOrders` (`->lines`, `->receipts`) | 24 |
-| Reorder suggestions | `$factuarea->purchaseReorderSuggestions` | 2 |
-| Goods receipts | `$factuarea->goodsReceipts` (`->lines`) | 9 |
-| Warehouses | `$factuarea->warehouses` (`->locations`) | 14 |
-| Stock transfers | `$factuarea->stockTransfers` (`->lines`) | 12 |
-| Stock reservations | `$factuarea->stockReservations` | 7 |
-| Stock availability | `$factuarea->stockAvailability` (`->commitments`) | 4 |
-| Carriers | `$factuarea->carriers` | 6 |
-| Returns | `$factuarea->returns` (`->correctiveCandidates`) | 12 |
-| Storefront | `$factuarea->storefront` (`->products`, `->prices`, `->availability`, `->orders`, `->sessions`, `->categories`, `->catalogSelections`) | 23 |
-| Storefront credentials | `$factuarea->storefrontKeys` | 7 |
-| Contacts | `$factuarea->contacts` | 18 |
-
-Fulfilment extends the existing delivery-note family in place
-(`$factuarea->deliveryNotes->pickingList`, `->pickingQueue`, `->pickingLines`,
-`->packages`, `->shipment`, `->fulfilmentStatus`), so no new entry point is
-needed for it.
-
-Everything the rest of the SDK gives you applies unchanged to these families:
-listings page with the same `{data, has_more, next_cursor}` envelope and are
-iterated by [`PageIterator`](src/Custom/Pagination/PageIterator.php); mutating
-calls get an automatic `Idempotency-Key`; PDF downloads (sales order, purchase
-order, stock transfer, picking list, packing list, shipping label) return the
-body on `$response->bytes` with the untouched stream on
-`$response->rawResponse->getBody()`.
-
 ---
 
 ## Versioning
 
 The SDK pins the `Factuarea-Version` it was generated against (currently
-`2026-06-04`) and sends it on every request, so the API behaves consistently
+`2026-10-01`) and sends it on every request, so the API behaves consistently
 until you upgrade. SemVer applies to the SDK's public surface: new operations are
 a minor bump, renames/removals or a behaviour-changing `Factuarea-Version` bump
 are breaking, fixes are a patch. The SDK stays on `0.x` until the API's GA, which
@@ -273,7 +238,7 @@ nothing to sync leaves no commit. Click it for the date of the latest run.
 | ------------------- | ---------------------------------------------------------- |
 | PHP                 | 8.2, 8.3, 8.4 (tested in CI)                               |
 | Stability           | Pre-GA `0.x` — the public surface may change before `1.0.0` |
-| `Factuarea-Version` | `2026-06-04` (pinned, sent on every request)              |
+| `Factuarea-Version` | `2026-10-01` (pinned, sent on every request)              |
 
 Full runtime-support matrix and the deprecation / breaking-change policy live in
 [`SUPPORT.md`](SUPPORT.md).
@@ -419,28 +384,21 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -456,12 +414,10 @@ if ($response->object !== null) {
 
 This SDK supports the following security schemes globally:
 
-| Name         | Type   | Scheme       |
-| ------------ | ------ | ------------ |
-| `http`       | http   | HTTP Bearer  |
-| `bearerAuth` | http   | HTTP Bearer  |
-| `apiKeyAuth` | apiKey | API key      |
-| `oAuth2`     | oauth2 | OAuth2 token |
+| Name         | Type   | Scheme      |
+| ------------ | ------ | ----------- |
+| `bearerAuth` | http   | HTTP Bearer |
+| `apiKeyAuth` | apiKey | API key     |
 
 You can set the security parameters through the `setSecurity` function on the `SDKBuilder` when initializing the SDK. The selected scheme will be used by default to authenticate with the API for all operations that support it. For example:
 ```php
@@ -472,28 +428,21 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -550,22 +499,96 @@ if ($response->object !== null) {
 
 ### [Account](docs/sdks/account/README.md)
 
-* [publicApiV1AccountShow](docs/sdks/account/README.md#publicapiv1accountshow) - Retrieve account details
 * [publicApiV1AccountBilling](docs/sdks/account/README.md#publicapiv1accountbilling) - Retrieve account billing details
+* [publicApiV1AccountUsage](docs/sdks/account/README.md#publicapiv1accountusage) - Retrieve account usage for the current period
+* [publicApiV1AccountShow](docs/sdks/account/README.md#publicapiv1accountshow) - Retrieve the calling credential
+* [publicApiV1AccountProvisioningUsage](docs/sdks/account/README.md#publicapiv1accountprovisioningusage) - Retrieve provisioning usage
 * [publicApiV1AccountVerifyCensus](docs/sdks/account/README.md#publicapiv1accountverifycensus) - Verify account against the AEAT census
 
-#### [Account.ApiKeys](docs/sdks/accountapikeys/README.md)
+#### [Account.ApiKeys](docs/sdks/apikeys/README.md)
 
-* [publicApiV1AccountApiKeysCreate](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
-* [publicApiV1AccountApiKeysList](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
-* [publicApiV1AccountApiKeysRevoke](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
-* [publicApiV1AccountApiKeysRotateSecret](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
-* [publicApiV1AccountApiKeysShow](docs/sdks/accountapikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
+* [publicApiV1AccountApiKeysCreate](docs/sdks/apikeys/README.md#publicapiv1accountapikeyscreate) - Create an API key
+* [publicApiV1AccountApiKeysList](docs/sdks/apikeys/README.md#publicapiv1accountapikeyslist) - List your API keys
+* [publicApiV1AccountApiKeysUsage](docs/sdks/apikeys/README.md#publicapiv1accountapikeysusage) - Retrieve the daily usage of an API key
+* [publicApiV1AccountApiKeysRevoke](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrevoke) - Revoke an API key
+* [publicApiV1AccountApiKeysRotateSecret](docs/sdks/apikeys/README.md#publicapiv1accountapikeysrotatesecret) - Rotate an API key secret
+* [publicApiV1AccountApiKeysShow](docs/sdks/apikeys/README.md#publicapiv1accountapikeysshow) - Retrieve an API key
+* [publicApiV1AccountApiKeysUpdateNifScope](docs/sdks/apikeys/README.md#publicapiv1accountapikeysupdatenifscope) - Change the tax IDs an API key reaches
+
+#### [Account.ConnectReturnDomains](docs/sdks/connectreturndomains/README.md)
+
+* [publicApiV1AccountConnectReturnDomainsCreate](docs/sdks/connectreturndomains/README.md#publicapiv1accountconnectreturndomainscreate) - Add a Stripe Connect return domain
+* [publicApiV1AccountConnectReturnDomainsList](docs/sdks/connectreturndomains/README.md#publicapiv1accountconnectreturndomainslist) - List Stripe Connect return domains
+* [publicApiV1AccountConnectReturnDomainsDelete](docs/sdks/connectreturndomains/README.md#publicapiv1accountconnectreturndomainsdelete) - Remove a Stripe Connect return domain
+
+#### [Account.Invitations](docs/sdks/invitations/README.md)
+
+* [publicApiV1AccountInvitationsCancel](docs/sdks/invitations/README.md#publicapiv1accountinvitationscancel) - Revoke an account invitation
+* [publicApiV1AccountInvitationsShow](docs/sdks/invitations/README.md#publicapiv1accountinvitationsshow) - Retrieve an account invitation
+* [publicApiV1AccountInvitationsCreate](docs/sdks/invitations/README.md#publicapiv1accountinvitationscreate) - Send an account invitation
+* [publicApiV1AccountInvitationsList](docs/sdks/invitations/README.md#publicapiv1accountinvitationslist) - List account invitations
+* [publicApiV1AccountInvitationsResend](docs/sdks/invitations/README.md#publicapiv1accountinvitationsresend) - Resend an account invitation
+
+#### [Account.Members](docs/sdks/members/README.md)
+
+* [publicApiV1AccountMembersCreate](docs/sdks/members/README.md#publicapiv1accountmemberscreate) - Add a member to the account
+* [publicApiV1AccountMembersList](docs/sdks/members/README.md#publicapiv1accountmemberslist) - List account members
+* [publicApiV1AccountMembersUpdate](docs/sdks/members/README.md#publicapiv1accountmembersupdate) - Change an account member role
+* [publicApiV1AccountMembersDelete](docs/sdks/members/README.md#publicapiv1accountmembersdelete) - Remove a member from the account
+* [publicApiV1AccountMembersShow](docs/sdks/members/README.md#publicapiv1accountmembersshow) - Retrieve an account member
+
+##### [Account.Members.Grants](docs/sdks/grants/README.md)
+
+* [publicApiV1AccountMembersGrantsList](docs/sdks/grants/README.md#publicapiv1accountmembersgrantslist) - List the grants of an account member
+* [publicApiV1AccountMembersGrantsDelete](docs/sdks/grants/README.md#publicapiv1accountmembersgrantsdelete) - Revoke an account member grant
+* [publicApiV1AccountMembersGrantsUpdate](docs/sdks/grants/README.md#publicapiv1accountmembersgrantsupdate) - Set an account member grant
+* [publicApiV1AccountMembersGrantsShow](docs/sdks/grants/README.md#publicapiv1accountmembersgrantsshow) - Retrieve an account member grant
+
+##### [Account.Members.ModuleAccess](docs/sdks/moduleaccess/README.md)
+
+* [publicApiV1AccountMembersModuleAccessShow](docs/sdks/moduleaccess/README.md#publicapiv1accountmembersmoduleaccessshow) - Retrieve a member module access level
+* [publicApiV1AccountMembersModuleAccessUpdate](docs/sdks/moduleaccess/README.md#publicapiv1accountmembersmoduleaccessupdate) - Set a member module access level
+
+#### [Account.NifTransfers](docs/sdks/niftransfers/README.md)
+
+* [publicApiV1AccountNifTransfersAccept](docs/sdks/niftransfers/README.md#publicapiv1accountniftransfersaccept) - Accept a tax ID transfer
+* [publicApiV1AccountNifTransfersCreate](docs/sdks/niftransfers/README.md#publicapiv1accountniftransferscreate) - Issue a tax ID transfer
+* [publicApiV1AccountNifTransfersList](docs/sdks/niftransfers/README.md#publicapiv1accountniftransferslist) - List issued tax ID transfers
+* [publicApiV1AccountNifTransfersRevoke](docs/sdks/niftransfers/README.md#publicapiv1accountniftransfersrevoke) - Revoke a tax ID transfer
+
+#### [Account.Owner](docs/sdks/owner/README.md)
+
+* [publicApiV1AccountOwnerTransfer](docs/sdks/owner/README.md#publicapiv1accountownertransfer) - Transfer account ownership
 
 #### [Account.Personalization](docs/sdks/personalization/README.md)
 
 * [publicApiV1AccountPersonalizationTemplates](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationtemplates) - List available personalization templates
 * [publicApiV1AccountPersonalizationUpdate](docs/sdks/personalization/README.md#publicapiv1accountpersonalizationupdate) - Update account personalization
+
+#### [Account.RequestLogs](docs/sdks/accountrequestlogs/README.md)
+
+* [publicApiV1AccountRequestLogsList](docs/sdks/accountrequestlogs/README.md#publicapiv1accountrequestlogslist) - List your account API request logs
+* [publicApiV1AccountRequestLogsShow](docs/sdks/accountrequestlogs/README.md#publicapiv1accountrequestlogsshow) - Retrieve an account API request log
+
+#### [Account.Webhooks](docs/sdks/webhooks/README.md)
+
+* [publicApiV1AccountWebhooksCreate](docs/sdks/webhooks/README.md#publicapiv1accountwebhookscreate) - Create an account webhook endpoint
+* [publicApiV1AccountWebhooksList](docs/sdks/webhooks/README.md#publicapiv1accountwebhookslist) - List account webhook endpoints
+* [publicApiV1AccountWebhooksDelete](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksdelete) - Delete an account webhook endpoint
+* [publicApiV1AccountWebhooksShow](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksshow) - Retrieve an account webhook endpoint
+* [publicApiV1AccountWebhooksUpdate](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksupdate) - Update an account webhook endpoint
+* [publicApiV1AccountWebhooksRotateSecret](docs/sdks/webhooks/README.md#publicapiv1accountwebhooksrotatesecret) - Rotate an account webhook secret
+* [publicApiV1AccountWebhooksTest](docs/sdks/webhooks/README.md#publicapiv1accountwebhookstest) - Send a test event to an account webhook endpoint
+
+##### [Account.Webhooks.Deliveries](docs/sdks/webhooksdeliveries/README.md)
+
+* [publicApiV1AccountWebhooksDeliveriesList](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliverieslist) - List account webhook deliveries
+* [publicApiV1AccountWebhooksDeliveriesRetry](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliveriesretry) - Retry an account webhook delivery
+* [publicApiV1AccountWebhooksDeliveriesShow](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliveriesshow) - Retrieve an account webhook delivery
+
+### [Agenda](docs/sdks/agenda/README.md)
+
+* [publicApiV1AgendaList](docs/sdks/agenda/README.md#publicapiv1agendalist) - List agenda items
 
 ### [Automations.Catalog](docs/sdks/catalog/README.md)
 
@@ -603,68 +626,43 @@ if ($response->object !== null) {
 
 * [publicApiV1AutomationsUsageShow](docs/sdks/usage/README.md#publicapiv1automationsusageshow) - Retrieve automation usage
 
-### [Carriers](docs/sdks/carriers/README.md)
-
-* [publicApiV1CarriersCreate](docs/sdks/carriers/README.md#publicapiv1carrierscreate) - Create a carrier
-* [publicApiV1CarriersList](docs/sdks/carriers/README.md#publicapiv1carrierslist) - List all carriers
-* [publicApiV1CarriersDelete](docs/sdks/carriers/README.md#publicapiv1carriersdelete) - Delete a carrier
-* [publicApiV1CarriersShow](docs/sdks/carriers/README.md#publicapiv1carriersshow) - Retrieve a carrier
-* [publicApiV1CarriersUpdate](docs/sdks/carriers/README.md#publicapiv1carriersupdate) - Update a carrier
-* [publicApiV1CarriersFindByCode](docs/sdks/carriers/README.md#publicapiv1carriersfindbycode) - Find a carrier by code
-
-### [Clients](docs/sdks/clients/README.md)
-
-* [publicApiV1ClientsBulkCreate](docs/sdks/clients/README.md#publicapiv1clientsbulkcreate) - Bulk create clients
-* [publicApiV1ClientsBulkDelete](docs/sdks/clients/README.md#publicapiv1clientsbulkdelete) - Delete multiple clients in bulk
-* [publicApiV1ClientsCreate](docs/sdks/clients/README.md#publicapiv1clientscreate) - Create a client
-* [publicApiV1ClientsList](docs/sdks/clients/README.md#publicapiv1clientslist) - List all clients
-* [publicApiV1ClientsDelete](docs/sdks/clients/README.md#publicapiv1clientsdelete) - Delete a client
-* [publicApiV1ClientsShow](docs/sdks/clients/README.md#publicapiv1clientsshow) - Retrieve a client
-* [publicApiV1ClientsUpdate](docs/sdks/clients/README.md#publicapiv1clientsupdate) - Update a client
-* [publicApiV1ClientsImportTemplate](docs/sdks/clients/README.md#publicapiv1clientsimporttemplate) - Download the client import template
-* [publicApiV1ClientsFindByExternalId](docs/sdks/clients/README.md#publicapiv1clientsfindbyexternalid) - Find a client by external ID
-* [publicApiV1ClientsFindByTaxId](docs/sdks/clients/README.md#publicapiv1clientsfindbytaxid) - Find a client by tax ID
-* [publicApiV1ClientsActivities](docs/sdks/clients/README.md#publicapiv1clientsactivities) - List client activity timeline
-* [publicApiV1ClientsStats](docs/sdks/clients/README.md#publicapiv1clientsstats) - Get client stats
-* [publicApiV1ClientsImport](docs/sdks/clients/README.md#publicapiv1clientsimport) - Import clients from a file
-* [publicApiV1ClientsSearch](docs/sdks/clients/README.md#publicapiv1clientssearch) - Search clients
-* [publicApiV1ClientsVerifyCensus](docs/sdks/clients/README.md#publicapiv1clientsverifycensus) - Verify a client against the AEAT census
-
 ### [Companies](docs/sdks/companies/README.md)
 
-* [publicApiV1CompaniesActivateBatch](docs/sdks/companies/README.md#publicapiv1companiesactivatebatch) - Activate several managed companies
-* [publicApiV1CompaniesActivate](docs/sdks/companies/README.md#publicapiv1companiesactivate) - Activate a managed company
-* [publicApiV1CompaniesCreate](docs/sdks/companies/README.md#publicapiv1companiescreate) - Create a managed company
-* [publicApiV1CompaniesList](docs/sdks/companies/README.md#publicapiv1companieslist) - List your managed companies
-* [publicApiV1CompaniesDeactivate](docs/sdks/companies/README.md#publicapiv1companiesdeactivate) - Deactivate a managed company
-* [publicApiV1CompaniesDelete](docs/sdks/companies/README.md#publicapiv1companiesdelete) - Archive a managed company
-* [publicApiV1CompaniesShow](docs/sdks/companies/README.md#publicapiv1companiesshow) - Retrieve a managed company
-* [publicApiV1CompaniesUpdate](docs/sdks/companies/README.md#publicapiv1companiesupdate) - Update a managed company
-* [publicApiV1CompaniesCreationStatus](docs/sdks/companies/README.md#publicapiv1companiescreationstatus) - Retrieve the creation status of a managed company
+* [publicApiV1CompaniesActivateBatch](docs/sdks/companies/README.md#publicapiv1companiesactivatebatch) - Activate several tax IDs of the account
+* [publicApiV1CompaniesActivate](docs/sdks/companies/README.md#publicapiv1companiesactivate) - Activate a tax ID of the account
+* [publicApiV1CompaniesDeactivate](docs/sdks/companies/README.md#publicapiv1companiesdeactivate) - Deactivate a tax ID of the account
+* [publicApiV1CompaniesDelete](docs/sdks/companies/README.md#publicapiv1companiesdelete) - Archive a tax ID of the account
+* [publicApiV1CompaniesShow](docs/sdks/companies/README.md#publicapiv1companiesshow) - Retrieve a tax ID of the account
+* [publicApiV1CompaniesUpdate](docs/sdks/companies/README.md#publicapiv1companiesupdate) - Update a tax ID of the account
+* [publicApiV1CompaniesStats](docs/sdks/companies/README.md#publicapiv1companiesstats) - Retrieve invoicing statistics per company
+* [publicApiV1CompaniesCreationStatus](docs/sdks/companies/README.md#publicapiv1companiescreationstatus) - Retrieve the creation status of a tax ID
+* [publicApiV1CompaniesIssuingReadiness](docs/sdks/companies/README.md#publicapiv1companiesissuingreadiness) - Check whether a portfolio NIF can issue
 * [publicApiV1CompaniesSeatChargePreview](docs/sdks/companies/README.md#publicapiv1companiesseatchargepreview) - Preview the seat charge of adding a company
-* [publicApiV1CompaniesVerifyCreation](docs/sdks/companies/README.md#publicapiv1companiesverifycreation) - Verify the creation of a managed company
-
-#### [Companies.ApiKeys](docs/sdks/companiesapikeys/README.md)
-
-* [publicApiV1CompaniesApiKeysCreate](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeyscreate) - Create a child API key
-* [publicApiV1CompaniesApiKeysList](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeyslist) - List child API keys
-* [publicApiV1CompaniesApiKeysRevoke](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrevoke) - Revoke a child API key
-* [publicApiV1CompaniesApiKeysShow](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysshow) - Retrieve a child API key
-* [publicApiV1CompaniesApiKeysRotateSecret](docs/sdks/companiesapikeys/README.md#publicapiv1companiesapikeysrotatesecret) - Rotate a child API key secret
+* [publicApiV1CompaniesList](docs/sdks/companies/README.md#publicapiv1companieslist) - List the tax IDs of your account
+* [publicApiV1CompaniesCreate](docs/sdks/companies/README.md#publicapiv1companiescreate) - Register a tax ID in the account
+* [publicApiV1CompaniesVerifyCreation](docs/sdks/companies/README.md#publicapiv1companiesverifycreation) - Verify the creation of a tax ID
 
 ### [Contacts](docs/sdks/contacts/README.md)
 
+* [publicApiV1ContactsArchive](docs/sdks/contacts/README.md#publicapiv1contactsarchive) - Archive a contact
 * [publicApiV1ContactsAssignContactRole](docs/sdks/contacts/README.md#publicapiv1contactsassigncontactrole) - Assign a contact role
 * [publicApiV1ContactsRemoveContactRole](docs/sdks/contacts/README.md#publicapiv1contactsremovecontactrole) - Remove a contact role
 * [publicApiV1ContactsBulkArchive](docs/sdks/contacts/README.md#publicapiv1contactsbulkarchive) - Archive contacts in bulk
 * [publicApiV1ContactsBulkChangeContactRoleStatus](docs/sdks/contacts/README.md#publicapiv1contactsbulkchangecontactrolestatus) - Change contact role status in bulk
+* [publicApiV1ContactsBulkCreate](docs/sdks/contacts/README.md#publicapiv1contactsbulkcreate) - Create contacts in bulk
+* [publicApiV1ContactsBulkDelete](docs/sdks/contacts/README.md#publicapiv1contactsbulkdelete) - Delete contacts in bulk
 * [publicApiV1ContactsChangeContactRoleStatus](docs/sdks/contacts/README.md#publicapiv1contactschangecontactrolestatus) - Change a contact role status
 * [publicApiV1ContactsCreate](docs/sdks/contacts/README.md#publicapiv1contactscreate) - Create a contact
 * [publicApiV1ContactsList](docs/sdks/contacts/README.md#publicapiv1contactslist) - List contacts
-* [publicApiV1ContactsDelete](docs/sdks/contacts/README.md#publicapiv1contactsdelete) - Archive a contact
+* [publicApiV1ContactsDelete](docs/sdks/contacts/README.md#publicapiv1contactsdelete) - Delete a contact
 * [publicApiV1ContactsShow](docs/sdks/contacts/README.md#publicapiv1contactsshow) - Retrieve a contact
 * [publicApiV1ContactsUpdate](docs/sdks/contacts/README.md#publicapiv1contactsupdate) - Update a contact
+* [publicApiV1ContactsImportTemplate](docs/sdks/contacts/README.md#publicapiv1contactsimporttemplate) - Download the contact import template
+* [publicApiV1ContactsFindByExternalId](docs/sdks/contacts/README.md#publicapiv1contactsfindbyexternalid) - Find a contact by external ID
+* [publicApiV1ContactsFindByTaxId](docs/sdks/contacts/README.md#publicapiv1contactsfindbytaxid) - Find a contact by tax ID
+* [publicApiV1ContactsActivities](docs/sdks/contacts/README.md#publicapiv1contactsactivities) - List contact activity
 * [publicApiV1ContactsOptions](docs/sdks/contacts/README.md#publicapiv1contactsoptions) - List contact filter options
+* [publicApiV1ContactsStats](docs/sdks/contacts/README.md#publicapiv1contactsstats) - Get contact statistics
 * [publicApiV1ContactsImport](docs/sdks/contacts/README.md#publicapiv1contactsimport) - Import contacts
 * [publicApiV1ContactsPreviewImport](docs/sdks/contacts/README.md#publicapiv1contactspreviewimport) - Preview a contact import
 * [publicApiV1ContactsRestore](docs/sdks/contacts/README.md#publicapiv1contactsrestore) - Restore an archived contact
@@ -672,6 +670,12 @@ if ($response->object !== null) {
 * [publicApiV1ContactsUpdateBankAccounts](docs/sdks/contacts/README.md#publicapiv1contactsupdatebankaccounts) - Replace the bank accounts of a contact
 * [publicApiV1ContactsUpdateCustomerProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatecustomerprofile) - Update a customer profile
 * [publicApiV1ContactsUpdateSupplierProfile](docs/sdks/contacts/README.md#publicapiv1contactsupdatesupplierprofile) - Update a supplier profile
+* [publicApiV1ContactsVerifyCensus](docs/sdks/contacts/README.md#publicapiv1contactsverifycensus) - Verify a contact against the AEAT census
+
+#### [Contacts.Imports](docs/sdks/contactsimports/README.md)
+
+* [publicApiV1ContactsImportsErrors](docs/sdks/contactsimports/README.md#publicapiv1contactsimportserrors) - Download contact import errors
+* [publicApiV1ContactsImportsShow](docs/sdks/contactsimports/README.md#publicapiv1contactsimportsshow) - Retrieve a contact import
 
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
@@ -687,66 +691,42 @@ if ($response->object !== null) {
 * [publicApiV1DeliveryNotesShow](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesshow) - Retrieve a delivery note
 * [publicApiV1DeliveryNotesUpdate](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesupdate) - Update a delivery note
 * [publicApiV1DeliveryNotesPdf](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotespdf) - Download delivery note PDF
-* [publicApiV1DeliveryNotesPackingList](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotespackinglist) - Download the packing list PDF
-* [publicApiV1DeliveryNotesShippingLabel](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesshippinglabel) - Download the shipping label PDF
 * [publicApiV1DeliveryNotesDuplicate](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesduplicate) - Duplicate a delivery note
 * [publicApiV1DeliveryNotesFindByExternalId](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesfindbyexternalid) - Find a delivery note by external ID
 * [publicApiV1DeliveryNotesStats](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstats) - Retrieve delivery note stats
 * [publicApiV1DeliveryNotesStatuses](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstatuses) - List delivery note statuses
-* [publicApiV1DeliveryNotesFulfilmentStatuses](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesfulfilmentstatuses) - List delivery note fulfilment statuses
 * [publicApiV1DeliveryNotesMarkDelivered](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesmarkdelivered) - Mark delivery note as delivered
 * [publicApiV1DeliveryNotesSend](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessend) - Send a delivery note
 * [publicApiV1DeliveryNotesSign](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessign) - Sign a delivery note
-
-#### [DeliveryNotes.FulfilmentStatus](docs/sdks/fulfilmentstatus/README.md)
-
-* [publicApiV1DeliveryNotesFulfilmentStatusTransition](docs/sdks/fulfilmentstatus/README.md#publicapiv1deliverynotesfulfilmentstatustransition) - Transition the fulfilment status of a delivery note
-
-#### [DeliveryNotes.Packages](docs/sdks/packages/README.md)
-
-* [publicApiV1DeliveryNotesPackagesCreate](docs/sdks/packages/README.md#publicapiv1deliverynotespackagescreate) - Add a package to a delivery note
-* [publicApiV1DeliveryNotesPackagesList](docs/sdks/packages/README.md#publicapiv1deliverynotespackageslist) - List the packages of a delivery note
-* [publicApiV1DeliveryNotesPackagesDelete](docs/sdks/packages/README.md#publicapiv1deliverynotespackagesdelete) - Delete a package of a delivery note
-* [publicApiV1DeliveryNotesPackagesUpdate](docs/sdks/packages/README.md#publicapiv1deliverynotespackagesupdate) - Update a package of a delivery note
-
-#### [DeliveryNotes.PickingLines](docs/sdks/pickinglines/README.md)
-
-* [publicApiV1DeliveryNotesPickingLinesPick](docs/sdks/pickinglines/README.md#publicapiv1deliverynotespickinglinespick) - Mark a picking line
-
-#### [DeliveryNotes.PickingList](docs/sdks/pickinglist/README.md)
-
-* [publicApiV1DeliveryNotesPickingListPdf](docs/sdks/pickinglist/README.md#publicapiv1deliverynotespickinglistpdf) - Download the picking list PDF
-* [publicApiV1DeliveryNotesPickingListOpen](docs/sdks/pickinglist/README.md#publicapiv1deliverynotespickinglistopen) - Open the picking list of a delivery note
-* [publicApiV1DeliveryNotesPickingListShow](docs/sdks/pickinglist/README.md#publicapiv1deliverynotespickinglistshow) - Retrieve the picking list of a delivery note
-
-#### [DeliveryNotes.PickingQueue](docs/sdks/pickingqueue/README.md)
-
-* [publicApiV1DeliveryNotesPickingQueueList](docs/sdks/pickingqueue/README.md#publicapiv1deliverynotespickingqueuelist) - List the delivery note picking queue
 
 #### [DeliveryNotes.PublicLink](docs/sdks/publiclink/README.md)
 
 * [publicApiV1DeliveryNotesPublicLinkGet](docs/sdks/publiclink/README.md#publicapiv1deliverynotespubliclinkget) - Retrieve a delivery note public link
 * [publicApiV1DeliveryNotesPublicLinkUpdate](docs/sdks/publiclink/README.md#publicapiv1deliverynotespubliclinkupdate) - Update a delivery note public link
 
-#### [DeliveryNotes.Shipment](docs/sdks/shipment/README.md)
-
-* [publicApiV1DeliveryNotesShipmentShow](docs/sdks/shipment/README.md#publicapiv1deliverynotesshipmentshow) - Retrieve the shipment of a delivery note
-* [publicApiV1DeliveryNotesShipmentUpdate](docs/sdks/shipment/README.md#publicapiv1deliverynotesshipmentupdate) - Update the shipment of a delivery note
-
 #### [DeliveryNotes.SignatureAudits](docs/sdks/signatureaudits/README.md)
 
 * [publicApiV1DeliveryNotesSignatureAuditsForget](docs/sdks/signatureaudits/README.md#publicapiv1deliverynotessignatureauditsforget) - Forget delivery note signature PII
 
-### [Developers.RequestLogs](docs/sdks/requestlogs/README.md)
+### [Developers.RequestLogs](docs/sdks/developersrequestlogs/README.md)
 
-* [publicApiV1DevelopersRequestLogsList](docs/sdks/requestlogs/README.md#publicapiv1developersrequestlogslist) - List your API request logs
-* [publicApiV1DevelopersRequestLogsShow](docs/sdks/requestlogs/README.md#publicapiv1developersrequestlogsshow) - Retrieve an API request log
+* [publicApiV1DevelopersRequestLogsList](docs/sdks/developersrequestlogs/README.md#publicapiv1developersrequestlogslist) - List your API request logs
+* [publicApiV1DevelopersRequestLogsShow](docs/sdks/developersrequestlogs/README.md#publicapiv1developersrequestlogsshow) - Retrieve an API request log
 
 ### [Emails](docs/sdks/emails/README.md)
 
 * [publicApiV1EmailsIndicators](docs/sdks/emails/README.md#publicapiv1emailsindicators) - Summarize email delivery per document
 * [publicApiV1EmailsList](docs/sdks/emails/README.md#publicapiv1emailslist) - List sent emails
 * [publicApiV1EmailsShow](docs/sdks/emails/README.md#publicapiv1emailsshow) - Retrieve a sent email
+
+### [EmployeeBatches](docs/sdks/employeebatches/README.md)
+
+* [publicApiV1EmployeeBatchesCancel](docs/sdks/employeebatches/README.md#publicapiv1employeebatchescancel) - Cancel an employee batch
+* [publicApiV1EmployeeBatchesConfirm](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesconfirm) - Confirm an employee batch
+* [publicApiV1EmployeeBatchesList](docs/sdks/employeebatches/README.md#publicapiv1employeebatcheslist) - List an employee batch
+* [publicApiV1EmployeeBatchesPrepare](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesprepare) - Prepare an employee batch
+* [publicApiV1EmployeeBatchesRefreshQuote](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesrefreshquote) - Refresh the quote for an employee batch
+* [publicApiV1EmployeeBatchesShow](docs/sdks/employeebatches/README.md#publicapiv1employeebatchesshow) - Retrieve an employee batch
 
 ### [EmployeeInvitations](docs/sdks/employeeinvitations/README.md)
 
@@ -792,21 +772,6 @@ if ($response->object !== null) {
 
 * [publicApiV1GestoriaWorkforceSummary](docs/sdks/gestoria/README.md#publicapiv1gestoriaworkforcesummary) - Retrieve the consolidated workforce compliance overview
 
-### [GoodsReceipts](docs/sdks/goodsreceipts/README.md)
-
-* [publicApiV1GoodsReceiptsBulkStatus](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsbulkstatus) - Bulk change goods receipt status
-* [publicApiV1GoodsReceiptsCancel](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptscancel) - Cancel a goods receipt
-* [publicApiV1GoodsReceiptsStats](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsstats) - Retrieve goods receipt stats
-* [publicApiV1GoodsReceiptsStatuses](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsstatuses) - List goods receipt statuses
-* [publicApiV1GoodsReceiptsList](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptslist) - List all goods receipts
-* [publicApiV1GoodsReceiptsCreate](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptscreate) - Register a goods receipt
-* [publicApiV1GoodsReceiptsPost](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptspost) - Post a goods receipt
-* [publicApiV1GoodsReceiptsShow](docs/sdks/goodsreceipts/README.md#publicapiv1goodsreceiptsshow) - Retrieve a goods receipt
-
-#### [GoodsReceipts.Lines](docs/sdks/goodsreceiptslines/README.md)
-
-* [publicApiV1GoodsReceiptsLinesList](docs/sdks/goodsreceiptslines/README.md#publicapiv1goodsreceiptslineslist) - List the lines of a goods receipt
-
 ### [Holidays](docs/sdks/holidays/README.md)
 
 * [publicApiV1HolidaysList](docs/sdks/holidays/README.md#publicapiv1holidayslist) - List all holidays
@@ -849,6 +814,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesPublicLinkGet](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkget) - Retrieve invoice public link
 * [publicApiV1InvoicesPublicLinkUpdate](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkupdate) - Update invoice public link
 * [publicApiV1InvoicesStats](docs/sdks/invoices/README.md#publicapiv1invoicesstats) - Get invoice statistics
+* [publicApiV1InvoicesIssue](docs/sdks/invoices/README.md#publicapiv1invoicesissue) - Issue an invoice
 * [publicApiV1InvoicesActivities](docs/sdks/invoices/README.md#publicapiv1invoicesactivities) - List invoice activity
 * [publicApiV1InvoicesCorrectives](docs/sdks/invoices/README.md#publicapiv1invoicescorrectives) - List corrective invoices
 * [publicApiV1InvoicesPaymentsList](docs/sdks/invoices/README.md#publicapiv1invoicespaymentslist) - List invoice payments
@@ -858,7 +824,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesMarkSent](docs/sdks/invoices/README.md#publicapiv1invoicesmarksent) - Mark an invoice as sent
 * [publicApiV1InvoicesPdfPreview](docs/sdks/invoices/README.md#publicapiv1invoicespdfpreview) - Preview an invoice draft PDF
 * [publicApiV1InvoicesReminderPreview](docs/sdks/invoices/README.md#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
-* [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download payment receipt PDF
+* [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download the receipt PDF of a payment
 * [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
 * [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
 * [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
@@ -876,9 +842,39 @@ if ($response->object !== null) {
 
 #### [Invoices.Quarterly](docs/sdks/quarterly/README.md)
 
-* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters with invoices
+* [publicApiV1InvoicesQuarterlyAvailable](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlyavailable) - List quarters to export
 * [publicApiV1InvoicesQuarterlyDownloadZip](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlydownloadzip) - Generate quarterly ZIP archive
 * [publicApiV1InvoicesQuarterlySendEmail](docs/sdks/quarterly/README.md#publicapiv1invoicesquarterlysendemail) - Email quarterly ZIP to accountant
+
+### [ManagedAccounts](docs/sdks/managedaccounts/README.md)
+
+* [publicApiV1ManagedAccountsList](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountslist) - List managed accounts
+* [publicApiV1ManagedAccountsCreate](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountscreate) - Provision a managed account
+* [publicApiV1ManagedAccountsProvisioningPreview](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountsprovisioningpreview) - Preview the provisioning of a managed account
+* [publicApiV1ManagedAccountsShow](docs/sdks/managedaccounts/README.md#publicapiv1managedaccountsshow) - Retrieve a managed account
+
+#### [ManagedAccounts.AccessLevel](docs/sdks/accesslevel/README.md)
+
+* [publicApiV1ManagedAccountsAccessLevelUpdate](docs/sdks/accesslevel/README.md#publicapiv1managedaccountsaccesslevelupdate) - Change the access level on a managed account
+
+#### [ManagedAccounts.ClaimTokens](docs/sdks/claimtokens/README.md)
+
+* [publicApiV1ManagedAccountsClaimTokensCreate](docs/sdks/claimtokens/README.md#publicapiv1managedaccountsclaimtokenscreate) - Reissue the claim voucher of a managed account
+
+#### [ManagedAccounts.Imports](docs/sdks/managedaccountsimports/README.md)
+
+* [publicApiV1ManagedAccountsImportsCreate](docs/sdks/managedaccountsimports/README.md#publicapiv1managedaccountsimportscreate) - Apply a bulk import of managed accounts
+* [publicApiV1ManagedAccountsImportsTemplate](docs/sdks/managedaccountsimports/README.md#publicapiv1managedaccountsimportstemplate) - Download the bulk import template
+* [publicApiV1ManagedAccountsImportsPreview](docs/sdks/managedaccountsimports/README.md#publicapiv1managedaccountsimportspreview) - Preview a bulk import of managed accounts
+
+#### [ManagedAccounts.Management](docs/sdks/management/README.md)
+
+* [publicApiV1ManagedAccountsManagementEnd](docs/sdks/management/README.md#publicapiv1managedaccountsmanagementend) - End the management of an account
+
+#### [ManagedAccounts.Plan](docs/sdks/plan/README.md)
+
+* [publicApiV1ManagedAccountsPlanUpdate](docs/sdks/plan/README.md#publicapiv1managedaccountsplanupdate) - Change the plan of a managed account
+* [publicApiV1ManagedAccountsPlanPreview](docs/sdks/plan/README.md#publicapiv1managedaccountsplanpreview) - Preview a managed account plan change
 
 ### [MonthlyTimeRecordCloses](docs/sdks/monthlytimerecordcloses/README.md)
 
@@ -891,6 +887,12 @@ if ($response->object !== null) {
 * [publicApiV1MonthlyTimeRecordClosesSeal](docs/sdks/monthlytimerecordcloses/README.md#publicapiv1monthlytimerecordclosesseal) - Seal a monthly time record register
 * [publicApiV1MonthlyTimeRecordClosesSealShow](docs/sdks/monthlytimerecordcloses/README.md#publicapiv1monthlytimerecordclosessealshow) - Retrieve the seal of a monthly register
 * [publicApiV1MonthlyTimeRecordClosesShow](docs/sdks/monthlytimerecordcloses/README.md#publicapiv1monthlytimerecordclosesshow) - Retrieve a monthly time record close
+
+### [Notifications](docs/sdks/notifications/README.md)
+
+* [publicApiV1NotificationsList](docs/sdks/notifications/README.md#publicapiv1notificationslist) - List notifications
+* [publicApiV1NotificationsMarkAllRead](docs/sdks/notifications/README.md#publicapiv1notificationsmarkallread) - Mark all notifications as read
+* [publicApiV1NotificationsRead](docs/sdks/notifications/README.md#publicapiv1notificationsread) - Mark a notification as read
 
 ### [PaymentMethods](docs/sdks/paymentmethods/README.md)
 
@@ -951,6 +953,11 @@ if ($response->object !== null) {
 * [publicApiV1ProductsToggleActive](docs/sdks/products/README.md#publicapiv1productstoggleactive) - Toggle product active state
 * [publicApiV1ProductsUpdateStock](docs/sdks/products/README.md#publicapiv1productsupdatestock) - Update product stock
 
+#### [Products.BaseUnitReplacement](docs/sdks/baseunitreplacement/README.md)
+
+* [publicApiV1ProductsBaseUnitReplacementPreview](docs/sdks/baseunitreplacement/README.md#publicapiv1productsbaseunitreplacementpreview) - Preview a base unit replacement
+* [publicApiV1ProductsBaseUnitReplacementCreate](docs/sdks/baseunitreplacement/README.md#publicapiv1productsbaseunitreplacementcreate) - Replace a product by changing its base unit
+
 #### [Products.Configurations](docs/sdks/configurations/README.md)
 
 * [publicApiV1ProductsConfigurationsList](docs/sdks/configurations/README.md#publicapiv1productsconfigurationslist) - List product commercial combinations
@@ -1006,7 +1013,6 @@ if ($response->object !== null) {
 * [publicApiV1ProformasBulkSend](docs/sdks/proformas/README.md#publicapiv1proformasbulksend) - Bulk send proformas
 * [publicApiV1ProformasBulkStatus](docs/sdks/proformas/README.md#publicapiv1proformasbulkstatus) - Bulk change proforma status
 * [publicApiV1ProformasConvert](docs/sdks/proformas/README.md#publicapiv1proformasconvert) - Convert proforma to invoice
-* [publicApiV1ProformasConvertToSalesOrder](docs/sdks/proformas/README.md#publicapiv1proformasconverttosalesorder) - Convert proforma to sales order
 * [publicApiV1ProformasCreate](docs/sdks/proformas/README.md#publicapiv1proformascreate) - Create a proforma
 * [publicApiV1ProformasList](docs/sdks/proformas/README.md#publicapiv1proformaslist) - List all proformas
 * [publicApiV1ProformasDelete](docs/sdks/proformas/README.md#publicapiv1proformasdelete) - Delete a proforma
@@ -1022,70 +1028,85 @@ if ($response->object !== null) {
 * [publicApiV1ProformasReject](docs/sdks/proformas/README.md#publicapiv1proformasreject) - Reject a proforma
 * [publicApiV1ProformasSend](docs/sdks/proformas/README.md#publicapiv1proformassend) - Send proforma by email
 
+### [Projects](docs/sdks/projects/README.md)
+
+* [publicApiV1ProjectsArchive](docs/sdks/projects/README.md#publicapiv1projectsarchive) - Archive a project
+* [publicApiV1ProjectsCreate](docs/sdks/projects/README.md#publicapiv1projectscreate) - Create a project
+* [publicApiV1ProjectsList](docs/sdks/projects/README.md#publicapiv1projectslist) - List projects
+* [publicApiV1ProjectsDelete](docs/sdks/projects/README.md#publicapiv1projectsdelete) - Delete a project
+* [publicApiV1ProjectsShow](docs/sdks/projects/README.md#publicapiv1projectsshow) - Retrieve a project
+* [publicApiV1ProjectsUpdate](docs/sdks/projects/README.md#publicapiv1projectsupdate) - Update a project
+* [publicApiV1ProjectsFindByKey](docs/sdks/projects/README.md#publicapiv1projectsfindbykey) - Find a project by key
+* [publicApiV1ProjectsUnarchive](docs/sdks/projects/README.md#publicapiv1projectsunarchive) - Unarchive a project
+
+#### [Projects.Columns](docs/sdks/columns/README.md)
+
+* [publicApiV1ProjectsColumnsCreate](docs/sdks/columns/README.md#publicapiv1projectscolumnscreate) - Create a project column
+* [publicApiV1ProjectsColumnsList](docs/sdks/columns/README.md#publicapiv1projectscolumnslist) - List project columns
+* [publicApiV1ProjectsColumnsDelete](docs/sdks/columns/README.md#publicapiv1projectscolumnsdelete) - Delete a project column
+* [publicApiV1ProjectsColumnsUpdate](docs/sdks/columns/README.md#publicapiv1projectscolumnsupdate) - Update a project column
+* [publicApiV1ProjectsColumnsReorder](docs/sdks/columns/README.md#publicapiv1projectscolumnsreorder) - Reorder project columns
+
+#### [Projects.CustomFields](docs/sdks/projectscustomfields/README.md)
+
+* [publicApiV1ProjectsCustomFieldsCreate](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldscreate) - Create a project custom field
+* [publicApiV1ProjectsCustomFieldsList](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldslist) - List project custom fields
+* [publicApiV1ProjectsCustomFieldsDelete](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldsdelete) - Delete a project custom field
+* [publicApiV1ProjectsCustomFieldsUpdate](docs/sdks/projectscustomfields/README.md#publicapiv1projectscustomfieldsupdate) - Update a project custom field
+
+#### [Projects.Tasks](docs/sdks/projectstasks/README.md)
+
+* [publicApiV1ProjectsTasksExport](docs/sdks/projectstasks/README.md#publicapiv1projectstasksexport) - Export project tasks
+* [publicApiV1ProjectsTasksImport](docs/sdks/projectstasks/README.md#publicapiv1projectstasksimport) - Import tasks into a project
+
+#### [Projects.TimeInvoices](docs/sdks/timeinvoices/README.md)
+
+* [publicApiV1ProjectsTimeInvoicesCreate](docs/sdks/timeinvoices/README.md#publicapiv1projectstimeinvoicescreate) - Invoice project time
+* [publicApiV1ProjectsTimeInvoicesPreview](docs/sdks/timeinvoices/README.md#publicapiv1projectstimeinvoicespreview) - Preview a project time invoice
+
+#### [Projects.TimeSummary](docs/sdks/timesummary/README.md)
+
+* [publicApiV1ProjectsTimeSummaryShow](docs/sdks/timesummary/README.md#publicapiv1projectstimesummaryshow) - Retrieve a project time summary
+
 ### [PurchaseInvoices](docs/sdks/purchaseinvoices/README.md)
 
-* [publicApiV1PurchaseInvoicesAttachFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesattachfile) - Attach a file to a purchase invoice
-* [publicApiV1PurchaseInvoicesBulkDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkdelete) - Bulk delete purchase invoices
-* [publicApiV1PurchaseInvoicesBulkStatus](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkstatus) - Bulk change purchase invoice status
-* [publicApiV1PurchaseInvoicesCreate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicescreate) - Create a purchase invoice
-* [publicApiV1PurchaseInvoicesList](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslist) - List all purchase invoices
-* [publicApiV1PurchaseInvoicesDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdelete) - Delete a purchase invoice
-* [publicApiV1PurchaseInvoicesShow](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesshow) - Retrieve a purchase invoice
-* [publicApiV1PurchaseInvoicesUpdate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesupdate) - Update a purchase invoice
-* [publicApiV1PurchaseInvoicesDeleteFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdeletefile) - Remove a purchase invoice file
-* [publicApiV1PurchaseInvoicesFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfile) - Download the original purchase invoice file
-* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download a purchase invoice payment receipt
-* [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find a purchase invoice by external ID
-* [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get purchase invoice stats
-* [publicApiV1PurchaseInvoicesOverdue](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesoverdue) - List overdue purchase invoices
-* [publicApiV1PurchaseInvoicesPending](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespending) - List pending purchase invoices
-* [publicApiV1PurchaseInvoicesListPayments](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslistpayments) - List purchase invoice payments
-* [publicApiV1PurchaseInvoicesRegisterPayment](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesregisterpayment) - Register a purchase invoice payment
-* [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark purchase invoice as paid
+* [publicApiV1PurchaseInvoicesAttachFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesattachfile) - Attach a file to an expense
+* [publicApiV1PurchaseInvoicesBulkDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkdelete) - Bulk delete expenses
+* [publicApiV1PurchaseInvoicesBulkStatus](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesbulkstatus) - Bulk change expense status
+* [publicApiV1PurchaseInvoicesCreate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicescreate) - Create an expense
+* [publicApiV1PurchaseInvoicesList](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslist) - List all expenses
+* [publicApiV1PurchaseInvoicesDelete](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdelete) - Delete an expense
+* [publicApiV1PurchaseInvoicesShow](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesshow) - Retrieve an expense
+* [publicApiV1PurchaseInvoicesUpdate](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesupdate) - Update an expense
+* [publicApiV1PurchaseInvoicesDeleteFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesdeletefile) - Remove an expense file
+* [publicApiV1PurchaseInvoicesFile](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfile) - Download the original expense file
+* [publicApiV1PurchaseInvoicesPaymentReceipt](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespaymentreceipt) - Download the receipt PDF of an expense payment
+* [publicApiV1PurchaseInvoicesFindByExternalId](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesfindbyexternalid) - Find an expense by external ID
+* [publicApiV1PurchaseInvoicesStats](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesstats) - Get expense stats
+* [publicApiV1PurchaseInvoicesExpenseCategories](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesexpensecategories) - List expense categories
+* [publicApiV1PurchaseInvoicesOverdue](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesoverdue) - List overdue expenses
+* [publicApiV1PurchaseInvoicesPending](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicespending) - List pending expenses
+* [publicApiV1PurchaseInvoicesListPayments](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoiceslistpayments) - List expense payments
+* [publicApiV1PurchaseInvoicesRegisterPayment](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesregisterpayment) - Register an expense payment
+* [publicApiV1PurchaseInvoicesMarkPaid](docs/sdks/purchaseinvoices/README.md#publicapiv1purchaseinvoicesmarkpaid) - Mark expense as paid
 
-#### [PurchaseInvoices.Match](docs/sdks/match/README.md)
+### [PurchaseScanEmails](docs/sdks/purchasescanemails/README.md)
 
-* [publicApiV1PurchaseInvoicesMatchAccept](docs/sdks/match/README.md#publicapiv1purchaseinvoicesmatchaccept) - Accept the deviation of a purchase invoice match
-* [publicApiV1PurchaseInvoicesMatchLink](docs/sdks/match/README.md#publicapiv1purchaseinvoicesmatchlink) - Link a purchase invoice to a purchase order
-* [publicApiV1PurchaseInvoicesMatchReject](docs/sdks/match/README.md#publicapiv1purchaseinvoicesmatchreject) - Reject a purchase invoice match
+* [publicApiV1PurchaseScanEmailsList](docs/sdks/purchasescanemails/README.md#publicapiv1purchasescanemailslist) - List purchase scanner emails
 
-### [PurchaseOrders](docs/sdks/purchaseorders/README.md)
+### [PurchaseScans](docs/sdks/purchasescans/README.md)
 
-* [publicApiV1PurchaseOrdersBulkCreate](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersbulkcreate) - Bulk create purchase orders
-* [publicApiV1PurchaseOrdersBulkDelete](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersbulkdelete) - Bulk delete purchase orders
-* [publicApiV1PurchaseOrdersBulkStatus](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersbulkstatus) - Bulk change purchase order status
-* [publicApiV1PurchaseOrdersCancel](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderscancel) - Cancel a purchase order
-* [publicApiV1PurchaseOrdersClose](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersclose) - Close a purchase order
-* [publicApiV1PurchaseOrdersConfirm](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersconfirm) - Confirm a purchase order
-* [publicApiV1PurchaseOrdersCreate](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderscreate) - Create a purchase order
-* [publicApiV1PurchaseOrdersList](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderslist) - List all purchase orders
-* [publicApiV1PurchaseOrdersDelete](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersdelete) - Delete a purchase order
-* [publicApiV1PurchaseOrdersShow](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersshow) - Retrieve a purchase order
-* [publicApiV1PurchaseOrdersUpdate](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersupdate) - Update a purchase order
-* [publicApiV1PurchaseOrdersPdf](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderspdf) - Download purchase order PDF
-* [publicApiV1PurchaseOrdersFindBySupplierReference](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersfindbysupplierreference) - Find a purchase order by supplier reference
-* [publicApiV1PurchaseOrdersMatch](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersmatch) - Retrieve the three-way match of a purchase order
-* [publicApiV1PurchaseOrdersStats](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersstats) - Retrieve purchase order stats
-* [publicApiV1PurchaseOrdersStatuses](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersstatuses) - List purchase order statuses
-* [publicApiV1PurchaseOrdersMarkAsSent](docs/sdks/purchaseorders/README.md#publicapiv1purchaseordersmarkassent) - Mark a purchase order as sent
-* [publicApiV1PurchaseOrdersSend](docs/sdks/purchaseorders/README.md#publicapiv1purchaseorderssend) - Send a purchase order to its supplier
-
-#### [PurchaseOrders.Lines](docs/sdks/purchaseorderslines/README.md)
-
-* [publicApiV1PurchaseOrdersLinesCreate](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslinescreate) - Add a line to a purchase order
-* [publicApiV1PurchaseOrdersLinesList](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslineslist) - List the lines of a purchase order
-* [publicApiV1PurchaseOrdersLinesDelete](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslinesdelete) - Delete a line of a purchase order
-* [publicApiV1PurchaseOrdersLinesUpdate](docs/sdks/purchaseorderslines/README.md#publicapiv1purchaseorderslinesupdate) - Update a line of a purchase order
-
-#### [PurchaseOrders.Receipts](docs/sdks/receipts/README.md)
-
-* [publicApiV1PurchaseOrdersReceiptsList](docs/sdks/receipts/README.md#publicapiv1purchaseordersreceiptslist) - List the goods receipts of a purchase order
-* [publicApiV1PurchaseOrdersReceiptsCreate](docs/sdks/receipts/README.md#publicapiv1purchaseordersreceiptscreate) - Register a goods receipt for a purchase order
-
-### [PurchaseReorderSuggestions](docs/sdks/purchasereordersuggestions/README.md)
-
-* [publicApiV1PurchaseReorderSuggestionsAccept](docs/sdks/purchasereordersuggestions/README.md#publicapiv1purchasereordersuggestionsaccept) - Accept a reorder suggestion
-* [publicApiV1PurchaseReorderSuggestionsList](docs/sdks/purchasereordersuggestions/README.md#publicapiv1purchasereordersuggestionslist) - List reorder suggestions
+* [publicApiV1PurchaseScansArchive](docs/sdks/purchasescans/README.md#publicapiv1purchasescansarchive) - Archive a purchase scan
+* [publicApiV1PurchaseScansShow](docs/sdks/purchasescans/README.md#publicapiv1purchasescansshow) - Retrieve a purchase scan
+* [publicApiV1PurchaseScansConvert](docs/sdks/purchasescans/README.md#publicapiv1purchasescansconvert) - Create the expense from a scan
+* [publicApiV1PurchaseScansSource](docs/sdks/purchasescans/README.md#publicapiv1purchasescanssource) - Download the original document
+* [publicApiV1PurchaseScansStats](docs/sdks/purchasescans/README.md#publicapiv1purchasescansstats) - Get purchase scanner stats
+* [publicApiV1PurchaseScansDuplicateResolution](docs/sdks/purchasescans/README.md#publicapiv1purchasescansduplicateresolution) - Resolve a duplicate purchase scan
+* [publicApiV1PurchaseScansRestore](docs/sdks/purchasescans/README.md#publicapiv1purchasescansrestore) - Restore an archived purchase scan
+* [publicApiV1PurchaseScansRetry](docs/sdks/purchasescans/README.md#publicapiv1purchasescansretry) - Retry a failed purchase scan
+* [publicApiV1PurchaseScansReview](docs/sdks/purchasescans/README.md#publicapiv1purchasescansreview) - Save the review of a purchase scan
+* [publicApiV1PurchaseScansList](docs/sdks/purchasescans/README.md#publicapiv1purchasescanslist) - List purchase scans
+* [publicApiV1PurchaseScansCreate](docs/sdks/purchasescans/README.md#publicapiv1purchasescanscreate) - Upload documents to the purchase scanner
 
 ### [Quotes](docs/sdks/quotes/README.md)
 
@@ -1095,7 +1116,6 @@ if ($response->object !== null) {
 * [publicApiV1QuotesBulkSend](docs/sdks/quotes/README.md#publicapiv1quotesbulksend) - Bulk send quotes
 * [publicApiV1QuotesBulkStatus](docs/sdks/quotes/README.md#publicapiv1quotesbulkstatus) - Bulk change quote status
 * [publicApiV1QuotesConvert](docs/sdks/quotes/README.md#publicapiv1quotesconvert) - Convert quote to invoice
-* [publicApiV1QuotesConvertToSalesOrder](docs/sdks/quotes/README.md#publicapiv1quotesconverttosalesorder) - Convert quote to sales order
 * [publicApiV1QuotesCreate](docs/sdks/quotes/README.md#publicapiv1quotescreate) - Create a quote
 * [publicApiV1QuotesList](docs/sdks/quotes/README.md#publicapiv1quoteslist) - List all quotes
 * [publicApiV1QuotesDelete](docs/sdks/quotes/README.md#publicapiv1quotesdelete) - Delete a quote
@@ -1115,6 +1135,7 @@ if ($response->object !== null) {
 
 * [publicApiV1RecurringInvoicesActivate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesactivate) - Activate recurring invoice
 * [publicApiV1RecurringInvoicesBulkDelete](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkdelete) - Bulk delete recurring invoices
+* [publicApiV1RecurringInvoicesBulkStatus](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkstatus) - Bulk change recurring invoice status
 * [publicApiV1RecurringInvoicesCancel](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescancel) - Cancel recurring invoice
 * [publicApiV1RecurringInvoicesCreate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescreate) - Create a recurring invoice
 * [publicApiV1RecurringInvoicesList](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoiceslist) - List all recurring invoices
@@ -1131,60 +1152,6 @@ if ($response->object !== null) {
 * [publicApiV1RecurringInvoicesResume](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesresume) - Resume recurring invoice
 * [publicApiV1RecurringInvoicesSkip](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesskip) - Skip the next recurring invoice generation
 
-### [Returns](docs/sdks/returns/README.md)
-
-* [publicApiV1ReturnsApprove](docs/sdks/returns/README.md#publicapiv1returnsapprove) - Approve a return
-* [publicApiV1ReturnsCreate](docs/sdks/returns/README.md#publicapiv1returnscreate) - Request a return
-* [publicApiV1ReturnsList](docs/sdks/returns/README.md#publicapiv1returnslist) - List all returns
-* [publicApiV1ReturnsDelete](docs/sdks/returns/README.md#publicapiv1returnsdelete) - Delete a return
-* [publicApiV1ReturnsShow](docs/sdks/returns/README.md#publicapiv1returnsshow) - Retrieve a return
-* [publicApiV1ReturnsUpdate](docs/sdks/returns/README.md#publicapiv1returnsupdate) - Update a return
-* [publicApiV1ReturnsStatuses](docs/sdks/returns/README.md#publicapiv1returnsstatuses) - List return statuses
-* [publicApiV1ReturnsReturnableLines](docs/sdks/returns/README.md#publicapiv1returnsreturnablelines) - List the returnable lines of a document
-* [publicApiV1ReturnsReceive](docs/sdks/returns/README.md#publicapiv1returnsreceive) - Receive a return
-* [publicApiV1ReturnsRefund](docs/sdks/returns/README.md#publicapiv1returnsrefund) - Refund a return
-* [publicApiV1ReturnsReject](docs/sdks/returns/README.md#publicapiv1returnsreject) - Reject a return
-
-#### [Returns.CorrectiveCandidates](docs/sdks/correctivecandidates/README.md)
-
-* [publicApiV1ReturnsCorrectiveCandidatesList](docs/sdks/correctivecandidates/README.md#publicapiv1returnscorrectivecandidateslist) - List the corrective invoice candidates of a return
-
-### [SalesOrders](docs/sdks/salesorders/README.md)
-
-* [publicApiV1SalesOrdersBulkCreate](docs/sdks/salesorders/README.md#publicapiv1salesordersbulkcreate) - Bulk create sales orders
-* [publicApiV1SalesOrdersBulkDelete](docs/sdks/salesorders/README.md#publicapiv1salesordersbulkdelete) - Bulk delete sales orders
-* [publicApiV1SalesOrdersBulkStatus](docs/sdks/salesorders/README.md#publicapiv1salesordersbulkstatus) - Bulk change sales order status
-* [publicApiV1SalesOrdersCancel](docs/sdks/salesorders/README.md#publicapiv1salesorderscancel) - Cancel a sales order
-* [publicApiV1SalesOrdersClose](docs/sdks/salesorders/README.md#publicapiv1salesordersclose) - Close a sales order
-* [publicApiV1SalesOrdersConfirm](docs/sdks/salesorders/README.md#publicapiv1salesordersconfirm) - Confirm a sales order
-* [publicApiV1SalesOrdersConvertToDeliveryNote](docs/sdks/salesorders/README.md#publicapiv1salesordersconverttodeliverynote) - Convert a sales order to a delivery note
-* [publicApiV1SalesOrdersConvertToInvoice](docs/sdks/salesorders/README.md#publicapiv1salesordersconverttoinvoice) - Convert a sales order to an invoice
-* [publicApiV1SalesOrdersCreate](docs/sdks/salesorders/README.md#publicapiv1salesorderscreate) - Create a sales order
-* [publicApiV1SalesOrdersList](docs/sdks/salesorders/README.md#publicapiv1salesorderslist) - List all sales orders
-* [publicApiV1SalesOrdersDelete](docs/sdks/salesorders/README.md#publicapiv1salesordersdelete) - Delete a sales order
-* [publicApiV1SalesOrdersShow](docs/sdks/salesorders/README.md#publicapiv1salesordersshow) - Retrieve a sales order
-* [publicApiV1SalesOrdersUpdate](docs/sdks/salesorders/README.md#publicapiv1salesordersupdate) - Update a sales order
-* [publicApiV1SalesOrdersPdf](docs/sdks/salesorders/README.md#publicapiv1salesorderspdf) - Download sales order PDF
-* [publicApiV1SalesOrdersFindByExternalId](docs/sdks/salesorders/README.md#publicapiv1salesordersfindbyexternalid) - Find a sales order by external id
-* [publicApiV1SalesOrdersStats](docs/sdks/salesorders/README.md#publicapiv1salesordersstats) - Retrieve sales order stats
-* [publicApiV1SalesOrdersStatuses](docs/sdks/salesorders/README.md#publicapiv1salesordersstatuses) - List sales order statuses
-* [publicApiV1SalesOrdersSend](docs/sdks/salesorders/README.md#publicapiv1salesorderssend) - Send a sales order
-
-#### [SalesOrders.Buyer](docs/sdks/buyer/README.md)
-
-* [publicApiV1SalesOrdersBuyerUpdate](docs/sdks/buyer/README.md#publicapiv1salesordersbuyerupdate) - Update the buyer of a sales order
-
-#### [SalesOrders.Lines](docs/sdks/salesorderslines/README.md)
-
-* [publicApiV1SalesOrdersLinesCreate](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslinescreate) - Add a line to a sales order
-* [publicApiV1SalesOrdersLinesList](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslineslist) - List the lines of a sales order
-* [publicApiV1SalesOrdersLinesDelete](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslinesdelete) - Delete a line of a sales order
-* [publicApiV1SalesOrdersLinesUpdate](docs/sdks/salesorderslines/README.md#publicapiv1salesorderslinesupdate) - Update a line of a sales order
-
-#### [SalesOrders.ShippingAddress](docs/sdks/shippingaddress/README.md)
-
-* [publicApiV1SalesOrdersShippingAddressUpdate](docs/sdks/shippingaddress/README.md#publicapiv1salesordersshippingaddressupdate) - Update the shipping address of a sales order
-
 ### [Series](docs/sdks/series/README.md)
 
 * [publicApiV1SeriesArchive](docs/sdks/series/README.md#publicapiv1seriesarchive) - Archive a series
@@ -1198,118 +1165,12 @@ if ($response->object !== null) {
 * [publicApiV1SeriesActive](docs/sdks/series/README.md#publicapiv1seriesactive) - List active series by document type
 * [publicApiV1SeriesSetDefault](docs/sdks/series/README.md#publicapiv1seriessetdefault) - Mark a series as default for its type
 * [publicApiV1SeriesShow](docs/sdks/series/README.md#publicapiv1seriesshow) - Retrieve a series
+* [publicApiV1SeriesUpdate](docs/sdks/series/README.md#publicapiv1seriesupdate) - Update a series
 * [publicApiV1SeriesUnarchive](docs/sdks/series/README.md#publicapiv1seriesunarchive) - Unarchive a series
 
 ### [Shopify.Stores](docs/sdks/shopifystores/README.md)
 
 * [publicApiV1ShopifyStoresConnectionTest](docs/sdks/shopifystores/README.md#publicapiv1shopifystoresconnectiontest) - Test a Shopify store connection
-
-### [StockAvailability](docs/sdks/stockavailability/README.md)
-
-* [publicApiV1StockAvailabilityBatch](docs/sdks/stockavailability/README.md#publicapiv1stockavailabilitybatch) - Retrieve stock availability in batch
-* [publicApiV1StockAvailabilityList](docs/sdks/stockavailability/README.md#publicapiv1stockavailabilitylist) - List stock availability
-* [publicApiV1StockAvailabilityShow](docs/sdks/stockavailability/README.md#publicapiv1stockavailabilityshow) - Retrieve the stock availability of an article
-
-#### [StockAvailability.Commitments](docs/sdks/commitments/README.md)
-
-* [publicApiV1StockAvailabilityCommitmentsList](docs/sdks/commitments/README.md#publicapiv1stockavailabilitycommitmentslist) - List the commitments over an article
-
-### [StockReservations](docs/sdks/stockreservations/README.md)
-
-* [publicApiV1StockReservationsCreate](docs/sdks/stockreservations/README.md#publicapiv1stockreservationscreate) - Create a stock reservation
-* [publicApiV1StockReservationsList](docs/sdks/stockreservations/README.md#publicapiv1stockreservationslist) - List all stock reservations
-* [publicApiV1StockReservationsFindByHolder](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsfindbyholder) - Find the stock reservations of a holder
-* [publicApiV1StockReservationsStatuses](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsstatuses) - List stock reservation statuses
-* [publicApiV1StockReservationsRelease](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsrelease) - Release a stock reservation
-* [publicApiV1StockReservationsReleaseByHolder](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsreleasebyholder) - Release the stock reservations of a holder
-* [publicApiV1StockReservationsShow](docs/sdks/stockreservations/README.md#publicapiv1stockreservationsshow) - Retrieve a stock reservation
-
-### [StockTransfers](docs/sdks/stocktransfers/README.md)
-
-* [publicApiV1StockTransfersCancel](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferscancel) - Cancel a stock transfer
-* [publicApiV1StockTransfersCreate](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferscreate) - Create a stock transfer
-* [publicApiV1StockTransfersList](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferslist) - List all stock transfers
-* [publicApiV1StockTransfersDispatch](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersdispatch) - Dispatch a stock transfer
-* [publicApiV1StockTransfersPdf](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferspdf) - Download stock transfer note PDF
-* [publicApiV1StockTransfersStatuses](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersstatuses) - List stock transfer statuses
-* [publicApiV1StockTransfersReceive](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersreceive) - Receive a stock transfer
-* [publicApiV1StockTransfersSend](docs/sdks/stocktransfers/README.md#publicapiv1stocktransferssend) - Send a stock transfer note
-* [publicApiV1StockTransfersShow](docs/sdks/stocktransfers/README.md#publicapiv1stocktransfersshow) - Retrieve a stock transfer
-
-#### [StockTransfers.Lines](docs/sdks/stocktransferslines/README.md)
-
-* [publicApiV1StockTransfersLinesCreate](docs/sdks/stocktransferslines/README.md#publicapiv1stocktransferslinescreate) - Add a line to a stock transfer
-* [publicApiV1StockTransfersLinesList](docs/sdks/stocktransferslines/README.md#publicapiv1stocktransferslineslist) - List the lines of a stock transfer
-* [publicApiV1StockTransfersLinesDelete](docs/sdks/stocktransferslines/README.md#publicapiv1stocktransferslinesdelete) - Remove a line from a stock transfer
-
-### [Storefront.Availability](docs/sdks/availability/README.md)
-
-* [publicApiV1StorefrontAvailabilityBulkResolve](docs/sdks/availability/README.md#publicapiv1storefrontavailabilitybulkresolve) - Resolve storefront availability in bulk
-* [publicApiV1StorefrontAvailabilityShow](docs/sdks/availability/README.md#publicapiv1storefrontavailabilityshow) - Retrieve storefront availability
-
-### [Storefront.CatalogSelections](docs/sdks/catalogselections/README.md)
-
-* [publicApiV1StorefrontCatalogSelectionsResolve](docs/sdks/catalogselections/README.md#publicapiv1storefrontcatalogselectionsresolve) - Resolve a storefront catalog selection
-
-### [Storefront.Categories](docs/sdks/categories/README.md)
-
-* [publicApiV1StorefrontCategoriesList](docs/sdks/categories/README.md#publicapiv1storefrontcategorieslist) - List storefront categories
-
-### [Storefront.Orders](docs/sdks/orders/README.md)
-
-* [publicApiV1StorefrontOrdersConfirmPayment](docs/sdks/orders/README.md#publicapiv1storefrontordersconfirmpayment) - Confirm the payment of a storefront order
-* [publicApiV1StorefrontOrdersCreate](docs/sdks/orders/README.md#publicapiv1storefrontorderscreate) - Create a storefront order
-* [publicApiV1StorefrontOrdersShow](docs/sdks/orders/README.md#publicapiv1storefrontordersshow) - Retrieve a storefront order
-* [publicApiV1StorefrontOrdersTracking](docs/sdks/orders/README.md#publicapiv1storefrontorderstracking) - Retrieve the shipment tracking of a storefront order
-* [publicApiV1StorefrontOrdersCheckout](docs/sdks/orders/README.md#publicapiv1storefrontorderscheckout) - Start the checkout of a storefront order
-
-#### [Storefront.Orders.BuyerIdentity](docs/sdks/buyeridentity/README.md)
-
-* [publicApiV1StorefrontOrdersBuyerIdentityUpdate](docs/sdks/buyeridentity/README.md#publicapiv1storefrontordersbuyeridentityupdate) - Update the buyer fiscal identity of a storefront order
-
-### [Storefront.Prices](docs/sdks/prices/README.md)
-
-* [publicApiV1StorefrontPricesBulkResolve](docs/sdks/prices/README.md#publicapiv1storefrontpricesbulkresolve) - Resolve storefront prices in bulk
-* [publicApiV1StorefrontPricesResolve](docs/sdks/prices/README.md#publicapiv1storefrontpricesresolve) - Resolve a storefront price
-
-### [Storefront.Products](docs/sdks/storefrontproducts/README.md)
-
-* [publicApiV1StorefrontProductsList](docs/sdks/storefrontproducts/README.md#publicapiv1storefrontproductslist) - List storefront products
-* [publicApiV1StorefrontProductsSearch](docs/sdks/storefrontproducts/README.md#publicapiv1storefrontproductssearch) - Search storefront products
-* [publicApiV1StorefrontProductsShow](docs/sdks/storefrontproducts/README.md#publicapiv1storefrontproductsshow) - Retrieve a storefront product
-
-#### [Storefront.Products.Images](docs/sdks/images/README.md)
-
-* [publicApiV1StorefrontProductsImagesList](docs/sdks/images/README.md#publicapiv1storefrontproductsimageslist) - List the images of a storefront product
-
-#### [Storefront.Products.Presentations](docs/sdks/storefrontpresentations/README.md)
-
-* [publicApiV1StorefrontProductsPresentationsList](docs/sdks/storefrontpresentations/README.md#publicapiv1storefrontproductspresentationslist) - List the presentations of a storefront product
-
-#### [Storefront.Products.ProductOptions](docs/sdks/storefrontproductoptions/README.md)
-
-* [publicApiV1StorefrontProductsOptionsList](docs/sdks/storefrontproductoptions/README.md#publicapiv1storefrontproductsoptionslist) - List the options of a storefront product
-
-#### [Storefront.Products.Variants](docs/sdks/storefrontvariants/README.md)
-
-* [publicApiV1StorefrontProductsVariantsList](docs/sdks/storefrontvariants/README.md#publicapiv1storefrontproductsvariantslist) - List the variants of a storefront product
-
-### [Storefront.Sessions](docs/sdks/sessions/README.md)
-
-* [publicApiV1StorefrontSessionsCreate](docs/sdks/sessions/README.md#publicapiv1storefrontsessionscreate) - Create a cart session
-* [publicApiV1StorefrontSessionsRevalidate](docs/sdks/sessions/README.md#publicapiv1storefrontsessionsrevalidate) - Revalidate a cart session
-* [publicApiV1StorefrontSessionsShow](docs/sdks/sessions/README.md#publicapiv1storefrontsessionsshow) - Retrieve a cart session
-* [publicApiV1StorefrontSessionsUpdate](docs/sdks/sessions/README.md#publicapiv1storefrontsessionsupdate) - Update a cart session
-
-### [StorefrontKeys](docs/sdks/storefrontkeys/README.md)
-
-* [publicApiV1StorefrontKeysCreate](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeyscreate) - Create a publishable storefront key
-* [publicApiV1StorefrontKeysList](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeyslist) - List publishable storefront keys
-* [publicApiV1StorefrontKeysScopes](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysscopes) - List assignable storefront key scopes
-* [publicApiV1StorefrontKeysRevoke](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysrevoke) - Revoke a publishable storefront key
-* [publicApiV1StorefrontKeysRotateSecret](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysrotatesecret) - Rotate a storefront key secret
-* [publicApiV1StorefrontKeysShow](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysshow) - Retrieve a publishable storefront key
-* [publicApiV1StorefrontKeysUpdate](docs/sdks/storefrontkeys/README.md#publicapiv1storefrontkeysupdate) - Update a publishable storefront key
 
 ### [Stores](docs/sdks/stores/README.md)
 
@@ -1319,17 +1180,28 @@ if ($response->object !== null) {
 * [publicApiV1StoresShow](docs/sdks/stores/README.md#publicapiv1storesshow) - Retrieve a connected store
 * [publicApiV1StoresUpdate](docs/sdks/stores/README.md#publicapiv1storesupdate) - Update store settings
 
-#### [Stores.ProductLinks](docs/sdks/productlinks/README.md)
-
-* [publicApiV1StoresProductLinksList](docs/sdks/productlinks/README.md#publicapiv1storesproductlinkslist) - List the product links of a store
-* [publicApiV1StoresProductLinksShow](docs/sdks/productlinks/README.md#publicapiv1storesproductlinksshow) - Retrieve a product link of a store
-
 ### [StripeAutoinvoicing.Accounts](docs/sdks/accounts/README.md)
 
 * [publicApiV1StripeAutoinvoicingAccountsDisconnect](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsdisconnect) - Disconnect a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsShow](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsshow) - Retrieve a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsUpdate](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountsupdate) - Update a connected Stripe account
 * [publicApiV1StripeAutoinvoicingAccountsList](docs/sdks/accounts/README.md#publicapiv1stripeautoinvoicingaccountslist) - List connected Stripe accounts
+
+#### [StripeAutoinvoicing.Accounts.ChargeRules](docs/sdks/chargerules/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulescreate) - Create a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesList](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargeruleslist) - List charge treatment rules of a connected Stripe account
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesDelete](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesdelete) - Delete a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesupdate) - Update a charge treatment rule
+* [publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder](docs/sdks/chargerules/README.md#publicapiv1stripeautoinvoicingaccountschargerulesreorder) - Reorder the charge treatment rules
+
+#### [StripeAutoinvoicing.Accounts.NonInvoicedCharges](docs/sdks/noninvoicedcharges/README.md)
+
+* [publicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesList](docs/sdks/noninvoicedcharges/README.md#publicapiv1stripeautoinvoicingaccountsnoninvoicedchargeslist) - List non-invoiced charges of a connected Stripe account
+
+### [StripeAutoinvoicing.Authorizations](docs/sdks/authorizations/README.md)
+
+* [publicApiV1StripeAutoinvoicingAuthorizationsCreate](docs/sdks/authorizations/README.md#publicapiv1stripeautoinvoicingauthorizationscreate) - Start a Stripe Connect authorization
 
 ### [StripeAutoinvoicing.Config](docs/sdks/config/README.md)
 
@@ -1344,21 +1216,99 @@ if ($response->object !== null) {
 
 * [publicApiV1StripeAutoinvoicingPaymentsList](docs/sdks/payments/README.md#publicapiv1stripeautoinvoicingpaymentslist) - List Stripe autoinvoiced charges
 
-### [Suppliers](docs/sdks/suppliers/README.md)
+### [TaskLabels](docs/sdks/tasklabels/README.md)
 
-* [publicApiV1SuppliersBulkDelete](docs/sdks/suppliers/README.md#publicapiv1suppliersbulkdelete) - Delete multiple suppliers in bulk
-* [publicApiV1SuppliersBulkStatus](docs/sdks/suppliers/README.md#publicapiv1suppliersbulkstatus) - Bulk change supplier active state
-* [publicApiV1SuppliersCreate](docs/sdks/suppliers/README.md#publicapiv1supplierscreate) - Create a supplier
-* [publicApiV1SuppliersList](docs/sdks/suppliers/README.md#publicapiv1supplierslist) - List all suppliers
-* [publicApiV1SuppliersDelete](docs/sdks/suppliers/README.md#publicapiv1suppliersdelete) - Delete a supplier
-* [publicApiV1SuppliersShow](docs/sdks/suppliers/README.md#publicapiv1suppliersshow) - Retrieve a supplier
-* [publicApiV1SuppliersUpdate](docs/sdks/suppliers/README.md#publicapiv1suppliersupdate) - Update a supplier
-* [publicApiV1SuppliersFindByExternalId](docs/sdks/suppliers/README.md#publicapiv1suppliersfindbyexternalid) - Find a supplier by external ID
-* [publicApiV1SuppliersFindByTaxId](docs/sdks/suppliers/README.md#publicapiv1suppliersfindbytaxid) - Find a supplier by tax ID
-* [publicApiV1SuppliersActivities](docs/sdks/suppliers/README.md#publicapiv1suppliersactivities) - List supplier activity timeline
-* [publicApiV1SuppliersStats](docs/sdks/suppliers/README.md#publicapiv1suppliersstats) - Get supplier stats
-* [publicApiV1SuppliersSearch](docs/sdks/suppliers/README.md#publicapiv1supplierssearch) - Search suppliers
-* [publicApiV1SuppliersToggleActive](docs/sdks/suppliers/README.md#publicapiv1supplierstoggleactive) - Toggle supplier active state
+* [publicApiV1TaskLabelsCreate](docs/sdks/tasklabels/README.md#publicapiv1tasklabelscreate) - Create a task label
+* [publicApiV1TaskLabelsList](docs/sdks/tasklabels/README.md#publicapiv1tasklabelslist) - List task labels
+* [publicApiV1TaskLabelsDelete](docs/sdks/tasklabels/README.md#publicapiv1tasklabelsdelete) - Delete a task label
+* [publicApiV1TaskLabelsShow](docs/sdks/tasklabels/README.md#publicapiv1tasklabelsshow) - Retrieve a task label
+* [publicApiV1TaskLabelsUpdate](docs/sdks/tasklabels/README.md#publicapiv1tasklabelsupdate) - Update a task label
+
+### [Tasks](docs/sdks/tasks/README.md)
+
+* [publicApiV1TasksAssign](docs/sdks/tasks/README.md#publicapiv1tasksassign) - Assign a task
+* [publicApiV1TasksBulkStatus](docs/sdks/tasks/README.md#publicapiv1tasksbulkstatus) - Bulk change task status
+* [publicApiV1TasksBulkDelete](docs/sdks/tasks/README.md#publicapiv1tasksbulkdelete) - Bulk delete tasks
+* [publicApiV1TasksBulkUpdate](docs/sdks/tasks/README.md#publicapiv1tasksbulkupdate) - Bulk update tasks
+* [publicApiV1TasksStatus](docs/sdks/tasks/README.md#publicapiv1tasksstatus) - Change task status
+* [publicApiV1TasksCreate](docs/sdks/tasks/README.md#publicapiv1taskscreate) - Create a task
+* [publicApiV1TasksSearch](docs/sdks/tasks/README.md#publicapiv1taskssearch) - Search tasks
+* [publicApiV1TasksDelete](docs/sdks/tasks/README.md#publicapiv1tasksdelete) - Delete a task
+* [publicApiV1TasksShow](docs/sdks/tasks/README.md#publicapiv1tasksshow) - Retrieve a task
+* [publicApiV1TasksUpdate](docs/sdks/tasks/README.md#publicapiv1tasksupdate) - Update a task
+* [publicApiV1TasksDuplicate](docs/sdks/tasks/README.md#publicapiv1tasksduplicate) - Duplicate a task
+* [publicApiV1TasksFindByKey](docs/sdks/tasks/README.md#publicapiv1tasksfindbykey) - Find a task by key
+* [publicApiV1TasksLinked](docs/sdks/tasks/README.md#publicapiv1taskslinked) - List tasks linked to an entity
+* [publicApiV1TasksReposition](docs/sdks/tasks/README.md#publicapiv1tasksreposition) - Reposition a task
+* [publicApiV1TasksMove](docs/sdks/tasks/README.md#publicapiv1tasksmove) - Move a task to another project
+* [publicApiV1TasksUnassign](docs/sdks/tasks/README.md#publicapiv1tasksunassign) - Unassign a task
+
+#### [Tasks.Activities](docs/sdks/activities/README.md)
+
+* [publicApiV1TasksActivitiesList](docs/sdks/activities/README.md#publicapiv1tasksactivitieslist) - List task activity
+
+#### [Tasks.Attachments](docs/sdks/attachments/README.md)
+
+* [publicApiV1TasksAttachmentsDelete](docs/sdks/attachments/README.md#publicapiv1tasksattachmentsdelete) - Delete a task attachment
+* [publicApiV1TasksAttachmentsShow](docs/sdks/attachments/README.md#publicapiv1tasksattachmentsshow) - Retrieve a task attachment
+* [publicApiV1TasksAttachmentsDownload](docs/sdks/attachments/README.md#publicapiv1tasksattachmentsdownload) - Download a task attachment
+* [publicApiV1TasksAttachmentsList](docs/sdks/attachments/README.md#publicapiv1tasksattachmentslist) - List task attachments
+* [publicApiV1TasksAttachmentsCreate](docs/sdks/attachments/README.md#publicapiv1tasksattachmentscreate) - Upload a task attachment
+
+#### [Tasks.Comments](docs/sdks/comments/README.md)
+
+* [publicApiV1TasksCommentsCreate](docs/sdks/comments/README.md#publicapiv1taskscommentscreate) - Create a task comment
+* [publicApiV1TasksCommentsList](docs/sdks/comments/README.md#publicapiv1taskscommentslist) - List task comments
+* [publicApiV1TasksCommentsDelete](docs/sdks/comments/README.md#publicapiv1taskscommentsdelete) - Delete a task comment
+* [publicApiV1TasksCommentsUpdate](docs/sdks/comments/README.md#publicapiv1taskscommentsupdate) - Update a task comment
+
+#### [Tasks.CustomFields](docs/sdks/taskscustomfields/README.md)
+
+* [publicApiV1TasksCustomFieldsSet](docs/sdks/taskscustomfields/README.md#publicapiv1taskscustomfieldsset) - Set a task custom field value
+
+#### [Tasks.EntityLinks](docs/sdks/entitylinks/README.md)
+
+* [publicApiV1TasksEntityLinksCreate](docs/sdks/entitylinks/README.md#publicapiv1tasksentitylinkscreate) - Link a task to an entity
+* [publicApiV1TasksEntityLinksList](docs/sdks/entitylinks/README.md#publicapiv1tasksentitylinkslist) - List task entity links
+* [publicApiV1TasksEntityLinksDelete](docs/sdks/entitylinks/README.md#publicapiv1tasksentitylinksdelete) - Unlink a task from an entity
+
+#### [Tasks.ExternalLinks](docs/sdks/externallinks/README.md)
+
+* [publicApiV1TasksExternalLinksCreate](docs/sdks/externallinks/README.md#publicapiv1tasksexternallinkscreate) - Create a task external link
+* [publicApiV1TasksExternalLinksList](docs/sdks/externallinks/README.md#publicapiv1tasksexternallinkslist) - List task external links
+* [publicApiV1TasksExternalLinksDelete](docs/sdks/externallinks/README.md#publicapiv1tasksexternallinksdelete) - Delete a task external link
+
+#### [Tasks.Labels](docs/sdks/labels/README.md)
+
+* [publicApiV1TasksLabelsAssign](docs/sdks/labels/README.md#publicapiv1taskslabelsassign) - Assign a label to a task
+* [publicApiV1TasksLabelsUnassign](docs/sdks/labels/README.md#publicapiv1taskslabelsunassign) - Remove a label from a task
+
+#### [Tasks.Relations](docs/sdks/relations/README.md)
+
+* [publicApiV1TasksRelationsCreate](docs/sdks/relations/README.md#publicapiv1tasksrelationscreate) - Create a task relation
+* [publicApiV1TasksRelationsList](docs/sdks/relations/README.md#publicapiv1tasksrelationslist) - List task relations
+* [publicApiV1TasksRelationsDelete](docs/sdks/relations/README.md#publicapiv1tasksrelationsdelete) - Delete a task relation
+
+#### [Tasks.TimeEntries](docs/sdks/taskstimeentries/README.md)
+
+* [publicApiV1TasksTimeEntriesDelete](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriesdelete) - Delete a task time entry
+* [publicApiV1TasksTimeEntriesShow](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriesshow) - Retrieve a task time entry
+* [publicApiV1TasksTimeEntriesUpdate](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriesupdate) - Update a task time entry
+* [publicApiV1TasksTimeEntriesList](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentrieslist) - List task time entries
+* [publicApiV1TasksTimeEntriesCreate](docs/sdks/taskstimeentries/README.md#publicapiv1taskstimeentriescreate) - Create a task time entry
+
+#### [Tasks.Timer](docs/sdks/timer/README.md)
+
+* [publicApiV1TasksTimerStart](docs/sdks/timer/README.md#publicapiv1taskstimerstart) - Start a task timer
+
+#### [Tasks.UploadLinks](docs/sdks/uploadlinks/README.md)
+
+* [publicApiV1TasksUploadLinksCreate](docs/sdks/uploadlinks/README.md#publicapiv1tasksuploadlinkscreate) - Create a task upload link
+
+### [TaskTimers](docs/sdks/tasktimers/README.md)
+
+* [publicApiV1TaskTimersCurrent](docs/sdks/tasktimers/README.md#publicapiv1tasktimerscurrent) - Retrieve the running task timer
+* [publicApiV1TaskTimersStop](docs/sdks/tasktimers/README.md#publicapiv1tasktimersstop) - Stop the running task timer
 
 ### [TaxCatalog](docs/sdks/taxcatalog/README.md)
 
@@ -1430,6 +1380,31 @@ if ($response->object !== null) {
 * [publicApiV1TimeTrackingSettingsShow](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsshow) - Retrieve the time tracking settings
 * [publicApiV1TimeTrackingSettingsUpdate](docs/sdks/timetrackingsettings/README.md#publicapiv1timetrackingsettingsupdate) - Update the time tracking settings
 
+### [TransportDocuments](docs/sdks/transportdocuments/README.md)
+
+* [publicApiV1TransportDocumentsCancel](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentscancel) - Cancel a transport document
+* [publicApiV1TransportDocumentsClose](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsclose) - Close a transport document
+* [publicApiV1TransportDocumentsCreate](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentscreate) - Create a transport document
+* [publicApiV1TransportDocumentsIndex](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsindex) - List all transport documents
+* [publicApiV1TransportDocumentsDelete](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsdelete) - Delete a draft transport document
+* [publicApiV1TransportDocumentsShow](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsshow) - Retrieve a transport document
+* [publicApiV1TransportDocumentsUpdate](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsupdate) - Update a draft transport document
+* [publicApiV1TransportDocumentsIssuanceProof](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsissuanceproof) - Download transport document issuance proof
+* [publicApiV1TransportDocumentsPdf](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentspdf) - Download transport document PDF
+* [publicApiV1TransportDocumentsEvidence](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsevidence) - List transport document issuance evidence
+* [publicApiV1TransportDocumentsQr](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsqr) - Download transport document QR code
+* [publicApiV1TransportDocumentsStatuses](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsstatuses) - List transport document statuses
+* [publicApiV1TransportDocumentsIssue](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsissue) - Issue a transport document
+* [publicApiV1TransportDocumentsModify](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsmodify) - Modify an issued transport document
+* [publicApiV1TransportDocumentsReopen](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentsreopen) - Reopen a transport document
+* [publicApiV1TransportDocumentsSend](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentssend) - Send a transport document by email
+* [publicApiV1TransportDocumentsSupersede](docs/sdks/transportdocuments/README.md#publicapiv1transportdocumentssupersede) - Mark a transport document as superseded
+
+### [Users](docs/sdks/users/README.md)
+
+* [publicApiV1UsersMe](docs/sdks/users/README.md#publicapiv1usersme) - Retrieve the current user
+* [publicApiV1UsersList](docs/sdks/users/README.md#publicapiv1userslist) - List users
+
 ### [Verifactu](docs/sdks/verifactu/README.md)
 
 * [publicApiV1VerifactuConfig](docs/sdks/verifactu/README.md#publicapiv1verifactuconfig) - Retrieve VeriFactu config
@@ -1471,33 +1446,20 @@ if ($response->object !== null) {
 * [publicApiV1VerifactuRecordsFindByInvoiceNumber](docs/sdks/records/README.md#publicapiv1verifacturecordsfindbyinvoicenumber) - Find a VeriFactu record by invoice number
 * [publicApiV1VerifactuRecordsActivities](docs/sdks/records/README.md#publicapiv1verifacturecordsactivities) - List VeriFactu record activity timeline
 * [publicApiV1VerifactuRecordsList](docs/sdks/records/README.md#publicapiv1verifacturecordslist) - List VeriFactu records
+* [publicApiV1VerifactuRecordsRetryBlocked](docs/sdks/records/README.md#publicapiv1verifacturecordsretryblocked) - Retry every blocked VeriFactu record
 * [publicApiV1VerifactuRecordsRetry](docs/sdks/records/README.md#publicapiv1verifacturecordsretry) - Retry VeriFactu transmission
 * [publicApiV1VerifactuRecordsShow](docs/sdks/records/README.md#publicapiv1verifacturecordsshow) - Retrieve a VeriFactu record
-* [publicApiV1VerifactuRecordsSubsanar](docs/sdks/records/README.md#publicapiv1verifacturecordssubsanar) - Subsanar a rejected VeriFactu record
+* [publicApiV1VerifactuRecordsSubsanar](docs/sdks/records/README.md#publicapiv1verifacturecordssubsanar) - Subsanar a VeriFactu record
+
+#### [Verifactu.Representation](docs/sdks/representation/README.md)
+
+* [publicApiV1VerifactuRepresentationShow](docs/sdks/representation/README.md#publicapiv1verifacturepresentationshow) - Retrieve the active representation
+* [publicApiV1VerifactuRepresentationRegister](docs/sdks/representation/README.md#publicapiv1verifacturepresentationregister) - Register a representation
+* [publicApiV1VerifactuRepresentationRevoke](docs/sdks/representation/README.md#publicapiv1verifacturepresentationrevoke) - Revoke the active representation
 
 #### [Verifactu.Settings](docs/sdks/settings/README.md)
 
 * [publicApiV1VerifactuSettingsUpdate](docs/sdks/settings/README.md#publicapiv1verifactusettingsupdate) - Update VeriFactu settings
-
-### [Warehouses](docs/sdks/warehouses/README.md)
-
-* [publicApiV1WarehousesDelete](docs/sdks/warehouses/README.md#publicapiv1warehousesdelete) - Archive a warehouse
-* [publicApiV1WarehousesShow](docs/sdks/warehouses/README.md#publicapiv1warehousesshow) - Retrieve a warehouse
-* [publicApiV1WarehousesUpdate](docs/sdks/warehouses/README.md#publicapiv1warehousesupdate) - Update a warehouse
-* [publicApiV1WarehousesCreate](docs/sdks/warehouses/README.md#publicapiv1warehousescreate) - Create a warehouse
-* [publicApiV1WarehousesList](docs/sdks/warehouses/README.md#publicapiv1warehouseslist) - List all warehouses
-* [publicApiV1WarehousesFindByCode](docs/sdks/warehouses/README.md#publicapiv1warehousesfindbycode) - Find a warehouse by code
-* [publicApiV1WarehousesDefault](docs/sdks/warehouses/README.md#publicapiv1warehousesdefault) - Retrieve the default warehouse
-* [publicApiV1WarehousesStatuses](docs/sdks/warehouses/README.md#publicapiv1warehousesstatuses) - List warehouse statuses
-* [publicApiV1WarehousesMarkAsDefault](docs/sdks/warehouses/README.md#publicapiv1warehousesmarkasdefault) - Mark a warehouse as default
-
-#### [Warehouses.Locations](docs/sdks/locations/README.md)
-
-* [publicApiV1WarehousesLocationsDelete](docs/sdks/locations/README.md#publicapiv1warehouseslocationsdelete) - Archive a location of a warehouse
-* [publicApiV1WarehousesLocationsShow](docs/sdks/locations/README.md#publicapiv1warehouseslocationsshow) - Retrieve a location of a warehouse
-* [publicApiV1WarehousesLocationsUpdate](docs/sdks/locations/README.md#publicapiv1warehouseslocationsupdate) - Update a location of a warehouse
-* [publicApiV1WarehousesLocationsCreate](docs/sdks/locations/README.md#publicapiv1warehouseslocationscreate) - Create a location in a warehouse
-* [publicApiV1WarehousesLocationsList](docs/sdks/locations/README.md#publicapiv1warehouseslocationslist) - List the locations of a warehouse
 
 ### [WebhookEndpoints](docs/sdks/webhookendpoints/README.md)
 
@@ -1510,11 +1472,11 @@ if ($response->object !== null) {
 * [publicApiV1WebhookEndpointsRotateSecret](docs/sdks/webhookendpoints/README.md#publicapiv1webhookendpointsrotatesecret) - Rotate webhook secret
 * [publicApiV1WebhookEndpointsTestEvent](docs/sdks/webhookendpoints/README.md#publicapiv1webhookendpointstestevent) - Send a test event
 
-#### [WebhookEndpoints.Deliveries](docs/sdks/deliveries/README.md)
+#### [WebhookEndpoints.Deliveries](docs/sdks/webhookendpointsdeliveries/README.md)
 
-* [publicApiV1WebhookEndpointsDeliveriesList](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliverieslist) - List webhook deliveries
-* [publicApiV1WebhookEndpointsDeliveriesReplay](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliveriesreplay) - Replay webhook delivery
-* [publicApiV1WebhookEndpointsDeliveriesShow](docs/sdks/deliveries/README.md#publicapiv1webhookendpointsdeliveriesshow) - Retrieve webhook delivery
+* [publicApiV1WebhookEndpointsDeliveriesList](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliverieslist) - List webhook deliveries
+* [publicApiV1WebhookEndpointsDeliveriesReplay](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliveriesreplay) - Replay webhook delivery
+* [publicApiV1WebhookEndpointsDeliveriesShow](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliveriesshow) - Retrieve webhook delivery
 
 ### [Woocommerce.Stores](docs/sdks/woocommercestores/README.md)
 
@@ -1526,7 +1488,7 @@ if ($response->object !== null) {
 * [publicApiV1WorkSchedulesAssign](docs/sdks/workschedules/README.md#publicapiv1workschedulesassign) - Assign a schedule to an employee
 * [publicApiV1WorkSchedulesCreate](docs/sdks/workschedules/README.md#publicapiv1workschedulescreate) - Create a work schedule
 * [publicApiV1WorkSchedulesList](docs/sdks/workschedules/README.md#publicapiv1workscheduleslist) - List all work schedules
-* [publicApiV1WorkSchedulesEmployeeSchedule](docs/sdks/workschedules/README.md#publicapiv1workschedulesemployeeschedule) - Get an employee’s current schedule
+* [publicApiV1WorkSchedulesEmployeeSchedule](docs/sdks/workschedules/README.md#publicapiv1workschedulesemployeeschedule) - Get an employee’s schedule on a date
 * [publicApiV1WorkSchedulesStats](docs/sdks/workschedules/README.md#publicapiv1workschedulesstats) - Get work schedule stats
 * [publicApiV1WorkSchedulesAssignments](docs/sdks/workschedules/README.md#publicapiv1workschedulesassignments) - List a schedule’s assignments
 * [publicApiV1WorkSchedulesShow](docs/sdks/workschedules/README.md#publicapiv1workschedulesshow) - Retrieve a work schedule
@@ -1551,29 +1513,21 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Retry;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request,
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
     options: Utils\Options->builder()->setRetryConfig(
         new Retry\RetryConfigBackoff(
             initialInterval: 1,
@@ -1582,6 +1536,7 @@ $response = $sdk->proformas->publicApiV1ProformasAccept(
             maxElapsedTime:  100,
             retryConnectionErrors: false,
         ))->build()
+
 );
 
 if ($response->object !== null) {
@@ -1598,7 +1553,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 use Factuarea\Sdk\Utils\Retry;
 
 $sdk = Sdk\Factuarea::builder()
@@ -1613,23 +1567,17 @@ $sdk = Sdk\Factuarea::builder()
   )
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {
@@ -1652,13 +1600,13 @@ By default an API error will raise a `Errors\APIException` exception, which has 
 | `$rawResponse` | *?\Psr\Http\Message\ResponseInterface*  | The raw HTTP response |
 | `$body`        | *string*                                | The response content  |
 
-When custom error responses are specified for an operation, the SDK may also throw their associated exception. You can refer to respective *Errors* tables in SDK docs for more details on possible exception types for each operation. For example, the `publicApiV1ProformasAccept` method throws the following exceptions:
+When custom error responses are specified for an operation, the SDK may also throw their associated exception. You can refer to respective *Errors* tables in SDK docs for more details on possible exception types for each operation. For example, the `publicApiV1AccountBilling` method throws the following exceptions:
 
-| Error Type          | Status Code                  | Content Type     |
-| ------------------- | ---------------------------- | ---------------- |
-| Errors\Error        | 401, 403, 404, 409, 422, 429 | application/json |
-| Errors\Error        | 500                          | application/json |
-| Errors\APIException | 4XX, 5XX                     | \*/\*            |
+| Error Type          | Status Code             | Content Type     |
+| ------------------- | ----------------------- | ---------------- |
+| Errors\Error        | 400, 401, 403, 404, 429 | application/json |
+| Errors\Error        | 500                     | application/json |
+| Errors\APIException | 4XX, 5XX                | \*/\*            |
 
 ### Example
 
@@ -1671,29 +1619,20 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Errors;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 try {
-    $request = new Operations\PublicApiV1ProformasAcceptRequest(
-        proforma: '<value>',
-        idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-        factuareaVersion: LocalDate::parse('2026-06-01'),
-        xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-        body: new Components\AcceptProformaRequest(
-            reason: 'Cliente confirma pedido por telefono',
-        ),
-    );
+    $response = $sdk->account->publicApiV1AccountBilling(
+        company: 'Gerlach - Schroeder',
+        factuareaVersion: LocalDate::parse('2026-06-01')
 
-    $response = $sdk->proformas->publicApiV1ProformasAccept(
-        request: $request
     );
 
     if ($response->object !== null) {
@@ -1726,29 +1665,22 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setServerURL('https://api.factuarea.com/v1')
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
-$request = new Operations\PublicApiV1ProformasAcceptRequest(
-    proforma: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
-    body: new Components\AcceptProformaRequest(
-        reason: 'Cliente confirma pedido por telefono',
-    ),
-);
 
-$response = $sdk->proformas->publicApiV1ProformasAccept(
-    request: $request
+
+$response = $sdk->account->publicApiV1AccountBilling(
+    company: 'Gerlach - Schroeder',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
 if ($response->object !== null) {

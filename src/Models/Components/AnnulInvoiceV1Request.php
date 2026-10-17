@@ -9,17 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * AnnulInvoiceV1Request - Public REST API v1 — POST /v1/invoices/{uuid}/annul.
- *
- *
- * Body: `reason` (string, required, max. 500). The reason is persisted
- * on the Invoice aggregate and included in the VeriFactu cancellation record
- * (AnulacionRecord) when applicable.
- */
+/** AnnulInvoiceV1Request - Annul an issued invoice. `reason` (3–500 characters) is required and is kept in the audit trail and, with VeriFactu, in the cancellation record. `revert_collections` (default `false`) reverts every live payment of the invoice and annuls it in one atomic operation — only for an invoice issued by mistake. */
 class AnnulInvoiceV1Request
 {
     /**
+     * Why the invoice is annulled (3–500 characters). It is kept in the audit trail and, when the company is enrolled in VeriFactu, it becomes the reason of the AEAT cancellation record. When `revert_collections` is `true` it is also the note of every reverted payment.
      *
      * @var string $reason
      */
@@ -27,11 +21,22 @@ class AnnulInvoiceV1Request
     public string $reason;
 
     /**
+     * When `true`, every live payment of the invoice is reverted with the reserved reason `issued_in_error` and the invoice is annulled, all in ONE atomic operation: if any step fails no payment stays reverted. Use it only when the invoice was issued by mistake (a duplicated charge at a kiosk); if the customer has to get the money back, issue a corrective instead. Defaults to `false`: an invoice with live payments is then rejected with 422 `invoice_has_active_collections`.
+     *
+     * @var ?bool $revertCollections
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('revert_collections')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $revertCollections = null;
+
+    /**
      * @param  string  $reason
+     * @param  ?bool  $revertCollections
      * @phpstan-pure
      */
-    public function __construct(string $reason)
+    public function __construct(string $reason, ?bool $revertCollections = null)
     {
         $this->reason = $reason;
+        $this->revertCollections = $revertCollections;
     }
 }

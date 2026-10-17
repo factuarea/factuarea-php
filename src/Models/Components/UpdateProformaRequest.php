@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * UpdateProformaRequest - Public REST API v1 — PUT /v1/proformas/{uuid}.
- *
- *
- * Partial update: omitted fields are kept. Only allowed when
- * the proforma is in `draft` status (the controller maps the
- * transition exception to 422 `invalid_status_transition`).
- */
+/** UpdateProformaRequest - Partial update of a proforma: omitted fields are kept. Only allowed while the proforma is in `draft` status (otherwise 422 `invalid_status_transition`). */
 class UpdateProformaRequest
 {
     /**

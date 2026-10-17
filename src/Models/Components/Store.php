@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Store - A connected e-commerce store of your company. The public `id` is the store UUID (v7). `integration_id` is the UUID of the provider connection that backs it, and `external_store_id` is the identifier the provider gives to the shop — an opaque string, not a foreign key of ours. The settings decide how the orders of the store become invoices. */
+/** Store - A connected e-commerce store of your company. The public `id` is the store UUID v7. `integration_id` is the UUID of the provider connection that backs it, and `external_store_id` is the identifier the provider gives to the shop — an opaque string, not a foreign key of ours. The settings decide how the orders of the store become invoices. */
 class Store
 {
     /**
-     * UUID (v7) of the store. Public identity (KEY `id`).
+     * UUID v7 of the store. Public identity (KEY `id`).
      *
      * @var string $id
      */
@@ -137,6 +137,14 @@ class Store
     public ?\DateTime $connectedAt;
 
     /**
+     * Optional note written in the notes of the invoices auto-created from this store's orders, or `null` when none is configured (the default: invoices carry no note). When an order needed a currency conversion to EUR, the conversion trace is appended to the note. Editable with `PATCH /v1/companies/{company}/stores/{store}`; `null` or an empty string clears it.
+     *
+     * @var ?string $invoiceNote
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoice_note')]
+    public ?string $invoiceNote;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\StoreObject  $object
      * @param  string  $integrationId
@@ -152,9 +160,10 @@ class Store
      * @param  \Factuarea\Sdk\Models\Components\StoreStatus  $status
      * @param  ?string  $remoteBaseUrl
      * @param  ?\DateTime  $connectedAt
+     * @param  ?string  $invoiceNote
      * @phpstan-pure
      */
-    public function __construct(string $id, StoreObject $object, string $integrationId, StoreProvider $provider, string $externalStoreId, string $name, string $simplifiedThreshold, bool $requireTaxId, bool $pricesIncludeTax, bool $autoinvoicingEnabled, bool $autosendEnabled, StoreEnvironment $environment, StoreStatus $status, ?string $remoteBaseUrl = null, ?\DateTime $connectedAt = null)
+    public function __construct(string $id, StoreObject $object, string $integrationId, StoreProvider $provider, string $externalStoreId, string $name, string $simplifiedThreshold, bool $requireTaxId, bool $pricesIncludeTax, bool $autoinvoicingEnabled, bool $autosendEnabled, StoreEnvironment $environment, StoreStatus $status, ?string $remoteBaseUrl = null, ?\DateTime $connectedAt = null, ?string $invoiceNote = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -171,5 +180,6 @@ class Store
         $this->status = $status;
         $this->remoteBaseUrl = $remoteBaseUrl;
         $this->connectedAt = $connectedAt;
+        $this->invoiceNote = $invoiceNote;
     }
 }

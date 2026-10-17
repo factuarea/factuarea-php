@@ -21,6 +21,15 @@ class EventDeletedObject
     public string $id;
 
     /**
+     * Resource type of the deleted object (`task`, `task_comment`…), when the event carries it.
+     *
+     * @var ?string $object
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $object = null;
+
+    /**
      * Always `true`.
      *
      * @var bool $deleted
@@ -31,11 +40,13 @@ class EventDeletedObject
     /**
      * @param  string  $id
      * @param  bool  $deleted
+     * @param  ?string  $object
      * @phpstan-pure
      */
-    public function __construct(string $id, bool $deleted = true)
+    public function __construct(string $id, ?string $object = null, bool $deleted = true)
     {
         $this->id = $id;
+        $this->object = $object;
         $this->deleted = $deleted;
     }
 }

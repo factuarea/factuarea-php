@@ -1,0 +1,175 @@
+# Projects.Tasks
+
+## Overview
+
+### Available Operations
+
+* [publicApiV1ProjectsTasksExport](#publicapiv1projectstasksexport) - Export project tasks
+* [publicApiV1ProjectsTasksImport](#publicapiv1projectstasksimport) - Import tasks into a project
+
+## publicApiV1ProjectsTasksExport
+
+Export the tasks of a project as a JSON document in the `factuarea.tasks.v1` format: the project, its labels, its custom fields and every task with its comments. The document can be imported back with `POST /v1/companies/{company}/projects/{project}/tasks/import`. Requires `projects:read` only: the export includes every task with its description and comments even if the key has no `tasks:read`, so grant `projects:read` with that in mind.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.export" method="get" path="/companies/{company}/projects/{project}/tasks/export" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->projects->tasks->publicApiV1ProjectsTasksExport(
+    company: 'Dach and Sons',
+    project: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `project`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the project.                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1ProjectsTasksExportResponse](../../Models/Operations/PublicApiV1ProjectsTasksExportResponse.md)**
+
+### Errors
+
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+
+## publicApiV1ProjectsTasksImport
+
+Import tasks into a project from a JSON document (`factuarea.tasks.v1`, or an export of other task tools in a supported format). The import is synchronous only and accepts up to 200 tasks per call: more than 200 returns 422, so split the file. The report lists, per task, its `index` in the document, the created `id` and `key` or the `error` that prevented it; it has no `mode` or `run_id` because the API does not create background import runs. At most the first 200 warnings are listed; `warnings_total` counts them all and `warnings_truncated` tells whether some were left out. Requires `projects:write` only: it creates tasks and comments even if the key has no `tasks:write`. Requires an `Idempotency-Key`: repeating the call with the same key and the same body returns the same report without creating tasks again, and reusing the key with a different body returns 422 `idempotency_key_reused`. Importing again with a new key creates a new copy of the tasks. The key is mandatory over REST (a request without it is rejected with `422 idempotency_key_required`); only the MCP tool `import_project_tasks` can be called without one, and then every call creates a copy.
+
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsTasksImportRequest(
+    company: 'Kessler and Sons',
+    project: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ImportProjectTasksV1Request(
+        tasks: [
+            [
+                'key' => '<value>',
+            ],
+        ],
+    ),
+);
+
+$response = $sdk->projects->tasks->publicApiV1ProjectsTasksImport(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsTasksImportRequest(
+    company: 'Gleichner LLC',
+    project: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ImportProjectTasksV1Request(
+        tasks: [
+            [
+                'key' => '<value>',
+            ],
+        ],
+    ),
+);
+
+$response = $sdk->projects->tasks->publicApiV1ProjectsTasksImport(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                            | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                           | [Operations\PublicApiV1ProjectsTasksImportRequest](../../Models/Operations/PublicApiV1ProjectsTasksImportRequest.md) | :heavy_check_mark:                                                                                                   | The request object to use for the request.                                                                           |
+
+### Response
+
+**[?Operations\PublicApiV1ProjectsTasksImportResponse](../../Models/Operations/PublicApiV1ProjectsTasksImportResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |

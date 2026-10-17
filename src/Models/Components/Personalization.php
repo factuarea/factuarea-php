@@ -9,9 +9,18 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Personalization - Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/account/personalization`. */
+/** Personalization - Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/companies/{company}/personalization`. */
 class Personalization
 {
+    /**
+     * Read-only document branding capabilities of the effective account.
+     *
+     * @var \Factuarea\Sdk\Models\Components\PdfCapabilities $pdfCapabilities
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_capabilities')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PdfCapabilities')]
+    public PdfCapabilities $pdfCapabilities;
+
     /**
      * Invoice-emission language of the account. One of `es`, `en`, `ca`.
      *
@@ -39,13 +48,15 @@ class Personalization
     public ?string $accentColor;
 
     /**
+     * @param  \Factuarea\Sdk\Models\Components\PdfCapabilities  $pdfCapabilities
      * @param  \Factuarea\Sdk\Models\Components\AccountLanguage  $language
      * @param  \Factuarea\Sdk\Models\Components\AccountPdfTemplate  $pdfTemplate
      * @param  ?string  $accentColor
      * @phpstan-pure
      */
-    public function __construct(AccountLanguage $language, AccountPdfTemplate $pdfTemplate, ?string $accentColor = null)
+    public function __construct(PdfCapabilities $pdfCapabilities, AccountLanguage $language, AccountPdfTemplate $pdfTemplate, ?string $accentColor = null)
     {
+        $this->pdfCapabilities = $pdfCapabilities;
         $this->language = $language;
         $this->pdfTemplate = $pdfTemplate;
         $this->accentColor = $accentColor;

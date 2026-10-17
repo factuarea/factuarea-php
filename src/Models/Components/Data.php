@@ -9,32 +9,34 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** Data - The content of the event, in the version of `api_version`. */
 class Data
 {
     /**
-     * Code of the permission, which is the value that travels when a credential is issued (for example `storefront:read`).
+     * Type of the event, the same as the envelope `type`.
      *
-     * @var string $key
+     * @var string $type
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('key')]
-    public string $key;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('type')]
+    public string $type;
 
     /**
-     * Readable label of the permission, in Spanish, ready to display in a selector.
+     * Snapshot of what the event is about. In an account-level event it is the member, owner, grant, relation, tax ID or import concerned, always with opaque identifiers (UUID v7) and never with internal ones; in a company event it is the same snapshot the company webhook carries.
      *
-     * @var string $label
+     * @var array<string, mixed> $object
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('label')]
-    public string $label;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, mixed>')]
+    public array $object;
 
     /**
-     * @param  string  $key
-     * @param  string  $label
+     * @param  string  $type
+     * @param  array<string, mixed>  $object
      * @phpstan-pure
      */
-    public function __construct(string $key, string $label)
+    public function __construct(string $type, array $object)
     {
-        $this->key = $key;
-        $this->label = $label;
+        $this->type = $type;
+        $this->object = $object;
     }
 }

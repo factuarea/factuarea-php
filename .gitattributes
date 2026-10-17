@@ -1,19 +1,2 @@
 # This allows generated code to be indexed correctly
 *.php linguist-generated=false
-
-# Keep the Composer package (`composer create-project` / dist archive) lean:
-# exclude CI, dev, test, and documentation artifacts from `git archive`. These
-# entries apply to future tags only — already-published tags are unaffected.
-/.github/ export-ignore
-/.speakeasy/ export-ignore
-/Tests/ export-ignore
-/docs/ export-ignore
-/spec/ export-ignore
-/.gitattributes export-ignore
-/.gitignore export-ignore
-/CONTRIBUTING.md export-ignore
-/SUPPORT.md export-ignore
-/phpstan.neon export-ignore
-/phpunit.xml export-ignore
-/pint.json export-ignore
-/rector.php export-ignore

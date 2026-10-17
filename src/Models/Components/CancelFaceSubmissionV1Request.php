@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/**
- * CancelFaceSubmissionV1Request - Public REST API v1 — POST /v1/face-submissions/{faceSubmission}/cancel.
- *
- *
- * The cancellation reason (`reason`) is required: it travels to the FACe
- * web service alongside the cancellation request (code 4200). Same contract
- * as the SPA surface (`CancelFaceSubmissionRequest`).
- */
+/** CancelFaceSubmissionV1Request - Cancel a FACe submission. `reason` is required: it travels to the FACe web service alongside the cancellation request (code 4200). */
 class CancelFaceSubmissionV1Request
 {
     /**

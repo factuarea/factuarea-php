@@ -44,7 +44,7 @@ class StockMovement
     public string $stockAfter;
 
     /**
-     * Why the movement happened. Closed catalog: `invoice_sent`, `invoice_annulled`, `invoice_unsent`, `corrective_created`, `delivery_note_delivered`, `delivery_note_cancelled`, `purchase_invoice_registered`, `purchase_invoice_reverted`, `manual_adjustment`.
+     * Why the movement happened. Closed catalog: `invoice_sent`, `invoice_annulled`, `invoice_unsent`, `corrective_created`, `delivery_note_delivered`, `delivery_note_cancelled`, `purchase_invoice_registered`, `purchase_invoice_reverted`, `manual_adjustment`, `initial`, `base_unit_replacement_out`, `base_unit_replacement_in`. The last two are the pair a base unit replacement writes: `_out` empties the old product (in its unit) and `_in` fills the new one (in its unit).
      *
      * @var string $reason
      */
@@ -52,7 +52,7 @@ class StockMovement
     public string $reason;
 
     /**
-     * Kind of document that caused the movement. `manual` for an adjustment with no source document.
+     * Kind of document that caused the movement. `manual` for an adjustment with no source document; `base_unit_replacement` for the transfer of a base unit replacement.
      *
      * @var \Factuarea\Sdk\Models\Components\SourceType $sourceType
      */
@@ -76,7 +76,7 @@ class StockMovement
     public string $baseUnitCode;
 
     /**
-     * Id of the source document, `null` for a manual adjustment or when the document is no longer reachable.
+     * Id of the source document, `null` for a manual adjustment or when the document is no longer reachable. For `base_unit_replacement` it is the id of the OTHER product of the replacement: the new one on the `_out` row and the old one on the `_in` row.
      *
      * @var ?string $sourceId
      */
@@ -84,7 +84,7 @@ class StockMovement
     public ?string $sourceId;
 
     /**
-     * Human-readable number of the source document.
+     * Human-readable number of the source document. For `base_unit_replacement`, the name of the other product.
      *
      * @var ?string $sourceLabel
      */
@@ -139,22 +139,6 @@ class StockMovement
     public ?string $variantName;
 
     /**
-     * Warehouse the movement was booked to, `null` for a movement recorded before the physical axis existed. It is NOT replaced by the company default warehouse: attributing it would invent a fact about the past.
-     *
-     * @var ?string $warehouseId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('warehouse_id')]
-    public ?string $warehouseId;
-
-    /**
-     * Name of that warehouse as the master has it, `null` in the same case. Travels next to the id so rows served from different warehouses are readable without resolving ids one by one.
-     *
-     * @var ?string $warehouseName
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('warehouse_name')]
-    public ?string $warehouseName;
-
-    /**
      * @param  \Factuarea\Sdk\Models\Components\StockMovementObject  $object
      * @param  string  $id
      * @param  string  $delta
@@ -171,11 +155,9 @@ class StockMovement
      * @param  ?string  $conversionFactor
      * @param  ?string  $variantId
      * @param  ?string  $variantName
-     * @param  ?string  $warehouseId
-     * @param  ?string  $warehouseName
      * @phpstan-pure
      */
-    public function __construct(StockMovementObject $object, string $id, string $delta, string $stockAfter, string $reason, SourceType $sourceType, \DateTime $occurredAt, string $baseUnitCode, ?string $sourceId = null, ?string $sourceLabel = null, ?string $performedBy = null, ?string $commercialQuantity = null, ?string $commercialUnitCode = null, ?string $conversionFactor = null, ?string $variantId = null, ?string $variantName = null, ?string $warehouseId = null, ?string $warehouseName = null)
+    public function __construct(StockMovementObject $object, string $id, string $delta, string $stockAfter, string $reason, SourceType $sourceType, \DateTime $occurredAt, string $baseUnitCode, ?string $sourceId = null, ?string $sourceLabel = null, ?string $performedBy = null, ?string $commercialQuantity = null, ?string $commercialUnitCode = null, ?string $conversionFactor = null, ?string $variantId = null, ?string $variantName = null)
     {
         $this->object = $object;
         $this->id = $id;
@@ -193,7 +175,5 @@ class StockMovement
         $this->conversionFactor = $conversionFactor;
         $this->variantId = $variantId;
         $this->variantName = $variantName;
-        $this->warehouseId = $warehouseId;
-        $this->warehouseName = $warehouseName;
     }
 }

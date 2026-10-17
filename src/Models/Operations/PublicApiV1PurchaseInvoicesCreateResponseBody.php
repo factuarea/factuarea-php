@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1PurchaseInvoicesCreateResponseBody - Purchase invoice created successfully. The `Location` header contains the canonical URL of the newly created resource. */
+/** PublicApiV1PurchaseInvoicesCreateResponseBody - Expense created successfully. The `Location` header contains the canonical URL of the newly created resource. */
 class PublicApiV1PurchaseInvoicesCreateResponseBody
 {
     /**

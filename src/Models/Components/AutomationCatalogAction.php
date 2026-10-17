@@ -38,7 +38,7 @@ class AutomationCatalogAction
     public array $parameters;
 
     /**
-     * Whether this action can be used in a rule whose `scope` is `cartera`. Actions that notify you —or that touch no record at all— can; actions whose subject would be a record of the managed company cannot, because a portfolio rule never operates on its behalf. Creating a portfolio rule with an action marked `false` is rejected with `automation_portfolio_scope_forbids_action`.
+     * Whether this action can be used in a rule whose `scope` is `cartera`. Actions that notify you —or that touch no record at all— can; actions whose subject would be a record of another tax ID cannot, because a portfolio rule never operates on behalf of another tax ID. Creating a portfolio rule with an action marked `false` is rejected with `automation_portfolio_scope_forbids_action`.
      *
      * @var bool $supportsPortfolioScope
      */
@@ -46,17 +46,27 @@ class AutomationCatalogAction
     public bool $supportsPortfolioScope;
 
     /**
+     * Key of the module that governs this action, or `null` when the action is transversal. Informational: an action of a module you have not contracted never reaches this list.
+     *
+     * @var ?string $module
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('module')]
+    public ?string $module;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ActionKey  $key
      * @param  string  $label
      * @param  array<\Factuarea\Sdk\Models\Components\Parameter>  $parameters
      * @param  bool  $supportsPortfolioScope
+     * @param  ?string  $module
      * @phpstan-pure
      */
-    public function __construct(ActionKey $key, string $label, array $parameters, bool $supportsPortfolioScope)
+    public function __construct(ActionKey $key, string $label, array $parameters, bool $supportsPortfolioScope, ?string $module = null)
     {
         $this->key = $key;
         $this->label = $label;
         $this->parameters = $parameters;
         $this->supportsPortfolioScope = $supportsPortfolioScope;
+        $this->module = $module;
     }
 }

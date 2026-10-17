@@ -1,0 +1,9 @@
+# CreatePurchaseInvoiceRequestPurchaseMeasurement
+
+
+## Fields
+
+| Field                                                                                                                | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `packageQuantity`                                                                                                    | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `costBasis`                                                                                                          | [Components\CreatePurchaseInvoiceRequestCostBasis](../../Models/Components/CreatePurchaseInvoiceRequestCostBasis.md) | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |

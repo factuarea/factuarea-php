@@ -9,22 +9,23 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1CompaniesActivateBatchResponseBody - The tax IDs that were reactivated, each as a `Company`, in the order of `company_ids`. */
 class PublicApiV1CompaniesActivateBatchResponseBody
 {
     /**
-     * A managed company (child sub-account) under your master tenant. Created and operated through the gestoría endpoints; its child API keys can only hold a subset of the scopes of the key that created them.
+     * $data
      *
-     * @var \Factuarea\Sdk\Models\Components\Company $data
+     * @var array<\Factuarea\Sdk\Models\Components\Company> $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Company')]
-    public Components\Company $data;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Company>')]
+    public array $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Company  $data
+     * @param  array<\Factuarea\Sdk\Models\Components\Company>  $data
      * @phpstan-pure
      */
-    public function __construct(Components\Company $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

@@ -40,9 +40,6 @@ class PublicApiV1RecurringInvoicesListResponse
     public array $headers;
 
     /**
-     * Non-existent or cross-company public FK (`client_uuid`/`series_uuid`)
-     *
-     * → empty result without leaking cross-tenant existence.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesListPaginatedList $paginatedList
      */

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Formato de fichero: xlsx o csv. */
+/** File format: `xlsx` or `csv`. */
 enum FileFormat: string
 {
     case Xlsx = 'xlsx';

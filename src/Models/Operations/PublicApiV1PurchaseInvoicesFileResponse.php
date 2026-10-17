@@ -40,27 +40,18 @@ class PublicApiV1PurchaseInvoicesFileResponse
     public array $headers;
 
     /**
-     * El adjunto está cifrado at-rest en el Vault; el handler entrega un
-     *
-     * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
      *
      * @var ?string $twoHundredApplicationPdfBytes
      */
     public ?string $twoHundredApplicationPdfBytes = null;
 
     /**
-     * El adjunto está cifrado at-rest en el Vault; el handler entrega un
-     *
-     * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
      *
      * @var ?string $twoHundredImageJpegBytes
      */
     public ?string $twoHundredImageJpegBytes = null;
 
     /**
-     * El adjunto está cifrado at-rest en el Vault; el handler entrega un
-     *
-     * temp file DESCIFRADO de vida acotada que se elimina tras enviarse.
      *
      * @var ?string $twoHundredImagePngBytes
      */

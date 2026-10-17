@@ -1,6 +1,6 @@
 # BulkDeleteQuotesV1Request
 
-Public REST API v1 — DELETE /v1/quotes/bulk.
+Public REST API v1 — POST /v1/companies/{company}/quotes/bulk-delete.
 
 
 ## Fields

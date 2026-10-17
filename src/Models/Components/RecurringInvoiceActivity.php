@@ -21,7 +21,7 @@ class RecurringInvoiceActivity
     public RecurringInvoiceActivityObject $object;
 
     /**
-     * Tipo de evento de dominio (p. ej. `recurring_invoice.activated`, `recurring_invoice.executed`, `recurring_invoice.cancelled`).
+     * Domain event type (e.g. `recurring_invoice.activated`, `recurring_invoice.executed`, `recurring_invoice.cancelled`).
      *
      * @var string $eventType
      */

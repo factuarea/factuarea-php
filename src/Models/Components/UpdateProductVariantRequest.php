@@ -26,7 +26,7 @@ class UpdateProductVariantRequest
     public bool $manageStock;
 
     /**
-     * Own balance of the variant, in the product base unit (up to 4 decimals). Send the current balance to leave it untouched — it may be negative when delivered documents ran ahead of the incoming stock. Any other value is a manual set and must be `>= 0` (422 otherwise); to move the balance use `PUT /v1/products/{uuid}/stock` with `variant_id`.
+     * Own balance of the variant, in the product base unit (up to 4 decimals). Send the current balance to leave it untouched — it may be negative when delivered documents ran ahead of the incoming stock. Any other value is a manual set and must be `>= 0` (422 otherwise); to move the balance use `PATCH /v1/companies/{company}/products/{product}/stock` with `variant_id`.
      *
      * @var float $stock
      */
@@ -58,9 +58,7 @@ class UpdateProductVariantRequest
     public ?string $barcode = null;
 
     /**
-     * Precio propio de la variante POR UNIDAD BASE. `null` = la variante
-     *
-     * no altera el precio del producto.
+     * Own price of the variant PER BASE UNIT; `null` keeps the price of the product.
      *
      * @var ?float $basePriceOverride
      */
@@ -69,7 +67,7 @@ class UpdateProductVariantRequest
     public ?float $basePriceOverride = null;
 
     /**
-     * Coste propio de la variante POR UNIDAD BASE.
+     * Own cost of the variant PER BASE UNIT.
      *
      * @var ?float $unitCostOverride
      */
@@ -78,7 +76,7 @@ class UpdateProductVariantRequest
     public ?float $unitCostOverride = null;
 
     /**
-     * Alias publicado de `base_price_override`.
+     * Published alias of `base_price_override`.
      *
      * @var ?float $priceOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -88,7 +86,7 @@ class UpdateProductVariantRequest
     public ?float $priceOverride = null;
 
     /**
-     * Alias publicado de `unit_cost_override`.
+     * Published alias of `unit_cost_override`.
      *
      * @var ?float $costOverride
      * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -116,6 +114,21 @@ class UpdateProductVariantRequest
     public ?array $specifications = null;
 
     /**
+     * Own gross transport weight of the variant, in kilograms PER BASE
+     *
+     * UNIT: up to four decimal places, greater than zero. It overrides
+     * the product weight for this variant. Omit it to keep the current
+     * value; send `null` to clear it and inherit the product weight
+     * again. Rejected with 422 `gross_weight_not_allowed` for services
+     * and mass base units (`KGM`, `GRM`).
+     *
+     * @var ?float $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $grossWeightKg = null;
+
+    /**
      * @param  string  $name
      * @param  bool  $manageStock
      * @param  float  $stock
@@ -128,9 +141,10 @@ class UpdateProductVariantRequest
      * @param  ?float  $costOverride
      * @param  ?float  $lowStockThreshold
      * @param  ?array<string, mixed>  $specifications
+     * @param  ?float  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $name, bool $manageStock, float $stock, ?bool $active = null, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?float $priceOverride = null, ?float $costOverride = null, ?float $lowStockThreshold = null, ?array $specifications = null)
+    public function __construct(string $name, bool $manageStock, float $stock, ?bool $active = null, ?string $sku = null, ?string $barcode = null, ?float $basePriceOverride = null, ?float $unitCostOverride = null, ?float $priceOverride = null, ?float $costOverride = null, ?float $lowStockThreshold = null, ?array $specifications = null, ?float $grossWeightKg = null)
     {
         $this->name = $name;
         $this->manageStock = $manageStock;
@@ -144,5 +158,6 @@ class UpdateProductVariantRequest
         $this->costOverride = $costOverride;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->specifications = $specifications;
+        $this->grossWeightKg = $grossWeightKg;
     }
 }

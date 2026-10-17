@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CompanyCreationStatus - Provisioning lifecycle status of a managed company (child sub-account) created through the gestoría endpoints. Poll it after creating a company to know when it becomes operational. */
+/** CompanyCreationStatus - Provisioning lifecycle status of a tax ID (company) of the account. Poll it after registering the tax ID to know when it becomes operational. */
 class CompanyCreationStatus
 {
     /**
-     * Opaque identifier (UUID v7) of the managed company.
+     * Opaque identifier (UUID v7) of the tax ID.
      *
      * @var string $id
      */
@@ -39,7 +39,7 @@ class CompanyCreationStatus
     public ProvisioningStatus $provisioningStatus;
 
     /**
-     * URL to onboard the master tenant's payment method. Only present while `awaiting_payment`; `null` otherwise.
+     * URL to set up the payment method of the account titular; when it is saved the person returns to the Companies page of the app (`/companies`). Only present while `awaiting_payment` and for a production credential that reaches the titular company; `null` otherwise.
      *
      * @var ?string $paymentSetupUrl
      */

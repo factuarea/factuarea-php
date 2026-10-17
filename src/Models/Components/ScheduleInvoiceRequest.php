@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ScheduleInvoiceRequest - Schedule the future issuance of a `draft` invoice. Required: `scheduled_for` (ISO 8601 date-time, strictly in the future) and `scheduled_action` (`draft` or `issue_and_send`). */
+/** ScheduleInvoiceRequest - Schedule the future issuance of a `draft` invoice. Required: `scheduled_for` (ISO 8601 date-time, strictly in the future) and `scheduled_action` (`issue` to issue it without sending, or `issue_and_send` to issue it and email it to the customer). The legacy value `draft` is still accepted as an alias of `issue` in every API version. */
 class ScheduleInvoiceRequest
 {
     /**
+     * Instant at which the invoice will be issued, as an ISO 8601 date-time strictly in the future. An explicit offset (`Z`, `+01:00`) is honoured; without one it is read in `Europe/Madrid`.
      *
      * @var \DateTime $scheduledFor
      */
@@ -20,6 +21,7 @@ class ScheduleInvoiceRequest
     public \DateTime $scheduledFor;
 
     /**
+     * What happens at `scheduled_for`: `issue` issues the invoice without sending it; `issue_and_send` issues it and emails it to the customer. `draft` is still accepted as an alias of `issue` in every API version (it always meant "issue without sending").
      *
      * @var \Factuarea\Sdk\Models\Components\ScheduleInvoiceRequestScheduledAction $scheduledAction
      */

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class InvoiceReminderSent
 {
     /**
-     * UUID (v7) of the invoice the reminder was sent to.
+     * UUID v7 of the invoice the reminder was sent to.
      *
      * @var string $id
      */

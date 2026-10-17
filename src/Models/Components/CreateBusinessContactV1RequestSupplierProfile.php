@@ -70,6 +70,7 @@ class CreateBusinessContactV1RequestSupplierProfile
     public ?SupplierProfilePaymentMethod $paymentMethod = null;
 
     /**
+     * Payment term in days (0-365). For a new contact, omitted or null means 30 days; an explicit 0 means immediate payment. For an existing contact upsert, an omitted profile is preserved and a supplied profile replaces its defaults.
      *
      * @var ?int $paymentTermsDays
      */

@@ -66,6 +66,14 @@ class Proforma
     public LocalDate $issuedOn;
 
     /**
+     * VAT operation regime of the proforma (`general`, `intracomunitaria`, `importacion_exportacion`, `isp`).
+     *
+     * @var string $operationRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_regime')]
+    public string $operationRegime;
+
+    /**
      *
      * @var string $subtotal
      */
@@ -73,7 +81,7 @@ class Proforma
     public string $subtotal;
 
     /**
-     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on an expense the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var string $taxesTotal
      */
@@ -113,7 +121,7 @@ class Proforma
     public string $total;
 
     /**
-     * Additional shipping cost added to the total.
+     * Shipping cost, expressed WITH VAT INCLUDED, added to the amount to pay. It is not part of `subtotal`, `total_vat` or `total`. When the proforma is converted to an invoice it becomes a "Gastos de envío" line whose base is `shipping_cost / (1 + r)` with VAT `r`, so the invoice total equals `total_with_shipping`.
      *
      * @var string $shippingCost
      */
@@ -121,7 +129,7 @@ class Proforma
     public string $shippingCost;
 
     /**
-     * Final total including the shipping cost (= total + shipping_cost).
+     * Final total including the shipping cost (= total + shipping_cost). The invoice generated from the proforma has exactly this total.
      *
      * @var string $totalWithShipping
      */
@@ -224,7 +232,7 @@ class Proforma
     public ?string $reference;
 
     /**
-     * UUID (v7) of the invoice this proforma was converted into, if applicable.
+     * UUID v7 of the invoice this proforma was converted into, if applicable.
      *
      * @var ?string $convertedToId
      */
@@ -256,7 +264,7 @@ class Proforma
     public ?int $paymentTermsDays;
 
     /**
-     * Condiciones de entrega en formato libre.
+     * Delivery terms, free-form text.
      *
      * @var ?string $deliveryTerms
      */
@@ -322,6 +330,7 @@ class Proforma
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
      * @param  string  $status
      * @param  LocalDate  $issuedOn
+     * @param  string  $operationRegime
      * @param  string  $subtotal
      * @param  string  $taxesTotal
      * @param  string  $totalVat
@@ -355,7 +364,7 @@ class Proforma
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $shippingCost, string $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, ProformaObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $operationRegime, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $shippingCost, string $totalWithShipping, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $reference = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -364,6 +373,7 @@ class Proforma
         $this->client = $client;
         $this->status = $status;
         $this->issuedOn = $issuedOn;
+        $this->operationRegime = $operationRegime;
         $this->subtotal = $subtotal;
         $this->taxesTotal = $taxesTotal;
         $this->totalVat = $totalVat;

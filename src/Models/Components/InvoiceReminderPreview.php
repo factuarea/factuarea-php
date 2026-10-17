@@ -45,7 +45,7 @@ class InvoiceReminderPreview
     public string $fromName;
 
     /**
-     * Destinatario principal resuelto.
+     * Resolved main recipient.
      *
      * @var string $to
      */
@@ -71,7 +71,7 @@ class InvoiceReminderPreview
     public array $bcc;
 
     /**
-     * Current status of the invoice (e.g. `sent`, `overdue`).
+     * Current status of the invoice (e.g. `issued`, `overdue`). Before API version `2026-10-01` the issued status is published as `sent`.
      *
      * @var string $status
      */
@@ -87,12 +87,12 @@ class InvoiceReminderPreview
     public string $invoiceNumber;
 
     /**
-     * Total amount of the invoice.
+     * Total amount of the invoice (EUR), as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Indicates whether the public link is active.
@@ -160,7 +160,7 @@ class InvoiceReminderPreview
      * @param  array<string>  $bcc
      * @param  string  $status
      * @param  string  $invoiceNumber
-     * @param  float  $total
+     * @param  string  $total
      * @param  bool  $publicLinkActive
      * @param  int  $remindersSent
      * @param  bool  $cooldownActive
@@ -170,7 +170,7 @@ class InvoiceReminderPreview
      * @param  ?\DateTime  $lastReminderSentAt
      * @phpstan-pure
      */
-    public function __construct(string $subject, string $html, string $from, string $fromName, string $to, array $cc, array $bcc, string $status, string $invoiceNumber, float $total, bool $publicLinkActive, int $remindersSent, bool $cooldownActive, ?LocalDate $dueDate = null, ?string $publicUrl = null, ?\DateTime $publicLinkExpiresAt = null, ?\DateTime $lastReminderSentAt = null)
+    public function __construct(string $subject, string $html, string $from, string $fromName, string $to, array $cc, array $bcc, string $status, string $invoiceNumber, string $total, bool $publicLinkActive, int $remindersSent, bool $cooldownActive, ?LocalDate $dueDate = null, ?string $publicUrl = null, ?\DateTime $publicLinkExpiresAt = null, ?\DateTime $lastReminderSentAt = null)
     {
         $this->subject = $subject;
         $this->html = $html;

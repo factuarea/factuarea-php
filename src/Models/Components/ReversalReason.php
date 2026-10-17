@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Reason the payment was reverted, from the closed catalog. `null` while the payment is in force. */
+/** Reason the payment was reverted, from the closed catalog. `issued_in_error` appears only on payments reverted by annulling an invoice issued by mistake with `revert_collections`; it cannot be requested for a single payment. `null` while the payment is in force. */
 enum ReversalReason: string
 {
     case DirectDebitReturn = 'direct_debit_return';
@@ -17,4 +17,5 @@ enum ReversalReason: string
     case MisappliedPayment = 'misapplied_payment';
     case BouncedEffect = 'bounced_effect';
     case RecordingError = 'recording_error';
+    case IssuedInError = 'issued_in_error';
 }

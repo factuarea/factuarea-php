@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkCreateResult - Result of a bulk invoice creation (`POST /v1/invoices/bulk-create`). `dry_run` reports the mode. In validate-only mode (`dry_run=true`) `results[]` carries the per-row classification `{index, status, errors[], warnings[]}` and nothing is persisted; in create mode (`dry_run=false`) only valid rows are created and `failures[]` carries the rows that were not created (identified by `index`). `total = successful + failed`. */
+/** BulkCreateResult - Result of a bulk invoice creation (`POST /v1/companies/{company}/invoices/bulk-create`). `dry_run` reports the mode. In validate-only mode (`dry_run=true`) `results[]` carries the per-row classification `{index, status, errors[], warnings[]}` and nothing is persisted; in create mode (`dry_run=false`) only valid rows are created and `failures[]` carries the rows that were not created (identified by `index`). `total = successful + failed`. */
 class BulkCreateResult
 {
     /**
@@ -47,10 +47,10 @@ class BulkCreateResult
     /**
      * Per-row classification of validate-only mode (`dry_run=true`). Empty in create mode.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Result> $results
+     * @var array<\Factuarea\Sdk\Models\Components\BulkCreateResultResult> $results
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('results')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Result>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BulkCreateResultResult>')]
     public array $results;
 
     /**
@@ -67,7 +67,7 @@ class BulkCreateResult
      * @param  int  $total
      * @param  int  $successful
      * @param  int  $failed
-     * @param  array<\Factuarea\Sdk\Models\Components\Result>  $results
+     * @param  array<\Factuarea\Sdk\Models\Components\BulkCreateResultResult>  $results
      * @param  array<\Factuarea\Sdk\Models\Components\BulkCreateResultFailure>  $failures
      * @phpstan-pure
      */

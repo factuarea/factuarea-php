@@ -1,14 +1,6 @@
 # CalculateTotalsRequest
 
-Public REST API v1 — POST /v1/taxes/calculate-totals.
-
-Body: `{ lines: [{ quantity, unit_price, discount?, vat_rate?,
-retention_rate?, surcharge_rate? }] }`. Returns subtotal, VAT, surcharge,
-withholding and total.
-
-The canonical field is `unit_price` (aligned with Invoice/Quote lines).
-`price` is accepted as a legacy alias so as not to break integrators that
-already send the previous shape; the controller normalizes it to `unit_price`.
+Calculate the totals of a set of lines. Body: `lines[]`, each with `quantity`, `unit_price` and the optional `discount`, `vat_rate`, `retention_rate` and `surcharge_rate`. Returns the subtotal, VAT, surcharge, withholding and total. `price` is accepted as a legacy alias of `unit_price`.
 
 
 ## Fields

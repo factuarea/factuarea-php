@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class SeriesBootstrapCandidate
 {
     /**
-     * Opaque identifier (UUID v7) of the series. Pass it to `POST /v1/series/{id}/default` to promote it.
+     * Opaque identifier (UUID v7) of the series. Pass it to `POST /v1/companies/{company}/series/{series}/default` to promote it.
      *
      * @var string $id
      */

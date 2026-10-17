@@ -1,8 +1,6 @@
 # UploadProductVideoRequest
 
-Public REST API v1 — POST /v1/products/{uuid}/video.
-
-Multipart upload: campo `video` (mp4/mov/avi/webm, max 50 MB).
+Upload the product video as `multipart/form-data`: the `video` field — mp4, mov, avi or webm, max 50 MB.
 
 
 ## Fields

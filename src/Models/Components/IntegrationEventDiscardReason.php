@@ -53,6 +53,11 @@ enum IntegrationEventDiscardReason: string
     case OrderStatusUnknown = 'order_status_unknown';
     case RefundNotSettled = 'refund_not_settled';
     case ProtectedCustomerDataUnavailable = 'protected_customer_data_unavailable';
-    case StorefrontOrderPayment = 'storefront_order_payment';
-    case InterposedOrderNotCreatable = 'interposed_order_not_creatable';
+    case ExcludedByChargeRule = 'excluded_by_charge_rule';
+    case HandledByStripeInvoice = 'handled_by_stripe_invoice';
+    case StripeAuthorizationRequired = 'stripe_authorization_required';
+    case StripeAppUninstalled = 'stripe_app_uninstalled';
+    case RefundOfNonInvoicedCharge = 'refund_of_non_invoiced_charge';
+    case StripeInvoiceWithoutAmount = 'stripe_invoice_without_amount';
+    case DeauthorizationNotApplicable = 'deauthorization_not_applicable';
 }

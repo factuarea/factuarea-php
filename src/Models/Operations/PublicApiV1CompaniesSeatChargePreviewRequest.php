@@ -13,12 +13,20 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1CompaniesSeatChargePreviewRequest
 {
     /**
-     * $companyIds
+     * Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).
      *
-     * @var array<string> $companyIds
+     * @var string $account
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=account')]
+    public string $account;
+
+    /**
+     * Public identifiers (UUID v7) of the companies to preview; omit it to preview `count` companies.
+     *
+     * @var ?array<string> $companyIds
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=company_ids[]')]
-    public array $companyIds;
+    public ?array $companyIds = null;
 
     /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
@@ -29,15 +37,7 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Número de empresas hijas que se activarían en bloque (≥1, default 1).
+     * Number of companies to preview activating in bulk, between 1 and 1000 (default 1); used without `company_ids[]`.
      *
      * @var ?int $count
      */
@@ -45,17 +45,17 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public ?int $count = null;
 
     /**
-     * @param  array<string>  $companyIds
+     * @param  string  $account
+     * @param  ?array<string>  $companyIds
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?int  $count
      * @phpstan-pure
      */
-    public function __construct(array $companyIds, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $count = null)
+    public function __construct(string $account, ?array $companyIds = null, ?LocalDate $factuareaVersion = null, ?int $count = null)
     {
+        $this->account = $account;
         $this->companyIds = $companyIds;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->count = $count;
     }
 }

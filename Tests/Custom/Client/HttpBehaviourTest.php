@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Tests\Custom\Client;
 
+use Factuarea\Sdk\Custom\Idempotency\IdempotencyClient;
 use Factuarea\Sdk\Custom\Idempotency\IdempotencyHook;
 use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
@@ -22,11 +23,18 @@ use Psr\Http\Message\RequestInterface;
  * typed errors) against a mocked Guzzle transport — no real network.
  *
  * The client is assembled exactly the way {@see \Factuarea\Sdk\Custom\FactuareaClient}
- * does (Bearer auth + IdempotencyHook), but with the Guzzle handler swapped for
+ * does (Bearer auth + IdempotencyClient), but with the Guzzle handler swapped for
  * a MockHandler so we can script responses and capture outgoing requests.
  */
 final class HttpBehaviourTest extends TestCase
 {
+    /**
+     * Company axis of the v1 contract: every company resource hangs off
+     * `/v1/companies/{company}/…`, so the identifier is a required argument of
+     * the generated method, not something the credential resolves in silence.
+     */
+    private const COMPANY = '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a01';
+
     /** @var list<array{request: RequestInterface}> */
     private array $history = [];
 
@@ -35,17 +43,16 @@ final class HttpBehaviourTest extends TestCase
         $this->history = [];
         $stack = HandlerStack::create($mock);
         $stack->push(Middleware::history($this->history));
-        $guzzle = new Client(['handler' => $stack]);
+        $guzzle = new IdempotencyClient(new Client(['handler' => $stack]));
 
         // Build the SDK the way FactuareaClient::create does (security wiring via the
-        // generated builder + FactuareaVersionHook + IdempotencyHook), but inject the
+        // generated builder + FactuareaVersionHook + IdempotencyClient), but inject the
         // mocked transport.
         $sdk = Factuarea::builder()
             ->setSecurity(new Security(bearerAuth: $apiKey))
             ->setClient($guzzle)
             ->build();
         $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new FactuareaVersionHook());
-        $sdk->sdkConfiguration->hooks->registerBeforeRequestHook(new IdempotencyHook());
 
         return $sdk;
     }
@@ -123,6 +130,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
             $this->fail('Expected a typed ErrorThrowable.');
@@ -149,6 +157,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
             $this->fail('Expected a typed ErrorThrowable.');
@@ -183,6 +192,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
         } catch (ErrorThrowable) {
@@ -214,6 +224,7 @@ final class HttpBehaviourTest extends TestCase
         try {
             $sdk->invoices->publicApiV1InvoicesBulkDelete(
                 new \Factuarea\Sdk\Models\Components\BulkDeleteInvoicesV1Request(ids: ['inv_1']),
+                company: self::COMPANY,
                 idempotencyKey: IdempotencyHook::uuidV4(),
             );
         } catch (ErrorThrowable) {

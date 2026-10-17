@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** TaxReport - A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/tax_reports/{uuid}/download`. */
+/** TaxReport - A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/companies/{company}/tax-reports/{tax_report}/download`. */
 class TaxReport
 {
     /**
-     * Opaque UUID (v7) of the generated report.
+     * Opaque UUID v7 of the generated report.
      *
      * @var string $id
      */
@@ -86,7 +86,7 @@ class TaxReport
     public \DateTime $generatedAt;
 
     /**
-     * UUID (v7) of the user who generated the declaration (audit trail).
+     * UUID v7 of the user who generated the declaration (audit trail).
      *
      * @var string $generatedById
      */
@@ -94,7 +94,7 @@ class TaxReport
     public string $generatedById;
 
     /**
-     * Relative download URL of the generated resource (`/v1/tax_reports/{uuid}/download`).
+     * Relative download URL of the generated resource (`/v1/companies/{company}/tax-reports/{tax_report}/download`).
      *
      * @var string $downloadUrl
      */

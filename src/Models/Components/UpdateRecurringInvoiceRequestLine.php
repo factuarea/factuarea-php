@@ -36,12 +36,14 @@ class UpdateRecurringInvoiceRequestLine
     public ?string $additionalDescription = null;
 
     /**
+     * Unit price. Send a JSON number or a decimal string with up to 4 decimals (`"0.0125"`, `"100.0000"`): the string is the exact form the response returns, so a line read from the API can be sent back unchanged. Derived amounts are computed from it and keep 2 decimals.
      *
-     * @var ?float $unitPrice
+     * @var float|string|null $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('float|string|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $unitPrice = null;
+    public float|string|null $unitPrice = null;
 
     /**
      *
@@ -76,6 +78,7 @@ class UpdateRecurringInvoiceRequestLine
     public ?float $confirmedBaseQuantity = null;
 
     /**
+     * VAT rate of the line (0–100). Optional, and it matters whenever `lines` is sent, because a `PUT` replaces the whole set of lines: a line that omits it (or sends `null`) takes the tax it references or the tax assigned to its product and otherwise the DEFAULT TAX of your company for this kind of document, inherited as a whole: its rate, its indirect-tax regime (IVA, IGIC or IPSI) and its AEAT qualification; an exempt or not-subject default also declares its cause (`exemption_reason`) on the line unless the line sends its own. If none of them exists the request is rejected with 422 `missing_required_param`, with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line); a rate already stored on a line is NOT kept if you resend the line without it. A `0` you send is honoured as a real 0 % rate.
      *
      * @var ?float $taxRate
      */
@@ -151,6 +154,14 @@ class UpdateRecurringInvoiceRequestLine
     public ?string $configurationUuid = null;
 
     /**
+     *
+     * @var ?float $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $countedQuantity = null;
+
+    /**
      * $options
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestOption> $options
@@ -214,7 +225,7 @@ class UpdateRecurringInvoiceRequestLine
      * @param  ?float  $quantity
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
-     * @param  ?float  $unitPrice
+     * @param  float|string|null  $unitPrice
      * @param  ?string  $productId
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
@@ -228,6 +239,7 @@ class UpdateRecurringInvoiceRequestLine
      * @param  ?string  $surchargeRateId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
      * @param  ?string  $configurationUuid
+     * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestOption>  $options
      * @param  ?string  $configurationSignature
      * @param  ?string  $configurationName
@@ -237,7 +249,7 @@ class UpdateRecurringInvoiceRequestLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?UpdateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?UpdateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?UpdateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateRecurringInvoiceRequestPriceSource $priceSource = null, ?UpdateRecurringInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?UpdateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?UpdateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?UpdateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateRecurringInvoiceRequestPriceSource $priceSource = null, ?UpdateRecurringInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->description = $description;
@@ -256,6 +268,7 @@ class UpdateRecurringInvoiceRequestLine
         $this->surchargeRateId = $surchargeRateId;
         $this->indirectTaxRegime = $indirectTaxRegime;
         $this->configurationUuid = $configurationUuid;
+        $this->countedQuantity = $countedQuantity;
         $this->options = $options;
         $this->configurationSignature = $configurationSignature;
         $this->configurationName = $configurationName;

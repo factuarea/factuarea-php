@@ -73,7 +73,7 @@ class Quote
     public string $subtotal;
 
     /**
-     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on a purchase invoice the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
+     * NET aggregate of the header taxes: `total_vat + total_surcharge − total_retention`. It is the amount that, added to `subtotal`, yields `total` (`total === subtotal + taxes_total`), so it must NOT be combined with `total_retention`: subtracting the withholding again on top of the aggregate produces a false total (4,320.00 + 259.20 − 648.00 = 3,931.20 against a real total of 4,579.20). It is NOT the VAT figure of the Spanish Modelo 303 — read `total_vat` for that. Beware that on an expense the same field name carries a DIFFERENT meaning (VAT only), which is why the identity that holds across all five document families is the explicit one: `total === subtotal + total_vat + total_surcharge − total_retention`.
      *
      * @var string $taxesTotal
      */
@@ -118,6 +118,14 @@ class Quote
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('currency')]
     public string $currency;
+
+    /**
+     * VAT operation regime of the quote (`general`, `intracomunitaria`, `importacion_exportacion`, `isp`).
+     *
+     * @var string $operationRegime
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_regime')]
+    public string $operationRegime;
 
     /**
      * $lines
@@ -206,7 +214,7 @@ class Quote
     public ?\DateTime $rejectedAt;
 
     /**
-     * UUID (v7) of the invoice this quote was converted into, if any.
+     * UUID v7 of the invoice this quote was converted into, if any.
      *
      * @var ?string $convertedToId
      */
@@ -235,6 +243,14 @@ class Quote
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('terms')]
     public ?string $terms;
+
+    /**
+     * Origin number of the document (e.g. the number it had in a previous system when imported). `null` if not set.
+     *
+     * @var ?string $reference
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('reference')]
+    public ?string $reference;
 
     /**
      * External integration key (ERP/CRM/e-commerce) mapping this document to a record in a third-party system. Free-format, unique per company, filterable via `?external_id=`. `null` when not set. Persistent synchronization key, independent of the request-level `Idempotency-Key`.
@@ -279,6 +295,7 @@ class Quote
      * @param  string  $totalSurcharge
      * @param  string  $total
      * @param  string  $currency
+     * @param  string  $operationRegime
      * @param  array<\Factuarea\Sdk\Models\Components\QuoteLine>  $lines
      * @param  array<string>  $tags
      * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
@@ -294,12 +311,13 @@ class Quote
      * @param  ?string  $convertedInvoiceNumber
      * @param  ?string  $notes
      * @param  ?string  $terms
+     * @param  ?string  $reference
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $linkExpiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $operationRegime, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $reference = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -315,6 +333,7 @@ class Quote
         $this->totalSurcharge = $totalSurcharge;
         $this->total = $total;
         $this->currency = $currency;
+        $this->operationRegime = $operationRegime;
         $this->lines = $lines;
         $this->tags = $tags;
         $this->customFields = $customFields;
@@ -330,6 +349,7 @@ class Quote
         $this->convertedInvoiceNumber = $convertedInvoiceNumber;
         $this->notes = $notes;
         $this->terms = $terms;
+        $this->reference = $reference;
         $this->externalId = $externalId;
         $this->metadata = $metadata;
         $this->linkExpiresAt = $linkExpiresAt;

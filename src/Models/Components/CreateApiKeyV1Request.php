@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateApiKeyV1Request - Create an API key for your own tenant. The `tier` is never accepted from the body — it is derived from the holder plan and add-ons. Requested `scopes` must belong to the closed v1 catalog and stay within the holder plan; a scope above the plan returns 422. The optional `scoped_company_ids` is the list of companies of your account (company IDs, UUID v7) the key will be able to operate on; when omitted the key reaches ONLY the holder company. Every requested scope must fit the plan of EVERY company in that list, so mixing companies on different plans returns 422, and the scope is fixed at issuance: widening it means issuing another key. */
+/** CreateApiKeyV1Request - Create an API key for your own tenant. The `tier` is never accepted from the body — it is derived from the holder plan and add-ons. Requested `scopes` must belong to the closed v1 catalog and stay within the holder plan; a scope above the plan returns 422. The optional `scoped_company_ids` is the list of companies of your account (company IDs, UUID v7) the key will be able to operate on; when omitted the key reaches the same companies as the credential that creates it, and it can never reach more. It is rejected with `environment: test`: a test key only reaches the sandbox company. Every requested scope must fit the plan of EVERY company in that list, so mixing companies on different plans returns 422. To change the scope of a key you already issued, use the dedicated scope operation. */
 class CreateApiKeyV1Request
 {
     /**
@@ -59,7 +59,7 @@ class CreateApiKeyV1Request
     public ?CreateApiKeyV1RequestEnvironment $environment = null;
 
     /**
-     * Lista opcional de empresas (uuid) que la key alcanzará; si se omite, solo la empresa titular.
+     * Optional public identifiers (UUID v7) of the companies of your account the key will reach; when omitted, the same companies as the credential that creates it. Not accepted with `environment: test`.
      *
      * @var ?array<string> $scopedCompanyIds
      */

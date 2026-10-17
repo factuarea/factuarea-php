@@ -137,7 +137,7 @@ class PriceListItem
     public ?string $presentationName;
 
     /**
-     * Why the entry was withdrawn. `null` while the entry is active.
+     * Why the entry was withdrawn. `product_replaced` means the product was replaced by another one with a different base unit (`POST /v1/companies/{company}/products/{product}/base-unit-replacement`): the entry keeps its price as history and, when it was transferred, a new entry for the new product carries the converted price. `null` while the entry is active.
      *
      * @var ?\Factuarea\Sdk\Models\Components\RetirementReason $retirementReason
      */

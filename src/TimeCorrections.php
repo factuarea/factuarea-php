@@ -51,7 +51,7 @@ class TimeCorrections
     /**
      * Approve a time entry correction
      *
-     * Approve a pending correction request by its `id` (UUID v7), appending the resolving `correction_entry` linked to the original time entry. An optional `note` from the approver may be supplied. A request that is not pending returns 422 (already resolved), and approving your own request returns 422 (self-approval is forbidden). Returns 200 with the resolved correction.
+     * Approve a pending correction request by its `id` (UUID v7), appending the resolving `correction_entry` linked to the original time entry. An optional `note` from the approver may be supplied. A request that is not pending returns 422 (already resolved), and approving your own request returns 422 (self-approval is forbidden). Approval checks the employment period again: if the corrected entry falls outside it (for example because `hire_date` was changed after the request), it returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period`, the request stays pending and the ledger is unchanged. Returns 200 with the resolved correction.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsApproveRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsApproveResponse
@@ -85,7 +85,7 @@ class TimeCorrections
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-corrections/{time_correction}/approve', Operations\PublicApiV1TimeCorrectionsApproveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-corrections/{time_correction}/approve', Operations\PublicApiV1TimeCorrectionsApproveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -135,7 +135,7 @@ class TimeCorrections
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -171,16 +171,16 @@ class TimeCorrections
     /**
      * Request a time entry correction
      *
-     * Request the correction of a time entry (RD-ley 8/2019). `time_entry_id` (UUID v7 of the entry to correct), `kind` (`add_missing_entry`/`adjust_time`/`remove_entry`), a `reason` and the `proposed` values are required. A correction is a new append-only entry that references the original entry without mutating it (analogous to a corrective invoice); the workflow stays `pending` until a manager approves or rejects it. Returns 201 with the created request and a `Location` header.
+     * Request the correction of a time entry (RD-ley 8/2019). `time_entry_id` (UUID v7 of the entry to correct), `kind` (`add_missing_entry`/`adjust_time`/`remove_entry`), a `reason` and the `proposed` values are required. A correction is a new append-only entry that references the original entry without mutating it (analogous to a corrective invoice); the workflow stays `pending` until a manager approves or rejects it. An `add_missing_entry` or `adjust_time` correction whose proposed time falls outside the employee’s employment period (before `hire_date` or after `termination_date`) returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` and no request is created; `remove_entry` is never blocked by this rule. Returns 201 with the created request and a `Location` header.
      *
      * @param  \Factuarea\Sdk\Models\Components\RequestTimeCorrectionRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeCorrectionsCreate(Components\RequestTimeCorrectionRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeCorrectionsCreateResponse
+    public function publicApiV1TimeCorrectionsCreate(Components\RequestTimeCorrectionRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeCorrectionsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -208,13 +208,13 @@ class TimeCorrections
             ];
         }
         $request = new Operations\PublicApiV1TimeCorrectionsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-corrections');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-corrections', Operations\PublicApiV1TimeCorrectionsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -265,7 +265,7 @@ class TimeCorrections
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -303,11 +303,11 @@ class TimeCorrections
      *
      * List the time entry correction requests of your company with cursor-based pagination, ordered by request time. Supports filtering by `status` (`pending` is the manager inbox, `approved`/`rejected` are resolved), `employee_id` (UUID v7) and a date range (`from`/`to`).
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeCorrectionsList(?Operations\PublicApiV1TimeCorrectionsListRequest $request = null, ?Options $options = null): Operations\PublicApiV1TimeCorrectionsListResponse
+    public function publicApiV1TimeCorrectionsList(Operations\PublicApiV1TimeCorrectionsListRequest $request, ?Options $options = null): Operations\PublicApiV1TimeCorrectionsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -335,7 +335,7 @@ class TimeCorrections
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-corrections');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-corrections', Operations\PublicApiV1TimeCorrectionsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -384,7 +384,7 @@ class TimeCorrections
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -454,7 +454,7 @@ class TimeCorrections
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-corrections/{time_correction}/reject', Operations\PublicApiV1TimeCorrectionsRejectRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-corrections/{time_correction}/reject', Operations\PublicApiV1TimeCorrectionsRejectRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -505,7 +505,7 @@ class TimeCorrections
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -543,13 +543,13 @@ class TimeCorrections
      *
      * Retrieve a single correction request by its `id` (UUID v7), including its derived status. A request belonging to another company returns 404 `correction_request_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $timeCorrection
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TimeCorrectionsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TimeCorrectionsShow(string $timeCorrection, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TimeCorrectionsShowResponse
+    public function publicApiV1TimeCorrectionsShow(string $company, string $timeCorrection, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TimeCorrectionsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -577,12 +577,12 @@ class TimeCorrections
             ];
         }
         $request = new Operations\PublicApiV1TimeCorrectionsShowRequest(
+            company: $company,
             timeCorrection: $timeCorrection,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/time-corrections/{time_correction}', Operations\PublicApiV1TimeCorrectionsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/time-corrections/{time_correction}', Operations\PublicApiV1TimeCorrectionsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -628,7 +628,7 @@ class TimeCorrections
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

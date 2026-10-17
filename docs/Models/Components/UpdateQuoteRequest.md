@@ -1,10 +1,6 @@
 # UpdateQuoteRequest
 
-Public REST API v1 — PUT /v1/quotes/{uuid}.
-
-Partial update: omitted fields are kept. Only allowed when
-the quote is in `draft` status (the controller maps the
-transition exception to 422 `invalid_status_transition`).
+Partial update of a quote: omitted fields are kept. Only allowed while the quote is in `draft` status (otherwise 422 `invalid_status_transition`).
 
 
 ## Fields

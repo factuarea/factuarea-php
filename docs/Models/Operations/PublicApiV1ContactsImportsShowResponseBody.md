@@ -1,0 +1,10 @@
+# PublicApiV1ContactsImportsShowResponseBody
+
+Persisted contact import progress and original row outcomes.
+
+
+## Fields
+
+| Field                                                                                                                                     | Type                                                                                                                                      | Required                                                                                                                                  | Description                                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                                                    | [Components\BusinessContactImport](../../Models/Components/BusinessContactImport.md)                                                      | :heavy_check_mark:                                                                                                                        | Tracking of a contact import. `outcomes` lists at most 500 rows (`outcomes_truncated`); `skip_reasons` counts the skipped rows by reason. |

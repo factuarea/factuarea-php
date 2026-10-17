@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TaxesListRequest
 {
     /**
-     * Cursor for forward pagination. Use the `uuid` of the last object on the previous page.
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -21,7 +29,7 @@ class PublicApiV1TaxesListRequest
     public ?string $startingAfter = null;
 
     /**
-     * Cursor for backward pagination. Use the `uuid` of the first object on the current page.
+     * Cursor for backward pagination: pass the `id` of the first object on the current page.
      *
      * @var ?string $endingBefore
      */
@@ -53,7 +61,7 @@ class PublicApiV1TaxesListRequest
     public ?bool $isActive = null;
 
     /**
-     * Filter taxes marked as global default (legacy flag). Exact match on `is_default`.
+     * Filter taxes that are your company's effective default (the tax your company proposes by default for the document). Exact match on `is_default`.
      *
      * @var ?bool $isDefault
      */
@@ -117,12 +125,20 @@ class PublicApiV1TaxesListRequest
     public ?string $externalReferenceIn = null;
 
     /**
-     * Filter system taxes (global catalog) vs custom. Exact match on `is_system`.
+     * Filter the protected canonical taxes of the Factuarea catalog (`true`) vs the rest (`false`). To tell the global catalog from your own taxes use `ownership`. Exact match on `is_system`.
      *
      * @var ?bool $isSystem
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=is_system')]
     public ?bool $isSystem = null;
+
+    /**
+     * Whose taxes to list: `global` (the read-only Factuarea catalog) or `company` (your own). Omit it to list both. Any other value responds 422. Exact match on `ownership`.
+     *
+     * @var ?string $ownership
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=ownership')]
+    public ?string $ownership = null;
 
     /**
      * AEAT fiscal zone: `peninsula`, `canarias`, `ceuta`, `melilla`. Exact match on `country_aeat_zone`.
@@ -149,15 +165,7 @@ class PublicApiV1TaxesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
-     * Number of objects to return. Integer between 1 and 100. Defaults to 25.
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -165,6 +173,7 @@ class PublicApiV1TaxesListRequest
     public ?int $limit = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $endingBefore
@@ -180,14 +189,15 @@ class PublicApiV1TaxesListRequest
      * @param  ?string  $externalReference
      * @param  ?string  $externalReferenceIn
      * @param  ?bool  $isSystem
+     * @param  ?string  $ownership
      * @param  ?string  $countryAeatZone
      * @param  ?string  $indirectTaxRegime
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @phpstan-pure
      */
-    public function __construct(?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $typeIn = null, ?bool $isActive = null, ?bool $isDefault = null, ?string $appliesTo = null, ?string $appliesToIn = null, ?string $country = null, ?string $code = null, ?string $search = null, ?string $externalReference = null, ?string $externalReferenceIn = null, ?bool $isSystem = null, ?string $countryAeatZone = null, ?string $indirectTaxRegime = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $type = null, ?string $typeIn = null, ?bool $isActive = null, ?bool $isDefault = null, ?string $appliesTo = null, ?string $appliesToIn = null, ?string $country = null, ?string $code = null, ?string $search = null, ?string $externalReference = null, ?string $externalReferenceIn = null, ?bool $isSystem = null, ?string $ownership = null, ?string $countryAeatZone = null, ?string $indirectTaxRegime = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
     {
+        $this->company = $company;
         $this->startingAfter = $startingAfter;
         $this->endingBefore = $endingBefore;
         $this->type = $type;
@@ -202,10 +212,10 @@ class PublicApiV1TaxesListRequest
         $this->externalReference = $externalReference;
         $this->externalReferenceIn = $externalReferenceIn;
         $this->isSystem = $isSystem;
+        $this->ownership = $ownership;
         $this->countryAeatZone = $countryAeatZone;
         $this->indirectTaxRegime = $indirectTaxRegime;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->limit = $limit;
     }
 }

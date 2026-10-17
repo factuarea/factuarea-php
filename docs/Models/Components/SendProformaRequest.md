@@ -1,11 +1,6 @@
 # SendProformaRequest
 
-Public REST API v1 — POST /v1/proformas/{uuid}/send.
-
-Optional body: `to` (string), `cc[]`, `bcc[]` (arrays of emails),
-`subject` (max 200), `body` (string). The controller performs the
-cross-field validation: if the client has no email and `to` is
-absent, it returns 422 `missing_required_param`.
+Email a proforma. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters) and `body` (string). If the client has no email and `to` is absent, it returns 422 `missing_required_param`.
 
 
 ## Fields

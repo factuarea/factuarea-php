@@ -9,14 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/**
- * AcceptQuoteRequest - Public REST API v1 — POST /v1/quotes/{uuid}/accept.
- *
- *
- * Optional body: `accepted_on` (date, defaults to today), `notes`.
- * The controller performs the cross-field validation for `quote_expired`
- * (`valid_until < today` → 422).
- */
+/** AcceptQuoteRequest - Optional body to record the acceptance of the quote: `accepted_on` (date, defaults to today) and `notes`. A quote whose `valid_until` date has already passed cannot be accepted (422 `quote_expired`). */
 class AcceptQuoteRequest
 {
     /**

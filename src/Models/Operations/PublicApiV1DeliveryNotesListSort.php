@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** Sort order. Use a field for ascending or a `-` prefix for descending (e.g. `-created`). Allowed fields: `created`, `number`, `delivery_date`. Combined with the cursor, ordering stays deterministic (a stable secondary sort by the cursor id, Stripe-style). When omitted, results follow the default cursor order (`created` descending). */
+/** Sort order: `created`, `number`, `delivery_date` ascending, or with a `-` prefix for descending (default `-created`). */
 enum PublicApiV1DeliveryNotesListSort: string
 {
     case Created = 'created';

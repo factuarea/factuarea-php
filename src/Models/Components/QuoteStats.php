@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** QuoteStats - Resumen agregado de los presupuestos de la empresa autenticada: total, importe acumulado, conteo por estado, expirados y convertidos a factura. Devuelto por `GET /v1/quotes/stats`. */
+/** QuoteStats - Aggregated summary of the quotes of the authenticated company: total, accumulated amount, count by status, expired and converted to invoice. Returned by `GET /v1/companies/{company}/quotes/stats`. */
 class QuoteStats
 {
     /**
@@ -21,12 +21,12 @@ class QuoteStats
     public int $totalCount;
 
     /**
-     * Aggregate amount of the quotes (EUR).
+     * Aggregate amount of the quotes (EUR), as a 2-decimal string.
      *
-     * @var float $totalAmount
+     * @var string $totalAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_amount')]
-    public float $totalAmount;
+    public string $totalAmount;
 
     /**
      * Quote count by status. Keys: `draft`, `sent`, `accepted`, `rejected`, `expired`, `converted`, `cancelled`.
@@ -55,13 +55,13 @@ class QuoteStats
 
     /**
      * @param  int  $totalCount
-     * @param  float  $totalAmount
+     * @param  string  $totalAmount
      * @param  array<string, int>  $countByStatus
      * @param  int  $expiredCount
      * @param  int  $convertedCount
      * @phpstan-pure
      */
-    public function __construct(int $totalCount, float $totalAmount, array $countByStatus, int $expiredCount, int $convertedCount)
+    public function __construct(int $totalCount, string $totalAmount, array $countByStatus, int $expiredCount, int $convertedCount)
     {
         $this->totalCount = $totalCount;
         $this->totalAmount = $totalAmount;

@@ -23,28 +23,30 @@ class Composition
     public ?array $components = null;
 
     /**
+     * Sum of the component fees, as a 2-decimal string in the payout currency.
      *
-     * @var ?float $feeTotal
+     * @var ?string $feeTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('fee_total')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $feeTotal = null;
+    public ?string $feeTotal = null;
 
     /**
+     * Sum of the component amounts, as a 2-decimal string in the payout currency.
      *
-     * @var ?float $grossTotal
+     * @var ?string $grossTotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('gross_total')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $grossTotal = null;
+    public ?string $grossTotal = null;
 
     /**
      * @param  ?array<\Factuarea\Sdk\Models\Components\Component>  $components
-     * @param  ?float  $feeTotal
-     * @param  ?float  $grossTotal
+     * @param  ?string  $feeTotal
+     * @param  ?string  $grossTotal
      * @phpstan-pure
      */
-    public function __construct(?array $components = null, ?float $feeTotal = null, ?float $grossTotal = null)
+    public function __construct(?array $components = null, ?string $feeTotal = null, ?string $grossTotal = null)
     {
         $this->components = $components;
         $this->feeTotal = $feeTotal;

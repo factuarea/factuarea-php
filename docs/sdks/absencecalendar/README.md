@@ -12,7 +12,7 @@ Return the monthly absence calendar of your team for a given `year` and `month`:
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.absence-calendar.show" method="get" path="/absence-calendar" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.absence-calendar.show" method="get" path="/companies/{company}/absence-calendar" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -26,16 +26,16 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1AbsenceCalendarShowRequest(
+    company: 'Jenkins, Jacobi and Gerlach',
     year: 930823,
     month: 411636,
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->absenceCalendar->publicApiV1AbsenceCalendarShow(
@@ -59,8 +59,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 422, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk;
 class Developers
 {
     private SDKConfiguration $sdkConfiguration;
-    public RequestLogs $requestLogs;
+    public DevelopersRequestLogs $requestLogs;
 
     /**
      * @param  SDKConfiguration  $sdkConfig
@@ -21,7 +21,7 @@ class Developers
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
-        $this->requestLogs = new RequestLogs($this->sdkConfiguration);
+        $this->requestLogs = new DevelopersRequestLogs($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl

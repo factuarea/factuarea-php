@@ -3,11 +3,11 @@
 
 ## Fields
 
-| Field                 | Type                  | Required              | Description           |
-| --------------------- | --------------------- | --------------------- | --------------------- |
-| `uuid`                | *string*              | :heavy_check_mark:    | N/A                   |
-| `originalInvoiceUuid` | *string*              | :heavy_check_mark:    | N/A                   |
-| `refundId`            | *string*              | :heavy_check_mark:    | N/A                   |
-| `provider`            | *string*              | :heavy_check_mark:    | N/A                   |
-| `amount`              | *float*               | :heavy_check_mark:    | N/A                   |
-| `correctionType`      | *string*              | :heavy_check_mark:    | N/A                   |
+| Field                                                         | Type                                                          | Required                                                      | Description                                                   | Example                                                       |
+| ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
+| `uuid`                                                        | *string*                                                      | :heavy_check_mark:                                            | N/A                                                           |                                                               |
+| `originalInvoiceUuid`                                         | *string*                                                      | :heavy_check_mark:                                            | N/A                                                           |                                                               |
+| `refundId`                                                    | *string*                                                      | :heavy_check_mark:                                            | N/A                                                           |                                                               |
+| `provider`                                                    | *string*                                                      | :heavy_check_mark:                                            | N/A                                                           |                                                               |
+| `amount`                                                      | *string*                                                      | :heavy_check_mark:                                            | Amount of the individual refund (EUR), as a 2-decimal string. | 121.00                                                        |
+| `correctionType`                                              | *string*                                                      | :heavy_check_mark:                                            | N/A                                                           |                                                               |

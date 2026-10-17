@@ -10,3 +10,4 @@
 | `quote`                                 | *int*                                   | :heavy_check_mark:                      | N/A                                     | **Example 1:** 2<br/>**Example 2:** 2   |
 | `deliveryNote`                          | *int*                                   | :heavy_check_mark:                      | N/A                                     | **Example 1:** 3<br/>**Example 2:** 3   |
 | `proforma`                              | *int*                                   | :heavy_check_mark:                      | N/A                                     | **Example 1:** 4<br/>**Example 2:** 4   |
+| `transportDocument`                     | *int*                                   | :heavy_check_mark:                      | N/A                                     |                                         |

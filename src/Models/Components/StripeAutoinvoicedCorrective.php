@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** StripeAutoinvoicedCorrective - A corrective invoice automatically generated from a Stripe refund (`charge.refunded`). The public `id` is the UUID (v7) of the corrective invoice; `original_invoice_id` links to the original invoice. */
+/** StripeAutoinvoicedCorrective - A corrective invoice automatically generated from a Stripe refund (`charge.refunded`). The public `id` is the UUID v7 of the corrective invoice; `original_invoice_id` links to the original invoice. */
 class StripeAutoinvoicedCorrective
 {
     /**
-     * UUID (v7) of the corrective invoice. Public identity (KEY `id`).
+     * UUID v7 of the corrective invoice. Public identity (KEY `id`).
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class StripeAutoinvoicedCorrective
     public StripeAutoinvoicedCorrectiveObject $object;
 
     /**
-     * UUID (v7) of the original invoice that was corrected by the refund.
+     * UUID v7 of the original invoice that was corrected by the refund.
      *
      * @var string $originalInvoiceId
      */

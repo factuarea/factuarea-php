@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Account - Snapshot of the company, plan, Developer API entitlement and metadata of the API key used to make the request. Use this endpoint to introspect credentials and discover limits with a single call. */
+/** Account - Snapshot of the company, plan, Developer API entitlement, personalization and metadata of the API key used to make the request. To introspect the calling credential and its scope of tax IDs, use `GET /v1/me` instead, which returns the `Me` resource. */
 class Account
 {
     /**
@@ -56,7 +56,7 @@ class Account
     public AccountApiKey $apiKey;
 
     /**
-     * Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/account/personalization`.
+     * Account personalization: invoice-emission language and PDF template/accent color. Mutable via `PATCH /v1/companies/{company}/personalization`.
      *
      * @var \Factuarea\Sdk\Models\Components\Personalization $personalization
      */

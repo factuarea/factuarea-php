@@ -42,19 +42,19 @@ class PublicApiV1DevelopersRequestLogsListResponse
     /**
      * `ApiRequestLogListV1Resource`
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\ApiRequestLogList $apiRequestLogList
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListApiRequestLogList $apiRequestLogList
      */
-    public ?ApiRequestLogList $apiRequestLogList = null;
+    public ?PublicApiV1DevelopersRequestLogsListApiRequestLogList $apiRequestLogList = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\ApiRequestLogList  $apiRequestLogList
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListApiRequestLogList  $apiRequestLogList
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?ApiRequestLogList $apiRequestLogList = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1DevelopersRequestLogsListApiRequestLogList $apiRequestLogList = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;

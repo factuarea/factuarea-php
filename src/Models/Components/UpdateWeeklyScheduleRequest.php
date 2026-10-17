@@ -12,38 +12,41 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateWeeklyScheduleRequest
 {
     /**
-     * Weekly schedule name.
+     * Weekly schedule name. Optional: when omitted it keeps its current value.
      *
-     * @var string $name
+     * @var ?string $name
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
-    public string $name;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $name = null;
 
     /**
-     * Schedule mode: `validated` (assumed fulfilled) or `real_clocking` (computed from real clock entries).
+     * Schedule mode: `validated` (assumed fulfilled) or `real_clocking` (computed from real clock entries). Optional: when omitted it keeps its current value.
      *
-     * @var \Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestMode $mode
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestMode $mode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('mode')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestMode')]
-    public UpdateWeeklyScheduleRequestMode $mode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateWeeklyScheduleRequestMode $mode = null;
 
     /**
-     * Full weekly pattern: list of days with their time ranges.
+     * Full weekly pattern: list of days with their time ranges. Optional: when omitted the current pattern is kept; when sent it replaces the whole pattern.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestWeekPattern> $weekPattern
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestWeekPattern> $weekPattern
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('week_pattern')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestWeekPattern>')]
-    public array $weekPattern;
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestWeekPattern>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $weekPattern = null;
 
     /**
-     * @param  string  $name
-     * @param  \Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestMode  $mode
-     * @param  array<\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestWeekPattern>  $weekPattern
+     * @param  ?string  $name
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestMode  $mode
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateWeeklyScheduleRequestWeekPattern>  $weekPattern
      * @phpstan-pure
      */
-    public function __construct(string $name, UpdateWeeklyScheduleRequestMode $mode, array $weekPattern)
+    public function __construct(?string $name = null, ?UpdateWeeklyScheduleRequestMode $mode = null, ?array $weekPattern = null)
     {
         $this->name = $name;
         $this->mode = $mode;

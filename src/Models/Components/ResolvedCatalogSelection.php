@@ -115,10 +115,10 @@ class ResolvedCatalogSelection
     /**
      * Groups that still need a choice before the line can be confirmed.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\ResolvedCatalogSelectionPendingOptionGroup> $pendingOptionGroups
+     * @var array<\Factuarea\Sdk\Models\Components\PendingOptionGroup> $pendingOptionGroups
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_option_groups')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ResolvedCatalogSelectionPendingOptionGroup>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\PendingOptionGroup>')]
     public array $pendingOptionGroups;
 
     /**
@@ -157,7 +157,7 @@ class ResolvedCatalogSelection
     public ?string $configurationSignature;
 
     /**
-     * Own FINAL price of the resolved combination, per commercial unit. This is CONTEXT, not the final price of the line: the full precedence (exact price-list entry, combination, presentation, variant, product) is resolved by `POST /v1/price-lists/resolve`.
+     * Own FINAL price of the resolved combination, per commercial unit. This is CONTEXT, not the final price of the line: the full precedence (exact price-list entry, combination, presentation, variant, product) is resolved by `POST /v1/companies/{company}/price-lists/resolve`.
      *
      * @var ?string $configurationPrice
      */
@@ -193,7 +193,7 @@ class ResolvedCatalogSelection
      * @param  array<\Factuarea\Sdk\Models\Components\CompatibleVariant>  $compatibleVariants
      * @param  array<\Factuarea\Sdk\Models\Components\CompatiblePresentation>  $compatiblePresentations
      * @param  array<\Factuarea\Sdk\Models\Components\CompatibleOptionGroup>  $compatibleOptionGroups
-     * @param  array<\Factuarea\Sdk\Models\Components\ResolvedCatalogSelectionPendingOptionGroup>  $pendingOptionGroups
+     * @param  array<\Factuarea\Sdk\Models\Components\PendingOptionGroup>  $pendingOptionGroups
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
      * @param  ?string  $configurationId

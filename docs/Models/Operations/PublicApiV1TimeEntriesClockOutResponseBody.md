@@ -1,5 +1,7 @@
 # PublicApiV1TimeEntriesClockOutResponseBody
 
+Clock-out recorded. The `Location` header contains the canonical URL of the new time entry.
+
 
 ## Fields
 

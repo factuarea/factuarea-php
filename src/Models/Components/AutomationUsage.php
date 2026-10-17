@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AutomationUsage - How many automation runs your company has consumed this period and what its plan allows. Read it to anticipate running out of budget: this API does not pre-check the quota when you activate a rule, so this is the endpoint that tells you where you stand. The figure comes from the same counter the engine applies when admitting a run, so it advances by exactly N after N admitted runs and does NOT change when run history is purged. */
+/** AutomationUsage - Current active automation rules and automation runs consumed this period, with the limits of the plan. Activating a rule checks the active-rule cap; the execution budget is checked only when admitting a run. Read both counters to anticipate reaching either limit. The figure comes from the same counter the engine applies when admitting a run, so it advances by exactly N after N admitted runs and does NOT change when run history is purged. */
 class AutomationUsage
 {
     /**
@@ -54,7 +54,16 @@ class AutomationUsage
     public int $thresholdPercent;
 
     /**
-     * Cap of the plan for the period, or `null` when the plan has NO cap. `null` means unlimited, never "unknown": treat it as "no progress bar", not as zero.
+     * Current active rules and the cap enforced when activating a rule. Draft, paused and deleted rules do not consume this cap.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ActiveRules $activeRules
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_rules')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ActiveRules')]
+    public ActiveRules $activeRules;
+
+    /**
+     * Cap of the plan for the period, or `null` when there is no automatic ceiling. Enterprise capacity is agreed by contract. `null` is not an unknown value or zero: omit the progress bar.
      *
      * @var ?int $limit
      */
@@ -67,16 +76,18 @@ class AutomationUsage
      * @param  \DateTime  $resetAt
      * @param  string  $period
      * @param  int  $thresholdPercent
+     * @param  \Factuarea\Sdk\Models\Components\ActiveRules  $activeRules
      * @param  ?int  $limit
      * @phpstan-pure
      */
-    public function __construct(AutomationUsageObject $object, int $consumed, \DateTime $resetAt, string $period, int $thresholdPercent, ?int $limit = null)
+    public function __construct(AutomationUsageObject $object, int $consumed, \DateTime $resetAt, string $period, int $thresholdPercent, ActiveRules $activeRules, ?int $limit = null)
     {
         $this->object = $object;
         $this->consumed = $consumed;
         $this->resetAt = $resetAt;
         $this->period = $period;
         $this->thresholdPercent = $thresholdPercent;
+        $this->activeRules = $activeRules;
         $this->limit = $limit;
     }
 }

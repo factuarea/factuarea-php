@@ -12,12 +12,21 @@ namespace Factuarea\Sdk\Models\Components;
 class BusinessContactImportPreview
 {
     /**
+     * $sourceHeaders
+     *
+     * @var array<string> $sourceHeaders
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_headers')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $sourceHeaders;
+
+    /**
      * $rows
      *
-     * @var array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewRow> $rows
+     * @var array<\Factuarea\Sdk\Models\Components\Row> $rows
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('rows')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewRow>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Row>')]
     public array $rows;
 
     /**
@@ -49,11 +58,20 @@ class BusinessContactImportPreview
     public int $addRole;
 
     /**
+     * Rows matching an existing contact under the `merge` strategy: nothing is applied and they are flagged for manual review (`reason=merge_review_required`).
      *
      * @var int $mergeCandidate
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('merge_candidate')]
     public int $mergeCandidate;
+
+    /**
+     * Rows that change nothing: identical to the existing contact (`no_changes`) or targeting an archived contact (`update_not_allowed`).
+     *
+     * @var int $skip
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('skip')]
+    public int $skip;
 
     /**
      *
@@ -77,6 +95,15 @@ class BusinessContactImportPreview
     public bool $dryRun;
 
     /**
+     * Skipped rows grouped by reason (`no_changes`, `update_not_allowed`, `merge_review_required`).
+     *
+     * @var array<string, int> $skipReasons
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('skip_reasons')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, int>')]
+    public array $skipReasons;
+
+    /**
      *
      * @var bool $queued
      */
@@ -84,29 +111,130 @@ class BusinessContactImportPreview
     public bool $queued;
 
     /**
-     * @param  array<\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewRow>  $rows
+     * Persisted import reference for synchronous and queued execution; null for dry-run.
+     *
+     * @var ?string $importUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('import_uuid')]
+    public ?string $importUuid;
+
+    /**
+     *
+     * @var ?int $addedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('added_count')]
+    public ?int $addedCount;
+
+    /**
+     *
+     * @var ?int $updatedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('updated_count')]
+    public ?int $updatedCount;
+
+    /**
+     *
+     * @var ?int $skippedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('skipped_count')]
+    public ?int $skippedCount;
+
+    /**
+     *
+     * @var ?int $failedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('failed_count')]
+    public ?int $failedCount;
+
+    /**
+     *
+     * @var ?int $warningsCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('warnings_count')]
+    public ?int $warningsCount;
+
+    /**
+     *
+     * @var ?int $unprocessedCount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('unprocessed_count')]
+    public ?int $unprocessedCount;
+
+    /**
+     * Business reading of a finished execution, same as the tracking resource; null for preview, dry-run and queued imports. `nothing_changed` means nothing was created or updated; do not present it as a success.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewOutcomeKind $outcomeKind
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('outcome_kind')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewOutcomeKind|null')]
+    public ?BusinessContactImportPreviewOutcomeKind $outcomeKind;
+
+    /**
+     * Persisted execution status; null for preview and dry-run. Synchronous responses can be failed with unprocessed rows after a concurrent closure.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewStatus $status
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewStatus|null')]
+    public ?BusinessContactImportPreviewStatus $status;
+
+    /**
+     *
+     * @var ?string $failureReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('failure_reason')]
+    public ?string $failureReason;
+
+    /**
+     * @param  array<string>  $sourceHeaders
+     * @param  array<\Factuarea\Sdk\Models\Components\Row>  $rows
      * @param  int  $total
      * @param  int  $create
      * @param  int  $update
      * @param  int  $addRole
      * @param  int  $mergeCandidate
+     * @param  int  $skip
      * @param  int  $conflict
      * @param  int  $invalid
      * @param  bool  $dryRun
+     * @param  array<string, int>  $skipReasons
      * @param  bool  $queued
+     * @param  ?string  $importUuid
+     * @param  ?int  $addedCount
+     * @param  ?int  $updatedCount
+     * @param  ?int  $skippedCount
+     * @param  ?int  $failedCount
+     * @param  ?int  $warningsCount
+     * @param  ?int  $unprocessedCount
+     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewOutcomeKind  $outcomeKind
+     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactImportPreviewStatus  $status
+     * @param  ?string  $failureReason
      * @phpstan-pure
      */
-    public function __construct(array $rows, int $total, int $create, int $update, int $addRole, int $mergeCandidate, int $conflict, int $invalid, bool $dryRun, bool $queued)
+    public function __construct(array $sourceHeaders, array $rows, int $total, int $create, int $update, int $addRole, int $mergeCandidate, int $skip, int $conflict, int $invalid, bool $dryRun, array $skipReasons, bool $queued, ?string $importUuid = null, ?int $addedCount = null, ?int $updatedCount = null, ?int $skippedCount = null, ?int $failedCount = null, ?int $warningsCount = null, ?int $unprocessedCount = null, ?BusinessContactImportPreviewOutcomeKind $outcomeKind = null, ?BusinessContactImportPreviewStatus $status = null, ?string $failureReason = null)
     {
+        $this->sourceHeaders = $sourceHeaders;
         $this->rows = $rows;
         $this->total = $total;
         $this->create = $create;
         $this->update = $update;
         $this->addRole = $addRole;
         $this->mergeCandidate = $mergeCandidate;
+        $this->skip = $skip;
         $this->conflict = $conflict;
         $this->invalid = $invalid;
         $this->dryRun = $dryRun;
+        $this->skipReasons = $skipReasons;
         $this->queued = $queued;
+        $this->importUuid = $importUuid;
+        $this->addedCount = $addedCount;
+        $this->updatedCount = $updatedCount;
+        $this->skippedCount = $skippedCount;
+        $this->failedCount = $failedCount;
+        $this->warningsCount = $warningsCount;
+        $this->unprocessedCount = $unprocessedCount;
+        $this->outcomeKind = $outcomeKind;
+        $this->status = $status;
+        $this->failureReason = $failureReason;
     }
 }

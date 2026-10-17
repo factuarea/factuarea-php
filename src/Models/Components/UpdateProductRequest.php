@@ -124,6 +124,14 @@ class UpdateProductRequest
     public ?float $lowStockThreshold = null;
 
     /**
+     *
+     * @var ?float $grossWeightKg
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('gross_weight_kg')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $grossWeightKg = null;
+
+    /**
      * Product amounts are read-only EUR: only `EUR` (or absence/null) is accepted.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency $currency
@@ -205,6 +213,7 @@ class UpdateProductRequest
      * @param  ?array<?string>  $specifications
      * @param  ?float  $stock
      * @param  ?float  $lowStockThreshold
+     * @param  ?float  $grossWeightKg
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCurrency  $currency
      * @param  ?string  $taxRateId
      * @param  ?array<string, string>  $metadata
@@ -214,7 +223,7 @@ class UpdateProductRequest
      * @param  ?string  $impactToken
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?string $price = null, ?UpdateProductRequestItemKind $itemKind = null, ?UpdateProductRequestBaseUnit $baseUnit = null, ?bool $manageStock = null, ?bool $isActive = null, ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
+    public function __construct(?string $name = null, ?string $price = null, ?UpdateProductRequestItemKind $itemKind = null, ?UpdateProductRequestBaseUnit $baseUnit = null, ?bool $manageStock = null, ?bool $isActive = null, ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
     {
         $this->name = $name;
         $this->price = $price;
@@ -229,6 +238,7 @@ class UpdateProductRequest
         $this->specifications = $specifications;
         $this->stock = $stock;
         $this->lowStockThreshold = $lowStockThreshold;
+        $this->grossWeightKg = $grossWeightKg;
         $this->currency = $currency;
         $this->taxRateId = $taxRateId;
         $this->metadata = $metadata;

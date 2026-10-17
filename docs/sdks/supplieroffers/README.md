@@ -16,7 +16,7 @@ Create a tenant-scoped supplier offer for a product or one of its variants.
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/products/{product}/supplier-offers" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -30,16 +30,16 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
+    company: 'Lind - Jacobi',
     product: 'Incredible Concrete Cheese',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateSupplierProductOfferRequest(
         supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
         purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
@@ -58,7 +58,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/products/{product}/supplier-offers" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.create" method="post" path="/companies/{company}/products/{product}/supplier-offers" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -72,16 +72,16 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersCreateRequest(
+    company: 'Farrell Inc',
     product: 'Elegant Fresh Bike',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateSupplierProductOfferRequest(
         supplierId: '9353861a-fd9e-456e-8a4e-87473aed3aae',
         purchaseUnit: Components\CreateSupplierProductOfferRequestPurchaseUnit::Hur,
@@ -113,7 +113,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -123,7 +123,7 @@ List supplier offers for a product, optionally filtered by variant, supplier, av
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.list" method="get" path="/products/{product}/supplier-offers" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.list" method="get" path="/companies/{company}/products/{product}/supplier-offers" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -137,15 +137,15 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersListRequest(
+    company: 'Legros, Shields and Bailey',
     product: 'Refined Metal Shoes',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersList(
@@ -169,11 +169,11 @@ if ($response->paginatedList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ProductsSupplierOffersDelete
 
@@ -181,7 +181,7 @@ Retire a supplier offer from the active catalog without changing historical purc
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.delete" method="delete" path="/products/{product}/supplier-offers/{offer}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.delete" method="delete" path="/companies/{company}/products/{product}/supplier-offers/{offer}" -->
 ```php
 declare(strict_types=1);
 
@@ -195,17 +195,17 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersDeleteRequest(
+    company: 'Pouros, Kulas and Kuvalis',
     product: 'Rustic Rubber Hat',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersDelete(
@@ -231,7 +231,7 @@ if ($response->statusCode === 200) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -241,7 +241,7 @@ Update cost, unit conversion, availability or activation data of a supplier offe
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="put" path="/products/{product}/supplier-offers/{offer}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -255,17 +255,17 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
+    company: 'Simonis, Nikolaus and Roob',
     product: 'Generic Wooden Mouse',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateSupplierProductOfferRequest(
         supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
         purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
@@ -284,7 +284,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="put" path="/products/{product}/supplier-offers/{offer}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.update" method="patch" path="/companies/{company}/products/{product}/supplier-offers/{offer}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -298,17 +298,17 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersUpdateRequest(
+    company: 'Rosenbaum, Macejkovic and Wyman',
     product: 'Intelligent Soft Salad',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateSupplierProductOfferRequest(
         supplierId: 'cc8fedac-b4cd-401f-8578-6be095739522',
         purchaseUnit: Components\UpdateSupplierProductOfferRequestPurchaseUnit::Kgm,
@@ -340,7 +340,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -350,7 +350,7 @@ Atomically mark this offer as preferred for its product and variant target. No r
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.preferred" method="post" path="/products/{product}/supplier-offers/{offer}/preferred" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.supplier-offers.preferred" method="post" path="/companies/{company}/products/{product}/supplier-offers/{offer}/preferred" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -364,17 +364,17 @@ use Factuarea\Sdk\Models\Operations;
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
         new Components\Security(
-            http: '<YOUR_BEARER_TOKEN_HERE>',
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
         )
     )
     ->build();
 
 $request = new Operations\PublicApiV1ProductsSupplierOffersPreferredRequest(
+    company: 'Hayes - Purdy',
     product: 'Ergonomic Frozen Salad',
     offer: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->supplierOffers->publicApiV1ProductsSupplierOffersPreferred(
@@ -400,6 +400,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

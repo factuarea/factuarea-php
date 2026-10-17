@@ -40,6 +40,7 @@ class PublicApiV1WorkSchedulesCreateResponse
     public array $headers;
 
     /**
+     * Work schedule created. The `Location` header contains the canonical URL of the new work schedule.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesCreateResponseBody $object
      */

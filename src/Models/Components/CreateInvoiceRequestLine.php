@@ -35,12 +35,14 @@ class CreateInvoiceRequestLine
     public ?string $additionalDescription = null;
 
     /**
+     * Unit price. Send a JSON number or a decimal string with up to 4 decimals (`"0.0125"`, `"100.0000"`): the string is the exact form the response returns, so a line read from the API can be sent back unchanged. Derived amounts are computed from it and keep 2 decimals.
      *
-     * @var ?float $unitPrice
+     * @var float|string|null $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('float|string|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $unitPrice = null;
+    public float|string|null $unitPrice = null;
 
     /**
      *
@@ -51,6 +53,7 @@ class CreateInvoiceRequestLine
     public ?string $taxRateId = null;
 
     /**
+     * VAT rate of the line (0–100). Optional: when you omit it (or send `null`) the line takes, in this order, the tax it references or the tax assigned to its product, and otherwise the DEFAULT TAX of your company for this kind of document (tax settings), inherited as a whole: its rate, its indirect-tax regime (IVA, IGIC or IPSI) and its AEAT qualification; an exempt or not-subject default also declares its cause (`exemption_reason`) on the line unless the line sends its own. The line ends up exactly as if you had chosen that tax. If none of them exists the request is rejected with 422 `missing_required_param`, with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line): the API never guesses a rate. A `0` you send is honoured as a real 0 % rate, never confused with «not stated».
      *
      * @var ?float $taxRate
      */
@@ -168,7 +171,7 @@ class CreateInvoiceRequestLine
     public ?CreateInvoiceRequestLineType $lineType = null;
 
     /**
-     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely registered as a purchase invoice.
+     * Reference of the supporting document that originated the disbursement — the receipt or fee number issued by the public body (up to 100 characters). REQUIRED when `line_type` is `SUPLIDO`; leave it out on a normal line. Free text on purpose: the receipt of a public body is rarely a supplier invoice.
      *
      * @var ?string $sourceInvoiceReference
      */
@@ -177,7 +180,7 @@ class CreateInvoiceRequestLine
     public ?string $sourceInvoiceReference = null;
 
     /**
-     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own purchase invoices that back it. A purchase invoice of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
+     * Optional traceability of a disbursement: list of IDs (UUID v7) of your own expenses that back it. An expense of another company is rejected with 422. Omit it (or send `null`) when there is nothing to link.
      *
      * @var ?array<string> $sourceInvoiceIds
      */
@@ -220,6 +223,14 @@ class CreateInvoiceRequestLine
     #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $configurationUuid = null;
+
+    /**
+     *
+     * @var ?float $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $countedQuantity = null;
 
     /**
      * $options
@@ -285,7 +296,7 @@ class CreateInvoiceRequestLine
      * @param  float  $quantity
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
-     * @param  ?float  $unitPrice
+     * @param  float|string|null  $unitPrice
      * @param  ?string  $taxRateId
      * @param  ?float  $taxRate
      * @param  ?float  $retentionRate
@@ -307,6 +318,7 @@ class CreateInvoiceRequestLine
      * @param  ?string  $exemptionReasonText
      * @param  ?float  $lineTotal
      * @param  ?string  $configurationUuid
+     * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOption>  $options
      * @param  ?string  $configurationSignature
      * @param  ?string  $configurationName
@@ -316,7 +328,7 @@ class CreateInvoiceRequestLine
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @phpstan-pure
      */
-    public function __construct(float $quantity, ?string $description = null, ?string $additionalDescription = null, ?float $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?CreateInvoiceRequestRegimeKey $regimeKey = null, ?CreateInvoiceRequestExemptionReason $exemptionReason = null, ?CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null, ?string $configurationUuid = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateInvoiceRequestPriceSource $priceSource = null, ?CreateInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?CreateInvoiceRequestRegimeKey $regimeKey = null, ?CreateInvoiceRequestExemptionReason $exemptionReason = null, ?CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateInvoiceRequestPriceSource $priceSource = null, ?CreateInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
     {
         $this->quantity = $quantity;
         $this->description = $description;
@@ -343,6 +355,7 @@ class CreateInvoiceRequestLine
         $this->exemptionReasonText = $exemptionReasonText;
         $this->lineTotal = $lineTotal;
         $this->configurationUuid = $configurationUuid;
+        $this->countedQuantity = $countedQuantity;
         $this->options = $options;
         $this->configurationSignature = $configurationSignature;
         $this->configurationName = $configurationName;

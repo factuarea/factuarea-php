@@ -13,7 +13,46 @@ namespace Factuarea\Sdk\Models\Components;
 class Details
 {
     /**
-     * UUID of the pre-existing resource that triggered the conflict. Resolvable with a `GET /v1/{resource}/{id}` without an extra `find_by_*` call. Only present on 409 duplication conflicts.
+     * Operation in the authenticated company that must be resolved before another employee-seat mutation.
+     *
+     * @var ?string $operationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('operation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $operationId = null;
+
+    /**
+     * Employee-batch validation failures identified by the stable row_id; no employee was charged or created.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\RowError> $rowErrors
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('row_errors')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\RowError>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $rowErrors = null;
+
+    /**
+     * Stable row_id of every employee-batch row whose external_id is already taken (repeated inside the batch or already in use in the company). Present on 409 `external_id_already_exists` of employee batches; correct those rows and send the batch again.
+     *
+     * @var ?array<string> $rowIds
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('row_ids')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $rowIds = null;
+
+    /**
+     * Review fields that must be corrected before a purchase scan can be converted. Keys use public identifiers, for example supplier_id or lines.0.tax_rate.
+     *
+     * @var ?array<string, array<string>> $fieldErrors
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('field_errors')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, array<string>>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $fieldErrors = null;
+
+    /**
+     * Public identifier (UUID v7) of the resource that already exists, so you can fetch it with a `GET` and no extra `find_by_*` call. Only present on 409 duplication conflicts.
      *
      * @var ?string $existingResourceId
      */
@@ -68,21 +107,84 @@ class Details
     public ?float $received = null;
 
     /**
+     * Current active automation rule count on automation_active_rules_limit_exceeded.
+     *
+     * @var ?int $activeRules
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('active_rules')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $activeRules = null;
+
+    /**
+     * Plan limit reached, including the active automation rule cap on automation_active_rules_limit_exceeded.
+     *
+     * @var ?int $limit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('limit')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $limit = null;
+
+    /**
+     * Resource whose quota was reached on plan_limit_exceeded, for example documents_year or users.
+     *
+     * @var ?string $resource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('resource')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $resource = null;
+
+    /**
+     * Current usage of the resource on plan_limit_exceeded.
+     *
+     * @var ?int $current
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('current')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $current = null;
+
+    /**
+     * End of the quota period on plan_limit_exceeded; null for resources without a period, including platform users.
+     *
+     * @var ?\DateTime $periodEnd
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('period_end')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?\DateTime $periodEnd = null;
+
+    /**
+     * @param  ?string  $operationId
+     * @param  ?array<\Factuarea\Sdk\Models\Components\RowError>  $rowErrors
+     * @param  ?array<string>  $rowIds
+     * @param  ?array<string, array<string>>  $fieldErrors
      * @param  ?string  $existingResourceId
      * @param  ?string  $paymentSetupUrl
      * @param  ?array<string>  $allowedValues
      * @param  ?string  $offendingField
      * @param  ?float  $expected
      * @param  ?float  $received
+     * @param  ?int  $activeRules
+     * @param  ?int  $limit
+     * @param  ?string  $resource
+     * @param  ?int  $current
+     * @param  ?\DateTime  $periodEnd
      * @phpstan-pure
      */
-    public function __construct(?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null)
+    public function __construct(?string $operationId = null, ?array $rowErrors = null, ?array $rowIds = null, ?array $fieldErrors = null, ?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null, ?int $activeRules = null, ?int $limit = null, ?string $resource = null, ?int $current = null, ?\DateTime $periodEnd = null)
     {
+        $this->operationId = $operationId;
+        $this->rowErrors = $rowErrors;
+        $this->rowIds = $rowIds;
+        $this->fieldErrors = $fieldErrors;
         $this->existingResourceId = $existingResourceId;
         $this->paymentSetupUrl = $paymentSetupUrl;
         $this->allowedValues = $allowedValues;
         $this->offendingField = $offendingField;
         $this->expected = $expected;
         $this->received = $received;
+        $this->activeRules = $activeRules;
+        $this->limit = $limit;
+        $this->resource = $resource;
+        $this->current = $current;
+        $this->periodEnd = $periodEnd;
     }
 }

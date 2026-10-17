@@ -1,6 +1,6 @@
 # UpdateTimeTrackingSettingsRequestOvertimeBasis
 
-Overtime computation basis: `weekly` or `daily`.
+Overtime computation basis: `weekly` or `daily`. Optional: when omitted it keeps its current value.
 
 
 ## Values

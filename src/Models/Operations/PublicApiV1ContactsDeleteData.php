@@ -20,10 +20,10 @@ class PublicApiV1ContactsDeleteData
 
     /**
      *
-     * @var bool $archived
+     * @var bool $deleted
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('archived')]
-    public bool $archived;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deleted')]
+    public bool $deleted;
 
     /**
      *
@@ -35,13 +35,13 @@ class PublicApiV1ContactsDeleteData
     /**
      * @param  string  $id
      * @param  string  $object
-     * @param  bool  $archived
+     * @param  bool  $deleted
      * @phpstan-pure
      */
-    public function __construct(string $id, bool $archived, string $object = 'contact')
+    public function __construct(string $id, bool $deleted, string $object = 'contact')
     {
         $this->id = $id;
-        $this->archived = $archived;
+        $this->deleted = $deleted;
         $this->object = $object;
     }
 }

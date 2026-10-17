@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** MonthlyTimeSheet - The live monthly time sheet of an employee for the open (in-progress) period of the Control Horario (time tracking) module. A computed resource with no entity identity: it is keyed by employee + month, so it exposes `employee_id` (UUID v7) and never an `id`. Totals are in minutes; `days` is the daily breakdown. It is recomputed on every request, so a just-recorded clock entry is reflected without closing the month. */
+/** MonthlyTimeSheet - The live monthly time sheet of an employee for the open (in-progress) period of the Control Horario (time tracking) module. A computed resource with no entity identity: it is keyed by employee + month, so it exposes `employee_id` (UUID v7) and never an `id`. Totals are in minutes; `days` is the daily breakdown. It is recomputed on every request, so a just-recorded clock entry is reflected without closing the month. The `total_*` fields cover the whole month and, in the current month, are a projection; `to_date` holds the actual accumulation of the closed days (every day before today). */
 class MonthlyTimeSheet
 {
     /**
@@ -38,7 +38,7 @@ class MonthlyTimeSheet
     public string $month;
 
     /**
-     * Total expected working minutes of the month (holidays and approved absences already discounted).
+     * Total expected working minutes of the whole month, including today and the remaining days (holidays, approved absences, days without a schedule and days outside the employment period already count as 0).
      *
      * @var int $totalExpectedMinutes
      */
@@ -46,7 +46,7 @@ class MonthlyTimeSheet
     public int $totalExpectedMinutes;
 
     /**
-     * Total worked minutes of the month.
+     * Total worked minutes of the month so far, today included.
      *
      * @var int $totalWorkedMinutes
      */
@@ -54,7 +54,7 @@ class MonthlyTimeSheet
     public int $totalWorkedMinutes;
 
     /**
-     * Month balance in minutes (worked − expected).
+     * Month balance in minutes as the sum of the daily balances. In the current month it is a projection that already subtracts the expected minutes of today and of the remaining days; use `to_date.balance_minutes` for the actual balance.
      *
      * @var int $totalBalanceMinutes
      */
@@ -70,7 +70,16 @@ class MonthlyTimeSheet
     public int $totalOvertimeMinutes;
 
     /**
-     * Daily breakdown of the month.
+     * The month-to-date accumulation of the closed days (every day before today) for the Control Horario (time tracking) module. It is computed from the same daily breakdown as the `total_*` fields, which instead cover the whole month and are a projection: in the current month they already subtract the expected minutes of today and of the remaining days. Today is left out because its workday is still in progress. In a finished month it equals the `total_*` fields; when no day of the month has closed yet (its first day, or a future month), `through_date` is `null` and the four figures are 0.
+     *
+     * @var \Factuarea\Sdk\Models\Components\TimeBalanceToDate $toDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('to_date')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TimeBalanceToDate')]
+    public TimeBalanceToDate $toDate;
+
+    /**
+     * Daily breakdown of the month. Each day includes `is_unscheduled` and `is_outside_employment`.
      *
      * @var array<\Factuarea\Sdk\Models\Components\DayBalance> $days
      */
@@ -86,10 +95,11 @@ class MonthlyTimeSheet
      * @param  int  $totalWorkedMinutes
      * @param  int  $totalBalanceMinutes
      * @param  int  $totalOvertimeMinutes
+     * @param  \Factuarea\Sdk\Models\Components\TimeBalanceToDate  $toDate
      * @param  array<\Factuarea\Sdk\Models\Components\DayBalance>  $days
      * @phpstan-pure
      */
-    public function __construct(MonthlyTimeSheetObject $object, string $employeeId, string $month, int $totalExpectedMinutes, int $totalWorkedMinutes, int $totalBalanceMinutes, int $totalOvertimeMinutes, array $days)
+    public function __construct(MonthlyTimeSheetObject $object, string $employeeId, string $month, int $totalExpectedMinutes, int $totalWorkedMinutes, int $totalBalanceMinutes, int $totalOvertimeMinutes, TimeBalanceToDate $toDate, array $days)
     {
         $this->object = $object;
         $this->employeeId = $employeeId;
@@ -98,6 +108,7 @@ class MonthlyTimeSheet
         $this->totalWorkedMinutes = $totalWorkedMinutes;
         $this->totalBalanceMinutes = $totalBalanceMinutes;
         $this->totalOvertimeMinutes = $totalOvertimeMinutes;
+        $this->toDate = $toDate;
         $this->days = $days;
     }
 }

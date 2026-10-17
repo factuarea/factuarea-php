@@ -1,5 +1,7 @@
 # PublicApiV1TimeCorrectionsCreateResponseBody
 
+Time correction requested. The `Location` header contains the canonical URL of the new correction request.
+
 
 ## Fields
 

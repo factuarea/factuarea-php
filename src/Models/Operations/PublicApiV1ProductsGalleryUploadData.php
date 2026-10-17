@@ -28,7 +28,7 @@ class PublicApiV1ProductsGalleryUploadData
     public string $url;
 
     /**
-     * MIME type de la imagen.
+     * MIME type of the image.
      *
      * @var \Factuarea\Sdk\Models\Operations\ContentType $contentType
      */

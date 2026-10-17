@@ -45,7 +45,7 @@ final class FactuareaVersionHookTest extends TestCase
     public function test_pins_the_factuarea_version_header_on_every_method(string $method): void
     {
         $hook = new FactuareaVersionHook();
-        $request = new Request($method, 'https://api.factuarea.com/v1/invoices');
+        $request = new Request($method, 'https://api.factuarea.com/v1/companies/019e0000-0000-7000-8000-0000000000c0/invoices');
 
         $result = $hook->beforeRequest($this->context, $request);
 
@@ -55,9 +55,9 @@ final class FactuareaVersionHookTest extends TestCase
         );
     }
 
-    public function test_default_version_is_the_frozen_spec_date(): void
+    public function test_default_version_is_the_contract_version_of_the_models(): void
     {
-        $this->assertSame('2026-06-04', FactuareaVersionHook::DEFAULT_VERSION);
+        $this->assertSame('2026-10-01', FactuareaVersionHook::DEFAULT_VERSION);
         $this->assertMatchesRegularExpression(
             '/^\d{4}-\d{2}-\d{2}$/',
             FactuareaVersionHook::DEFAULT_VERSION,
@@ -67,7 +67,7 @@ final class FactuareaVersionHookTest extends TestCase
     public function test_does_not_overwrite_a_caller_provided_version(): void
     {
         $hook = new FactuareaVersionHook();
-        $request = (new Request('GET', 'https://api.factuarea.com/v1/invoices'))
+        $request = (new Request('GET', 'https://api.factuarea.com/v1/companies/019e0000-0000-7000-8000-0000000000c0/invoices'))
             ->withHeader('Factuarea-Version', '2099-01-01');
 
         $result = $hook->beforeRequest($this->context, $request);
@@ -78,7 +78,7 @@ final class FactuareaVersionHookTest extends TestCase
     public function test_honours_a_custom_pinned_version(): void
     {
         $hook = new FactuareaVersionHook('2026-12-31');
-        $request = new Request('POST', 'https://api.factuarea.com/v1/invoices');
+        $request = new Request('POST', 'https://api.factuarea.com/v1/companies/019e0000-0000-7000-8000-0000000000c0/invoices');
 
         $result = $hook->beforeRequest($this->context, $request);
 
