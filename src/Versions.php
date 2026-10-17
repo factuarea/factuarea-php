@@ -50,11 +50,9 @@ class Versions
     /**
      * List the versions of an automation rule
      *
-     * Browse the sealed versions of the definition of a rule, from the most recent to the oldest. Every edit seals a version and every run keeps a pointer to the one it executed, so this is how you reconstruct what a rule looked like when it ran.
-     *
-     * IMPORTANT — the cursor of THIS listing is not a UUID. It is the only listing of the automation surface whose read path still paginates by offset, so `next_cursor` carries an opaque token of a different shape (a page number as a string). Treat it as strictly opaque: pass back verbatim the value you received and never build, parse or validate one yourself. The envelope is the canonical one, `limit` behaves as everywhere else, and `ending_before` steps one page back.
-     *
-     * A rule of another company returns 200 with an empty list instead of 404 — an empty page tells an attacker nothing about whether the rule exists.
+     * List the sealed versions of a rule definition, newest first.
+     * - The cursor of this listing is an opaque page-number token: pass `next_cursor` back verbatim, never build it.
+     * - A rule of another company returns 200 with an empty list, not 404.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesVersionsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesVersionsListResponse

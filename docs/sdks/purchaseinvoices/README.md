@@ -70,6 +70,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.attach_file" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/attach-file" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesAttachFileRequest(
+    company: 'd45c4b8d-b8ac-4985-be82-a70645bff097',
+    purchaseInvoice: 'c310f08e-d5b7-41d2-8670-bbda8169523f',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AttachPurchaseInvoiceFileRequest(
+        file: new Components\AttachPurchaseInvoiceFileRequestFile(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesAttachFile(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.attach_file" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/attach-file" example="invalid_api_key" -->
@@ -154,6 +196,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.attach_file" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/attach-file" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesAttachFileRequest(
+    company: '6d64bcbc-2e83-4f4c-97de-4763f8b7c6b8',
+    purchaseInvoice: 'e14751c3-be98-465a-8861-e9f1d5defa09',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AttachPurchaseInvoiceFileRequest(
+        file: new Components\AttachPurchaseInvoiceFileRequestFile(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesAttachFile(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.attach_file" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/attach-file" example="success" -->
@@ -178,6 +262,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseInvoicesAttachFileRequest(
     company: 'Schuppe Inc',
     purchaseInvoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AttachPurchaseInvoiceFileRequest(
+        file: new Components\AttachPurchaseInvoiceFileRequestFile(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesAttachFile(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.attach_file" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/attach-file" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesAttachFileRequest(
+    company: '499e9afc-846d-4db5-b23d-62fd89454a16',
+    purchaseInvoice: '8f7c7a0e-0d86-4f9b-8cd1-cfbae4f6f2a1',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AttachPurchaseInvoiceFileRequest(
@@ -247,6 +373,44 @@ $body = new Components\BulkDeletePurchaseInvoicesRequest(
 
 $response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkDelete(
     company: '6ed38fdd-ea11-4600-aa0a-596cd3a874f1',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_delete" method="post" path="/companies/{company}/purchase-invoices/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeletePurchaseInvoicesRequest(
+    ids: [
+        'ed38fdde-a116-400a-b0a5-96cd3a874f19',
+    ],
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkDelete(
+    company: 'f4b4126f-953f-4882-a5a5-b34cb5709c13',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -333,6 +497,44 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_delete" method="post" path="/companies/{company}/purchase-invoices/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeletePurchaseInvoicesRequest(
+    ids: [
+        'ed38fdde-a116-400a-b0a5-96cd3a874f19',
+    ],
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkDelete(
+    company: '6ed38fdd-ea11-4600-aa0a-596cd3a874f1',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_delete" method="post" path="/companies/{company}/purchase-invoices/bulk-delete" example="success" -->
@@ -361,6 +563,44 @@ $body = new Components\BulkDeletePurchaseInvoicesRequest(
 
 $response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkDelete(
     company: 'Lehner - Yundt',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_delete" method="post" path="/companies/{company}/purchase-invoices/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeletePurchaseInvoicesRequest(
+    ids: [
+        'ed38fdde-a116-400a-b0a5-96cd3a874f19',
+    ],
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkDelete(
+    company: 'afcac34d-5214-4ca6-a061-cd725ae10d67',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -426,6 +666,45 @@ $body = new Components\BulkStatusPurchaseInvoicesV1Request(
 
 $response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkStatus(
     company: '43746f64-5dae-401c-9621-4ac406b3cc6a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_status" method="post" path="/companies/{company}/purchase-invoices/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusPurchaseInvoicesV1Request(
+    ids: [
+        '3746f645-dae0-41c6-b214-ac406b3cc6a6',
+    ],
+    newStatus: Components\BulkStatusPurchaseInvoicesV1RequestNewStatus::Paid,
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkStatus(
+    company: 'fa13d5ac-fa14-48f8-bee0-bff0d716a81c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -514,6 +793,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_status" method="post" path="/companies/{company}/purchase-invoices/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusPurchaseInvoicesV1Request(
+    ids: [
+        '3746f645-dae0-41c6-b214-ac406b3cc6a6',
+    ],
+    newStatus: Components\BulkStatusPurchaseInvoicesV1RequestNewStatus::Paid,
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkStatus(
+    company: '43746f64-5dae-401c-9621-4ac406b3cc6a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_status" method="post" path="/companies/{company}/purchase-invoices/bulk-status" example="success" -->
@@ -553,6 +871,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.bulk_status" method="post" path="/companies/{company}/purchase-invoices/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusPurchaseInvoicesV1Request(
+    ids: [
+        '3746f645-dae0-41c6-b214-ac406b3cc6a6',
+    ],
+    newStatus: Components\BulkStatusPurchaseInvoicesV1RequestNewStatus::Paid,
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesBulkStatus(
+    company: '03e714a8-4128-4e63-8bbb-44c2239d4348',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -577,7 +934,9 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesCreate
 
-Record an invoice received from a supplier. Catalog lines accept `product_id`, `variant_id`, `presentation_id`, `supplier_offer_id` and an optional `confirmed_base_quantity`. When `supplier_offer_id` is provided, the supplier cost, purchase unit and base-unit conversion are frozen in the invoice line snapshot; `unit_price` may be omitted. Creating the invoice as `pending` registers the inbound stock once. A `draft` invoice does not affect stock until it is later marked as paid.
+Record an invoice received from a supplier.
+- With `supplier_offer_id`, cost, purchase unit and base conversion are frozen; `unit_price` is optional.
+- `pending` registers inbound stock once; `draft` leaves stock untouched until marked as paid.
 
 ### Example Usage: api_key_revoked
 
@@ -618,6 +977,55 @@ $body = new Components\CreatePurchaseInvoiceRequest(
 
 $response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesCreate(
     company: '0f749d2a-755e-408d-9ab4-4d96e8847656',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.create" method="post" path="/companies/{company}/purchase-invoices" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreatePurchaseInvoiceRequest(
+    externalInvoiceNumber: '<value>',
+    issuedOn: LocalDate::parse('2025-04-26'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreatePurchaseInvoiceRequestLine(
+            description: 'gee till bidet annually towards bell opposite',
+            quantity: 543.83,
+            unitPrice: 5791.7,
+            taxRate: 5996.27,
+        ),
+    ],
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesCreate(
+    company: '7b810d80-d924-4994-87d4-30bfd1216d02',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -726,6 +1134,55 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.create" method="post" path="/companies/{company}/purchase-invoices" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreatePurchaseInvoiceRequest(
+    externalInvoiceNumber: '<value>',
+    issuedOn: LocalDate::parse('2025-04-26'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreatePurchaseInvoiceRequestLine(
+            description: 'gee till bidet annually towards bell opposite',
+            quantity: 543.83,
+            unitPrice: 5791.7,
+            taxRate: 5996.27,
+        ),
+    ],
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesCreate(
+    company: '90f749d2-a755-4e08-9dab-44d96e884765',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.create" method="post" path="/companies/{company}/purchase-invoices" example="success" -->
@@ -765,6 +1222,55 @@ $body = new Components\CreatePurchaseInvoiceRequest(
 
 $response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesCreate(
     company: 'Stoltenberg Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.create" method="post" path="/companies/{company}/purchase-invoices" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreatePurchaseInvoiceRequest(
+    externalInvoiceNumber: '<value>',
+    issuedOn: LocalDate::parse('2025-04-26'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreatePurchaseInvoiceRequestLine(
+            description: 'gee till bidet annually towards bell opposite',
+            quantity: 543.83,
+            unitPrice: 5791.7,
+            taxRate: 5996.27,
+        ),
+    ],
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesCreate(
+    company: '88292ad8-6530-4412-a41c-01a0933aa16e',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1019,6 +1525,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.update" method="patch" path="/companies/{company}/purchase-invoices/{purchase_invoice}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesUpdateRequest(
+    company: '8197d607-5f58-4fc1-8505-d3835bbb06da',
+    purchaseInvoice: 'be64f484-99eb-46a7-9743-e4dba4402f9b',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdatePurchaseInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.update" method="patch" path="/companies/{company}/purchase-invoices/{purchase_invoice}" example="invalid_api_key" -->
@@ -1103,6 +1651,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.update" method="patch" path="/companies/{company}/purchase-invoices/{purchase_invoice}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesUpdateRequest(
+    company: '37d784e4-e7d6-4002-ada5-d1d0c38684b1',
+    purchaseInvoice: '4c5e7c2f-419f-47ca-a0e6-6eefdd53399f',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdatePurchaseInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.update" method="patch" path="/companies/{company}/purchase-invoices/{purchase_invoice}" example="success" -->
@@ -1127,6 +1717,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseInvoicesUpdateRequest(
     company: 'Tremblay - Grant',
     purchaseInvoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdatePurchaseInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.update" method="patch" path="/companies/{company}/purchase-invoices/{purchase_invoice}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesUpdateRequest(
+    company: '1f103d13-6d9c-4ecb-8b66-e0be2ba98f7d',
+    purchaseInvoice: '15722f02-2267-4b02-be06-58c3a59d6e60',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdatePurchaseInvoiceRequest(
@@ -1284,7 +1916,9 @@ if ($response->twoHundredApplicationPdfBytes !== null) {
 
 ## publicApiV1PurchaseInvoicesPaymentReceipt
 
-Streams the PDF receipt of ONE payment of an expense, partial payments included: every active payment has its own receipt, which shows the expense as it stood right after that payment (payments up to it, amount paid and amount pending). Without `payment_id` it returns the receipt of the most recent active payment (by payment date, then by registration). Returns 422 when the expense has no active payments or when the requested payment has been reversed, and 404 when the expense or `payment_id` does not exist.
+Stream the PDF receipt of one payment of an expense, partial payments included.
+- Without `payment_id`, returns the receipt of the most recent active payment.
+- Returns 422 without active payments or if reversed; 404 if the expense or `payment_id` is unknown.
 
 ### Example Usage
 
@@ -1380,6 +2014,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.find_by_external_id" method="post" path="/companies/{company}/purchase-invoices/find-by-external-id" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindPurchaseInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesFindByExternalId(
+    company: 'a17f1537-2afb-4630-bda4-123ef7d1dda3',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.find_by_external_id" method="post" path="/companies/{company}/purchase-invoices/find-by-external-id" example="invalid_api_key" -->
@@ -1450,6 +2119,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.find_by_external_id" method="post" path="/companies/{company}/purchase-invoices/find-by-external-id" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindPurchaseInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesFindByExternalId(
+    company: 'f3f86b42-43ea-468a-86b4-b2650ad6c0a3',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.find_by_external_id" method="post" path="/companies/{company}/purchase-invoices/find-by-external-id" example="success" -->
@@ -1476,6 +2180,41 @@ $body = new Components\FindPurchaseInvoiceByExternalIdRequest(
 
 $response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesFindByExternalId(
     company: 'Fadel, Wiza and MacGyver',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.find_by_external_id" method="post" path="/companies/{company}/purchase-invoices/find-by-external-id" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindPurchaseInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesFindByExternalId(
+    company: 'b95d58fe-d416-424a-8a65-44361b271a77',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1792,7 +2531,9 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesRegisterPayment
 
-Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` cannot be later than today (an earlier date than the supplier document issue date is accepted as an advance payment), and a cancelled expense accepts no payments. Once the accumulated payments cover the total, the expense settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
+Record a partial or total payment against an expense and append it to its ledger; returns `201` with a `Location` header.
+- Returns `422` if amount is zero or above the balance, `paid_on` is future, or the expense is cancelled.
+- When payments cover the total the expense settles on its own; no `mark_paid` call is needed.
 
 ### Example Usage: api_key_revoked
 
@@ -1818,6 +2559,47 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest(
     company: '94553ff2-ec55-4384-948b-ca931b11ace8',
     purchaseInvoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RegisterPurchaseInvoicePaymentRequest(
+        amount: 6207.65,
+        paidOn: LocalDate::parse('2024-10-31'),
+        paymentMethod: '<value>',
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesRegisterPayment(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.register_payment" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/payments" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest(
+    company: '63370159-3b49-40fe-8422-4a9b0500d606',
+    purchaseInvoice: '85a1e7bb-ab77-4c51-bc9f-bbe10db61259',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RegisterPurchaseInvoicePaymentRequest(
         amount: 6207.65,
@@ -1915,6 +2697,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.register_payment" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/payments" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest(
+    company: '94553ff2-ec55-4384-948b-ca931b11ace8',
+    purchaseInvoice: '732cb3e1-4074-4113-9505-59487d55bc41',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RegisterPurchaseInvoicePaymentRequest(
+        amount: 6207.65,
+        paidOn: LocalDate::parse('2024-10-31'),
+        paymentMethod: '<value>',
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesRegisterPayment(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.register_payment" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/payments" example="success" -->
@@ -1956,6 +2779,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_invoices.register_payment" method="post" path="/companies/{company}/purchase-invoices/{purchase_invoice}/payments" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest(
+    company: 'a0ec3662-c5b1-482f-86a1-9c636244aad5',
+    purchaseInvoice: 'f5d133c2-835a-480a-921f-e75f80996593',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RegisterPurchaseInvoicePaymentRequest(
+        amount: 6207.65,
+        paidOn: LocalDate::parse('2024-10-31'),
+        paymentMethod: '<value>',
+    ),
+);
+
+$response = $sdk->purchaseInvoices->publicApiV1PurchaseInvoicesRegisterPayment(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -1977,7 +2841,9 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseInvoicesMarkPaid
 
-Record payment of an expense using the optional `paid_on` date (defaults to today; it cannot be later than today, and an earlier date than the supplier document issue date is accepted as an advance payment). When a draft expense contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending expense has already registered them, so marking it as paid never duplicates stock.
+Record payment of an expense, using the optional `paid_on` date (defaults to today, never later than today).
+- A draft expense with stock-managed lines registers its inbound stock exactly once on this transition.
+- A pending expense already registered it, so marking it paid never duplicates stock.
 
 ### Example Usage
 

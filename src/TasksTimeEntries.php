@@ -287,7 +287,9 @@ class TasksTimeEntries
     /**
      * List task time entries
      *
-     * List the time logged on a task, newest first, with its author, period, duration, whether it is billable and whether it was invoiced. Task time entries are the time spent on work, not the working-day clock-ins of the time tracking module (`/v1/companies/{company}/time-entries`). Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+     * List the time logged on a task, newest first, with author, period, duration, `billable` flag and whether it was invoiced.
+     * - It is task time, not the working-day clock-ins at `/v1/companies/{company}/time-entries`.
+     * - Cursor-paginated: pass `next_cursor` as `starting_after`; `has_more` tells if there are more.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksTimeEntriesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksTimeEntriesListResponse

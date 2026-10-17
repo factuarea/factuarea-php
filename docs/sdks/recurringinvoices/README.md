@@ -123,6 +123,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteRecurringInvoicesRequest(
+    ids: [],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
+    company: '13d4881e-3a8d-44c3-a2e6-a345f42d1c82',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="invalid_api_key" -->
@@ -195,6 +231,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteRecurringInvoicesRequest(
+    ids: [],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
+    company: '21f2575e-e368-4b6a-a489-5863eac0e24e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="success" -->
@@ -231,6 +303,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteRecurringInvoicesRequest(
+    ids: [],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
+    company: 'aada0a85-bbc1-4aa2-8ff1-c2d8b760f41a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -255,8 +363,49 @@ if ($response->object !== null) {
 
 ## publicApiV1RecurringInvoicesBulkStatus
 
-Move up to 50 recurring invoices (by id) to a status from the closed set `[active, paused]`: `paused` pauses the active ones and `active` resumes the paused ones, each through the same single transition —and therefore the same aggregate guards— as `POST /companies/{company}/recurring-invoices/{recurring_invoice}/pause` and `/resume`. Returns a `BulkPartialSuccessResult`; nothing aborts the batch: ids that are not found, already in the target status, cancelled or with their occurrences exhausted come back in `failures[]` with their `error_code` and a Spanish `error_message`.
+Moves up to 50 recurring invoices (by id) to `active` or `paused`, each through the same transition as `pause` and `resume`.
+- Returns a `BulkPartialSuccessResult`; the batch never aborts.
+- Not found, already in target status, cancelled or exhausted ids come back in `failures[]` with `error_code`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusRecurringInvoicesV1Request(
+    ids: [
+        '9fdc4d2e-2ef6-4e57-a569-db18a914455c',
+    ],
+    newStatus: Components\BulkStatusRecurringInvoicesV1RequestNewStatus::Active,
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
+    company: 'b43a546c-ec12-46a1-9994-1c9ade2b8eb7',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="missing_api_key" -->
@@ -296,6 +445,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusRecurringInvoicesV1Request(
+    ids: [
+        '9fdc4d2e-2ef6-4e57-a569-db18a914455c',
+    ],
+    newStatus: Components\BulkStatusRecurringInvoicesV1RequestNewStatus::Active,
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
+    company: '79fdc4d2-e2ef-46e5-b756-9db18a914455',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="success" -->
@@ -325,6 +513,45 @@ $body = new Components\BulkStatusRecurringInvoicesV1Request(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
     company: 'Mayert and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusRecurringInvoicesV1Request(
+    ids: [
+        '9fdc4d2e-2ef6-4e57-a569-db18a914455c',
+    ],
+    newStatus: Components\BulkStatusRecurringInvoicesV1RequestNewStatus::Active,
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
+    company: '18b8bc42-a046-406f-834b-a6493a12a265',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -454,6 +681,53 @@ $body = new Components\CreateRecurringInvoiceRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
     company: 'fde75c17-ddda-405e-907b-451493319737',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateRecurringInvoiceRequest(
+    clientId: '51493319-7376-4241-9b8a-c13e605d7d5a',
+    frequency: Components\CreateRecurringInvoiceRequestFrequency::Monthly,
+    startOn: LocalDate::parse('2025-04-18'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateRecurringInvoiceRequestLine(
+            quantity: 4510.94,
+        ),
+    ],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
+    company: '241b8ac1-3e60-45d7-ad5a-776c719fd17d',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -604,6 +878,53 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateRecurringInvoiceRequest(
+    clientId: '51493319-7376-4241-9b8a-c13e605d7d5a',
+    frequency: Components\CreateRecurringInvoiceRequestFrequency::Monthly,
+    startOn: LocalDate::parse('2025-04-18'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateRecurringInvoiceRequestLine(
+            quantity: 4510.94,
+        ),
+    ],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
+    company: 'fde75c17-ddda-405e-907b-451493319737',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="success" -->
@@ -641,6 +962,53 @@ $body = new Components\CreateRecurringInvoiceRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
     company: 'Romaguera Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateRecurringInvoiceRequest(
+    clientId: '51493319-7376-4241-9b8a-c13e605d7d5a',
+    frequency: Components\CreateRecurringInvoiceRequestFrequency::Monthly,
+    startOn: LocalDate::parse('2025-04-18'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateRecurringInvoiceRequestLine(
+            quantity: 4510.94,
+        ),
+    ],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
+    company: '4eb5ef8e-82d0-4a22-a0fd-c58a5e8f95c4',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -895,6 +1263,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
+    company: '6cc440b4-80a6-43ea-9ded-feb716eb5335',
+    recurringInvoice: '3d7bc2e7-3a6d-456a-bf8c-b414b65873d5',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateRecurringInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="invalid_api_key" -->
@@ -979,6 +1389,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
+    company: '511fefae-0a10-44b9-9359-a0b82d5d3845',
+    recurringInvoice: '1312e3bb-6765-4eda-a470-344b40311c8e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateRecurringInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="success" -->
@@ -1003,6 +1455,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
     company: 'Towne, White and Murazik',
     recurringInvoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateRecurringInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
+    company: '7ba2ce94-e861-4d31-b603-d0973ee7162d',
+    recurringInvoice: 'ce6f7a8e-c3b9-4359-b55a-8ff02a7447ca',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateRecurringInvoiceRequest(
@@ -1070,6 +1564,41 @@ $body = new Components\FindRecurringInvoiceByExternalIdRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
     company: '5e0e0e91-d10f-43fd-bb90-d27e6d9cdf1c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindRecurringInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
+    company: '9a6ca220-0210-4e0e-b7d4-2dbcc2a9a181',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1149,6 +1678,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindRecurringInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
+    company: '5e0e0e91-d10f-43fd-bb90-d27e6d9cdf1c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="success" -->
@@ -1175,6 +1739,41 @@ $body = new Components\FindRecurringInvoiceByExternalIdRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
     company: 'Tromp Group',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindRecurringInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
+    company: 'b6bcc514-1250-421f-a561-76d31c07e187',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

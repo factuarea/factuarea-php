@@ -71,6 +71,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.accept" method="post" path="/companies/{company}/proformas/{proforma}/accept" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasAcceptRequest(
+    company: 'cb4e78fd-8ade-44ea-a3fc-8e65cc2e227a',
+    proforma: 'a6d9b08f-363e-4331-8392-212761997d12',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AcceptProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasAccept(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.accept" method="post" path="/companies/{company}/proformas/{proforma}/accept" example="invalid_api_key" -->
@@ -155,6 +197,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.accept" method="post" path="/companies/{company}/proformas/{proforma}/accept" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasAcceptRequest(
+    company: 'e8d21b98-c5ed-4d81-a3f0-0d2c0f319122',
+    proforma: '750d7a27-f788-4b0f-90cf-04b36cbdabd4',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AcceptProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasAccept(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.accept" method="post" path="/companies/{company}/proformas/{proforma}/accept" example="success" -->
@@ -179,6 +263,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProformasAcceptRequest(
     company: 'Reinger - McGlynn',
     proforma: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AcceptProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasAccept(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.accept" method="post" path="/companies/{company}/proformas/{proforma}/accept" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasAcceptRequest(
+    company: '9cb4c7a2-a8fe-423d-bb67-781cdfa49688',
+    proforma: '165f5313-8066-43d6-a720-48705d8b6d82',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AcceptProformaRequest(
@@ -250,6 +376,46 @@ $body = new Components\BulkDeleteProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkDelete(
     company: 'e39679e5-01bd-4f43-aefb-a629c7ec14b4',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_delete" method="post" path="/companies/{company}/proformas/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteProformasV1Request(
+    ids: [
+        '39679e50-1bdf-443e-bfba-629c7ec14b49',
+        '92a1863d-93ca-431b-a06c-ad39de040d63',
+        '4fbbc939-d13c-4a24-bafb-1f3cccf1ab4b',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkDelete(
+    company: 'f92a1863-d93c-4a31-8b06-cad39de040d6',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -340,6 +506,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_delete" method="post" path="/companies/{company}/proformas/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteProformasV1Request(
+    ids: [
+        '39679e50-1bdf-443e-bfba-629c7ec14b49',
+        '92a1863d-93ca-431b-a06c-ad39de040d63',
+        '4fbbc939-d13c-4a24-bafb-1f3cccf1ab4b',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkDelete(
+    company: 'e39679e5-01bd-4f43-aefb-a629c7ec14b4',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_delete" method="post" path="/companies/{company}/proformas/bulk-delete" example="success" -->
@@ -370,6 +576,46 @@ $body = new Components\BulkDeleteProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkDelete(
     company: 'Mitchell and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_delete" method="post" path="/companies/{company}/proformas/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteProformasV1Request(
+    ids: [
+        '39679e50-1bdf-443e-bfba-629c7ec14b49',
+        '92a1863d-93ca-431b-a06c-ad39de040d63',
+        '4fbbc939-d13c-4a24-bafb-1f3cccf1ab4b',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkDelete(
+    company: 'a4fbbc93-9d13-4ca2-a4af-b1f3cccf1ab4',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -436,6 +682,46 @@ $body = new Components\BulkPdfProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkPdf(
     company: 'c06da3fc-ec25-4254-af27-116f04877733',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_pdf" method="post" path="/companies/{company}/proformas/bulk-pdf" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfProformasV1Request(
+    ids: [
+        '06da3fce-c252-454f-a271-16f048777338',
+        'cf679d7a-a886-4246-b1f1-c9a42d972f34',
+        '9662f509-4ab1-454c-8eea-224d8a833a4d',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkPdf(
+    company: '2335a09c-c8c5-4fdd-97e7-0e89b37032a2',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -526,6 +812,86 @@ if ($response->bytes !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_pdf" method="post" path="/companies/{company}/proformas/bulk-pdf" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfProformasV1Request(
+    ids: [
+        '06da3fce-c252-454f-a271-16f048777338',
+        'cf679d7a-a886-4246-b1f1-c9a42d972f34',
+        '9662f509-4ab1-454c-8eea-224d8a833a4d',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkPdf(
+    company: '8db1c278-a1fa-4cc0-97d7-b0649efac048',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_pdf" method="post" path="/companies/{company}/proformas/bulk-pdf" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfProformasV1Request(
+    ids: [
+        '06da3fce-c252-454f-a271-16f048777338',
+        'cf679d7a-a886-4246-b1f1-c9a42d972f34',
+        '9662f509-4ab1-454c-8eea-224d8a833a4d',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkPdf(
+    company: '011b91bc-c442-4223-9b39-f60816a4327e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -582,6 +948,46 @@ $body = new Components\BulkSendProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkSend(
     company: 'f74f133a-1583-4f56-b4e7-28364ffc2ad0',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_send" method="post" path="/companies/{company}/proformas/bulk-send" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendProformasV1Request(
+    ids: [
+        '74f133a1-583f-4564-ae72-8364ffc2ad0f',
+        '57b10cae-f8b3-4a55-b882-600388396437',
+        '0251ac7e-34b1-4e41-9cf9-47c4fe335677',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkSend(
+    company: 'a57b10ca-ef8b-43a5-9588-260038839643',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -672,6 +1078,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_send" method="post" path="/companies/{company}/proformas/bulk-send" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendProformasV1Request(
+    ids: [
+        '74f133a1-583f-4564-ae72-8364ffc2ad0f',
+        '57b10cae-f8b3-4a55-b882-600388396437',
+        '0251ac7e-34b1-4e41-9cf9-47c4fe335677',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkSend(
+    company: 'f74f133a-1583-4f56-b4e7-28364ffc2ad0',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_send" method="post" path="/companies/{company}/proformas/bulk-send" example="success" -->
@@ -702,6 +1148,46 @@ $body = new Components\BulkSendProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkSend(
     company: 'Kuhlman, Haag and Zieme',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_send" method="post" path="/companies/{company}/proformas/bulk-send" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendProformasV1Request(
+    ids: [
+        '74f133a1-583f-4564-ae72-8364ffc2ad0f',
+        '57b10cae-f8b3-4a55-b882-600388396437',
+        '0251ac7e-34b1-4e41-9cf9-47c4fe335677',
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkSend(
+    company: 'c0251ac7-e34b-41e4-91cf-947c4fe33567',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -765,6 +1251,45 @@ $body = new Components\BulkStatusProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkStatus(
     company: '51e72765-b090-484d-9312-14c4080e99e5',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_status" method="post" path="/companies/{company}/proformas/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusProformasV1Request(
+    ids: [
+        '1e72765b-0908-44d3-9121-4c4080e99e54',
+    ],
+    newStatus: Components\BulkStatusProformasV1RequestNewStatus::Rejected,
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkStatus(
+    company: '5e627991-5012-4553-b31f-f57451174f89',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -851,6 +1376,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_status" method="post" path="/companies/{company}/proformas/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusProformasV1Request(
+    ids: [
+        '1e72765b-0908-44d3-9121-4c4080e99e54',
+    ],
+    newStatus: Components\BulkStatusProformasV1RequestNewStatus::Rejected,
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkStatus(
+    company: '51e72765-b090-484d-9312-14c4080e99e5',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_status" method="post" path="/companies/{company}/proformas/bulk-status" example="success" -->
@@ -880,6 +1444,45 @@ $body = new Components\BulkStatusProformasV1Request(
 
 $response = $sdk->proformas->publicApiV1ProformasBulkStatus(
     company: 'Boyle and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.bulk_status" method="post" path="/companies/{company}/proformas/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusProformasV1Request(
+    ids: [
+        '1e72765b-0908-44d3-9121-4c4080e99e54',
+    ],
+    newStatus: Components\BulkStatusProformasV1RequestNewStatus::Rejected,
+);
+
+$response = $sdk->proformas->publicApiV1ProformasBulkStatus(
+    company: '5a93d905-596b-4e75-a61f-be72c1ae615f',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -979,6 +1582,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProformasConvertRequest(
     company: 'Funk, Watsica and Towne',
     proforma: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertProformaRequest(
+        target: Components\ConvertProformaRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.convert" method="post" path="/companies/{company}/proformas/{proforma}/convert" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasConvertRequest(
+    company: '0db37831-f94f-4ca7-a49d-9cd80beba9ec',
+    proforma: '91ca60e6-d284-4f1e-a4fd-bf810de5343b',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConvertProformaRequest(
@@ -1150,6 +1792,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.convert" method="post" path="/companies/{company}/proformas/{proforma}/convert" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasConvertRequest(
+    company: '2f58acd4-eea9-45d1-98ea-89af408c02e7',
+    proforma: 'f0059b6c-98ce-47d6-add4-2dc3c249e059',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertProformaRequest(
+        target: Components\ConvertProformaRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.convert" method="post" path="/companies/{company}/proformas/{proforma}/convert" example="success" -->
@@ -1174,6 +1855,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProformasConvertRequest(
     company: 'O\'Reilly and Sons',
     proforma: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertProformaRequest(
+        target: Components\ConvertProformaRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.convert" method="post" path="/companies/{company}/proformas/{proforma}/convert" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasConvertRequest(
+    company: '1c1274ee-a3fe-46d2-b3c7-b2501f534141',
+    proforma: '445d88c0-a68c-4af0-9257-8958d5e391b9',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConvertProformaRequest(
@@ -1244,6 +1964,52 @@ $body = new Components\CreateProformaRequest(
 
 $response = $sdk->proformas->publicApiV1ProformasCreate(
     company: '29001df6-dee3-421e-8e33-e940f39892c2',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.create" method="post" path="/companies/{company}/proformas" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateProformaRequest(
+    clientId: '001df6de-e321-4ee3-93e9-40f39892c20a',
+    issuedOn: LocalDate::parse('2024-06-19'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateProformaRequestLine(
+            quantity: 1263.51,
+        ),
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasCreate(
+    company: 'a52b2a62-eb2a-4243-9847-015f138febd2',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1390,6 +2156,52 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.create" method="post" path="/companies/{company}/proformas" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateProformaRequest(
+    clientId: '001df6de-e321-4ee3-93e9-40f39892c20a',
+    issuedOn: LocalDate::parse('2024-06-19'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateProformaRequestLine(
+            quantity: 1263.51,
+        ),
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasCreate(
+    company: '29001df6-dee3-421e-8e33-e940f39892c2',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.create" method="post" path="/companies/{company}/proformas" example="success" -->
@@ -1426,6 +2238,52 @@ $body = new Components\CreateProformaRequest(
 
 $response = $sdk->proformas->publicApiV1ProformasCreate(
     company: 'Bergstrom - Stark',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.create" method="post" path="/companies/{company}/proformas" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateProformaRequest(
+    clientId: '001df6de-e321-4ee3-93e9-40f39892c20a',
+    issuedOn: LocalDate::parse('2024-06-19'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateProformaRequestLine(
+            quantity: 1263.51,
+        ),
+    ],
+);
+
+$response = $sdk->proformas->publicApiV1ProformasCreate(
+    company: 'bab87c8a-54ce-482e-b4aa-02f6ddd7307a',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1680,6 +2538,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.update" method="patch" path="/companies/{company}/proformas/{proforma}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasUpdateRequest(
+    company: '06fc4f0f-c0fb-4ebe-bae6-61eb0bf78c4e',
+    proforma: '6e739474-6f95-4981-9447-88578600e9a6',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.update" method="patch" path="/companies/{company}/proformas/{proforma}" example="invalid_api_key" -->
@@ -1764,6 +2664,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.update" method="patch" path="/companies/{company}/proformas/{proforma}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasUpdateRequest(
+    company: '6642d2ea-419d-4e35-9226-c0f9f82a6a4f',
+    proforma: '256979b7-66f4-4ead-8b19-7cb1bc52abca',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.update" method="patch" path="/companies/{company}/proformas/{proforma}" example="success" -->
@@ -1788,6 +2730,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProformasUpdateRequest(
     company: 'Stoltenberg - Cummerata',
     proforma: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.update" method="patch" path="/companies/{company}/proformas/{proforma}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasUpdateRequest(
+    company: '96171dcd-671f-43fb-afc2-3b7ad9c7d693',
+    proforma: '66a6bc7c-66b4-431f-9de6-5ea558f658f9',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProformaRequest(
@@ -1983,6 +2967,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.find_by_external_id" method="post" path="/companies/{company}/proformas/find-by-external-id" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProformaByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->proformas->publicApiV1ProformasFindByExternalId(
+    company: '4dd64f04-0089-4881-894e-9617a4cf8585',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.find_by_external_id" method="post" path="/companies/{company}/proformas/find-by-external-id" example="invalid_api_key" -->
@@ -2053,6 +3072,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.find_by_external_id" method="post" path="/companies/{company}/proformas/find-by-external-id" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProformaByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->proformas->publicApiV1ProformasFindByExternalId(
+    company: '74013919-fd02-472c-99f4-bb04707e8734',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.find_by_external_id" method="post" path="/companies/{company}/proformas/find-by-external-id" example="success" -->
@@ -2079,6 +3133,41 @@ $body = new Components\FindProformaByExternalIdRequest(
 
 $response = $sdk->proformas->publicApiV1ProformasFindByExternalId(
     company: 'Gottlieb Group',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.find_by_external_id" method="post" path="/companies/{company}/proformas/find-by-external-id" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProformaByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->proformas->publicApiV1ProformasFindByExternalId(
+    company: '0d01aa09-f50b-4761-8c0c-d3095cc6b63f',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2210,6 +3299,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.public_link_update" method="patch" path="/companies/{company}/proformas/{proforma}/public-link" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasPublicLinkUpdateRequest(
+    company: '8b4b7866-eea7-4905-8834-d88c9da99ebc',
+    proforma: '559aa917-9944-434d-8d59-9531e0352284',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProformaPublicLinkRequest(
+        action: Components\UpdateProformaPublicLinkRequestAction::Reset,
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.public_link_update" method="patch" path="/companies/{company}/proformas/{proforma}/public-link" example="invalid_api_key" -->
@@ -2288,6 +3416,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.public_link_update" method="patch" path="/companies/{company}/proformas/{proforma}/public-link" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasPublicLinkUpdateRequest(
+    company: 'dcc90b95-6c1f-4376-8b4a-d4ad7d488e9d',
+    proforma: '2aed079b-f09a-4fe7-9754-3b276ef2fd78',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProformaPublicLinkRequest(
+        action: Components\UpdateProformaPublicLinkRequestAction::Reset,
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.public_link_update" method="patch" path="/companies/{company}/proformas/{proforma}/public-link" example="success" -->
@@ -2312,6 +3479,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProformasPublicLinkUpdateRequest(
     company: 'Rogahn - Monahan',
     proforma: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProformaPublicLinkRequest(
+        action: Components\UpdateProformaPublicLinkRequestAction::Reset,
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.public_link_update" method="patch" path="/companies/{company}/proformas/{proforma}/public-link" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasPublicLinkUpdateRequest(
+    company: 'f69f8b27-9fca-4956-aac0-89556901f7b4',
+    proforma: 'c7af0712-48a1-4178-b7f5-6a86eed6117e',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProformaPublicLinkRequest(
@@ -2504,6 +3710,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.reject" method="post" path="/companies/{company}/proformas/{proforma}/reject" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasRejectRequest(
+    company: 'b682e6d9-b1dc-4174-8bff-eb83a8662809',
+    proforma: '65429014-4444-47e3-963e-089cca961931',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RejectProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasReject(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.reject" method="post" path="/companies/{company}/proformas/{proforma}/reject" example="invalid_api_key" -->
@@ -2588,6 +3836,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.reject" method="post" path="/companies/{company}/proformas/{proforma}/reject" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasRejectRequest(
+    company: '9f08bcac-c0d1-4f14-b9fc-2e7853b8c378',
+    proforma: '169cc045-8b85-4041-a3e4-2f3bddb0e2e3',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RejectProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasReject(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.proformas.reject" method="post" path="/companies/{company}/proformas/{proforma}/reject" example="success" -->
@@ -2612,6 +3902,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProformasRejectRequest(
     company: 'Ratke and Sons',
     proforma: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RejectProformaRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->proformas->publicApiV1ProformasReject(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.proformas.reject" method="post" path="/companies/{company}/proformas/{proforma}/reject" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProformasRejectRequest(
+    company: 'b7969441-b7f9-421f-bd61-f7cbe955da44',
+    proforma: '6598c2ab-459a-4927-9008-80f8e994ee12',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RejectProformaRequest(

@@ -10,7 +10,8 @@
 
 ## publicApiV1InvoicesQuarterlyAvailable
 
-Returns the quarters that have at least one invoice, with breakdown by invoice type (F1/F2/F3/R5), and the quarters that only have charges left out of invoicing by the company's connected Stripe accounts (or refunds of such charges): those come back with `invoice_count` 0 and an empty breakdown, and their quarterly ZIP contains only the charges CSV. Useful to populate "quarter to export" selectors.
+List the quarters with at least one invoice, broken down by type (F1/F2/F3/R5), plus quarters with only Stripe charges left out of invoicing.
+- Those come back with `invoice_count` 0 and an empty breakdown; their ZIP holds only the charges CSV.
 
 ### Example Usage
 
@@ -66,7 +67,9 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesQuarterlyDownloadZip
 
-Builds a ZIP with all invoice PDFs of the given quarter. When the company has charges left out of invoicing in that quarter (from any of its connected Stripe accounts) and `include_non_invoiced_charges` is not `false` (default `true`), the ZIP also includes the CSV `cobros_sin_factura_Q{quarter}_{year}.csv` with the charges of the quarter and the refunds that happen in the quarter (date, type, description, origin, reason, reference, currency, amount, refunded amount and net amount; a refund of a charge from an earlier quarter is a negative line) and totals per currency; without such charges the file is not added. If the quarter has no invoices but has such charges, the ZIP contains only the CSV. Returns ZIP metadata (path, processed counts, errors).
+Build a ZIP with all invoice PDFs of a quarter and return its metadata (path, counts, errors).
+- Unless `include_non_invoiced_charges` is `false`, it adds a CSV of charges left out of invoicing and their refunds.
+- A quarter with only such charges yields a CSV-only ZIP.
 
 ### Example Usage: api_key_revoked
 
@@ -95,6 +98,43 @@ $body = new Components\QuarterlyDownloadV1Request(
 
 $response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlyDownloadZip(
     company: '1d8d2eb8-e19d-444a-a79b-4877103ecea2',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.download_zip" method="post" path="/companies/{company}/invoices/quarterly/download-zip" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\QuarterlyDownloadV1Request(
+    year: 105193,
+    quarter: 852790,
+);
+
+$response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlyDownloadZip(
+    company: '934ef2da-84ee-41a6-bed4-604ecf66fb25',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -179,6 +219,80 @@ if ($response->bytes !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.download_zip" method="post" path="/companies/{company}/invoices/quarterly/download-zip" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\QuarterlyDownloadV1Request(
+    year: 105193,
+    quarter: 852790,
+);
+
+$response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlyDownloadZip(
+    company: '1d8d2eb8-e19d-444a-a79b-4877103ecea2',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.download_zip" method="post" path="/companies/{company}/invoices/quarterly/download-zip" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\QuarterlyDownloadV1Request(
+    year: 105193,
+    quarter: 852790,
+);
+
+$response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlyDownloadZip(
+    company: '1e403848-ee73-4df4-bbeb-caecf5415a55',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -203,7 +317,9 @@ if ($response->bytes !== null) {
 
 ## publicApiV1InvoicesQuarterlySendEmail
 
-Generates the quarterly ZIP and emails it to the recipient, typically the tax accountant. When the company has charges left out of invoicing in that quarter (from any of its connected Stripe accounts) and `include_non_invoiced_charges` is not `false` (default `true`), the ZIP also includes the CSV `cobros_sin_factura_Q{quarter}_{year}.csv` with the charges of the quarter and the refunds that happen in the quarter (date, type, description, origin, reason, reference, currency, amount, refunded amount and net amount; a refund of a charge from an earlier quarter is a negative line) and totals per currency; without such charges the file is not added. If the quarter has no invoices but has such charges, the ZIP contains only the CSV.
+Generate the quarterly ZIP and email it to a recipient, typically the tax accountant.
+- Unless `include_non_invoiced_charges` is `false`, it adds a CSV of charges left out of invoicing and their refunds.
+- A quarter with only such charges yields a CSV-only ZIP.
 
 ### Example Usage: api_key_revoked
 
@@ -232,6 +348,43 @@ $body = new Components\QuarterlyDownloadV1Request(
 
 $response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlySendEmail(
     company: '13acc70b-48b5-40b0-b27e-2e901e688791',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.send_email" method="post" path="/companies/{company}/invoices/quarterly/send-email" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\QuarterlyDownloadV1Request(
+    year: 96908,
+    quarter: 230067,
+);
+
+$response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlySendEmail(
+    company: '01cf0a16-95f3-4bf6-85d2-226bcedf047d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -316,6 +469,43 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.send_email" method="post" path="/companies/{company}/invoices/quarterly/send-email" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\QuarterlyDownloadV1Request(
+    year: 96908,
+    quarter: 230067,
+);
+
+$response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlySendEmail(
+    company: '13acc70b-48b5-40b0-b27e-2e901e688791',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.send_email" method="post" path="/companies/{company}/invoices/quarterly/send-email" example="success" -->
@@ -343,6 +533,43 @@ $body = new Components\QuarterlyDownloadV1Request(
 
 $response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlySendEmail(
     company: 'Schmidt, Kuhic and Bechtelar',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.quarterly.send_email" method="post" path="/companies/{company}/invoices/quarterly/send-email" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\QuarterlyDownloadV1Request(
+    year: 96908,
+    quarter: 230067,
+);
+
+$response = $sdk->invoices->quarterly->publicApiV1InvoicesQuarterlySendEmail(
+    company: 'fd6d9522-d7f7-4e0b-ab93-d41e61d194c9',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
