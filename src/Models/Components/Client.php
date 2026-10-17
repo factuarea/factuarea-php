@@ -141,7 +141,7 @@ class Client
     public ?string $dir3ProcessingUnit;
 
     /**
-     * UUID (v7) of the default price list assigned to the client.
+     * UUID v7 of the default price list assigned to the client.
      *
      * @var ?string $defaultPriceListId
      */

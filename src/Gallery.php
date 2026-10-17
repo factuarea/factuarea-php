@@ -84,7 +84,7 @@ class Gallery
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/gallery/{index}', Operations\PublicApiV1ProductsGalleryDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/gallery/{index}', Operations\PublicApiV1ProductsGalleryDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -120,7 +120,7 @@ class Gallery
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -158,14 +158,14 @@ class Gallery
      *
      * Stream the raw binary of a product gallery image by its 0-based index. Returns 404 if the index is missing or the file is not on disk.
      *
+     * @param  string  $company
      * @param  string  $product
      * @param  int  $index
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsGalleryDownloadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsGalleryDownload(string $product, int $index, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1ProductsGalleryDownloadResponse
+    public function publicApiV1ProductsGalleryDownload(string $company, string $product, int $index, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsGalleryDownloadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -193,13 +193,13 @@ class Gallery
             ];
         }
         $request = new Operations\PublicApiV1ProductsGalleryDownloadRequest(
+            company: $company,
             product: $product,
             index: $index,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/gallery/{index}/download', Operations\PublicApiV1ProductsGalleryDownloadRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/gallery/{index}/download', Operations\PublicApiV1ProductsGalleryDownloadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -242,7 +242,7 @@ class Gallery
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -312,7 +312,7 @@ class Gallery
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/products/{product}/gallery', Operations\PublicApiV1ProductsGalleryUploadRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}/gallery', Operations\PublicApiV1ProductsGalleryUploadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'multipart');
@@ -363,7 +363,7 @@ class Gallery
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

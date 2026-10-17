@@ -32,6 +32,16 @@ class Details
     public ?array $rowErrors = null;
 
     /**
+     * Stable row_id of every employee-batch row whose external_id is already taken (repeated inside the batch or already in use in the company). Present on 409 `external_id_already_exists` of employee batches; correct those rows and send the batch again.
+     *
+     * @var ?array<string> $rowIds
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('row_ids')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $rowIds = null;
+
+    /**
      * Review fields that must be corrected before a purchase scan can be converted. Keys use public identifiers, for example supplier_id or lines.0.tax_rate.
      *
      * @var ?array<string, array<string>> $fieldErrors
@@ -42,7 +52,7 @@ class Details
     public ?array $fieldErrors = null;
 
     /**
-     * UUID of the pre-existing resource that triggered the conflict. Resolvable with a `GET /v1/{resource}/{id}` without an extra `find_by_*` call. Only present on 409 duplication conflicts.
+     * Public identifier (UUID v7) of the resource that already exists, so you can fetch it with a `GET` and no extra `find_by_*` call. Only present on 409 duplication conflicts.
      *
      * @var ?string $existingResourceId
      */
@@ -144,6 +154,7 @@ class Details
     /**
      * @param  ?string  $operationId
      * @param  ?array<\Factuarea\Sdk\Models\Components\RowError>  $rowErrors
+     * @param  ?array<string>  $rowIds
      * @param  ?array<string, array<string>>  $fieldErrors
      * @param  ?string  $existingResourceId
      * @param  ?string  $paymentSetupUrl
@@ -158,10 +169,11 @@ class Details
      * @param  ?\DateTime  $periodEnd
      * @phpstan-pure
      */
-    public function __construct(?string $operationId = null, ?array $rowErrors = null, ?array $fieldErrors = null, ?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null, ?int $activeRules = null, ?int $limit = null, ?string $resource = null, ?int $current = null, ?\DateTime $periodEnd = null)
+    public function __construct(?string $operationId = null, ?array $rowErrors = null, ?array $rowIds = null, ?array $fieldErrors = null, ?string $existingResourceId = null, ?string $paymentSetupUrl = null, ?array $allowedValues = null, ?string $offendingField = null, ?float $expected = null, ?float $received = null, ?int $activeRules = null, ?int $limit = null, ?string $resource = null, ?int $current = null, ?\DateTime $periodEnd = null)
     {
         $this->operationId = $operationId;
         $this->rowErrors = $rowErrors;
+        $this->rowIds = $rowIds;
         $this->fieldErrors = $fieldErrors;
         $this->existingResourceId = $existingResourceId;
         $this->paymentSetupUrl = $paymentSetupUrl;

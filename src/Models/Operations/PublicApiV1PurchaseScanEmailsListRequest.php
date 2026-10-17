@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PurchaseScanEmailsListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -20,6 +29,7 @@ class PublicApiV1PurchaseScanEmailsListRequest
     public ?int $limit = null;
 
     /**
+     * Free-text search (partial, case-insensitive match).
      *
      * @var ?string $search
      */
@@ -27,21 +37,15 @@ class PublicApiV1PurchaseScanEmailsListRequest
     public ?string $search = null;
 
     /**
-     * $resultQueryParameter
+     * Comma-separated list of email results: `pending`, `processed`, `partially_processed`, `no_compatible_attachments`, `parked`, `rejected` or `failed`.
      *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\Result> $resultQueryParameter
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=result[]')]
-    public ?array $resultQueryParameter = null;
-
-    /**
-     *
-     * @var ?string $resultQueryParameter1
+     * @var ?string $result
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=result')]
-    public ?string $resultQueryParameter1 = null;
+    public ?string $result = null;
 
     /**
+     * Only emails received on or after this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $createdGte
      */
@@ -49,6 +53,7 @@ class PublicApiV1PurchaseScanEmailsListRequest
     public ?LocalDate $createdGte = null;
 
     /**
+     * Only emails received on or before this date (`YYYY-MM-DD`).
      *
      * @var ?LocalDate $createdLte
      */
@@ -64,14 +69,7 @@ class PublicApiV1PurchaseScanEmailsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -79,27 +77,25 @@ class PublicApiV1PurchaseScanEmailsListRequest
     public ?string $startingAfter = null;
 
     /**
+     * @param  string  $company
      * @param  ?int  $limit
      * @param  ?string  $search
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\Result>  $resultQueryParameter
-     * @param  ?string  $resultQueryParameter1
+     * @param  ?string  $result
      * @param  ?LocalDate  $createdGte
      * @param  ?LocalDate  $createdLte
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(?int $limit = null, ?string $search = null, ?array $resultQueryParameter = null, ?string $resultQueryParameter1 = null, ?LocalDate $createdGte = null, ?LocalDate $createdLte = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null)
+    public function __construct(string $company, ?int $limit = null, ?string $search = null, ?string $result = null, ?LocalDate $createdGte = null, ?LocalDate $createdLte = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
     {
+        $this->company = $company;
         $this->limit = $limit;
         $this->search = $search;
-        $this->resultQueryParameter = $resultQueryParameter;
-        $this->resultQueryParameter1 = $resultQueryParameter1;
+        $this->result = $result;
         $this->createdGte = $createdGte;
         $this->createdLte = $createdLte;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;
     }
 }

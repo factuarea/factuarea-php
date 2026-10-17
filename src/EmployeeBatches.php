@@ -85,7 +85,7 @@ class EmployeeBatches
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-batches/{id}/cancel', Operations\PublicApiV1EmployeeBatchesCancelRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-batches/{id}/cancel', Operations\PublicApiV1EmployeeBatchesCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -124,7 +124,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesCancelResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -142,7 +142,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesCancelResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -154,7 +154,7 @@ class EmployeeBatches
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -224,7 +224,7 @@ class EmployeeBatches
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-batches/{id}/confirm', Operations\PublicApiV1EmployeeBatchesConfirmRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-batches/{id}/confirm', Operations\PublicApiV1EmployeeBatchesConfirmRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -263,7 +263,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesConfirmResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -281,7 +281,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesConfirmResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -293,7 +293,7 @@ class EmployeeBatches
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -375,7 +375,7 @@ class EmployeeBatches
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-batches');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-batches', Operations\PublicApiV1EmployeeBatchesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -424,7 +424,7 @@ class EmployeeBatches
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -463,13 +463,13 @@ class EmployeeBatches
      * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  \Factuarea\Sdk\Models\Components\PrepareEmployeeBatchBodyCreate|\Factuarea\Sdk\Models\Components\PrepareEmployeeBatchBodyReactivate  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesPrepareResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeBatchesPrepare(Components\PrepareEmployeeBatchBodyCreate|Components\PrepareEmployeeBatchBodyReactivate $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeBatchesPrepareResponse
+    public function publicApiV1EmployeeBatchesPrepare(Components\PrepareEmployeeBatchBodyCreate|Components\PrepareEmployeeBatchBodyReactivate $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeBatchesPrepareResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -497,13 +497,13 @@ class EmployeeBatches
             ];
         }
         $request = new Operations\PublicApiV1EmployeeBatchesPrepareRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-batches');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-batches', Operations\PublicApiV1EmployeeBatchesPrepareRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -554,7 +554,7 @@ class EmployeeBatches
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -636,7 +636,7 @@ class EmployeeBatches
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-batches/{id}/quote', Operations\PublicApiV1EmployeeBatchesRefreshQuoteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-batches/{id}/quote', Operations\PublicApiV1EmployeeBatchesRefreshQuoteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -687,7 +687,7 @@ class EmployeeBatches
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -737,13 +737,13 @@ class EmployeeBatches
      *
      * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
+     * @param  string  $company
      * @param  string  $id
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeBatchesShow(string $id, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeBatchesShowResponse
+    public function publicApiV1EmployeeBatchesShow(string $company, string $id, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeBatchesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -771,12 +771,12 @@ class EmployeeBatches
             ];
         }
         $request = new Operations\PublicApiV1EmployeeBatchesShowRequest(
+            company: $company,
             id: $id,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-batches/{id}', Operations\PublicApiV1EmployeeBatchesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/employee-batches/{id}', Operations\PublicApiV1EmployeeBatchesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -822,7 +822,7 @@ class EmployeeBatches
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

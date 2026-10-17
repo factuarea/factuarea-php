@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateCompanyV1Request - Partial update of a managed child company profile (business name, fiscal address, contact details). Omitted fields keep their current value; send `""` to clear a field. `country_aeat_zone` is derived from the postal code, and `tax_id` is immutable after creation (sending it returns 422). */
+/** UpdateCompanyV1Request - Partial update of the profile of a company (tax ID) of your account (business name, fiscal address, contact details). Omitted fields keep their current value; send `""` to clear a field. `country_aeat_zone` is derived from the postal code, and `tax_id` is immutable after creation (sending it returns 422). */
 class UpdateCompanyV1Request
 {
     /**
-     * Trade name of the child company (1-255 characters).
+     * Trade name of the company (1-255 characters).
      *
      * @var ?string $name
      */
@@ -22,7 +22,7 @@ class UpdateCompanyV1Request
     public ?string $name = null;
 
     /**
-     * Legal/registered business name of the child company.
+     * Legal/registered business name of the company.
      *
      * @var ?string $businessName
      */
@@ -76,7 +76,7 @@ class UpdateCompanyV1Request
     public ?string $country = null;
 
     /**
-     * Contact email of the child company.
+     * Contact email of the company.
      *
      * @var ?string $email
      */

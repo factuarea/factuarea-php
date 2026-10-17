@@ -15,7 +15,7 @@ Create a commercial presentation for a product with its unit and conversion data
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/products/{product}/presentations" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -35,10 +35,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
+    company: 'Rutherford LLC',
     product: 'Refined Metal Cheese',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateProductPresentationRequest(
         name: '<value>',
         mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
@@ -56,7 +56,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/products/{product}/presentations" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.create" method="post" path="/companies/{company}/products/{product}/presentations" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -76,10 +76,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsCreateRequest(
+    company: 'Gusikowski, Russel and Waelchi',
     product: 'Refined Wooden Hat',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\CreateProductPresentationRequest(
         name: '<value>',
         mode: Components\CreateProductPresentationRequestMode::VariableMeasure,
@@ -110,7 +110,7 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -120,7 +120,7 @@ List the commercial presentations configured for a product, including unit, conv
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.list" method="get" path="/products/{product}/presentations" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.list" method="get" path="/companies/{company}/products/{product}/presentations" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -140,9 +140,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsListRequest(
+    company: 'Rempel - Jacobi',
     product: 'Elegant Rubber Fish',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->presentations->publicApiV1ProductsPresentationsList(
@@ -166,11 +166,11 @@ if ($response->paginatedList !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1ProductsPresentationsDelete
 
@@ -178,7 +178,7 @@ Retire a commercial presentation from the product catalog while historical docum
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.delete" method="delete" path="/products/{product}/presentations/{presentation}" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.delete" method="delete" path="/companies/{company}/products/{product}/presentations/{presentation}" -->
 ```php
 declare(strict_types=1);
 
@@ -198,11 +198,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsDeleteRequest(
+    company: 'VonRueden - Roob',
     product: 'Fantastic Wooden Shirt',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->products->presentations->publicApiV1ProductsPresentationsDelete(
@@ -228,7 +228,7 @@ if ($response->statusCode === 200) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
@@ -238,7 +238,7 @@ Update the selected commercial presentation while preserving tenant and product 
 
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="put" path="/products/{product}/presentations/{presentation}" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -258,11 +258,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
+    company: 'DuBuque, Bradtke and Dooley',
     product: 'Electronic Cotton Tuna',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateProductPresentationRequest(
         name: '<value>',
         mode: Components\UpdateProductPresentationRequestMode::Fixed,
@@ -280,7 +280,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="put" path="/products/{product}/presentations/{presentation}" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.presentations.update" method="patch" path="/companies/{company}/products/{product}/presentations/{presentation}" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -300,11 +300,11 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProductsPresentationsUpdateRequest(
+    company: 'Quitzon LLC',
     product: 'Luxurious Rubber Chair',
     presentation: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateProductPresentationRequest(
         name: '<value>',
         mode: Components\UpdateProductPresentationRequestMode::Fixed,
@@ -335,6 +335,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

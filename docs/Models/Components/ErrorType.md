@@ -1,6 +1,6 @@
 # ErrorType
 
-Machine-readable category of the error. Versioned by `Factuarea-Version`: from `2026-09-01` onwards the payment gate codes `payment_method_required`, `seat_charge_failed`, `gestoria_plan_required`, `employee_seat_payment_method_required` and `employee_seat_charge_failed` are served as `payment_required_error`; requests pinned to an earlier version keep receiving `invalid_request_error` for those five. `error.code` and `error.subcode` never change — branch on `code` if you want version-independent behaviour.
+Machine-readable category of the error. Versioned by `Factuarea-Version`: from `2026-09-01` onwards the payment gate codes `payment_method_required`, `employee_seat_payment_method_required` and `employee_seat_charge_failed` are served as `payment_required_error`; requests pinned to an earlier version keep receiving `invalid_request_error` for those three. The additional tax ID codes (`additional_nif_plan_required`, `additional_nif_charge_failed`) and `addon_required` are newer and carry `payment_required_error` in every version. `error.code` and `error.subcode` never change — branch on `code` if you want version-independent behaviour.
 
 
 ## Values

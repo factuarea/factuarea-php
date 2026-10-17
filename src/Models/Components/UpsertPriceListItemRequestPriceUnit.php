@@ -20,4 +20,17 @@ enum UpsertPriceListItemRequestPriceUnit: string
     case Mtk = 'MTK';
     case Hur = 'HUR';
     case Day = 'DAY';
+    case H87 = 'H87';
+    case Xpk = 'XPK';
+    case Xbx = 'XBX';
+    case Xds = 'XDS';
+    case Xbg = 'XBG';
+    case Xbo = 'XBO';
+    case Xdj = 'XDJ';
+    case Xca = 'XCA';
+    case Xtb = 'XTB';
+    case Xci = 'XCI';
+    case Xjy = 'XJY';
+    case Xen = 'XEN';
+    case Xcs = 'XCS';
 }

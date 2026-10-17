@@ -40,6 +40,7 @@ class PublicApiV1EmployeesCreateResponse
     public array $headers;
 
     /**
+     * Employee created. The `Location` header contains the canonical URL of the new employee.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesCreateResponseBody $object
      */

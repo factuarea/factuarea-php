@@ -52,12 +52,12 @@ class TaskTimers
      *
      * Return the running timer of the member who owns the API key, with its task, or `data: null` when none is running.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaskTimersCurrentResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaskTimersCurrent(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaskTimersCurrentResponse
+    public function publicApiV1TaskTimersCurrent(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaskTimersCurrentResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -85,11 +85,11 @@ class TaskTimers
             ];
         }
         $request = new Operations\PublicApiV1TaskTimersCurrentRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-timers/current');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-timers/current', Operations\PublicApiV1TaskTimersCurrentRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -135,7 +135,7 @@ class TaskTimers
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -173,13 +173,13 @@ class TaskTimers
      *
      * Stop the timer of the member who owns the API key and return the closed time entry. No request body. With no timer running it returns 422 `task_timer_not_running`.
      *
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaskTimersStopResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TaskTimersStop(?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TaskTimersStopResponse
+    public function publicApiV1TaskTimersStop(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TaskTimersStopResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -207,12 +207,12 @@ class TaskTimers
             ];
         }
         $request = new Operations\PublicApiV1TaskTimersStopRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/task-timers/stop');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/task-timers/stop', Operations\PublicApiV1TaskTimersStopRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -258,7 +258,7 @@ class TaskTimers
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

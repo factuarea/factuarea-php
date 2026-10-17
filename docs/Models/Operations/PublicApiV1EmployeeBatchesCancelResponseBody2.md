@@ -1,6 +1,6 @@
 # PublicApiV1EmployeeBatchesCancelResponseBody2
 
-Accepted; retrieve this operation until terminal.
+Current durable operation.
 
 
 ## Fields

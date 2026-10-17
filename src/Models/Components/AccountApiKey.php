@@ -55,11 +55,11 @@ class AccountApiKey
     /**
      * Environment of the authenticated key: `live` (`fact_live_` prefix, real side effects) or `test` (`fact_test_` prefix, sandbox company, no real-world effects).
      *
-     * @var \Factuarea\Sdk\Models\Components\AccountEnvironment $environment
+     * @var \Factuarea\Sdk\Models\Components\AccountEnvironment2 $environment
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountEnvironment')]
-    public AccountEnvironment $environment;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountEnvironment2')]
+    public AccountEnvironment2 $environment;
 
     /**
      *
@@ -88,13 +88,13 @@ class AccountApiKey
      * @param  string  $prefix
      * @param  array<string>  $scopes
      * @param  string  $tier
-     * @param  \Factuarea\Sdk\Models\Components\AccountEnvironment  $environment
+     * @param  \Factuarea\Sdk\Models\Components\AccountEnvironment2  $environment
      * @param  \DateTime  $createdAt
      * @param  ?\DateTime  $lastUsedAt
      * @param  ?\DateTime  $expiresAt
      * @phpstan-pure
      */
-    public function __construct(string $id, string $name, string $prefix, array $scopes, string $tier, AccountEnvironment $environment, \DateTime $createdAt, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null)
+    public function __construct(string $id, string $name, string $prefix, array $scopes, string $tier, AccountEnvironment2 $environment, \DateTime $createdAt, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null)
     {
         $this->id = $id;
         $this->name = $name;

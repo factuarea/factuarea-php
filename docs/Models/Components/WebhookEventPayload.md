@@ -905,6 +905,15 @@ Components\WebhookEventPayloadProductCreated $value = /* values here */
 Components\WebhookEventPayloadProductUpdated $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadProductReplaced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProductReplaced
+*/
+Components\WebhookEventPayloadProductReplaced $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadPaymentReceived`
 
 ```php

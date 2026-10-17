@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class DeclaracionResponsable
 {
     /**
-     * UUID (v7) of the declaration.
+     * UUID v7 of the declaration.
      *
      * @var string $id
      */

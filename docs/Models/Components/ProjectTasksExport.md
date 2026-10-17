@@ -1,6 +1,6 @@
 # ProjectTasksExport
 
-JSON export of the tasks of a project (`factuarea.tasks.v1`), importable with `POST /v1/projects/{project}/tasks/import`.
+JSON export of the tasks of a project (`factuarea.tasks.v1`), importable with `POST /v1/companies/{company}/projects/{project}/tasks/import`.
 
 
 ## Fields

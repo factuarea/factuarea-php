@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-/** `in` = inbound movements (positive delta), `out` = outbound movements (negative delta). Omitted = the whole ledger. */
+/** `in` returns only incoming movements and `out` only outgoing ones (all when omitted). */
 enum PublicApiV1ProductsStockMovementsListDirection: string
 {
     case In = 'in';

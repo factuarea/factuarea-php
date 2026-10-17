@@ -1,0 +1,8 @@
+# SetAccountMemberGrantV1Request
+
+
+## Fields
+
+| Field                                                                                                            | Type                                                                                                             | Required                                                                                                         | Description                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `level`                                                                                                          | [Components\SetAccountMemberGrantV1RequestLevel](../../Models/Components/SetAccountMemberGrantV1RequestLevel.md) | :heavy_check_mark:                                                                                               | Access level of the grant on the tax ID of the path: `view` (read-only) or `operate`.                            |

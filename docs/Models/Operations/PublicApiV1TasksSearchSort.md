@@ -1,6 +1,6 @@
 # PublicApiV1TasksSearchSort
 
-Sort order: a field for ascending or a `-` prefix for descending. Allowed fields: `created_at`, `updated_at`, `due_on`, `priority`, `number`. Defaults to `-created_at`; ties are broken by `id`, so pagination stays stable.
+Sort order: `created_at` (default is `-created_at`), `updated_at`, `due_on`, `priority` or `number`; prefix it with `-` for descending.
 
 
 ## Values

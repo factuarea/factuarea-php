@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class EmailDelivery
 {
     /**
-     * UUID v7 of the send. Use it in `GET /v1/emails/{email}`.
+     * UUID v7 of the send. Use it in `GET /v1/companies/{company}/emails/{email}`.
      *
      * @var string $id
      */

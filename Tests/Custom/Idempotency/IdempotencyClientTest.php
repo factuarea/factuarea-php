@@ -21,7 +21,7 @@ final class IdempotencyClientTest extends TestCase
         $history = [];
         $client = self::client($history, 1);
 
-        $client->send(new Request('POST', 'https://example.test/purchase_scans'), [
+        $client->send(new Request('POST', 'https://example.test/companies/019e0000-0000-7000-8000-0000000000c0/purchase-scans'), [
             'headers' => ['idempotency-key' => 'caller-chosen-key'],
         ]);
 
@@ -32,7 +32,7 @@ final class IdempotencyClientTest extends TestCase
     {
         $history = [];
         $client = self::client($history, 2);
-        $request = new Request('POST', 'https://example.test/purchase_scans');
+        $request = new Request('POST', 'https://example.test/companies/019e0000-0000-7000-8000-0000000000c0/purchase-scans');
 
         $client->send($request);
         $client->send($request);
@@ -47,7 +47,7 @@ final class IdempotencyClientTest extends TestCase
         $history = [];
         $client = self::client($history, 1);
 
-        $client->send(new Request('GET', 'https://example.test/purchase_scans'));
+        $client->send(new Request('GET', 'https://example.test/companies/019e0000-0000-7000-8000-0000000000c0/purchase-scans'));
 
         self::assertFalse($history[0]['request']->hasHeader('Idempotency-Key'));
     }

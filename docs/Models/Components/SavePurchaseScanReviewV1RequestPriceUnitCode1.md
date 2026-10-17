@@ -1,0 +1,9 @@
+# SavePurchaseScanReviewV1RequestPriceUnitCode1
+
+
+## Fields
+
+| Field                                                                                           | Type                                                                                            | Required                                                                                        | Description                                                                                     |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `value`                                                                                         | *string*                                                                                        | :heavy_check_mark:                                                                              | N/A                                                                                             |
+| `issueCodes`                                                                                    | array<[Components\PriceUnitCodeIssueCode1](../../Models/Components/PriceUnitCodeIssueCode1.md)> | :heavy_minus_sign:                                                                              | N/A                                                                                             |

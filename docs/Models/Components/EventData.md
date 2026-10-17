@@ -1,6 +1,6 @@
 # EventData
 
-The payload embedded when the event was emitted, discriminated by `type`. Carries the full snapshot of the affected resource under `object` — identical to `GET /v1/<resource>/{id}` at emission time — plus event-specific keys, e.g. `{ "type": "invoice.paid", "object": { ...invoice... }, "amount": 1210.0 }`. The snapshot is frozen: later changes to the resource do not rewrite past events.
+The payload embedded when the event was emitted, discriminated by `type`. Carries the full snapshot of the affected resource under `object` — identical to the `GET` of that resource at emission time (for an invoice, `GET /v1/companies/{company}/invoices/{invoice}`) — plus event-specific keys, e.g. `{ "type": "invoice.paid", "object": { ...invoice... }, "amount": "1210.00" }`. The snapshot is frozen: later changes to the resource do not rewrite past events.
 
 
 ## Supported Types
@@ -903,6 +903,15 @@ Components\EventDataProductCreated $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataProductUpdated
 */
 Components\EventDataProductUpdated $value = /* values here */
+```
+
+### `Components\EventDataProductReplaced`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProductReplaced
+*/
+Components\EventDataProductReplaced $value = /* values here */
 ```
 
 ### `Components\EventDataPaymentReceived`

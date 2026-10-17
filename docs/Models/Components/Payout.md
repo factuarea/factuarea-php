@@ -3,10 +3,10 @@
 
 ## Fields
 
-| Field                | Type                 | Required             | Description          |
-| -------------------- | -------------------- | -------------------- | -------------------- |
-| `uuid`               | *string*             | :heavy_check_mark:   | N/A                  |
-| `stripePayoutId`     | *string*             | :heavy_check_mark:   | N/A                  |
-| `amountNet`          | *float*              | :heavy_check_mark:   | N/A                  |
-| `currency`           | *string*             | :heavy_check_mark:   | N/A                  |
-| `bankTransactionRef` | *string*             | :heavy_check_mark:   | N/A                  |
+| Field                                                                           | Type                                                                            | Required                                                                        | Description                                                                     | Example                                                                         |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `uuid`                                                                          | *string*                                                                        | :heavy_check_mark:                                                              | N/A                                                                             |                                                                                 |
+| `stripePayoutId`                                                                | *string*                                                                        | :heavy_check_mark:                                                              | N/A                                                                             |                                                                                 |
+| `amountNet`                                                                     | *string*                                                                        | :heavy_check_mark:                                                              | Net amount settled by the payout, as a 2-decimal string in the payout currency. | 1180.40                                                                         |
+| `currency`                                                                      | *string*                                                                        | :heavy_check_mark:                                                              | N/A                                                                             |                                                                                 |
+| `bankTransactionRef`                                                            | *string*                                                                        | :heavy_check_mark:                                                              | N/A                                                                             |                                                                                 |

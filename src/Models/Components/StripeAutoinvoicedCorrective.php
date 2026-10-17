@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** StripeAutoinvoicedCorrective - A corrective invoice automatically generated from a Stripe refund (`charge.refunded`). The public `id` is the UUID (v7) of the corrective invoice; `original_invoice_id` links to the original invoice. */
+/** StripeAutoinvoicedCorrective - A corrective invoice automatically generated from a Stripe refund (`charge.refunded`). The public `id` is the UUID v7 of the corrective invoice; `original_invoice_id` links to the original invoice. */
 class StripeAutoinvoicedCorrective
 {
     /**
-     * UUID (v7) of the corrective invoice. Public identity (KEY `id`).
+     * UUID v7 of the corrective invoice. Public identity (KEY `id`).
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class StripeAutoinvoicedCorrective
     public StripeAutoinvoicedCorrectiveObject $object;
 
     /**
-     * UUID (v7) of the original invoice that was corrected by the refund.
+     * UUID v7 of the original invoice that was corrected by the refund.
      *
      * @var string $originalInvoiceId
      */
@@ -56,10 +56,10 @@ class StripeAutoinvoicedCorrective
     /**
      * Refunded amount in euros (the individual refund amount, not the cumulative).
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Scope of the correction: `total` (full annulment) or `partial` (a single negative line for the refunded amount).
@@ -84,12 +84,12 @@ class StripeAutoinvoicedCorrective
      * @param  string  $originalInvoiceId
      * @param  string  $refundId
      * @param  string  $provider
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  \Factuarea\Sdk\Models\Components\StripeAutoinvoicedCorrectiveCorrectionType  $correctionType
      * @param  \DateTime  $createdAt
      * @phpstan-pure
      */
-    public function __construct(string $id, StripeAutoinvoicedCorrectiveObject $object, string $originalInvoiceId, string $refundId, string $provider, float $amount, StripeAutoinvoicedCorrectiveCorrectionType $correctionType, \DateTime $createdAt)
+    public function __construct(string $id, StripeAutoinvoicedCorrectiveObject $object, string $originalInvoiceId, string $refundId, string $provider, string $amount, StripeAutoinvoicedCorrectiveCorrectionType $correctionType, \DateTime $createdAt)
     {
         $this->id = $id;
         $this->object = $object;

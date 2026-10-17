@@ -13,7 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1TaxReportsGenerate303ResponseBody
 {
     /**
-     * A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/tax_reports/{uuid}/download`.
+     * A generated Spanish tax declaration (Modelo 303 quarterly VAT, or Modelo 347 yearly informational). Downloadable via `GET /v1/companies/{company}/tax-reports/{tax_report}/download`.
      *
      * @var \Factuarea\Sdk\Models\Components\TaxReport $data
      */

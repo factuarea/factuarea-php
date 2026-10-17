@@ -22,18 +22,18 @@ class PublicApiV1TransportDocumentsEvidenceResponseBody
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Operations\Meta $meta
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsEvidenceMeta $meta
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('meta')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\Meta')]
-    public Meta $meta;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsEvidenceMeta')]
+    public PublicApiV1TransportDocumentsEvidenceMeta $meta;
 
     /**
      * @param  array<\Factuarea\Sdk\Models\Components\TransportDocumentEvidence>  $data
-     * @param  \Factuarea\Sdk\Models\Operations\Meta  $meta
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsEvidenceMeta  $meta
      * @phpstan-pure
      */
-    public function __construct(array $data, Meta $meta)
+    public function __construct(array $data, PublicApiV1TransportDocumentsEvidenceMeta $meta)
     {
         $this->data = $data;
         $this->meta = $meta;

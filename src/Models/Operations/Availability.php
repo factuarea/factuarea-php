@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Only offers with this availability: `available`, `unavailable`, `unknown`, `seasonal` or `store_dependent`. */
 enum Availability: string
 {
     case Available = 'available';

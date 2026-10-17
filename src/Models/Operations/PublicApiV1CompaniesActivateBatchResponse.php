@@ -40,6 +40,7 @@ class PublicApiV1CompaniesActivateBatchResponse
     public array $headers;
 
     /**
+     * The tax IDs that were reactivated, each as a `Company`, in the order of `company_ids`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateBatchResponseBody $object
      */

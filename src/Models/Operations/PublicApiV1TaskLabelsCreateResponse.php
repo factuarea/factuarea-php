@@ -40,6 +40,7 @@ class PublicApiV1TaskLabelsCreateResponse
     public array $headers;
 
     /**
+     * Task label created successfully. The `Location` header contains the canonical URL of the newly created label.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TaskLabelsCreateResponseBody $object
      */

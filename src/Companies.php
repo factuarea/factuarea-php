@@ -20,15 +20,12 @@ use Speakeasy\Serializer\DeserializationContext;
 class Companies
 {
     private SDKConfiguration $sdkConfiguration;
-    public CompaniesApiKeys $apiKeys;
-
     /**
      * @param  SDKConfiguration  $sdkConfig
      */
     public function __construct(public SDKConfiguration $sdkConfig)
     {
         $this->sdkConfiguration = $sdkConfig;
-        $this->apiKeys = new CompaniesApiKeys($this->sdkConfiguration);
     }
     /**
      * @param  string  $baseUrl
@@ -52,18 +49,18 @@ class Companies
     }
 
     /**
-     * Activate a managed company
+     * Activate a tax ID of the account
      *
-     * Reactivate a previously deactivated (`inactive`) managed company. Activation is gated by an atomic per-seat charge — in live mode the prorated seat is charged synchronously and the company only becomes `active` if the charge succeeds. No payment method on file returns 402, and a plan without the gestoría module returns 403. Trial, enterprise and test keys skip the charge.
+     * Reactivate a deactivated (`inactive`) tax ID of the account. The reactivated tax ID is an ADDITIONAL tax ID of the account, so it goes through the additional tax ID gate before anything changes: the credential must reach the titular company of the account, which pays it (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; the tax ID only becomes `active` if the charge succeeds. A tax ID still covered for the current period is reactivated without a new charge, and trial, enterprise without a paid subscription and a test account are not charged. A tax ID that the system suspended (its payer was blocked or its management ended) cannot be activated by hand, whatever the payment state: it returns 422 `business_rule_violation` with subcode `nif_suspended_by_system` before anything is charged, and it resumes on its own when the payment or the management is resolved. A tax ID that is not part of the account returns 404, like one outside the credential scope. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesActivate(string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateResponse
+    public function publicApiV1CompaniesActivate(string $account, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -91,13 +88,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesActivateRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/activate', Operations\PublicApiV1CompaniesActivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/activate', Operations\PublicApiV1CompaniesActivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -143,7 +140,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -189,18 +186,18 @@ class Companies
     }
 
     /**
-     * Activate several managed companies
+     * Activate several tax IDs of the account
      *
-     * Reactivate several deactivated (`inactive`) managed companies in one operation, charging the combined prorated seats in a single invoice. Pass `company_ids`. The gate is atomic: every company is validated (ownership and `inactive` status) before any charge, so if one is invalid the whole batch is rejected without charging or activating any.
+     * Reactivate several deactivated (`inactive`) tax IDs of the account in one operation, charging the combined additional tax IDs in a single invoice. Pass `company_ids`. The gate is atomic: a tax ID the system suspended (its payer was blocked or its management ended) rejects the whole batch with 422 `business_rule_violation` and subcode `nif_suspended_by_system` before anything is charged; every tax ID is validated (it belongs to the account and is `inactive`, 422 `business_rule_violation` otherwise) before any charge, so if one is invalid the whole batch is rejected without charging or activating any; a tax ID that is not part of the account returns 404 for the whole batch. The batch then goes through the additional tax ID gate: the credential must reach the titular company of the account (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and keep the resulting active additional tax IDs within its cap (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; no tax ID is activated in either case. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
      * @param  \Factuarea\Sdk\Models\Components\ActivateCompaniesBatchV1Request  $body
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesActivateBatchResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesActivateBatch(Components\ActivateCompaniesBatchV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateBatchResponse
+    public function publicApiV1CompaniesActivateBatch(Components\ActivateCompaniesBatchV1Request $body, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesActivateBatchResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -228,13 +225,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesActivateBatchRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/activate');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/activate', Operations\PublicApiV1CompaniesActivateBatchRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -285,7 +282,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -331,18 +328,18 @@ class Companies
     }
 
     /**
-     * Create a managed company
+     * Register a tax ID in the account
      *
-     * Register a new managed company (a child sub-account) under your master tenant — the gestoría model. `name` and `tax_id` are required, and `tax_id` must be unique among the companies you manage (a duplicate returns 409). In live mode the prorated per-seat charge gates creation: with no payment method on file or a failed charge the call returns 402 and nothing is created. Use `GET /v1/companies/seat-charge-preview` to anticipate the cost; test keys skip the charge.
+     * Register a new tax ID (company) in the account of the path, which is the credential account. `name` and `tax_id` are required, and `tax_id` must be unique within the account (a duplicate returns 409); a tax ID that already belongs to another account returns 422 `business_rule_violation` and is moved with a tax ID transfer instead. When the account already has an active tax ID, the new one is an ADDITIONAL tax ID and goes through the additional tax ID gate before anything is created: the credential must reach the titular company of the account, which pays it (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; in every rejection nothing is created and nothing is charged. Trial and enterprise without a paid subscription are not charged. Use `GET /v1/accounts/{account}/companies/seat-charge-preview` to anticipate the cost. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateCompanyV1Request  $body
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesCreate(Components\CreateCompanyV1Request $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreateResponse
+    public function publicApiV1CompaniesCreate(Components\CreateCompanyV1Request $body, string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -370,13 +367,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesCreateRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies', Operations\PublicApiV1CompaniesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -427,7 +424,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -473,17 +470,17 @@ class Companies
     }
 
     /**
-     * Retrieve the creation status of a managed company
+     * Retrieve the creation status of a tax ID
      *
-     * Poll the provisioning lifecycle of a managed company. Returns `provisioning_status` (`pending`, `awaiting_payment`, `provisioning`, `active`, `failed`). `payment_setup_url` is present only while `awaiting_payment` and points to the master tenant's payment-method onboarding; `failed_reason` is present only when provisioning has `failed`. Test keys move the child to `active` directly.
+     * Poll the provisioning lifecycle of a tax ID of the account. Returns `provisioning_status` (`pending`, `awaiting_payment`, `provisioning`, `active`, `failed`). `payment_setup_url` is present only while `awaiting_payment` and points to the payment-method onboarding of the account titular (it is `null` for a test credential and for one that does not reach the titular company); `failed_reason` is present only when provisioning has `failed`. Test keys move the tax ID to `active` directly.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesCreationStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesCreationStatus(string $company, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreationStatusResponse
+    public function publicApiV1CompaniesCreationStatus(string $account, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesCreationStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -511,12 +508,12 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesCreationStatusRequest(
+            account: $account,
             company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/creation-status', Operations\PublicApiV1CompaniesCreationStatusRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/creation-status', Operations\PublicApiV1CompaniesCreationStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -562,7 +559,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -596,18 +593,18 @@ class Companies
     }
 
     /**
-     * Deactivate a managed company
+     * Deactivate a tax ID of the account
      *
-     * Deactivate a managed company, moving it from `active` to `inactive`: it becomes non-operational but its data is preserved and the change is reversible (reactivate it later by paying its seat). No charge is applied; instead a prorated seat credit is emitted best-effort for the unused time.
+     * Deactivate a tax ID of the account, moving it from `active` to `inactive`: it becomes non-operational but its data is preserved and the change is reversible (reactivate it later through the additional tax ID gate). No charge is applied: the additional tax ID is released without credit, and it can be reactivated for free within the paid period. The account must keep at least one active tax ID (422 `business_rule_violation` with subcode `account_must_keep_one_nif`). A tax ID that is not part of the account returns 404. Deactivating is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesDeactivateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesDeactivate(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeactivateResponse
+    public function publicApiV1CompaniesDeactivate(string $account, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeactivateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -635,13 +632,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesDeactivateRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/deactivate', Operations\PublicApiV1CompaniesDeactivateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/deactivate', Operations\PublicApiV1CompaniesDeactivateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -687,7 +684,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -721,18 +718,18 @@ class Companies
     }
 
     /**
-     * Archive a managed company
+     * Archive a tax ID of the account
      *
-     * Archive a managed company, moving it to the `archived` status so it no longer accepts operations. The underlying company row and its history are preserved. Archiving may be blocked by business rules (returns 422 `business_rule_violation`). A company not managed by your master tenant returns 404.
+     * Archive a tax ID of the account, moving it to the `archived` status so it no longer accepts operations. The underlying company row and its history are preserved. Archiving may be blocked by business rules, all as 422 `business_rule_violation`: open fiscal documents, or the account would keep no active tax ID (subcode `account_must_keep_one_nif`). A tax ID that is not part of the account or outside the credential scope returns 404. Archiving is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesDelete(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeleteResponse
+    public function publicApiV1CompaniesDelete(string $account, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -760,13 +757,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesDeleteRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}', Operations\PublicApiV1CompaniesDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}', Operations\PublicApiV1CompaniesDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -802,7 +799,7 @@ class Companies
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -836,17 +833,17 @@ class Companies
     }
 
     /**
-     * List your managed companies
+     * Check whether a portfolio NIF can issue
      *
-     * List the companies managed by your master tenant with cursor-based pagination. By default only `active` and `inactive` companies are returned; pass `status` (`active`, `inactive`, `archived`) to filter — `status=archived` is the opt-in way to surface archived companies. Only your own children are ever returned.
+     * Check whether one of the NIFs within your credential scope is ready to ISSUE invoices, as a FISCAL and module state: a `can_issue` verdict, a closed list of `blockers`, and the signals it was composed from (census status, default series, fiscal profile, operability, missing modules). This is a NEUTRAL read: it never inspects or reports subscription, plan, tier, quota, usage or price, and it never answers with a payment-required state. `{company}` names the NIF being CHECKED, not the company that owns the data, and membership is decided by the credential scope alone. A test credential of a live account reads, like the equivalent live credential, the live NIFs its sandbox scope mirrors (the whole portfolio when its scope holds the sandbox of the account owner). A NIF that does not exist, belongs to another account, falls outside what your credential reads (including a live NIF for a test credential of a legacy test account owned by a sandbox), or carries a malformed identifier all return the SAME 404 `resource_not_found` (`param: company`) — never a 403 — so the answer cannot be used to census NIFs by difference.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListStatus  $status
+     * @param  string  $account
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
-     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListResponse
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesIssuingReadinessResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesList(?Operations\PublicApiV1CompaniesListStatus $status = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesListResponse
+    public function publicApiV1CompaniesIssuingReadiness(string $account, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesIssuingReadinessResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -873,13 +870,129 @@ class Companies
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1CompaniesListRequest(
-            status: $status,
+        $request = new Operations\PublicApiV1CompaniesIssuingReadinessRequest(
+            account: $account,
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/issuing-readiness', Operations\PublicApiV1CompaniesIssuingReadinessRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.companies.issuing_readiness', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesIssuingReadinessResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1CompaniesIssuingReadinessResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * List the tax IDs of your account
+     *
+     * List the tax IDs (companies) of the account that your credential reads, with cursor-based pagination. By default only `active` and `inactive` companies are returned; pass `status` (`active`, `inactive`, `archived`) to filter — `status=archived` is the opt-in way to surface archived companies. With `tax_id` and no `status`, archived companies are hidden, as in the unfiltered list. Only the tax IDs of the account in the path are ever returned. Pass `include=readiness` (also together with `tax_id`) to add to each company a `readiness` object with the same contract as `GET /v1/accounts/{account}/companies/{company}/issuing-readiness`; without it the key is absent. Any other `include` value returns 422 `invalid_param_value`.
+     *
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListRequest  $request
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1CompaniesList(Operations\PublicApiV1CompaniesListRequest $request, ?Options $options = null): Operations\PublicApiV1CompaniesListResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies', Operations\PublicApiV1CompaniesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -928,7 +1041,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -964,16 +1077,16 @@ class Companies
     /**
      * Preview the seat charge of adding a company
      *
-     * Preview the prorated per-seat amount for adding or activating managed companies, computed from the master tenant's Stripe upcoming invoice, without charging. Use `count` (≥1) to preview a batch, or `company_ids` for a coverage-aware preview: companies still covered for the current period cost `0` (`already_covered: true`). `amount` is in the currency's minor units; `requires_payment_method` is `true` when no payment method is on file.
+     * Preview the prorated amount the account would be charged for registering or activating ADDITIONAL tax IDs, decided by the same gate as those writes and computed from the Stripe upcoming invoice of the account titular, without charging. Use `count` (≥1) to preview a batch, or `company_ids` for a coverage-aware preview: tax IDs still covered for the current period cost `0` (`already_covered: true`). `amount` is the taxable base in euros as a 2-decimal string (`tax_amount` and `total` too; only `recurring_base_cents` and `recurring_total_cents` are in cents); `requires_payment_method` is `true` when no payment method is on file. A tax ID that is not additional, a test account, and an account without a current plan or whose plan does not allow additional tax IDs preview `0`: this read never returns 402 nor the plan or cap rejections of the writes. It returns 403 `billing_managed_by_provider` when the billing of the account is managed by its provider, and 404 when a `company_ids` value is not a tax ID of the account.
      *
-     * @param  array<string>  $companyIds
+     * @param  string  $account
      * @param  ?int  $count
+     * @param  ?array<string>  $companyIds
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesSeatChargePreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesSeatChargePreview(array $companyIds, ?int $count = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesSeatChargePreviewResponse
+    public function publicApiV1CompaniesSeatChargePreview(string $account, ?int $count = null, ?array $companyIds = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesSeatChargePreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1001,13 +1114,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesSeatChargePreviewRequest(
-            companyIds: $companyIds,
+            account: $account,
             count: $count,
+            companyIds: $companyIds,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/seat-charge-preview');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/seat-charge-preview', Operations\PublicApiV1CompaniesSeatChargePreviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1068,7 +1181,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1114,17 +1227,17 @@ class Companies
     }
 
     /**
-     * Retrieve a managed company
+     * Retrieve a tax ID of the account
      *
-     * Retrieve a single managed company by its `id` (UUID v7). A company not managed by your master tenant returns 404 `company_not_found` (anti-enumeration).
+     * Retrieve a single tax ID (company) of the account by its `id` (UUID v7). A tax ID that does not exist, is outside the account or is outside what your credential reads returns 404 `resource_not_found` (anti-enumeration), always with the same body. An `{account}` that is not the account of your credential returns 404 `account_not_found`.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesShow(string $company, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesShowResponse
+    public function publicApiV1CompaniesShow(string $account, string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1152,12 +1265,12 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesShowRequest(
+            account: $account,
             company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}', Operations\PublicApiV1CompaniesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}', Operations\PublicApiV1CompaniesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1203,7 +1316,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1237,9 +1350,137 @@ class Companies
     }
 
     /**
-     * Update a managed company
+     * Retrieve invoicing statistics per company
      *
-     * Update the profile of a managed company (`name`, `business_name`, address fields, `email`, `phone`). The `tax_id` is immutable after creation (sending it returns 422) and `country_aeat_zone` is derived from the address. Partial update: omitted fields keep their value; send `""` to clear a field.
+     * Return one `company_stats` row per company (tax ID) of the account that your credential reads: the number of issued invoices in the period (`invoices_count`, sent, paid and overdue ones), what they invoice (`total_invoiced`, a 2-decimal string) and the last issued invoice of the company regardless of the period (`last_invoice`, or `null` when it has not issued any). The rows cover the same companies as `GET /v1/accounts/{account}/companies`, archived ones hidden. The period is `date_from`/`date_to` (`YYYY-MM-DD`, both optional and inclusive); without them it is the current calendar year, and with only one the other end stays within the same year. The list is not paginated, because an account holds a bounded set of companies: `has_more` is always `false` and `next_cursor` always `null`. An `{account}` that is not the account of your credential returns 404 `account_not_found` (anti-enumeration), and a malformed date or an end before the start returns 422 `invalid_param_value`.
+     *
+     * @param  string  $account
+     * @param  ?LocalDate  $dateFrom
+     * @param  ?LocalDate  $dateTo
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesStatsResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1CompaniesStats(string $account, ?LocalDate $dateFrom = null, ?LocalDate $dateTo = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesStatsResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1CompaniesStatsRequest(
+            account: $account,
+            dateFrom: $dateFrom,
+            dateTo: $dateTo,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/stats', Operations\PublicApiV1CompaniesStatsRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+
+        $qp = Utils\Utils::getQueryParams(Operations\PublicApiV1CompaniesStatsRequest::class, $request, $urlOverride);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.companies.stats', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions['query'] = Utils\QueryParameters::standardizeQueryParams($httpRequest, $qp);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\AccountNifStatsList', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1CompaniesStatsResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    accountNifStatsList: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
+     * Update a tax ID of the account
+     *
+     * Update the profile of a tax ID of the account (`name`, `business_name`, address fields, `email`, `phone`). The titular company of the account (your own, or the one of a managed account you operate) is edited here too, for these profile fields only: archiving, activating and deactivating do not apply to it. The `tax_id` is immutable after creation (sending it returns 422) and `country_aeat_zone` is derived from the address. Partial update: omitted fields keep their value; send `""` to clear a field. Only an `active` tax ID can be edited (422 `business_rule_violation` otherwise). Editing a profile is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesUpdateResponse
@@ -1273,7 +1514,7 @@ class Companies
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}', Operations\PublicApiV1CompaniesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}', Operations\PublicApiV1CompaniesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1323,7 +1564,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1357,18 +1598,18 @@ class Companies
     }
 
     /**
-     * Verify the creation of a managed company
+     * Verify the creation of a tax ID
      *
-     * Reconcile and advance the provisioning of a managed company against the master tenant's subscription. No request body; idempotent. While `awaiting_payment`, once the master has a payment method on file the child is charged the prorated seat and moves to `active`; otherwise it stays `awaiting_payment` with no error. Returns the creation-status resource.
+     * Reconcile and advance the provisioning of a tax ID of the account against the subscription of the account titular. No request body; idempotent. While `awaiting_payment`, once the titular has a payment method on file the tax ID is charged as an additional tax ID and moves to `active`; otherwise it stays `awaiting_payment` with no error. Returns the creation-status resource. A tax ID that is not part of the account returns 404, and a credential that does not reach the titular company returns 403 `forbidden_action`. It never returns 402: a charge that fails leaves the provisioning `failed` with its reason. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
      *
+     * @param  string  $account
      * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesVerifyCreationResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1CompaniesVerifyCreation(string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1CompaniesVerifyCreationResponse
+    public function publicApiV1CompaniesVerifyCreation(string $account, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1CompaniesVerifyCreationResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1396,13 +1637,13 @@ class Companies
             ];
         }
         $request = new Operations\PublicApiV1CompaniesVerifyCreationRequest(
+            account: $account,
             company: $company,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/verify-creation', Operations\PublicApiV1CompaniesVerifyCreationRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/companies/{company}/verify-creation', Operations\PublicApiV1CompaniesVerifyCreationRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1448,7 +1689,7 @@ class Companies
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

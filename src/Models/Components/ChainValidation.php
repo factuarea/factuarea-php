@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ChainValidation - Result of recomputing and verifying the VeriFactu hash chain (`huella`) of your company without mutating data. Returned by `GET /v1/verifactu/chain/validate`. */
+/** ChainValidation - Result of recomputing and verifying the VeriFactu hash chain (`huella`) of your company without mutating data. Returned by `GET /v1/companies/{company}/verifactu/chain/validate`. */
 class ChainValidation
 {
     /**
@@ -61,7 +61,7 @@ class ChainValidation
     public \DateTime $validatedAt;
 
     /**
-     * UUID (v7) of the first invalid record, or `null` if the chain is intact.
+     * UUID v7 of the first invalid record, or `null` if the chain is intact.
      *
      * @var ?string $firstInvalidRecordId
      */

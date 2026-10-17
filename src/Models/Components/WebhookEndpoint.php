@@ -45,7 +45,7 @@ class WebhookEndpoint
     public array $enabledEvents;
 
     /**
-     * enabled, disabled, or paused.
+     * Status of the endpoint: `active` (it receives deliveries), `degraded` (every delivery of the last 24 hours failed: deliveries are paused until a `ping` succeeds) or `disabled` (turned off by you: it receives none).
      *
      * @var string $status
      */

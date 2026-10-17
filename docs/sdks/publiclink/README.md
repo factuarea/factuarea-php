@@ -13,7 +13,7 @@ Return the public share link state of a delivery note: `url` (absolute, ready to
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.get" method="get" path="/delivery_notes/{delivery_note}/public-link" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.get" method="get" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -34,9 +34,9 @@ $sdk = Sdk\Factuarea::builder()
 
 
 $response = $sdk->deliveryNotes->publicLink->publicApiV1DeliveryNotesPublicLinkGet(
+    company: 'Reichel - Ledner',
     deliveryNote: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c'
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
@@ -47,11 +47,11 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                        | Type                                                                                                                                                                                                                                                                                                                                                                                             | Required                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `deliveryNote`                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                               | N/A                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                               | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                     | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                       |
-| `xActiveProfile`                                                                                                                                                                                                                                                                                                                                                                                 | *?string*                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                               | Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf). | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c                                                                                                                                                                                                                                                                                                                                                             |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `deliveryNote`                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the delivery note.                                                                                                                                                                                                                                                                                                                            |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -59,11 +59,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type          | Status Code         | Content Type        |
-| ------------------- | ------------------- | ------------------- |
-| Errors\Error        | 401, 403, 404, 429  | application/json    |
-| Errors\Error        | 500                 | application/json    |
-| Errors\APIException | 4XX, 5XX            | \*/\*               |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1DeliveryNotesPublicLinkUpdate
 
@@ -71,7 +71,7 @@ Enable/disable the public share link of a delivery note or change its expiry. Re
 
 ### Example Usage: api_key_revoked
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="put" path="/delivery_notes/{delivery_note}/public-link" example="api_key_revoked" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -91,10 +91,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: '943a1537-2346-4372-a8a3-854334ff4aa3',
     deliveryNote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateDeliveryNotePublicLinkRequest(
         action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
     ),
@@ -110,7 +110,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="put" path="/delivery_notes/{delivery_note}/public-link" example="invalid_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -130,10 +130,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: '7236d4e7-fc65-45dd-8374-8e2c98b94110',
     deliveryNote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateDeliveryNotePublicLinkRequest(
         action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
     ),
@@ -149,7 +149,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="put" path="/delivery_notes/{delivery_note}/public-link" example="missing_api_key" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -169,10 +169,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: 'Krajcik - Considine',
     deliveryNote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateDeliveryNotePublicLinkRequest(
         action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
     ),
@@ -188,7 +188,7 @@ if ($response->object !== null) {
 ```
 ### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="put" path="/delivery_notes/{delivery_note}/public-link" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -208,10 +208,10 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: 'Buckridge Inc',
     deliveryNote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
     body: new Components\UpdateDeliveryNotePublicLinkRequest(
         action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
     ),
@@ -240,6 +240,6 @@ if ($response->object !== null) {
 
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 401, 403, 404, 409, 422, 429 | application/json             |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

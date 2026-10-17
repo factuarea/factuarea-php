@@ -53,11 +53,10 @@ class PaymentMethods
      * Lists the closed catalog of payment methods with their public `value` and localized `label`. Use it to populate the `payment_method` field when registering a payment instead of hard-coding values.
      *
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PaymentMethodsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PaymentMethodsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PaymentMethodsListResponse
+    public function publicApiV1PaymentMethodsList(?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PaymentMethodsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,7 +85,6 @@ class PaymentMethods
         }
         $request = new Operations\PublicApiV1PaymentMethodsListRequest(
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/payment-methods');
@@ -135,7 +133,7 @@ class PaymentMethods
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

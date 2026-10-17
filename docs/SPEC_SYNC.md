@@ -16,6 +16,8 @@ receiver. It runs on three triggers:
   from the `factuarea` repo (emitter, below).
 - **`workflow_dispatch`** — manual run from the Actions tab.
 - **`schedule`** — a daily cron fallback, so a missed dispatch is still caught.
+  **Currently PAUSED**, together with the emitter in the `factuarea` repo; the
+  reactivation condition is written in the workflow itself.
 
 What it does:
 

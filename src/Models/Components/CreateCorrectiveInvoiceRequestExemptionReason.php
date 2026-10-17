@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one. */
+/** Cause of VAT exemption of the corrected line (the closed catalog of `POST /v1/companies/{company}/invoices`). OMIT it and the line inherits the exemption of the original line at the same index; SEND it and it replaces it; send `null` for explicitly none — for example, `exemption_reason: null` turns an exempt original line into a taxed one. */
 enum CreateCorrectiveInvoiceRequestExemptionReason: string
 {
     case E1 = 'E1';

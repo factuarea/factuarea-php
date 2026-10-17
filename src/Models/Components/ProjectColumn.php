@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ProjectColumn
 {
     /**
-     * UUID (v7) of the column.
+     * UUID v7 of the column.
      *
      * @var string $id
      */

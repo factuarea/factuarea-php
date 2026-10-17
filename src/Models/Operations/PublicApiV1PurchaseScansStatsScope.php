@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Universe of the counts per option: `inbox` (default, scans still to be handled) or `history` (the whole history). */
 enum PublicApiV1PurchaseScansStatsScope: string
 {
     case Inbox = 'inbox';

@@ -20,12 +20,12 @@ class ProductSalesAnalytics
     public string $unitsSold;
 
     /**
-     * Sales revenue in EUR.
+     * Revenue of the product (EUR), as a 2-decimal string.
      *
-     * @var float $totalRevenue
+     * @var string $totalRevenue
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total_revenue')]
-    public float $totalRevenue;
+    public string $totalRevenue;
 
     /**
      *
@@ -78,7 +78,7 @@ class ProductSalesAnalytics
 
     /**
      * @param  string  $unitsSold
-     * @param  float  $totalRevenue
+     * @param  string  $totalRevenue
      * @param  int  $invoicesCount
      * @param  int  $monthOverMonthDeltaPercent
      * @param  array<string>  $trend
@@ -87,7 +87,7 @@ class ProductSalesAnalytics
      * @param  ?\Factuarea\Sdk\Models\Components\LastBuyer  $lastBuyer
      * @phpstan-pure
      */
-    public function __construct(string $unitsSold, float $totalRevenue, int $invoicesCount, int $monthOverMonthDeltaPercent, array $trend, array $trendLabels, array $activity, ?LastBuyer $lastBuyer = null)
+    public function __construct(string $unitsSold, string $totalRevenue, int $invoicesCount, int $monthOverMonthDeltaPercent, array $trend, array $trendLabels, array $activity, ?LastBuyer $lastBuyer = null)
     {
         $this->unitsSold = $unitsSold;
         $this->totalRevenue = $totalRevenue;

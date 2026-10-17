@@ -40,6 +40,7 @@ class PublicApiV1TasksCreateResponse
     public array $headers;
 
     /**
+     * Task created successfully. The `Location` header contains the canonical URL of the newly created task.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TasksCreateResponseBody $object
      */

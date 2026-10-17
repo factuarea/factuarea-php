@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1VerifactuEventsSummaryResponseBody
 {
     /**
-     * Aggregated summary of the VeriFactu events of the company: total and breakdown by type and by status. Returned by `GET /v1/verifactu/events/summary`.
+     * Aggregated summary of the VeriFactu events of the company: total and breakdown by type and by status. Returned by `GET /v1/companies/{company}/verifactu/events/summary`.
      *
      * @var \Factuarea\Sdk\Models\Components\VeriFactuEventSummary $data
      */

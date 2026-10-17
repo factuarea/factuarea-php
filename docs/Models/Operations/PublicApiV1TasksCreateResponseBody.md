@@ -1,5 +1,7 @@
 # PublicApiV1TasksCreateResponseBody
 
+Task created successfully. The `Location` header contains the canonical URL of the newly created task.
+
 
 ## Fields
 

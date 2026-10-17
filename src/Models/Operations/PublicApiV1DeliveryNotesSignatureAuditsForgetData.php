@@ -13,10 +13,10 @@ class PublicApiV1DeliveryNotesSignatureAuditsForgetData
 {
     /**
      *
-     * @var int $id
+     * @var string $id
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('id')]
-    public int $id;
+    public string $id;
 
     /**
      *
@@ -26,11 +26,11 @@ class PublicApiV1DeliveryNotesSignatureAuditsForgetData
     public bool $forgotten;
 
     /**
-     * @param  int  $id
+     * @param  string  $id
      * @param  bool  $forgotten
      * @phpstan-pure
      */
-    public function __construct(int $id, bool $forgotten)
+    public function __construct(string $id, bool $forgotten)
     {
         $this->id = $id;
         $this->forgotten = $forgotten;

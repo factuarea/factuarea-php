@@ -1,0 +1,8 @@
+# PublicApiV1AccountWebhooksRotateSecretResponseBody
+
+
+## Fields
+
+| Field                                                                                                                      | Type                                                                                                                       | Required                                                                                                                   | Description                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                                     | [Components\AccountWebhookWithSecret](../../Models/Components/AccountWebhookWithSecret.md)                                 | :heavy_check_mark:                                                                                                         | An `AccountWebhook` returned once at creation or after secret rotation: the same fields PLUS the plaintext signing secret. |

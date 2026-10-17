@@ -20,7 +20,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?bool $surchargeSubject = null;
 
     /**
-     * UUID (v7) of an active price list of your company to apply by default to this customer.
+     * Public identifier (UUID v7) of an active price list of your company applied by default to this customer, or `null`.
      *
      * @var ?string $defaultPriceListUuid
      */

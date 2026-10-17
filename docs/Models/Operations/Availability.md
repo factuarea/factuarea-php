@@ -1,5 +1,7 @@
 # Availability
 
+Only offers with this availability: `available`, `unavailable`, `unknown`, `seasonal` or `store_dependent`.
+
 
 ## Values
 

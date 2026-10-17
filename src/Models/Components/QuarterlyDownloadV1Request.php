@@ -10,9 +10,9 @@ namespace Factuarea\Sdk\Models\Components;
 
 
 /**
- * QuarterlyDownloadV1Request - Public REST API v1 — POST /v1/invoices/quarterly/download-zip
+ * QuarterlyDownloadV1Request - Public REST API v1 — POST /v1/companies/{company}/invoices/quarterly/download-zip
  *
- * and POST /v1/invoices/quarterly/send-email (shared fields).
+ * and POST /v1/companies/{company}/invoices/quarterly/send-email (shared fields).
  *
  * The canonical recipient field is `email`. We accept
  * `to_email` as a deprecated alias for compatibility with older clients.

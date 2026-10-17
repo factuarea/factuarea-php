@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class VeriFactuEvent
 {
     /**
-     * UUID (v7) of the event.
+     * UUID v7 of the event.
      *
      * @var string $id
      */

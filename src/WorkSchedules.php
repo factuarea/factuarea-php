@@ -53,14 +53,14 @@ class WorkSchedules
      *
      * Archive a work schedule (transition `active` → `archived`), retiring it from use while preserving it. No request body. Returns 422 if it is already archived. Reversible via unarchive.
      *
+     * @param  string  $company
      * @param  string  $schedule
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesArchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesArchive(string $schedule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesArchiveResponse
+    public function publicApiV1WorkSchedulesArchive(string $company, string $schedule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesArchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -88,13 +88,13 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesArchiveRequest(
+            company: $company,
             schedule: $schedule,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}/archive', Operations\PublicApiV1WorkSchedulesArchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}/archive', Operations\PublicApiV1WorkSchedulesArchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -140,7 +140,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -210,7 +210,7 @@ class WorkSchedules
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}/assign', Operations\PublicApiV1WorkSchedulesAssignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}/assign', Operations\PublicApiV1WorkSchedulesAssignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -261,7 +261,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -299,13 +299,13 @@ class WorkSchedules
      *
      * List the employees with an open assignment (`effective_to` = null) to this work schedule, as a flat list under `{ "data": [ … ] }`.
      *
+     * @param  string  $company
      * @param  string  $schedule
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesAssignmentsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesAssignments(string $schedule, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesAssignmentsResponse
+    public function publicApiV1WorkSchedulesAssignments(string $company, string $schedule, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesAssignmentsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,12 +333,12 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesAssignmentsRequest(
+            company: $company,
             schedule: $schedule,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}/assignments', Operations\PublicApiV1WorkSchedulesAssignmentsRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}/assignments', Operations\PublicApiV1WorkSchedulesAssignmentsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -384,7 +384,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -423,13 +423,13 @@ class WorkSchedules
      * Create a weekly work schedule for the authenticated company (resolved from the API key, never from the payload). `name` and `week_pattern` are required; `mode` defaults to `validated`. The `week_pattern` is a list of weekdays (ISO 8601 1..7) each with its ordered, non-overlapping `HH:MM` time ranges (an empty `ranges` means a rest day). Returns the created schedule with its generated `id` (UUID v7); `weekly_hours` is derived from the pattern.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateWeeklyScheduleRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesCreate(Components\CreateWeeklyScheduleRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesCreateResponse
+    public function publicApiV1WorkSchedulesCreate(Components\CreateWeeklyScheduleRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -457,13 +457,13 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules', Operations\PublicApiV1WorkSchedulesCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -514,7 +514,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -552,14 +552,14 @@ class WorkSchedules
      *
      * Resolve the work schedule in effect for an employee by its `id` (UUID v7) on a given day. The optional `date` query parameter (`Y-m-d`) sets that day and defaults to today, so you can read a schedule that starts in the future, such as the one assigned from a pending hire date. Returns 404 `schedule_assignment_not_found` when the employee has no schedule in effect on that day (or belongs to another company), and 422 when `date` is not a valid `Y-m-d` date. The result is the resolved schedule (`id` = UUID v7 of the schedule), not the assignment.
      *
+     * @param  string  $company
      * @param  string  $employee
      * @param  ?LocalDate  $date
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesEmployeeScheduleResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesEmployeeSchedule(string $employee, ?LocalDate $date = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesEmployeeScheduleResponse
+    public function publicApiV1WorkSchedulesEmployeeSchedule(string $company, string $employee, ?LocalDate $date = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesEmployeeScheduleResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -587,13 +587,13 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesEmployeeScheduleRequest(
+            company: $company,
             employee: $employee,
             date: $date,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/employee/{employee}', Operations\PublicApiV1WorkSchedulesEmployeeScheduleRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/employee/{employee}', Operations\PublicApiV1WorkSchedulesEmployeeScheduleRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -642,7 +642,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -680,11 +680,11 @@ class WorkSchedules
      *
      * List the weekly work schedules of your company with cursor-based pagination. Supports filtering by `status` (`active`/`archived`) and `mode` (`validated`/`real_clocking`), plus free-text `search` over the schedule name.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesList(?Operations\PublicApiV1WorkSchedulesListRequest $request = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesListResponse
+    public function publicApiV1WorkSchedulesList(Operations\PublicApiV1WorkSchedulesListRequest $request, ?Options $options = null): Operations\PublicApiV1WorkSchedulesListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -712,7 +712,7 @@ class WorkSchedules
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules', Operations\PublicApiV1WorkSchedulesListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -761,7 +761,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -799,13 +799,13 @@ class WorkSchedules
      *
      * Retrieve a single work schedule by its `id` (UUID v7). A schedule belonging to another company returns 404 `work_schedule_not_found` (anti-enumeration).
      *
+     * @param  string  $company
      * @param  string  $schedule
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesShow(string $schedule, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesShowResponse
+    public function publicApiV1WorkSchedulesShow(string $company, string $schedule, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -833,12 +833,12 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesShowRequest(
+            company: $company,
             schedule: $schedule,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}', Operations\PublicApiV1WorkSchedulesShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}', Operations\PublicApiV1WorkSchedulesShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -884,7 +884,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -922,12 +922,12 @@ class WorkSchedules
      *
      * Aggregated KPIs for your work schedules: total count, active and archived counts, a breakdown by mode (`validated`/`real_clocking`) and the number of employees with an assigned schedule. Returned as `{ "data": … }`.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesStats(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesStatsResponse
+    public function publicApiV1WorkSchedulesStats(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -955,11 +955,11 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesStatsRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/stats', Operations\PublicApiV1WorkSchedulesStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1005,7 +1005,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1043,14 +1043,14 @@ class WorkSchedules
      *
      * Unarchive a work schedule (transition `archived` → `active`), returning it to use. No request body. Returns 422 if it is already active.
      *
+     * @param  string  $company
      * @param  string  $schedule
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUnarchiveResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WorkSchedulesUnarchive(string $schedule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesUnarchiveResponse
+    public function publicApiV1WorkSchedulesUnarchive(string $company, string $schedule, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WorkSchedulesUnarchiveResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1078,13 +1078,13 @@ class WorkSchedules
             ];
         }
         $request = new Operations\PublicApiV1WorkSchedulesUnarchiveRequest(
+            company: $company,
             schedule: $schedule,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}/unarchive', Operations\PublicApiV1WorkSchedulesUnarchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}/unarchive', Operations\PublicApiV1WorkSchedulesUnarchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1130,7 +1130,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1200,7 +1200,7 @@ class WorkSchedules
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}/unassign', Operations\PublicApiV1WorkSchedulesUnassignRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}/unassign', Operations\PublicApiV1WorkSchedulesUnassignRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1241,7 +1241,7 @@ class WorkSchedules
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1277,7 +1277,7 @@ class WorkSchedules
     /**
      * Update a work schedule
      *
-     * Fully replace a work schedule: `name`, `mode` and the complete `week_pattern` are required (there is no partial update of the pattern). `weekly_hours` is recomputed from the new pattern. Returns the updated schedule.
+     * Partially update a work schedule: `name`, `mode` and `week_pattern` are optional and an omitted field keeps its current value (an empty body changes nothing). When sent, `week_pattern` replaces the whole weekly pattern — there is no update of a single day — and `weekly_hours` is recomputed from it. The resulting schedule is validated as a whole, so an invalid value returns 422 and changes nothing. Returns the updated schedule.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUpdateResponse
@@ -1311,21 +1311,20 @@ class WorkSchedules
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/work-schedules/{schedule}', Operations\PublicApiV1WorkSchedulesUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/work-schedules/{schedule}', Operations\PublicApiV1WorkSchedulesUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body === null) {
-            throw new \Exception('Request body is required');
+        if ($body !== null) {
+            $httpOptions = array_merge_recursive($httpOptions, $body);
         }
-        $httpOptions = array_merge_recursive($httpOptions, $body);
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.work_schedules.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -1362,7 +1361,7 @@ class WorkSchedules
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

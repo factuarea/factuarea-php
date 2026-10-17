@@ -1,5 +1,7 @@
 # PublicApiV1TimeEntriesManualResponseBody
 
+Manual time entry recorded. The `Location` header contains the canonical URL of the new time entry.
+
 
 ## Fields
 

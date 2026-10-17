@@ -40,6 +40,7 @@ class PublicApiV1AbsenceTypesCreateResponse
     public array $headers;
 
     /**
+     * Absence type created. The `Location` header contains the canonical URL of the new absence type.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceTypesCreateResponseBody $object
      */

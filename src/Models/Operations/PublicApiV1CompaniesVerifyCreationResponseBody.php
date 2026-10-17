@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1CompaniesVerifyCreationResponseBody
 {
     /**
-     * Provisioning lifecycle status of a managed company (child sub-account) created through the gestoría endpoints. Poll it after creating a company to know when it becomes operational.
+     * Provisioning lifecycle status of a tax ID (company) of the account. Poll it after registering the tax ID to know when it becomes operational.
      *
      * @var \Factuarea\Sdk\Models\Components\CompanyCreationStatus $data
      */

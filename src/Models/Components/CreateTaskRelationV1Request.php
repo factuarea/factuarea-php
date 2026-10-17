@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateTaskRelationV1Request
 {
     /**
-     * `id` (UUID) of the target task of the relation, from the same company.
+     * Public identifier (UUID v7) of the target task of the relation, from the same company.
      *
      * @var string $targetTaskId
      */

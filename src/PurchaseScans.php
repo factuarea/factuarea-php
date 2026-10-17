@@ -85,7 +85,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}', Operations\PublicApiV1PurchaseScansArchiveRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}', Operations\PublicApiV1PurchaseScansArchiveRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -136,7 +136,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -206,7 +206,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}/convert', Operations\PublicApiV1PurchaseScansConvertRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}/convert', Operations\PublicApiV1PurchaseScansConvertRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -257,7 +257,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -296,13 +296,13 @@ class PurchaseScans
      * Upload up to 20 PDF, JPEG or PNG files as `multipart/form-data` (`files[]`, 20 MiB each, 100 MiB per request). Each file is scanned for safety and stored encrypted. It is queued for OCR when automatic scanning is enabled; otherwise it remains `received` until explicitly started. Responds `202` with `accepted[]` (index plus the full scan detail) and `rejected[]` (index, filename, error code); `422` when no file was accepted. Send an `Idempotency-Key` header: a replay returns the same result without re-ingesting.
      *
      * @param  \Factuarea\Sdk\Models\Components\UploadPurchaseScansRequest  $body
+     * @param  string  $company
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseScansCreate(Components\UploadPurchaseScansRequest $body, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansCreateResponse
+    public function publicApiV1PurchaseScansCreate(Components\UploadPurchaseScansRequest $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -330,13 +330,13 @@ class PurchaseScans
             ];
         }
         $request = new Operations\PublicApiV1PurchaseScansCreateRequest(
+            company: $company,
             idempotencyKey: $idempotencyKey,
             body: $body,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans', Operations\PublicApiV1PurchaseScansCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'multipart');
@@ -399,7 +399,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '413', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '413', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -469,7 +469,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}/duplicate_resolution', Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}/duplicate-resolution', Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -520,7 +520,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -558,11 +558,11 @@ class PurchaseScans
      *
      * List the documents received by the purchase scanner (upload, API or mailbox) with their lifecycle status, extraction issues and `available_actions`. Use `filter[status]`, `filter[source]` and the documented date/range filters; cursor-based pagination.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseScansList(?Operations\PublicApiV1PurchaseScansListRequest $request = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansListResponse
+    public function publicApiV1PurchaseScansList(Operations\PublicApiV1PurchaseScansListRequest $request, ?Options $options = null): Operations\PublicApiV1PurchaseScansListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -590,7 +590,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans', Operations\PublicApiV1PurchaseScansListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -639,7 +639,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -709,7 +709,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}/restore', Operations\PublicApiV1PurchaseScansRestoreRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}/restore', Operations\PublicApiV1PurchaseScansRestoreRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -760,7 +760,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -830,7 +830,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}/retry', Operations\PublicApiV1PurchaseScansRetryRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}/retry', Operations\PublicApiV1PurchaseScansRetryRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -881,7 +881,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -951,7 +951,7 @@ class PurchaseScans
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}/review', Operations\PublicApiV1PurchaseScansReviewRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}/review', Operations\PublicApiV1PurchaseScansReviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -965,7 +965,7 @@ class PurchaseScans
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.purchase_scans.review', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -1002,7 +1002,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1040,13 +1040,13 @@ class PurchaseScans
      *
      * Retrieve a purchase scan by its public `id` (UUID v7): evidence-first extraction (value, confidence and page/bounding-box evidence per field and line), issues, duplicate match, attempts, linked expense and `available_actions`. The current `version` is required by every mutation.
      *
+     * @param  string  $company
      * @param  string  $purchaseScan
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseScansShow(string $purchaseScan, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansShowResponse
+    public function publicApiV1PurchaseScansShow(string $company, string $purchaseScan, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1074,12 +1074,12 @@ class PurchaseScans
             ];
         }
         $request = new Operations\PublicApiV1PurchaseScansShowRequest(
+            company: $company,
             purchaseScan: $purchaseScan,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}', Operations\PublicApiV1PurchaseScansShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}', Operations\PublicApiV1PurchaseScansShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1125,7 +1125,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1163,13 +1163,13 @@ class PurchaseScans
      *
      * Download the original file of a purchase scan (PDF or image) as a binary stream with `Content-Disposition: attachment`. Available while the original is retained.
      *
+     * @param  string  $company
      * @param  string  $purchaseScan
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansSourceResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseScansSource(string $purchaseScan, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansSourceResponse
+    public function publicApiV1PurchaseScansSource(string $company, string $purchaseScan, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansSourceResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1197,12 +1197,12 @@ class PurchaseScans
             ];
         }
         $request = new Operations\PublicApiV1PurchaseScansSourceRequest(
+            company: $company,
             purchaseScan: $purchaseScan,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/{purchase_scan}/source', Operations\PublicApiV1PurchaseScansSourceRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/{purchase_scan}/source', Operations\PublicApiV1PurchaseScansSourceRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1267,7 +1267,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1305,13 +1305,13 @@ class PurchaseScans
      *
      * Aggregated counters of the purchase scanner for your company: documents in progress, pending review and with incidents, plus per-status counts. Returned as `{ "data": PurchaseScanStats }`.
      *
+     * @param  string  $company
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansStatsScope  $scope
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseScansStatsResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PurchaseScansStats(?Operations\PublicApiV1PurchaseScansStatsScope $scope = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansStatsResponse
+    public function publicApiV1PurchaseScansStats(string $company, ?Operations\PublicApiV1PurchaseScansStatsScope $scope = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PurchaseScansStatsResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1339,12 +1339,12 @@ class PurchaseScans
             ];
         }
         $request = new Operations\PublicApiV1PurchaseScansStatsRequest(
+            company: $company,
             scope: $scope,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/purchase_scans/stats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/purchase-scans/stats', Operations\PublicApiV1PurchaseScansStatsRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1393,7 +1393,7 @@ class PurchaseScans
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

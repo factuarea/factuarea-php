@@ -50,16 +50,16 @@ class Timer
     /**
      * Start a task timer
      *
-     * Start a timer on a task for the member who owns the API key. No request body. A member can run one timer at a time: if another is running, the call returns 409 `task_timer_already_running`; stop it with `POST /v1/task-timers/stop`.
+     * Start a timer on a task for the member who owns the API key. No request body. A member can run one timer at a time: if another is running, the call returns 409 `task_timer_already_running`; stop it with `POST /v1/companies/{company}/task-timers/stop`.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksTimerStartResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksTimerStart(string $task, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksTimerStartResponse
+    public function publicApiV1TasksTimerStart(string $company, string $task, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksTimerStartResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,13 +87,13 @@ class Timer
             ];
         }
         $request = new Operations\PublicApiV1TasksTimerStartRequest(
+            company: $company,
             task: $task,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/timer/start', Operations\PublicApiV1TasksTimerStartRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/timer/start', Operations\PublicApiV1TasksTimerStartRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -139,7 +139,7 @@ class Timer
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -12,7 +12,7 @@ Summarize the time logged on the tasks of a project, optionally between `from` a
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_summary.show" method="get" path="/projects/{project}/time-summary" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_summary.show" method="get" path="/companies/{company}/projects/{project}/time-summary" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -32,9 +32,9 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1ProjectsTimeSummaryShowRequest(
+    company: 'Adams and Sons',
     project: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    xActiveProfile: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a0c',
 );
 
 $response = $sdk->projects->timeSummary->publicApiV1ProjectsTimeSummaryShow(
@@ -58,8 +58,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type              | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| Errors\Error            | 401, 403, 404, 422, 429 | application/json        |
-| Errors\Error            | 500                     | application/json        |
-| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |

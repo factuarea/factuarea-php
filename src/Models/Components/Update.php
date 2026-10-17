@@ -12,7 +12,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Update
 {
     /**
-     * UUID (v7) of the product. A product that does not exist or does not belong to your company is skipped, without revealing whether it exists.
+     * UUID v7 of the product. A product that does not exist or does not belong to your company is skipped, without revealing whether it exists.
      *
      * @var string $productId
      */

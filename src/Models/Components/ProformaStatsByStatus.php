@@ -20,19 +20,19 @@ class ProformaStatsByStatus
     public int $count;
 
     /**
-     * Aggregate amount of the proformas in this status (EUR).
+     * Aggregate amount of the proformas in this status (EUR), as a 2-decimal string.
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * @param  int  $count
-     * @param  float  $total
+     * @param  string  $total
      * @phpstan-pure
      */
-    public function __construct(int $count, float $total)
+    public function __construct(int $count, string $total)
     {
         $this->count = $count;
         $this->total = $total;

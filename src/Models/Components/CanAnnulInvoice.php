@@ -47,7 +47,7 @@ class CanAnnulInvoice
     public array $info;
 
     /**
-     * `true` when the live payments of the invoice are the ONLY obstacle to annulling it: `POST /v1/invoices/{invoice}/annul` with `revert_collections: true` would succeed. `can_annul` stays `false` in that case, because it is the verdict without `revert_collections`. `false` when there are no live payments or when something else also blocks the annulment.
+     * `true` when the live payments of the invoice are the ONLY obstacle to annulling it: `POST /v1/companies/{company}/invoices/{invoice}/annul` with `revert_collections: true` would succeed. `can_annul` stays `false` in that case, because it is the verdict without `revert_collections`. `false` when there are no live payments or when something else also blocks the annulment.
      *
      * @var bool $requiresCollectionReversal
      */

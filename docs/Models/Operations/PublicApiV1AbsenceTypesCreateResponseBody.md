@@ -1,5 +1,7 @@
 # PublicApiV1AbsenceTypesCreateResponseBody
 
+Absence type created. The `Location` header contains the canonical URL of the new absence type.
+
 
 ## Fields
 

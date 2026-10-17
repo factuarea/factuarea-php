@@ -13,7 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1EmployeeBatchesListRequest
 {
     /**
-     * $statuses
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Only batches in these statuses, e.g. `draft`, `quoted`, `paid`, `completed` or `failed` (repeat the parameter).
      *
      * @var array<\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesListStatuses> $statuses
      */
@@ -21,6 +29,7 @@ class PublicApiV1EmployeeBatchesListRequest
     public array $statuses;
 
     /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -36,14 +45,7 @@ class PublicApiV1EmployeeBatchesListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Pagination cursor: the `next_cursor` of the previous page.
      *
      * @var ?string $cursor
      */
@@ -51,19 +53,19 @@ class PublicApiV1EmployeeBatchesListRequest
     public ?string $cursor = null;
 
     /**
+     * @param  string  $company
      * @param  array<\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesListStatuses>  $statuses
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $cursor
      * @phpstan-pure
      */
-    public function __construct(array $statuses, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $cursor = null)
+    public function __construct(string $company, array $statuses, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $cursor = null)
     {
+        $this->company = $company;
         $this->statuses = $statuses;
         $this->limit = $limit;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->cursor = $cursor;
     }
 }

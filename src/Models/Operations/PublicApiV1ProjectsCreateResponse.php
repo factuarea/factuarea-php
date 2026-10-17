@@ -40,6 +40,7 @@ class PublicApiV1ProjectsCreateResponse
     public array $headers;
 
     /**
+     * Project created successfully. The `Location` header contains the canonical URL of the newly created project.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsCreateResponseBody $object
      */

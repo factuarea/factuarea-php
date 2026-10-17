@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** LinkedTask - A task linked to a Factuarea entity, as listed by `GET /v1/tasks/linked`. */
+/** LinkedTask - A task linked to a Factuarea entity, as listed by `GET /v1/companies/{company}/tasks/linked`. */
 class LinkedTask
 {
     /**

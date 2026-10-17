@@ -13,6 +13,14 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TasksSearchRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
      * UUID of a project of your company: only its tasks are returned.
      *
      * @var ?string $projectId
@@ -85,7 +93,7 @@ class PublicApiV1TasksSearchRequest
     public ?bool $completed = null;
 
     /**
-     * Sort order: a field for ascending or a `-` prefix for descending. Allowed fields: `created_at`, `updated_at`, `due_on`, `priority`, `number`. Defaults to `-created_at`; ties are broken by `id`, so pagination stays stable.
+     * Sort order: `created_at` (default is `-created_at`), `updated_at`, `due_on`, `priority` or `number`; prefix it with `-` for descending.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchSort $sort
      */
@@ -117,14 +125,6 @@ class PublicApiV1TasksSearchRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
      * Free text matched against the task title and description. A value shaped like a task key (`DEV-12`) also matches that task by its key or a previous alias. Maximum 512 characters.
      *
      * @var ?string $q
@@ -133,6 +133,7 @@ class PublicApiV1TasksSearchRequest
     public ?string $q = null;
 
     /**
+     * @param  string  $company
      * @param  ?string  $projectId
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchStatus  $status
      * @param  ?string  $columnId
@@ -146,12 +147,12 @@ class PublicApiV1TasksSearchRequest
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $q
      * @phpstan-pure
      */
-    public function __construct(?string $projectId = null, ?PublicApiV1TasksSearchStatus $status = null, ?string $columnId = null, ?Priority $priority = null, ?string $assigneeId = null, ?string $labelId = null, ?LocalDate $dueBefore = null, ?LocalDate $dueAfter = null, ?bool $completed = null, ?PublicApiV1TasksSearchSort $sort = null, ?int $limit = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $q = null)
+    public function __construct(string $company, ?string $projectId = null, ?PublicApiV1TasksSearchStatus $status = null, ?string $columnId = null, ?Priority $priority = null, ?string $assigneeId = null, ?string $labelId = null, ?LocalDate $dueBefore = null, ?LocalDate $dueAfter = null, ?bool $completed = null, ?PublicApiV1TasksSearchSort $sort = null, ?int $limit = null, ?string $startingAfter = null, ?LocalDate $factuareaVersion = null, ?string $q = null)
     {
+        $this->company = $company;
         $this->projectId = $projectId;
         $this->status = $status;
         $this->columnId = $columnId;
@@ -165,7 +166,6 @@ class PublicApiV1TasksSearchRequest
         $this->limit = $limit;
         $this->startingAfter = $startingAfter;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->q = $q;
     }
 }

@@ -95,7 +95,7 @@ class MonthlyTimeRecordClose
     public int $employeeCount;
 
     /**
-     * Whether a digital seal exists for this close (mere presence; integrity verification is served by `GET /monthly-time-record-closes/{id}/seal`).
+     * Whether a digital seal exists for this close (mere presence; integrity verification is served by `GET /companies/{company}/monthly-time-record-closes/{monthly_time_record_close}/seal`).
      *
      * @var bool $isSealed
      */

@@ -1,6 +1,6 @@
 # BulkDeleteInvoicesV1Request
 
-Public REST API v1 — DELETE /v1/invoices/bulk.
+Public REST API v1 — POST /v1/companies/{company}/invoices/bulk-delete.
 
 
 ## Fields

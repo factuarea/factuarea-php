@@ -53,11 +53,10 @@ class PayrollExportFormats
      * List the payroll software formats supported by the payroll export (`a3`, `sage`, `nominasol`), each with its commercial label, so an integration can offer a software selector without hardcoding the values. A flat read-only catalog with no pagination.
      *
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PayrollExportFormatsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1PayrollExportFormatsList(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1PayrollExportFormatsListResponse
+    public function publicApiV1PayrollExportFormatsList(?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1PayrollExportFormatsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,7 +85,6 @@ class PayrollExportFormats
         }
         $request = new Operations\PublicApiV1PayrollExportFormatsListRequest(
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/payroll-export-formats');
@@ -135,7 +133,7 @@ class PayrollExportFormats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

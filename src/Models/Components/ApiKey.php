@@ -95,6 +95,15 @@ class ApiKey
     public bool $isRevoked;
 
     /**
+     * Tax IDs the key reaches, each with its opaque identifier, its fiscal identifier and the access level stored for the key on it.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeItem> $nifScope
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('nif_scope')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeItem>')]
+    public array $nifScope;
+
+    /**
      * Timestamp of the last authenticated request with this key, or `null` if never used.
      *
      * @var ?\DateTime $lastUsedAt
@@ -119,6 +128,83 @@ class ApiKey
     public ?\DateTime $revokedAt;
 
     /**
+     * IP addresses or CIDR ranges the key is restricted to, or `null` when it has no IP restriction.
+     *
+     * @var ?array<string> $ipAllowlist
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('ip_allowlist')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    public ?array $ipAllowlist;
+
+    /**
+     * Browser origins allowed to use a browser-published key, or `null` (or empty) when the key is server-side only.
+     *
+     * @var ?array<string> $allowedOrigins
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('allowed_origins')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    public ?array $allowedOrigins;
+
+    /**
+     * IP address of the last authenticated request with this key, or `null` if never used.
+     *
+     * @var ?string $lastUsedIp
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('last_used_ip')]
+    public ?string $lastUsedIp;
+
+    /**
+     * The person who created the key. `null` when that person no longer belongs to the account, or for keys created before this field existed.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ApiKeyCreatedBy $createdBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('created_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiKeyCreatedBy|null')]
+    public ?ApiKeyCreatedBy $createdBy;
+
+    /**
+     * The person who revoked the key. `null` when the key is not revoked, when that person no longer belongs to the account, or for keys revoked before this field existed.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ApiKeyRevokedBy $revokedBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('revoked_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiKeyRevokedBy|null')]
+    public ?ApiKeyRevokedBy $revokedBy;
+
+    /**
+     * Reason stored when the key was revoked, or `null`.
+     *
+     * @var ?string $revokeReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('revoke_reason')]
+    public ?string $revokeReason;
+
+    /**
+     * Instant of the last secret rotation, or `null` if the secret was never rotated.
+     *
+     * @var ?\DateTime $secretRotatedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('secret_rotated_at')]
+    public ?\DateTime $secretRotatedAt;
+
+    /**
+     * The person who last rotated the secret. Always `null` when the rotation was made with an API credential or the MCP server instead of a person.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ApiKeySecretRotatedBy $secretRotatedBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('secret_rotated_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiKeySecretRotatedBy|null')]
+    public ?ApiKeySecretRotatedBy $secretRotatedBy;
+
+    /**
+     * End of the 24-hour grace window in which the previous secret still authenticates after a rotation, or `null` outside that window.
+     *
+     * @var ?\DateTime $previousSecretValidUntil
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('previous_secret_valid_until')]
+    public ?\DateTime $previousSecretValidUntil;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ApiKeyObject  $object
      * @param  string  $name
@@ -129,12 +215,22 @@ class ApiKey
      * @param  \DateTime  $createdAt
      * @param  bool  $isActive
      * @param  bool  $isRevoked
+     * @param  array<\Factuarea\Sdk\Models\Components\ApiKeyNifScopeItem>  $nifScope
      * @param  ?\DateTime  $lastUsedAt
      * @param  ?\DateTime  $expiresAt
      * @param  ?\DateTime  $revokedAt
+     * @param  ?array<string>  $ipAllowlist
+     * @param  ?array<string>  $allowedOrigins
+     * @param  ?string  $lastUsedIp
+     * @param  ?\Factuarea\Sdk\Models\Components\ApiKeyCreatedBy  $createdBy
+     * @param  ?\Factuarea\Sdk\Models\Components\ApiKeyRevokedBy  $revokedBy
+     * @param  ?string  $revokeReason
+     * @param  ?\DateTime  $secretRotatedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\ApiKeySecretRotatedBy  $secretRotatedBy
+     * @param  ?\DateTime  $previousSecretValidUntil
      * @phpstan-pure
      */
-    public function __construct(string $id, ApiKeyObject $object, string $name, string $prefix, array $scopes, string $tier, ApiKeyEnvironment $environment, \DateTime $createdAt, bool $isActive, bool $isRevoked, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null, ?\DateTime $revokedAt = null)
+    public function __construct(string $id, ApiKeyObject $object, string $name, string $prefix, array $scopes, string $tier, ApiKeyEnvironment $environment, \DateTime $createdAt, bool $isActive, bool $isRevoked, array $nifScope, ?\DateTime $lastUsedAt = null, ?\DateTime $expiresAt = null, ?\DateTime $revokedAt = null, ?array $ipAllowlist = null, ?array $allowedOrigins = null, ?string $lastUsedIp = null, ?ApiKeyCreatedBy $createdBy = null, ?ApiKeyRevokedBy $revokedBy = null, ?string $revokeReason = null, ?\DateTime $secretRotatedAt = null, ?ApiKeySecretRotatedBy $secretRotatedBy = null, ?\DateTime $previousSecretValidUntil = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -146,8 +242,18 @@ class ApiKey
         $this->createdAt = $createdAt;
         $this->isActive = $isActive;
         $this->isRevoked = $isRevoked;
+        $this->nifScope = $nifScope;
         $this->lastUsedAt = $lastUsedAt;
         $this->expiresAt = $expiresAt;
         $this->revokedAt = $revokedAt;
+        $this->ipAllowlist = $ipAllowlist;
+        $this->allowedOrigins = $allowedOrigins;
+        $this->lastUsedIp = $lastUsedIp;
+        $this->createdBy = $createdBy;
+        $this->revokedBy = $revokedBy;
+        $this->revokeReason = $revokeReason;
+        $this->secretRotatedAt = $secretRotatedAt;
+        $this->secretRotatedBy = $secretRotatedBy;
+        $this->previousSecretValidUntil = $previousSecretValidUntil;
     }
 }

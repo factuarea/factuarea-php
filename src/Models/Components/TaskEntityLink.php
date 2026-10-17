@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaskEntityLink
 {
     /**
-     * UUID (v7) of the link.
+     * UUID v7 of the link.
      *
      * @var string $id
      */

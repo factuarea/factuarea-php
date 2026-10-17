@@ -13,6 +13,15 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1PriceListsItemsListRequest
 {
     /**
+     * Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).
+     *
+     * @var string $company
+     */
+    #[SpeakeasyMetadata('pathParam:style=simple,explode=false,name=company')]
+    public string $company;
+
+    /**
+     * Public identifier (UUID v7) of the price list.
      *
      * @var string $priceList
      */
@@ -20,6 +29,7 @@ class PublicApiV1PriceListsItemsListRequest
     public string $priceList;
 
     /**
+     * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
@@ -35,14 +45,7 @@ class PublicApiV1PriceListsItemsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Operate on behalf of a child company (gestoría master key): pass its public `id` (UUID v7) and the request runs against that child's data without changing the key's scope, tier or environment (omit to use the key's own company). Invalid UUID → `400 parameter_invalid_uuid`; unknown or non-owned id → `404 profile_not_found`. See the [Acting on behalf guide](/guides/acting-on-behalf).
-     *
-     * @var ?string $xActiveProfile
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=X-Active-Profile')]
-    public ?string $xActiveProfile = null;
-
-    /**
+     * Cursor for forward pagination: pass the `id` of the last object on the previous page (the `next_cursor` of the previous response).
      *
      * @var ?string $startingAfter
      */
@@ -50,6 +53,7 @@ class PublicApiV1PriceListsItemsListRequest
     public ?string $startingAfter = null;
 
     /**
+     * Partial, case-insensitive match on the name of the priced item (up to 120 characters).
      *
      * @var ?string $search
      */
@@ -57,6 +61,7 @@ class PublicApiV1PriceListsItemsListRequest
     public ?string $search = null;
 
     /**
+     * Items to return: `active` (default), `retired` or `all`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsItemsListStatus $status
      */
@@ -64,21 +69,21 @@ class PublicApiV1PriceListsItemsListRequest
     public ?PublicApiV1PriceListsItemsListStatus $status = null;
 
     /**
+     * @param  string  $company
      * @param  string  $priceList
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @param  ?string  $startingAfter
      * @param  ?string  $search
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsItemsListStatus  $status
      * @phpstan-pure
      */
-    public function __construct(string $priceList, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?string $startingAfter = null, ?string $search = null, ?PublicApiV1PriceListsItemsListStatus $status = null)
+    public function __construct(string $company, string $priceList, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null, ?string $search = null, ?PublicApiV1PriceListsItemsListStatus $status = null)
     {
+        $this->company = $company;
         $this->priceList = $priceList;
         $this->limit = $limit;
         $this->factuareaVersion = $factuareaVersion;
-        $this->xActiveProfile = $xActiveProfile;
         $this->startingAfter = $startingAfter;
         $this->search = $search;
         $this->status = $status;

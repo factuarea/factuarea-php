@@ -52,14 +52,14 @@ class WoocommerceStores
      *
      * Test the connection with one connected WooCommerce store and return the diagnosis. The check reads the WooCommerce system status resource with the stored credential and writes nothing, neither in the shop nor in Factuarea. It answers 200 with `reachable`, `credential_accepted`, the WooCommerce and WordPress versions the shop reports (WooCommerce publishes no REST API version of its own; the one this connector speaks is fixed on our side), the instant of the check and, when something went wrong, a `failure_code` — `woocommerce_store_unreachable` (the shop did not answer), `woocommerce_credentials_rejected` (the shop answered and refused the key) or `woocommerce_rest_route_missing` (the shop answered and does not publish its REST API). Those three are outcomes of a check that ran, not failures of the API, which is why they travel inside a 200 instead of as an error status. The endpoint is a `POST` because it makes an outbound call to an address you chose, so it consumes third-party resources and requires an `Idempotency-Key` header. A missing store or one from another company returns 404 `store_not_found`.
      *
+     * @param  string  $company
      * @param  string  $store
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WoocommerceStoresConnectionTestResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1WoocommerceStoresConnectionTest(string $store, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1WoocommerceStoresConnectionTestResponse
+    public function publicApiV1WoocommerceStoresConnectionTest(string $company, string $store, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1WoocommerceStoresConnectionTestResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -87,13 +87,13 @@ class WoocommerceStores
             ];
         }
         $request = new Operations\PublicApiV1WoocommerceStoresConnectionTestRequest(
+            company: $company,
             store: $store,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/woocommerce/stores/{store}/connection-test', Operations\PublicApiV1WoocommerceStoresConnectionTestRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/woocommerce/stores/{store}/connection-test', Operations\PublicApiV1WoocommerceStoresConnectionTestRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -139,7 +139,7 @@ class WoocommerceStores
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

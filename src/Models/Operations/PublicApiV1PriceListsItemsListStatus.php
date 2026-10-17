@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 
-
+/** Items to return: `active` (default), `retired` or `all`. */
 enum PublicApiV1PriceListsItemsListStatus: string
 {
     case Active = 'active';

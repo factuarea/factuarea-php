@@ -40,6 +40,7 @@ class PublicApiV1AbsenceRequestsCreateResponse
     public array $headers;
 
     /**
+     * Absence request created. The `Location` header contains the canonical URL of the new absence request.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsCreateResponseBody $object
      */

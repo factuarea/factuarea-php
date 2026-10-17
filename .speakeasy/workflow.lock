@@ -2,20 +2,19 @@ speakeasyVersion: 1.802.0
 sources:
     Factuarea Public API:
         sourceNamespace: factuarea-public-api
-        sourceRevisionDigest: sha256:79bd8d26e50f62c259f754751c660e60641f783bbe6a340010f5262a6d2eac67
-        sourceBlobDigest: sha256:e2c99dfc4f01d796f0f21d740fd54b2c5b2deb054b00ffc22c0e6d2ec6701d89
+        sourceRevisionDigest: sha256:2acb7e2e36a4056ac0c5b53ca609cfe3a26f04d85b5a7c391b614cbba4b93e30
+        sourceBlobDigest: sha256:0a9f0254adaa1897f3768ff4dca8715ad504c15cbbe042ff48d7f473383fb7d8
         tags:
             - latest
-            - main
             - 1.0.0
 targets:
     factuarea:
         source: Factuarea Public API
         sourceNamespace: factuarea-public-api
-        sourceRevisionDigest: sha256:79bd8d26e50f62c259f754751c660e60641f783bbe6a340010f5262a6d2eac67
-        sourceBlobDigest: sha256:e2c99dfc4f01d796f0f21d740fd54b2c5b2deb054b00ffc22c0e6d2ec6701d89
+        sourceRevisionDigest: sha256:2acb7e2e36a4056ac0c5b53ca609cfe3a26f04d85b5a7c391b614cbba4b93e30
+        sourceBlobDigest: sha256:0a9f0254adaa1897f3768ff4dca8715ad504c15cbbe042ff48d7f473383fb7d8
         codeSamplesNamespace: factuarea-public-api-php-code-samples
-        codeSamplesRevisionDigest: sha256:2a34675ad7866a4aaba3e0db0f7b61389a84f26d02f51c00ed11250d5cd91027
+        codeSamplesRevisionDigest: sha256:05c23a48923742631a3c5d651568c4f461bde386e2a68231ed54fa86d8ce64ad
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

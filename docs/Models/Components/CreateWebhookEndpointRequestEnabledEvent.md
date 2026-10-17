@@ -105,6 +105,7 @@
 | `ContactSupplierProfileUpdated`      | contact.supplier_profile.updated     |
 | `ProductCreated`                     | product.created                      |
 | `ProductUpdated`                     | product.updated                      |
+| `ProductReplaced`                    | product.replaced                     |
 | `PaymentReceived`                    | payment.received                     |
 | `PaymentReversed`                    | payment.reversed                     |
 | `TaxMetadataChanged`                 | tax.metadata_changed                 |

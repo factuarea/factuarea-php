@@ -1,6 +1,6 @@
 # ConnectStoreV1Request
 
-Public REST API v1 — POST /v1/stores.
+Public REST API v1 — POST /v1/companies/{company}/stores.
 
 Connect an e-commerce store to your company. Required: `integration_id` (the
 provider connection that backs the store), `provider`, `external_store_id`

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1ProjectsCreateResponseBody - Project created successfully. The `Location` header contains the canonical URL of the newly created project. */
 class PublicApiV1ProjectsCreateResponseBody
 {
     /**

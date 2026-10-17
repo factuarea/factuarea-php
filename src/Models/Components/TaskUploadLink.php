@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaskUploadLink
 {
     /**
-     * UUID (v7) of the upload link.
+     * UUID v7 of the upload link.
      *
      * @var string $id
      */

@@ -1,0 +1,12 @@
+# AccountWebhookDeliveryList
+
+Cursor-paginated list of the deliveries of an account webhook endpoint (`{ data, has_more, next_cursor }`).
+
+
+## Fields
+
+| Field                                                                                         | Type                                                                                          | Required                                                                                      | Description                                                                                   | Example                                                                                       |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `data`                                                                                        | array<[Components\AccountWebhookDelivery](../../Models/Components/AccountWebhookDelivery.md)> | :heavy_check_mark:                                                                            | Page of deliveries.                                                                           |                                                                                               |
+| `hasMore`                                                                                     | *bool*                                                                                        | :heavy_check_mark:                                                                            | `true` when more deliveries exist beyond this page.                                           | false                                                                                         |
+| `nextCursor`                                                                                  | *string*                                                                                      | :heavy_check_mark:                                                                            | Cursor to pass as `starting_after` for the next page, or `null` when `has_more` is `false`.   | null                                                                                          |

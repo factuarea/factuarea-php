@@ -85,7 +85,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/cancel', Operations\PublicApiV1TransportDocumentsCancelRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/cancel', Operations\PublicApiV1TransportDocumentsCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -136,7 +136,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -174,14 +174,14 @@ class TransportDocuments
      *
      * Mark an `issued` transport document as finished (`closed`, `close_mode: manual`). Documents are also closed automatically 7 days after their last transport date. A manually closed document can be reopened until that automatic-close deadline (`reopen_deadline`).
      *
+     * @param  string  $company
      * @param  string  $transportDocument
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsCloseResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsClose(string $transportDocument, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsCloseResponse
+    public function publicApiV1TransportDocumentsClose(string $company, string $transportDocument, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsCloseResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,13 +209,13 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsCloseRequest(
+            company: $company,
             transportDocument: $transportDocument,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/close', Operations\PublicApiV1TransportDocumentsCloseRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/close', Operations\PublicApiV1TransportDocumentsCloseRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -261,7 +261,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -300,13 +300,13 @@ class TransportDocuments
      * Create a transport document (DeCA) in `draft`. `company_role` says whether your company acts as contractual shipper (`shipper`) or effective carrier (`carrier`); your party is filled with your company data and the other one from `contact_id` or from the fields you send. Pass `delivery_note_ids` (1 to 50 of your delivery notes) to pre-fill one shipment per delivery note with its destination, date and goods (services excluded, frozen weights); a cancelled delivery note is rejected with 422 `delivery_note_cancelled`. A shipment that omits `origin` gets your default loading place or, if you have none, your registered address (an explicit `origin: null` leaves it without origin). The `id` is generated by the server; `shipments[].id` is optional and an identifier already in use returns 422 on `shipments.N.id`. A goods line whose `quantity × gross_weight_kg` exceeds 9,999,999,999.9999 kg or rounds to 0 returns 422 `invalid_gross_weight` on `shipments.N.goods.M.gross_weight_kg`. A draft admits incomplete data; the minimum data is only required to issue. A concurrent write that collides on an identifier returns 409 `resource_conflict`: nothing was saved and the request can be retried. Returns 201 with the resource and a `Location` header.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTransportDocumentRequest  $body
+     * @param  string  $company
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsCreateResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsCreate(Components\CreateTransportDocumentRequest $body, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsCreateResponse
+    public function publicApiV1TransportDocumentsCreate(Components\CreateTransportDocumentRequest $body, string $company, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsCreateResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -334,13 +334,13 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsCreateRequest(
+            company: $company,
             body: $body,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents', Operations\PublicApiV1TransportDocumentsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -391,7 +391,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -429,14 +429,14 @@ class TransportDocuments
      *
      * Delete a transport document that is still in `draft`, together with its shipments. It consumes no number and leaves no file. An issued document is always kept: deleting it returns 422 `transport_document_cannot_be_deleted`. Returns 204.
      *
+     * @param  string  $company
      * @param  string  $transportDocument
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsDeleteResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsDelete(string $transportDocument, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsDeleteResponse
+    public function publicApiV1TransportDocumentsDelete(string $company, string $transportDocument, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsDeleteResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -464,13 +464,13 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsDeleteRequest(
+            company: $company,
             transportDocument: $transportDocument,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}', Operations\PublicApiV1TransportDocumentsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}', Operations\PublicApiV1TransportDocumentsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -506,7 +506,7 @@ class TransportDocuments
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -544,13 +544,13 @@ class TransportDocuments
      *
      * List the issuance evidence of a transport document in chronological order: versions issued or modified, manual closes (`closed`) and automatic closes (`auto_closed`), reopenings, cancellation, supersession, email deliveries with their recipients and public downloads with truncated IP (/24 IPv4, /48 IPv6) and user agent. Public downloads are recorded once per hour for the same network and version (the user agent is stored but does not count as a different download), and only the first 100 are listed: `meta.downloads_total` is the number recorded and `meta.downloads_listed` how many are in `data`. Each entry names its actor in `actor_name` (user, API key or MCP client, with the name it had then; `null` for automatic closes and public downloads) and `occurred_at` carries its UTC offset. It is the proof of issuance of art. 7.1 of Orden FOM/2861/2012. A draft returns 422.
      *
+     * @param  string  $company
      * @param  string  $transportDocument
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsEvidenceResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsEvidence(string $transportDocument, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsEvidenceResponse
+    public function publicApiV1TransportDocumentsEvidence(string $company, string $transportDocument, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsEvidenceResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -578,12 +578,12 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsEvidenceRequest(
+            company: $company,
             transportDocument: $transportDocument,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/evidence', Operations\PublicApiV1TransportDocumentsEvidenceRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/evidence', Operations\PublicApiV1TransportDocumentsEvidenceRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -629,7 +629,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -667,11 +667,11 @@ class TransportDocuments
      *
      * List the transport control documents (DeCA, Spanish electronic administrative control document for road freight) of your company with cursor-based pagination. Filters: `status` (also `status[in]`), `transport_date[gte]`/`transport_date[lte]` (a document matches when the date range of its shipments overlaps the period), `company_role` (`shipper` or `carrier`), `carrier_tax_id`, `delivery_note_id` (documents with a shipment from that delivery note) and `q` (number, parties or plates). Sort with `sort` (`transport_date`, `number`, `created`, `updated`; prefix `-` for descending; default `-transport_date`). `q` takes 1 to 255 characters. Any other query parameter returns 400. The MCP tool `search_transport_documents` accepts the same `sort` and `q`.
      *
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIndexRequest  $request
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIndexRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIndexResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsIndex(?Operations\PublicApiV1TransportDocumentsIndexRequest $request = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsIndexResponse
+    public function publicApiV1TransportDocumentsIndex(Operations\PublicApiV1TransportDocumentsIndexRequest $request, ?Options $options = null): Operations\PublicApiV1TransportDocumentsIndexResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -699,7 +699,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents', Operations\PublicApiV1TransportDocumentsIndexRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -748,7 +748,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -786,14 +786,14 @@ class TransportDocuments
      *
      * Requires the scope `transport_documents:read` (it contains the issuance evidence; `pdfs:read` alone returns 403 `insufficient_scope`). Generate on demand a PDF proof of issuance with the number, public URL and QR, parties, every version with its date, author, reason, data origin and sha256, the status changes, the email deliveries and the public downloads. It is not stored: each version is verified by recomputing the sha256 of its PDF. Pass `?download=1` for `Content-Disposition: attachment`. A draft returns 422.
      *
+     * @param  string  $company
      * @param  string  $transportDocument
      * @param  ?string  $download
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIssuanceProofResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsIssuanceProof(string $transportDocument, ?string $download = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsIssuanceProofResponse
+    public function publicApiV1TransportDocumentsIssuanceProof(string $company, string $transportDocument, ?string $download = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsIssuanceProofResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -821,13 +821,13 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsIssuanceProofRequest(
+            company: $company,
             transportDocument: $transportDocument,
             download: $download,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/issuance_proof', Operations\PublicApiV1TransportDocumentsIssuanceProofRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/issuance-proof', Operations\PublicApiV1TransportDocumentsIssuanceProofRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -873,7 +873,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -911,14 +911,14 @@ class TransportDocuments
      *
      * Issue a draft transport document. It checks the minimum data (shipper name, tax ID and full address; carrier name and tax ID; at least one shipment with origin, destination, goods and declared measure; tractor plate; transport date), that every origin and destination is in Spain and that every transport date is today or later (Europe/Madrid). In a single atomic operation it assigns the next number of the `DC` series and the permanent public URL, renders and stores version 1 of the PDF with its sha256, and moves the document to `issued`. Missing data returns 422 `transport_document_not_issuable` with the list in `error.details.missing`, using this closed vocabulary: `shipper.name`, `shipper.tax_id`, `shipper.address`, `carrier.name`, `carrier.tax_id`, `vehicle.tractor_plate`, `transport_date`, `shipments` (no shipment) and `shipments.N.origin|destination|goods|measure` with `N` counting from 1. A PDF over 5 MB returns 422 `transport_document_pdf_too_large` and nothing is issued. Irreversible: requires `Idempotency-Key`. Hand the PDF, link or QR to the driver before the transport starts.
      *
+     * @param  string  $company
      * @param  string  $transportDocument
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsIssueResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsIssue(string $transportDocument, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsIssueResponse
+    public function publicApiV1TransportDocumentsIssue(string $company, string $transportDocument, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsIssueResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -946,13 +946,13 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsIssueRequest(
+            company: $company,
             transportDocument: $transportDocument,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/issue', Operations\PublicApiV1TransportDocumentsIssueRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/issue', Operations\PublicApiV1TransportDocumentsIssueRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -998,7 +998,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1068,7 +1068,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/modify', Operations\PublicApiV1TransportDocumentsModifyRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/modify', Operations\PublicApiV1TransportDocumentsModifyRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1119,7 +1119,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1189,7 +1189,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/pdf', Operations\PublicApiV1TransportDocumentsPdfRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/pdf', Operations\PublicApiV1TransportDocumentsPdfRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1235,7 +1235,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '410', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '410', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1305,7 +1305,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/qr', Operations\PublicApiV1TransportDocumentsQrRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/qr', Operations\PublicApiV1TransportDocumentsQrRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -1362,7 +1362,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1432,7 +1432,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/reopen', Operations\PublicApiV1TransportDocumentsReopenRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/reopen', Operations\PublicApiV1TransportDocumentsReopenRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1483,7 +1483,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1553,7 +1553,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/send', Operations\PublicApiV1TransportDocumentsSendRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/send', Operations\PublicApiV1TransportDocumentsSendRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1603,7 +1603,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '410', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '410', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1641,13 +1641,13 @@ class TransportDocuments
      *
      * Retrieve a transport document (DeCA) by its `id`. The resource carries the parties, vehicle, shipments with their goods and declared measure, every version with its author, reason, changes and sha256, the public URL printed on the QR, and the lifecycle dates (including `reopen_deadline` and `retention_until`). Each shipment built from a delivery note reports `source_changed`/`source_changes` when the delivery note changed after the current version, and `source_missing` when it was cancelled or deleted. A document of another company returns 404 `transport_document_not_found`.
      *
+     * @param  string  $company
      * @param  string  $transportDocument
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsShow(string $transportDocument, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsShowResponse
+    public function publicApiV1TransportDocumentsShow(string $company, string $transportDocument, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1675,12 +1675,12 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsShowRequest(
+            company: $company,
             transportDocument: $transportDocument,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}', Operations\PublicApiV1TransportDocumentsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}', Operations\PublicApiV1TransportDocumentsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1726,7 +1726,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1764,12 +1764,12 @@ class TransportDocuments
      *
      * List the closed catalog of transport document statuses (`draft`, `issued`, `closed`, `cancelled`, `superseded`) with their Spanish label and UI color. Use it to populate filters or status pickers instead of hard-coding values. The response `data` is an array of `{ value, label, color }` items.
      *
+     * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsStatusesResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TransportDocumentsStatuses(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsStatusesResponse
+    public function publicApiV1TransportDocumentsStatuses(string $company, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TransportDocumentsStatusesResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1797,11 +1797,11 @@ class TransportDocuments
             ];
         }
         $request = new Operations\PublicApiV1TransportDocumentsStatusesRequest(
+            company: $company,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/statuses');
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/statuses', Operations\PublicApiV1TransportDocumentsStatusesRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -1847,7 +1847,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1917,7 +1917,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}/supersede', Operations\PublicApiV1TransportDocumentsSupersedeRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}/supersede', Operations\PublicApiV1TransportDocumentsSupersedeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -1968,7 +1968,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2004,7 +2004,7 @@ class TransportDocuments
     /**
      * Update a draft transport document
      *
-     * Partially update a transport document in `draft`: an absent field is kept, an explicit `null` clears it and `shipments` replaces the whole list. Any other status returns 422 `transport_document_cannot_be_edited`; an issued document is changed with `POST /v1/transport_documents/{id}/modify`. `shipments[].id` only identifies a shipment of this document (any other returns 422 `parameter_invalid_value` on `shipments.N.id`); a goods line with an impossible weight returns 422 `invalid_gross_weight`. A concurrent write that collides on an identifier returns 409 `resource_conflict`, retryable: nothing was saved.
+     * Partially update a transport document in `draft`: an absent field is kept, an explicit `null` clears it and `shipments` replaces the whole list. Any other status returns 422 `transport_document_cannot_be_edited`; an issued document is changed with `POST /v1/companies/{company}/transport-documents/{transport_document}/modify`. `shipments[].id` only identifies a shipment of this document (any other returns 422 `parameter_invalid_value` on `shipments.N.id`); a goods line with an impossible weight returns 422 `invalid_gross_weight`. A concurrent write that collides on an identifier returns 409 `resource_conflict`, retryable: nothing was saved.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TransportDocumentsUpdateResponse
@@ -2038,7 +2038,7 @@ class TransportDocuments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/transport_documents/{transport_document}', Operations\PublicApiV1TransportDocumentsUpdateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/transport-documents/{transport_document}', Operations\PublicApiV1TransportDocumentsUpdateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
@@ -2051,7 +2051,7 @@ class TransportDocuments
         }
         $httpOptions['headers']['Accept'] = 'application/json';
         $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
-        $httpRequest = new \GuzzleHttp\Psr7\Request('PUT', $url);
+        $httpRequest = new \GuzzleHttp\Psr7\Request('PATCH', $url);
         $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.transport_documents.update', null, $this->sdkConfiguration->securitySource);
         $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
@@ -2088,7 +2088,7 @@ class TransportDocuments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -10,15 +10,16 @@ namespace Factuarea\Sdk\Models\Errors;
 
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils;
+/** Error - Missing or invalid API key. */
 class Error
 {
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Error2 $error
+     * @var \Factuarea\Sdk\Models\Components\ErrorError $error
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('error')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Error2')]
-    public Components\Error2 $error;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ErrorError')]
+    public Components\ErrorError $error;
 
     /**
      * Raw HTTP response; suitable for custom response parsing
@@ -30,11 +31,11 @@ class Error
     public ?\Psr\Http\Message\ResponseInterface $rawResponse = null;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Error2  $error
+     * @param  \Factuarea\Sdk\Models\Components\ErrorError  $error
      * @param  ?\Psr\Http\Message\ResponseInterface  $rawResponse
      * @phpstan-pure
      */
-    public function __construct(Components\Error2 $error, ?\Psr\Http\Message\ResponseInterface $rawResponse = null)
+    public function __construct(Components\ErrorError $error, ?\Psr\Http\Message\ResponseInterface $rawResponse = null)
     {
         $this->error = $error;
         $this->rawResponse = $rawResponse;

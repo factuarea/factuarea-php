@@ -13,14 +13,6 @@ class ChangeContactRoleStatusV1Request
 {
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\ChangeContactRoleStatusV1RequestRole $role
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('role')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ChangeContactRoleStatusV1RequestRole')]
-    public ChangeContactRoleStatusV1RequestRole $role;
-
-    /**
-     *
      * @var \Factuarea\Sdk\Models\Components\ChangeContactRoleStatusV1RequestStatus $status
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
@@ -28,13 +20,11 @@ class ChangeContactRoleStatusV1Request
     public ChangeContactRoleStatusV1RequestStatus $status;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\ChangeContactRoleStatusV1RequestRole  $role
      * @param  \Factuarea\Sdk\Models\Components\ChangeContactRoleStatusV1RequestStatus  $status
      * @phpstan-pure
      */
-    public function __construct(ChangeContactRoleStatusV1RequestRole $role, ChangeContactRoleStatusV1RequestStatus $status)
+    public function __construct(ChangeContactRoleStatusV1RequestStatus $status)
     {
-        $this->role = $role;
         $this->status = $status;
     }
 }

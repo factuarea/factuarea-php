@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** InvoicePaymentDetail - A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/invoices/{id}/payments`. */
+/** InvoicePaymentDetail - A single payment recorded against an invoice (partial payment ledger entry). Listed in `payments.detail[]` (materialized only on the show endpoint) and in the standalone sub-resource `GET /v1/companies/{company}/invoices/{invoice}/payments`. */
 class InvoicePaymentDetail
 {
     /**
-     * Opaque UUID (v7) of the payment.
+     * Opaque UUID v7 of the payment.
      *
      * @var string $id
      */
@@ -30,7 +30,7 @@ class InvoicePaymentDetail
     public InvoicePaymentDetailObject $object;
 
     /**
-     * UUID (v7) of the invoice this payment belongs to.
+     * UUID v7 of the invoice this payment belongs to.
      *
      * @var string $invoiceId
      */
@@ -40,10 +40,10 @@ class InvoicePaymentDetail
     /**
      * Payment amount.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Payment date (YYYY-MM-DD).
@@ -146,7 +146,7 @@ class InvoicePaymentDetail
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\InvoicePaymentDetailObject  $object
      * @param  string  $invoiceId
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  LocalDate  $paymentDate
      * @param  string  $paymentMethod
      * @param  string  $paymentMethodText
@@ -161,7 +161,7 @@ class InvoicePaymentDetail
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoicePaymentDetailObject $object, string $invoiceId, float $amount, LocalDate $paymentDate, string $paymentMethod, string $paymentMethodText, bool $isReversed, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?ReversalReason $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, InvoicePaymentDetailObject $object, string $invoiceId, string $amount, LocalDate $paymentDate, string $paymentMethod, string $paymentMethodText, bool $isReversed, ?string $reference = null, ?string $notes = null, ?\DateTime $reversedAt = null, ?ReversalReason $reversalReason = null, ?string $reversalReasonText = null, ?string $reversalNote = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

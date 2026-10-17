@@ -1,6 +1,6 @@
 # CompanyStatus
 
-Lifecycle status: `active` (operational) or `archived` (no longer accepts operations).
+Status of the tax ID in the account: `active` (operational), `inactive` (deactivated, data preserved, can be reactivated) or `archived` (no longer accepts operations).
 
 
 ## Values
@@ -8,4 +8,5 @@ Lifecycle status: `active` (operational) or `archived` (no longer accepts operat
 | Name       | Value      |
 | ---------- | ---------- |
 | `Active`   | active     |
+| `Inactive` | inactive   |
 | `Archived` | archived   |

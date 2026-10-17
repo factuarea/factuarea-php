@@ -1,6 +1,6 @@
 # AccountPersonalizationTemplates
 
-Plan-aware catalog of PDF templates available for the account, plus the accepted hex format for the accent color. Returned by `GET /v1/account/personalization/templates`. Use it to discover which `pdf_template` slugs and colors can be set via `PATCH /v1/account/personalization`.
+Plan-aware catalog of PDF templates available for the account, plus the accepted hex format for the accent color. Returned by `GET /v1/companies/{company}/personalization/templates`. Use it to discover which `pdf_template` slugs and colors can be set via `PATCH /v1/companies/{company}/personalization`.
 
 
 ## Fields

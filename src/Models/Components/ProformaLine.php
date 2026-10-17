@@ -28,11 +28,12 @@ class ProformaLine
     public float $quantity;
 
     /**
+     * Unit price as a decimal STRING with the 4-decimal scale of its column (e.g. `"0.0125"`, `"100.0000"`): it is returned exactly as it was accepted and stored, so reading a line and sending it back never changes its price. Derived amounts (`subtotal`, `taxes`, `total`) keep 2 decimals.
      *
-     * @var float $unitPrice
+     * @var string $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
-    public float $unitPrice;
+    public string $unitPrice;
 
     /**
      *
@@ -66,24 +67,24 @@ class ProformaLine
 
     /**
      *
-     * @var float $subtotal
+     * @var string $subtotal
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('subtotal')]
-    public float $subtotal;
+    public string $subtotal;
 
     /**
      *
-     * @var float $taxes
+     * @var string $taxes
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('taxes')]
-    public float $taxes;
+    public string $taxes;
 
     /**
      *
-     * @var float $total
+     * @var string $total
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('total')]
-    public float $total;
+    public string $total;
 
     /**
      * Configurable options frozen on the line, in printing order. Always an array, `[]` included.
@@ -142,17 +143,19 @@ class ProformaLine
 
     /**
      *
-     * @var ?string $commercialUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\ProformaLineCommercialUnitCode $commercialUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('commercial_unit_code')]
-    public ?string $commercialUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProformaLineCommercialUnitCode|null')]
+    public ?ProformaLineCommercialUnitCode $commercialUnitCode;
 
     /**
      *
-     * @var ?string $baseUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\ProformaLineBaseUnitCode $baseUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('base_unit_code')]
-    public ?string $baseUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProformaLineBaseUnitCode|null')]
+    public ?ProformaLineBaseUnitCode $baseUnitCode;
 
     /**
      *
@@ -191,10 +194,28 @@ class ProformaLine
 
     /**
      *
-     * @var ?string $priceUnitCode
+     * @var ?\Factuarea\Sdk\Models\Components\ProformaLinePriceUnitCode $priceUnitCode
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_unit_code')]
-    public ?string $priceUnitCode;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProformaLinePriceUnitCode|null')]
+    public ?ProformaLinePriceUnitCode $priceUnitCode;
+
+    /**
+     * Pieces the customer asked for on a variable-weight line sold by count (decimal string, scale 4, greater than 0), e.g. `"4.0000"` for four pieces weighing `quantity` kg in total. Informational: the line is charged and the stock is discounted by `quantity` (the real weight), never by the pieces. `null` on any other line. Only accepted on a `variable_measure` presentation whose unit is a count unit.
+     *
+     * @var ?string $countedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_quantity')]
+    public ?string $countedQuantity;
+
+    /**
+     * UN/ECE code of the count unit of `counted_quantity` (`H87` piece, `XPK` pack…). `null` exactly when `counted_quantity` is `null`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProformaLineCountedUnit $countedUnit
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('counted_unit')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProformaLineCountedUnit|null')]
+    public ?ProformaLineCountedUnit $countedUnit;
 
     /**
      * Commercial combination frozen on the line, or `null` when the line was not sold or bought through one (legacy product, manual line).
@@ -243,14 +264,14 @@ class ProformaLine
     /**
      * @param  \Factuarea\Sdk\Models\Components\ProformaLineObject  $object
      * @param  float  $quantity
-     * @param  float  $unitPrice
+     * @param  string  $unitPrice
      * @param  float  $taxRate
      * @param  float  $retentionRate
      * @param  float  $surchargeRate
      * @param  float  $discountPercent
-     * @param  float  $subtotal
-     * @param  float  $taxes
-     * @param  float  $total
+     * @param  string  $subtotal
+     * @param  string  $taxes
+     * @param  string  $total
      * @param  array<\Factuarea\Sdk\Models\Components\ProformaLineOption>  $options
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
@@ -258,14 +279,16 @@ class ProformaLine
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineVariant  $variant
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLinePresentation  $presentation
      * @param  ?string  $itemKind
-     * @param  ?string  $commercialUnitCode
-     * @param  ?string  $baseUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineCommercialUnitCode  $commercialUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineBaseUnitCode  $baseUnitCode
      * @param  ?string  $conversionFactor
      * @param  ?string  $baseQuantity
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?string  $priceSource
-     * @param  ?string  $priceUnitCode
+     * @param  ?\Factuarea\Sdk\Models\Components\ProformaLinePriceUnitCode  $priceUnitCode
+     * @param  ?string  $countedQuantity
+     * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineCountedUnit  $countedUnit
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineConfiguration  $configuration
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
@@ -273,7 +296,7 @@ class ProformaLine
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(ProformaLineObject $object, float $quantity, float $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, float $subtotal, float $taxes, float $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?ProformaLineVariant $variant = null, ?ProformaLinePresentation $presentation = null, ?string $itemKind = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?string $priceUnitCode = null, ?ProformaLineConfiguration $configuration = null, ?ProformaLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?ProformaLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(ProformaLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?ProformaLineVariant $variant = null, ?ProformaLinePresentation $presentation = null, ?string $itemKind = null, ?ProformaLineCommercialUnitCode $commercialUnitCode = null, ?ProformaLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?ProformaLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?ProformaLineCountedUnit $countedUnit = null, ?ProformaLineConfiguration $configuration = null, ?ProformaLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?ProformaLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -300,6 +323,8 @@ class ProformaLine
         $this->priceListName = $priceListName;
         $this->priceSource = $priceSource;
         $this->priceUnitCode = $priceUnitCode;
+        $this->countedQuantity = $countedQuantity;
+        $this->countedUnit = $countedUnit;
         $this->configuration = $configuration;
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;

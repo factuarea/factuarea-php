@@ -1,5 +1,7 @@
 # PublicApiV1ProjectsCreateResponseBody
 
+Project created successfully. The `Location` header contains the canonical URL of the newly created project.
+
 
 ## Fields
 

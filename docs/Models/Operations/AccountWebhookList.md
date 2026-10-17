@@ -1,0 +1,12 @@
+# AccountWebhookList
+
+Cursor-paginated list of account webhook endpoints (`{ data, has_more, next_cursor }`).
+
+
+## Fields
+
+| Field                                                                                       | Type                                                                                        | Required                                                                                    | Description                                                                                 | Example                                                                                     |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `data`                                                                                      | array<[Components\AccountWebhook](../../Models/Components/AccountWebhook.md)>               | :heavy_check_mark:                                                                          | Page of account webhook endpoints.                                                          |                                                                                             |
+| `hasMore`                                                                                   | *bool*                                                                                      | :heavy_check_mark:                                                                          | `true` when more endpoints exist beyond this page.                                          | false                                                                                       |
+| `nextCursor`                                                                                | *string*                                                                                    | :heavy_check_mark:                                                                          | Cursor to pass as `starting_after` for the next page, or `null` when `has_more` is `false`. | null                                                                                        |

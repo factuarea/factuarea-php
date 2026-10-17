@@ -9,11 +9,12 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Kind of document that caused the movement. `manual` for an adjustment with no source document. */
+/** Kind of document that caused the movement. `manual` for an adjustment with no source document; `base_unit_replacement` for the transfer of a base unit replacement. */
 enum SourceType: string
 {
     case Invoice = 'invoice';
     case DeliveryNote = 'delivery_note';
     case PurchaseInvoice = 'purchase_invoice';
     case Manual = 'manual';
+    case BaseUnitReplacement = 'base_unit_replacement';
 }

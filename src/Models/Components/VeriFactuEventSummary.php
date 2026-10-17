@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** VeriFactuEventSummary - Aggregated summary of the VeriFactu events of the company: total and breakdown by type and by status. Returned by `GET /v1/verifactu/events/summary`. */
+/** VeriFactuEventSummary - Aggregated summary of the VeriFactu events of the company: total and breakdown by type and by status. Returned by `GET /v1/companies/{company}/verifactu/events/summary`. */
 class VeriFactuEventSummary
 {
     /**

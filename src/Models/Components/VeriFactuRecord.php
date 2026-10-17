@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class VeriFactuRecord
 {
     /**
-     * UUID (v7) of the VeriFactu record.
+     * UUID v7 of the VeriFactu record.
      *
      * @var string $id
      */
@@ -29,7 +29,7 @@ class VeriFactuRecord
     public VeriFactuRecordObject $object;
 
     /**
-     * Tipo de registro (`alta` / `anulacion`).
+     * Record type: `alta` (registration) or `anulacion` (cancellation).
      *
      * @var string $type
      */
@@ -63,10 +63,10 @@ class VeriFactuRecord
     /**
      * Total amount of the associated invoice.
      *
-     * @var float $amount
+     * @var string $amount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('amount')]
-    public float $amount;
+    public string $amount;
 
     /**
      * Transmission status (pending, submitted, accepted, rejected, error).
@@ -116,7 +116,7 @@ class VeriFactuRecord
     public \DateTime $createdAt;
 
     /**
-     * Whether the record is BLOCKED: it is in `error` with NO automatic retry, so it does not go out again until someone reactivates it (fix the cause, then `POST /v1/verifactu/records/retry-blocked`, or `POST /v1/verifactu/records/{id}/retry` one by one), and it holds back the rest of the chain of the company. `false` for a record that retries by itself, with a backoff of at most one hour (art. 16.4 of Order HAC/1177/2024).
+     * Whether the record is BLOCKED: it is in `error` with NO automatic retry, so it does not go out again until someone reactivates it (fix the cause, then `POST /v1/companies/{company}/verifactu/records/retry-blocked`, or `POST /v1/companies/{company}/verifactu/records/{record}/retry` one by one), and it holds back the rest of the chain of the company. `false` for a record that retries by itself, with a backoff of at most one hour (art. 16.4 of Order HAC/1177/2024).
      *
      * @var bool $isBlocked
      */
@@ -124,7 +124,7 @@ class VeriFactuRecord
     public bool $isBlocked;
 
     /**
-     * Whether the record admits `POST /v1/verifactu/records/{id}/subsanar`: an `alta` that is ACCEPTED (or accepted with errors) or REJECTED by AEAT and is the last one of its invoice, which has not been annulled. It is the very rule that endpoint applies, so `true` guarantees it will not refuse the record by its state; whether there is something to correct and whether it changes a field of the hash (`requires_annulment`) is only known when you subsanar.
+     * Whether the record admits `POST /v1/companies/{company}/verifactu/records/{record}/subsanar`: an `alta` that is ACCEPTED (or accepted with errors) or REJECTED by AEAT and is the last one of its invoice, which has not been annulled. It is the very rule that endpoint applies, so `true` guarantees it will not refuse the record by its state; whether there is something to correct and whether it changes a field of the hash (`requires_annulment`) is only known when you subsanar.
      *
      * @var bool $canSubsanar
      */
@@ -187,7 +187,7 @@ class VeriFactuRecord
      * @param  string  $invoiceType
      * @param  string  $invoiceNumber
      * @param  string  $date
-     * @param  float  $amount
+     * @param  string  $amount
      * @param  string  $status
      * @param  string  $huella
      * @param  string  $environment
@@ -204,7 +204,7 @@ class VeriFactuRecord
      * @param  ?bool  $aeatWarningRequiresSubsanation
      * @phpstan-pure
      */
-    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, float $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, bool $isBlocked, bool $canSubsanar, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null, ?string $aeatErrorCode = null, ?VeriFactuRecordBlockReason $blockReason = null, ?bool $aeatWarningRequiresSubsanation = null)
+    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, string $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, bool $isBlocked, bool $canSubsanar, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null, ?string $aeatErrorCode = null, ?VeriFactuRecordBlockReason $blockReason = null, ?bool $aeatWarningRequiresSubsanation = null)
     {
         $this->id = $id;
         $this->object = $object;

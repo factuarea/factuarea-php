@@ -13,7 +13,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdateResponseBody
 {
     /**
-     * A charge treatment rule of a connected Stripe account. Rules are evaluated in `position` order and the first one that matches decides whether the charge is invoiced or left out. The public `id` is the rule UUID (v7).
+     * A charge treatment rule of a connected Stripe account. Rules are evaluated in `position` order and the first one that matches decides whether the charge is invoiced or left out. The public `id` is the rule UUID v7.
      *
      * @var \Factuarea\Sdk\Models\Components\ChargeRule $data
      */

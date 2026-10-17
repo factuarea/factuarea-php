@@ -84,7 +84,7 @@ class Attachments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/attachments', Operations\PublicApiV1TasksAttachmentsCreateRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/attachments', Operations\PublicApiV1TasksAttachmentsCreateRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $body = Utils\Utils::serializeRequestBody($request, 'body', 'multipart');
@@ -135,7 +135,7 @@ class Attachments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '404', '409', '413', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '413', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -205,7 +205,7 @@ class Attachments
             ];
         }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/attachments/{attachment}', Operations\PublicApiV1TasksAttachmentsDeleteRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/attachments/{attachment}', Operations\PublicApiV1TasksAttachmentsDeleteRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -251,7 +251,7 @@ class Attachments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -289,14 +289,14 @@ class Attachments
      *
      * Download the file of an attachment. The response `Content-Type` is the real type of the file as detected on upload (images, PDF, office documents, text, CSV, Markdown or ZIP); files that are not safe to display inline are served as `Content-Disposition: attachment` with `X-Content-Type-Options: nosniff`.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  string  $attachment
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAttachmentsDownloadResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksAttachmentsDownload(string $task, string $attachment, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksAttachmentsDownloadResponse
+    public function publicApiV1TasksAttachmentsDownload(string $company, string $task, string $attachment, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksAttachmentsDownloadResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -324,13 +324,13 @@ class Attachments
             ];
         }
         $request = new Operations\PublicApiV1TasksAttachmentsDownloadRequest(
+            company: $company,
             task: $task,
             attachment: $attachment,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/attachments/{attachment}/download', Operations\PublicApiV1TasksAttachmentsDownloadRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/attachments/{attachment}/download', Operations\PublicApiV1TasksAttachmentsDownloadRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -538,7 +538,7 @@ class Attachments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -576,13 +576,13 @@ class Attachments
      *
      * List the files attached to a task (in its description or its comments) with their name, MIME type and size. Returns a plain list, without pagination.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAttachmentsListResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksAttachmentsList(string $task, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksAttachmentsListResponse
+    public function publicApiV1TasksAttachmentsList(string $company, string $task, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksAttachmentsListResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -610,12 +610,12 @@ class Attachments
             ];
         }
         $request = new Operations\PublicApiV1TasksAttachmentsListRequest(
+            company: $company,
             task: $task,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/attachments', Operations\PublicApiV1TasksAttachmentsListRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/attachments', Operations\PublicApiV1TasksAttachmentsListRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -661,7 +661,7 @@ class Attachments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -699,14 +699,14 @@ class Attachments
      *
      * Retrieve the metadata of an attachment: name, MIME type, size, where it is attached and who uploaded it. Use the download operation to get the file.
      *
+     * @param  string  $company
      * @param  string  $task
      * @param  string  $attachment
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAttachmentsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1TasksAttachmentsShow(string $task, string $attachment, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1TasksAttachmentsShowResponse
+    public function publicApiV1TasksAttachmentsShow(string $company, string $task, string $attachment, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1TasksAttachmentsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -734,13 +734,13 @@ class Attachments
             ];
         }
         $request = new Operations\PublicApiV1TasksAttachmentsShowRequest(
+            company: $company,
             task: $task,
             attachment: $attachment,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/tasks/{task}/attachments/{attachment}', Operations\PublicApiV1TasksAttachmentsShowRequest::class, $request);
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/tasks/{task}/attachments/{attachment}', Operations\PublicApiV1TasksAttachmentsShowRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -786,7 +786,7 @@ class Attachments
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '404', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

@@ -48,7 +48,7 @@ class CreateTaskV1Request
     public ?array $labelIds = null;
 
     /**
-     * Values of the project's custom fields, as a map from the custom field `id` (UUID) to its value: text, number, boolean, or a list of options for a `multiselect` field. `null` leaves the field empty.
+     * Values of the project's custom fields, as a map from the custom field public identifier (UUID v7) to its value: text, number, boolean, or a list of options for a `multiselect` field. `null` leaves the field empty.
      *
      * @var ?array<string, string|float|bool|array<string>|null> $customFields
      */

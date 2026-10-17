@@ -54,7 +54,7 @@ class WebhookEventPayloadTaskCompleted
     public EventDataTaskCompleted $data;
 
     /**
-     * API version (date-based) the payload was serialized under, sealed at emission (e.g. `2026-05-22`). `null` only for legacy events emitted before versions were sealed.
+     * API version (date-based) this delivery's payload is serialized under (e.g. `2026-10-05`): the version your endpoint is pinned to, or the latest one when it follows the latest. An event re-emitted by an automation declares the payload version its data was frozen in, which can be older than the endpoint's pinned version: a payload is never upgraded to a newer version. `null` only for legacy events emitted before versions were sealed.
      *
      * @var ?string $apiVersion
      */

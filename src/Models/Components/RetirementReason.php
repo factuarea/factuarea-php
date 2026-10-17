@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Why the entry was withdrawn. `null` while the entry is active. */
+/** Why the entry was withdrawn. `product_replaced` means the product was replaced by another one with a different base unit (`POST /v1/companies/{company}/products/{product}/base-unit-replacement`): the entry keeps its price as history and, when it was transferred, a new entry for the new product carries the converted price. `null` while the entry is active. */
 enum RetirementReason: string
 {
     case ProductDeleted = 'product_deleted';
@@ -19,4 +19,5 @@ enum RetirementReason: string
     case OptionGroupDeleted = 'option_group_deleted';
     case OptionValueDeleted = 'option_value_deleted';
     case LegacyOrphan = 'legacy_orphan';
+    case ProductReplaced = 'product_replaced';
 }

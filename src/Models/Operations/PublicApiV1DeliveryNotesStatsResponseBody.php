@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1DeliveryNotesStatsResponseBody
 {
     /**
-     * Aggregated summary of the delivery notes (*albaranes*) of the authenticated company: total, accumulated amount, breakdown by status, pending signature and converted to invoice this month. Returned by `GET /v1/delivery_notes/stats`.
+     * Aggregated summary of the delivery notes (*albaranes*) of the authenticated company: total, accumulated amount, breakdown by status, pending signature and converted to invoice this month. Returned by `GET /v1/companies/{company}/delivery-notes/stats`.
      *
      * @var \Factuarea\Sdk\Models\Components\DeliveryNoteStats $data
      */

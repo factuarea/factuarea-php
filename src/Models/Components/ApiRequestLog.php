@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class ApiRequestLog
 {
     /**
-     * Opaque identifier of the request (`req_` + ULID), the same value returned in the `X-Request-Id` response header of that call. It is the identity of this resource — quote it in support requests and use it in `GET /v1/developers/request-logs/{request_id}`. Deliberately NOT a UUID v7: request logs are ephemeral rows, not domain resources.
+     * Opaque identifier of the request (`req_` + ULID), the same value returned in the `X-Request-Id` response header of that call. It is the identity of this resource — quote it in support requests and use it in `GET /v1/companies/{company}/request-logs/{request_id}`. Deliberately NOT a UUID v7: request logs are ephemeral rows, not domain resources.
      *
      * @var string $requestId
      */
@@ -128,6 +128,24 @@ class ApiRequestLog
     public ?string $factuareaVersion;
 
     /**
+     * The company (tax ID) the request acted on, or `null` when the request did not act on one (for example an account-level call) or the company no longer exists.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ApiRequestLogCompany $company
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('company')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiRequestLogCompany|null')]
+    public ?ApiRequestLogCompany $company;
+
+    /**
+     * Axis the request was made on, derived from the path prefix: `company` for `/v1/companies/{company}/…` and `account` for `/v1/accounts/{account}/…`. `null` when the path belongs to neither.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\Axis $axis
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('axis')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Axis|null')]
+    public ?Axis $axis;
+
+    /**
      * @param  string  $requestId
      * @param  \Factuarea\Sdk\Models\Components\ApiRequestLogObject  $object
      * @param  \Factuarea\Sdk\Models\Components\ApiRequestLogMethod  $method
@@ -142,9 +160,11 @@ class ApiRequestLog
      * @param  ?string  $errorType
      * @param  ?string  $errorCode
      * @param  ?string  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\ApiRequestLogCompany  $company
+     * @param  ?\Factuarea\Sdk\Models\Components\Axis  $axis
      * @phpstan-pure
      */
-    public function __construct(string $requestId, ApiRequestLogObject $object, ApiRequestLogMethod $method, string $path, int $statusCode, int $durationMs, string $ip, ApiRequestLogEnvironment $environment, \DateTime $createdAt, ?string $apiKeyPrefix = null, ?string $userAgent = null, ?string $errorType = null, ?string $errorCode = null, ?string $factuareaVersion = null)
+    public function __construct(string $requestId, ApiRequestLogObject $object, ApiRequestLogMethod $method, string $path, int $statusCode, int $durationMs, string $ip, ApiRequestLogEnvironment $environment, \DateTime $createdAt, ?string $apiKeyPrefix = null, ?string $userAgent = null, ?string $errorType = null, ?string $errorCode = null, ?string $factuareaVersion = null, ?ApiRequestLogCompany $company = null, ?Axis $axis = null)
     {
         $this->requestId = $requestId;
         $this->object = $object;
@@ -160,5 +180,7 @@ class ApiRequestLog
         $this->errorType = $errorType;
         $this->errorCode = $errorCode;
         $this->factuareaVersion = $factuareaVersion;
+        $this->company = $company;
+        $this->axis = $axis;
     }
 }

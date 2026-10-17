@@ -63,6 +63,8 @@ class Factuarea
         'https://api.factuarea.com/v1',
     ];
 
+    public Account $account;
+
     public Proformas $proformas;
 
     public Quotes $quotes;
@@ -78,6 +80,8 @@ class Factuarea
     public Tasks $tasks;
 
     public Invoices $invoices;
+
+    public ManagedAccounts $managedAccounts;
 
     public AbsenceRequests $absenceRequests;
 
@@ -120,8 +124,6 @@ class Factuarea
     public MonthlyTimeRecordCloses $monthlyTimeRecordCloses;
 
     public Stores $stores;
-
-    public Account $account;
 
     public StripeAutoinvoicing $stripeAutoinvoicing;
 
@@ -197,6 +199,7 @@ class Factuarea
     public function __construct(
         public SDKConfiguration $sdkConfiguration,
     ) {
+        $this->account = new Account($this->sdkConfiguration);
         $this->proformas = new Proformas($this->sdkConfiguration);
         $this->quotes = new Quotes($this->sdkConfiguration);
         $this->automations = new Automations($this->sdkConfiguration);
@@ -205,6 +208,7 @@ class Factuarea
         $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
         $this->tasks = new Tasks($this->sdkConfiguration);
         $this->invoices = new Invoices($this->sdkConfiguration);
+        $this->managedAccounts = new ManagedAccounts($this->sdkConfiguration);
         $this->absenceRequests = new AbsenceRequests($this->sdkConfiguration);
         $this->timeCorrections = new TimeCorrections($this->sdkConfiguration);
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
@@ -226,7 +230,6 @@ class Factuarea
         $this->timeEntries = new TimeEntries($this->sdkConfiguration);
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->stores = new Stores($this->sdkConfiguration);
-        $this->account = new Account($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);

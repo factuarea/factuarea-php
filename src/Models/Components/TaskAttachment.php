@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class TaskAttachment
 {
     /**
-     * UUID (v7) of the attachment.
+     * UUID v7 of the attachment.
      *
      * @var string $id
      */

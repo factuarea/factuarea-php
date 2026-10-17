@@ -1,0 +1,12 @@
+# AccountMemberGrantList
+
+The grants of one account member with the canonical list envelope (`{ data, has_more, next_cursor }`). The collection is complete — bounded by the tax IDs of the account — so `has_more` is always `false` and `next_cursor` always `null`.
+
+
+## Fields
+
+| Field                                                                                 | Type                                                                                  | Required                                                                              | Description                                                                           | Example                                                                               |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `data`                                                                                | array<[Components\AccountMemberGrant](../../Models/Components/AccountMemberGrant.md)> | :heavy_check_mark:                                                                    | Grants on the tax IDs your credential reads.                                          |                                                                                       |
+| `hasMore`                                                                             | *bool*                                                                                | :heavy_check_mark:                                                                    | Always `false`: the collection is complete.                                           | false                                                                                 |
+| `nextCursor`                                                                          | *string*                                                                              | :heavy_check_mark:                                                                    | Always `null`: the collection is complete.                                            | null                                                                                  |

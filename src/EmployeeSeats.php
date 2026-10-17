@@ -50,15 +50,15 @@ class EmployeeSeats
     /**
      * Cancel the employee seat add-on
      *
-     * Cancel the per-employee billing add-on: the `employee-seats` subscription is cancelled at period end (the current month is already paid) and the per-employee coverage is purged. The plan subscription is never touched. Returns the resulting billing status, where `subscribed` stays `true` until the period ends.
+     * Cancel the per-employee billing add-on: the `employee-seats` subscription is cancelled at period end (the current month is already paid) and the per-employee coverage is purged. The plan subscription is never touched. Returns the resulting billing status, where `subscribed` stays `true` until the period ends. The person who issued the credential must be able to operate the billing of the account (owner or admin): otherwise 403 `forbidden_action`. Returns 403 `billing_managed_by_provider`, with no charge and no change, when the billing of the account is managed by its provider.
      *
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsCancelResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsCancel(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsCancelResponse
+    public function publicApiV1EmployeeSeatsCancel(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsCancelResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -86,12 +86,12 @@ class EmployeeSeats
             ];
         }
         $request = new Operations\PublicApiV1EmployeeSeatsCancelRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-seats/cancel');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/employee-seats/cancel', Operations\PublicApiV1EmployeeSeatsCancelRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -137,7 +137,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -173,15 +173,15 @@ class EmployeeSeats
     /**
      * Sync the employee seat quantity
      *
-     * Reconcile the seat quantity of the add-on to the real number of active employees (SET with `proration_behavior: none`, no invoice). Idempotent: when the quantity already matches it is a no-op. Returns the resulting billing status.
+     * Reconcile the seat quantity of the add-on to the real number of active employees (SET with `proration_behavior: none`, no invoice). Idempotent: when the quantity already matches it is a no-op. Returns the resulting billing status. The person who issued the credential must be able to operate the billing of the account (owner or admin): otherwise 403 `forbidden_action`. Returns 403 `billing_managed_by_provider`, with no charge and no change, when the billing of the account is managed by its provider.
      *
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsChangeQuantityResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsChangeQuantity(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsChangeQuantityResponse
+    public function publicApiV1EmployeeSeatsChangeQuantity(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsChangeQuantityResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -209,12 +209,12 @@ class EmployeeSeats
             ];
         }
         $request = new Operations\PublicApiV1EmployeeSeatsChangeQuantityRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-seats/change-quantity');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/employee-seats/change-quantity', Operations\PublicApiV1EmployeeSeatsChangeQuantityRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -260,7 +260,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -296,16 +296,16 @@ class EmployeeSeats
     /**
      * Preview the employee seat charge
      *
-     * Preview the prorated per-seat amount for activating or hiring employees, computed from the Stripe upcoming invoice of the `employee-seats` subscription, without charging. Use `count` (≥1, up to 1000) for a batch preview, or `employee_ids` (UUID v7) for a coverage-aware preview: employees still covered for the current period cost 0 (`already_covered: true`). `amount` is the taxable base in cents; `requires_payment_method` is `true` when no payment method is on file. Never throws — it degrades to a neutral preview.
+     * Preview the prorated per-seat amount for activating or hiring employees, computed from the Stripe upcoming invoice of the `employee-seats` subscription, without charging. Use `count` (≥1, up to 1000) for a batch preview, or `employee_ids` (UUID v7) for a coverage-aware preview: employees still covered for the current period cost 0 (`already_covered: true`). `amount` is the taxable base in euros as a 2-decimal string (`tax_amount` and `total` too; only `recurring_base_cents` and `recurring_total_cents` are in cents); `requires_payment_method` is `true` when no payment method is on file. It returns 403 `billing_managed_by_provider` when the billing of the account is managed by its provider; otherwise it never throws — it degrades to a neutral preview.
      *
+     * @param  string  $account
      * @param  ?int  $count
      * @param  ?array<string>  $employeeIds
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsPreviewResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsPreview(?int $count = null, ?array $employeeIds = null, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsPreviewResponse
+    public function publicApiV1EmployeeSeatsPreview(string $account, ?int $count = null, ?array $employeeIds = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsPreviewResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -333,13 +333,13 @@ class EmployeeSeats
             ];
         }
         $request = new Operations\PublicApiV1EmployeeSeatsPreviewRequest(
+            account: $account,
             count: $count,
             employeeIds: $employeeIds,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-seats/preview');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/employee-seats/preview', Operations\PublicApiV1EmployeeSeatsPreviewRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
 
@@ -388,7 +388,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -424,14 +424,14 @@ class EmployeeSeats
     /**
      * Retrieve employee seat billing status
      *
-     * Return the billing status of the per-employee add-on for your company: whether the `employee-seats` subscription is active, how many seats are billed (`quantity`), how many employees are active, and the recurring per-seat cost with VAT. Amounts are in the currency minor units (cents) and are `null` when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. `seats_billable` tells whether your plan MUST be paying per seat, independently of `subscribed`: `subscribed: false` with `seats_billable: true` and active employees is a billing anomaly, while `seats_billable: false` is a legitimate no-charge state (enterprise by contract, trial or sandbox). Employees never count towards the plan `users` seat limit.
+     * Return the billing status of the per-employee add-on for your company: whether the `employee-seats` subscription is active, how many seats are billed (`quantity`), how many employees are active, and the recurring per-seat cost with VAT. Amounts are euros as 2-decimal strings and are `null` when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. `seats_billable` tells whether your plan MUST be paying per seat, independently of `subscribed`: `subscribed: false` with `seats_billable: true` and active employees is a billing anomaly, while `seats_billable: false` is a legitimate no-charge state (enterprise by contract, trial or sandbox). Employees never count towards the plan `users` seat limit. Returns 403 `billing_managed_by_provider` when the billing of the account is managed by its provider.
      *
+     * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsStatusResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsStatus(?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsStatusResponse
+    public function publicApiV1EmployeeSeatsStatus(string $account, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsStatusResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -459,11 +459,11 @@ class EmployeeSeats
             ];
         }
         $request = new Operations\PublicApiV1EmployeeSeatsStatusRequest(
+            account: $account,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-seats');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/employee-seats', Operations\PublicApiV1EmployeeSeatsStatusRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -509,7 +509,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '403', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -545,15 +545,15 @@ class EmployeeSeats
     /**
      * Subscribe to the employee seat add-on
      *
-     * Opt in to the per-employee billing add-on: create the dedicated monthly `employee-seats` subscription with `quantity` set to the number of active employees, charging the first period with the payment method on file. The charge is atomic — with no payment method it returns 402 `employee_seat_payment_method_required` (the envelope carries `error.details.payment_setup_url`), and a declined charge returns 402 `employee_seat_charge_failed`; in both cases nothing is subscribed. Returns the resulting billing status.
+     * Opt in to the per-employee billing add-on: create the dedicated monthly `employee-seats` subscription with `quantity` set to the number of active employees, charging the first period with the payment method on file. The charge is atomic — with no payment method it returns 402 `employee_seat_payment_method_required` (the envelope carries `error.details.payment_setup_url`), and a declined charge returns 402 `employee_seat_charge_failed`; in both cases nothing is subscribed. Returns the resulting billing status. The person who issued the credential must be able to operate the billing of the account (owner or admin): otherwise 403 `forbidden_action`. Returns 403 `billing_managed_by_provider`, with no charge and no change, when the billing of the account is managed by its provider.
      *
+     * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $xActiveProfile
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeSeatsSubscribeResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1EmployeeSeatsSubscribe(string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?string $xActiveProfile = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsSubscribeResponse
+    public function publicApiV1EmployeeSeatsSubscribe(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1EmployeeSeatsSubscribeResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -581,12 +581,12 @@ class EmployeeSeats
             ];
         }
         $request = new Operations\PublicApiV1EmployeeSeatsSubscribeRequest(
+            account: $account,
             idempotencyKey: $idempotencyKey,
             factuareaVersion: $factuareaVersion,
-            xActiveProfile: $xActiveProfile,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
-        $url = Utils\Utils::generateUrl($baseUrl, '/employee-seats/subscribe');
+        $url = Utils\Utils::generateUrl($baseUrl, '/accounts/{account}/employee-seats/subscribe', Operations\PublicApiV1EmployeeSeatsSubscribeRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
@@ -632,7 +632,7 @@ class EmployeeSeats
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['401', '402', '403', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '402', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
