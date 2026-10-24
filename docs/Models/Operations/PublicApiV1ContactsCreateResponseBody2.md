@@ -1,6 +1,6 @@
 # PublicApiV1ContactsCreateResponseBody2
 
-The `external_id` already identified a contact of the company: that contact was updated with the request, keeps its `id` and is returned.
+Contact created. The `Location` header contains the canonical URL of the new contact.
 
 
 ## Fields

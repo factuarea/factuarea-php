@@ -9,8 +9,49 @@
 
 ## publicApiV1ProjectsTimeInvoicesCreate
 
-Turn the selected billable time into a DRAFT invoice for the project billing contact, grouped by `grouping`, and mark those entries as invoiced. Requires the `invoices:write` scope (it creates an invoice), not a projects scope. The draft is numbered when issued from the invoice API. Entries already invoiced return 422 `task_time_entry_invoiced`; if the plan has used up its invoices or yearly documents, 402 `limit_exceeded` and nothing is created. Sending the same `batch_id` again with the same request returns the same invoice; reusing a `batch_id` with a different project selection, grouping or entries (or after its invoice was deleted) returns 422 `idempotency_key_reused`. Deleting the draft invoice releases the entries.
+Turn the selected billable time into a DRAFT invoice for the project billing contact and mark the entries as invoiced.
+- Requires `invoices:write`; already invoiced entries return 422 `task_time_entry_invoiced`.
+- Resending the same `batch_id` and request returns the same invoice; deleting the draft releases the entries.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.create" method="post" path="/companies/{company}/projects/{project}/time-invoices" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest(
+    company: '6f57620a-5992-486d-a165-63d382c66c05',
+    project: '50464952-7fa3-41b5-b5b2-9b35f78649b1',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\InvoiceTaskTimeV1Request(
+        grouping: Components\InvoiceTaskTimeV1RequestGrouping::PerEntry,
+    ),
+);
+
+$response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.create" method="post" path="/companies/{company}/projects/{project}/time-invoices" example="missing_api_key" -->
@@ -35,6 +76,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest(
     company: 'Schneider Group',
     project: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\InvoiceTaskTimeV1Request(
+        grouping: Components\InvoiceTaskTimeV1RequestGrouping::PerEntry,
+    ),
+);
+
+$response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.create" method="post" path="/companies/{company}/projects/{project}/time-invoices" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest(
+    company: '903ac27e-8a3f-4f12-951f-0a00bd758159',
+    project: '94975f61-a721-4f8c-af22-5a0149931f81',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\InvoiceTaskTimeV1Request(
@@ -89,6 +169,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.create" method="post" path="/companies/{company}/projects/{project}/time-invoices" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsTimeInvoicesCreateRequest(
+    company: '583e32b8-0747-45f0-aafe-2a0ce9d7bedb',
+    project: 'd8a4902f-d524-4a8c-8d2f-c5b622692b8c',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\InvoiceTaskTimeV1Request(
+        grouping: Components\InvoiceTaskTimeV1RequestGrouping::PerEntry,
+    ),
+);
+
+$response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -110,8 +229,46 @@ if ($response->object !== null) {
 
 ## publicApiV1ProjectsTimeInvoicesPreview
 
-Preview the invoice lines that invoicing the selected time would produce, without creating anything: select either `entry_ids` or a `period`, and a `grouping`. Entries that cannot be invoiced (not billable, already invoiced, without a price or whose invoice line amounts would exceed the invoice limits) return 422 `task_time_not_invoiceable`. A read-only POST: it does not need an `Idempotency-Key`.
+Preview the invoice lines that invoicing the selected time would produce, without creating anything.
+- Entries that cannot be invoiced return 422 `task_time_not_invoiceable`.
+- Read-only POST: no `Idempotency-Key` needed.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.preview" method="post" path="/companies/{company}/projects/{project}/time-invoices/preview" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewTaskTimeInvoiceV1Request(
+    grouping: Components\PreviewTaskTimeInvoiceV1RequestGrouping::PerTask,
+);
+
+$response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesPreview(
+    company: '9e9e66df-bae4-4aaa-9275-7301a5eaee9d',
+    project: 'f8ad002f-da8c-4197-a0be-05c708c23f25',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.preview" method="post" path="/companies/{company}/projects/{project}/time-invoices/preview" example="missing_api_key" -->
@@ -148,6 +305,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.preview" method="post" path="/companies/{company}/projects/{project}/time-invoices/preview" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewTaskTimeInvoiceV1Request(
+    grouping: Components\PreviewTaskTimeInvoiceV1RequestGrouping::PerTask,
+);
+
+$response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesPreview(
+    company: '05e22ff3-6c3d-4a13-bce4-e02a98b694f6',
+    project: '2847b89c-0219-41da-bcff-bbc4eab7dfad',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.preview" method="post" path="/companies/{company}/projects/{project}/time-invoices/preview" example="success" -->
@@ -175,6 +368,42 @@ $body = new Components\PreviewTaskTimeInvoiceV1Request(
 $response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesPreview(
     company: 'Hilll - Volkman',
     project: '<value>',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.time_invoices.preview" method="post" path="/companies/{company}/projects/{project}/time-invoices/preview" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\PreviewTaskTimeInvoiceV1Request(
+    grouping: Components\PreviewTaskTimeInvoiceV1RequestGrouping::PerTask,
+);
+
+$response = $sdk->projects->timeInvoices->publicApiV1ProjectsTimeInvoicesPreview(
+    company: 'bf9feb43-7d09-48d1-8ca2-3138e624573b',
+    project: 'ba5f4b0c-9c3f-4bd2-bff3-7b2922093bf2',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

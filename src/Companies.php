@@ -51,7 +51,10 @@ class Companies
     /**
      * Activate a tax ID of the account
      *
-     * Reactivate a deactivated (`inactive`) tax ID of the account. The reactivated tax ID is an ADDITIONAL tax ID of the account, so it goes through the additional tax ID gate before anything changes: the credential must reach the titular company of the account, which pays it (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; the tax ID only becomes `active` if the charge succeeds. A tax ID still covered for the current period is reactivated without a new charge, and trial, enterprise without a paid subscription and a test account are not charged. A tax ID that the system suspended (its payer was blocked or its management ended) cannot be activated by hand, whatever the payment state: it returns 422 `business_rule_violation` with subcode `nif_suspended_by_system` before anything is charged, and it resumes on its own when the payment or the management is resolved. A tax ID that is not part of the account returns 404, like one outside the credential scope. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Reactivate an `inactive` tax ID of the account as an ADDITIONAL tax ID, after the additional tax ID gate.
+     * - Gate: 403 `forbidden_action`, 403 `additional_nif_not_in_plan`, 402 `additional_nif_plan_required`.
+     * - Live paid accounts are charged at once (402 `payment_method_required`); `active` only if charged.
+     * - System-suspended: 422 subcode `nif_suspended_by_system`.
      *
      * @param  string  $account
      * @param  string  $company
@@ -188,7 +191,10 @@ class Companies
     /**
      * Activate several tax IDs of the account
      *
-     * Reactivate several deactivated (`inactive`) tax IDs of the account in one operation, charging the combined additional tax IDs in a single invoice. Pass `company_ids`. The gate is atomic: a tax ID the system suspended (its payer was blocked or its management ended) rejects the whole batch with 422 `business_rule_violation` and subcode `nif_suspended_by_system` before anything is charged; every tax ID is validated (it belongs to the account and is `inactive`, 422 `business_rule_violation` otherwise) before any charge, so if one is invalid the whole batch is rejected without charging or activating any; a tax ID that is not part of the account returns 404 for the whole batch. The batch then goes through the additional tax ID gate: the credential must reach the titular company of the account (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and keep the resulting active additional tax IDs within its cap (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; no tax ID is activated in either case. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Reactivate several `inactive` tax IDs (`company_ids`) atomically, charged in a single invoice.
+     * - One invalid or suspended tax ID rejects the whole batch, with no charge.
+     * - Same gate as single activation: 403 `forbidden_action`, 402 `additional_nif_plan_required`.
+     * - Charge failure (402 `payment_method_required`): nothing is activated.
      *
      * @param  \Factuarea\Sdk\Models\Components\ActivateCompaniesBatchV1Request  $body
      * @param  string  $account
@@ -330,7 +336,10 @@ class Companies
     /**
      * Register a tax ID in the account
      *
-     * Register a new tax ID (company) in the account of the path, which is the credential account. `name` and `tax_id` are required, and `tax_id` must be unique within the account (a duplicate returns 409); a tax ID that already belongs to another account returns 422 `business_rule_violation` and is moved with a tax ID transfer instead. When the account already has an active tax ID, the new one is an ADDITIONAL tax ID and goes through the additional tax ID gate before anything is created: the credential must reach the titular company of the account, which pays it (403 `forbidden_action` otherwise), the account must be billed by itself (403 `billing_managed_by_provider` otherwise), hold a current plan (402 `additional_nif_plan_required` otherwise) that allows additional tax IDs — `empresario` or `enterprise`, trial included (403 `additional_nif_not_in_plan` otherwise) — and stay within its cap of active additional tax IDs (422 `business_rule_violation` with subcode `additional_nif_limit_reached`). In live mode with a paid subscription the additional tax ID is charged immediately: with no payment method on file it returns 402 `payment_method_required` (`error.details.payment_setup_url` links to where to set it up) and a declined charge returns 402 `additional_nif_charge_failed`; in every rejection nothing is created and nothing is charged. Trial and enterprise without a paid subscription are not charged. Use `GET /v1/accounts/{account}/companies/seat-charge-preview` to anticipate the cost. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed.
+     * Register a new tax ID in the account; `name` and `tax_id` are required.
+     * - Duplicate `tax_id` returns 409; one owned by another account returns 422 `business_rule_violation`.
+     * - Beyond the first active one it is ADDITIONAL: plan, cap and 402 `payment_method_required` apply.
+     * - Preview the cost with `GET /v1/accounts/{account}/companies/seat-charge-preview`.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateCompanyV1Request  $body
      * @param  string  $account
@@ -472,7 +481,10 @@ class Companies
     /**
      * Retrieve the creation status of a tax ID
      *
-     * Poll the provisioning lifecycle of a tax ID of the account. Returns `provisioning_status` (`pending`, `awaiting_payment`, `provisioning`, `active`, `failed`). `payment_setup_url` is present only while `awaiting_payment` and points to the payment-method onboarding of the account titular (it is `null` for a test credential and for one that does not reach the titular company); `failed_reason` is present only when provisioning has `failed`. Test keys move the tax ID to `active` directly.
+     * Poll the provisioning lifecycle of a tax ID of the account.
+     * - Returns `provisioning_status`: `pending`, `awaiting_payment`, `provisioning`, `active` or `failed`.
+     * - `payment_setup_url` only while `awaiting_payment`; `failed_reason` only when `failed`.
+     * - Test keys go straight to `active`.
      *
      * @param  string  $account
      * @param  string  $company
@@ -595,7 +607,9 @@ class Companies
     /**
      * Deactivate a tax ID of the account
      *
-     * Deactivate a tax ID of the account, moving it from `active` to `inactive`: it becomes non-operational but its data is preserved and the change is reversible (reactivate it later through the additional tax ID gate). No charge is applied: the additional tax ID is released without credit, and it can be reactivated for free within the paid period. The account must keep at least one active tax ID (422 `business_rule_violation` with subcode `account_must_keep_one_nif`). A tax ID that is not part of the account returns 404. Deactivating is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Deactivate a tax ID of the account (`active` to `inactive`): it stops operating but its data is kept.
+     * - Reversible; no charge, never returns 402; the additional tax ID is released without credit.
+     * - The account must keep one active tax ID: 422 subcode `account_must_keep_one_nif`.
      *
      * @param  string  $account
      * @param  string  $company
@@ -720,7 +734,9 @@ class Companies
     /**
      * Archive a tax ID of the account
      *
-     * Archive a tax ID of the account, moving it to the `archived` status so it no longer accepts operations. The underlying company row and its history are preserved. Archiving may be blocked by business rules, all as 422 `business_rule_violation`: open fiscal documents, or the account would keep no active tax ID (subcode `account_must_keep_one_nif`). A tax ID that is not part of the account or outside the credential scope returns 404. Archiving is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Archive a tax ID of the account: it moves to `archived`, stops accepting operations and its history is kept.
+     * - Never billed (no 402).
+     * - Blocked with 422 `business_rule_violation` by open fiscal documents or subcode `account_must_keep_one_nif`.
      *
      * @param  string  $account
      * @param  string  $company
@@ -835,7 +851,9 @@ class Companies
     /**
      * Check whether a portfolio NIF can issue
      *
-     * Check whether one of the NIFs within your credential scope is ready to ISSUE invoices, as a FISCAL and module state: a `can_issue` verdict, a closed list of `blockers`, and the signals it was composed from (census status, default series, fiscal profile, operability, missing modules). This is a NEUTRAL read: it never inspects or reports subscription, plan, tier, quota, usage or price, and it never answers with a payment-required state. `{company}` names the NIF being CHECKED, not the company that owns the data, and membership is decided by the credential scope alone. A test credential of a live account reads, like the equivalent live credential, the live NIFs its sandbox scope mirrors (the whole portfolio when its scope holds the sandbox of the account owner). A NIF that does not exist, belongs to another account, falls outside what your credential reads (including a live NIF for a test credential of a legacy test account owned by a sandbox), or carries a malformed identifier all return the SAME 404 `resource_not_found` (`param: company`) — never a 403 — so the answer cannot be used to census NIFs by difference.
+     * Check whether a NIF within your credential scope is ready to issue invoices: `can_issue`, a closed list of `blockers` and the composing signals.
+     * - Neutral read: it never reports plan, quota or price, and never returns a payment-required state.
+     * - Unknown, foreign or out-of-scope NIFs all return the same 404 `resource_not_found` (`param: company`).
      *
      * @param  string  $account
      * @param  string  $company
@@ -958,7 +976,9 @@ class Companies
     /**
      * List the tax IDs of your account
      *
-     * List the tax IDs (companies) of the account that your credential reads, with cursor-based pagination. By default only `active` and `inactive` companies are returned; pass `status` (`active`, `inactive`, `archived`) to filter — `status=archived` is the opt-in way to surface archived companies. With `tax_id` and no `status`, archived companies are hidden, as in the unfiltered list. Only the tax IDs of the account in the path are ever returned. Pass `include=readiness` (also together with `tax_id`) to add to each company a `readiness` object with the same contract as `GET /v1/accounts/{account}/companies/{company}/issuing-readiness`; without it the key is absent. Any other `include` value returns 422 `invalid_param_value`.
+     * List the tax IDs of the account that your credential reads, with cursor pagination.
+     * - Returns `active` and `inactive` by default; filter with `status` (`archived` is opt-in) or `tax_id`.
+     * - `include=readiness` adds a `readiness` object per company; other values return 422 `invalid_param_value`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesListResponse
@@ -1077,7 +1097,10 @@ class Companies
     /**
      * Preview the seat charge of adding a company
      *
-     * Preview the prorated amount the account would be charged for registering or activating ADDITIONAL tax IDs, decided by the same gate as those writes and computed from the Stripe upcoming invoice of the account titular, without charging. Use `count` (≥1) to preview a batch, or `company_ids` for a coverage-aware preview: tax IDs still covered for the current period cost `0` (`already_covered: true`). `amount` is the taxable base in euros as a 2-decimal string (`tax_amount` and `total` too; only `recurring_base_cents` and `recurring_total_cents` are in cents); `requires_payment_method` is `true` when no payment method is on file. A tax ID that is not additional, a test account, and an account without a current plan or whose plan does not allow additional tax IDs preview `0`: this read never returns 402 nor the plan or cap rejections of the writes. It returns 403 `billing_managed_by_provider` when the billing of the account is managed by its provider, and 404 when a `company_ids` value is not a tax ID of the account.
+     * Preview the prorated amount of registering or activating ADDITIONAL tax IDs, without charging.
+     * - Use `count` for a batch or `company_ids` for a coverage-aware preview; covered tax IDs cost `0`.
+     * - Amounts are 2-decimal euro strings; this read never returns 402 or plan and cap rejections.
+     * - Returns 403 `billing_managed_by_provider` when a provider manages billing.
      *
      * @param  string  $account
      * @param  ?int  $count
@@ -1352,7 +1375,9 @@ class Companies
     /**
      * Retrieve invoicing statistics per company
      *
-     * Return one `company_stats` row per company (tax ID) of the account that your credential reads: the number of issued invoices in the period (`invoices_count`, sent, paid and overdue ones), what they invoice (`total_invoiced`, a 2-decimal string) and the last issued invoice of the company regardless of the period (`last_invoice`, or `null` when it has not issued any). The rows cover the same companies as `GET /v1/accounts/{account}/companies`, archived ones hidden. The period is `date_from`/`date_to` (`YYYY-MM-DD`, both optional and inclusive); without them it is the current calendar year, and with only one the other end stays within the same year. The list is not paginated, because an account holds a bounded set of companies: `has_more` is always `false` and `next_cursor` always `null`. An `{account}` that is not the account of your credential returns 404 `account_not_found` (anti-enumeration), and a malformed date or an end before the start returns 422 `invalid_param_value`.
+     * Return one `company_stats` row per company of the account that your credential reads, with `invoices_count`, `total_invoiced` and `last_invoice`.
+     * - Period is `date_from`/`date_to` (`YYYY-MM-DD`, inclusive); default is the current calendar year.
+     * - Not paginated: `has_more` is always `false`. A bad date or range returns 422 `invalid_param_value`.
      *
      * @param  string  $account
      * @param  ?LocalDate  $dateFrom
@@ -1480,7 +1505,9 @@ class Companies
     /**
      * Update a tax ID of the account
      *
-     * Update the profile of a tax ID of the account (`name`, `business_name`, address fields, `email`, `phone`). The titular company of the account (your own, or the one of a managed account you operate) is edited here too, for these profile fields only: archiving, activating and deactivating do not apply to it. The `tax_id` is immutable after creation (sending it returns 422) and `country_aeat_zone` is derived from the address. Partial update: omitted fields keep their value; send `""` to clear a field. Only an `active` tax ID can be edited (422 `business_rule_violation` otherwise). Editing a profile is not billed: it never returns 402. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Update the profile of a tax ID of the account (`name`, `business_name`, address, `email`, `phone`); partial, `""` clears a field.
+     * - `tax_id` is immutable (sending it returns 422); only an `active` tax ID can be edited.
+     * - Never billed (no 402); needs an owner or admin of the account, else 403 `forbidden_action`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1CompaniesUpdateResponse
@@ -1600,7 +1627,9 @@ class Companies
     /**
      * Verify the creation of a tax ID
      *
-     * Reconcile and advance the provisioning of a tax ID of the account against the subscription of the account titular. No request body; idempotent. While `awaiting_payment`, once the titular has a payment method on file the tax ID is charged as an additional tax ID and moves to `active`; otherwise it stays `awaiting_payment` with no error. Returns the creation-status resource. A tax ID that is not part of the account returns 404, and a credential that does not reach the titular company returns 403 `forbidden_action`. It never returns 402: a charge that fails leaves the provisioning `failed` with its reason. The person who issued the credential must be an owner or admin of the account, with the `user_management` section available: otherwise 403 `forbidden_action`, before anything is charged or changed. A credential whose effective access to that tax ID is read-only (`view`) returns 403 `company_read_only`, and one with no access returns the same 404 as a tax ID outside the account.
+     * Reconcile and advance the provisioning of a tax ID against the titular's subscription; no body, idempotent.
+     * - While `awaiting_payment`, once a payment method exists it is charged and becomes `active`.
+     * - Returns the creation-status resource; never 402: a failed charge leaves it `failed` with its reason.
      *
      * @param  string  $account
      * @param  string  $company

@@ -287,7 +287,8 @@ class EntityLinks
     /**
      * List task entity links
      *
-     * List the Factuarea entities a task is linked to (invoices, quotes, contacts, products…), with their display label. A link is always returned; when its entity was deleted, when its module is not accessible to your company or when the key lacks the read scope of the entity resource (for example `invoices:read` for an invoice, `contacts:read` for a contact), it comes with `available: false` and `summary: null`, so the link can still be removed. Returns a plain list, without pagination.
+     * List the Factuarea entities a task is linked to (invoices, quotes, contacts, products…), with their display label. Plain list, no pagination.
+     * - A link is always returned; if its entity is deleted, its module is inaccessible or the key lacks the entity read scope, it has `available: false` and `summary: null`.
      *
      * @param  string  $company
      * @param  string  $task

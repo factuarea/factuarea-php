@@ -50,7 +50,9 @@ class ChargeRules
     /**
      * Create a charge treatment rule
      *
-     * Create a charge treatment rule at the end of the account's list. A rule matches a charge by `condition` and either invoices it (optionally with a `concept` and a `vat_rate`) or excludes it from invoicing with a `non_invoice_reason` (`indemnity_not_subject`, `multipurpose_voucher` or `invoiced_elsewhere`). Responds 201 with the rule. Fails with `charge_rule_invalid` when a field breaks the contract and with `charge_rule_limit_reached` when the account already has the maximum number of rules.
+     * Creates a charge treatment rule at the end of the account's list; responds 201.
+     * - A rule matches by `condition` and either invoices the charge or excludes it with `non_invoice_reason`.
+     * - Fails with `charge_rule_invalid` or `charge_rule_limit_reached`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateResponse
@@ -277,7 +279,9 @@ class ChargeRules
     /**
      * List charge treatment rules of a connected Stripe account
      *
-     * List the charge treatment rules of a connected Stripe account, ordered by `position` (the first matching rule decides how a charge is treated). Each rule exposes its `id` (UUID v7), `condition` (`type`: `metadata_equals`, `description_contains` or `payment_link`, with `key` and `value`), `outcome` (`invoice` or `do_not_invoice`), `concept`, `vat_rate` and `non_invoice_reason`. Returns 404 if the account does not exist or belongs to another company.
+     * Lists the charge treatment rules of a connected Stripe account ordered by `position`; the first match decides.
+     * - Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`.
+     * - Returns 404 if the account is not in your company.
      *
      * @param  string  $company
      * @param  string  $account

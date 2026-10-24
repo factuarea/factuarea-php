@@ -425,7 +425,9 @@ class RecurringInvoices
     /**
      * Bulk change recurring invoice status
      *
-     * Move up to 50 recurring invoices (by id) to a status from the closed set `[active, paused]`: `paused` pauses the active ones and `active` resumes the paused ones, each through the same single transition —and therefore the same aggregate guards— as `POST /companies/{company}/recurring-invoices/{recurring_invoice}/pause` and `/resume`. Returns a `BulkPartialSuccessResult`; nothing aborts the batch: ids that are not found, already in the target status, cancelled or with their occurrences exhausted come back in `failures[]` with their `error_code` and a Spanish `error_message`.
+     * Moves up to 50 recurring invoices (by id) to `active` or `paused`, each through the same transition as `pause` and `resume`.
+     * - Returns a `BulkPartialSuccessResult`; the batch never aborts.
+     * - Not found, already in target status, cancelled or exhausted ids come back in `failures[]` with `error_code`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusRecurringInvoicesV1Request  $body
      * @param  string  $company

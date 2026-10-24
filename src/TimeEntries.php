@@ -54,7 +54,10 @@ class TimeEntries
     /**
      * Clock in an employee
      *
-     * Clock the start of an employee’s workday, opening a new work span. `employee_id` (UUID v7) and `source` (`web`/`mobile`) are required; `occurred_at` defaults to the server time. Valid only when the employee is not already clocked in; an invalid transition returns 422 in Spanish. `occurred_at` must fall within the employee’s employment period (from `hire_date` to `termination_date`, both inclusive, compared on the calendar date of `occurred_at` in its own UTC offset); otherwise it returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` (param `occurred_at`) and a Spanish message naming the hire or termination date, and nothing is written. Pausing, resuming and clocking out of a span that is already open are never blocked by this rule. Returns 201 with the created `clock_in` entry.
+     * Clock the start of an employee's workday, opening a new work span.
+     * - `employee_id` and `source` (`web`/`mobile`) are required; `occurred_at` defaults to now.
+     * - Fails if already clocked in, or outside the employment period: 422 `business_rule_violation` (`clocking_outside_employment_period`).
+     * - Returns 201 with the `clock_in` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\ClockActionRequest  $body
      * @param  string  $company
@@ -559,7 +562,10 @@ class TimeEntries
     /**
      * Record a manual retroactive entry
      *
-     * Record a past work span for an employee (a retroactive manual entry). `employee_id` (UUID v7), `started_at`, `ended_at` and a `reason` are required; optional `pauses` add pause intervals. The entries are stored with `is_retroactive: true` and `source: manual`, and one audit log entry is written. `ended_at` before `started_at`, or a missing reason, returns 422 in Spanish. A span that starts or ends outside the employee’s employment period (before `hire_date` or after `termination_date`) returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` and writes nothing. Returns 201 with the created span’s `clock_out` entry.
+     * Record a past work span for an employee as a retroactive manual entry.
+     * - `employee_id`, `started_at`, `ended_at` and `reason` are required; optional `pauses`.
+     * - Outside the employment period: 422 `business_rule_violation` (`clocking_outside_employment_period`); nothing is written.
+     * - Returns 201 with the span's `clock_out` entry.
      *
      * @param  \Factuarea\Sdk\Models\Components\RecordManualTimeEntryRequest  $body
      * @param  string  $company

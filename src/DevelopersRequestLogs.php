@@ -50,7 +50,9 @@ class DevelopersRequestLogs
     /**
      * List your API request logs
      *
-     * Inspect the requests your own integration has made against this API, newest first, so you can debug it without opening a support ticket: what you called, what came back, how long it took and, when a call failed, the error it returned. Scoped to the authenticated company and to the API keys of your account: it lists only the requests made with keys of your account, so the requests another account made against the same tax ID are never returned. Rows are purged after 30 days, so this is a debugging window, not an audit trail.
+     * List the requests your own integration made against this API, newest first, to debug without a support ticket.
+     * - Only requests made with API keys of your account; rows are purged after 30 days.
+     * - Not an audit trail.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DevelopersRequestLogsListResponse
@@ -169,7 +171,9 @@ class DevelopersRequestLogs
     /**
      * Retrieve an API request log
      *
-     * Retrieve a single request of your own integration by the `request_id` the API returned in the `X-Request-Id` header of that response — the identifier you already have in hand when a call misbehaved, and the one to quote in a support request. It is an opaque `req_…` string, not a UUID v7. A request made with a key of another account returns 404 even if it acted on your tax ID. The body carries the same fields as the listing.
+     * Retrieve one request of your integration by the `request_id` (an opaque `req_...` string) returned in the `X-Request-Id` header.
+     * - A request made with a key of another account returns 404.
+     * - Same fields as the listing.
      *
      * @param  string  $company
      * @param  string  $requestId

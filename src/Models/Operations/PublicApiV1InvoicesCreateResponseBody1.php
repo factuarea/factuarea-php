@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1InvoicesCreateResponseBody1 - Invoice created successfully. In an unattended checkout (`type: F2`, a `payment` block or `options.register_verifactu`) the body also carries the `verifactu`, `pdf` and `public_url` blocks. The `Location` header contains the canonical URL of the newly created resource. */
+/** PublicApiV1InvoicesCreateResponseBody1 - Late retry of an unattended checkout: the `external_id` already belongs to an invoice issued in your company, so that invoice is returned unchanged — with the `Idempotent-Replayed: true` header — after completing the VeriFactu alta and the payment if they were missing. Nothing new is created and the invoice number is not consumed again. If the type or the total of the request differ from the issued invoice, the answer is `409` `unattended_replay_mismatch` instead. */
 class PublicApiV1InvoicesCreateResponseBody1
 {
     /**
