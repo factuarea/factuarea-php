@@ -418,7 +418,9 @@ class WebhookEndpoints
     /**
      * Ping webhook endpoint
      *
-     * Send a synchronous test request (`{"type": "webhook.ping"}`, 10-second timeout) to the URL of the endpoint to check that it is reachable, and return its HTTP status, a truncated body and the duration. The request carries no `Factuarea-Signature` and creates no delivery, so it does not appear in `GET /companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries`: use `test-event` to exercise the signature. An endpoint that was not `active` becomes `active` again when the request succeeds.
+     * Send a synchronous test request (`{"type": "webhook.ping"}`, 10-second timeout) to the endpoint URL and return its HTTP status, a truncated body and the duration.
+     * - It carries no `Factuarea-Signature` and creates no delivery; use `test-event` to exercise the signature.
+     * - An inactive endpoint becomes `active` if the request succeeds.
      *
      * @param  string  $company
      * @param  string  $webhookEndpoint
@@ -543,7 +545,9 @@ class WebhookEndpoints
     /**
      * Rotate webhook secret
      *
-     * Rotate the signing secret of a webhook endpoint. The new secret is returned **once** in this response. The previous secret remains valid for a 24-hour grace period (see `previous_secret_valid_until`) to allow zero-downtime rotation. Rotating again within five minutes of the last rotation returns 422 `business_rule_violation` with the subcode `webhook_secret_recently_rotated`; nothing changes, so wait and retry.
+     * Rotate the signing secret of a webhook endpoint; the new secret is returned once.
+     * - The previous secret stays valid for 24 hours (`previous_secret_valid_until`).
+     * - Rotating again within five minutes returns 422 `business_rule_violation` (subcode `webhook_secret_recently_rotated`); nothing changes.
      *
      * @param  string  $company
      * @param  string  $webhookEndpoint
@@ -791,7 +795,9 @@ class WebhookEndpoints
     /**
      * Send a test event
      *
-     * Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the delivered envelope. Unlike `ping` (a synthetic `webhook.ping`), this records a real `Event` (visible in `GET /companies/{company}/events`) and queues a signed, retried `WebhookDelivery`. Optionally pass `type` to choose which subscribed event to simulate. The delivery reaches only this endpoint.
+     * Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the envelope.
+     * - Unlike `ping`, it records a real `Event` and queues a signed, retried delivery to this endpoint only.
+     * - Optional `type` picks the subscribed event to simulate.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WebhookEndpointsTestEventResponse

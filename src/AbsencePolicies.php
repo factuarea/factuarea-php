@@ -420,7 +420,10 @@ class AbsencePolicies
     /**
      * Configure a policy’s year-end carryover
      *
-     * Configure how much unused balance carries over at year-end for this absence policy. `carryover_type` (`none`/`capped`/`unlimited`) is required; `carryover_max_days` is required and positive only when `carryover_type` is `capped`. Optional `carryover_expiry_month` (1..12) and `carryover_expiry_day` set when the carried-over balance expires. A policy belonging to another company returns 404 `absence_policy_not_found` (anti-enumeration). Returns the updated policy.
+     * Configure how much unused balance carries over at year-end for an absence policy; returns the policy.
+     * - `carryover_type` (`none`/`capped`/`unlimited`) is required; `carryover_max_days` is required only when `capped`.
+     * - Optional `carryover_expiry_month` (1..12) and `carryover_expiry_day`.
+     * - Another company’s policy returns 404 `absence_policy_not_found`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesCarryoverRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsencePoliciesCarryoverResponse
@@ -541,7 +544,9 @@ class AbsencePolicies
     /**
      * Create an absence policy
      *
-     * Create an absence policy for the authenticated company (resolved from the API key, never from the payload). `name`, `allowance_type` (`limited`/`unlimited`) and `accrual_method` (`annual`/`monthly`) are required; `allowance_days` is required and positive only when `allowance_type` is `limited`. `absence_type_ids` is the list of public identifiers (UUID v7) of the absence types the policy covers (may be empty); a type belonging to another company returns 422. Returns the created policy with its generated `id` (UUID v7).
+     * Create an absence policy for the company resolved from the API key; returns it with its generated `id` (UUID v7).
+     * - Required: `name`, `allowance_type` (`limited`/`unlimited`), `accrual_method` (`annual`/`monthly`); `allowance_days` is required and positive only when `limited`.
+     * - `absence_type_ids` lists covered types (may be empty); a type of another company returns 422.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsencePolicyRequest  $body
      * @param  string  $company

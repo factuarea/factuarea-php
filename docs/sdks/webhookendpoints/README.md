@@ -64,6 +64,53 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://angelic-lender.biz',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: '69e71b1f-8508-4c4e-8f19-dd1e1bc4c5c8',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="invalid_api_key" -->
@@ -158,6 +205,53 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://angelic-lender.biz',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: 'c08383dd-8005-4b9f-8ae2-71da36a48f6d',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="success" -->
@@ -195,6 +289,53 @@ $body = new Components\CreateWebhookEndpointRequest(
 
 $response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
     company: 'Fisher and Sons',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.create" method="post" path="/companies/{company}/webhook-endpoints" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWebhookEndpointRequest(
+    url: 'https://angelic-lender.biz',
+    enabledEvents: [
+        Components\CreateWebhookEndpointRequestEnabledEvent::QuoteConverted,
+    ],
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    customHeaders: [
+        'Authorization' => 'Bearer integration-token',
+        'X-Custom-Auth' => 'tenant-a',
+    ],
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsCreate(
+    company: '04180aa2-49d8-48d7-8014-290ca750b299',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -495,6 +636,52 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: '03e4ff6b-2a71-423b-9571-3e09b3255ded',
+    webhookEndpoint: '889560ea-47c0-43e6-8689-606f461c1cbf',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="invalid_api_key" -->
@@ -586,6 +773,52 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: '60f887fb-6344-4a32-946b-f6a359c3e7f1',
+    webhookEndpoint: '3845798c-0a1e-49ed-adb8-5cc7dd69303b',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="success" -->
@@ -632,6 +865,52 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.webhook_endpoints.update" method="patch" path="/companies/{company}/webhook-endpoints/{webhook_endpoint}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WebhookEndpointsUpdateRequest(
+    company: 'f369ceea-99aa-418c-9d2c-d6a523ca3d0c',
+    webhookEndpoint: 'a73b7a30-13cf-4d9f-a06a-ce1826993ca7',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateWebhookEndpointRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+        customHeaders: [
+            'Authorization' => 'Bearer integration-token',
+            'X-Custom-Auth' => 'tenant-a',
+        ],
+    ),
+);
+
+$response = $sdk->webhookEndpoints->publicApiV1WebhookEndpointsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -653,7 +932,9 @@ if ($response->object !== null) {
 
 ## publicApiV1WebhookEndpointsPing
 
-Send a synchronous test request (`{"type": "webhook.ping"}`, 10-second timeout) to the URL of the endpoint to check that it is reachable, and return its HTTP status, a truncated body and the duration. The request carries no `Factuarea-Signature` and creates no delivery, so it does not appear in `GET /companies/{company}/webhook-endpoints/{webhook_endpoint}/deliveries`: use `test-event` to exercise the signature. An endpoint that was not `active` becomes `active` again when the request succeeds.
+Send a synchronous test request (`{"type": "webhook.ping"}`, 10-second timeout) to the endpoint URL and return its HTTP status, a truncated body and the duration.
+- It carries no `Factuarea-Signature` and creates no delivery; use `test-event` to exercise the signature.
+- An inactive endpoint becomes `active` if the request succeeds.
 
 ### Example Usage
 
@@ -713,7 +994,9 @@ if ($response->object !== null) {
 
 ## publicApiV1WebhookEndpointsRotateSecret
 
-Rotate the signing secret of a webhook endpoint. The new secret is returned **once** in this response. The previous secret remains valid for a 24-hour grace period (see `previous_secret_valid_until`) to allow zero-downtime rotation. Rotating again within five minutes of the last rotation returns 422 `business_rule_violation` with the subcode `webhook_secret_recently_rotated`; nothing changes, so wait and retry.
+Rotate the signing secret of a webhook endpoint; the new secret is returned once.
+- The previous secret stays valid for 24 hours (`previous_secret_valid_until`).
+- Rotating again within five minutes returns 422 `business_rule_violation` (subcode `webhook_secret_recently_rotated`); nothing changes.
 
 ### Example Usage
 
@@ -773,7 +1056,9 @@ if ($response->object !== null) {
 
 ## publicApiV1WebhookEndpointsTestEvent
 
-Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the delivered envelope. Unlike `ping` (a synthetic `webhook.ping`), this records a real `Event` (visible in `GET /companies/{company}/events`) and queues a signed, retried `WebhookDelivery`. Optionally pass `type` to choose which subscribed event to simulate. The delivery reaches only this endpoint.
+Trigger a test delivery of a real catalog event type to this endpoint, marked `test: true` in the envelope.
+- Unlike `ping`, it records a real `Event` and queues a signed, retried delivery to this endpoint only.
+- Optional `type` picks the subscribed event to simulate.
 
 ### Example Usage
 

@@ -173,7 +173,9 @@ class Contacts
     /**
      * Archive a contact
      *
-     * Archive a contact: a reversible removal that parks it out of the day-to-day operations while keeping it fully readable. Archiving is ALWAYS allowed — invoices, contracts or supplier offers referencing the contact never block it — and it is idempotent: archiving an already archived contact returns 200 and keeps the first `archived_at`. The contact keeps its identity, its roles with their status, the directional profiles, the bank accounts, the legacy aliases and every document, stays retrievable by `id` with `is_archived: true`, and can be brought back with `POST /companies/{company}/contacts/{contact}/restore`. It requires `contacts:delete`, like the other two removals, because it takes the contact out of the operation. To make the contact disappear from the application instead, use `DELETE /companies/{company}/contacts/{contact}`. A UUID owned by another company returns the same 404 `contact_not_found` as an unknown UUID.
+     * Archive a contact: a reversible removal that keeps it fully readable (`is_archived: true`).
+     * - Always allowed and idempotent: archiving again returns 200 and keeps the first `archived_at`.
+     * - Requires `contacts:delete`; undo with `POST /companies/{company}/contacts/{contact}/restore`.
      *
      * @param  string  $company
      * @param  string  $contact
@@ -414,7 +416,9 @@ class Contacts
     /**
      * Archive contacts in bulk
      *
-     * Archive up to 500 contacts by `ids` with partial success. Archiving is always allowed and reversible: every contact keeps its identity, history, aliases and documents, stays retrievable with `is_archived: true` and can be brought back one by one with `POST /companies/{company}/contacts/{contact}/restore`. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. To make the contacts disappear from the application instead, use `POST /companies/{company}/contacts/bulk-delete`.
+     * Archive up to 500 contacts by `ids` with partial success.
+     * - Always allowed and reversible, one by one, with `POST /companies/{company}/contacts/{contact}/restore`.
+     * - Only per-row failure: a UUID the company does not own (`contact_not_found`); the rest still succeed.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkArchiveBusinessContactsV1Request  $body
      * @param  string  $company
@@ -804,7 +808,9 @@ class Contacts
     /**
      * Delete contacts in bulk
      *
-     * Delete up to 500 contacts by `ids` with partial success, applying to each one the same soft delete as `DELETE /companies/{company}/contacts/{contact}`: the contact disappears from every read surface while its identity, roles, aliases and documents are preserved, and its fiscal identity and `external_id` are released so they can be registered again. Every UUID is evaluated inside the authenticated tenant; the only per-row failure is a UUID the company does not own (`contact_not_found`, already deleted contacts included), returned with `id`, `error_code` and a Spanish `error_message` without aborting the successful entries. The deletion is irreversible through the API; for a reversible bulk removal use `POST /companies/{company}/contacts/bulk/archive`.
+     * Delete up to 500 contacts by `ids` with partial success, applying the same soft delete as the single delete.
+     * - Irreversible through the API; for a reversible one use `POST /companies/{company}/contacts/bulk/archive`.
+     * - Only per-row failure is `contact_not_found`, returned with `id`, `error_code` and `error_message`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteBusinessContactsV1Request  $body
      * @param  string  $company
@@ -1055,7 +1061,9 @@ class Contacts
     /**
      * Create a contact
      *
-     * Create one canonical commercial contact with no assigned relationship or any cumulative combination of `customer`, `supplier` and `lead`. The response uses `id` with the generated UUID v7 and includes the common identity plus the directional profiles when applicable. A repeated `Idempotency-Key` replays the original response without duplicating the contact; an existing `external_id` is updated idempotently within the authenticated company.
+     * Create one canonical contact with no role or any combination of `customer`, `supplier` and `lead`; the response `id` is a UUID v7.
+     * - A repeated `Idempotency-Key` replays the original response without duplicating the contact.
+     * - An existing `external_id` is updated idempotently within the company.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateBusinessContactV1Request  $body
      * @param  string  $company
@@ -1137,7 +1145,7 @@ class Contacts
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1ContactsCreateResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -1155,7 +1163,7 @@ class Contacts
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsCreateResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1ContactsCreateResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -1203,7 +1211,9 @@ class Contacts
     /**
      * Delete a contact
      *
-     * Delete a contact. It is a soft delete: the contact disappears from every read surface — list, search, options and selectors, stats, export, activities and its own detail, which answers 404 `contact_not_found` from then on — while nothing is physically removed. Its identity, roles, directional profiles, bank accounts, legacy aliases and every invoice, quote, delivery note or expense that references it are preserved exactly as they were, and those documents keep showing their customer or supplier data. Deleting releases the fiscal identity and the `external_id`, so the same tax ID or external ID can be registered again as a different contact. A deleted contact can no longer be used in new documents, not even through its legacy alias. The operation is irreversible through the API — `POST /companies/{company}/contacts/{contact}/restore` only unarchives — and deleting an unknown, foreign or already deleted UUID returns 404 `contact_not_found`. For a reversible removal that keeps the contact readable, use `POST /companies/{company}/contacts/{contact}/archive` instead. It emits the `contact.deleted` webhook event.
+     * Soft delete a contact: it disappears from every read surface and its detail answers 404 `contact_not_found`.
+     * - Irreversible through the API (`restore` only unarchives); documents that reference it are preserved.
+     * - Releases the tax ID and `external_id`; emits `contact.deleted`. Use `archive` to keep it readable.
      *
      * @param  string  $company
      * @param  string  $contact
@@ -1584,20 +1594,10 @@ class Contacts
     /**
      * Import contacts
      *
-     * Import canonical contacts from CSV with target roles, explicit field mapping, conflict strategy and optional `dry_run`. Returns per-row classifications and a stable import_uuid for synchronous 200 and queued 202 results. Dry-run is always synchronous and does not reserve or consume quota. New admissions share bulk_import_rows_per_month; imports admitted under the previous contact exemption retain it. Applied create/update/add_role rows consume quota; admission rejects with 429 import_row_quota_exceeded before writing or queueing when the allowance is exhausted.
-     *
-     * Fill in the downloaded template before applying the import. A file with no data rows returns 422 with code `business_rule_violation`, subcode `empty_import` and param `file`, before creating an import record or queueing work. Preview and `dry_run=true` accept a file containing only column headers and preserve `source_headers` with total 0.
-     *
-     * ```bash
-     * curl -X POST https://api.factuarea.com/v1/companies/{company}/contacts/import \
-     *   -F file=@contacts.csv \
-     *   -F 'target_roles[]=customer' \
-     *   -F 'target_roles[]=supplier' \
-     *   -F conflict_strategy=reject \
-     *   -F dry_run=true
-     * ```
-     *
-     * Limits: the file accepts CSV, TXT, XLSX or XLS up to 10 MB; `target_roles` accepts at most three distinct roles. Use the preview endpoint before importing. A queued import returns `202`.
+     * Import contacts from CSV with target roles, field mapping, conflict strategy and optional `dry_run`.
+     * - Returns an `import_uuid` with 200 (sync) or 202 (queued); `dry_run` is synchronous and uses no quota.
+     * - Exhausted allowance returns 429 `import_row_quota_exceeded`; an empty file 422 subcode `empty_import`.
+     * - CSV, TXT, XLSX or XLS up to 10 MB.
      *
      * @param  \Factuarea\Sdk\Models\Components\ImportBusinessContactsV1Request  $body
      * @param  string  $company
@@ -1998,7 +1998,9 @@ class Contacts
     /**
      * List contact filter options
      *
-     * Retrieve selectable values for contact forms and filters. Required `field` accepts `country` (the ISO country catalogue), `country_code` (countries present in the authenticated company), `province`, `city` or `tag`. For existing contact values, narrow results with `search` (maximum 100 characters), `country_code` and `province`; `limit` defaults to 50 and accepts 1–250. These values are tenant-scoped. The `country` field always returns the complete ISO catalogue, without applying search or limit. Example: `GET /companies/{company}/contacts/options?field=city&country_code=ES&province=Murcia&limit=50`. Requires `contacts:read` and the canonical contacts rollout; this read does not create catalogue values.
+     * Retrieve selectable values for contact forms and filters; `field` is required (`country`, `country_code`, `province`, `city` or `tag`).
+     * - Narrow with `search` (max 100 characters), `country_code` and `province`; `limit` defaults to 50 (1-250).
+     * - `country` always returns the full ISO catalogue; requires `contacts:read`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ContactsOptionsRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ContactsOptionsResponse
@@ -2363,7 +2365,9 @@ class Contacts
     /**
      * Restore an archived contact
      *
-     * Undo the archival of a contact: it clears the archive mark and touches nothing else. Roles keep the status they had before archiving — a role left `inactive` stays `inactive` — and the directional profiles, the fiscal identity and the bank accounts are left exactly as they were. The operation is idempotent: restoring a contact that is not archived returns 200 without writing anything or emitting `business_contact.restored`. The scope is `contacts:write` and not `contacts:delete` because restoring destroys nothing, it reinstates. A UUID owned by another company returns the same 404 `contact_not_found` as an unknown UUID.
+     * Undo the archival of a contact; nothing else changes and roles keep their previous status.
+     * - Idempotent: restoring a contact that is not archived returns 200 and writes nothing.
+     * - Needs `contacts:write`, not `contacts:delete`.
      *
      * @param  string  $company
      * @param  string  $contact
@@ -2971,7 +2975,9 @@ class Contacts
     /**
      * Replace the bank accounts of a contact
      *
-     * Replace the ENTIRE set of bank accounts of the contact. There is no way to add or drop a single account, because the invariants belong to the set — at most one default collection account and one default payment account, no repeated IBAN once normalized, and an account marked as default must accept that use — and checking them one by one would force the contact through invalid intermediate states. That is why `bank_accounts` is required: an empty list deletes every account, and omitting the key is a 422, never a silent "leave them as they are". A set identical to the current one writes nothing and emits no event. Bank accounts can never be edited from the identity update, which rejects the field like roles and directional profiles.
+     * Replace the ENTIRE set of bank accounts of a contact; single accounts cannot be added or dropped.
+     * - `bank_accounts` is required: an empty list deletes every account, and omitting it returns 422.
+     * - Set invariants: one default collection and one default payment account, no repeated IBAN.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ContactsUpdateBankAccountsRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ContactsUpdateBankAccountsResponse

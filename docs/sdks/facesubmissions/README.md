@@ -50,6 +50,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.face_submissions.cancel" method="post" path="/companies/{company}/face-submissions/{faceSubmission}/cancel" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1FaceSubmissionsCancelRequest(
+    company: '9b4ef8f1-7acb-463d-b3d9-3f4bffc97f64',
+    faceSubmission: 'f4d742a3-de41-42dc-afb1-78495ac99798',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CancelFaceSubmissionV1Request(
+        reason: '<value>',
+    ),
+);
+
+$response = $sdk->faceSubmissions->publicApiV1FaceSubmissionsCancel(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.face_submissions.cancel" method="post" path="/companies/{company}/face-submissions/{faceSubmission}/cancel" example="invalid_api_key" -->
@@ -128,6 +167,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.face_submissions.cancel" method="post" path="/companies/{company}/face-submissions/{faceSubmission}/cancel" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1FaceSubmissionsCancelRequest(
+    company: '3b08667b-9912-4fd2-abcd-2b639c2def36',
+    faceSubmission: '10fc20f8-72b3-4646-b791-bfebc802fad3',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CancelFaceSubmissionV1Request(
+        reason: '<value>',
+    ),
+);
+
+$response = $sdk->faceSubmissions->publicApiV1FaceSubmissionsCancel(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.face_submissions.cancel" method="post" path="/companies/{company}/face-submissions/{faceSubmission}/cancel" example="success" -->
@@ -152,6 +230,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1FaceSubmissionsCancelRequest(
     company: 'Prohaska - Anderson',
     faceSubmission: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CancelFaceSubmissionV1Request(
+        reason: '<value>',
+    ),
+);
+
+$response = $sdk->faceSubmissions->publicApiV1FaceSubmissionsCancel(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.face_submissions.cancel" method="post" path="/companies/{company}/face-submissions/{faceSubmission}/cancel" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1FaceSubmissionsCancelRequest(
+    company: '8d937efb-1a1b-49a6-a0f8-2820d3b521cb',
+    faceSubmission: '69208954-f4e9-45a4-b355-46d6e5e9521f',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CancelFaceSubmissionV1Request(

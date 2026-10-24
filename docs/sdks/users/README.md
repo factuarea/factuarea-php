@@ -65,7 +65,9 @@ if ($response->object !== null) {
 
 ## publicApiV1UsersList
 
-List the people tasks can be assigned to in your company, ordered by name, with their `id`, name, email, initials and avatar color: its members plus the people of other accounts who reach the company through an account relation with `operate` access (for example, the accountancy firm that manages it). People with view-only relation access are not listed. `q` filters by name or email. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+List the people tasks can be assigned to in your company, ordered by name: its members plus people with `operate` access through an account relation.
+- View-only relation access is not listed; `q` filters by name or email.
+- Cursor-paginated: pass `next_cursor` as `starting_after`.
 
 ### Example Usage
 

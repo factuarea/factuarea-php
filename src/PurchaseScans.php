@@ -293,7 +293,9 @@ class PurchaseScans
     /**
      * Upload documents to the purchase scanner
      *
-     * Upload up to 20 PDF, JPEG or PNG files as `multipart/form-data` (`files[]`, 20 MiB each, 100 MiB per request). Each file is scanned for safety and stored encrypted. It is queued for OCR when automatic scanning is enabled; otherwise it remains `received` until explicitly started. Responds `202` with `accepted[]` (index plus the full scan detail) and `rejected[]` (index, filename, error code); `422` when no file was accepted. Send an `Idempotency-Key` header: a replay returns the same result without re-ingesting.
+     * Upload up to 20 PDF, JPEG or PNG files as `multipart/form-data` (`files[]`) to the purchase scanner.
+     * - Responds `202` with `accepted[]` and `rejected[]`; `422` when no file was accepted.
+     * - Send an `Idempotency-Key` header: a replay returns the same result without re-ingesting.
      *
      * @param  \Factuarea\Sdk\Models\Components\UploadPurchaseScansRequest  $body
      * @param  string  $company

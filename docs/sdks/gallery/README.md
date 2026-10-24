@@ -174,6 +174,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
+    company: 'fa5899eb-0ea6-4a32-be3a-c7bd7a8d4990',
+    product: '02d8dad3-1e44-4ca7-9abf-6270d2a35324',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UploadProductGalleryImageRequest(
+        image: new Components\Image(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->products->gallery->publicApiV1ProductsGalleryUpload(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="invalid_api_key" -->
@@ -258,6 +300,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
+    company: 'e0dd2e1d-b946-4aab-ba8e-78694f0ad40b',
+    product: '5aadbaac-ace2-4bce-ad9a-9bcf68ec8d84',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UploadProductGalleryImageRequest(
+        image: new Components\Image(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->products->gallery->publicApiV1ProductsGalleryUpload(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="success" -->
@@ -282,6 +366,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
     company: 'Becker, Stark and Streich',
     product: 'Small Bronze Soap',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UploadProductGalleryImageRequest(
+        image: new Components\Image(
+            fileName: 'example.file',
+            content: file_get_contents('example.file');,
+        ),
+    ),
+);
+
+$response = $sdk->products->gallery->publicApiV1ProductsGalleryUpload(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.gallery.upload" method="post" path="/companies/{company}/products/{product}/gallery" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsGalleryUploadRequest(
+    company: '3cd25255-0df6-4200-8e5e-cf483d59d192',
+    product: '8d7cedfe-ef9c-477e-90d2-78eec14e762d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductGalleryImageRequest(

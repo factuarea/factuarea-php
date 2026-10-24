@@ -26,7 +26,9 @@
 
 ## publicApiV1DeliveryNotesBulkDelete
 
-Delete several delivery notes in a single request. The body takes an `ids` array of delivery note identifiers (UUID v7). Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` counts and a `failures` list (`id` + `error_code` + Spanish `error_message`) for those that could not be deleted (e.g. signed or invoiced). Supports `Idempotency-Key` for safe retries.
+Delete several delivery notes in one request: `ids` array of UUID v7.
+- Returns a `BulkPartialSuccessResult`; `failures` list the notes not deleted (e.g. signed or invoiced).
+- Supports `Idempotency-Key`.
 
 ### Example Usage: api_key_revoked
 
@@ -57,6 +59,45 @@ $body = new Components\BulkDeleteDeliveryNotesRequest(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkDelete(
     company: 'bd3f2cfb-d324-4076-98e5-808b4fbba9f1',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_delete" method="post" path="/companies/{company}/delivery-notes/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteDeliveryNotesRequest(
+    ids: [
+        'd3f2cfbd-3240-4768-ae58-08b4fbba9f17',
+        '6f21babd-33d3-4ef2-8929-11464c5520a7',
+    ],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkDelete(
+    company: '96f21bab-d33d-43ef-9292-911464c5520a',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -145,6 +186,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_delete" method="post" path="/companies/{company}/delivery-notes/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteDeliveryNotesRequest(
+    ids: [
+        'd3f2cfbd-3240-4768-ae58-08b4fbba9f17',
+        '6f21babd-33d3-4ef2-8929-11464c5520a7',
+    ],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkDelete(
+    company: 'bd3f2cfb-d324-4076-98e5-808b4fbba9f1',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_delete" method="post" path="/companies/{company}/delivery-notes/bulk-delete" example="success" -->
@@ -174,6 +254,45 @@ $body = new Components\BulkDeleteDeliveryNotesRequest(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkDelete(
     company: 'Ruecker - West',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_delete" method="post" path="/companies/{company}/delivery-notes/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteDeliveryNotesRequest(
+    ids: [
+        'd3f2cfbd-3240-4768-ae58-08b4fbba9f17',
+        '6f21babd-33d3-4ef2-8929-11464c5520a7',
+    ],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkDelete(
+    company: '318e1ae8-8138-43d5-8459-bff45bbeb951',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -236,6 +355,42 @@ $body = new Components\BulkPdfDeliveryNotesV1Request(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkPdf(
     company: '1149b34d-c7ab-436d-b4e2-b35e7a026916',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_pdf" method="post" path="/companies/{company}/delivery-notes/bulk-pdf" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfDeliveryNotesV1Request(
+    ids: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkPdf(
+    company: 'aa7b5fc9-bda3-4150-8aa6-f066d5ec5f1d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -318,6 +473,78 @@ if ($response->bytes !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_pdf" method="post" path="/companies/{company}/delivery-notes/bulk-pdf" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfDeliveryNotesV1Request(
+    ids: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkPdf(
+    company: '149b34dc-7ab3-46d4-be2b-35e7a026916d',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_pdf" method="post" path="/companies/{company}/delivery-notes/bulk-pdf" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkPdfDeliveryNotesV1Request(
+    ids: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkPdf(
+    company: 'b5e138c1-719a-4516-a33a-9eb61c5ff8fe',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->bytes !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -370,6 +597,42 @@ $body = new Components\BulkSendDeliveryNotesV1Request(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkSend(
     company: '163aea31-437b-49b9-aaf4-3d266469ca73',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_send" method="post" path="/companies/{company}/delivery-notes/bulk-send" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendDeliveryNotesV1Request(
+    ids: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkSend(
+    company: '4340a7f0-e935-48a9-8307-bd1c1d05e9ad',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -452,6 +715,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_send" method="post" path="/companies/{company}/delivery-notes/bulk-send" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendDeliveryNotesV1Request(
+    ids: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkSend(
+    company: '163aea31-437b-49b9-aaf4-3d266469ca73',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_send" method="post" path="/companies/{company}/delivery-notes/bulk-send" example="success" -->
@@ -478,6 +777,42 @@ $body = new Components\BulkSendDeliveryNotesV1Request(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkSend(
     company: 'Jones - Fadel',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_send" method="post" path="/companies/{company}/delivery-notes/bulk-send" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkSendDeliveryNotesV1Request(
+    ids: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkSend(
+    company: '6490f1e2-fc98-49cf-913b-0198b3b3f51d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -543,6 +878,43 @@ $body = new Components\BulkStatusDeliveryNotesV1Request(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkStatus(
     company: '15994476-43c7-454c-861d-727228ac7d57',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_status" method="post" path="/companies/{company}/delivery-notes/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusDeliveryNotesV1Request(
+    ids: [],
+    newStatus: Components\BulkStatusDeliveryNotesV1RequestNewStatus::Delivered,
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkStatus(
+    company: '91a622f3-0e0b-412c-8a65-3e2e6e0a5d84',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -629,6 +1001,43 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_status" method="post" path="/companies/{company}/delivery-notes/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusDeliveryNotesV1Request(
+    ids: [],
+    newStatus: Components\BulkStatusDeliveryNotesV1RequestNewStatus::Delivered,
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkStatus(
+    company: '15994476-43c7-454c-861d-727228ac7d57',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_status" method="post" path="/companies/{company}/delivery-notes/bulk-status" example="success" -->
@@ -656,6 +1065,43 @@ $body = new Components\BulkStatusDeliveryNotesV1Request(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkStatus(
     company: 'Heathcote - Metz',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.bulk_status" method="post" path="/companies/{company}/delivery-notes/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusDeliveryNotesV1Request(
+    ids: [],
+    newStatus: Components\BulkStatusDeliveryNotesV1RequestNewStatus::Delivered,
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesBulkStatus(
+    company: '3f4cfa7b-0fc8-4305-a59f-0b853a3fc02b',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -815,6 +1261,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1DeliveryNotesConvertRequest(
     company: 'O\'Hara and Sons',
     deliveryNote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertDeliveryNoteRequest(
+        target: Components\ConvertDeliveryNoteRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/convert" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesConvertRequest(
+    company: '1a50dd7b-02f6-48ea-bf40-9e612e4787ce',
+    deliveryNote: 'c830df93-7262-4eb5-b098-6db5283ca220',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConvertDeliveryNoteRequest(
@@ -1021,6 +1506,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/convert" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesConvertRequest(
+    company: 'c7d76a98-ae2c-49e5-9263-077bf7b526d5',
+    deliveryNote: 'f1e02912-d12c-4880-b8aa-866f9d67f156',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertDeliveryNoteRequest(
+        target: Components\ConvertDeliveryNoteRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/convert" example="success" -->
@@ -1045,6 +1569,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1DeliveryNotesConvertRequest(
     company: 'Osinski LLC',
     deliveryNote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertDeliveryNoteRequest(
+        target: Components\ConvertDeliveryNoteRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.convert" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/convert" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesConvertRequest(
+    company: '5c1ac187-d6df-40d8-9202-d737c155cbeb',
+    deliveryNote: '798c8bd5-0e82-4014-92e0-2a82420ea3ce',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConvertDeliveryNoteRequest(
@@ -1172,6 +1735,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.create" method="post" path="/companies/{company}/delivery-notes" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateDeliveryNoteRequest(
+    clientId: 'eae5c51d-7f97-4439-a6a0-93961580e35c',
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesCreate(
+    company: '6a093961-580e-435c-8b7e-f78e03e87122',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.create" method="post" path="/companies/{company}/delivery-notes" example="invalid_api_key" -->
@@ -1254,6 +1858,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.create" method="post" path="/companies/{company}/delivery-notes" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateDeliveryNoteRequest(
+    clientId: 'eae5c51d-7f97-4439-a6a0-93961580e35c',
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesCreate(
+    company: 'bca0e7ad-9fd1-4c6e-a9ea-e5c51d7f9743',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.create" method="post" path="/companies/{company}/delivery-notes" example="success" -->
@@ -1285,6 +1930,47 @@ $body = new Components\CreateDeliveryNoteRequest(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesCreate(
     company: 'Kshlerin, O\'Conner and Simonis',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.create" method="post" path="/companies/{company}/delivery-notes" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateDeliveryNoteRequest(
+    clientId: 'eae5c51d-7f97-4439-a6a0-93961580e35c',
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesCreate(
+    company: 'bc188869-9407-4c5f-9d93-ab2ba34257cf',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1538,6 +2224,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesUpdateRequest(
+    company: '6e8524cc-c44c-478e-aa5a-7560fade55db',
+    deliveryNote: '27d4eb61-9a09-4da0-8990-566bbe340cce',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateDeliveryNoteRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}" example="invalid_api_key" -->
@@ -1621,6 +2349,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesUpdateRequest(
+    company: 'f638e2d4-fa5e-46f5-ab70-80d528f50661',
+    deliveryNote: '2345d891-807a-4f6b-b0c1-d83d47acbcee',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateDeliveryNoteRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}" example="success" -->
@@ -1645,6 +2415,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1DeliveryNotesUpdateRequest(
     company: 'Conn, Smith and Fritsch',
     deliveryNote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateDeliveryNoteRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesUpdateRequest(
+    company: '45e03ac0-e373-4b46-9dea-3ba675fe6308',
+    deliveryNote: '9c52dd71-5d06-43fb-9765-b59e2ba1abe0',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateDeliveryNoteRequest(
@@ -1840,6 +2652,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.find_by_external_id" method="post" path="/companies/{company}/delivery-notes/find-by-external-id" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindDeliveryNoteByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesFindByExternalId(
+    company: '9a4bf498-7423-490b-84af-2ac5da2ca1e2',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.find_by_external_id" method="post" path="/companies/{company}/delivery-notes/find-by-external-id" example="invalid_api_key" -->
@@ -1910,6 +2757,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.find_by_external_id" method="post" path="/companies/{company}/delivery-notes/find-by-external-id" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindDeliveryNoteByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesFindByExternalId(
+    company: 'df658e52-9038-4bea-9ebd-116f1728ab24',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.find_by_external_id" method="post" path="/companies/{company}/delivery-notes/find-by-external-id" example="success" -->
@@ -1936,6 +2818,41 @@ $body = new Components\FindDeliveryNoteByExternalIdRequest(
 
 $response = $sdk->deliveryNotes->publicApiV1DeliveryNotesFindByExternalId(
     company: 'Wehner, Howe and Hills',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.find_by_external_id" method="post" path="/companies/{company}/delivery-notes/find-by-external-id" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindDeliveryNoteByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesFindByExternalId(
+    company: '5ebd179d-5048-4646-87d0-ef4ccc88c036',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2180,6 +3097,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.send" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/send" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesSendRequest(
+    company: 'a179bb1c-e4ba-48a4-ab34-9b1c25c57e8f',
+    deliveryNote: 'db45a5ee-1d1f-4de0-8407-331300f27c56',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SendDeliveryNoteRequest(
+        email: 'Arden_Beatty@hotmail.com',
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesSend(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.send" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/send" example="invalid_api_key" -->
@@ -2258,6 +3214,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.send" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/send" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesSendRequest(
+    company: 'd110a0ac-80bc-4603-a483-e321b2204797',
+    deliveryNote: '95a651a6-4da3-49a1-ae62-ed9af3e81c20',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SendDeliveryNoteRequest(
+        email: 'Arden_Beatty@hotmail.com',
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesSend(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.send" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/send" example="success" -->
@@ -2297,6 +3292,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.send" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/send" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesSendRequest(
+    company: '5cbdf9c2-7d6e-4659-a63e-97013b6636f7',
+    deliveryNote: 'f4a4c1be-0fef-4be4-b81e-b18e505b5844',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SendDeliveryNoteRequest(
+        email: 'Arden_Beatty@hotmail.com',
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesSend(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -2318,7 +3352,9 @@ if ($response->object !== null) {
 
 ## publicApiV1DeliveryNotesSign
 
-Record a handwritten signature on a delivery note, typically captured from the recipient on delivery. The signature must be a base64-encoded PNG (≤2 MB); other formats return 422. Signing sets `signed_at`/`signed_by` but does not change the status. The signature audit log retains hashed recipient PII for 5 years (Spanish LSSI-CE); use the `signature-audits/{auditId}/forget` endpoint to honor a GDPR erasure request.
+Record a handwritten signature on a delivery note: base64 PNG up to 2 MB, other formats return 422.
+- Sets `signed_at`/`signed_by` without changing the status.
+- The audit log keeps hashed PII for 5 years; erase it via `signature-audits/{auditId}/forget`.
 
 ### Example Usage: api_key_revoked
 
@@ -2344,6 +3380,47 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1DeliveryNotesSignRequest(
     company: '5d4c8edd-858d-4580-a37f-8960de1921f7',
     deliveryNote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SignDeliveryNoteRequest(
+        signedBy: '<value>',
+        recipientDni: '<value>',
+        signatureImageBase64: '<value>',
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesSign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.sign" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/sign" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesSignRequest(
+    company: 'fa86d47a-de31-4c3b-8958-c04eeab2ef53',
+    deliveryNote: 'abb69848-5a8a-49ae-9562-d0bd681080e7',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SignDeliveryNoteRequest(
@@ -2443,6 +3520,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.sign" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/sign" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesSignRequest(
+    company: '5d4c8edd-858d-4580-a37f-8960de1921f7',
+    deliveryNote: '0a5545b0-ca91-418d-9891-2f9ed5927f8b',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SignDeliveryNoteRequest(
+        signedBy: '<value>',
+        recipientDni: '<value>',
+        signatureImageBase64: '<value>',
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesSign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.sign" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/sign" example="success" -->
@@ -2467,6 +3585,47 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1DeliveryNotesSignRequest(
     company: 'Luettgen, Ullrich and Stoltenberg',
     deliveryNote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SignDeliveryNoteRequest(
+        signedBy: '<value>',
+        recipientDni: '<value>',
+        signatureImageBase64: '<value>',
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicApiV1DeliveryNotesSign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.sign" method="post" path="/companies/{company}/delivery-notes/{delivery_note}/sign" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesSignRequest(
+    company: '9d3a946d-1249-4c22-85b7-bed3d4df24eb',
+    deliveryNote: '9f6225d7-6e3c-4ef6-9159-f30d4e8509f9',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SignDeliveryNoteRequest(

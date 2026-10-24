@@ -57,7 +57,9 @@ class DeliveryNotes
     /**
      * Bulk delete delivery notes
      *
-     * Delete several delivery notes in a single request. The body takes an `ids` array of delivery note identifiers (UUID v7). Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` counts and a `failures` list (`id` + `error_code` + Spanish `error_message`) for those that could not be deleted (e.g. signed or invoiced). Supports `Idempotency-Key` for safe retries.
+     * Delete several delivery notes in one request: `ids` array of UUID v7.
+     * - Returns a `BulkPartialSuccessResult`; `failures` list the notes not deleted (e.g. signed or invoiced).
+     * - Supports `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteDeliveryNotesRequest  $body
      * @param  string  $company
@@ -1934,7 +1936,9 @@ class DeliveryNotes
     /**
      * Sign a delivery note
      *
-     * Record a handwritten signature on a delivery note, typically captured from the recipient on delivery. The signature must be a base64-encoded PNG (≤2 MB); other formats return 422. Signing sets `signed_at`/`signed_by` but does not change the status. The signature audit log retains hashed recipient PII for 5 years (Spanish LSSI-CE); use the `signature-audits/{auditId}/forget` endpoint to honor a GDPR erasure request.
+     * Record a handwritten signature on a delivery note: base64 PNG up to 2 MB, other formats return 422.
+     * - Sets `signed_at`/`signed_by` without changing the status.
+     * - The audit log keeps hashed PII for 5 years; erase it via `signature-audits/{auditId}/forget`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesSignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesSignResponse

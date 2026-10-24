@@ -50,7 +50,9 @@ class Catalog
     /**
      * Retrieve the automation catalog
      *
-     * Everything you need to build a valid automation rule without guessing: the triggers visible to your company, the closed set of condition operators and combinators, and the actions that have a registered adapter together with the JSON schema of their parameters. Visibility follows the plan and the modules of the company, so two accounts can legitimately see different catalogs. The response is deterministic — two consecutive calls with nothing changed return exactly the same body — and its labels are translated according to the `Accept-Language` header, defaulting to Spanish. The evaluable fields of each trigger are NOT included here: they are served per trigger by `GET /v1/companies/{company}/automations/catalog/triggers/{trigger}/fields`, which is what keeps this call from weighing hundreds of kilobytes.
+     * Return what you need to build a valid automation rule: visible triggers, condition operators and combinators, and actions with their parameter JSON schema.
+     * - Visibility follows the company’s plan and modules; labels follow `Accept-Language` (default Spanish).
+     * - Trigger fields are served per trigger by `GET /v1/companies/{company}/automations/catalog/triggers/{trigger}/fields`.
      *
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
@@ -171,7 +173,9 @@ class Catalog
     /**
      * Retrieve the evaluable fields of a trigger
      *
-     * List the fields you can write conditions against for a single trigger: where to read each one inside the triggering event, its type, the translated label of that type and the operators it accepts. It is the companion of the catalog, split into its own operation because serving the fields of every trigger at once would weigh hundreds of kilobytes per call. A trigger outside the catalog visible to your company returns 404 — whether the name does not exist, its module is not in your plan, or it is admin-only — so this endpoint cannot be used to probe what an account has contracted. A visible trigger whose event type publishes no evaluable fields returns 422.
+     * List the fields you can write conditions against for one trigger: location in the event, type, label and accepted operators.
+     * - A trigger outside your visible catalog returns 404, so it cannot be used to probe contracted modules.
+     * - A visible trigger with no evaluable fields returns 422.
      *
      * @param  string  $company
      * @param  string  $trigger
