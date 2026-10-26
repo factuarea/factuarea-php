@@ -30,6 +30,7 @@ class PublicApiV1InvoicesBulkSendRequest
     public string $idempotencyKey;
 
     /**
+     * Bulk invoice send accepts an optional UUID-keyed map of complete seven-field presentation preconditions. When revisioned presentation is enabled for the company, every DRAFT row must carry its precondition because sending issues it: a draft row without one is not issued or sent and is reported in `failures[]` with 428 `pdf_presentation_precondition_required`, while the other rows continue. Rows that are not drafts are re-sent as they are. With revisioned presentation disabled the precondition fields are ignored.
      *
      * @var \Factuarea\Sdk\Models\Components\BulkSendInvoicesV1Request $body
      */

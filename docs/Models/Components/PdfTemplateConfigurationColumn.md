@@ -1,0 +1,10 @@
+# PdfTemplateConfigurationColumn
+
+
+## Fields
+
+| Field                                                                                                  | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `id`                                                                                                   | [Components\PdfTemplateConfigurationId](../../Models/Components/PdfTemplateConfigurationId.md)         | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `visible`                                                                                              | *bool*                                                                                                 | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `labels`                                                                                               | [Components\PdfTemplateConfigurationLabels](../../Models/Components/PdfTemplateConfigurationLabels.md) | :heavy_check_mark:                                                                                     | N/A                                                                                                    |

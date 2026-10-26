@@ -51,7 +51,9 @@ class Employees
     /**
      * Create an employee
      *
-     * Register a new employee for the authenticated company (resolved from the API key, never from the payload). `first_name`, `last_name`, `email`, `employment_type` (`full_time`/`part_time`), `contract_hours`, `hire_date` and `ccaa` are required; `tax_id` and `job_title` are optional. Returns the created employee with its generated `id` (UUID v7). Active employees count towards the workforce module seat billing.
+     * Register a new employee for the company in the path; returns it with a generated `id` (UUID v7).
+     * - Required: `first_name`, `last_name`, `email`, `employment_type`, `contract_hours`, `hire_date`, `ccaa`.
+     * - Active employees count towards workforce module seat billing.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateEmployeeRequest  $body
      * @param  string  $company
@@ -157,19 +159,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500', '503'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -661,19 +651,7 @@ class Employees
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $obj->rawResponse = $httpResponse;
-                throw $obj->toException();
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['503'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500', '503'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -941,7 +919,9 @@ class Employees
     /**
      * Update an employee
      *
-     * Update an employee. Partial update: only fields present in the payload are modified; omitted fields keep their value. `hire_date` (`Y-m-d`) can be corrected: it must not be later than the employee’s `termination_date` (422 `parameter_invalid_value`, subcode `invalid_hire_date`), and changing it keeps existing time entries and schedule assignments — entries left outside the new employment period stay in the ledger and are flagged with `is_outside_employment` in the time balances. Returns the updated employee.
+     * Partially update an employee; omitted fields keep their value, and the updated employee is returned.
+     * - `hire_date` cannot be later than `termination_date`: 422 `parameter_invalid_value`, subcode `invalid_hire_date`.
+     * - Entries outside the new employment period stay in the ledger, flagged `is_outside_employment`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesUpdateResponse

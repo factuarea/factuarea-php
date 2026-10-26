@@ -38,6 +38,7 @@ class PublicApiV1DeliveryNotesSendRequest
     public string $idempotencyKey;
 
     /**
+     * Delivery-note send accepts the `presentation_precondition` object with exactly seven fields and the optional `expected_presentation_uuid` and `expected_publication_id`. The object is required when revisioned presentation is enabled for the company and the delivery note has no retained capture yet (a missing object returns 428 `pdf_presentation_precondition_required`); an already captured delivery note is re-sent as captured without it and without creating a new version; otherwise it is ignored, as are the optional identities.
      *
      * @var \Factuarea\Sdk\Models\Components\SendDeliveryNoteRequest $body
      */

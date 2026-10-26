@@ -54,7 +54,9 @@ class Rules
     /**
      * Activate an automation rule
      *
-     * Put an automation rule into service: from this point on, every event of its trigger is evaluated against its current version. Returns 200 with the rule already in its new state, so you do not need a second call to confirm it. Only a `draft` or a `paused` rule can be activated — activating one that is already active returns 422. Activation deliberately does not pre-check quota or budget; call `GET /v1/companies/{company}/automations/usage` if you want to anticipate that.
+     * Put an automation rule into service: every event of its trigger is evaluated against its current version. Returns 200 with the new state.
+     * - Only a `draft` or `paused` rule can be activated; an active one returns 422.
+     * - Quota and budget are not pre-checked; see `GET /v1/companies/{company}/automations/usage`.
      *
      * @param  string  $company
      * @param  string  $rule
@@ -179,7 +181,9 @@ class Rules
     /**
      * Create an automation rule
      *
-     * Create an automation rule out of three pieces: the trigger that puts it in motion, an optional condition tree evaluated against the triggering event, and the ordered list of actions it executes. The server assigns the `id` (UUID v7) and seals version 1 of the definition. New rules are created in `draft` and do not fire until you activate them with `POST /v1/companies/{company}/automations/rules/{rule}/activate`. Omit `conditions` to run on every event of the trigger. The trigger must belong to the catalog visible to your company and every action must have a registered adapter; otherwise the call returns 422 and nothing is created.
+     * Create an automation rule from a trigger, an optional condition tree and an ordered list of actions; the server assigns the `id`.
+     * - It is created in `draft` and does not fire until activated via `POST /v1/companies/{company}/automations/rules/{rule}/activate`.
+     * - A trigger outside your catalog or an action without adapter returns 422.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAutomationRuleV1Request  $body
      * @param  string  $company
@@ -309,7 +313,9 @@ class Rules
     /**
      * Delete an automation rule
      *
-     * Delete an automation rule. The deletion is logical: the rule stops existing for the API and stops firing, while its sealed versions and its run history are preserved so past executions remain auditable. Returns 204 with no body and is not reversible through this API. A second delete of the same rule returns 404, exactly as a rule of another company does.
+     * Delete an automation rule logically: it stops firing and disappears from the API, while versions and run history stay auditable.
+     * - Returns 204; not reversible through this API.
+     * - A second delete returns 404, like a rule of another company.
      *
      * @param  string  $company
      * @param  string  $rule
@@ -424,11 +430,10 @@ class Rules
     /**
      * Dry-run an automation rule
      *
-     * Simulate what a rule would do against a sample event: whether its condition would match, why it could not be evaluated when it cannot, and what each of its actions would resolve to. It executes NOTHING — no email is sent, no document changes, no third party is called, no quota is consumed and neither a run nor a step is recorded — which is why it takes the read scope even though it is a POST (the sample event has to travel in the body).
-     *
-     * IMPORTANT — if the rule acts on documents (send a document by email, send a payment reminder, change a status, tag an entity), pass `event_aggregate_id` with the id of a real document of yours. Without it the dry run reports that no step would run, and a perfectly correct rule looks broken.
-     *
-     * A condition that cannot be evaluated is not an HTTP error: it comes back as `condition_error` with 200, because seeing exactly that is what the dry run is for. A step a guardrail would cut short in production comes back as non-executable with its typed reason, never as a success.
+     * Simulate what a rule would do against a sample event: condition match and what each action would resolve to. Executes nothing.
+     * - No email, change, quota use or run record; it takes the read scope.
+     * - For document rules pass `event_aggregate_id` of a real document, or no step would run.
+     * - An unevaluable condition returns 200 with `condition_error`.
      *
      * @param  \Factuarea\Sdk\Models\Components\DryRunAutomationRuleV1Request  $body
      * @param  string  $company
@@ -558,7 +563,9 @@ class Rules
     /**
      * List your automation rules
      *
-     * List the automation rules of the authenticated company with cursor-based pagination. Filter by `status`, by `trigger_type` or by creation window (`created[gte]`, `created[lte]`, …), and search by name with `search`. Pages are ordered by `id` ascending — a unique, monotonic key — so a rule created while you are paginating never shifts or duplicates a row. Only your own rules are ever returned, and a cursor issued for another company yields an empty page rather than someone else's data.
+     * List the company’s automation rules with cursor-based pagination, ordered by `id` ascending.
+     * - Filter by `status`, `trigger_type`, creation window (`created[gte]`, `created[lte]`) and search by name with `search`.
+     * - A cursor issued for another company yields an empty page.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesListResponse
@@ -677,7 +684,9 @@ class Rules
     /**
      * Pause an automation rule
      *
-     * Stop an active automation rule from firing, without losing either its definition or its run history. Returns 200 with the rule already in its new state. Pausing does not touch the definition, so it seals no new version, and the rule can be activated again at any time. Only an `active` rule can be paused; anything else returns 422. Bear in mind the engine may also pause a rule on its own after several consecutive failures.
+     * Stop an active automation rule from firing, keeping its definition and run history.
+     * - Returns 200 with the rule in its new state; seals no new version, and it can be activated again.
+     * - Only an `active` rule can be paused; anything else returns 422.
      *
      * @param  string  $company
      * @param  string  $rule
@@ -925,7 +934,9 @@ class Rules
     /**
      * Update an automation rule
      *
-     * Partially update an automation rule: omitted fields keep their value, and sending `""` in `description` clears it. Editing never mutates the previous definition — it seals a NEW version and bumps `current_version` — which is what keeps every past run readable against the exact definition it executed. The status is left untouched: editing an active rule leaves it active, running the new version from its next event onwards.
+     * Partially update an automation rule: omitted fields keep their value, and `""` in `description` clears it.
+     * - Every edit seals a NEW version and bumps `current_version`; past runs keep their original definition.
+     * - The status is unchanged: an active rule stays active.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRulesUpdateResponse

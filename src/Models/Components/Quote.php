@@ -163,6 +163,15 @@ class Quote
     public bool $linkIsActive;
 
     /**
+     * Safe summary of the retained PDF output for a document. This is not artifact metadata: it never exposes snapshots, proofs, or storage paths. `download_url` is present only for a ready artifact.
+     *
+     * @var \Factuarea\Sdk\Models\Components\DocumentPdfOutputState $pdfOutputState
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_output_state')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentPdfOutputState')]
+    public DocumentPdfOutputState $pdfOutputState;
+
+    /**
      *
      * @var \DateTime $createdAt
      */
@@ -281,6 +290,14 @@ class Quote
     public ?\DateTime $linkExpiresAt;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\DocumentPresentationState $presentation
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentPresentationState|null')]
+    public ?DocumentPresentationState $presentation;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\QuoteObject  $object
      * @param  string  $number
@@ -300,6 +317,7 @@ class Quote
      * @param  array<string>  $tags
      * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
      * @param  bool  $linkIsActive
+     * @param  \Factuarea\Sdk\Models\Components\DocumentPdfOutputState  $pdfOutputState
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?string  $priceListId
@@ -315,9 +333,10 @@ class Quote
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
      * @param  ?\DateTime  $linkExpiresAt
+     * @param  ?\Factuarea\Sdk\Models\Components\DocumentPresentationState  $presentation
      * @phpstan-pure
      */
-    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $operationRegime, array $lines, array $tags, array $customFields, bool $linkIsActive, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $reference = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null)
+    public function __construct(string $id, QuoteObject $object, string $number, SeriesRef $series, ClientRef $client, string $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, string $operationRegime, array $lines, array $tags, array $customFields, bool $linkIsActive, DocumentPdfOutputState $pdfOutputState, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $validUntil = null, ?\DateTime $acceptedAt = null, ?\DateTime $rejectedAt = null, ?string $convertedToId = null, ?string $convertedInvoiceNumber = null, ?string $notes = null, ?string $terms = null, ?string $reference = null, ?string $externalId = null, ?array $metadata = null, ?\DateTime $linkExpiresAt = null, ?DocumentPresentationState $presentation = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -338,6 +357,7 @@ class Quote
         $this->tags = $tags;
         $this->customFields = $customFields;
         $this->linkIsActive = $linkIsActive;
+        $this->pdfOutputState = $pdfOutputState;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->priceListId = $priceListId;
@@ -353,5 +373,6 @@ class Quote
         $this->externalId = $externalId;
         $this->metadata = $metadata;
         $this->linkExpiresAt = $linkExpiresAt;
+        $this->presentation = $presentation;
     }
 }

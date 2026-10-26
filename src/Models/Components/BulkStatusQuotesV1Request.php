@@ -30,13 +30,25 @@ class BulkStatusQuotesV1Request
     public BulkStatusQuotesV1RequestNewStatus $newStatus;
 
     /**
+     * Optional map from each affected quote UUID to its complete seven-field presentation precondition. Keys must identify documents in this batch; do not reuse another document's source token. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?array<string, \Factuarea\Sdk\Models\Components\QuotePresentationPrecondition> $presentationPreconditions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_preconditions')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, \Factuarea\Sdk\Models\Components\QuotePresentationPrecondition>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $presentationPreconditions = null;
+
+    /**
      * @param  array<string>  $ids
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1RequestNewStatus  $newStatus
+     * @param  ?array<string, \Factuarea\Sdk\Models\Components\QuotePresentationPrecondition>  $presentationPreconditions
      * @phpstan-pure
      */
-    public function __construct(array $ids, BulkStatusQuotesV1RequestNewStatus $newStatus)
+    public function __construct(array $ids, BulkStatusQuotesV1RequestNewStatus $newStatus, ?array $presentationPreconditions = null)
     {
         $this->ids = $ids;
         $this->newStatus = $newStatus;
+        $this->presentationPreconditions = $presentationPreconditions;
     }
 }

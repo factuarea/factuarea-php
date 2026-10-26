@@ -51,7 +51,9 @@ class Invitations
     /**
      * Revoke an account invitation
      *
-     * Revoke a pending invitation identified by its `id` (UUID v7): it transitions to `revoked` and its link can no longer be accepted. It never removes an existing member. Returns 204 on success, 422 `business_rule_violation` when it was already accepted or revoked, and 404 `invitation_not_found` when it does not exist or belongs to another account. Requires the `invitations:write` scope, which `*` does not cover: the API key must list it explicitly.
+     * Revoke a pending invitation by its `id` (UUID v7): it becomes `revoked` and its link can no longer be accepted.
+     * - It never removes an existing member; returns 204.
+     * - 422 `business_rule_violation` if already accepted or revoked; 404 `invitation_not_found` if unknown or of another account. Requires the `invitations:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  string  $invitation
@@ -166,7 +168,10 @@ class Invitations
     /**
      * Send an account invitation
      *
-     * Invite a person by email to join the ACCOUNT with an account `role` (`admin` or `member`) and the required `grants` list (it may be empty; only a `member` carries grants, each one a tax ID of the account by its `company_id` UUID and a `level`). This is how a person who already exists on the platform joins an account. Set `send_email: false` to skip the email and deliver the link yourself. Returns 201 with the invitation and a `Location` header; only a copy-link invitation (`send_email: false`) carries its acceptance `secret` and `accept_url`, exactly once. With `send_email: true` the secret travels only in the email and both fields are `null`, so the invitee proves control of the mailbox. An idempotent replay returns them as `null`. Inviting an `admin` requires a credential scope that covers every tax ID of the account. Returns 400 `parameter_missing` when `grants` is absent, 422 `grants_only_for_member`, 422 `grant_company_not_in_account`, and 422 `business_rule_violation` when a pending invitation already exists for that address, the person is already a member, a tax ID repeats or the account reached its plan user limit. The external advisor invitation is only available in the web app. Requires the `invitations:write` scope, which `*` does not cover: the API key must list it explicitly.
+     * Invite a person by email to join the account with a `role` (`admin` or `member`) and a required `grants` list (may be empty).
+     * - Only a `member` carries grants; an `admin` invite needs a scope covering every tax ID. Returns 201.
+     * - `secret` and `accept_url` appear once, only with `send_email: false`.
+     * - Missing `grants` returns 400 `parameter_missing`. Requires the `invitations:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Components\InviteAccountMemberV1Request  $body
      * @param  string  $account
@@ -296,7 +301,9 @@ class Invitations
     /**
      * List account invitations
      *
-     * List the invitations of the ACCOUNT, optionally filtered by `status` (`pending`, `accepted`, `revoked`, `expired`), cursor-paginated with `limit` (1-100, default 25) and `starting_after` or `ending_before`. Each item exposes the invited `email`, the account `role` (`admin` or `member`), its initial `grants[]` (only those on tax IDs your credential reads), `send_email`, `external_advisor`, `status` and `expires_at`. The acceptance secret is never listed. The credential holder must be an owner or admin of the account (403 `forbidden_action` otherwise). Requires the `invitations:read` scope, which `*` does not cover: the API key must list it explicitly.
+     * List the invitations of the account, cursor-paginated with `limit` (1-100, default 25) and `starting_after` or `ending_before`.
+     * - Filter by `status` (`pending`, `accepted`, `revoked`, `expired`); grants shown are only those on tax IDs your credential reads.
+     * - The acceptance secret is never listed; owner or admin only (403 `forbidden_action`). Requires the `invitations:read` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1AccountInvitationsListStatus  $status
@@ -422,7 +429,10 @@ class Invitations
     /**
      * Resend an account invitation
      *
-     * Resend a pending invitation identified by its `id` (UUID v7): a NEW acceptance secret is issued (the previous one stops working), the expiry is renewed and, when the invitation was created with `send_email`, the email is sent again. Returns 200 with the invitation and, only for a copy-link invitation (`send_email: false`), the new `secret` and `accept_url` exactly once; when it is delivered by email the new secret travels only in the email and both are `null`, and an idempotent replay returns them as `null`. Resending hands out a new secret, so it follows the same scope rules as sending: an `admin` invitation requires a credential scope that covers every tax ID of the account (403 `forbidden_action` otherwise), and a `member` invitation requires every tax ID of its grants inside your credential scope (422 `grant_company_not_in_account` otherwise). Returns 422 `invitation_expired` when it has already expired (send a new one), 422 `business_rule_violation` when it was already accepted or revoked, and 404 `invitation_not_found` when it does not exist or belongs to another account. Requires the `invitations:write` scope, which `*` does not cover: the API key must list it explicitly.
+     * Resend a pending invitation: a NEW acceptance secret is issued, the previous one stops working and expiry is renewed.
+     * - Returns 200; `secret` and `accept_url` appear once, only for a copy-link invitation; `null` on replay.
+     * - An `admin` invite needs a scope covering every tax ID of the account.
+     * - 422 `invitation_expired` if expired; 404 `invitation_not_found`. Requires the `invitations:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  string  $invitation
@@ -547,7 +557,10 @@ class Invitations
     /**
      * Retrieve an account invitation
      *
-     * Retrieve one invitation of the account by its `id` (UUID v7): invited `email`, account `role`, initial `grants[]` (only those on tax IDs your credential reads), `send_email`, `external_advisor`, `status` (`pending`, `accepted`, `revoked` or `expired`) and `expires_at`. The acceptance secret and URL are never returned here: they are only delivered once, by the write that issues them. An invitation that does not exist, is malformed, belongs to another account or is not an account invitation returns the same 404 `invitation_not_found`. Requires the `invitations:read` scope, which `*` does not cover: the API key must list it explicitly.
+     * Retrieve one invitation by its `id` (UUID v7): `email`, `role`, initial `grants[]`, `send_email`, `external_advisor`, `status` and `expires_at`.
+     * - Grants shown are only those on tax IDs your credential reads.
+     * - The acceptance secret and URL are never returned here.
+     * - An unknown, malformed or foreign invitation returns the same 404 `invitation_not_found`. Requires the `invitations:read` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  string  $invitation

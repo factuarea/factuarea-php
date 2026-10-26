@@ -31,6 +31,16 @@ class BulkStatusInvoicesV1Request
     public BulkStatusInvoicesV1RequestNewStatus $newStatus;
 
     /**
+     * Optional map from each affected invoice UUID to its complete seven-field presentation precondition. Keys must identify documents in this batch; do not reuse another document's source token. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?array<string, \Factuarea\Sdk\Models\Components\InvoicePresentationPrecondition> $presentationPreconditions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_preconditions')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, \Factuarea\Sdk\Models\Components\InvoicePresentationPrecondition>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $presentationPreconditions = null;
+
+    /**
      *
      * @var ?\DateTime $paymentDate
      */
@@ -41,13 +51,15 @@ class BulkStatusInvoicesV1Request
     /**
      * @param  array<string>  $ids
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusInvoicesV1RequestNewStatus  $newStatus
+     * @param  ?array<string, \Factuarea\Sdk\Models\Components\InvoicePresentationPrecondition>  $presentationPreconditions
      * @param  ?\DateTime  $paymentDate
      * @phpstan-pure
      */
-    public function __construct(array $ids, BulkStatusInvoicesV1RequestNewStatus $newStatus, ?\DateTime $paymentDate = null)
+    public function __construct(array $ids, BulkStatusInvoicesV1RequestNewStatus $newStatus, ?array $presentationPreconditions = null, ?\DateTime $paymentDate = null)
     {
         $this->ids = $ids;
         $this->newStatus = $newStatus;
+        $this->presentationPreconditions = $presentationPreconditions;
         $this->paymentDate = $paymentDate;
     }
 }

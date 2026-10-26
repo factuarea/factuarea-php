@@ -82,11 +82,11 @@ class AccountEventEnvelope
     /**
      * The content of the event, in the version of `api_version`.
      *
-     * @var \Factuarea\Sdk\Models\Components\Data $data
+     * @var \Factuarea\Sdk\Models\Components\AccountEventEnvelopeData $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Data')]
-    public Data $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AccountEventEnvelopeData')]
+    public AccountEventEnvelopeData $data;
 
     /**
      * Correlation identifier of the request or process that caused the event, or `null`.
@@ -113,12 +113,12 @@ class AccountEventEnvelope
      * @param  bool  $test
      * @param  \Factuarea\Sdk\Models\Components\AccountEventEnvelopeAccount  $account
      * @param  \Factuarea\Sdk\Models\Components\AccountEventEnvelopeAccountRelationship  $accountRelationship
-     * @param  \Factuarea\Sdk\Models\Components\Data  $data
+     * @param  \Factuarea\Sdk\Models\Components\AccountEventEnvelopeData  $data
      * @param  ?string  $correlationId
      * @param  ?string  $companyId
      * @phpstan-pure
      */
-    public function __construct(string $id, AccountEventType|string $type, string $apiVersion, int $created, bool $livemode, bool $test, AccountEventEnvelopeAccount $account, AccountEventEnvelopeAccountRelationship $accountRelationship, Data $data, ?string $correlationId = null, ?string $companyId = null)
+    public function __construct(string $id, AccountEventType|string $type, string $apiVersion, int $created, bool $livemode, bool $test, AccountEventEnvelopeAccount $account, AccountEventEnvelopeAccountRelationship $accountRelationship, AccountEventEnvelopeData $data, ?string $correlationId = null, ?string $companyId = null)
     {
         $this->id = $id;
         $this->type = $type;

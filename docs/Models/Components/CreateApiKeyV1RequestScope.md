@@ -5,6 +5,8 @@
 
 | Name                           | Value                          |
 | ------------------------------ | ------------------------------ |
+| `PdfTemplatesRead`             | pdf_templates:read             |
+| `PdfTemplatesWrite`            | pdf_templates:write            |
 | `ContactsRead`                 | contacts:read                  |
 | `ContactsWrite`                | contacts:write                 |
 | `ContactsDelete`               | contacts:delete                |

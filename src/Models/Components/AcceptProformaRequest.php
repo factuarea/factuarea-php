@@ -9,9 +9,19 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AcceptProformaRequest - Optional body to record the client acceptance: `reason` (string, ≤500 chars) and `metadata` (object, ≤50 keys, ≤500 chars per value). */
+/** AcceptProformaRequest - Optional body to record the client acceptance: `reason` (string, ≤500 chars) and `metadata` (object, ≤50 keys, ≤500 chars per value) and, when revisioned presentation is enabled, `presentation_precondition` (first capture) and `expected_presentation_uuid` (retained capture). */
 class AcceptProformaRequest
 {
+    /**
+     * Proforma action precondition as accepted by the v1 proforma actions. All seven values travel together; nullable revision IDs remain required keys.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition $presentationPrecondition
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_precondition')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProformaPresentationPrecondition $presentationPrecondition = null;
+
     /**
      *
      * @var ?string $reason
@@ -34,13 +44,26 @@ class AcceptProformaRequest
     public ?array $metadata = null;
 
     /**
+     * UUID of the presentation the caller reviewed. If it is no longer the current presentation of the document the request is rejected with 409 and nothing is changed. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. Optional: cite the retained capture you reviewed when the proforma already has one; a proforma that was never shared has none to cite and is accepted with `presentation_precondition` alone.
+     *
+     * @var ?string $expectedPresentationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationUuid = null;
+
+    /**
+     * @param  ?\Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition  $presentationPrecondition
      * @param  ?string  $reason
      * @param  ?array<string, string>  $metadata
+     * @param  ?string  $expectedPresentationUuid
      * @phpstan-pure
      */
-    public function __construct(?string $reason = null, ?array $metadata = null)
+    public function __construct(?ProformaPresentationPrecondition $presentationPrecondition = null, ?string $reason = null, ?array $metadata = null, ?string $expectedPresentationUuid = null)
     {
+        $this->presentationPrecondition = $presentationPrecondition;
         $this->reason = $reason;
         $this->metadata = $metadata;
+        $this->expectedPresentationUuid = $expectedPresentationUuid;
     }
 }

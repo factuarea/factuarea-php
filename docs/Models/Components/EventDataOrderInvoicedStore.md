@@ -1,9 +1,0 @@
-# EventDataOrderInvoicedStore
-
-
-## Fields
-
-| Field                                                                                           | Type                                                                                            | Required                                                                                        | Description                                                                                     |
-| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `uuid`                                                                                          | *string*                                                                                        | :heavy_check_mark:                                                                              | Opaque identifier (UUID v7) of the connected store the order came from.                         |
-| `provider`                                                                                      | *string*                                                                                        | :heavy_check_mark:                                                                              | Store platform the order was ingested from. Currently `woocommerce`, `shopify` or `prestashop`. |

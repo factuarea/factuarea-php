@@ -45,17 +45,26 @@ class PublicApiV1InvoicesFaceSubmissionsSubmitRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequestBody $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?PublicApiV1InvoicesFaceSubmissionsSubmitRequestBody $body = null;
+
+    /**
      * @param  string  $company
      * @param  string  $invoice
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequestBody  $body
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?PublicApiV1InvoicesFaceSubmissionsSubmitRequestBody $body = null)
     {
         $this->company = $company;
         $this->invoice = $invoice;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }

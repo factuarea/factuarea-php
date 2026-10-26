@@ -51,7 +51,9 @@ class Representation
     /**
      * Register a representation
      *
-     * Register the representation that lets Factuarea remit your VeriFactu records to AEAT with its own certificate. Send `multipart/form-data` with `kind` (`social_collaboration_annex_i` or `aeat_power_of_attorney`), `signer_name`, `signer_tax_id`, `granted_on` and the evidence: the signed annex I as `document` (PDF, up to 5 MB, validated by magic bytes) for social collaboration, and the proof of the power of attorney as `document` or its reference in `power_of_attorney_reference` for a power of attorney. The document is custodied encrypted and counts against your storage quota (402 `storage_quota_exceeded`). If a representation was already active it is revoked and kept in the history, and the new one becomes the active one. The optional `valid_until` sets the last day of validity (not before `granted_on`, at most 5 years after it); without it the representation does not expire, and once the day has passed it stops enabling third-party remission (you are warned 30 and 7 days ahead and when it expires). If your company already remits through a third-party mode, registering a representation of the OTHER kind moves the mode to the one that kind asks for (annex I → `social_collaborator`, power of attorney → `power_of_attorney`) — or back to `own_certificate` when that mode cannot be used, because this instance does not offer the social collaborator or the new representation is already expired — and the records that were blocked waiting for it are reactivated. With `own_certificate` nothing changes: switch explicitly with `PATCH /v1/companies/{company}/verifactu/settings`, which requires this representation. Returns 201 with `data` (the new representation) and `remission_mode`, the remission mode that results, plus a `Location` header; an invalid payload returns 422 (`param` names the field; the evidence that is missing or not a valid PDF is `business_rule_violation` / `invalid_representation`).
+     * Register the representation that lets Factuarea remit your VeriFactu records to AEAT; send `multipart/form-data`.
+     * - Required: `kind` (`social_collaboration_annex_i`/`aeat_power_of_attorney`), `signer_name`, `signer_tax_id`, `granted_on`, `document` (PDF, up to 5 MB).
+     * - An active one is revoked; `remission_mode` may change. Returns 201 with `data`.
      *
      * @param  \Factuarea\Sdk\Models\Components\RegisterCompanyRepresentationV1Request  $body
      * @param  string  $company
@@ -181,7 +183,9 @@ class Representation
     /**
      * Revoke the active representation
      *
-     * Revoke the active representation: Factuarea stops remitting your records on your behalf and `remission_mode` goes back to `own_certificate`, so from then on the remission uses your own certificate. Revoking is TERMINAL — a revoked representation is never reactivated; register another one to authorize again — and the custodied document is kept in the history. `reason` is optional, 3 to 500 characters, in the JSON body or in the query (a text outside that range returns 422 with `param=reason` instead of being trimmed); without it «Revocada vía API v1.» is recorded. Returns 204; with no current representation it returns 422 `business_rule_violation` / `invalid_representation`.
+     * Revoke the active representation: Factuarea stops remitting on your behalf and `remission_mode` returns to `own_certificate`.
+     * - Terminal: a revoked representation is never reactivated; register another one.
+     * - `reason` is optional (3 to 500 characters). Returns 204; with no current representation, 422 `business_rule_violation` / `invalid_representation`.
      *
      * @param  string  $company
      * @param  string  $idempotencyKey
@@ -299,7 +303,9 @@ class Representation
     /**
      * Retrieve the active representation
      *
-     * Return the CURRENT representation with which your company authorizes Factuarea to remit its VeriFactu records to AEAT on its behalf (social collaboration, annex I, or a power of attorney registered with AEAT): kind, signer, grant date, last day of validity (`valid_until`) and whether it has expired (`is_expired`), and whether the signed document is custodied. A representation that has expired is still returned (`is_active: true`, `is_expired: true`) but no longer enables third-party remission: register a new one. The document itself is never returned. Returns 404 `resource_not_found` only when there is no current (not revoked) representation.
+     * Return the current representation that authorizes Factuarea to remit your VeriFactu records to AEAT: kind, signer, grant date, `valid_until`, `is_expired` and whether the document is custodied.
+     * - An expired representation is still returned but no longer enables third-party remission.
+     * - Returns 404 `resource_not_found` only when there is none.
      *
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion

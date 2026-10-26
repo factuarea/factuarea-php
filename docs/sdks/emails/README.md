@@ -10,9 +10,9 @@
 
 ## publicApiV1EmailsIndicators
 
-Answer "did the email for these documents go out?" for a whole batch at once, instead of paging through the deliveries of each one: per document, how many emails were sent, the last status, the last hand-off and how many failed. Ideal to paint a "sent / not sent" column over a page of invoices in a single call.
-
-IMPORTANT — `last_status` and `last_sent_at` describe the hand-off to the OUTGOING SMTP SERVER, not real delivery: a `sent` email may still bounce afterwards without the platform observing it.
+Summarize email delivery for a batch of documents in one call: emails sent, last status, last hand-off and failures per document.
+- `last_status` and `last_sent_at` describe the hand-off to the outgoing SMTP server, not real delivery.
+- A `sent` email may still bounce.
 
 ### Example Usage
 
@@ -74,9 +74,9 @@ if ($response->emailDeliveryIndicators !== null) {
 
 ## publicApiV1EmailsList
 
-Browse the emails your company has sent through the platform — invoices, quotes, pro formas, delivery notes, payment reminders — newest first, so you can answer "did the email for this invoice actually go out?" without asking your customer. Scoped to the authenticated company.
-
-IMPORTANT — `status` describes the hand-off to the OUTGOING SMTP SERVER, not real delivery: `sent` means the outgoing mail server accepted the message, not that the recipient received it.
+List the emails your company sent through the platform, newest first (invoices, quotes, pro formas, delivery notes, reminders).
+- `status` describes the hand-off to the outgoing SMTP server, not real delivery.
+- `sent` does not mean the recipient received it.
 
 ### Example Usage
 
@@ -134,9 +134,9 @@ if ($response->emailDeliveryList !== null) {
 
 ## publicApiV1EmailsShow
 
-Retrieve one email by its id, typically after finding it in the listing, to investigate what happened to it: recipient, subject, status, attempts, the error message when it failed, and the document it was sent for. Scoped to the authenticated company.
-
-IMPORTANT — `status` describes the hand-off to the OUTGOING SMTP SERVER, not real delivery: `sent` means the outgoing mail server accepted the message, not that the recipient received it.
+Retrieve one sent email by id: recipient, subject, status, attempts, error message and the document it was sent for.
+- `status` describes the hand-off to the outgoing SMTP server, not real delivery.
+- `sent` does not mean the recipient received it.
 
 ### Example Usage
 

@@ -35,6 +35,15 @@ class CreateProformaRequest
     public array $lines;
 
     /**
+     * Optional positive selection version. When POST upserts an existing external_id, it is the selection CAS and must be sent together with pdf_template_id. A new document initializes its selection version. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?int $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedSelectionVersion = null;
+
+    /**
      *
      * @var ?string $seriesId
      */
@@ -58,6 +67,15 @@ class CreateProformaRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProformaRequestRepriceStrategy|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CreateProformaRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     * Optional tenant-template UUID. On a new document, omission or null inherits the current default; a UUID requests a compatible manual selection. If POST resolves to an existing external_id, omission preserves intent and null clears it. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
 
     /**
      *
@@ -193,9 +211,11 @@ class CreateProformaRequest
      * @param  string  $clientId
      * @param  LocalDate  $issuedOn
      * @param  array<\Factuarea\Sdk\Models\Components\CreateProformaRequestLine>  $lines
+     * @param  ?int  $expectedSelectionVersion
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProformaRequestRepriceStrategy  $repriceStrategy
+     * @param  ?string  $pdfTemplateId
      * @param  ?LocalDate  $validUntil
      * @param  ?int  $validityDays
      * @param  ?string  $notes
@@ -213,14 +233,16 @@ class CreateProformaRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateProformaRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, LocalDate $issuedOn, array $lines, ?string $seriesId = null, ?string $priceListId = null, ?CreateProformaRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $externalId = null, ?CreateProformaRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, LocalDate $issuedOn, array $lines, ?int $expectedSelectionVersion = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateProformaRequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?string $externalId = null, ?CreateProformaRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
         $this->lines = $lines;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->validUntil = $validUntil;
         $this->validityDays = $validityDays;
         $this->notes = $notes;

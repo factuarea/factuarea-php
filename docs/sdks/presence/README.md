@@ -68,7 +68,9 @@ if ($response->object !== null) {
 
 ## publicApiV1PresenceLive
 
-Return the live presence panel of your team for the Control Horario (time tracking) module: one `employee_presence` item per active employee, with the workday state derived from the immutable time record ledger (`working`/`paused`/`finished`/`away`), the late-arrival flag (first clock-in vs planned start) and the office/remote location declared today. A computed read-only resource: each item exposes the employee UUID v7 as its `id`, never a presence record id. No filters or pagination.
+Return the live presence panel of your team for the Control Horario module: one `employee_presence` item per active employee.
+- Each item has the workday state, the late-arrival flag and today's declared office/remote location.
+- Computed and read-only: `id` is the employee UUID v7; no filters or pagination.
 
 ### Example Usage
 

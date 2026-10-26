@@ -20,6 +20,16 @@ class SendDeliveryNoteRequest
     public string $email;
 
     /**
+     * Delivery-note action precondition. All seven values travel together; this family accepts complete-purpose A4 output only.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition $presentationPrecondition
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_precondition')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?DeliveryNotePresentationPrecondition $presentationPrecondition = null;
+
+    /**
      *
      * @var ?string $subject
      */
@@ -45,17 +55,41 @@ class SendDeliveryNoteRequest
     public ?int $templateId = null;
 
     /**
+     * UUID of the presentation the caller reviewed. If it is no longer the current presentation of the document the request is rejected with 409 and nothing is changed. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $expectedPresentationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationUuid = null;
+
+    /**
+     * UUID of the publication of the delivery-note presentation the caller reviewed, or null. If it is no longer the current publication the request is rejected with 409 and nothing is sent. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $expectedPublicationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_publication_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPublicationId = null;
+
+    /**
      * @param  string  $email
+     * @param  ?\Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition  $presentationPrecondition
      * @param  ?string  $subject
      * @param  ?string  $message
      * @param  ?int  $templateId
+     * @param  ?string  $expectedPresentationUuid
+     * @param  ?string  $expectedPublicationId
      * @phpstan-pure
      */
-    public function __construct(string $email, ?string $subject = null, ?string $message = null, ?int $templateId = null)
+    public function __construct(string $email, ?DeliveryNotePresentationPrecondition $presentationPrecondition = null, ?string $subject = null, ?string $message = null, ?int $templateId = null, ?string $expectedPresentationUuid = null, ?string $expectedPublicationId = null)
     {
         $this->email = $email;
+        $this->presentationPrecondition = $presentationPrecondition;
         $this->subject = $subject;
         $this->message = $message;
         $this->templateId = $templateId;
+        $this->expectedPresentationUuid = $expectedPresentationUuid;
+        $this->expectedPublicationId = $expectedPublicationId;
     }
 }

@@ -9,9 +9,19 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** AcceptQuoteRequest - Optional body to record the acceptance of the quote: `accepted_on` (date, defaults to today) and `notes`. A quote whose `valid_until` date has already passed cannot be accepted (422 `quote_expired`). */
+/** AcceptQuoteRequest - Optional body to record the acceptance of the quote: `accepted_on` (date, defaults to today) and `notes` and, when revisioned presentation is enabled, `presentation_precondition` (first capture) and `expected_presentation_uuid` (retained capture). A quote whose `valid_until` date has already passed cannot be accepted (422 `quote_expired`). */
 class AcceptQuoteRequest
 {
+    /**
+     * Quote action precondition. All seven values travel together; this family accepts complete-purpose A4 output only.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuotePresentationPrecondition $presentationPrecondition
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_precondition')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuotePresentationPrecondition|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?QuotePresentationPrecondition $presentationPrecondition = null;
+
     /**
      *
      * @var ?LocalDate $acceptedOn
@@ -29,13 +39,26 @@ class AcceptQuoteRequest
     public ?string $notes = null;
 
     /**
+     * UUID of the presentation the caller reviewed. If it is no longer the current presentation of the document the request is rejected with 409 and nothing is changed. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. Optional: cite the retained capture you reviewed when the quote already has one; a quote that was never shared has none to cite and is accepted with `presentation_precondition` alone.
+     *
+     * @var ?string $expectedPresentationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationUuid = null;
+
+    /**
+     * @param  ?\Factuarea\Sdk\Models\Components\QuotePresentationPrecondition  $presentationPrecondition
      * @param  ?LocalDate  $acceptedOn
      * @param  ?string  $notes
+     * @param  ?string  $expectedPresentationUuid
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $acceptedOn = null, ?string $notes = null)
+    public function __construct(?QuotePresentationPrecondition $presentationPrecondition = null, ?LocalDate $acceptedOn = null, ?string $notes = null, ?string $expectedPresentationUuid = null)
     {
+        $this->presentationPrecondition = $presentationPrecondition;
         $this->acceptedOn = $acceptedOn;
         $this->notes = $notes;
+        $this->expectedPresentationUuid = $expectedPresentationUuid;
     }
 }

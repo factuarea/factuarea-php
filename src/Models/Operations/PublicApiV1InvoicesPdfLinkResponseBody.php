@@ -14,17 +14,17 @@ class PublicApiV1InvoicesPdfLinkResponseBody
 {
     /**
      *
-     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkDataResponseBody $data
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkData $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkDataResponseBody')]
-    public PublicApiV1InvoicesPdfLinkDataResponseBody $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkData')]
+    public PublicApiV1InvoicesPdfLinkData $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkDataResponseBody  $data
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfLinkData  $data
      * @phpstan-pure
      */
-    public function __construct(PublicApiV1InvoicesPdfLinkDataResponseBody $data)
+    public function __construct(PublicApiV1InvoicesPdfLinkData $data)
     {
         $this->data = $data;
     }

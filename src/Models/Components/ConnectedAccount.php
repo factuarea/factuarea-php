@@ -86,7 +86,7 @@ class ConnectedAccount
     public bool $subscriptionAutoinvoicingEnabled;
 
     /**
-     * How the account was linked to Stripe: `account_links` (Stripe Connect onboarding) or `stripe_app` (Stripe App). Read-only.
+     * How the account was linked to Stripe: `account_links` (Stripe Connect onboarding), `stripe_app` (Stripe App) or `platform` (the own Stripe account of the company that issues the Factuarea invoices; it has no stored credential and does not accept `subscription_autoinvoicing_enabled`). Read-only.
      *
      * @var \Factuarea\Sdk\Models\Components\ConnectionMethod $connectionMethod
      */
@@ -111,6 +111,14 @@ class ConnectedAccount
     #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ConnectedAccountStatus')]
     public ConnectedAccountStatus $status;
+
+    /**
+     * Whether the Stripe fees of this account are recorded as a monthly purchase expense. Defaults to `false`. Editable with `PATCH /v1/companies/{company}/connected-accounts/{account}`.
+     *
+     * @var bool $feeExpensesEnabled
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('fee_expenses_enabled')]
+    public bool $feeExpensesEnabled;
 
     /**
      * Account name reported by Stripe, or `null` if unknown.
@@ -153,6 +161,23 @@ class ConnectedAccount
     public ?\DateTime $connectedAt;
 
     /**
+     * Tax treatment of the fee expense: `reverse_charge_eu` (intra-community purchase at 21 %, self-assessed) or `exempt` (0 %, exemption cause E1). `null` until it is configured.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\FeeExpensesTaxTreatment $feeExpensesTaxTreatment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('fee_expenses_tax_treatment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\FeeExpensesTaxTreatment|null')]
+    public ?FeeExpensesTaxTreatment $feeExpensesTaxTreatment;
+
+    /**
+     * First month recorded as a fee expense, as `YYYY-MM`, or `null` until it is configured.
+     *
+     * @var ?string $feeExpensesSince
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('fee_expenses_since')]
+    public ?string $feeExpensesSince;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ConnectedAccountObject  $object
      * @param  string  $name
@@ -165,14 +190,17 @@ class ConnectedAccount
      * @param  \Factuarea\Sdk\Models\Components\ConnectionMethod  $connectionMethod
      * @param  \Factuarea\Sdk\Models\Components\AuthorizationStatus  $authorizationStatus
      * @param  \Factuarea\Sdk\Models\Components\ConnectedAccountStatus  $status
+     * @param  bool  $feeExpensesEnabled
      * @param  ?string  $externalAccountName
      * @param  ?string  $seriesId
      * @param  ?string  $defaultLineConcept
      * @param  ?string  $invoiceNote
      * @param  ?\DateTime  $connectedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\FeeExpensesTaxTreatment  $feeExpensesTaxTreatment
+     * @param  ?string  $feeExpensesSince
      * @phpstan-pure
      */
-    public function __construct(string $id, ConnectedAccountObject $object, string $name, string $externalAccountId, bool $autoinvoicingEnabled, int $simplifiedThresholdCents, bool $requireNif, bool $refundsEnabled, bool $subscriptionAutoinvoicingEnabled, ConnectionMethod $connectionMethod, AuthorizationStatus $authorizationStatus, ConnectedAccountStatus $status, ?string $externalAccountName = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null, ?\DateTime $connectedAt = null)
+    public function __construct(string $id, ConnectedAccountObject $object, string $name, string $externalAccountId, bool $autoinvoicingEnabled, int $simplifiedThresholdCents, bool $requireNif, bool $refundsEnabled, bool $subscriptionAutoinvoicingEnabled, ConnectionMethod $connectionMethod, AuthorizationStatus $authorizationStatus, ConnectedAccountStatus $status, bool $feeExpensesEnabled, ?string $externalAccountName = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null, ?\DateTime $connectedAt = null, ?FeeExpensesTaxTreatment $feeExpensesTaxTreatment = null, ?string $feeExpensesSince = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -186,10 +214,13 @@ class ConnectedAccount
         $this->connectionMethod = $connectionMethod;
         $this->authorizationStatus = $authorizationStatus;
         $this->status = $status;
+        $this->feeExpensesEnabled = $feeExpensesEnabled;
         $this->externalAccountName = $externalAccountName;
         $this->seriesId = $seriesId;
         $this->defaultLineConcept = $defaultLineConcept;
         $this->invoiceNote = $invoiceNote;
         $this->connectedAt = $connectedAt;
+        $this->feeExpensesTaxTreatment = $feeExpensesTaxTreatment;
+        $this->feeExpensesSince = $feeExpensesSince;
     }
 }
