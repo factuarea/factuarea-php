@@ -5,6 +5,8 @@
 ### Available Operations
 
 * [publicApiV1SeriesArchive](#publicapiv1seriesarchive) - Archive a series
+* [publicApiV1SeriesAssignPdfTemplate](#publicapiv1seriesassignpdftemplate) - Assign the PDF template of a series
+* [publicApiV1SeriesGetPdfTemplate](#publicapiv1seriesgetpdftemplate) - Retrieve the PDF template of a series
 * [publicApiV1SeriesBootstrap](#publicapiv1seriesbootstrap) - Bootstrap the default series of a company
 * [publicApiV1SeriesCreate](#publicapiv1seriescreate) - Create a series
 * [publicApiV1SeriesList](#publicapiv1serieslist) - List all series
@@ -78,24 +80,216 @@ if ($response->statusCode === 200) {
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
+## publicApiV1SeriesAssignPdfTemplate
+
+Set `pdf_template_id` to an active template compatible with the purpose of the series, or `null` to inherit the defaults. Send the current `expected_version` in the body and/or the strong `ETag` of this resource in `If-Match`: a wrong tag returns 412, an outdated version 409 and neither 428. A request that changes nothing does not increase the version. Fiscal numbering and the documents already issued are not modified. Requires `series:write` and current Series authority, and supports `Idempotency-Key`.
+
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.assign_pdf_template" method="patch" path="/companies/{company}/series/{series}/pdf-template" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1SeriesAssignPdfTemplateRequest(
+    company: '5d118d58-4c67-4d9b-a42f-c6a3f795f3ec',
+    series: '649f5e3e-7304-4386-84bb-6baf106bf428',
+    ifMatch: '"bc184bf746b8468604a7c9b985d8e351ac369f04af73e5da7d47d38349c6cb65"',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Operations\PublicApiV1SeriesAssignPdfTemplateRequestBody(
+        pdfTemplateId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a71',
+        expectedVersion: 1,
+    ),
+);
+
+$response = $sdk->series->publicApiV1SeriesAssignPdfTemplate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.assign_pdf_template" method="patch" path="/companies/{company}/series/{series}/pdf-template" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1SeriesAssignPdfTemplateRequest(
+    company: 'aa2cccd9-07c5-41aa-ab0e-f7f527ca3dd0',
+    series: '4838dc15-69e7-470c-8ab7-09bfec2d4a73',
+    ifMatch: '"bc184bf746b8468604a7c9b985d8e351ac369f04af73e5da7d47d38349c6cb65"',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Operations\PublicApiV1SeriesAssignPdfTemplateRequestBody(
+        pdfTemplateId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a71',
+        expectedVersion: 1,
+    ),
+);
+
+$response = $sdk->series->publicApiV1SeriesAssignPdfTemplate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.assign_pdf_template" method="patch" path="/companies/{company}/series/{series}/pdf-template" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1SeriesAssignPdfTemplateRequest(
+    company: '74887ba7-c1c6-41fe-a8d5-451858de34d8',
+    series: 'daa5c6a8-807b-4a7b-8e19-79eabaddb179',
+    ifMatch: '"bc184bf746b8468604a7c9b985d8e351ac369f04af73e5da7d47d38349c6cb65"',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Operations\PublicApiV1SeriesAssignPdfTemplateRequestBody(
+        pdfTemplateId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a71',
+        expectedVersion: 1,
+    ),
+);
+
+$response = $sdk->series->publicApiV1SeriesAssignPdfTemplate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                    | Type                                                                                                                         | Required                                                                                                                     | Description                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                                   | [Operations\PublicApiV1SeriesAssignPdfTemplateRequest](../../Models/Operations/PublicApiV1SeriesAssignPdfTemplateRequest.md) | :heavy_check_mark:                                                                                                           | The request object to use for the request.                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1SeriesAssignPdfTemplateResponse](../../Models/Operations/PublicApiV1SeriesAssignPdfTemplateResponse.md)**
+
+### Errors
+
+| Error Type                                  | Status Code                                 | Content Type                                |
+| ------------------------------------------- | ------------------------------------------- | ------------------------------------------- |
+| Errors\Error                                | 400, 401, 403, 404, 409, 412, 422, 428, 429 | application/json                            |
+| Errors\Error                                | 500                                         | application/json                            |
+| Errors\APIException                         | 4XX, 5XX                                    | \*/\*                                       |
+
+## publicApiV1SeriesGetPdfTemplate
+
+Retrieve the visual template preference of a series as an independent resource: `pdf_template_id` (`null` when the series inherits the defaults), its own `version`, the document family, purpose and formats, availability and warnings. The response carries a strong `ETag` that belongs to this resource only; the `ETag` of the series is not valid here. It does not change numbering. Requires `series:read` and current Series authority (employees are not allowed).
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.get_pdf_template" method="get" path="/companies/{company}/series/{series}/pdf-template" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->series->publicApiV1SeriesGetPdfTemplate(
+    company: '78132c63-198a-4eb3-9c61-7e2caa8b06e5',
+    series: 'ce328457-bf0d-4d90-b078-ee8c9cd98921',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `series`                                                                                                                                                                                                                                                                                                                                                                     | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the document series.                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1SeriesGetPdfTemplateResponse](../../Models/Operations/PublicApiV1SeriesGetPdfTemplateResponse.md)**
+
+### Errors
+
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+
 ## publicApiV1SeriesBootstrap
 
-Leave a company able to issue documents in one call: for every document type of the public surface (`invoice`, `quote`, `delivery_note`, `proforma`) that has no active series, create its default series with the canonical code and name. No request body.
-
-**What comes back**
-
-- One entry per document type, with a `status` of `created`, `existing` or `no_default`.
-- `no_default` means the type has active series but none marked as default — archiving the default demotes it without promoting a replacement — and the company still cannot issue that document.
-- Treat `no_default` as work still to do, not as success: the active series arrive in `candidates` and you resolve it with `POST /v1/companies/{company}/series/{series}/default`.
-
-**Why it does not choose for you**
-
-Picking which series numbers a company's documents has registry consequences only you can decide, so the bootstrap never promotes one for you.
-
-**Calling it twice**
-
-- Idempotent by business rule: a second call creates nothing, fails nothing and reports the state again.
-- INDEPENDENT of the `Idempotency-Key` header: with the header, a repeated key replays the original body — `created` entries included — instead of reporting the current state.
+Creates the default series for each document type that has no active series. No request body.
+- Returns one entry per type: `created`, `existing` or `no_default`.
+- `no_default` is pending: pick from `candidates` with `POST /v1/companies/{company}/series/{series}/default`.
+- Repeat calls change nothing; a repeated `Idempotency-Key` replays the original body.
 
 ### Example Usage
 
@@ -153,7 +347,9 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesCreate
 
-Create a document numbering series. Optional `number_format` sets the numbering mask (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (≥1) starts the counter to continue an existing numbering. The same code may be reused across document types (multi-series), but not within the same document type. Code, mask and purpose can still be changed with `PATCH /v1/companies/{company}/series/{series}` until the first document is issued; after that they are fixed.
+Creates a document numbering series, optionally with `number_format` (e.g. `{code}-{YYYY}-{00000}`) and `initial_number` (>=1).
+- The same `code` can repeat across document types, not within one type.
+- Code, mask and purpose can be changed with `PATCH` until the first document is issued.
 
 ### Example Usage: api_key_revoked
 
@@ -182,6 +378,45 @@ $body = new Components\CreateSeriesRequest(
 
 $response = $sdk->series->publicApiV1SeriesCreate(
     company: 'fcd70115-e512-4325-891f-00734d5c8065',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateSeriesRequest(
+    pdfTemplateId: null,
+    code: 'F',
+    name: 'Facturas',
+    documentType: Components\CreateSeriesRequestDocumentType::Invoice,
+);
+
+$response = $sdk->series->publicApiV1SeriesCreate(
+    company: 'df170dfb-3043-4591-b471-a4711e3ac206',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -266,6 +501,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateSeriesRequest(
+    pdfTemplateId: null,
+    code: 'F',
+    name: 'Facturas',
+    documentType: Components\CreateSeriesRequestDocumentType::Invoice,
+);
+
+$response = $sdk->series->publicApiV1SeriesCreate(
+    company: 'fcd70115-e512-4325-891f-00734d5c8065',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="success" -->
@@ -287,12 +561,53 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $body = new Components\CreateSeriesRequest(
-    code: '<value>',
-    documentType: Components\CreateSeriesRequestDocumentType::Proforma,
+    pdfTemplateId: null,
+    code: 'F',
+    name: 'Facturas',
+    documentType: Components\CreateSeriesRequestDocumentType::Invoice,
 );
 
 $response = $sdk->series->publicApiV1SeriesCreate(
     company: 'Block - Cartwright',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.create" method="post" path="/companies/{company}/series" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateSeriesRequest(
+    pdfTemplateId: null,
+    code: 'F',
+    name: 'Facturas',
+    documentType: Components\CreateSeriesRequestDocumentType::Invoice,
+);
+
+$response = $sdk->series->publicApiV1SeriesCreate(
+    company: 'e66a985b-2fa5-4298-92d6-11022667ce58',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -309,7 +624,7 @@ if ($response->object !== null) {
 | Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [Components\CreateSeriesRequest](../../Models/Components/CreateSeriesRequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [Components\CreateSeriesRequest](../../Models/Components/CreateSeriesRequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | The visual preference is optional and independent of fiscal numbering. An update requires `pdf_template_expected_version` in the body when a selector is provided or the purpose changes with a saved preference; the parent ETag is not sufficient. Fresh actor authority precedes any idempotent replay, resource lookup and CAS.                                                                                                                                                                                         | **Example 1:** {<br/>"document_type": "invoice",<br/>"code": "F",<br/>"name": "Facturas",<br/>"pdf_template_id": null<br/>}<br/>**Example 2:** {<br/>"document_type": "invoice",<br/>"code": "T",<br/>"name": "Facturas en ticket",<br/>"pdf_template_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a71"<br/>}<br/>**Example 3:** {<br/>"document_type": "quote",<br/>"code": "P",<br/>"name": "Presupuestos"<br/>}                                                                                                                |
 | `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
@@ -384,7 +699,9 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1SeriesFindByCode
 
-Look up a series by its `code` (JSON body, case-insensitive). A `code` is not unique across document types (multi-series), so pass `document_type` to resolve the exact `(code, document_type)` series. If you omit it the code is matched across all types: a single match is returned, but an ambiguous code returns 422 `document_type_required_for_ambiguous_code` rather than silently picking one. Returns 404 if none exists.
+Looks up a series by `code` (JSON body, case-insensitive); pass `document_type` to resolve the exact series.
+- Without `document_type`, an ambiguous code returns 422 `document_type_required_for_ambiguous_code`.
+- Returns 404 if none exists.
 
 ### Example Usage: api_key_revoked
 
@@ -412,6 +729,41 @@ $body = new Components\FindSeriesByCodeRequest(
 
 $response = $sdk->series->publicApiV1SeriesFindByCode(
     company: '08d06efd-6a64-476b-8ecd-36c5255b3e0d',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindSeriesByCodeRequest(
+    code: '<value>',
+);
+
+$response = $sdk->series->publicApiV1SeriesFindByCode(
+    company: '479f8dd9-5d82-434b-9b98-1438e9520cdf',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -491,6 +843,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindSeriesByCodeRequest(
+    code: '<value>',
+);
+
+$response = $sdk->series->publicApiV1SeriesFindByCode(
+    company: '08d06efd-6a64-476b-8ecd-36c5255b3e0d',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="success" -->
@@ -526,6 +913,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.find_by_code" method="post" path="/companies/{company}/series/find-by-code" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindSeriesByCodeRequest(
+    code: '<value>',
+);
+
+$response = $sdk->series->publicApiV1SeriesFindByCode(
+    company: 'b156c0f2-c98c-4a96-97c8-8d77cabe7e0c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -549,7 +971,9 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesDefault
 
-Return the default numbering series for the given document type (invoice, quote, proforma, delivery_note). Invoice series have a fixed purpose and the default is per purpose: pass `invoice_kind` (`complete` when omitted, `simplified`, `corrective` or `simplified_corrective`) to get the series an invoice of that purpose will be numbered in. Returns 404 when no default is configured (an invoice series of a purpose is created automatically the first time an invoice of that purpose is issued) and 422 `series_invoice_kind_invalid` for an unknown `invoice_kind`.
+Returns the default numbering series for a document type (invoice, quote, proforma, delivery_note).
+- For invoices, pass `invoice_kind` (default `complete`, `simplified`, `corrective`, `simplified_corrective`).
+- Returns 404 if no default exists; 422 `series_invoice_kind_invalid` for an unknown kind.
 
 ### Example Usage
 
@@ -907,9 +1331,90 @@ if ($response->object !== null) {
 
 ## publicApiV1SeriesUpdate
 
-Partially update a series: only the fields you send change (`name`, `code`, `counter_reset`, `number_format`, `initial_number`, `invoice_kind`; `year_reset` is the deprecated alias of `counter_reset`). The same fiscal guards as the web app apply, each one as a 422 `business_rule_violation` with its own `subcode` and nothing changed: `code` and `number_format` only while the series has no documents (`series_code_immutable_with_documents`, `series_format_immutable_with_documents`); once AEAT has accepted a record of one of its invoices, `code`, `number_format` and `initial_number` are locked (`series_locked_by_verifactu`); `initial_number` cannot open a gap (`series_initial_number_creates_gap`); `invoice_kind` is fixed with the first invoice (`series_invoice_kind_locked`) and the default series of a purpose cannot change purpose (`series_default_kind_change`). A `code` already used by another series of the same document type returns 422 with `param=code`; `document_type` cannot be changed. Returns 200 with the updated series, and 404 `series_not_found` if it does not belong to your company.
+Partially updates a series; only the fields you send change.
+- Fiscal guards return 422 `business_rule_violation` with a `subcode`, e.g. `series_locked_by_verifactu`.
+- `code` and `number_format` lock once the series has documents; `initial_number` too after AEAT acceptance.
+- `document_type` cannot change; unknown series returns 404 `series_not_found`.
 
-### Example Usage
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.update" method="patch" path="/companies/{company}/series/{series}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1SeriesUpdateRequest(
+    company: 'bfd35147-b3a8-4967-967f-7590461b5d98',
+    series: 'fd9e8c8b-20f5-4c9b-8126-c65f123df36e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateSeriesRequest(
+        name: 'Facturas tienda',
+    ),
+);
+
+$response = $sdk->series->publicApiV1SeriesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.update" method="patch" path="/companies/{company}/series/{series}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1SeriesUpdateRequest(
+    company: 'd8a1c3e7-6812-4aba-8681-ba5c6f4d0d45',
+    series: 'c89f88df-dd05-4b94-8e2f-94f111f5bdfd',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateSeriesRequest(
+        name: 'Facturas tienda',
+    ),
+);
+
+$response = $sdk->series->publicApiV1SeriesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.series.update" method="patch" path="/companies/{company}/series/{series}" example="success" -->
 ```php
@@ -935,6 +1440,48 @@ $request = new Operations\PublicApiV1SeriesUpdateRequest(
     series: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateSeriesRequest(
+        name: 'Facturas tienda',
+    ),
+);
+
+$response = $sdk->series->publicApiV1SeriesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.series.update" method="patch" path="/companies/{company}/series/{series}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1SeriesUpdateRequest(
+    company: '874216a2-017e-4a20-aa00-895ff95227cf',
+    series: '377e82c5-c8c9-401c-ba3f-33b4b3723d23',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateSeriesRequest(
+        name: 'Facturas tienda',
+    ),
 );
 
 $response = $sdk->series->publicApiV1SeriesUpdate(
@@ -958,11 +1505,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 403, 404, 409, 422, 428, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
 
 ## publicApiV1SeriesUnarchive
 

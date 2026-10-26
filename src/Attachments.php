@@ -50,7 +50,9 @@ class Attachments
     /**
      * Upload a task attachment
      *
-     * Upload a file to a task as `multipart/form-data` (`file`). Maximum 10 MB per file; the type is checked by content (magic bytes), not by extension: images (PNG, JPEG, GIF, WebP, HEIC, AVIF), PDF, Word/Excel/PowerPoint (OOXML), OpenDocument text and spreadsheet, plain text, CSV, Markdown and ZIP. `target` places it in a new comment (default) or at the end of the description, and the optional `note` (up to 1,000 characters) becomes the comment text; a longer note returns 422 `parameter_invalid_value`. The file counts towards the storage quota of your plan (402 `storage_quota_exceeded` when it is full). Requires an `Idempotency-Key`.
+     * Upload a file to a task as `multipart/form-data` (`file`), up to 10 MB; the type is checked by content, not extension.
+     * - `target` places it in a new comment (default) or the description; `note` (max 1,000 characters) is the comment text.
+     * - Counts towards the plan storage quota (402 `storage_quota_exceeded`). Requires an `Idempotency-Key`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAttachmentsCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAttachmentsCreateResponse

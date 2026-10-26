@@ -36,13 +36,24 @@ class UpdateInvoicePublicLinkRequest
     public ?int $extendDays = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateInvoicePublicLinkRequestPublicationContext $publicationContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('publication_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateInvoicePublicLinkRequestPublicationContext|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateInvoicePublicLinkRequestPublicationContext $publicationContext = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\UpdateInvoicePublicLinkRequestAction  $action
      * @param  ?int  $extendDays
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateInvoicePublicLinkRequestPublicationContext  $publicationContext
      * @phpstan-pure
      */
-    public function __construct(UpdateInvoicePublicLinkRequestAction $action, ?int $extendDays = null)
+    public function __construct(UpdateInvoicePublicLinkRequestAction $action, ?int $extendDays = null, ?UpdateInvoicePublicLinkRequestPublicationContext $publicationContext = null)
     {
         $this->action = $action;
         $this->extendDays = $extendDays;
+        $this->publicationContext = $publicationContext;
     }
 }

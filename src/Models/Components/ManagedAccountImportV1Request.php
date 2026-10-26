@@ -31,18 +31,18 @@ class ManagedAccountImportV1Request
     /**
      * Options of the import, sent as form fields (`options[send_email]=true`) or as one JSON field. Only the three below are accepted, all `false` by default; any other key is rejected with 422.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\ManagedAccountImportV1RequestOptions $options
+     * @var ?\Factuarea\Sdk\Models\Components\Options $options
      */
     #[SpeakeasyMetadata('multipartForm:name=options,json=true')]
-    public ?ManagedAccountImportV1RequestOptions $options = null;
+    public ?Options $options = null;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\AccountsFile  $accountsFile
      * @param  ?\Factuarea\Sdk\Models\Components\CustomersFile  $customersFile
-     * @param  ?\Factuarea\Sdk\Models\Components\ManagedAccountImportV1RequestOptions  $options
+     * @param  ?\Factuarea\Sdk\Models\Components\Options  $options
      * @phpstan-pure
      */
-    public function __construct(AccountsFile $accountsFile, ?CustomersFile $customersFile = null, ?ManagedAccountImportV1RequestOptions $options = null)
+    public function __construct(AccountsFile $accountsFile, ?CustomersFile $customersFile = null, ?Options $options = null)
     {
         $this->accountsFile = $accountsFile;
         $this->customersFile = $customersFile;

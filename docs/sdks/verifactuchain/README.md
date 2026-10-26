@@ -8,7 +8,9 @@
 
 ## publicApiV1VerifactuChainValidate
 
-Recompute the VeriFactu hash chain (`huella`) for your company and compare it against the persisted values without mutating data. Returns whether the chain is intact and, if not, the first corrupted record. Rate-limited to 1 request per minute per credential and company (never shared across companies, credentials or routes) and rejected with 422 `dataset_too_large` for datasets over 50,000 records.
+Recompute the VeriFactu hash chain (`huella`) for your company and compare it with the stored values, without changing data.
+- Returns whether the chain is intact and, if not, the first corrupted record.
+- Limited to 1 request per minute per credential and company; datasets over 50,000 records return 422 `dataset_too_large`.
 
 ### Example Usage
 

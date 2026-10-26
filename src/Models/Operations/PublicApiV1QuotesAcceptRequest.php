@@ -46,6 +46,7 @@ class PublicApiV1QuotesAcceptRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Quote acceptance accepts the `presentation_precondition` object with exactly seven fields and the optional `expected_presentation_uuid`. With revisioned presentation enabled for the company, the object is required for the first capture: when the quote has no retained capture yet, or its draft was edited or re-templated after it was captured (a missing object returns 428 `pdf_presentation_precondition_required` before anything is written). Build it from a `persisted_draft` preview (`POST /v1/companies/{company}/pdf-template-previews`): the artifact's `selection_version`, `source_token`, `expected_preview_context_fingerprint`, `template_revision_id` and `commercial_identity_revision_id`, with `purpose` `complete` and `format` `a4`; accepting a draft numbers it and captures what was reviewed. A quote with a retained capture is accepted without the object and its capture follows the number; `expected_presentation_uuid` cites that capture and returns 409 `pdf_presentation_conflict` if it is no longer the current one. With revisioned presentation disabled both are ignored.
      *
      * @var ?\Factuarea\Sdk\Models\Components\AcceptQuoteRequest $body
      */

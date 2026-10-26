@@ -13,6 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Series
 {
     /**
+     * Public series UUID v7.
      *
      * @var string $id
      */
@@ -48,6 +49,14 @@ class Series
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('document_type')]
     public string $documentType;
+
+    /**
+     * Independent visual association version; fiscal-only edits do not increment it.
+     *
+     * @var int $pdfTemplateVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_version')]
+    public int $pdfTemplateVersion;
 
     /**
      * Legacy alias for code. Use code field. Will be removed in v2.
@@ -131,6 +140,14 @@ class Series
     public ?SeriesInvoiceKind $invoiceKind;
 
     /**
+     * Saved tenant-template UUID v7, or null to inherit. Kept even if the saved template later becomes unavailable.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    public ?string $pdfTemplateId;
+
+    /**
      *
      * @var ?\DateTime $createdAt
      */
@@ -150,6 +167,7 @@ class Series
      * @param  string  $code
      * @param  string  $name
      * @param  string  $documentType
+     * @param  int  $pdfTemplateVersion
      * @param  string  $prefix
      * @param  string  $numberFormat
      * @param  int  $nextNumber
@@ -160,17 +178,19 @@ class Series
      * @param  bool  $isDefault
      * @param  bool  $isActive
      * @param  ?\Factuarea\Sdk\Models\Components\SeriesInvoiceKind  $invoiceKind
+     * @param  ?string  $pdfTemplateId
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, SeriesObject $object, string $code, string $name, string $documentType, string $prefix, string $numberFormat, int $nextNumber, int $currentNumber, int $initialNumber, SeriesCounterReset $counterReset, bool $yearReset, bool $isDefault, bool $isActive, ?SeriesInvoiceKind $invoiceKind = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, SeriesObject $object, string $code, string $name, string $documentType, int $pdfTemplateVersion, string $prefix, string $numberFormat, int $nextNumber, int $currentNumber, int $initialNumber, SeriesCounterReset $counterReset, bool $yearReset, bool $isDefault, bool $isActive, ?SeriesInvoiceKind $invoiceKind = null, ?string $pdfTemplateId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->code = $code;
         $this->name = $name;
         $this->documentType = $documentType;
+        $this->pdfTemplateVersion = $pdfTemplateVersion;
         $this->prefix = $prefix;
         $this->numberFormat = $numberFormat;
         $this->nextNumber = $nextNumber;
@@ -181,6 +201,7 @@ class Series
         $this->isDefault = $isDefault;
         $this->isActive = $isActive;
         $this->invoiceKind = $invoiceKind;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
     }

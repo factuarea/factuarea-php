@@ -679,12 +679,13 @@ if ($response->object !== null) {
 
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
+* [publicApiV1DeliveryNotesAssignPresentation](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesassignpresentation) - Assign the delivery-note visual template
+* [publicApiV1DeliveryNotesGetPresentation](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesgetpresentation) - Get the delivery-note presentation
 * [publicApiV1DeliveryNotesBulkDelete](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkdelete) - Bulk delete delivery notes
 * [publicApiV1DeliveryNotesBulkPdf](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkpdf) - Bulk download delivery note PDFs
 * [publicApiV1DeliveryNotesBulkSend](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulksend) - Bulk send delivery notes
 * [publicApiV1DeliveryNotesBulkStatus](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkstatus) - Bulk change delivery note status
 * [publicApiV1DeliveryNotesCancel](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotescancel) - Cancel a delivery note
-* [publicApiV1DeliveryNotesConvert](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesconvert) - Convert delivery note to invoice
 * [publicApiV1DeliveryNotesCreate](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotescreate) - Create a delivery note
 * [publicApiV1DeliveryNotesList](docs/sdks/deliverynotes/README.md#publicapiv1deliverynoteslist) - List all delivery notes
 * [publicApiV1DeliveryNotesDelete](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesdelete) - Delete a delivery note
@@ -695,7 +696,9 @@ if ($response->object !== null) {
 * [publicApiV1DeliveryNotesFindByExternalId](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesfindbyexternalid) - Find a delivery note by external ID
 * [publicApiV1DeliveryNotesStats](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstats) - Retrieve delivery note stats
 * [publicApiV1DeliveryNotesStatuses](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstatuses) - List delivery note statuses
+* [publicApiV1DeliveryNotesListPresentations](docs/sdks/deliverynotes/README.md#publicapiv1deliverynoteslistpresentations) - List retained delivery-note presentations
 * [publicApiV1DeliveryNotesMarkDelivered](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesmarkdelivered) - Mark delivery note as delivered
+* [publicApiV1DeliveryNotesRevisePresentation](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesrevisepresentation) - Create a delivery-note presentation revision
 * [publicApiV1DeliveryNotesSend](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessend) - Send a delivery note
 * [publicApiV1DeliveryNotesSign](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessign) - Sign a delivery note
 
@@ -758,15 +761,10 @@ if ($response->object !== null) {
 
 * [publicApiV1EventCatalogList](docs/sdks/eventcatalog/README.md#publicapiv1eventcataloglist) - List event types
 
-### [Events](docs/sdks/events/README.md)
-
-* [publicApiV1EventsList](docs/sdks/events/README.md#publicapiv1eventslist) - List all events
-* [publicApiV1EventsShow](docs/sdks/events/README.md#publicapiv1eventsshow) - Retrieve an event
-
 ### [FaceSubmissions](docs/sdks/facesubmissions/README.md)
 
 * [publicApiV1FaceSubmissionsCancel](docs/sdks/facesubmissions/README.md#publicapiv1facesubmissionscancel) - Request FACe submission cancellation
-* [publicApiV1FaceSubmissionsShow](docs/sdks/facesubmissions/README.md#publicapiv1facesubmissionsshow) - Retrieve a FACe submission
+* [publicApiV1FaceSubmissionsShow](docs/sdks/facesubmissions/README.md#publicapiv1facesubmissionsshow) - Retrieve a durable FACe attempt
 
 ### [Gestoria](docs/sdks/gestoria/README.md)
 
@@ -786,59 +784,45 @@ if ($response->object !== null) {
 
 ### [Invoices](docs/sdks/invoices/README.md)
 
-* [publicApiV1InvoicesAnnul](docs/sdks/invoices/README.md#publicapiv1invoicesannul) - Annul an invoice
-* [publicApiV1InvoicesAssignRealNumber](docs/sdks/invoices/README.md#publicapiv1invoicesassignrealnumber) - Assign a real invoice number
-* [publicApiV1InvoicesBulkCreate](docs/sdks/invoices/README.md#publicapiv1invoicesbulkcreate) - Bulk create invoices
+* [publicApiV1InvoicesAssignPresentation](docs/sdks/invoices/README.md#publicapiv1invoicesassignpresentation) - Assign the invoice visual template
+* [publicApiV1InvoicesGetPresentation](docs/sdks/invoices/README.md#publicapiv1invoicesgetpresentation) - Get the invoice presentation
 * [publicApiV1InvoicesBulkDelete](docs/sdks/invoices/README.md#publicapiv1invoicesbulkdelete) - Bulk delete invoices
 * [publicApiV1InvoicesBulkPdf](docs/sdks/invoices/README.md#publicapiv1invoicesbulkpdf) - Bulk download invoice PDFs
 * [publicApiV1InvoicesBulkSend](docs/sdks/invoices/README.md#publicapiv1invoicesbulksend) - Bulk send invoices
 * [publicApiV1InvoicesBulkStatus](docs/sdks/invoices/README.md#publicapiv1invoicesbulkstatus) - Bulk change invoice status
 * [publicApiV1InvoicesCanAnnul](docs/sdks/invoices/README.md#publicapiv1invoicescanannul) - Check annulment eligibility
 * [publicApiV1InvoicesSimplifiedEligibility](docs/sdks/invoices/README.md#publicapiv1invoicessimplifiedeligibility) - Check simplified invoice eligibility
-* [publicApiV1InvoicesCorrective](docs/sdks/invoices/README.md#publicapiv1invoicescorrective) - Generate corrective invoice
-* [publicApiV1InvoicesCreate](docs/sdks/invoices/README.md#publicapiv1invoicescreate) - Create an invoice
-* [publicApiV1InvoicesList](docs/sdks/invoices/README.md#publicapiv1invoiceslist) - List all invoices
 * [publicApiV1InvoicesVerifactuCreate](docs/sdks/invoices/README.md#publicapiv1invoicesverifactucreate) - Force-create VeriFactu record for invoice
 * [publicApiV1InvoicesVerifactuGet](docs/sdks/invoices/README.md#publicapiv1invoicesverifactuget) - Retrieve invoice VeriFactu record
-* [publicApiV1InvoicesCreateRecurring](docs/sdks/invoices/README.md#publicapiv1invoicescreaterecurring) - Create a recurring invoice from an invoice
 * [publicApiV1InvoicesDelete](docs/sdks/invoices/README.md#publicapiv1invoicesdelete) - Delete an invoice
-* [publicApiV1InvoicesShow](docs/sdks/invoices/README.md#publicapiv1invoicesshow) - Retrieve an invoice
-* [publicApiV1InvoicesUpdate](docs/sdks/invoices/README.md#publicapiv1invoicesupdate) - Update an invoice
-* [publicApiV1InvoicesFacturae](docs/sdks/invoices/README.md#publicapiv1invoicesfacturae) - Download FacturaE XML
+* [publicApiV1InvoicesFacturae](docs/sdks/invoices/README.md#publicapiv1invoicesfacturae) - Download current or retained Facturae XML
 * [publicApiV1InvoicesPdf](docs/sdks/invoices/README.md#publicapiv1invoicespdf) - Download invoice PDF
-* [publicApiV1InvoicesDuplicate](docs/sdks/invoices/README.md#publicapiv1invoicesduplicate) - Duplicate an invoice
 * [publicApiV1InvoicesExportExcel](docs/sdks/invoices/README.md#publicapiv1invoicesexportexcel) - Export invoices to a spreadsheet
-* [publicApiV1InvoicesFindByExternalId](docs/sdks/invoices/README.md#publicapiv1invoicesfindbyexternalid) - Find an invoice by external ID
-* [publicApiV1InvoicesFindByNumber](docs/sdks/invoices/README.md#publicapiv1invoicesfindbynumber) - Find an invoice by number
 * [publicApiV1InvoicesPdfLink](docs/sdks/invoices/README.md#publicapiv1invoicespdflink) - Generate temporary PDF link
 * [publicApiV1InvoicesPublicLinkGet](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkget) - Retrieve invoice public link
 * [publicApiV1InvoicesPublicLinkUpdate](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkupdate) - Update invoice public link
 * [publicApiV1InvoicesStats](docs/sdks/invoices/README.md#publicapiv1invoicesstats) - Get invoice statistics
-* [publicApiV1InvoicesIssue](docs/sdks/invoices/README.md#publicapiv1invoicesissue) - Issue an invoice
+* [publicApiV1InvoicesListPresentations](docs/sdks/invoices/README.md#publicapiv1invoiceslistpresentations) - List retained invoice presentations
 * [publicApiV1InvoicesActivities](docs/sdks/invoices/README.md#publicapiv1invoicesactivities) - List invoice activity
-* [publicApiV1InvoicesCorrectives](docs/sdks/invoices/README.md#publicapiv1invoicescorrectives) - List corrective invoices
 * [publicApiV1InvoicesPaymentsList](docs/sdks/invoices/README.md#publicapiv1invoicespaymentslist) - List invoice payments
 * [publicApiV1InvoicesPaymentsCreate](docs/sdks/invoices/README.md#publicapiv1invoicespaymentscreate) - Register a payment
 * [publicApiV1InvoicesStatuses](docs/sdks/invoices/README.md#publicapiv1invoicesstatuses) - List invoice statuses
-* [publicApiV1InvoicesMarkPaid](docs/sdks/invoices/README.md#publicapiv1invoicesmarkpaid) - Mark invoice as paid
-* [publicApiV1InvoicesMarkSent](docs/sdks/invoices/README.md#publicapiv1invoicesmarksent) - Mark an invoice as sent
 * [publicApiV1InvoicesPdfPreview](docs/sdks/invoices/README.md#publicapiv1invoicespdfpreview) - Preview an invoice draft PDF
 * [publicApiV1InvoicesReminderPreview](docs/sdks/invoices/README.md#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
 * [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download the receipt PDF of a payment
-* [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
 * [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
-* [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
-* [publicApiV1InvoicesSend](docs/sdks/invoices/README.md#publicapiv1invoicessend) - Send invoice by email
+* [publicApiV1InvoicesRevisePresentation](docs/sdks/invoices/README.md#publicapiv1invoicesrevisepresentation) - Create an invoice presentation revision
 * [publicApiV1InvoicesSendReminder](docs/sdks/invoices/README.md#publicapiv1invoicessendreminder) - Send a payment reminder
-* [publicApiV1InvoicesSubstituteSimplified](docs/sdks/invoices/README.md#publicapiv1invoicessubstitutesimplified) - Substitute simplified invoices with full invoice
-* [publicApiV1InvoicesUnschedule](docs/sdks/invoices/README.md#publicapiv1invoicesunschedule) - Unschedule an invoice
-* [publicApiV1InvoicesUnsend](docs/sdks/invoices/README.md#publicapiv1invoicesunsend) - Unsend an invoice
-* [publicApiV1InvoicesVoid](docs/sdks/invoices/README.md#publicapiv1invoicesvoid) - Void an invoice
+
+#### [Invoices.AdministrativeRevisions](docs/sdks/administrativerevisions/README.md)
+
+* [publicApiV1InvoicesAdministrativeRevisionsIndex](docs/sdks/administrativerevisions/README.md#publicapiv1invoicesadministrativerevisionsindex) - Retrieve invoice administrative routing history
+* [publicApiV1InvoicesAdministrativeRevisionsStore](docs/sdks/administrativerevisions/README.md#publicapiv1invoicesadministrativerevisionsstore) - Revise invoice administrative routing
 
 #### [Invoices.FaceSubmissions](docs/sdks/invoicesfacesubmissions/README.md)
 
 * [publicApiV1InvoicesFaceSubmissionsList](docs/sdks/invoicesfacesubmissions/README.md#publicapiv1invoicesfacesubmissionslist) - List invoice FACe submissions
-* [publicApiV1InvoicesFaceSubmissionsSubmit](docs/sdks/invoicesfacesubmissions/README.md#publicapiv1invoicesfacesubmissionssubmit) - Submit invoice to FACe
+* [publicApiV1InvoicesFaceSubmissionsSubmit](docs/sdks/invoicesfacesubmissions/README.md#publicapiv1invoicesfacesubmissionssubmit) - Prepare or continue a FACe submission
 
 #### [Invoices.Quarterly](docs/sdks/quarterly/README.md)
 
@@ -906,6 +890,44 @@ if ($response->object !== null) {
 ### [PayrollExportFormats](docs/sdks/payrollexportformats/README.md)
 
 * [publicApiV1PayrollExportFormatsList](docs/sdks/payrollexportformats/README.md#publicapiv1payrollexportformatslist) - List the supported payroll export formats
+
+### [PdfArtifacts](docs/sdks/pdfartifacts/README.md)
+
+* [publicApiV1PdfArtifactsDownload](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsdownload) - Download the exact retained PDF
+* [publicApiV1PdfArtifactsShow](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsshow) - Read PDF artifact metadata
+* [publicApiV1PdfArtifactsPrepare](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsprepare) - Prepare an exact presentation PDF
+* [publicApiV1PdfArtifactsRender](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsrender) - Render a prepared PDF artifact
+
+### [PdfCommercialIdentities](docs/sdks/pdfcommercialidentities/README.md)
+
+* [publicApiV1PdfCommercialIdentitiesArchive](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesarchive) - Archive a PDF commercial identity
+* [publicApiV1PdfCommercialIdentitiesCreate](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiescreate) - Create a PDF commercial identity
+* [publicApiV1PdfCommercialIdentitiesList](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitieslist) - List PDF commercial identities
+* [publicApiV1PdfCommercialIdentitiesFind](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesfind) - Retrieve a PDF commercial identity
+* [publicApiV1PdfCommercialIdentitiesUpdate](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesupdate) - Update PDF commercial identity metadata
+* [publicApiV1PdfCommercialIdentitiesImpact](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesimpact) - Inspect the impact of a PDF commercial identity change
+* [publicApiV1PdfCommercialIdentitiesRevision](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesrevision) - Retrieve a PDF commercial identity revision
+* [publicApiV1PdfCommercialIdentitiesPublishRevision](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiespublishrevision) - Publish a PDF commercial identity revision
+* [publicApiV1PdfCommercialIdentitiesRestore](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesrestore) - Restore a PDF commercial identity
+
+### [PdfTemplates](docs/sdks/pdftemplates/README.md)
+
+* [publicApiV1PdfTemplatesArchive](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesarchive) - Archive a PDF template
+* [publicApiV1PdfTemplatesCreate](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatescreate) - Create a PDF template
+* [publicApiV1PdfTemplatesList](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplateslist) - List PDF templates
+* [publicApiV1PdfTemplatesDuplicate](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesduplicate) - Duplicate a PDF template
+* [publicApiV1PdfTemplatesFind](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesfind) - Retrieve a PDF template
+* [publicApiV1PdfTemplatesUpdate](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesupdate) - Update PDF template metadata
+* [publicApiV1PdfTemplatesContactDefaultGet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatescontactdefaultget) - Retrieve a contact PDF template preference
+* [publicApiV1PdfTemplatesContactDefaultSet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatescontactdefaultset) - Set a contact PDF template preference
+* [publicApiV1PdfTemplatesDefaultsGet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesdefaultsget) - Retrieve the PDF template defaults
+* [publicApiV1PdfTemplatesDefaultsSet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesdefaultsset) - Update the PDF template defaults
+* [publicApiV1PdfTemplatesImpact](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesimpact) - Inspect the impact of a PDF template change
+* [publicApiV1PdfTemplatesAssetGet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesassetget) - Retrieve a PDF template image
+* [publicApiV1PdfTemplatesRevision](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesrevision) - Retrieve a PDF template revision
+* [publicApiV1PdfTemplatesPublishRevision](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatespublishrevision) - Publish a PDF template revision
+* [publicApiV1PdfTemplatesRestore](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesrestore) - Restore a PDF template
+* [publicApiV1PdfTemplatesAssetUpload](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesassetupload) - Upload a PDF template image
 
 ### [Presence](docs/sdks/presence/README.md)
 
@@ -1008,11 +1030,12 @@ if ($response->object !== null) {
 ### [Proformas](docs/sdks/proformas/README.md)
 
 * [publicApiV1ProformasAccept](docs/sdks/proformas/README.md#publicapiv1proformasaccept) - Accept a proforma
+* [publicApiV1ProformasAssignPresentation](docs/sdks/proformas/README.md#publicapiv1proformasassignpresentation) - Assign the proforma visual template
+* [publicApiV1ProformasGetPresentation](docs/sdks/proformas/README.md#publicapiv1proformasgetpresentation) - Get the proforma presentation
 * [publicApiV1ProformasBulkDelete](docs/sdks/proformas/README.md#publicapiv1proformasbulkdelete) - Bulk delete proformas
 * [publicApiV1ProformasBulkPdf](docs/sdks/proformas/README.md#publicapiv1proformasbulkpdf) - Bulk download proforma PDFs
 * [publicApiV1ProformasBulkSend](docs/sdks/proformas/README.md#publicapiv1proformasbulksend) - Bulk send proformas
 * [publicApiV1ProformasBulkStatus](docs/sdks/proformas/README.md#publicapiv1proformasbulkstatus) - Bulk change proforma status
-* [publicApiV1ProformasConvert](docs/sdks/proformas/README.md#publicapiv1proformasconvert) - Convert proforma to invoice
 * [publicApiV1ProformasCreate](docs/sdks/proformas/README.md#publicapiv1proformascreate) - Create a proforma
 * [publicApiV1ProformasList](docs/sdks/proformas/README.md#publicapiv1proformaslist) - List all proformas
 * [publicApiV1ProformasDelete](docs/sdks/proformas/README.md#publicapiv1proformasdelete) - Delete a proforma
@@ -1024,8 +1047,10 @@ if ($response->object !== null) {
 * [publicApiV1ProformasPublicLinkGet](docs/sdks/proformas/README.md#publicapiv1proformaspubliclinkget) - Retrieve proforma public link
 * [publicApiV1ProformasPublicLinkUpdate](docs/sdks/proformas/README.md#publicapiv1proformaspubliclinkupdate) - Update proforma public link
 * [publicApiV1ProformasStats](docs/sdks/proformas/README.md#publicapiv1proformasstats) - Get proforma stats
+* [publicApiV1ProformasListPresentations](docs/sdks/proformas/README.md#publicapiv1proformaslistpresentations) - List retained proforma presentations
 * [publicApiV1ProformasStatuses](docs/sdks/proformas/README.md#publicapiv1proformasstatuses) - List proforma statuses
 * [publicApiV1ProformasReject](docs/sdks/proformas/README.md#publicapiv1proformasreject) - Reject a proforma
+* [publicApiV1ProformasRevisePresentation](docs/sdks/proformas/README.md#publicapiv1proformasrevisepresentation) - Create a proforma presentation revision
 * [publicApiV1ProformasSend](docs/sdks/proformas/README.md#publicapiv1proformassend) - Send proforma by email
 
 ### [Projects](docs/sdks/projects/README.md)
@@ -1111,11 +1136,12 @@ if ($response->object !== null) {
 ### [Quotes](docs/sdks/quotes/README.md)
 
 * [publicApiV1QuotesAccept](docs/sdks/quotes/README.md#publicapiv1quotesaccept) - Accept a quote
+* [publicApiV1QuotesAssignPresentation](docs/sdks/quotes/README.md#publicapiv1quotesassignpresentation) - Assign the quote visual template
+* [publicApiV1QuotesGetPresentation](docs/sdks/quotes/README.md#publicapiv1quotesgetpresentation) - Get the quote presentation
 * [publicApiV1QuotesBulkDelete](docs/sdks/quotes/README.md#publicapiv1quotesbulkdelete) - Bulk delete quotes
 * [publicApiV1QuotesBulkPdf](docs/sdks/quotes/README.md#publicapiv1quotesbulkpdf) - Bulk download quote PDFs
 * [publicApiV1QuotesBulkSend](docs/sdks/quotes/README.md#publicapiv1quotesbulksend) - Bulk send quotes
 * [publicApiV1QuotesBulkStatus](docs/sdks/quotes/README.md#publicapiv1quotesbulkstatus) - Bulk change quote status
-* [publicApiV1QuotesConvert](docs/sdks/quotes/README.md#publicapiv1quotesconvert) - Convert quote to invoice
 * [publicApiV1QuotesCreate](docs/sdks/quotes/README.md#publicapiv1quotescreate) - Create a quote
 * [publicApiV1QuotesList](docs/sdks/quotes/README.md#publicapiv1quoteslist) - List all quotes
 * [publicApiV1QuotesDelete](docs/sdks/quotes/README.md#publicapiv1quotesdelete) - Delete a quote
@@ -1127,34 +1153,28 @@ if ($response->object !== null) {
 * [publicApiV1QuotesPublicLinkGet](docs/sdks/quotes/README.md#publicapiv1quotespubliclinkget) - Retrieve quote public link
 * [publicApiV1QuotesPublicLinkUpdate](docs/sdks/quotes/README.md#publicapiv1quotespubliclinkupdate) - Update quote public link
 * [publicApiV1QuotesStats](docs/sdks/quotes/README.md#publicapiv1quotesstats) - Get quote stats
+* [publicApiV1QuotesListPresentations](docs/sdks/quotes/README.md#publicapiv1quoteslistpresentations) - List retained quote presentations
 * [publicApiV1QuotesStatuses](docs/sdks/quotes/README.md#publicapiv1quotesstatuses) - List quote statuses
 * [publicApiV1QuotesReject](docs/sdks/quotes/README.md#publicapiv1quotesreject) - Reject a quote
+* [publicApiV1QuotesRevisePresentation](docs/sdks/quotes/README.md#publicapiv1quotesrevisepresentation) - Create a quote presentation revision
 * [publicApiV1QuotesSend](docs/sdks/quotes/README.md#publicapiv1quotessend) - Send quote by email
 
 ### [RecurringInvoices](docs/sdks/recurringinvoices/README.md)
 
-* [publicApiV1RecurringInvoicesActivate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesactivate) - Activate recurring invoice
 * [publicApiV1RecurringInvoicesBulkDelete](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkdelete) - Bulk delete recurring invoices
 * [publicApiV1RecurringInvoicesBulkStatus](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesbulkstatus) - Bulk change recurring invoice status
-* [publicApiV1RecurringInvoicesCancel](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescancel) - Cancel recurring invoice
-* [publicApiV1RecurringInvoicesCreate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicescreate) - Create a recurring invoice
-* [publicApiV1RecurringInvoicesList](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoiceslist) - List all recurring invoices
 * [publicApiV1RecurringInvoicesDelete](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesdelete) - Delete a recurring invoice
-* [publicApiV1RecurringInvoicesShow](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesshow) - Retrieve a recurring invoice
-* [publicApiV1RecurringInvoicesUpdate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesupdate) - Update a recurring invoice
-* [publicApiV1RecurringInvoicesFindByExternalId](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesfindbyexternalid) - Find a recurring invoice by external ID
 * [publicApiV1RecurringInvoicesGenerate](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesgenerate) - Generate an invoice from a recurring template
 * [publicApiV1RecurringInvoicesStats](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesstats) - Retrieve recurring invoice stats
 * [publicApiV1RecurringInvoicesActivities](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesactivities) - List recurring invoice activity
 * [publicApiV1RecurringInvoicesLogs](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoiceslogs) - List recurring invoice execution logs
-* [publicApiV1RecurringInvoicesPause](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicespause) - Pause recurring invoice
 * [publicApiV1RecurringInvoicesPreview](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicespreview) - Preview upcoming recurring invoice dates
-* [publicApiV1RecurringInvoicesResume](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesresume) - Resume recurring invoice
-* [publicApiV1RecurringInvoicesSkip](docs/sdks/recurringinvoices/README.md#publicapiv1recurringinvoicesskip) - Skip the next recurring invoice generation
 
 ### [Series](docs/sdks/series/README.md)
 
 * [publicApiV1SeriesArchive](docs/sdks/series/README.md#publicapiv1seriesarchive) - Archive a series
+* [publicApiV1SeriesAssignPdfTemplate](docs/sdks/series/README.md#publicapiv1seriesassignpdftemplate) - Assign the PDF template of a series
+* [publicApiV1SeriesGetPdfTemplate](docs/sdks/series/README.md#publicapiv1seriesgetpdftemplate) - Retrieve the PDF template of a series
 * [publicApiV1SeriesBootstrap](docs/sdks/series/README.md#publicapiv1seriesbootstrap) - Bootstrap the default series of a company
 * [publicApiV1SeriesCreate](docs/sdks/series/README.md#publicapiv1seriescreate) - Create a series
 * [publicApiV1SeriesList](docs/sdks/series/README.md#publicapiv1serieslist) - List all series
@@ -1474,9 +1494,7 @@ if ($response->object !== null) {
 
 #### [WebhookEndpoints.Deliveries](docs/sdks/webhookendpointsdeliveries/README.md)
 
-* [publicApiV1WebhookEndpointsDeliveriesList](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliverieslist) - List webhook deliveries
 * [publicApiV1WebhookEndpointsDeliveriesReplay](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliveriesreplay) - Replay webhook delivery
-* [publicApiV1WebhookEndpointsDeliveriesShow](docs/sdks/webhookendpointsdeliveries/README.md#publicapiv1webhookendpointsdeliveriesshow) - Retrieve webhook delivery
 
 ### [Woocommerce.Stores](docs/sdks/woocommercestores/README.md)
 

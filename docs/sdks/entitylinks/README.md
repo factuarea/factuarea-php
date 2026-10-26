@@ -12,6 +12,46 @@
 
 Link a task to a Factuarea entity (`entity_type` + `entity_id`). An entity that does not exist, belongs to another company or whose module is not accessible returns 404 `linked_entity_not_found`. Linking it again returns the existing link.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.entity_links.create" method="post" path="/companies/{company}/tasks/{task}/entity-links" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksEntityLinksCreateRequest(
+    company: '93b99fbb-7db2-4ae7-8fa5-9686fd77d6f0',
+    task: '49225acd-f9ea-421e-9e6b-bffdea88fdb8',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\LinkTaskToEntityV1Request(
+        entityType: Components\LinkTaskToEntityV1RequestEntityType::Proforma,
+        entityId: '8a0e4354-9976-4c41-9b0b-7fe92de33c71',
+    ),
+);
+
+$response = $sdk->tasks->entityLinks->publicApiV1TasksEntityLinksCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.entity_links.create" method="post" path="/companies/{company}/tasks/{task}/entity-links" example="missing_api_key" -->
@@ -36,6 +76,46 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksEntityLinksCreateRequest(
     company: 'Towne - Hackett',
     task: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\LinkTaskToEntityV1Request(
+        entityType: Components\LinkTaskToEntityV1RequestEntityType::Proforma,
+        entityId: '8a0e4354-9976-4c41-9b0b-7fe92de33c71',
+    ),
+);
+
+$response = $sdk->tasks->entityLinks->publicApiV1TasksEntityLinksCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.entity_links.create" method="post" path="/companies/{company}/tasks/{task}/entity-links" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksEntityLinksCreateRequest(
+    company: '48a0e435-4997-46c4-81b0-b7fe92de33c7',
+    task: '40996e5a-616d-44e2-a170-59ca91998f48',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\LinkTaskToEntityV1Request(
@@ -92,6 +172,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.entity_links.create" method="post" path="/companies/{company}/tasks/{task}/entity-links" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksEntityLinksCreateRequest(
+    company: '4c866302-aea2-4ef1-90b2-e39e5ffe910c',
+    task: '1bd9516f-8856-42f2-be71-459c79c21963',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\LinkTaskToEntityV1Request(
+        entityType: Components\LinkTaskToEntityV1RequestEntityType::Proforma,
+        entityId: '8a0e4354-9976-4c41-9b0b-7fe92de33c71',
+    ),
+);
+
+$response = $sdk->tasks->entityLinks->publicApiV1TasksEntityLinksCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -113,7 +233,8 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksEntityLinksList
 
-List the Factuarea entities a task is linked to (invoices, quotes, contacts, products…), with their display label. A link is always returned; when its entity was deleted, when its module is not accessible to your company or when the key lacks the read scope of the entity resource (for example `invoices:read` for an invoice, `contacts:read` for a contact), it comes with `available: false` and `summary: null`, so the link can still be removed. Returns a plain list, without pagination.
+List the Factuarea entities a task is linked to (invoices, quotes, contacts, products…), with their display label. Plain list, no pagination.
+- A link is always returned; if its entity is deleted, its module is inaccessible or the key lacks the entity read scope, it has `available: false` and `summary: null`.
 
 ### Example Usage
 

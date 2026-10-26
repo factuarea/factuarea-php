@@ -8,7 +8,10 @@
 
 ## publicApiV1AccountOwnerTransfer
 
-Put the ACCOUNT in the name of another MEMBER of the account. Requires the `account:owner` scope — the highest privilege of the account — and the caller must be the CURRENT owner, checked per request against the source of truth: a credential outlives its creator ceasing to be the owner, so the check is never frozen at issuance. Pass the target PERSON in `owner_user_id` (their person UUID, not the account member `id`); the account subject and the acting person come from the authenticated credential and never from the body. In the same transaction the outgoing owner becomes an `admin` and the target becomes the `owner`; both keep access to every tax ID of the account, and no tax ID, API key or plan changes. Transferring to the current owner changes nothing and returns the same person in both fields. The 200 publishes the incoming AND the outgoing owner, which no later read can reconstruct. Returns 403 `owner_transfer_forbidden` when the caller is not the current owner (it reveals neither who is nor whether the target exists), 422 `invalid_param_value` when `owner_user_id` is missing or malformed, 422 `business_rule_violation` when the target does not exist, is not a member of the account or is its external advisor (all three with the SAME body), 422 `idempotency_key_required` because the operation is irreversible, and 404 `account_not_found` when `{account}` is not the credential account — foreign, non-existent or malformed, all three with the same body and never a 403. Requires the `account:owner` scope, which `*` does not cover: the API key must list it explicitly.
+Put the account in the name of another member: the outgoing owner becomes `admin`, the target `owner`. Irreversible.
+- Needs the `account:owner` scope, the current owner, and `Idempotency-Key`.
+- `owner_user_id` is the person UUID, not the member `id`; 403 `owner_transfer_forbidden` if not the owner.
+- 422 `business_rule_violation` for an invalid target. Requires the `account:owner` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage: api_key_expired
 
@@ -72,6 +75,42 @@ $body = new Components\TransferAccountOwnershipV1Request(
 
 $response = $sdk->account->owner->publicApiV1AccountOwnerTransfer(
     account: '31840552',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.owner.transfer" method="patch" path="/accounts/{account}/owner" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\TransferAccountOwnershipV1Request(
+    ownerUserId: 'b7b5138a-e8fa-4e11-9e2c-d25eb8010aaf',
+);
+
+$response = $sdk->account->owner->publicApiV1AccountOwnerTransfer(
+    account: '73b18ee3-abcf-4f76-adcd-3876015a614f',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -180,6 +219,78 @@ $body = new Components\TransferAccountOwnershipV1Request(
 
 $response = $sdk->account->owner->publicApiV1AccountOwnerTransfer(
     account: '41818263',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.owner.transfer" method="patch" path="/accounts/{account}/owner" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\TransferAccountOwnershipV1Request(
+    ownerUserId: 'b7b5138a-e8fa-4e11-9e2c-d25eb8010aaf',
+);
+
+$response = $sdk->account->owner->publicApiV1AccountOwnerTransfer(
+    account: 'b7b5138a-e8fa-4e11-9e2c-d25eb8010aaf',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.account.owner.transfer" method="patch" path="/accounts/{account}/owner" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\TransferAccountOwnershipV1Request(
+    ownerUserId: 'b7b5138a-e8fa-4e11-9e2c-d25eb8010aaf',
+);
+
+$response = $sdk->account->owner->publicApiV1AccountOwnerTransfer(
+    account: '7e919e98-9eac-4006-9259-baec639c43e8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

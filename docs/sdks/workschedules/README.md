@@ -78,7 +78,10 @@ if ($response->object !== null) {
 
 ## publicApiV1WorkSchedulesAssign
 
-Assign the work schedule to an employee with an effective start date. `employee_id` (UUID v7, must belong to your company) and `effective_from` (`Y-m-d`) are required. Assigning closes the employee’s previously open assignment and opens the new one (an employee has at most one open assignment; history is preserved). If that previous assignment has not started yet and the new `effective_from` is on or before its start, it is cancelled instead: it is closed as an empty span (`effective_to` = its `effective_from`), kept in the history and never in effect. Moving back the start of an assignment that is already in effect still returns 422. An unknown employee returns 422 `assigned_employee_not_found`; an unknown schedule returns 404. Returns the created assignment.
+Assign the work schedule to an employee with an effective start date; the previous open assignment is closed and history is kept.
+- `employee_id` and `effective_from` (`Y-m-d`) are required.
+- An unknown employee returns 422 `assigned_employee_not_found`; moving back the start of an assignment already in effect returns 422.
+- Returns the created assignment.
 
 ### Example Usage: api_key_revoked
 
@@ -149,6 +152,46 @@ $request = new Operations\PublicApiV1WorkSchedulesAssignRequest(
     body: new Components\AssignScheduleRequest(
         employeeId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b01',
         effectiveFrom: LocalDate::parse('2026-06-01'),
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assign" method="post" path="/companies/{company}/work-schedules/{schedule}/assign" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesAssignRequest(
+    company: 'e910dae8-7ebb-4ad3-9c1e-0e077fbbc4d6',
+    schedule: '19805bb8-3095-44c8-a0ff-7af69e990175',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignScheduleRequest(
+        employeeId: 'c79fb215-b043-460c-87f2-620747dc1e0b',
+        effectiveFrom: LocalDate::parse('2025-09-15'),
     ),
 );
 
@@ -240,6 +283,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assign" method="post" path="/companies/{company}/work-schedules/{schedule}/assign" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesAssignRequest(
+    company: 'c79fb215-b043-460c-87f2-620747dc1e0b',
+    schedule: '9b210684-1309-4761-b268-6ad503b03c9e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignScheduleRequest(
+        employeeId: 'c79fb215-b043-460c-87f2-620747dc1e0b',
+        effectiveFrom: LocalDate::parse('2025-09-15'),
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assign" method="post" path="/companies/{company}/work-schedules/{schedule}/assign" example="success" -->
@@ -280,6 +363,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.assign" method="post" path="/companies/{company}/work-schedules/{schedule}/assign" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesAssignRequest(
+    company: 'fde22a81-fb9d-43a6-888b-c4cccdbab1c8',
+    schedule: 'fcb07512-c151-461c-aac1-622b4aa1edf2',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignScheduleRequest(
+        employeeId: 'c79fb215-b043-460c-87f2-620747dc1e0b',
+        effectiveFrom: LocalDate::parse('2025-09-15'),
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -301,7 +424,9 @@ if ($response->object !== null) {
 
 ## publicApiV1WorkSchedulesCreate
 
-Create a weekly work schedule for the authenticated company (resolved from the API key, never from the payload). `name` and `week_pattern` are required; `mode` defaults to `validated`. The `week_pattern` is a list of weekdays (ISO 8601 1..7) each with its ordered, non-overlapping `HH:MM` time ranges (an empty `ranges` means a rest day). Returns the created schedule with its generated `id` (UUID v7); `weekly_hours` is derived from the pattern.
+Create a weekly work schedule for your company (resolved from the API key).
+- `name` and `week_pattern` are required; `mode` defaults to `validated`. `week_pattern` lists ISO weekdays (1..7) with ordered, non-overlapping `HH:MM` ranges (empty `ranges` = rest day).
+- Returns the schedule with its `id`; `weekly_hours` is derived.
 
 ### Example Usage: api_key_revoked
 
@@ -331,6 +456,44 @@ $body = new Components\CreateWeeklyScheduleRequest(
 
 $response = $sdk->workSchedules->publicApiV1WorkSchedulesCreate(
     company: '00d63127-485d-4ec7-9497-08d3aa5bb6e4',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.create" method="post" path="/companies/{company}/work-schedules" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWeeklyScheduleRequest(
+    name: '<value>',
+    mode: Components\CreateWeeklyScheduleRequestMode::Validated,
+    weekPattern: [],
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesCreate(
+    company: '7dbdf38c-e88e-4e41-87d0-77d356f50f85',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -417,6 +580,44 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.create" method="post" path="/companies/{company}/work-schedules" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWeeklyScheduleRequest(
+    name: '<value>',
+    mode: Components\CreateWeeklyScheduleRequestMode::Validated,
+    weekPattern: [],
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesCreate(
+    company: '00d63127-485d-4ec7-9497-08d3aa5bb6e4',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.create" method="post" path="/companies/{company}/work-schedules" example="success" -->
@@ -445,6 +646,44 @@ $body = new Components\CreateWeeklyScheduleRequest(
 
 $response = $sdk->workSchedules->publicApiV1WorkSchedulesCreate(
     company: 'Ebert Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.create" method="post" path="/companies/{company}/work-schedules" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateWeeklyScheduleRequest(
+    name: '<value>',
+    mode: Components\CreateWeeklyScheduleRequestMode::Validated,
+    weekPattern: [],
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesCreate(
+    company: 'adc3da9c-deb5-4f42-aff2-21d3febd712b',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -646,7 +885,9 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1WorkSchedulesEmployeeSchedule
 
-Resolve the work schedule in effect for an employee by its `id` (UUID v7) on a given day. The optional `date` query parameter (`Y-m-d`) sets that day and defaults to today, so you can read a schedule that starts in the future, such as the one assigned from a pending hire date. Returns 404 `schedule_assignment_not_found` when the employee has no schedule in effect on that day (or belongs to another company), and 422 when `date` is not a valid `Y-m-d` date. The result is the resolved schedule (`id` = UUID v7 of the schedule), not the assignment.
+Resolve the work schedule in effect for an employee on a day; `date` (`Y-m-d`) is optional and defaults to today.
+- Returns the schedule, not the assignment.
+- 404 `schedule_assignment_not_found` if none is in effect (or the employee belongs to another company); 422 for an invalid `date`.
 
 ### Example Usage
 
@@ -878,7 +1119,9 @@ if ($response->object !== null) {
 
 ## publicApiV1WorkSchedulesUpdate
 
-Partially update a work schedule: `name`, `mode` and `week_pattern` are optional and an omitted field keeps its current value (an empty body changes nothing). When sent, `week_pattern` replaces the whole weekly pattern — there is no update of a single day — and `weekly_hours` is recomputed from it. The resulting schedule is validated as a whole, so an invalid value returns 422 and changes nothing. Returns the updated schedule.
+Partially update a work schedule; an omitted field keeps its value.
+- A sent `week_pattern` replaces the whole pattern and `weekly_hours` is recomputed.
+- An invalid value returns 422 and changes nothing. Returns the updated schedule.
 
 ### Example Usage: api_key_revoked
 
@@ -1220,7 +1463,9 @@ if ($response->object !== null) {
 
 ## publicApiV1WorkSchedulesUnassign
 
-Close the employee’s open assignment to this schedule. `employee_id` (UUID v7) is required; `effective_to` (`Y-m-d`) is optional and defaults to today. An assignment that has not started yet and is unassigned on or before its start (including the default of today) is cancelled: it is closed as an empty span (`effective_to` = its `effective_from`) and kept in the history. Closing an assignment already in effect on a date before its start returns 422. Returns 404 when there is no open assignment. Responds 204 No Content.
+Close the employee's open assignment to this schedule; `employee_id` is required and `effective_to` (`Y-m-d`) defaults to today.
+- An assignment not yet started is cancelled and kept in history as an empty span.
+- Closing an assignment in effect before its start returns 422; no open assignment returns 404. Responds 204.
 
 ### Example Usage: api_key_revoked
 
@@ -1246,6 +1491,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1WorkSchedulesUnassignRequest(
     company: 'e55ef20b-e38d-4834-9804-0ffad781d3b3',
     schedule: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UnassignScheduleRequest(
+        employeeId: 'e55ef20b-e38d-4834-9804-0ffad781d3b3',
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesUnassign(
+    request: $request
+);
+
+if ($response->statusCode === 200) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.unassign" method="post" path="/companies/{company}/work-schedules/{schedule}/unassign" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesUnassignRequest(
+    company: '0c0433f8-a5e7-47f7-b2c7-7b61989942aa',
+    schedule: '80c3ec13-d6d7-4820-9a54-4a2810e69f3c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UnassignScheduleRequest(
@@ -1339,6 +1623,45 @@ if ($response->statusCode === 200) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.unassign" method="post" path="/companies/{company}/work-schedules/{schedule}/unassign" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesUnassignRequest(
+    company: 'f8d30550-04f1-42b3-b89d-c9c1cbef881b',
+    schedule: '5a067bd7-bbdc-4f85-bc6b-ba214246f452',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UnassignScheduleRequest(
+        employeeId: 'e55ef20b-e38d-4834-9804-0ffad781d3b3',
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesUnassign(
+    request: $request
+);
+
+if ($response->statusCode === 200) {
+    // handle response
+}
+```
 ### Example Usage: unassign
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.unassign" method="post" path="/companies/{company}/work-schedules/{schedule}/unassign" example="unassign" -->
@@ -1368,6 +1691,45 @@ $request = new Operations\PublicApiV1WorkSchedulesUnassignRequest(
     body: new Components\UnassignScheduleRequest(
         employeeId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b01',
         effectiveTo: LocalDate::parse('2026-06-30'),
+    ),
+);
+
+$response = $sdk->workSchedules->publicApiV1WorkSchedulesUnassign(
+    request: $request
+);
+
+if ($response->statusCode === 200) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.work_schedules.unassign" method="post" path="/companies/{company}/work-schedules/{schedule}/unassign" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1WorkSchedulesUnassignRequest(
+    company: 'd2520ca2-73c2-44bd-a007-17c8f1d54344',
+    schedule: '1fd00d5e-842c-4f44-923f-a326eb910585',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UnassignScheduleRequest(
+        employeeId: 'e55ef20b-e38d-4834-9804-0ffad781d3b3',
     ),
 );
 

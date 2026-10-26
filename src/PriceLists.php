@@ -546,7 +546,9 @@ class PriceLists
     /**
      * Resolve a catalog price
      *
-     * Resolve the effective catalog price for a complete catalog selection — product, optional variant, optional presentation, optional commercial combination (`configuration_id`), its canonical `selection_signature` and the chosen `option_value_ids` — under an optional price list. The combination and its signature are NOT mutually exclusive here: a real selection carries both, because the signature is derived from the combination. What is rejected is repeating the cross the combination already identifies (`variant_id` / `presentation_id`). No amount is ever accepted in the payload: every own price and every option adjustment comes from the catalog, so a caller cannot price its own line. The response carries the breakdown (`unit_semantics`, `source_amount`, `option_adjustment_total`, `option_adjustments_absorbed`) so a double charge is detectable from the preview — `source` alone cannot tell a price-list entry that ABSORBS the option adjustments from a legacy one that ADDS them, and both say `price_list`.
+     * Resolve the effective catalog price of a complete selection (product, variant, presentation, combination, `option_value_ids`) under an optional price list.
+     * - No amount is ever accepted in the payload; prices come from the catalog.
+     * - The response carries the breakdown (`source_amount`, `option_adjustment_total`) to detect double charges.
      *
      * @param  \Factuarea\Sdk\Models\Components\ResolveCatalogPriceRequest  $body
      * @param  string  $company
@@ -674,7 +676,9 @@ class PriceLists
     /**
      * Resolve many catalog prices
      *
-     * Reprice a whole document in one request: resolve the effective price of up to 100 catalog selections and compare each with the unit price the line has frozen today (`current_unit_price`), returning `changed` and `difference`. It is a READ and persists nothing; the verb is POST because the list of selections, with their combinations and option values, does not fit in a query string — the same reason as `POST /v1/companies/{company}/price-lists/resolve`. Each selection carries exactly what the document line assembler will see, so the previewed amount is the one the line will freeze. A target that cannot be resolved is attributed to ITS index (`targets.<n>`) instead of failing the whole batch: with forty lines, knowing WHICH one is the whole point.
+     * Reprice a whole document in one request: resolve up to 100 catalog selections and compare each with the line's `current_unit_price`.
+     * - A read that persists nothing; POST only because the selections do not fit in a query string.
+     * - An unresolvable target is reported under its own index (`targets.<n>`) instead of failing the batch.
      *
      * @param  \Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequest  $body
      * @param  string  $company

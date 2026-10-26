@@ -49,7 +49,9 @@ class Agenda
     /**
      * List agenda items
      *
-     * Return a combined agenda between `from` and `to` (at most 93 days, both included): due tasks and, from other modules, invoice and purchase invoice due dates, quote and pro forma expiries, recurring invoice runs, tax deadlines, absences and holidays. `sources` chooses the layers. Every layer also needs the read scope of its own resource and its module (for example `invoices:read` for invoice due dates, `absences:read` for absences); layers the key cannot read are left out without an error, and `sources` in the response lists the layers actually served. `assignee_id` (`me` or a member id) filters the task layer. The whole window is returned in one page.
+     * Return a combined agenda between `from` and `to` (at most 93 days): due tasks plus due dates, expiries, tax deadlines, absences and holidays.
+     * - `sources` picks the layers; each needs its own read scope, and unreadable layers are left out without error.
+     * - The response `sources` lists the layers served; `assignee_id` filters tasks; one page.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AgendaListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AgendaListResponse

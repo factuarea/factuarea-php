@@ -9,9 +9,19 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** SendQuoteRequest - Email a quote. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters) and `body` (string). If the client has no email and `to` is absent, it returns 422 `missing_required_param`. */
+/** SendQuoteRequest - Email a quote. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters), `body` (string) and, when revisioned presentation is enabled, `presentation_precondition` and `expected_presentation_uuid`. If the client has no email and `to` is absent, it returns 422 `missing_required_param`. A draft quote is numbered (`draft` → `pending`) and then sent in one step: the reviewed `presentation_precondition` is checked by the numbering, which captures what was reviewed, and the email carries that capture. */
 class SendQuoteRequest
 {
+    /**
+     * Quote action precondition. All seven values travel together; this family accepts complete-purpose A4 output only.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\QuotePresentationPrecondition $presentationPrecondition
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_precondition')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\QuotePresentationPrecondition|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?QuotePresentationPrecondition $presentationPrecondition = null;
+
     /**
      *
      * @var ?string $to
@@ -57,19 +67,32 @@ class SendQuoteRequest
     public ?string $body = null;
 
     /**
+     * UUID of the presentation the caller reviewed. If it is no longer the current presentation of the document the request is rejected with 409 and nothing is changed. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. Only for re-sending a quote that already has a retained capture.
+     *
+     * @var ?string $expectedPresentationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationUuid = null;
+
+    /**
+     * @param  ?\Factuarea\Sdk\Models\Components\QuotePresentationPrecondition  $presentationPrecondition
      * @param  ?string  $to
      * @param  ?array<string>  $cc
      * @param  ?array<string>  $bcc
      * @param  ?string  $subject
      * @param  ?string  $body
+     * @param  ?string  $expectedPresentationUuid
      * @phpstan-pure
      */
-    public function __construct(?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null)
+    public function __construct(?QuotePresentationPrecondition $presentationPrecondition = null, ?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null, ?string $expectedPresentationUuid = null)
     {
+        $this->presentationPrecondition = $presentationPrecondition;
         $this->to = $to;
         $this->cc = $cc;
         $this->bcc = $bcc;
         $this->subject = $subject;
         $this->body = $body;
+        $this->expectedPresentationUuid = $expectedPresentationUuid;
     }
 }
