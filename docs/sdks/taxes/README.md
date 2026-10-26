@@ -62,42 +62,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTaxRequest(
-    base: 1715.56,
-    taxesId: 'e0683a9c-bad1-4692-bb01-105d103397cc',
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: 'c418b30a-6c09-430f-9c09-a6c14bc5c701',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="invalid_api_key" -->
@@ -170,42 +134,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTaxRequest(
-    base: 1715.56,
-    taxesId: 'e0683a9c-bad1-4692-bb01-105d103397cc',
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: '2e0683a9-cbad-4169-b2b0-1105d103397c',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="success" -->
@@ -233,42 +161,6 @@ $body = new Components\CalculateTaxRequest(
 
 $response = $sdk->taxes->publicApiV1TaxesCalculate(
     company: 'Kuvalis Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate" method="post" path="/companies/{company}/taxes/calculate" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTaxRequest(
-    base: 1715.56,
-    taxesId: 'e0683a9c-bad1-4692-bb01-105d103397cc',
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculate(
-    company: '16505e72-657a-4b9f-adf9-868d818bc200',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -329,41 +221,6 @@ $body = new Components\CalculateTotalsRequest(
 
 $response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
     company: '7e61754e-9217-4c2b-b3bb-d5e68133396f',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTotalsRequest(
-    lines: [],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: '6a5864c6-9654-4ab9-ae27-efd19ba45c11',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -443,41 +300,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTotalsRequest(
-    lines: [],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: '7e61754e-9217-4c2b-b3bb-d5e68133396f',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="success" -->
@@ -504,41 +326,6 @@ $body = new Components\CalculateTotalsRequest(
 
 $response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
     company: 'Konopelski - Hermann',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.calculate_totals" method="post" path="/companies/{company}/taxes/calculate-totals" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CalculateTotalsRequest(
-    lines: [],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCalculateTotals(
-    company: '297c9c78-d08c-4d09-95d3-70ed153a6e55',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -629,9 +416,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TaxesCreate
 
-Create a tax owned by your company with name, code, type (vat, retention, surcharge or other), rate, scope and the required ISO-2 country code.
-- The code must be unique among the global catalog and your own taxes (409 otherwise).
-- `default_for_documents` sets your defaults; an unsupported document type returns 422 `tax_not_defaultable_for_document`.
+Create a tax owned by your company, with name, code, type (vat, retention, surcharge or other), rate and scope (sale, purchase or both). The ISO-2 country code is required. The code must be unique among the global catalog and your own taxes (409 otherwise); other companies may reuse it. The tax is visible only to your company. `default_for_documents` sets your company's defaults; a document type the tax cannot be default for responds 422 `tax_not_defaultable_for_document`.
 
 ### Example Usage: api_key_revoked
 
@@ -668,51 +453,6 @@ $body = new Components\CreateTaxRequest(
 
 $response = $sdk->taxes->publicApiV1TaxesCreate(
     company: '3c412951-170c-453b-a805-a02d5946b212',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.create" method="post" path="/companies/{company}/taxes" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateTaxRequest(
-    name: '<value>',
-    code: '<value>',
-    type: Components\CreateTaxRequestType::Vat,
-    rate: 7660.11,
-    appliesTo: Components\CreateTaxRequestAppliesTo::Sale,
-    country: 'Belarus',
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCreate(
-    company: '705d7830-6bb5-41f9-9758-bfe86bc1a001',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -813,51 +553,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.create" method="post" path="/companies/{company}/taxes" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateTaxRequest(
-    name: '<value>',
-    code: '<value>',
-    type: Components\CreateTaxRequestType::Vat,
-    rate: 7660.11,
-    appliesTo: Components\CreateTaxRequestAppliesTo::Sale,
-    country: 'Belarus',
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCreate(
-    company: '3c412951-170c-453b-a805-a02d5946b212',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.taxes.create" method="post" path="/companies/{company}/taxes" example="success" -->
@@ -893,51 +588,6 @@ $body = new Components\CreateTaxRequest(
 
 $response = $sdk->taxes->publicApiV1TaxesCreate(
     company: '705d7830-6bb5-41f9-9758-bfe86bc1a001',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.create" method="post" path="/companies/{company}/taxes" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateTaxRequest(
-    name: '<value>',
-    code: '<value>',
-    type: Components\CreateTaxRequestType::Vat,
-    rate: 7660.11,
-    appliesTo: Components\CreateTaxRequestAppliesTo::Sale,
-    country: 'Belarus',
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->taxes->publicApiV1TaxesCreate(
-    company: '2f0464ec-040e-4aa5-927a-a10cfeb3c95d',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1191,48 +841,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.update" method="patch" path="/companies/{company}/taxes/{tax}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TaxesUpdateRequest(
-    company: 'b62a83a2-3878-4dbc-bfbb-f73f25d5d23d',
-    tax: '927ae939-e8f4-4b01-9084-2ffdde1ba4ed',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateTaxRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->taxes->publicApiV1TaxesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.taxes.update" method="patch" path="/companies/{company}/taxes/{tax}" example="invalid_api_key" -->
@@ -1317,48 +925,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.update" method="patch" path="/companies/{company}/taxes/{tax}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TaxesUpdateRequest(
-    company: 'e6d6e075-8c6f-40df-b917-58921507542c',
-    tax: '11810b38-b94d-431f-84b2-69d898324dfa',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateTaxRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->taxes->publicApiV1TaxesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.taxes.update" method="patch" path="/companies/{company}/taxes/{tax}" example="success" -->
@@ -1383,48 +949,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TaxesUpdateRequest(
     company: '11810b38-b94d-431f-84b2-69d898324dfa',
     tax: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateTaxRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->taxes->publicApiV1TaxesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.taxes.update" method="patch" path="/companies/{company}/taxes/{tax}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TaxesUpdateRequest(
-    company: 'cceb2ca1-bb63-4ef6-86cc-29621f68663a',
-    tax: 'b3ca60d1-9c0f-466a-9b34-961dfb43ca5c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateTaxRequest(
@@ -1804,9 +1328,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TaxesSetDefault
 
-Set a visible tax as your company's default for its category (vat, retention or surcharge) in every compatible document type; only your configuration changes.
-- Inactive taxes return 422 `tax_inactive_cannot_be_default`; non-defaultable ones 422 `tax_not_defaultable_for_document`.
-- If the category is off in all compatible types, 422 `tax_default_axis_disabled`.
+Set a visible tax (global or owned by your company) as your company's default for its category (vat, retention or surcharge) in every compatible document type. It only changes your company's configuration; the global catalog and other companies are not affected. Inactive taxes respond 422 `tax_inactive_cannot_be_default`, and a tax that cannot be default for a document type, 422 `tax_not_defaultable_for_document`. It is written only in the compatible document types where the category is switched on for your company; if it is switched off in all of them, 422 `tax_default_axis_disabled`.
 
 ### Example Usage
 
@@ -1866,9 +1388,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TaxesSetDefaultForDocument
 
-Set a visible tax as your company's default for one document type (invoice, quote, proforma, delivery_note, purchase_invoice); only your configuration changes.
-- `recurring_invoice`, type `other` and an incompatible `applies_to` return 422 `tax_not_defaultable_for_document`.
-- A category switched off for that document returns 422 `tax_default_axis_disabled`.
+Set a visible tax as your company's default for one document type (invoice, quote, proforma, delivery_note, purchase_invoice). `recurring_invoice` inherits from invoice and responds 422 `tax_not_defaultable_for_document`, as do type `other` and an incompatible `applies_to`. If the tax category is switched off for that document in your company, 422 `tax_default_axis_disabled`. It only changes your company's configuration.
 
 ### Example Usage
 

@@ -12,46 +12,6 @@
 
 Relate a task to another task of your company (`target_task_id`) with a `type`: `subtask`, `blocks` or `related`. A task cannot relate to itself (422 `task_self_relation`), a relation that would close a cycle is rejected (422 `task_relation_cycle`) and an existing one returns 409 `task_relation_exists`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.relations.create" method="post" path="/companies/{company}/tasks/{task}/relations" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksRelationsCreateRequest(
-    company: '6bc538aa-5ac0-4aa1-8f2f-135e801bd4f4',
-    task: '8728d5b0-eea1-461b-9161-8ec0ade90a4e',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateTaskRelationV1Request(
-        targetTaskId: '42457ca5-81c0-47c7-b71b-0a12f37c7168',
-        type: Components\CreateTaskRelationV1RequestType::Blocks,
-    ),
-);
-
-$response = $sdk->tasks->relations->publicApiV1TasksRelationsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.relations.create" method="post" path="/companies/{company}/tasks/{task}/relations" example="missing_api_key" -->
@@ -92,46 +52,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.relations.create" method="post" path="/companies/{company}/tasks/{task}/relations" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksRelationsCreateRequest(
-    company: '42457ca5-81c0-47c7-b71b-0a12f37c7168',
-    task: '58fb3764-df1f-4d54-a6f6-46c32a6c3fbc',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateTaskRelationV1Request(
-        targetTaskId: '42457ca5-81c0-47c7-b71b-0a12f37c7168',
-        type: Components\CreateTaskRelationV1RequestType::Blocks,
-    ),
-);
-
-$response = $sdk->tasks->relations->publicApiV1TasksRelationsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.relations.create" method="post" path="/companies/{company}/tasks/{task}/relations" example="success" -->
@@ -156,46 +76,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksRelationsCreateRequest(
     company: 'Collins - Gulgowski',
     task: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateTaskRelationV1Request(
-        targetTaskId: '42457ca5-81c0-47c7-b71b-0a12f37c7168',
-        type: Components\CreateTaskRelationV1RequestType::Blocks,
-    ),
-);
-
-$response = $sdk->tasks->relations->publicApiV1TasksRelationsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.relations.create" method="post" path="/companies/{company}/tasks/{task}/relations" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksRelationsCreateRequest(
-    company: '3c32a303-9923-4f91-850a-c0692249c53a',
-    task: 'd0c6d5a4-3018-4a4c-bdec-77447478d5dd',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateTaskRelationV1Request(

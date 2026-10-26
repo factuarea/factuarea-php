@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateSeriesRequest - Create a fiscal numbering series using code and document_type, with the existing name, initial_number, invoice_kind, counter_reset, year_reset and number_format options. Optional pdf_template_id is a tenant-template UUID or null; omitted or null creates an inherited preference at version 1, a compatible assignment at version 2. No visual precondition is needed on creation. Invoice purpose and supported paper formats must match; ticket-only invoice templates are valid. The visual preference does not change numbering, fiscal evidence or captured document presentations. */
 class CreateSeriesRequest
 {
     /**
@@ -26,15 +25,6 @@ class CreateSeriesRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('document_type')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateSeriesRequestDocumentType')]
     public CreateSeriesRequestDocumentType $documentType;
-
-    /**
-     * Optional tenant-template UUID. Omitted preserves (inherits on creation), null clears, empty or two selectors return 422.
-     *
-     * @var ?string $pdfTemplateId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $pdfTemplateId = null;
 
     /**
      *
@@ -97,7 +87,6 @@ class CreateSeriesRequest
     /**
      * @param  string  $code
      * @param  \Factuarea\Sdk\Models\Components\CreateSeriesRequestDocumentType  $documentType
-     * @param  ?string  $pdfTemplateId
      * @param  ?string  $name
      * @param  ?string  $prefix
      * @param  ?\Factuarea\Sdk\Models\Components\CreateSeriesRequestCounterReset  $counterReset
@@ -107,11 +96,10 @@ class CreateSeriesRequest
      * @param  ?\Factuarea\Sdk\Models\Components\CreateSeriesRequestInvoiceKind  $invoiceKind
      * @phpstan-pure
      */
-    public function __construct(string $code, CreateSeriesRequestDocumentType $documentType, ?string $pdfTemplateId = null, ?string $name = null, ?string $prefix = null, ?CreateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null, ?CreateSeriesRequestInvoiceKind $invoiceKind = null)
+    public function __construct(string $code, CreateSeriesRequestDocumentType $documentType, ?string $name = null, ?string $prefix = null, ?CreateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null, ?CreateSeriesRequestInvoiceKind $invoiceKind = null)
     {
         $this->code = $code;
         $this->documentType = $documentType;
-        $this->pdfTemplateId = $pdfTemplateId;
         $this->name = $name;
         $this->prefix = $prefix;
         $this->counterReset = $counterReset;

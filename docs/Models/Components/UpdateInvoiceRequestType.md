@@ -1,0 +1,9 @@
+# UpdateInvoiceRequestType
+
+
+## Values
+
+| Name  | Value |
+| ----- | ----- |
+| `F1`  | F1    |
+| `F2`  | F2    |

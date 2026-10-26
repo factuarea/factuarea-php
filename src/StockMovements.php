@@ -49,9 +49,7 @@ class StockMovements
     /**
      * List stock movements of a product
      *
-     * Read the append-only stock ledger of a product, newest movement first.
-     * - Rows carry signed `delta` and `stock_after` (base units); `stock_after` ignores `direction`.
-     * - Cursor-paginated (`limit` + `starting_after`); `direction=in|out` narrows the rows.
+     * Read the append-only stock ledger of a product, from the most recently applied movement to the oldest, so an integration can audit where a balance came from and reconcile inventory against its own system. Each row carries the signed `delta` and the `stock_after` balance in BASE units as decimal strings, the reason, the source document, the acting user and the managing variant. `stock_after` is the balance at the instant the movement was applied and is derived from the COMPLETE ledger, so it does not change when `direction` hides the interleaved rows. Paginated by cursor (`limit` + `starting_after`); optional `direction=in|out` narrows it to stock in or stock out.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsStockMovementsListResponse

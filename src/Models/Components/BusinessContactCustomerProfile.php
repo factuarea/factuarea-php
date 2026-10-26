@@ -89,14 +89,6 @@ class BusinessContactCustomerProfile
     public ?string $dir3ProcessingUnit;
 
     /**
-     * Canonical DIR3 code of the proposing body (role 04): 9-10 uppercase alphanumeric characters starting with a letter. Not a foreign key. Always present for a customer profile; null when no proponent is recorded, including historical contacts.
-     *
-     * @var ?string $dir3Proponent
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_proponent')]
-    public ?string $dir3Proponent;
-
-    /**
      * @param  bool  $isSurchargeSubject
      * @param  ?string  $defaultPriceListUuid
      * @param  ?float  $defaultDiscount
@@ -108,10 +100,9 @@ class BusinessContactCustomerProfile
      * @param  ?string  $dir3AccountingOffice
      * @param  ?string  $dir3ManagingBody
      * @param  ?string  $dir3ProcessingUnit
-     * @param  ?string  $dir3Proponent
      * @phpstan-pure
      */
-    public function __construct(bool $isSurchargeSubject, ?string $defaultPriceListUuid = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?string $preferredOperationRegime = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null, ?string $dir3Proponent = null)
+    public function __construct(bool $isSurchargeSubject, ?string $defaultPriceListUuid = null, ?float $defaultDiscount = null, ?float $defaultVatRate = null, ?float $defaultRetentionRate = null, ?string $preferredOperationRegime = null, ?string $paymentMethod = null, ?int $paymentTermsDays = null, ?string $dir3AccountingOffice = null, ?string $dir3ManagingBody = null, ?string $dir3ProcessingUnit = null)
     {
         $this->isSurchargeSubject = $isSurchargeSubject;
         $this->defaultPriceListUuid = $defaultPriceListUuid;
@@ -124,6 +115,5 @@ class BusinessContactCustomerProfile
         $this->dir3AccountingOffice = $dir3AccountingOffice;
         $this->dir3ManagingBody = $dir3ManagingBody;
         $this->dir3ProcessingUnit = $dir3ProcessingUnit;
-        $this->dir3Proponent = $dir3Proponent;
     }
 }

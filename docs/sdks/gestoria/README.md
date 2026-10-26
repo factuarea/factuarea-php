@@ -8,9 +8,7 @@
 
 ## publicApiV1GestoriaWorkforceSummary
 
-Return the consolidated time-tracking compliance panel: one row per `active` company in your credential scope (the owner company excluded).
-- Each row projects the latest monthly close: closed status, last closed period, balance, overtime and `employee_count`.
-- Scope-bound: rows come from the tax IDs your credential reaches, never from the payload.
+Return the consolidated time-tracking compliance panel for your portfolio: one row per `active` company within your credential scope (the owner company of the account excluded), each projected from that company's latest monthly close without recomputation — whether the current (last closable) period is closed, its status (`closed`/`reopened`), the last closed period (`last_closed_year`/`last_closed_month`), and the aggregated `total_balance_minutes`, `total_overtime_minutes` and `employee_count`. Scope-bound: the rows are resolved from the tax IDs your credential reaches, never from the payload, so a credential scoped to one tax ID sees that tax ID and no other company. Unlike the per-company endpoints, which name a single company in the `{company}` path segment, this aggregates across the scope in one call. Returned as `{ "data": [ConsolidatedWorkforce, ...] }`.
 
 ### Example Usage
 

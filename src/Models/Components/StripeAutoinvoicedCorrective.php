@@ -64,11 +64,11 @@ class StripeAutoinvoicedCorrective
     /**
      * Scope of the correction: `total` (full annulment) or `partial` (a single negative line for the refunded amount).
      *
-     * @var \Factuarea\Sdk\Models\Components\CorrectionType $correctionType
+     * @var \Factuarea\Sdk\Models\Components\StripeAutoinvoicedCorrectiveCorrectionType $correctionType
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('correction_type')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CorrectionType')]
-    public CorrectionType $correctionType;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\StripeAutoinvoicedCorrectiveCorrectionType')]
+    public StripeAutoinvoicedCorrectiveCorrectionType $correctionType;
 
     /**
      * When the corrective mapping was recorded (ISO 8601).
@@ -85,11 +85,11 @@ class StripeAutoinvoicedCorrective
      * @param  string  $refundId
      * @param  string  $provider
      * @param  string  $amount
-     * @param  \Factuarea\Sdk\Models\Components\CorrectionType  $correctionType
+     * @param  \Factuarea\Sdk\Models\Components\StripeAutoinvoicedCorrectiveCorrectionType  $correctionType
      * @param  \DateTime  $createdAt
      * @phpstan-pure
      */
-    public function __construct(string $id, StripeAutoinvoicedCorrectiveObject $object, string $originalInvoiceId, string $refundId, string $provider, string $amount, CorrectionType $correctionType, \DateTime $createdAt)
+    public function __construct(string $id, StripeAutoinvoicedCorrectiveObject $object, string $originalInvoiceId, string $refundId, string $provider, string $amount, StripeAutoinvoicedCorrectiveCorrectionType $correctionType, \DateTime $createdAt)
     {
         $this->id = $id;
         $this->object = $object;

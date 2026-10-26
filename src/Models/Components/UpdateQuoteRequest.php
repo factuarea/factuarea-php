@@ -30,15 +30,6 @@ class UpdateQuoteRequest
     public ?UpdateQuoteRequestRepriceStrategy $repriceStrategy = null;
 
     /**
-     * Positive current selection version used as the body CAS. It is required exactly when pdf_template_id is present; omit both fields to leave the current presentation intent unchanged. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
-     *
-     * @var ?int $expectedSelectionVersion
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $expectedSelectionVersion = null;
-
-    /**
      *
      * @var ?LocalDate $issuedOn
      */
@@ -79,15 +70,6 @@ class UpdateQuoteRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $priceListId = null;
-
-    /**
-     * Optional nullable tenant-template UUID. Omission preserves current intent; null clears manual intent and inherits; a UUID selects a compatible manual template. Send expected_selection_version whenever this field is present. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
-     *
-     * @var ?string $pdfTemplateId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $pdfTemplateId = null;
 
     /**
      *
@@ -149,13 +131,11 @@ class UpdateQuoteRequest
     /**
      * @param  ?string  $clientId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuoteRequestRepriceStrategy  $repriceStrategy
-     * @param  ?int  $expectedSelectionVersion
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $validUntil
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestLine>  $lines
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
-     * @param  ?string  $pdfTemplateId
      * @param  ?string  $notes
      * @param  ?string  $terms
      * @param  ?string  $externalId
@@ -164,17 +144,15 @@ class UpdateQuoteRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateQuoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateQuoteRequestRepriceStrategy $repriceStrategy = null, ?int $expectedSelectionVersion = null, ?LocalDate $issuedOn = null, ?LocalDate $validUntil = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateQuoteRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?LocalDate $validUntil = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->repriceStrategy = $repriceStrategy;
-        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->issuedOn = $issuedOn;
         $this->validUntil = $validUntil;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
-        $this->pdfTemplateId = $pdfTemplateId;
         $this->notes = $notes;
         $this->terms = $terms;
         $this->externalId = $externalId;

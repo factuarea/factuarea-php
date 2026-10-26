@@ -30,7 +30,6 @@ class PublicApiV1QuotesBulkStatusRequest
     public string $idempotencyKey;
 
     /**
-     * Bulk quote status changes accept an optional UUID-keyed map of complete seven-field presentation preconditions. The presentation precondition fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
      *
      * @var \Factuarea\Sdk\Models\Components\BulkStatusQuotesV1Request $body
      */

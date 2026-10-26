@@ -23,7 +23,7 @@ class Composition
     public ?array $components = null;
 
     /**
-     * Sum of the component fees, plus the standalone fees and the fees of the refunds, as a 2-decimal string in the payout currency.
+     * Sum of the component fees, as a 2-decimal string in the payout currency.
      *
      * @var ?string $feeTotal
      */
@@ -41,48 +41,15 @@ class Composition
     public ?string $grossTotal = null;
 
     /**
-     * Sum of the refunds settled in the payout (negative), as a 2-decimal string in the payout currency. `"0.00"` when there are none.
-     *
-     * @var ?string $refundsTotal
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('refunds_total')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $refundsTotal = null;
-
-    /**
-     * Sum of the Stripe fees charged on their own, not attached to a charge (such as monthly or currency conversion fees), as a 2-decimal string in the payout currency. Already included in `fee_total`. `"0.00"` when there are none.
-     *
-     * @var ?string $standaloneFeeTotal
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('standalone_fee_total')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $standaloneFeeTotal = null;
-
-    /**
-     * Sum of the remaining movements settled in the payout (adjustments, disputes and similar; signed), as a 2-decimal string in the payout currency. `"0.00"` when there are none.
-     *
-     * @var ?string $otherTotal
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('other_total')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $otherTotal = null;
-
-    /**
      * @param  ?array<\Factuarea\Sdk\Models\Components\Component>  $components
      * @param  ?string  $feeTotal
      * @param  ?string  $grossTotal
-     * @param  ?string  $refundsTotal
-     * @param  ?string  $standaloneFeeTotal
-     * @param  ?string  $otherTotal
      * @phpstan-pure
      */
-    public function __construct(?array $components = null, ?string $feeTotal = null, ?string $grossTotal = null, ?string $refundsTotal = null, ?string $standaloneFeeTotal = null, ?string $otherTotal = null)
+    public function __construct(?array $components = null, ?string $feeTotal = null, ?string $grossTotal = null)
     {
         $this->components = $components;
         $this->feeTotal = $feeTotal;
         $this->grossTotal = $grossTotal;
-        $this->refundsTotal = $refundsTotal;
-        $this->standaloneFeeTotal = $standaloneFeeTotal;
-        $this->otherTotal = $otherTotal;
     }
 }

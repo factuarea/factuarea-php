@@ -12,9 +12,7 @@
 
 ## publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate
 
-Creates a charge treatment rule at the end of the account's list; responds 201.
-- A rule matches by `condition` and either invoices the charge or excludes it with `non_invoice_reason`.
-- Fails with `charge_rule_invalid` or `charge_rule_limit_reached`.
+Create a charge treatment rule at the end of the account's list. A rule matches a charge by `condition` and either invoices it (optionally with a `concept` and a `vat_rate`) or excludes it from invoicing with a `non_invoice_reason` (`indemnity_not_subject`, `multipurpose_voucher` or `invoiced_elsewhere`). Responds 201 with the rule. Fails with `charge_rule_invalid` when a field breaks the contract and with `charge_rule_limit_reached` when the account already has the maximum number of rules.
 
 ### Example Usage: api_key_expired
 
@@ -83,49 +81,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateRequest(
     company: 'fe05fcfb-afc3-442d-9488-95d6667f15ae',
     account: '8d211275-3a8b-4fe8-9fd6-890b9a48c24b',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChargeRuleRequest(
-        condition: new Components\ChargeRuleRequestCondition(
-            type: Components\ChargeRuleRequestType::PaymentLink,
-            value: '<value>',
-        ),
-        outcome: Components\ChargeRuleRequestOutcome::Invoice,
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.create" method="post" path="/companies/{company}/connected-accounts/{account}/charge-rules" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateRequest(
-    company: 'dbdb9e49-4d2e-4219-9a6a-32fae2f0f9c3',
-    account: 'f789f586-fff3-4b6c-a33c-1cd40878910f',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ChargeRuleRequest(
@@ -274,49 +229,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.create" method="post" path="/companies/{company}/connected-accounts/{account}/charge-rules" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateRequest(
-    company: 'a39c1f0b-5e15-4fa9-9025-a1c890badf46',
-    account: '00a2c889-3a65-46de-ba25-22bc41b4db4e',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChargeRuleRequest(
-        condition: new Components\ChargeRuleRequestCondition(
-            type: Components\ChargeRuleRequestType::PaymentLink,
-            value: '<value>',
-        ),
-        outcome: Components\ChargeRuleRequestOutcome::Invoice,
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.create" method="post" path="/companies/{company}/connected-accounts/{account}/charge-rules" example="success" -->
@@ -360,49 +272,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.create" method="post" path="/companies/{company}/connected-accounts/{account}/charge-rules" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateRequest(
-    company: 'a3d75df2-6568-487b-88ac-37b29c102761',
-    account: '42777f00-dda9-46b7-bcdc-4e5f8188a714',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChargeRuleRequest(
-        condition: new Components\ChargeRuleRequestCondition(
-            type: Components\ChargeRuleRequestType::PaymentLink,
-            value: '<value>',
-        ),
-        outcome: Components\ChargeRuleRequestOutcome::Invoice,
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -424,9 +293,7 @@ if ($response->object !== null) {
 
 ## publicApiV1StripeAutoinvoicingAccountsChargeRulesList
 
-Lists the charge treatment rules of a connected Stripe account ordered by `position`; the first match decides.
-- Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`.
-- Returns 404 if the account is not in your company.
+List the charge treatment rules of a connected Stripe account, ordered by `position` (the first matching rule decides how a charge is treated). Each rule exposes its `id` (UUID v7), `condition` (`type`: `metadata_equals`, `description_contains` or `payment_link`, with `key` and `value`), `outcome` (`invoice` or `do_not_invoice`), `concept`, `vat_rate` and `non_invoice_reason`. Returns 404 if the account does not exist or belongs to another company.
 
 ### Example Usage
 
@@ -634,50 +501,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.update" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/{rule}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdateRequest(
-    company: '158480e0-ddc1-416b-b609-210690508214',
-    account: '1957fc84-ea6d-445b-93e8-ea9a124b6950',
-    rule: 'e83c1e9d-4201-485e-acaf-f0bef2d06f14',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChargeRuleRequest(
-        condition: new Components\ChargeRuleRequestCondition(
-            type: Components\ChargeRuleRequestType::MetadataEquals,
-            value: '<value>',
-        ),
-        outcome: Components\ChargeRuleRequestOutcome::Invoice,
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.update" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/{rule}" example="invalid_api_key" -->
@@ -810,50 +633,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.update" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/{rule}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdateRequest(
-    company: '4027517b-7ce4-4326-b427-88238c097d32',
-    account: 'c2d85005-1ab5-4ba4-a451-87e91518aa76',
-    rule: 'dc6048be-e457-4bb9-9ee7-637eeabb47d5',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChargeRuleRequest(
-        condition: new Components\ChargeRuleRequestCondition(
-            type: Components\ChargeRuleRequestType::MetadataEquals,
-            value: '<value>',
-        ),
-        outcome: Components\ChargeRuleRequestOutcome::Invoice,
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.update" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/{rule}" example="success" -->
@@ -879,50 +658,6 @@ $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdat
     company: '27517b7c-e432-4642-8788-238c097d32fc',
     account: 'd850051a-b5ba-4445-b187-e91518aa76ad',
     rule: '6048bee4-57bb-49ee-9763-7eeabb47d561',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ChargeRuleRequest(
-        condition: new Components\ChargeRuleRequestCondition(
-            type: Components\ChargeRuleRequestType::MetadataEquals,
-            value: '<value>',
-        ),
-        outcome: Components\ChargeRuleRequestOutcome::Invoice,
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.update" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/{rule}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdateRequest(
-    company: 'c3ce7abe-8303-4e42-8108-f7aa33969931',
-    account: 'df11a7a3-49c8-407b-8618-cb3ee6a1e337',
-    rule: '849da975-3918-4d79-997d-38e440dc986b',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ChargeRuleRequest(
@@ -1030,47 +765,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesReorderRequest(
     company: '40fe1c84-9fea-49f3-ba27-20e914335ffb',
     account: 'dcebc0ac-5f57-4022-b2c7-1d5a4b0b01dc',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReorderChargeRulesRequest(
-        ruleIds: [
-            '0a3f6d58-1c3c-4a20-b328-7ac1ed3106de',
-        ],
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.reorder" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/order" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesReorderRequest(
-    company: 'f7ab1dc2-bff3-48b9-b42a-fbe2f4206e5c',
-    account: '17aa501d-3852-4b67-adfb-f5b9bddaff97',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ReorderChargeRulesRequest(
@@ -1211,47 +905,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.reorder" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/order" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesReorderRequest(
-    company: '70a3f6d5-81c3-4ca2-b032-87ac1ed3106d',
-    account: 'df4a2f88-f705-4585-bdae-bf367a943ae3',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReorderChargeRulesRequest(
-        ruleIds: [
-            '0a3f6d58-1c3c-4a20-b328-7ac1ed3106de',
-        ],
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.reorder" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/order" example="success" -->
@@ -1276,47 +929,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesReorderRequest(
     company: 'f4a2f88f-7055-485d-baeb-f367a943ae3d',
     account: '7ab1dc2b-ff38-4b94-82af-be2f4206e5cc',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReorderChargeRulesRequest(
-        ruleIds: [
-            '0a3f6d58-1c3c-4a20-b328-7ac1ed3106de',
-        ],
-    ),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesReorder(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.charge_rules.reorder" method="put" path="/companies/{company}/connected-accounts/{account}/charge-rules/order" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesReorderRequest(
-    company: 'bd736aec-e921-467b-86c3-35ac99366ddd',
-    account: 'dfd0377d-3092-47b9-a2c4-66b9cca8fafa',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ReorderChargeRulesRequest(

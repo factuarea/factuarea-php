@@ -4,43 +4,74 @@
 
 ### Available Operations
 
-* [publicApiV1InvoicesAssignPresentation](#publicapiv1invoicesassignpresentation) - Assign the invoice visual template
-* [publicApiV1InvoicesGetPresentation](#publicapiv1invoicesgetpresentation) - Get the invoice presentation
+* [publicApiV1InvoicesAnnul](#publicapiv1invoicesannul) - Annul an invoice
+* [publicApiV1InvoicesAssignRealNumber](#publicapiv1invoicesassignrealnumber) - Assign a real invoice number
+* [publicApiV1InvoicesBulkCreate](#publicapiv1invoicesbulkcreate) - Bulk create invoices
 * [publicApiV1InvoicesBulkDelete](#publicapiv1invoicesbulkdelete) - Bulk delete invoices
 * [publicApiV1InvoicesBulkPdf](#publicapiv1invoicesbulkpdf) - Bulk download invoice PDFs
 * [publicApiV1InvoicesBulkSend](#publicapiv1invoicesbulksend) - Bulk send invoices
 * [publicApiV1InvoicesBulkStatus](#publicapiv1invoicesbulkstatus) - Bulk change invoice status
 * [publicApiV1InvoicesCanAnnul](#publicapiv1invoicescanannul) - Check annulment eligibility
 * [publicApiV1InvoicesSimplifiedEligibility](#publicapiv1invoicessimplifiedeligibility) - Check simplified invoice eligibility
+* [publicApiV1InvoicesCorrective](#publicapiv1invoicescorrective) - Generate corrective invoice
+* [publicApiV1InvoicesCreate](#publicapiv1invoicescreate) - Create an invoice
+* [publicApiV1InvoicesList](#publicapiv1invoiceslist) - List all invoices
 * [publicApiV1InvoicesVerifactuCreate](#publicapiv1invoicesverifactucreate) - Force-create VeriFactu record for invoice
 * [publicApiV1InvoicesVerifactuGet](#publicapiv1invoicesverifactuget) - Retrieve invoice VeriFactu record
+* [publicApiV1InvoicesCreateRecurring](#publicapiv1invoicescreaterecurring) - Create a recurring invoice from an invoice
 * [publicApiV1InvoicesDelete](#publicapiv1invoicesdelete) - Delete an invoice
-* [publicApiV1InvoicesFacturae](#publicapiv1invoicesfacturae) - Download current or retained Facturae XML
+* [publicApiV1InvoicesShow](#publicapiv1invoicesshow) - Retrieve an invoice
+* [publicApiV1InvoicesUpdate](#publicapiv1invoicesupdate) - Update an invoice
+* [publicApiV1InvoicesFacturae](#publicapiv1invoicesfacturae) - Download FacturaE XML
 * [publicApiV1InvoicesPdf](#publicapiv1invoicespdf) - Download invoice PDF
+* [publicApiV1InvoicesDuplicate](#publicapiv1invoicesduplicate) - Duplicate an invoice
 * [publicApiV1InvoicesExportExcel](#publicapiv1invoicesexportexcel) - Export invoices to a spreadsheet
+* [publicApiV1InvoicesFindByExternalId](#publicapiv1invoicesfindbyexternalid) - Find an invoice by external ID
+* [publicApiV1InvoicesFindByNumber](#publicapiv1invoicesfindbynumber) - Find an invoice by number
 * [publicApiV1InvoicesPdfLink](#publicapiv1invoicespdflink) - Generate temporary PDF link
 * [publicApiV1InvoicesPublicLinkGet](#publicapiv1invoicespubliclinkget) - Retrieve invoice public link
 * [publicApiV1InvoicesPublicLinkUpdate](#publicapiv1invoicespubliclinkupdate) - Update invoice public link
 * [publicApiV1InvoicesStats](#publicapiv1invoicesstats) - Get invoice statistics
-* [publicApiV1InvoicesListPresentations](#publicapiv1invoiceslistpresentations) - List retained invoice presentations
+* [publicApiV1InvoicesIssue](#publicapiv1invoicesissue) - Issue an invoice
 * [publicApiV1InvoicesActivities](#publicapiv1invoicesactivities) - List invoice activity
+* [publicApiV1InvoicesCorrectives](#publicapiv1invoicescorrectives) - List corrective invoices
 * [publicApiV1InvoicesPaymentsList](#publicapiv1invoicespaymentslist) - List invoice payments
 * [publicApiV1InvoicesPaymentsCreate](#publicapiv1invoicespaymentscreate) - Register a payment
 * [publicApiV1InvoicesStatuses](#publicapiv1invoicesstatuses) - List invoice statuses
+* [publicApiV1InvoicesMarkPaid](#publicapiv1invoicesmarkpaid) - Mark invoice as paid
+* [publicApiV1InvoicesMarkSent](#publicapiv1invoicesmarksent) - Mark an invoice as sent
 * [publicApiV1InvoicesPdfPreview](#publicapiv1invoicespdfpreview) - Preview an invoice draft PDF
 * [publicApiV1InvoicesReminderPreview](#publicapiv1invoicesreminderpreview) - Preview a payment reminder email
 * [publicApiV1InvoicesPaymentReceipt](#publicapiv1invoicespaymentreceipt) - Download the receipt PDF of a payment
+* [publicApiV1InvoicesReschedule](#publicapiv1invoicesreschedule) - Reschedule an invoice
 * [publicApiV1InvoicesPaymentsRevert](#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
-* [publicApiV1InvoicesRevisePresentation](#publicapiv1invoicesrevisepresentation) - Create an invoice presentation revision
+* [publicApiV1InvoicesSchedule](#publicapiv1invoicesschedule) - Schedule an invoice
+* [publicApiV1InvoicesSend](#publicapiv1invoicessend) - Send invoice by email
 * [publicApiV1InvoicesSendReminder](#publicapiv1invoicessendreminder) - Send a payment reminder
+* [publicApiV1InvoicesSubstituteSimplified](#publicapiv1invoicessubstitutesimplified) - Substitute simplified invoices with full invoice
+* [publicApiV1InvoicesUnschedule](#publicapiv1invoicesunschedule) - Unschedule an invoice
+* [publicApiV1InvoicesUnsend](#publicapiv1invoicesunsend) - Unsend an invoice
+* [publicApiV1InvoicesVoid](#publicapiv1invoicesvoid) - Void an invoice
 
-## publicApiV1InvoicesAssignPresentation
+## publicApiV1InvoicesAnnul
 
-Set an explicit tenant template or null inheritance without changing numbering, totals, references, payment terms or the existing capture. Supply the visual selection version and/or the strong validator from this exact presentation URI. A successful replay preserves the original result; current actor authority is still required.
+Withdraw an issued invoice **with a documented reason**. `reason` is required here (3–500 characters); that is the only difference from `POST /v1/companies/{company}/invoices/{invoice}/void`, which performs exactly the same operation and persists a placeholder when you omit it. Prefer this endpoint whenever the reason has to be traceable — the text you send is kept in the invoice audit trail and, when the company is enrolled in VeriFactu, becomes the `motivo` of the AEAT cancellation record.
 
-### Example Usage: factuarea_version_invalid_format
+The invoice moves to `annulled` and `voided_at` starts reporting when that happened. The status is terminal and the operation is **irreversible**: there is no transition back to `sent` or `draft`, and the correlative number of the series is neither released nor reused.
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.assign_presentation" method="patch" path="/companies/{company}/invoices/{invoice}/presentation" example="factuarea_version_invalid_format" -->
+**Effect on AEAT.** With VeriFactu enabled, annulling queues an *anulación* record to AEAT **asynchronously**: a `200` means the invoice is annulled in Factuarea, not that AEAT has already processed it — poll the invoice for its VeriFactu status. The original *alta* record is not deleted or rewritten; AEAT keeps both entries, the issuance and its cancellation. With VeriFactu inactive the annulment is purely internal and nothing is transmitted.
+
+**Annul or correct?** Annulment withdraws the whole document; it produces no amending document, so it never restates an amount. A corrective (`POST /v1/companies/{company}/invoices/{invoice}/corrective`) creates a **new** invoice that amends the original and is the path when the operation was real and only part of it was wrong, or when the money has to be returned.
+
+**Annulling an operation that was already paid.** By default an invoice with live payments is rejected with 422 `invoice_has_active_collections`. When the invoice was issued by mistake — a duplicated charge at a kiosk, a sale the terminal did not complete — send `revert_collections: true` (default `false`): in ONE atomic operation every live payment is reverted with the reserved reason `issued_in_error` and the invoice is annulled. If any step fails, no payment stays reverted and the invoice is not annulled. The option does not relax anything else: a corrective invoice, an invoice already fully corrected or a status that cannot be annulled are still rejected, and the payments are reverted with the same trail (instant, author and the annulment reason as the note) as any other reversal. It is an annulment, not a refund: if the customer has to get the money back, issue a corrective instead. `POST /v1/companies/{company}/invoices/{invoice}/void` has no such option.
+
+Limits: only `issued`, `sent` or `overdue` can be annulled. A `draft` is not annulled but deleted; `cancelled` and `annulled` return 422. An invoice that **is** a corrective can never be annulled — issue a new corrective of the original instead. Use `GET /v1/companies/{company}/invoices/{invoice}/can-annul` to check eligibility, whether the live payments are the only obstacle (`requires_collection_reversal`) and whether a VeriFactu cancellation record will be created, before posting here.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the annulment billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is annulled: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (issued and not annulled) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.annul" method="post" path="/companies/{company}/invoices/{invoice}/annul" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -59,28 +90,27 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesAssignPresentationRequest(
-    company: '55ab1950-94d5-47cb-80dc-405c4be01d6c',
-    invoice: 'f28f1c5b-3ecb-44f8-9460-4d9d8649861f',
+$request = new Operations\PublicApiV1InvoicesAnnulRequest(
+    company: 'b7293eda-1bef-43e4-acd4-d9da19a51d1a',
+    invoice: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
+    body: new Components\AnnulInvoiceV1Request(
+        reason: '<value>',
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesAssignPresentation(
+$response = $sdk->invoices->publicApiV1InvoicesAnnul(
     request: $request
 );
 
-if ($response->documentPresentationStateEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: inherit
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.assign_presentation" method="patch" path="/companies/{company}/invoices/{invoice}/presentation" example="inherit" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.annul" method="post" path="/companies/{company}/invoices/{invoice}/annul" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -99,28 +129,27 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesAssignPresentationRequest(
-    company: '37647b72-70b6-40c6-93b5-57fc3e4337bb',
-    invoice: 'f6ad863b-793c-4487-8989-55506e108c7a',
+$request = new Operations\PublicApiV1InvoicesAnnulRequest(
+    company: 'dae8895a-643c-4c90-9fbd-976930390137',
+    invoice: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
+    body: new Components\AnnulInvoiceV1Request(
+        reason: '<value>',
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesAssignPresentation(
+$response = $sdk->invoices->publicApiV1InvoicesAnnul(
     request: $request
 );
 
-if ($response->documentPresentationStateEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.assign_presentation" method="patch" path="/companies/{company}/invoices/{invoice}/presentation" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.annul" method="post" path="/companies/{company}/invoices/{invoice}/annul" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -139,28 +168,27 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesAssignPresentationRequest(
-    company: 'f116aac9-929e-4f44-bb68-aedd620da264',
-    invoice: '0ae4437f-8d97-43c5-a61c-be44d4b77433',
+$request = new Operations\PublicApiV1InvoicesAnnulRequest(
+    company: 'Blanda LLC',
+    invoice: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
+    body: new Components\AnnulInvoiceV1Request(
+        reason: '<value>',
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesAssignPresentation(
+$response = $sdk->invoices->publicApiV1InvoicesAnnul(
     request: $request
 );
 
-if ($response->documentPresentationStateEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
+### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.assign_presentation" method="patch" path="/companies/{company}/invoices/{invoice}/presentation" example="unsupported_api_version" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.annul" method="post" path="/companies/{company}/invoices/{invoice}/annul" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -179,51 +207,50 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesAssignPresentationRequest(
-    company: '9cb6eaff-79b9-4e06-99dc-5af720cea3ec',
-    invoice: '0c412546-5517-4233-b8a2-370e8488d6f9',
+$request = new Operations\PublicApiV1InvoicesAnnulRequest(
+    company: 'Upton - Steuber',
+    invoice: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
+    body: new Components\AnnulInvoiceV1Request(
+        reason: '<value>',
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesAssignPresentation(
+$response = $sdk->invoices->publicApiV1InvoicesAnnul(
     request: $request
 );
 
-if ($response->documentPresentationStateEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
 
 ### Parameters
 
-| Parameter                                                                                                                          | Type                                                                                                                               | Required                                                                                                                           | Description                                                                                                                        |
-| ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `$request`                                                                                                                         | [Operations\PublicApiV1InvoicesAssignPresentationRequest](../../Models/Operations/PublicApiV1InvoicesAssignPresentationRequest.md) | :heavy_check_mark:                                                                                                                 | The request object to use for the request.                                                                                         |
+| Parameter                                                                                                | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                               | [Operations\PublicApiV1InvoicesAnnulRequest](../../Models/Operations/PublicApiV1InvoicesAnnulRequest.md) | :heavy_check_mark:                                                                                       | The request object to use for the request.                                                               |
 
 ### Response
 
-**[?Operations\PublicApiV1InvoicesAssignPresentationResponse](../../Models/Operations/PublicApiV1InvoicesAssignPresentationResponse.md)**
+**[?Operations\PublicApiV1InvoicesAnnulResponse](../../Models/Operations/PublicApiV1InvoicesAnnulResponse.md)**
 
 ### Errors
 
-| Error Type                                  | Status Code                                 | Content Type                                |
-| ------------------------------------------- | ------------------------------------------- | ------------------------------------------- |
-| Errors\Error                                | 400, 401, 403, 404, 409, 412, 422, 428, 429 | application/json                            |
-| Errors\Error                                | 500                                         | application/json                            |
-| Errors\APIException                         | 4XX, 5XX                                    | \*/\*                                       |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
-## publicApiV1InvoicesGetPresentation
+## publicApiV1InvoicesAssignRealNumber
 
-Inspect the current visual selection and retained capture independently. Returns a virtual state before the first visual action. Reads never initialize templates, capture, publish, render or refresh legal content.
+Promotes a draft to a definitive invoice by assigning its real series number. In VeriFactu-enabled companies the same happens automatically on send.
 
-### Example Usage: legal_source_changed
+### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.get_presentation" method="get" path="/companies/{company}/invoices/{invoice}/presentation" example="legal_source_changed" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.assign_real_number" method="post" path="/companies/{company}/invoices/{invoice}/assign-real-number" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -243,142 +270,255 @@ $sdk = Sdk\Factuarea::builder()
 
 
 
-$response = $sdk->invoices->publicApiV1InvoicesGetPresentation(
-    company: 'd4c55ee9-5061-4fca-9443-00befa3502a0',
-    invoice: '50b4e5f9-e0cb-48c5-a7c8-264043d10240',
+$response = $sdk->invoices->publicApiV1InvoicesAssignRealNumber(
+    company: 'Douglas - Rowe',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: retained_capture
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.get_presentation" method="get" path="/companies/{company}/invoices/{invoice}/presentation" example="retained_capture" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->invoices->publicApiV1InvoicesGetPresentation(
-    company: 'a858755e-a2a7-4ec9-9520-adaf76a6e155',
-    invoice: '6be96059-d1e9-441c-ac1c-7adf71c942d8',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: series_candidate_requires_confirmation
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.get_presentation" method="get" path="/companies/{company}/invoices/{invoice}/presentation" example="series_candidate_requires_confirmation" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->invoices->publicApiV1InvoicesGetPresentation(
-    company: '54e5ea60-52f1-44d5-86b8-167f0799fbfe',
-    invoice: '063b4a69-7fa4-4992-8aa8-85e42d81584f',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: virtual_legacy_head
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.get_presentation" method="get" path="/companies/{company}/invoices/{invoice}/presentation" example="virtual_legacy_head" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->invoices->publicApiV1InvoicesGetPresentation(
-    company: '9cf893ad-2cc6-461b-8330-20045008cf4a',
-    invoice: 'dc230cda-a8d2-463d-8ed0-752faae89111',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
-| `invoice`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                              |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
-**[?Operations\PublicApiV1InvoicesGetPresentationResponse](../../Models/Operations/PublicApiV1InvoicesGetPresentationResponse.md)**
+**[?Operations\PublicApiV1InvoicesAssignRealNumberResponse](../../Models/Operations/PublicApiV1InvoicesAssignRealNumberResponse.md)**
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+
+## publicApiV1InvoicesBulkCreate
+
+Create up to 100 invoices in one call, each entry a full invoice payload (including an optional `operation_on`, the date the operation took place when it differs from `issued_on`, and an optional `series_id`: without it, each row goes to the default series of its purpose, as in `POST /v1/companies/{company}/invoices`). With `dry_run=true` it validates every row without persisting and returns a per-row classification (`results[]`, including duplicate `external_id` and a non-blocking AEAT census warning); with `dry_run=false` it creates only the valid rows and reports the rest in `failures[]`. Returns the `BulkCreateResult` shape.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_create" method="post" path="/companies/{company}/invoices/bulk-create" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkCreateInvoicesV1Request(
+    invoices: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesBulkCreate(
+    company: '3cd8f73d-dcc1-4f70-8e27-c6cd7316e5f8',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: dry_run
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_create" method="post" path="/companies/{company}/invoices/bulk-create" example="dry_run" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkCreateInvoicesV1Request(
+    invoices: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesBulkCreate(
+    company: 'Schuppe - Stanton',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_create" method="post" path="/companies/{company}/invoices/bulk-create" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkCreateInvoicesV1Request(
+    invoices: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesBulkCreate(
+    company: '134023b6-006f-47a2-936f-78fde02f8fd4',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_create" method="post" path="/companies/{company}/invoices/bulk-create" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkCreateInvoicesV1Request(
+    invoices: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesBulkCreate(
+    company: 'Ruecker, Breitenberg and Zemlak',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_create" method="post" path="/companies/{company}/invoices/bulk-create" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkCreateInvoicesV1Request(
+    invoices: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesBulkCreate(
+    company: 'Wisozk Inc',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkCreateInvoicesV1Request](../../Models/Components/BulkCreateInvoicesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesBulkCreateResponse](../../Models/Operations/PublicApiV1InvoicesBulkCreateResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1InvoicesBulkDelete
 
-Delete up to 100 draft invoices (`ids`, UUID v7) with partial success; one failure never aborts the batch.
-- An issued invoice fails with `resource_not_deletable`; use `void` instead.
-- Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` and `failures`.
+Delete several invoices in one call with partial success — each id is evaluated independently and one failure never aborts the batch. Only draft invoices are deleted; an issued invoice comes back as a `resource_not_deletable` failure (use `void` instead). Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` and a per-id `failures` list.
+
+```json
+{ "ids": ["0190a1b2-c3d4-7e5f-8a90-1b2c3d4e5f60", "0190a1b2-c3d4-7e5f-8a90-1b2c3d4e5f61"] }
+```
+
+Limits: `ids` accepts 1–100 UUID v7 entries per call.
 
 ### Example Usage: api_key_revoked
 
@@ -447,44 +587,6 @@ $body = new Components\BulkDeleteInvoicesV1Request(
 
 $response = $sdk->invoices->publicApiV1InvoicesBulkDelete(
     company: 'Goyette LLC',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_delete" method="post" path="/companies/{company}/invoices/bulk-delete" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteInvoicesV1Request(
-    ids: [
-        '4b0b7709-e2c0-4f04-9b63-2e7d196a58f7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkDelete(
-    company: '5c614f6a-45c0-4ac4-8b36-819203b46cc6',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -571,44 +673,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_delete" method="post" path="/companies/{company}/invoices/bulk-delete" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteInvoicesV1Request(
-    ids: [
-        '4b0b7709-e2c0-4f04-9b63-2e7d196a58f7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkDelete(
-    company: '54b0b770-9e2c-40f0-94b6-32e7d196a58f',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_delete" method="post" path="/companies/{company}/invoices/bulk-delete" example="success" -->
@@ -637,44 +701,6 @@ $body = new Components\BulkDeleteInvoicesV1Request(
 
 $response = $sdk->invoices->publicApiV1InvoicesBulkDelete(
     company: 'Rodriguez - Kulas',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_delete" method="post" path="/companies/{company}/invoices/bulk-delete" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteInvoicesV1Request(
-    ids: [
-        '4b0b7709-e2c0-4f04-9b63-2e7d196a58f7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkDelete(
-    company: '5ea014a1-52fd-4239-883e-09c738d44f4c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -740,45 +766,6 @@ $body = new Components\BulkPdfInvoicesV1Request(
 
 $response = $sdk->invoices->publicApiV1InvoicesBulkPdf(
     company: '8fce2bff-accb-4b6e-9aed-c2255002fbfe',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_pdf" method="post" path="/companies/{company}/invoices/bulk-pdf" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfInvoicesV1Request(
-    ids: [
-        'fce2bffa-ccbb-46ea-aedc-2255002fbfe7',
-        '4a4441bd-c5d3-4482-9e5e-405f63d94e25',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkPdf(
-    company: '13b70ca4-d92d-4d53-ae30-20fc7994fd4a',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -867,84 +854,6 @@ if ($response->bytes !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_pdf" method="post" path="/companies/{company}/invoices/bulk-pdf" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfInvoicesV1Request(
-    ids: [
-        'fce2bffa-ccbb-46ea-aedc-2255002fbfe7',
-        '4a4441bd-c5d3-4482-9e5e-405f63d94e25',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkPdf(
-    company: 'c5ea8e8d-f876-47ef-baa1-db75adbc80fe',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_pdf" method="post" path="/companies/{company}/invoices/bulk-pdf" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfInvoicesV1Request(
-    ids: [
-        'fce2bffa-ccbb-46ea-aedc-2255002fbfe7',
-        '4a4441bd-c5d3-4482-9e5e-405f63d94e25',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkPdf(
-    company: 'd89bc588-7661-4a44-be45-cc1b18c13fd5',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1001,46 +910,6 @@ $body = new Components\BulkSendInvoicesV1Request(
 
 $response = $sdk->invoices->publicApiV1InvoicesBulkSend(
     company: 'f8eafd32-3ce4-40e4-ae0d-154fcb534b50',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_send" method="post" path="/companies/{company}/invoices/bulk-send" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendInvoicesV1Request(
-    ids: [
-        '8eafd323-ce40-4e4e-90d1-54fcb534b509',
-        '096cc252-19e9-4eae-872f-21c9954301b2',
-        'fd36c089-a475-4c6a-92d8-536c6f15dbb7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkSend(
-    company: '2fd36c08-9a47-45c6-9a2d-8536c6f15dbb',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1131,86 +1000,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: pdf_engine_unreachable_row
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_send" method="post" path="/companies/{company}/invoices/bulk-send" example="pdf_engine_unreachable_row" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendInvoicesV1Request(
-    ids: [
-        '8eafd323-ce40-4e4e-90d1-54fcb534b509',
-        '096cc252-19e9-4eae-872f-21c9954301b2',
-        'fd36c089-a475-4c6a-92d8-536c6f15dbb7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkSend(
-    company: 'f8eafd32-3ce4-40e4-ae0d-154fcb534b50',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_send" method="post" path="/companies/{company}/invoices/bulk-send" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendInvoicesV1Request(
-    ids: [
-        '8eafd323-ce40-4e4e-90d1-54fcb534b509',
-        '096cc252-19e9-4eae-872f-21c9954301b2',
-        'fd36c089-a475-4c6a-92d8-536c6f15dbb7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkSend(
-    company: '6096cc25-219e-49ea-8e72-f21c9954301b',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_send" method="post" path="/companies/{company}/invoices/bulk-send" example="success" -->
@@ -1251,46 +1040,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_send" method="post" path="/companies/{company}/invoices/bulk-send" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendInvoicesV1Request(
-    ids: [
-        '8eafd323-ce40-4e4e-90d1-54fcb534b509',
-        '096cc252-19e9-4eae-872f-21c9954301b2',
-        'fd36c089-a475-4c6a-92d8-536c6f15dbb7',
-    ],
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkSend(
-    company: '6ed21533-6ef1-444f-8bc7-dea215c97e7b',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1298,7 +1047,7 @@ if ($response->object !== null) {
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkSendInvoicesV1Request](../../Models/Components/BulkSendInvoicesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Bulk invoice send accepts an optional UUID-keyed map of complete seven-field presentation preconditions. When revisioned presentation is enabled for the company, every DRAFT row must carry its precondition because sending issues it: a draft row without one is not issued or sent and is reported in `failures[]` with 428 `pdf_presentation_precondition_required`, while the other rows continue. Rows that are not drafts are re-sent as they are. With revisioned presentation disabled the precondition fields are ignored.                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkSendInvoicesV1Request](../../Models/Components/BulkSendInvoicesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
@@ -1315,9 +1064,13 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesBulkStatus
 
-Move up to 50 invoices to `issued`, `sent` (alias of `issued`) or `paid` in one call, with partial success.
-- `paid` requires `payment_date` (not in the future), applied to every invoice.
-- Failures are `resource_not_found` or `invalid_status_transition`, in a `BulkPartialSuccessResult`.
+Transition several invoices to a new status in one call, each through the same state-transition guard, with partial success (a rejected id never aborts the batch). `new_status` is `issued`, `sent` (alias of `issued`) or `paid`; when `paid`, `payment_date` is required and propagated as the real payment date of every invoice (never `now()`). Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` and a per-id `failures` list (`resource_not_found` or `invalid_status_transition`).
+
+```json
+{ "ids": ["0190a1b2-c3d4-7e5f-8a90-1b2c3d4e5f60"], "new_status": "paid", "payment_date": "2026-06-30" }
+```
+
+Limits: `ids` accepts 1–50 entries; `payment_date` is required when `new_status` is `paid` and must not be in the future.
 
 ### Example Usage: api_key_revoked
 
@@ -1350,47 +1103,6 @@ $body = new Components\BulkStatusInvoicesV1Request(
 
 $response = $sdk->invoices->publicApiV1InvoicesBulkStatus(
     company: 'fe4478cc-0aaa-48f6-93be-59ced0c92e49',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_status" method="post" path="/companies/{company}/invoices/bulk-status" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusInvoicesV1Request(
-    ids: [
-        'e4478cc0-aaa8-4f63-8be5-9ced0c92e495',
-        '7ca46b65-ff09-41df-8c9b-a70033872b89',
-        '6649a205-fa3a-4693-9c44-8d44c464fe06',
-    ],
-    newStatus: Components\BulkStatusInvoicesV1RequestNewStatus::Sent,
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkStatus(
-    company: '26649a20-5fa3-4a69-93c4-48d44c464fe0',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1483,88 +1195,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: pdf_engine_unreachable_row
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_status" method="post" path="/companies/{company}/invoices/bulk-status" example="pdf_engine_unreachable_row" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusInvoicesV1Request(
-    ids: [
-        'e4478cc0-aaa8-4f63-8be5-9ced0c92e495',
-        '7ca46b65-ff09-41df-8c9b-a70033872b89',
-        '6649a205-fa3a-4693-9c44-8d44c464fe06',
-    ],
-    newStatus: Components\BulkStatusInvoicesV1RequestNewStatus::Sent,
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkStatus(
-    company: 'fe4478cc-0aaa-48f6-93be-59ced0c92e49',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_status" method="post" path="/companies/{company}/invoices/bulk-status" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusInvoicesV1Request(
-    ids: [
-        'e4478cc0-aaa8-4f63-8be5-9ced0c92e495',
-        '7ca46b65-ff09-41df-8c9b-a70033872b89',
-        '6649a205-fa3a-4693-9c44-8d44c464fe06',
-    ],
-    newStatus: Components\BulkStatusInvoicesV1RequestNewStatus::Sent,
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkStatus(
-    company: '37ca46b6-5ff0-491d-afc9-ba70033872b8',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_status" method="post" path="/companies/{company}/invoices/bulk-status" example="success" -->
@@ -1606,47 +1236,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.bulk_status" method="post" path="/companies/{company}/invoices/bulk-status" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusInvoicesV1Request(
-    ids: [
-        'e4478cc0-aaa8-4f63-8be5-9ced0c92e495',
-        '7ca46b65-ff09-41df-8c9b-a70033872b89',
-        '6649a205-fa3a-4693-9c44-8d44c464fe06',
-    ],
-    newStatus: Components\BulkStatusInvoicesV1RequestNewStatus::Sent,
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesBulkStatus(
-    company: '770f8cbf-752c-4379-8c75-724f022a3cf2',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1654,7 +1243,7 @@ if ($response->object !== null) {
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkStatusInvoicesV1Request](../../Models/Components/BulkStatusInvoicesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Bulk invoice status changes accept an optional UUID-keyed map of complete seven-field presentation preconditions. When revisioned presentation is enabled for the company and the change issues invoices (`issued` or the legacy `sent`), every draft row must carry its precondition: a draft row without one is not issued and is reported in `failures[]` with 428 `pdf_presentation_precondition_required`, while the other rows continue. With revisioned presentation disabled the precondition fields are ignored.                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkStatusInvoicesV1Request](../../Models/Components/BulkStatusInvoicesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
@@ -1671,9 +1260,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesCanAnnul
 
-Check whether an invoice can be annulled and whether a VeriFactu cancellation record will be created; call before `/annul`.
-- `can_annul` is the verdict without `revert_collections`.
-- If only live payments block it, `requires_collection_reversal` is `true` with `active_collections_amount`.
+Validates whether the invoice can be annulled and whether a VeriFactu anulacion record will be created. Call before posting to /annul. `can_annul` is the verdict of `POST .../annul` WITHOUT `revert_collections`: when the live payments are the only obstacle, `can_annul` is `false` but `requires_collection_reversal` is `true` and `active_collections_amount` is the amount that `revert_collections: true` would revert.
 
 ### Example Usage: requires_collection_reversal
 
@@ -1801,41 +1388,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.simplified_eligibility" method="post" path="/companies/{company}/invoices/simplified-eligibility" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\SimplifiedInvoiceEligibilityV1Request(
-    total: 725.14,
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesSimplifiedEligibility(
-    company: '1d02ebc7-acdb-41d5-b00f-6aa1788908f5',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.simplified_eligibility" method="post" path="/companies/{company}/invoices/simplified-eligibility" example="invalid_api_key" -->
@@ -1906,41 +1458,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.simplified_eligibility" method="post" path="/companies/{company}/invoices/simplified-eligibility" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\SimplifiedInvoiceEligibilityV1Request(
-    total: 725.14,
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesSimplifiedEligibility(
-    company: '1f805cc9-bafe-46c0-bf13-a99b4a45e303',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.simplified_eligibility" method="post" path="/companies/{company}/invoices/simplified-eligibility" example="success" -->
@@ -1976,9 +1493,532 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.simplified_eligibility" method="post" path="/companies/{company}/invoices/simplified-eligibility" example="unsupported_api_version" -->
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\SimplifiedInvoiceEligibilityV1Request](../../Models/Components/SimplifiedInvoiceEligibilityV1Request.md)                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesSimplifiedEligibilityResponse](../../Models/Operations/PublicApiV1InvoicesSimplifiedEligibilityResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesCorrective
+
+Issue a corrective invoice (*rectificativa*, RD 1619/2012 art. 15) that amends a previously issued invoice. Returns `201` with the **new** invoice: `is_corrective: true`, `corrective` pointing at the original, and its own correlative number in a corrective series (`R-2026-001`, `R-2026-002`… with the default numbering format — corrective invoices of simplified invoices go in their own series, `RS`). The series is `series_id` when you send it, otherwise the default series of the right purpose (`corrective` for `R1`–`R4`, `simplified_corrective` for `R5`), created automatically if the company has none; a series of another `invoice_kind` returns 422 `series_invoice_kind_mismatch`.
+
+Flow: the original must already be issued (`issued` or `overdue`) → the corrective is born **already issued**, never as a draft → when VeriFactu is enabled its *alta* is transmitted to AEAT **asynchronously**, so a `201` does not mean AEAT has accepted it yet. The original is never modified: it keeps its number, its status and its own VeriFactu record (the corrective references it by its number). A corrective is an additional document, not an edit.
+
+**Three ways to correct (art. 15.5 RD 1619/2012).** `correction_nature` is optional: without it, `full` with `lines` is a substitution (`S`) and `full` without `lines` and `partial` are by differences (`I`: the corrective carries the amount of the rectification, whatever its sign).
+- **Void the whole invoice** — `correction_type: full`, no `lines`: every original line is copied back negated and prefixed `[ANULACION]` (a full refund). Registered in VeriFactu as `TipoRectificativa: I`, with a negative base.
+- **Correct some amounts** — `correction_type: partial` with the adjustment `lines` (required): each one is a delta prefixed `[AJUSTE]`, with a negative `quantity` to subtract (`unit_price` is never negative). Also `TipoRectificativa: I`. A line only moves stock if it declares its own `product_id`.
+- **Replace it with the correct version** — `correction_type: full` with the FINAL `lines` of the correct invoice (no negative quantity); `correction_nature: S` is optional here. Registered as `TipoRectificativa: S` with `ImporteRectificacion` (the base and tax of the original, plus its equivalence surcharge when it had one); the product of each line is inherited from the original line at the same index.
+
+Incoherent combinations are rejected with 422 before anything is created: `full` with `lines` and an explicit `correction_nature: I` (`parameter_invalid_value`, subcode `corrective_full_cancellation_with_lines`, `param: lines`); a substitution or a partial correction without `lines` (`missing_required_param`, `param: lines`); a substitution with a negative quantity (`parameter_invalid_value`, subcode `corrective_substitution_negative_amount`, `param: lines.N.quantity`, with `line_index`); a partial substitution (`parameter_invalid_value`, subcode `corrective_substitution_requires_full`, `param: correction_nature`). An invoice already voided in full (a full corrective by differences) admits no further corrective at all, and one replaced in full admits no second full correction, though it still admits a partial one (both `business_rule_violation`, subcode `invoice_already_rectified_in_full`).
+
+**Nature of each corrected line.** A line may declare `unit`, `regime_key`, `exemption_reason` and `exemption_reason_text`, with the same rules as `POST /v1/companies/{company}/invoices`. They follow the presence of the key: a key you OMIT inherits the value of the original line at the same index; a key you SEND (even `null`) replaces it, and `null` means explicitly none — for example `exemption_reason: null` turns an exempt original line into a taxed one. This applies to both substitution and correction by differences.
+
+**AEAT R code.** By default it is derived from `correction_reason`: `error_fundado` → R1, `concurso` → R2, `incobrable` → R3, everything else → R4; a corrective of a simplified (F2) invoice is always born R5 regardless of the reason. `correction_code` overrides that derivation, but is validated against the legal matrix — original F2 → only `R5`; original F1/F3 → only `R1`–`R4`. Any other combination returns 422 with the legal `allowed_values`.
+
+Limits: `draft`, `scheduled`, `cancelled` and `annulled` originals return 422; a corrective can never itself be corrected — issue a new corrective of the original instead. List every corrective of an invoice with `GET /v1/companies/{company}/invoices/{invoice}/correctives`.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the alta billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is issued: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (a draft without a number) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: '5932b4e8-2c6a-4102-a13f-5bef06e16d60',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::Incobrable,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Partial,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: '02d1ec62-a203-450b-95b4-522211a4bde3',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::Incobrable,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Partial,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Waters Group',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::ErrorCliente,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: r1_error_fundado
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="r1_error_fundado" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Mann Group',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::ErrorFundado,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+        correctionCode: Components\CorrectionCode::R1,
+        justification: 'Error fundado de derecho en la cuota repercutida de la factura original; se anula y rectifica la totalidad.',
+        notes: 'Rectificativa total por error de derecho',
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: r2_concurso
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="r2_concurso" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Rodriguez - Gottlieb',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::Concurso,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+        correctionCode: Components\CorrectionCode::R2,
+        justification: 'Modificación de la base imponible por auto de declaración de concurso del destinatario (art. 80.Tres LIVA).',
+        notes: 'Rectificativa por concurso de acreedores',
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: r3_incobrable
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="r3_incobrable" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Leuschke, Christiansen and Schneider',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::Incobrable,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+        correctionCode: Components\CorrectionCode::R3,
+        justification: 'Crédito total o parcialmente incobrable según los requisitos del art. 80.Cuatro LIVA (reclamación previa documentada).',
+        notes: 'Rectificativa por crédito incobrable',
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: r4_otras
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="r4_otras" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'O\'Kon Group',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::Descuento,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Partial,
+        correctionCode: Components\CorrectionCode::R4,
+        justification: 'Rectificación parcial por descuento posterior a la emisión sobre una de las líneas de la factura original.',
+        notes: 'Rectificativa parcial por descuento',
+        lines: [
+            new Components\CreateCorrectiveInvoiceRequestLine(
+                description: 'Descuento comercial posterior sobre el servicio de consultoría',
+                quantity: -1,
+                unitPrice: 15,
+                taxRate: 21,
+            ),
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: r5_simplificada
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="r5_simplificada" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Davis - Bernhard',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::ErrorImporte,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+        correctionCode: Components\CorrectionCode::R5,
+        justification: 'Rectificación del importe de una factura simplificada (F2) emitida a consumidor final; corrige la cuota repercutida.',
+        notes: 'Rectificativa de factura simplificada',
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: substitution
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="substitution" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Wuckert - Harvey',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::ErrorImporte,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+        correctionNature: Components\CorrectionNature::S,
+        notes: 'Sustituye a la factura original: el precio pactado era 120 €, no 150 €',
+        lines: [
+            new Components\CreateCorrectiveInvoiceRequestLine(
+                description: 'Servicio de consultoría',
+                quantity: 1,
+                unitPrice: 120,
+                taxRate: 21,
+            ),
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.corrective" method="post" path="/companies/{company}/invoices/{invoice}/corrective" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCorrectiveRequest(
+    company: 'Walter, Yost and Altenwerth',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateCorrectiveInvoiceRequest(
+        correctionReason: Components\CorrectionReason::ErrorCliente,
+        correctionType: Components\CreateCorrectiveInvoiceRequestCorrectionType::Full,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrective(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                          | Type                                                                                                               | Required                                                                                                           | Description                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `$request`                                                                                                         | [Operations\PublicApiV1InvoicesCorrectiveRequest](../../Models/Operations/PublicApiV1InvoicesCorrectiveRequest.md) | :heavy_check_mark:                                                                                                 | The request object to use for the request.                                                                         |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesCorrectiveResponse](../../Models/Operations/PublicApiV1InvoicesCorrectiveResponse.md)**
+
+### Errors
+
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 402, 403, 404, 409, 422, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+
+## publicApiV1InvoicesCreate
+
+Create an invoice. It is created in `draft` by default; pass `options.issue_directly: true` to issue it immediately (assigning the correlative number and freezing the document per AEAT), or issue it later. VeriFactu *alta* is transmitted to AEAT asynchronously — a `201` does not mean AEAT has accepted the invoice yet, so poll it for the AEAT status.
+
+```json
+{
+  "client_id": "0190a1b2-c3d4-7e5f-8a90-1b2c3d4e5f60",
+  "lines": [{ "description": "Consulting", "quantity": 1, "unit_price": 1000, "tax_rate": 21 }],
+  "options": { "issue_directly": true }
+}
+```
+
+Limits: at least one line is required; send an `Idempotency-Key` (≤255 chars, remembered 24 h) for safe retries; a duplicate `external_id` upserts the existing invoice instead of creating a new one. A line with no `tax_rate`, no referenced tax and no product with a tax takes the DEFAULT TAX your company has set for invoices, as if you had chosen that tax (its rate, indirect-tax regime and AEAT qualification); if there is none the request is rejected with 422 `missing_required_param` (`error.param` `lines.N.tax_rate` and `error.line_index` N, the zero-based index of the line). `options.send_automatically` emails the invoice once issued to `options.send_to` or, when omitted, to the client; with no possible recipient the request is rejected BEFORE anything is created —no draft, no number consumed— with 422 `missing_required_param` and `error.param` `options.send_to`.
+
+**Unattended checkout (self-service terminals and vending machines).** A terminal can issue an already-paid simplified invoice in ONE idempotent call. A request is a checkout when it carries `type: F2`, a `payment` block or `options.register_verifactu`; only those get the extra response blocks below, any other request behaves as described above.
+
+- `type: F2` is the simplified invoice. Without `client_id` it is an anonymous ticket; with one it is a qualified simplified invoice (the client must belong to your company). `F1` (the default) still requires a client with a complete tax ID. The company needs simplified invoices enabled (422 `simplified_invoices_disabled`) and the amount cannot exceed the absolute cap of 3,000 € VAT included (422 `simplified_invoice_not_allowed`).
+- `series_id` is optional. Invoice series have a fixed purpose (`invoice_kind`: `complete`, `simplified`, `corrective`, `simplified_corrective`) and a document is only numbered in a series of its own purpose. Without `series_id`, a `F1` goes to your default complete series (`F`) and a `F2` to your default simplified series (`S`), created automatically if you have none. If you DO send a `series_id` of another `invoice_kind`, issuing is rejected with 422 `series_invoice_kind_mismatch` (it is never changed silently); `GET /v1/companies/{company}/series/default?document_type=invoice&invoice_kind=simplified` returns the series to use.
+- `prices_include_tax: true` makes every `unit_price` the FINAL price with taxes. The system computes the net base to the cent so that the invoice total equals the sum of the amounts you sent; if no distribution reaches it, 422 `amount_reconciliation_failed` and nothing is issued. Catalog lines (`product_id`) are not accepted in this mode.
+- `payment` (`method` required, `paid_at` and `reference` optional) records the payment for the whole amount due after issuing. It implies issuing.
+- `operation_on` is the date the operation took place when it differs from `issued_on`; it cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15.
+- `options.register_verifactu: true` generates the VERI*FACTU alta synchronously, BEFORE responding, and implies issuing. Its transmission to AEAT follows its course in batches.
+
+The response is the invoice plus `verifactu` (alta `status` `registered` or `failed` with its `error_code`, `aeat_status`, `huella`, `qr_url`, `qr_png_base64`, `legend` and `csv`), `pdf` (`status`, signed `url` and `expires_at`) and `public_url`. `pdf.status` is `ready` only when the A4 PDF is already materialized and `pdf.url` serves it at once (use `options.wait_for_pdf`, which waits up to about 15 s); otherwise it is `pending` and the URL answers 404 for a few seconds — never an error. If the alta cannot be generated, the invoice stays issued and the response says so (`status: failed`).
+
+**Late retries.** Identify the operation by its `external_id`: it has no expiry, unlike an `Idempotency-Key`. A checkout that repeats the `external_id` of an invoice already issued in your company returns that invoice with `200` and `Idempotent-Replayed: true`, completing the alta and the payment if they were missing, without creating or changing anything else and without emailing again an invoice whose email is already queued or delivered. If the type or the total differ from the issued invoice, it returns `409` `unattended_replay_mismatch` (also in `subcode`) with `param: external_id`: the `external_id` identifies ONE operation, so use a new one for a new operation. Two simultaneous requests with the same `external_id` produce ONE invoice, ONE number and ONE payment: the second waits for the first (up to 20 seconds) and then replays it, and if the first has still not finished it returns `409` `resource_locked` with `param: external_id` — nothing was written by the waiting request, so sending the same request again is harmless. Requests that are not checkouts keep the `external_id` upsert.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the alta billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is issued: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (a draft without a number) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -1996,33 +2036,699 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$body = new Components\SimplifiedInvoiceEligibilityV1Request(
-    total: 725.14,
+$body = new Components\CreateInvoiceRequest(
+    clientId: '8b4931f3-c449-40ad-ab16-a033daa399fd',
+    seriesId: 'fdab8e05-a5ba-4149-b81c-1cbdbd6e4e58',
+    issuedOn: LocalDate::parse('2026-09-28'),
+    dueOn: LocalDate::parse('2024-01-31'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'cautiously than fooey briefly dial as robust',
+            quantity: 5830.08,
+            unitPrice: 482.34,
+        ),
+    ],
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesSimplifiedEligibility(
-    company: 'f71b0621-b05b-4214-9965-a74ef141c7ba',
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: '8b4931f3-c449-40ad-ab16-a033daa399fd',
     body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
 
-if ($response->object !== null) {
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: b2b_nacional
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="b2b_nacional" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    clientId: 'f58fbf7f-333f-499b-affc-c0d396cbd83f',
+    seriesId: '019e5584-7a72-7038-a8f6-561ed180b699',
+    issuedOn: LocalDate::parse('2026-06-01'),
+    dueOn: LocalDate::parse('2026-07-01'),
+    notes: 'Factura creada via API v1',
+    metadata: [
+        'order_ref' => 'PO-2026-0042',
+    ],
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Servicio de consultoria',
+            quantity: 2,
+            unitPrice: 150,
+            taxRateId: '019e5584-7a7f-70fd-b9cb-9466c3ee12a8',
+            discountPercent: 0,
+        ),
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Roberts Inc',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: b2c
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="b2c" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    clientId: 'f58fbf7f-333f-499b-affc-c0d396cbd83f',
+    seriesId: '019e5584-7a72-7038-a8f6-561ed180b699',
+    issuedOn: LocalDate::parse('2026-06-01'),
+    dueOn: LocalDate::parse('2026-06-01'),
+    notes: 'Venta a consumidor final (factura simplificada cuando aplique)',
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Reparación de electrodoméstico',
+            quantity: 1,
+            unitPrice: 80,
+            taxRate: 21,
+            regimeKey: Components\CreateInvoiceRequestRegimeKey::One,
+        ),
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Ferry Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: cajero_reenvio
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="cajero_reenvio" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    type: Components\CreateInvoiceRequestType::F2,
+    pricesIncludeTax: true,
+    payment: new Components\Payment(
+        method: Components\CreateInvoiceRequestMethod::CreditCard,
+        paidAt: Utils\Utils::parseDateTime('2026-06-01T10:42:11+02:00'),
+        reference: 'TPV-8841-000187',
+    ),
+    issuedOn: LocalDate::parse('2026-06-01'),
+    dueOn: LocalDate::parse('2026-06-01'),
+    externalId: 'KIOSK-0042-20260601-000187',
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Lavado exprés',
+            quantity: 1,
+            unitPrice: 5,
+            taxRate: 21,
+        ),
+    ],
+    options: new Components\CreateInvoiceRequestOptions(
+        waitForPdf: true,
+        registerVerifactu: true,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Fisher - Fisher',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: cajero_simplificada_cualificada
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="cajero_simplificada_cualificada" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    type: Components\CreateInvoiceRequestType::F2,
+    clientId: 'f58fbf7f-333f-499b-affc-c0d396cbd83f',
+    pricesIncludeTax: true,
+    operationOn: LocalDate::parse('2026-06-01'),
+    payment: new Components\Payment(
+        method: Components\CreateInvoiceRequestMethod::CreditCard,
+        reference: 'TPV-8841-000188',
+    ),
+    issuedOn: LocalDate::parse('2026-06-02'),
+    dueOn: LocalDate::parse('2026-06-02'),
+    externalId: 'KIOSK-0042-20260601-000188',
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Recarga de taquilla',
+            quantity: 1,
+            unitPrice: 12.4,
+            taxRate: 21,
+        ),
+    ],
+    options: new Components\CreateInvoiceRequestOptions(
+        registerVerifactu: true,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Hudson - Murray',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: cajero_ticket_anonimo
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="cajero_ticket_anonimo" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    type: Components\CreateInvoiceRequestType::F2,
+    pricesIncludeTax: true,
+    payment: new Components\Payment(
+        method: Components\CreateInvoiceRequestMethod::CreditCard,
+        paidAt: Utils\Utils::parseDateTime('2026-06-01T10:42:11+02:00'),
+        reference: 'TPV-8841-000187',
+    ),
+    issuedOn: LocalDate::parse('2026-06-01'),
+    dueOn: LocalDate::parse('2026-06-01'),
+    externalId: 'KIOSK-0042-20260601-000187',
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Lavado exprés',
+            quantity: 1,
+            unitPrice: 5,
+            taxRate: 21,
+        ),
+    ],
+    options: new Components\CreateInvoiceRequestOptions(
+        waitForPdf: true,
+        registerVerifactu: true,
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Stanton LLC',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: con_irpf
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="con_irpf" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    clientId: 'f58fbf7f-333f-499b-affc-c0d396cbd83f',
+    seriesId: '019e5584-7a72-7038-a8f6-561ed180b699',
+    issuedOn: LocalDate::parse('2026-06-01'),
+    dueOn: LocalDate::parse('2026-07-01'),
+    notes: 'Factura de profesional con retención IRPF del 15%',
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Servicios profesionales de abogacía',
+            quantity: 1,
+            unitPrice: 1000,
+            taxRate: 21,
+            retentionRate: 15,
+            regimeKey: Components\CreateInvoiceRequestRegimeKey::One,
+        ),
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'McLaughlin - Altenwerth',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: idempotent_replay
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="idempotent_replay" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    issuedOn: LocalDate::parse('2025-07-18'),
+    dueOn: LocalDate::parse('2026-03-24'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'O\'Reilly, O\'Connell and Ernser',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: intracomunitario_bienes
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="intracomunitario_bienes" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    clientId: 'f58fbf7f-333f-499b-affc-c0d396cbd83f',
+    seriesId: '019e5584-7a72-7038-a8f6-561ed180b699',
+    issuedOn: LocalDate::parse('2026-06-01'),
+    dueOn: LocalDate::parse('2026-07-01'),
+    notes: 'Entrega intracomunitaria de bienes exenta (art. 25 LIVA)',
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'Suministro de maquinaria a cliente UE (DE)',
+            quantity: 1,
+            unitPrice: 5000,
+            taxRate: 0,
+            regimeKey: Components\CreateInvoiceRequestRegimeKey::One,
+            exemptionReason: Components\CreateInvoiceRequestExemptionReason::E5,
+        ),
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Dietrich, Schoen and Goldner',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    clientId: '8b4931f3-c449-40ad-ab16-a033daa399fd',
+    seriesId: 'fdab8e05-a5ba-4149-b81c-1cbdbd6e4e58',
+    issuedOn: LocalDate::parse('2026-09-28'),
+    dueOn: LocalDate::parse('2024-01-31'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateInvoiceRequestLine(
+            description: 'cautiously than fooey briefly dial as robust',
+            quantity: 5830.08,
+            unitPrice: 482.34,
+        ),
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'fdab8e05-a5ba-4149-b81c-1cbdbd6e4e58',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    issuedOn: LocalDate::parse('2025-07-18'),
+    dueOn: LocalDate::parse('2026-03-24'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Ritchie, Lueilwitz and Vandervort',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    issuedOn: LocalDate::parse('2025-07-18'),
+    dueOn: LocalDate::parse('2026-03-24'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'Morissette and Sons',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
+    // handle response
+}
+```
+### Example Usage: unattended_checkout
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create" method="post" path="/companies/{company}/invoices" example="unattended_checkout" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateInvoiceRequest(
+    issuedOn: LocalDate::parse('2025-07-18'),
+    dueOn: LocalDate::parse('2026-03-24'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreate(
+    company: 'McGlynn, Ziemann and Shanahan',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->twoHundredApplicationJsonObject !== null) {
     // handle response
 }
 ```
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
-| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\SimplifiedInvoiceEligibilityV1Request](../../Models/Components/SimplifiedInvoiceEligibilityV1Request.md)                                                                                                                                                                                                                                                         | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [Components\CreateInvoiceRequest](../../Models/Components/CreateInvoiceRequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                                          | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ### Response
 
-**[?Operations\PublicApiV1InvoicesSimplifiedEligibilityResponse](../../Models/Operations/PublicApiV1InvoicesSimplifiedEligibilityResponse.md)**
+**[?Operations\PublicApiV1InvoicesCreateResponse](../../Models/Operations/PublicApiV1InvoicesCreateResponse.md)**
+
+### Errors
+
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 402, 403, 404, 409, 422, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+
+## publicApiV1InvoicesList
+
+List your invoices with cursor-based pagination. Supports filtering by `status[in]`, `client_id`, `series_id`, `issued_on[gte|lte]`, and `total[gte|lte]`.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.list" method="get" path="/companies/{company}/invoices" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesListRequest(
+    company: 'Hackett and Sons',
+    sort: Operations\PublicApiV1InvoicesListSort::MinusCreated,
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesList(
+    request: $request
+);
+
+if ($response->paginatedList !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                              | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `$request`                                                                                             | [Operations\PublicApiV1InvoicesListRequest](../../Models/Operations/PublicApiV1InvoicesListRequest.md) | :heavy_check_mark:                                                                                     | The request object to use for the request.                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesListResponse](../../Models/Operations/PublicApiV1InvoicesListResponse.md)**
 
 ### Errors
 
@@ -2150,6 +2856,203 @@ if ($response->object !== null) {
 | Errors\Error            | 500                     | application/json        |
 | Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
+## publicApiV1InvoicesCreateRecurring
+
+Create a recurring invoice template that reuses the lines, client, and series of an existing invoice, applying the cadence (frequency, start date, optional end date and limits) supplied in the body. Returns the new recurring invoice.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create_recurring" method="post" path="/companies/{company}/invoices/{invoice}/create-recurring" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCreateRecurringRequest(
+    company: 'cf900940-b160-46bd-8c4b-e327abfb835a',
+    invoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateRecurringFromInvoiceRequest(
+        frequency: Components\CreateRecurringFromInvoiceRequestFrequency::Semiannual,
+        startOn: LocalDate::parse('2026-11-08'),
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreateRecurring(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create_recurring" method="post" path="/companies/{company}/invoices/{invoice}/create-recurring" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCreateRecurringRequest(
+    company: 'db2ad436-2230-4fcc-9221-fef40c4d3a2d',
+    invoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateRecurringFromInvoiceRequest(
+        frequency: Components\CreateRecurringFromInvoiceRequestFrequency::Semiannual,
+        startOn: LocalDate::parse('2026-11-08'),
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreateRecurring(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create_recurring" method="post" path="/companies/{company}/invoices/{invoice}/create-recurring" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCreateRecurringRequest(
+    company: 'Moore - Green',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateRecurringFromInvoiceRequest(
+        frequency: Components\CreateRecurringFromInvoiceRequestFrequency::Semiannual,
+        startOn: LocalDate::parse('2026-11-08'),
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreateRecurring(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.create_recurring" method="post" path="/companies/{company}/invoices/{invoice}/create-recurring" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesCreateRecurringRequest(
+    company: 'Wiegand, Moore and Bashirian',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateRecurringFromInvoiceRequest(
+        frequency: Components\CreateRecurringFromInvoiceRequestFrequency::Semiannual,
+        startOn: LocalDate::parse('2026-11-08'),
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesCreateRecurring(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                    | Type                                                                                                                         | Required                                                                                                                     | Description                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                                   | [Operations\PublicApiV1InvoicesCreateRecurringRequest](../../Models/Operations/PublicApiV1InvoicesCreateRecurringRequest.md) | :heavy_check_mark:                                                                                                           | The request object to use for the request.                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesCreateRecurringResponse](../../Models/Operations/PublicApiV1InvoicesCreateRecurringResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+
 ## publicApiV1InvoicesDelete
 
 Delete a draft invoice. Issued invoices cannot be deleted (use `void` instead).
@@ -2210,12 +3113,258 @@ if ($response->statusCode === 200) {
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
+## publicApiV1InvoicesShow
+
+Retrieve a sales invoice by its `id`.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.show" method="get" path="/companies/{company}/invoices/{invoice}" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesShow(
+    company: 'Gorczany - Hane',
+    invoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesShowResponse](../../Models/Operations/PublicApiV1InvoicesShowResponse.md)**
+
+### Errors
+
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+
+## publicApiV1InvoicesUpdate
+
+Update a draft invoice. Once an invoice has been issued (status `issued`), most fields become immutable per AEAT compliance. `operation_on` (the date the operation took place, when it differs from `issued_on`) can only be changed while the invoice is a draft; it cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. Sending `lines` replaces the whole set: a line with no `tax_rate`, no referenced tax and no product with a tax takes the DEFAULT TAX your company has set for invoices, as if you had chosen that tax (its rate, indirect-tax regime and AEAT qualification), and if there is none it is rejected with 422 `missing_required_param` (`error.param` `lines.N.tax_rate`, `error.line_index` N). A line that sends both a tax (`tax_rate_id`) and a `tax_rate` that contradicts it is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`, `error.param` `lines.N.tax_rate`): the chosen tax qualifies the line. `type` switches a draft between a complete (`F1`) and a simplified (`F2`) invoice, never a corrective one: `F2` requires simplified invoices enabled (422 `simplified_invoices_disabled`) and a total eligible for a simplified invoice (422 `simplified_invoice_not_allowed`), and `F1` requires a client (422 `business_rule_violation`, subcode `invoice_type_change_not_allowed`, `error.param` `client_id`). Changing `type` without `series_id` detaches the draft from its series, so it will be numbered in the default series of its new purpose when issued; `series_id: null` detaches it explicitly, and a series of another purpose (`invoice_kind`) is rejected right away with 422 `series_invoice_kind_mismatch`.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.update" method="patch" path="/companies/{company}/invoices/{invoice}" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesUpdateRequest(
+    company: 'fdf0e156-e141-46af-b0eb-fa6cdac22409',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.update" method="patch" path="/companies/{company}/invoices/{invoice}" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesUpdateRequest(
+    company: '3dc94cec-4b9c-4188-9d56-b4e6edbe9e48',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.update" method="patch" path="/companies/{company}/invoices/{invoice}" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesUpdateRequest(
+    company: 'Bode, Hahn and Bradtke',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.update" method="patch" path="/companies/{company}/invoices/{invoice}" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesUpdateRequest(
+    company: 'Brakus, Hessel and Keebler',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                  | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                 | [Operations\PublicApiV1InvoicesUpdateRequest](../../Models/Operations/PublicApiV1InvoicesUpdateRequest.md) | :heavy_check_mark:                                                                                         | The request object to use for the request.                                                                 |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesUpdateResponse](../../Models/Operations/PublicApiV1InvoicesUpdateResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+
 ## publicApiV1InvoicesFacturae
 
-Stream the Facturae 3.2.2 XML of an issued invoice: signed `.xsig` with a signing certificate, otherwise `.xml` (see `X-Facturae-Signed`).
-- Without `submission_id` it exports the current legal source; draft and scheduled invoices return 422 `invoice_not_emittable_for_facturae`.
-- With an own `submission_id` it returns that attempt's exact retained bytes, never regenerated or completed with live data.
-- Hash and `ETag` only accompany a known retained artifact.
+Stream the FacturaE 3.2.2 XML for the invoice (B2G compliance), XSD-conformant with full tax breakdown. With an active signing certificate the body is signed XAdES-EPES and served as `.xsig`; without one it is returned unsigned as `.xml`. The `X-Facturae-Signed` header distinguishes the two. Draft invoices return 422.
 
 ### Example Usage
 
@@ -2257,7 +3406,6 @@ if ($response->res !== null) {
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
 | `invoice`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                              |
-| `submissionId`                                                                                                                                                                                                                                                                                                                                                               | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Own FACe attempt to export. Omitted or null exports the current legal source; a UUID returns the exact retained bytes of that attempt, never regenerated or re-signed.                                                                                                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                              |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
@@ -2266,22 +3414,19 @@ if ($response->res !== null) {
 
 ### Errors
 
-| Error Type                        | Status Code                       | Content Type                      |
-| --------------------------------- | --------------------------------- | --------------------------------- |
-| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
-| Errors\Error                      | 500                               | application/json                  |
-| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1InvoicesPdf
 
-Download the invoice PDF as a binary stream (`application/pdf`).
-- `format` is `a4` (default), `ticket_80` or `ticket_58`; others return 422 `parameter_invalid_enum`.
-- The `ETag` changes with the invoice, VeriFactu alta and format; `If-None-Match` returns 304.
-- With revisioned presentation, a draft returns its `BORRADOR` PDF (or `202` with `Retry-After` while it renders) and is never issued.
+Download the PDF representation of an invoice. Returns the binary PDF stream (`application/pdf`). The optional `format` query chooses the paper: `a4` (default, with the company template), `ticket_80` (80 mm thermal roll) or `ticket_58` (58 mm roll); any other value returns 422 with a `parameter_invalid_enum` entry (and its `allowed_values`) in `error.errors[]`. Tickets are laid out for a receipt printer — QR of 30 mm, no header band or footer — and each format is rendered and cached separately, so asking for a ticket never changes the company template of the A4. The response carries an `ETag` that changes with the invoice, with its VeriFactu alta (so a PDF downloaded before the alta, without QR, never revalidates as current) and with the `format`; send it back in `If-None-Match` to get `304 Not Modified` when nothing changed.
 
-### Example Usage: failed_render_claimed_again
+### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.pdf" method="get" path="/companies/{company}/invoices/{invoice}/pdf" example="failed_render_claimed_again" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.pdf" method="get" path="/companies/{company}/invoices/{invoice}/pdf" -->
 ```php
 declare(strict_types=1);
 
@@ -2301,45 +3446,8 @@ $sdk = Sdk\Factuarea::builder()
     ->build();
 
 $request = new Operations\PublicApiV1InvoicesPdfRequest(
-    company: 'c885933a-0683-4362-9307-e7dac770f236',
-    invoice: '86d3e1d1-46df-4cef-adcd-1d1bf5f45a7b',
-    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPdf(
-    request: $request
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: pending
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.pdf" method="get" path="/companies/{company}/invoices/{invoice}/pdf" example="pending" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPdfRequest(
-    company: 'e85c4ca1-efe2-427d-9267-ad60a8edb606',
-    invoice: '97bfecaf-3cb2-413f-8164-06aae12a5855',
-    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
+    company: 'Lynch, Heathcote and Schinner',
+    invoice: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 
@@ -2364,17 +3472,84 @@ if ($response->bytes !== null) {
 
 ### Errors
 
-| Error Type                             | Status Code                            | Content Type                           |
-| -------------------------------------- | -------------------------------------- | -------------------------------------- |
-| Errors\Error                           | 400, 401, 403, 404, 409, 410, 422, 429 | application/json                       |
-| Errors\Error                           | 500, 503                               | application/json                       |
-| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesDuplicate
+
+Create a new draft invoice by copying the lines, client, and metadata from an existing invoice. The new invoice gets a fresh `id` and a draft number. A complete invoice is duplicated as complete (`F1`) in the same series; a simplified one as simplified (`F2`) WITHOUT a series, so it will be numbered in the default series for simplified invoices when issued, and only if its total is still eligible (422 `simplified_invoice_not_allowed`). Corrective, annulled and cancelled invoices cannot be duplicated (422 `invoice_not_duplicatable_in_current_state`): issue a new corrective of the original instead.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.duplicate" method="post" path="/companies/{company}/invoices/{invoice}/duplicate" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesDuplicate(
+    company: 'Jacobson Group',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesDuplicateResponse](../../Models/Operations/PublicApiV1InvoicesDuplicateResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 402, 403, 404, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1InvoicesExportExcel
 
-Export a selection of invoices to `xlsx` or `csv` and stream it back as an attachment.
-- Filter by `invoice_ids`, `client_id`, `series_id`, `status`, dates or `search`; `format` is `SUMMARY` or `ITEMS`.
-- Capped at 5,000 invoices: 422 `export_limit_exceeded`.
+Export a selection of invoices to a spreadsheet (`xlsx` or `csv`) and stream it back as an attachment. Narrow it with the filters of the body (`invoice_ids`, `client_id`, `series_id`, `status`, `date_from`, `date_to`, `search`) or omit them to export everything. `format` picks the layout: `SUMMARY` (one row per invoice) or `ITEMS` (one row per line).
+
+```http
+POST /v1/companies/{company}/invoices/export/excel
+Content-Type: application/json
+
+{"format": "SUMMARY", "status": "paid", "date_from": "2026-01-01", "date_to": "2026-03-31"}
+```
+
+Limits: the selection is capped at 5,000 invoices; a wider one returns 422 `export_limit_exceeded`.
 
 ### Example Usage
 
@@ -2432,11 +3607,339 @@ if ($response->twoHundredApplicationVndOpenxmlformatsOfficedocumentSpreadsheetml
 | Errors\Error                      | 500                               | application/json                  |
 | Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
+## publicApiV1InvoicesFindByExternalId
+
+Look up a single invoice by its `external_id` (sent in the JSON body), the integration key that maps it to a record in a third-party system (ERP/CRM/e-commerce). Distinct from the fiscal number and the `id`. Returns the matching invoice or 404 `invoice_not_found` if no invoice uses that external_id within your company.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_external_id" method="post" path="/companies/{company}/invoices/find-by-external-id" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByExternalId(
+    company: 'ef1311d4-dff2-45e5-9f65-8355c8d5fc82',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_external_id" method="post" path="/companies/{company}/invoices/find-by-external-id" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByExternalId(
+    company: '2a6e022a-36ed-40f9-a8a5-3a451468b739',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_external_id" method="post" path="/companies/{company}/invoices/find-by-external-id" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByExternalId(
+    company: 'Breitenberg - Spinka',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_external_id" method="post" path="/companies/{company}/invoices/find-by-external-id" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByExternalId(
+    company: 'Wilderman, Boyer and Emard',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\FindInvoiceByExternalIdRequest](../../Models/Components/FindInvoiceByExternalIdRequest.md)                                                                                                                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesFindByExternalIdResponse](../../Models/Operations/PublicApiV1InvoicesFindByExternalIdResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesFindByNumber
+
+Looks up a single invoice by its number. A number can repeat for two independent reasons — series recycle numbering across fiscal years, and two series of the same company each issue their own `F-2026-001` — so both `year` and `series_id` are accepted as optional discriminators. Returns 404 if not found, and 422 if the number still matches more than one invoice; the error message enumerates the series found (with their identifier) and the fiscal years, so that a second request can resolve it.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_number" method="post" path="/companies/{company}/invoices/find-by-number" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByNumberRequest(
+    number: '<value>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByNumber(
+    company: '202405e6-8f26-4294-b2c2-20c8a34d3b47',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_number" method="post" path="/companies/{company}/invoices/find-by-number" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByNumberRequest(
+    number: '<value>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByNumber(
+    company: '59d25f92-2b11-416e-b821-c04e16fc68aa',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_number" method="post" path="/companies/{company}/invoices/find-by-number" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByNumberRequest(
+    number: '<value>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByNumber(
+    company: 'Kautzer, Ledner and Williamson',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.find_by_number" method="post" path="/companies/{company}/invoices/find-by-number" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindInvoiceByNumberRequest(
+    number: '<value>',
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesFindByNumber(
+    company: 'Beier - Hilll',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                       | [Components\FindInvoiceByNumberRequest](../../Models/Components/FindInvoiceByNumberRequest.md)                                                                                                                                                                                                                                                                               | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | N/A                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesFindByNumberResponse](../../Models/Operations/PublicApiV1InvoicesFindByNumberResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
 ## publicApiV1InvoicesPdfLink
 
-Return a temporary signed URL to the invoice PDF instead of the bytes; `format` is `a4` (default), `ticket_80` or `ticket_58`.
-- The URL needs no API key and expires at `expires_at` (24 h) with 403.
-- 200 when the PDF is ready; 202 `pendiente` when queued, so retry until 200.
+Returns a temporary signed URL to the invoice PDF instead of streaming the bytes. The optional `format` query chooses the paper: `a4` (default), `ticket_80` or `ticket_58` (80 mm / 58 mm thermal rolls); any other value returns 422 with a `parameter_invalid_enum` entry (and its `allowed_values`) in `error.errors[]`, and each format is rendered and cached separately. Convenient for embedding in emails or messaging apps. The URL is signed, needs no API key, only opens this invoice and stops working at `expires_at` (24 h) with 403 — or earlier with 404 if the invoice or the company branding changes after the PDF was generated: request a new link instead of storing it. Dual contract: 200 with the URL when the PDF is already materialized; 202 with `status: pendiente` when generation was enqueued (the PDF renders on the `pdf` queue) — retry until you get the 200. The `pdf_url` of the 202 is also signed and answers 404 until the PDF is ready.
 
 ### Example Usage
 
@@ -2467,7 +3970,7 @@ $response = $sdk->invoices->publicApiV1InvoicesPdfLink(
 
 );
 
-if ($response->object !== null) {
+if ($response->twoHundredApplicationJsonObject !== null) {
     // handle response
 }
 ```
@@ -2487,11 +3990,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                             | Status Code                            | Content Type                           |
-| -------------------------------------- | -------------------------------------- | -------------------------------------- |
-| Errors\Error                           | 400, 401, 403, 404, 409, 410, 422, 429 | application/json                       |
-| Errors\Error                           | 500, 503                               | application/json                       |
-| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1InvoicesPublicLinkGet
 
@@ -2634,45 +4137,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.public_link_update" method="patch" path="/companies/{company}/invoices/{invoice}/public-link" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPublicLinkUpdateRequest(
-    company: '4edf687a-4a11-4d5b-9566-32e0a1d3dd59',
-    invoice: '5a938a36-b49d-4a15-be81-f23d97614394',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateInvoicePublicLinkRequest(
-        action: Components\UpdateInvoicePublicLinkRequestAction::Revoke,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.public_link_update" method="patch" path="/companies/{company}/invoices/{invoice}/public-link" example="invalid_api_key" -->
@@ -2751,45 +4215,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.public_link_update" method="patch" path="/companies/{company}/invoices/{invoice}/public-link" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPublicLinkUpdateRequest(
-    company: '098a5b06-f731-42d8-a7cd-dc0ebc34ba79',
-    invoice: '7e959af7-c91d-4bf8-b3a5-6486664e579c',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateInvoicePublicLinkRequest(
-        action: Components\UpdateInvoicePublicLinkRequestAction::Revoke,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.public_link_update" method="patch" path="/companies/{company}/invoices/{invoice}/public-link" example="success" -->
@@ -2814,45 +4239,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1InvoicesPublicLinkUpdateRequest(
     company: 'Hermann LLC',
     invoice: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateInvoicePublicLinkRequest(
-        action: Components\UpdateInvoicePublicLinkRequestAction::Revoke,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.public_link_update" method="patch" path="/companies/{company}/invoices/{invoice}/public-link" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPublicLinkUpdateRequest(
-    company: '4cfbdfb8-69bf-4eb6-a338-38360836cf03',
-    invoice: 'cabe497a-7451-41f5-ad11-8a932cbc196d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateInvoicePublicLinkRequest(
@@ -2945,13 +4331,15 @@ if ($response->object !== null) {
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
-## publicApiV1InvoicesListPresentations
+## publicApiV1InvoicesIssue
 
-Return page-based capture history in descending number. Each summary retains its own purpose, format and availability; capture metadata does not prove prepared PDF bytes. Privacy-erased rows remain metadata tombstones.
+Issues a draft invoice without sending it: assigns its definitive series number, freezes the issuer and customer snapshots, sets `issued_at`, registers the VeriFactu record when applicable and emits the `invoice.issued` event. No email is sent and the delivery mark is not set (`is_sent` stays `false`); to deliver it use `POST /v1/companies/{company}/invoices/{invoice}/send`, or `POST /v1/companies/{company}/invoices/{invoice}/mark-sent` with `Factuarea-Version: 2026-10-01` when you delivered it through another channel. Only a `draft` can be issued: any other status returns 422 `invalid_status_transition`. Issuing is irreversible and consumes a series number, so send an `Idempotency-Key` to retry safely. Available in every API version; the response follows the effective version (before `2026-10-01` the issued invoice is published as `status: sent`).
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the alta billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is issued: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (a draft without a number) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
 
 ### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.list_presentations" method="get" path="/companies/{company}/invoices/{invoice}/presentation-history" example="retained_history" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.issue" method="post" path="/companies/{company}/invoices/{invoice}/issue" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -2960,7 +4348,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -2970,44 +4357,45 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesListPresentationsRequest(
-    company: '6a87b925-57ec-4ed4-ac4b-cbaee3cb74d4',
-    invoice: '12091eae-25fd-4411-a9ae-5fb9a6e8a885',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
+
+
+$response = $sdk->invoices->publicApiV1InvoicesIssue(
+    company: 'Hickle and Sons',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesListPresentations(
-    request: $request
-);
-
-if ($response->documentPresentationHistoryEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
 
 ### Parameters
 
-| Parameter                                                                                                                        | Type                                                                                                                             | Required                                                                                                                         | Description                                                                                                                      |
-| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `$request`                                                                                                                       | [Operations\PublicApiV1InvoicesListPresentationsRequest](../../Models/Operations/PublicApiV1InvoicesListPresentationsRequest.md) | :heavy_check_mark:                                                                                                               | The request object to use for the request.                                                                                       |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
-**[?Operations\PublicApiV1InvoicesListPresentationsResponse](../../Models/Operations/PublicApiV1InvoicesListPresentationsResponse.md)**
+**[?Operations\PublicApiV1InvoicesIssueResponse](../../Models/Operations/PublicApiV1InvoicesIssueResponse.md)**
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1InvoicesActivities
 
-Return the cursor-paginated activity timeline (audit log) of an invoice.
-- Covers status transitions, emails, reminders, VeriFactu submission results to AEAT, public link visits and payments.
-- The `metadata` of each type follows the `InvoiceActivity` schema.
+Returns the cursor-paginated activity timeline (audit log) of a single invoice: status transitions, emails (including the ones that could not be delivered, `invoice.email_failed`), reminders, metadata changes, the result of every submission of its VeriFactu records to AEAT (`verifactu.record_accepted`, `verifactu.record_rejected`, `verifactu.transmission_failed` — one per incident, not per attempt — and `verifactu.transmission_blocked`) the first visit of each day to its public link (`invoice.public_link_viewed`) and its payments (`payment.payment_created`, `payment.payment_reversed` and `payment.payment_updated`, also the ones recorded before they appeared here, with the payment origin in `metadata.provider`). The `metadata` of those types follows the exact contract described in the `InvoiceActivity` schema.
 
 ### Example Usage
 
@@ -3054,6 +4442,64 @@ if ($response->paginatedList !== null) {
 ### Response
 
 **[?Operations\PublicApiV1InvoicesActivitiesResponse](../../Models/Operations/PublicApiV1InvoicesActivitiesResponse.md)**
+
+### Errors
+
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
+
+## publicApiV1InvoicesCorrectives
+
+Returns all corrective invoices associated with the original invoice. Used to reconstruct the original → rectificativa tree.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.correctives" method="get" path="/companies/{company}/invoices/{invoice}/correctives" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesCorrectives(
+    company: 'Hoeger, Heaney and Kuhlman',
+    invoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesCorrectivesResponse](../../Models/Operations/PublicApiV1InvoicesCorrectivesResponse.md)**
 
 ### Errors
 
@@ -3123,9 +4569,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesPaymentsCreate
 
-Register a partial or full payment against an invoice.
-- The invoice becomes `partially_paid` until the total is reached, then `paid`.
-- 422 for a status that rejects payments or `paid_on` later than today; an earlier date records an advance payment.
+Register a partial (or full) payment against an invoice. The invoice transitions to `partially_paid` while the cumulative paid amount is below the total, and to `paid` once it reaches it. Returns 422 if the invoice is in a status that does not accept payments, or if `paid_on` is later than today. A `paid_on` earlier than the issue date is accepted: it records an advance payment.
 
 ### Example Usage: api_key_revoked
 
@@ -3151,47 +4595,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1InvoicesPaymentsCreateRequest(
     company: '8b0d3bf3-0da8-42bf-87c1-2a6e5e09893d',
     invoice: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RegisterInvoicePaymentRequest(
-        amount: 5286.57,
-        paidOn: LocalDate::parse('2026-03-30'),
-        paymentMethod: Components\RegisterInvoicePaymentRequestPaymentMethod::BankTransfer,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPaymentsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_create" method="post" path="/companies/{company}/invoices/{invoice}/payments" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPaymentsCreateRequest(
-    company: '8eb00428-beac-48a8-9bf8-a35fe04d2896',
-    invoice: '9c2b62cf-5dcd-4001-8df5-fe39c0a7fbdd',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RegisterInvoicePaymentRequest(
         amount: 5286.57,
@@ -3289,47 +4692,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_create" method="post" path="/companies/{company}/invoices/{invoice}/payments" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPaymentsCreateRequest(
-    company: '8b0d3bf3-0da8-42bf-87c1-2a6e5e09893d',
-    invoice: '1e90097d-05d0-48fc-8fd2-4678017c9cae',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RegisterInvoicePaymentRequest(
-        amount: 5286.57,
-        paidOn: LocalDate::parse('2026-03-30'),
-        paymentMethod: Components\RegisterInvoicePaymentRequestPaymentMethod::BankTransfer,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPaymentsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_create" method="post" path="/companies/{company}/invoices/{invoice}/payments" example="success" -->
@@ -3354,47 +4716,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1InvoicesPaymentsCreateRequest(
     company: 'Rogahn Group',
     invoice: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RegisterInvoicePaymentRequest(
-        amount: 5286.57,
-        paidOn: LocalDate::parse('2026-03-30'),
-        paymentMethod: Components\RegisterInvoicePaymentRequestPaymentMethod::BankTransfer,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPaymentsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_create" method="post" path="/companies/{company}/invoices/{invoice}/payments" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPaymentsCreateRequest(
-    company: '8132aeb9-0faa-4570-a4d3-082182169778',
-    invoice: '413705f6-2832-49b1-8bed-85f79370ada8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RegisterInvoicePaymentRequest(
@@ -3487,6 +4808,127 @@ if ($response->object !== null) {
 | Errors\Error            | 500                     | application/json        |
 | Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
+## publicApiV1InvoicesMarkPaid
+
+Mark an invoice as fully paid. Idempotent: if already paid, returns the invoice unchanged. Returns 422 if the invoice is in a status that cannot transition to `paid`, or if `paid_on` is later than today. A `paid_on` earlier than the issue date is accepted: it records an advance payment.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.mark_paid" method="post" path="/companies/{company}/invoices/{invoice}/mark-paid" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesMarkPaidRequest(
+    company: 'Schiller - O\'Keefe',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesMarkPaid(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                      | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                     | [Operations\PublicApiV1InvoicesMarkPaidRequest](../../Models/Operations/PublicApiV1InvoicesMarkPaidRequest.md) | :heavy_check_mark:                                                                                             | The request object to use for the request.                                                                     |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesMarkPaidResponse](../../Models/Operations/PublicApiV1InvoicesMarkPaidResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+
+## publicApiV1InvoicesMarkSent
+
+Its meaning depends on the effective API version. **Before `2026-10-01`** (including the default version) it ISSUES a draft invoice without dispatching any email, exactly as it always did: the response publishes the invoice as `status: sent`. **From `2026-10-01`** it only records that you delivered an issued invoice to the customer through a channel of your own (WhatsApp, paper, a portal…): it sets `is_sent: true`, `sent_via: manual` and `sent_at`, and never changes the fiscal status, the number or the VeriFactu record. In that version it is only accepted on `issued` or `overdue` invoices — on a draft it returns 422 `invoice_cannot_be_marked_as_sent` (issue it first with `POST /v1/companies/{company}/invoices/{invoice}/issue`) — and it is idempotent: an invoice already marked as sent keeps its original date and channel. Because in the default version it issues the invoice, the operation stays classified as irreversible and accepts an `Idempotency-Key`.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the alta billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is issued: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (a draft without a number) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.mark_sent" method="post" path="/companies/{company}/invoices/{invoice}/mark-sent" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesMarkSent(
+    company: 'Graham, Walker and Mann',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesMarkSentResponse](../../Models/Operations/PublicApiV1InvoicesMarkSentResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+
 ## publicApiV1InvoicesPdfPreview
 
 Stream a non-fiscal draft PDF (`application/pdf`) of an invoice marked BORRADOR, with a placeholder number and no VeriFactu QR. Nothing is persisted: the series counter and fingerprint are untouched. Returns 422 for an already issued invoice — use the standard `pdf` endpoint instead.
@@ -3539,11 +4981,11 @@ if ($response->bytes !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 409, 429 | application/json             |
-| Errors\Error                 | 500, 503                     | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type              | Status Code             | Content Type            |
+| ----------------------- | ----------------------- | ----------------------- |
+| Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
+| Errors\Error            | 500                     | application/json        |
+| Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
 ## publicApiV1InvoicesReminderPreview
 
@@ -3607,9 +5049,7 @@ if ($response->object !== null) {
 
 ## publicApiV1InvoicesPaymentReceipt
 
-Stream the PDF receipt of one invoice payment, partial payments included; it is not an invoice and has no VERI*FACTU data.
-- Without `payment_id`, returns the most recent active payment.
-- 422 with no active payments or a reversed payment; 404 if `payment_id` is not of this invoice.
+Streams the PDF receipt of ONE payment of an invoice, partial payments included: every active payment has its own receipt, which shows the invoice as it stood right after that payment (payments up to it, amount collected and amount pending). Without `payment_id` it returns the receipt of the most recent active payment (by payment date, then by registration). Returns 422 when the invoice has no active payments or when the requested payment has been reversed, and 404 when `payment_id` is not a payment of this invoice. The receipt is not an invoice and carries no VERI*FACTU data.
 
 ### Example Usage
 
@@ -3666,16 +5106,17 @@ if ($response->bytes !== null) {
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
-## publicApiV1InvoicesPaymentsRevert
+## publicApiV1InvoicesReschedule
 
-Void a payment with a required `reason`; the payment stays flagged `is_reversed: true` and is never deleted.
-- Irreversible: to restate the collection, register a new payment.
-- 422 `payment_already_reversed`, `payment_reversal_reason_invalid` or `reversal_reason_reserved` (`issued_in_error`).
-- The invoice returns to `overdue` or `sent`.
+Move the issuance date of an already scheduled invoice. The invoice **stays `scheduled` throughout** — unlike `unschedule` followed by `schedule`, it never returns to `draft`, so it is never editable or deletable in between and there is no window in which the sweep could find it unscheduled.
 
-### Example Usage: factuarea_version_invalid_format
+**What you can change:** `scheduled_for`, and only that. `scheduled_action` is preserved — a schedule created as `issue_and_send` still emails the client at the new date, and one created as `issue` still does not (before API version `2026-10-01` that action is published as `draft`). To change the action you have to `unschedule` and `schedule` again. The content of the invoice (lines, client, series, totals) is untouched by this call: use `PATCH /v1/companies/{company}/invoices/{invoice}` while it is still a draft for that.
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_revert" method="post" path="/companies/{company}/invoices/{invoice}/payments/{payment}/reversal" example="factuarea_version_invalid_format" -->
+Limits: only an invoice in `scheduled` can be rescheduled — a `draft` (never scheduled) or an already issued invoice returns 422 — and the new `scheduled_for` must be strictly in the future (422 otherwise). Everything documented under `schedule` about what happens when the date arrives (number assigned at that moment, snapshots frozen, asynchronous VeriFactu *alta*, email only with `issue_and_send`, per-invoice retry on failure) applies unchanged to the new date.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.reschedule" method="patch" path="/companies/{company}/invoices/{invoice}/reschedule" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -3685,6 +5126,7 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -3694,18 +5136,16 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesPaymentsRevertRequest(
-    company: 'dab90c85-ebf9-4cd0-af82-baf00280f2a8',
-    invoice: '0f8d557d-8da0-428e-b929-099ce572b1eb',
-    payment: '594f4a59-1bc1-455f-8947-00f821afb0d2',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+$request = new Operations\PublicApiV1InvoicesRescheduleRequest(
+    company: 'eaf952c1-e7b5-4b33-be90-3b667caa806d',
+    invoice: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RevertInvoicePaymentRequest(
-        reason: '<value>',
+    body: new Components\RescheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-08-26T11:02:45.567Z'),
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesPaymentsRevert(
+$response = $sdk->invoices->publicApiV1InvoicesReschedule(
     request: $request
 );
 
@@ -3713,6 +5153,156 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.reschedule" method="patch" path="/companies/{company}/invoices/{invoice}/reschedule" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesRescheduleRequest(
+    company: 'de86c582-3304-40c6-b187-9b48f6a5f6af',
+    invoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RescheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-08-26T11:02:45.567Z'),
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesReschedule(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.reschedule" method="patch" path="/companies/{company}/invoices/{invoice}/reschedule" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesRescheduleRequest(
+    company: 'Corwin and Sons',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RescheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-08-26T11:02:45.567Z'),
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesReschedule(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.reschedule" method="patch" path="/companies/{company}/invoices/{invoice}/reschedule" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesRescheduleRequest(
+    company: 'Orn, Wehner and Medhurst',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\RescheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-08-26T11:02:45.567Z'),
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesReschedule(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                          | Type                                                                                                               | Required                                                                                                           | Description                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `$request`                                                                                                         | [Operations\PublicApiV1InvoicesRescheduleRequest](../../Models/Operations/PublicApiV1InvoicesRescheduleRequest.md) | :heavy_check_mark:                                                                                                 | The request object to use for the request.                                                                         |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesRescheduleResponse](../../Models/Operations/PublicApiV1InvoicesRescheduleResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesPaymentsRevert
+
+Void a payment recorded against an invoice, stating why. The payment keeps its amount, date, method and reference and is flagged as reverted (`is_reversed: true`) together with the reason, the instant and the author — it is never deleted, because a payment that existed and stopped having effect is accounting information.
+
+`reason` is **required** and belongs to a closed catalog: `direct_debit_return` (returned SEPA direct debit), `card_dispute` (card chargeback or reversal), `misapplied_payment` (booked against the wrong invoice), `bounced_effect` (dishonoured bill) and `recording_error`. A value outside the catalog returns 422 `payment_reversal_reason_invalid`. A sixth value of the catalog, `issued_in_error`, is RESERVED to annulling an invoice that was issued by mistake (`POST /v1/companies/{company}/invoices/{invoice}/annul` with `revert_collections: true`): requesting it here returns 422 `reversal_reason_reserved`. If the whole invoice must go, annul it with that option instead of reverting its payments one by one. `note` is an optional free-text remark of up to 500 characters; going over returns 422 `payment_reversal_invalid`. Reverting a payment that is already reverted returns 422 `payment_already_reversed`.
+
+A reverted payment stops counting towards `paid_amount`, `pending_amount` and every treasury aggregate, so the invoice goes **back into the collection circuit**: `overdue` if its due date has passed, `sent` otherwise, and it accepts a new payment again. That transition is derived from the ledger and can only originate here — the generic status-change endpoint cannot move an invoice out of `paid`.
+
+**Refund or reversal?** Revert when the customer got their money back without the operation being reduced (returned direct debit, chargeback, booking mistake): the debt survives and you want to collect it. Issue a corrective invoice (`POST /v1/companies/{company}/invoices/{invoice}/corrective`) when the operation itself is reduced — that is where revenue actually decreases. Reverting never issues a corrective, and a returned receipt is not a bad-debt claim (art. 80.Cuatro LIVA has its own formal requirements).
+
+Irreversible: there is no un-revert. To restate the collection, register a new payment.
+
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_revert" method="post" path="/companies/{company}/invoices/{invoice}/payments/{payment}/reversal" example="missing_api_key" -->
@@ -3738,46 +5328,6 @@ $request = new Operations\PublicApiV1InvoicesPaymentsRevertRequest(
     company: 'Hahn - Beier',
     invoice: '<value>',
     payment: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RevertInvoicePaymentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPaymentsRevert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_revert" method="post" path="/companies/{company}/invoices/{invoice}/payments/{payment}/reversal" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPaymentsRevertRequest(
-    company: 'abf10722-50df-49a4-8119-253dbc24a289',
-    invoice: 'da6a72c7-f329-485c-bcc1-04a1696d0ad5',
-    payment: 'b50451ef-4a9c-443a-a55d-a737b1c3d94d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RevertInvoicePaymentRequest(
@@ -3833,46 +5383,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.payments_revert" method="post" path="/companies/{company}/invoices/{invoice}/payments/{payment}/reversal" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesPaymentsRevertRequest(
-    company: 'bbfd5eed-4e49-46d1-beb9-589aed98d01c',
-    invoice: '47290d8a-4241-4012-a4c0-938693c5b4bb',
-    payment: 'c4cad8d7-72b6-4142-8f8c-7f883ea03e5e',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RevertInvoicePaymentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesPaymentsRevert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -3892,13 +5402,25 @@ if ($response->object !== null) {
 | Errors\Error                      | 500                               | application/json                  |
 | Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
-## publicApiV1InvoicesRevisePresentation
+## publicApiV1InvoicesSchedule
 
-Append a derived capture using the authentic presentation_revision preview of the exact parent, target, policy and current source. Send the source token and preview fingerprint; a delivery or illustrative preview cannot authorize this action. Existing document state, fiscal numbering, references, instalments and totals remain intact. This action does not render, publish or send a PDF. Personal-data erasure is terminal.
+Reserve the issuance of a draft invoice for a future instant. The invoice moves to `scheduled` and **nothing fiscal happens yet**: it keeps its `BORRADOR` placeholder number, no series counter is consumed and nothing is registered with VeriFactu. Scheduling never burns numbering.
 
-### Example Usage: captured_visual_revision
+**What happens at `scheduled_for`.** A sweep runs every minute and, on the first pass at or after that instant, it: (1) assigns the definitive correlative number of the series **at that moment**, not when you scheduled — so a document scheduled today and issued next month takes the number that corresponds to next month; (2) freezes the recipient and issuer snapshots as of that instant, which is what the PDF and the fiscal XML will show; (3) moves the invoice to `issued`, sets `issued_at` and emits `invoice.issued`; (4) queues the VeriFactu *alta* to AEAT **asynchronously** when the company is enrolled; and (5) emails the client **only** when `scheduled_action` is `issue_and_send` and the client has an email on file — with `scheduled_action: issue` the invoice is issued but never delivered, and `issue_and_send` without a recipient email still issues it, silently skipping the delivery. Issuing never sets the delivery mark by itself: `is_sent` becomes `true` (with `sent_via: email` and `sent_at`) only when the mail server accepts that email.
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.revise_presentation" method="post" path="/companies/{company}/invoices/{invoice}/presentation-revisions" example="captured_visual_revision" -->
+**`scheduled_action`.** `issue` issues the invoice without sending it; `issue_and_send` issues it and emails it to the customer. `draft` is still accepted as an input alias of `issue` in every API version, because it always meant "issue without sending".
+
+**Time zone.** `scheduled_for` is an ISO 8601 date-time. If it carries an explicit offset (`2027-01-15T09:00:00Z`, `…+01:00`) that offset is honoured; without one it is read in the account's server time zone, `Europe/Madrid`. Resolution is minute-level: expect issuance within about a minute of the instant you asked for, never before it.
+
+**If the scheduled issuance fails**, each invoice is isolated in its own transaction: the failing one stays `scheduled` with its date in the past, the error is logged, the rest of the batch is unaffected and the next sweep retries it. A successful issuance is never repeated, because `scheduled → issued` can only happen once.
+
+Limits: only a `draft` can be scheduled (any other status returns 422) and `scheduled_for` must be strictly in the future (422 otherwise). While it is still `scheduled` you can call `unschedule` to return it to `draft`, or `reschedule` to move only the date.
+
+**Before API version `2026-10-01`** (including the default version) the behaviour is the same, but the response uses the previous vocabulary: the action `issue` is published as `scheduled_action: draft`, and an invoice the sweep has issued is published as `status: sent` with `sent_at` equal to the issuance instant and without `issued_at`, `is_sent` or `sent_via`. Send `Factuarea-Version: 2026-10-01` to read the vocabulary documented here.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.schedule" method="post" path="/companies/{company}/invoices/{invoice}/schedule" example="api_key_revoked" -->
 ```php
 declare(strict_types=1);
 
@@ -3908,6 +5430,7 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -3917,36 +5440,26 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesRevisePresentationRequest(
-    company: '8d7e3104-0113-4db1-b322-46e22a283b4d',
-    invoice: '01389fdc-7f3f-4703-887c-4b52f9920509',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+$request = new Operations\PublicApiV1InvoicesScheduleRequest(
+    company: 'e46e8c23-1c75-4c3b-820a-3dd85f1eab4d',
+    invoice: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
+    body: new Components\ScheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-10-13T03:00:05.244Z'),
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesRevisePresentation(
+$response = $sdk->invoices->publicApiV1InvoicesSchedule(
     request: $request
 );
 
-if ($response->documentPresentationRevisionEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: current_legal_revision
+### Example Usage: invalid_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.revise_presentation" method="post" path="/companies/{company}/invoices/{invoice}/presentation-revisions" example="current_legal_revision" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.schedule" method="post" path="/companies/{company}/invoices/{invoice}/schedule" example="invalid_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -3956,6 +5469,7 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -3965,36 +5479,26 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesRevisePresentationRequest(
-    company: '557d6bb6-feb7-47c0-8121-c43225354bd5',
-    invoice: 'bc658362-f25f-41e7-9831-54a180cf38ea',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+$request = new Operations\PublicApiV1InvoicesScheduleRequest(
+    company: '114cf64f-7b52-433a-bead-723b52cf3430',
+    invoice: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
+    body: new Components\ScheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-10-13T03:00:05.244Z'),
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesRevisePresentation(
+$response = $sdk->invoices->publicApiV1InvoicesSchedule(
     request: $request
 );
 
-if ($response->documentPresentationRevisionEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
+### Example Usage: missing_api_key
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.revise_presentation" method="post" path="/companies/{company}/invoices/{invoice}/presentation-revisions" example="factuarea_version_invalid_format" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.schedule" method="post" path="/companies/{company}/invoices/{invoice}/schedule" example="missing_api_key" -->
 ```php
 declare(strict_types=1);
 
@@ -4004,6 +5508,7 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -4013,36 +5518,28 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesRevisePresentationRequest(
-    company: 'b6399c05-62fd-4d0d-aa19-3952c934e5e3',
-    invoice: 'd7dfb3c9-130f-42d4-97e2-b34a4ae14094',
+$request = new Operations\PublicApiV1InvoicesScheduleRequest(
+    company: 'Runte Group',
+    invoice: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
+    body: new Components\ScheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-10-13T03:00:05.244Z'),
+        scheduledAction: Components\ScheduleInvoiceRequestScheduledAction::IssueAndSend,
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesRevisePresentation(
+$response = $sdk->invoices->publicApiV1InvoicesSchedule(
     request: $request
 );
 
-if ($response->documentPresentationRevisionEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
+### Example Usage: success
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.revise_presentation" method="post" path="/companies/{company}/invoices/{invoice}/presentation-revisions" example="retired_active_profile_header" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.schedule" method="post" path="/companies/{company}/invoices/{invoice}/schedule" example="success" -->
 ```php
 declare(strict_types=1);
 
@@ -4052,6 +5549,7 @@ use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Models\Operations;
+use Factuarea\Sdk\Utils;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -4061,99 +5559,148 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1InvoicesRevisePresentationRequest(
-    company: '3729cd1b-1239-43d3-a337-79cc9dc99f2b',
-    invoice: 'ed643947-66d7-4f03-851a-737cbcce79d7',
+$request = new Operations\PublicApiV1InvoicesScheduleRequest(
+    company: 'Gorczany, Kemmer and Tillman',
+    invoice: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
+    body: new Components\ScheduleInvoiceRequest(
+        scheduledFor: Utils\Utils::parseDateTime('2026-10-13T03:00:05.244Z'),
+        scheduledAction: Components\ScheduleInvoiceRequestScheduledAction::IssueAndSend,
     ),
 );
 
-$response = $sdk->invoices->publicApiV1InvoicesRevisePresentation(
+$response = $sdk->invoices->publicApiV1InvoicesSchedule(
     request: $request
 );
 
-if ($response->documentPresentationRevisionEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.revise_presentation" method="post" path="/companies/{company}/invoices/{invoice}/presentation-revisions" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1InvoicesRevisePresentationRequest(
-    company: '1b3b7ee4-4a86-4040-8893-8932fe76368a',
-    invoice: '4ed47aac-7041-4243-80de-3d56f16955dc',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
-    ),
-);
-
-$response = $sdk->invoices->publicApiV1InvoicesRevisePresentation(
-    request: $request
-);
-
-if ($response->documentPresentationRevisionEnvelope !== null) {
+if ($response->object !== null) {
     // handle response
 }
 ```
 
 ### Parameters
 
-| Parameter                                                                                                                          | Type                                                                                                                               | Required                                                                                                                           | Description                                                                                                                        |
-| ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `$request`                                                                                                                         | [Operations\PublicApiV1InvoicesRevisePresentationRequest](../../Models/Operations/PublicApiV1InvoicesRevisePresentationRequest.md) | :heavy_check_mark:                                                                                                                 | The request object to use for the request.                                                                                         |
+| Parameter                                                                                                      | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                     | [Operations\PublicApiV1InvoicesScheduleRequest](../../Models/Operations/PublicApiV1InvoicesScheduleRequest.md) | :heavy_check_mark:                                                                                             | The request object to use for the request.                                                                     |
 
 ### Response
 
-**[?Operations\PublicApiV1InvoicesRevisePresentationResponse](../../Models/Operations/PublicApiV1InvoicesRevisePresentationResponse.md)**
+**[?Operations\PublicApiV1InvoicesScheduleResponse](../../Models/Operations/PublicApiV1InvoicesScheduleResponse.md)**
 
 ### Errors
 
-| Error Type                                  | Status Code                                 | Content Type                                |
-| ------------------------------------------- | ------------------------------------------- | ------------------------------------------- |
-| Errors\Error                                | 400, 401, 403, 404, 409, 410, 422, 428, 429 | application/json                            |
-| Errors\Error                                | 500, 503                                    | application/json                            |
-| Errors\APIException                         | 4XX, 5XX                                    | \*/\*                                       |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesSend
+
+Send an invoice to the client by email. Uses the email on file unless overridden in the payload.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the alta billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is issued: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (a draft without a number) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage: document_send_email
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.send" method="post" path="/companies/{company}/invoices/{invoice}/send" example="document_send_email" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesSendRequest(
+    company: 'Crona - Daniel',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\SendInvoiceRequest(
+        to: 'cliente@example.com',
+        cc: [
+            'copia@example.com',
+        ],
+        subject: 'Su documento de Factuarea',
+        body: 'Adjuntamos el documento solicitado.',
+    ),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesSend(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.send" method="post" path="/companies/{company}/invoices/{invoice}/send" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesSendRequest(
+    company: 'O\'Conner, Kulas and Swaniawski',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesSend(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                              | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `$request`                                                                                             | [Operations\PublicApiV1InvoicesSendRequest](../../Models/Operations/PublicApiV1InvoicesSendRequest.md) | :heavy_check_mark:                                                                                     | The request object to use for the request.                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesSendResponse](../../Models/Operations/PublicApiV1InvoicesSendResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1InvoicesSendReminder
 
@@ -4205,6 +5752,389 @@ if ($response->object !== null) {
 ### Response
 
 **[?Operations\PublicApiV1InvoicesSendReminderResponse](../../Models/Operations/PublicApiV1InvoicesSendReminderResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesSubstituteSimplified
+
+Groups N simplified invoices (F2) under a single substitutive full invoice (F3) with complete recipient data. Marks the originals as substituted.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the alta billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is issued: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (a draft without a number) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.substitute_simplified" method="post" path="/companies/{company}/invoices/substitute-simplified" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\SubstituteSimplifiedV1Request(
+    clientId: '029b489a-3f6a-4b22-b759-f00a5949b6bc',
+    simplifiedInvoiceIds: [
+        'fb1627b9-f8b4-4445-9b21-e6f860e3b5e6',
+        '4d5de73b-01f6-438b-9870-1c513434f97d',
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesSubstituteSimplified(
+    company: '029b489a-3f6a-4b22-b759-f00a5949b6bc',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.substitute_simplified" method="post" path="/companies/{company}/invoices/substitute-simplified" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\SubstituteSimplifiedV1Request(
+    clientId: '029b489a-3f6a-4b22-b759-f00a5949b6bc',
+    simplifiedInvoiceIds: [
+        'fb1627b9-f8b4-4445-9b21-e6f860e3b5e6',
+        '4d5de73b-01f6-438b-9870-1c513434f97d',
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesSubstituteSimplified(
+    company: '9fb1627b-9f8b-4444-95b2-1e6f860e3b5e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.substitute_simplified" method="post" path="/companies/{company}/invoices/substitute-simplified" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\SubstituteSimplifiedV1Request(
+    clientId: '029b489a-3f6a-4b22-b759-f00a5949b6bc',
+    simplifiedInvoiceIds: [
+        'fb1627b9-f8b4-4445-9b21-e6f860e3b5e6',
+        '4d5de73b-01f6-438b-9870-1c513434f97d',
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesSubstituteSimplified(
+    company: 'Farrell, Willms and Hudson',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.substitute_simplified" method="post" path="/companies/{company}/invoices/substitute-simplified" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\SubstituteSimplifiedV1Request(
+    clientId: '029b489a-3f6a-4b22-b759-f00a5949b6bc',
+    simplifiedInvoiceIds: [
+        'fb1627b9-f8b4-4445-9b21-e6f860e3b5e6',
+        '4d5de73b-01f6-438b-9870-1c513434f97d',
+    ],
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesSubstituteSimplified(
+    company: 'Hackett, Labadie and Metz',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\SubstituteSimplifiedV1Request](../../Models/Components/SubstituteSimplifiedV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesSubstituteSimplifiedResponse](../../Models/Operations/PublicApiV1InvoicesSubstituteSimplifiedResponse.md)**
+
+### Errors
+
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 402, 403, 404, 409, 422, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+
+## publicApiV1InvoicesUnschedule
+
+Cancel a scheduled issuance. The invoice returns to `draft`, `scheduled_for` and `scheduled_action` are set back to `null`, and it becomes editable and deletable again as any other draft.
+
+Unscheduling leaves **no fiscal trace**, because nothing fiscal had happened yet: no correlative number of the series was consumed (the invoice still carries its `BORRADOR` placeholder), nothing was registered with VeriFactu and no email was sent. This is not an annulment and it does not appear in any AEAT record.
+
+**Window of use.** It only applies while the invoice is `scheduled`. A `draft` that was never scheduled returns 422, and so does an invoice the sweep has already issued: from that instant on it is `issued` (published as `sent` before API version `2026-10-01`), it owns a definitive number and — where VeriFactu applies — an AEAT record, so the way back is no longer `unschedule` but `void`/`annul` to withdraw it (only while it is unpaid) or `corrective` to amend it. In practice the race is real: an invoice whose `scheduled_for` has just elapsed may already have been issued when your call lands.
+
+If you only want to move the date, use `PATCH /v1/companies/{company}/invoices/{invoice}/reschedule` instead — it avoids the round trip through `draft` and the window in which the document is editable.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.unschedule" method="post" path="/companies/{company}/invoices/{invoice}/unschedule" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesUnschedule(
+    company: 'Emmerich, Jones and Schinner',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesUnscheduleResponse](../../Models/Operations/PublicApiV1InvoicesUnscheduleResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesUnsend
+
+Clear the delivery mark of an issued invoice without changing its fiscal status: `sent_at` and `sent_via` go back to `null` and `is_sent` to `false`, while the invoice stays `issued` or `overdue`. The correlative number and VeriFactu record stay intact — the invoice is not reverted to draft and remains immutable per AEAT. Use it to undo a delivery that was recorded by mistake. Only `issued` and `overdue` invoices qualify: a draft, scheduled, cancelled or annulled invoice, or one with active payments, returns 422 `invalid_status_transition` (subcode `invoice_not_unsendable_in_current_state`). Idempotent: a no-op when the invoice is not marked as sent. **Before API version `2026-10-01`** (including the default version) `sent_at` represents the issuance instant, so the response keeps `status: sent` and a populated `sent_at`; read the delivery mark with `Factuarea-Version: 2026-10-01`. **It does not touch stock:** undoing the delivery marker does NOT return any goods to the warehouse, because the movement was booked when the invoice was issued and not when it was marked as sent. To undo the sale itself — and with it its stock — void the invoice or issue a corrective one.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.unsend" method="post" path="/companies/{company}/invoices/{invoice}/unsend" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesUnsend(
+    company: 'Ondricka, Mosciski and Murray',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `invoice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the invoice.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesUnsendResponse](../../Models/Operations/PublicApiV1InvoicesUnsendResponse.md)**
+
+### Errors
+
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1InvoicesVoid
+
+Withdraw an issued invoice. The invoice moves to `annulled`, `voided_at` starts reporting when that happened and the status is terminal: voiding is **irreversible** and there is no way back to `sent` or `draft`.
+
+**Void or correct?** Void when the whole document should never have existed and has not been paid — the invoice is withdrawn as a whole and no amending document is produced. Issue a corrective (`POST /v1/companies/{company}/invoices/{invoice}/corrective`) when the invoice was already paid, or when only part of it is wrong (amount, recipient, partial return): a `paid` invoice can never be voided, and voiding never fixes a figure.
+
+What voiding does **not** do: the correlative number of the series is neither released nor reused (the series counter only moves forward), the original invoice is not deleted, and its VeriFactu *alta* record is not withdrawn. When the company is enrolled in VeriFactu, an AEAT cancellation (*anulación*) record is queued **asynchronously** with your `reason` as its `motivo` — a `200` means the invoice is annulled on our side, not that AEAT has already processed the cancellation. With VeriFactu inactive the annulment is purely internal.
+
+Limits: only an invoice in `sent` or `overdue` can be voided. A `draft` is not voidable (delete it instead), and `paid`, `cancelled` and `annulled` return 422. An invoice that **is** a corrective can never be voided — to undo a wrong corrective, issue a new corrective of the original. Note the inverse is allowed: having correctives does not block voiding the original. Call `GET /v1/companies/{company}/invoices/{invoice}/can-annul` first if you need to check eligibility without attempting the change.
+
+`reason` is optional here and a placeholder is persisted when you omit it. `POST /v1/companies/{company}/invoices/{invoice}/annul` is the very same operation with `reason` required — prefer it whenever the reason must be documented.
+
+**Signing certificate (NO VERI*FACTU).** Only when the company has VeriFactu enabled in NO VERI*FACTU mode, the annulment billing record of this operation is signed with the company's electronic certificate (art. 6.c and 14 of Order HAC/1177/2024), and a certificate that is missing, expired, revoked, issued for another tax id or unreadable is rejected **before** the invoice is annulled: 422 `verifactu_not_eligible` with `error.subcode: signing_certificate_unavailable`; `error.param` says what is missing (`certificate`: the company certificate; `representation`: the representation that lets Factuarea sign on its behalf is not active; `system_certificate`: the Factuarea certificate is unavailable, nothing for you to fix). The invoice stays exactly as it was (issued and not annulled) and nothing is consumed: upload a valid certificate in Settings → Digital certificate (or register the representation in the third-party remission modes) and repeat the same call. Companies that have not enabled VeriFactu, and companies in VERI*FACTU mode (whose records are not signed), are never blocked by this rule.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.void" method="post" path="/companies/{company}/invoices/{invoice}/void" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1InvoicesVoidRequest(
+    company: 'Predovic, Mayer and Ullrich',
+    invoice: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
+
+$response = $sdk->invoices->publicApiV1InvoicesVoid(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                              | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `$request`                                                                                             | [Operations\PublicApiV1InvoicesVoidRequest](../../Models/Operations/PublicApiV1InvoicesVoidRequest.md) | :heavy_check_mark:                                                                                     | The request object to use for the request.                                                             |
+
+### Response
+
+**[?Operations\PublicApiV1InvoicesVoidResponse](../../Models/Operations/PublicApiV1InvoicesVoidResponse.md)**
 
 ### Errors
 

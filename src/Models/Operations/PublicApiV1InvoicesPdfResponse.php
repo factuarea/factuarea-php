@@ -40,18 +40,11 @@ class PublicApiV1InvoicesPdfResponse
     public array $headers;
 
     /**
-     * Binary PDF bytes for the owner document. No storage path, snapshot, rendering plan, or internal proof is returned.
+     * Binary PDF stream of the invoice (`application/pdf`) in the paper chosen with `format` (`a4` by default, `ticket_80` or `ticket_58`). Use `?download=1` to receive `Content-Disposition: attachment`; otherwise the disposition is `inline`. The response carries an `ETag`; send it back via `If-None-Match` to get a `304 Not Modified` when nothing changed.
      *
      * @var ?string $bytes
      */
     public ?string $bytes = null;
-
-    /**
-     * PDF preparation is still in progress, including a render that failed but can be retried: this request claimed it again. Retry this URL after the Retry-After delay.
-     *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfResponseBody $object
-     */
-    public ?PublicApiV1InvoicesPdfResponseBody $object = null;
 
     /**
      * @param  string  $contentType
@@ -59,16 +52,14 @@ class PublicApiV1InvoicesPdfResponse
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
      * @param  ?string  $bytes
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfResponseBody  $object
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $bytes = null, ?PublicApiV1InvoicesPdfResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $bytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
         $this->bytes = $bytes;
-        $this->object = $object;
     }
 }

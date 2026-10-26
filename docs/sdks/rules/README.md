@@ -15,9 +15,7 @@
 
 ## publicApiV1AutomationsRulesActivate
 
-Put an automation rule into service: every event of its trigger is evaluated against its current version. Returns 200 with the new state.
-- Only a `draft` or `paused` rule can be activated; an active one returns 422.
-- Quota and budget are not pre-checked; see `GET /v1/companies/{company}/automations/usage`.
+Put an automation rule into service: from this point on, every event of its trigger is evaluated against its current version. Returns 200 with the rule already in its new state, so you do not need a second call to confirm it. Only a `draft` or a `paused` rule can be activated — activating one that is already active returns 422. Activation deliberately does not pre-check quota or budget; call `GET /v1/companies/{company}/automations/usage` if you want to anticipate that.
 
 ### Example Usage
 
@@ -77,9 +75,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AutomationsRulesCreate
 
-Create an automation rule from a trigger, an optional condition tree and an ordered list of actions; the server assigns the `id`.
-- It is created in `draft` and does not fire until activated via `POST /v1/companies/{company}/automations/rules/{rule}/activate`.
-- A trigger outside your catalog or an action without adapter returns 422.
+Create an automation rule out of three pieces: the trigger that puts it in motion, an optional condition tree evaluated against the triggering event, and the ordered list of actions it executes. The server assigns the `id` (UUID v7) and seals version 1 of the definition. New rules are created in `draft` and do not fire until you activate them with `POST /v1/companies/{company}/automations/rules/{rule}/activate`. Omit `conditions` to run on every event of the trigger. The trigger must belong to the catalog visible to your company and every action must have a registered adapter; otherwise the call returns 422 and nothing is created.
 
 ### Example Usage: api_key_expired
 
@@ -155,48 +151,6 @@ $body = new Components\CreateAutomationRuleV1Request(
 
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
     company: 'Heidenreich and Sons',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAutomationRuleV1Request(
-    name: '<value>',
-    triggerType: '<value>',
-    actions: [
-        new Components\AutomationActionInput(
-            type: Components\AutomationActionInputType::SendDocumentEmail,
-        ),
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'cc9d89b6-0779-4cf3-825e-da5a90644fa8',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -333,90 +287,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAutomationRuleV1Request(
-    name: '<value>',
-    triggerType: '<value>',
-    actions: [
-        new Components\AutomationActionInput(
-            type: Components\AutomationActionInputType::SendDocumentEmail,
-        ),
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: '88d8aee1-f455-4e54-a59c-772d064b835c',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.create" method="post" path="/companies/{company}/automations/rules" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAutomationRuleV1Request(
-    name: '<value>',
-    triggerType: '<value>',
-    actions: [
-        new Components\AutomationActionInput(
-            type: Components\AutomationActionInputType::SendDocumentEmail,
-        ),
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesCreate(
-    company: 'f3c73b72-3e5e-41b7-a8f1-7776b368b39f',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -441,9 +311,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AutomationsRulesList
 
-List the company’s automation rules with cursor-based pagination, ordered by `id` ascending.
-- Filter by `status`, `trigger_type`, creation window (`created[gte]`, `created[lte]`) and search by name with `search`.
-- A cursor issued for another company yields an empty page.
+List the automation rules of the authenticated company with cursor-based pagination. Filter by `status`, by `trigger_type` or by creation window (`created[gte]`, `created[lte]`, …), and search by name with `search`. Pages are ordered by `id` ascending — a unique, monotonic key — so a rule created while you are paginating never shifts or duplicates a row. Only your own rules are ever returned, and a cursor issued for another company yields an empty page rather than someone else's data.
 
 ### Example Usage
 
@@ -500,9 +368,7 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1AutomationsRulesDelete
 
-Delete an automation rule logically: it stops firing and disappears from the API, while versions and run history stay auditable.
-- Returns 204; not reversible through this API.
-- A second delete returns 404, like a rule of another company.
+Delete an automation rule. The deletion is logical: the rule stops existing for the API and stops firing, while its sealed versions and its run history are preserved so past executions remain auditable. Returns 204 with no body and is not reversible through this API. A second delete of the same rule returns 404, exactly as a rule of another company does.
 
 ### Example Usage
 
@@ -620,9 +486,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AutomationsRulesUpdate
 
-Partially update an automation rule: omitted fields keep their value, and `""` in `description` clears it.
-- Every edit seals a NEW version and bumps `current_version`; past runs keep their original definition.
-- The status is unchanged: an active rule stays active.
+Partially update an automation rule: omitted fields keep their value, and sending `""` in `description` clears it. Editing never mutates the previous definition — it seals a NEW version and bumps `current_version` — which is what keeps every past run readable against the exact definition it executed. The status is left untouched: editing an active rule leaves it active, running the new version from its next event onwards.
 
 ### Example Usage
 
@@ -702,10 +566,11 @@ if ($response->object !== null) {
 
 ## publicApiV1AutomationsRulesDryRun
 
-Simulate what a rule would do against a sample event: condition match and what each action would resolve to. Executes nothing.
-- No email, change, quota use or run record; it takes the read scope.
-- For document rules pass `event_aggregate_id` of a real document, or no step would run.
-- An unevaluable condition returns 200 with `condition_error`.
+Simulate what a rule would do against a sample event: whether its condition would match, why it could not be evaluated when it cannot, and what each of its actions would resolve to. It executes NOTHING — no email is sent, no document changes, no third party is called, no quota is consumed and neither a run nor a step is recorded — which is why it takes the read scope even though it is a POST (the sample event has to travel in the body).
+
+IMPORTANT — if the rule acts on documents (send a document by email, send a payment reminder, change a status, tag an entity), pass `event_aggregate_id` with the id of a real document of yours. Without it the dry run reports that no step would run, and a perfectly correct rule looks broken.
+
+A condition that cannot be evaluated is not an HTTP error: it comes back as `condition_error` with 200, because seeing exactly that is what the dry run is for. A step a guardrail would cut short in production comes back as non-executable with its typed reason, never as a success.
 
 ### Example Usage: api_key_expired
 
@@ -776,45 +641,6 @@ $body = new Components\DryRunAutomationRuleV1Request(
 $response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
     company: 'Beahan LLC',
     rule: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\DryRunAutomationRuleV1Request(
-    eventType: '<value>',
-    eventPayload: [
-
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: '6915acd8-4b29-4005-ab00-54ff6a83ced0',
-    rule: 'b31b137c-b6f1-4e24-8be4-292287804e51',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -941,84 +767,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\DryRunAutomationRuleV1Request(
-    eventType: '<value>',
-    eventPayload: [
-
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: '29cfd8eb-c7b7-40bb-a0c5-2830d6b09e31',
-    rule: '6c98fc29-936a-4118-ac3a-6733aefc05e8',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.automations.rules.dry_run" method="post" path="/companies/{company}/automations/rules/{rule}/dry-run" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\DryRunAutomationRuleV1Request(
-    eventType: '<value>',
-    eventPayload: [
-
-    ],
-);
-
-$response = $sdk->automations->rules->publicApiV1AutomationsRulesDryRun(
-    company: '1363a185-3ad4-4a16-a1ee-85a0df67d188',
-    rule: 'f38b8b85-d21d-4ba5-91b3-7a961a9bb8cd',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1043,9 +791,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AutomationsRulesPause
 
-Stop an active automation rule from firing, keeping its definition and run history.
-- Returns 200 with the rule in its new state; seals no new version, and it can be activated again.
-- Only an `active` rule can be paused; anything else returns 422.
+Stop an active automation rule from firing, without losing either its definition or its run history. Returns 200 with the rule already in its new state. Pausing does not touch the definition, so it seals no new version, and the rule can be activated again at any time. Only an `active` rule can be paused; anything else returns 422. Bear in mind the engine may also pause a rule on its own after several consecutive failures.
 
 ### Example Usage
 

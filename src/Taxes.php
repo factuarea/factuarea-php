@@ -554,9 +554,7 @@ class Taxes
     /**
      * Create a tax
      *
-     * Create a tax owned by your company with name, code, type (vat, retention, surcharge or other), rate, scope and the required ISO-2 country code.
-     * - The code must be unique among the global catalog and your own taxes (409 otherwise).
-     * - `default_for_documents` sets your defaults; an unsupported document type returns 422 `tax_not_defaultable_for_document`.
+     * Create a tax owned by your company, with name, code, type (vat, retention, surcharge or other), rate and scope (sale, purchase or both). The ISO-2 country code is required. The code must be unique among the global catalog and your own taxes (409 otherwise); other companies may reuse it. The tax is visible only to your company. `default_for_documents` sets your company's defaults; a document type the tax cannot be default for responds 422 `tax_not_defaultable_for_document`.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTaxRequest  $body
      * @param  string  $company
@@ -1408,9 +1406,7 @@ class Taxes
     /**
      * Mark a tax as the default for its type
      *
-     * Set a visible tax as your company's default for its category (vat, retention or surcharge) in every compatible document type; only your configuration changes.
-     * - Inactive taxes return 422 `tax_inactive_cannot_be_default`; non-defaultable ones 422 `tax_not_defaultable_for_document`.
-     * - If the category is off in all compatible types, 422 `tax_default_axis_disabled`.
+     * Set a visible tax (global or owned by your company) as your company's default for its category (vat, retention or surcharge) in every compatible document type. It only changes your company's configuration; the global catalog and other companies are not affected. Inactive taxes respond 422 `tax_inactive_cannot_be_default`, and a tax that cannot be default for a document type, 422 `tax_not_defaultable_for_document`. It is written only in the compatible document types where the category is switched on for your company; if it is switched off in all of them, 422 `tax_default_axis_disabled`.
      *
      * @param  string  $company
      * @param  string  $tax
@@ -1535,9 +1531,7 @@ class Taxes
     /**
      * Set tax default for a document type
      *
-     * Set a visible tax as your company's default for one document type (invoice, quote, proforma, delivery_note, purchase_invoice); only your configuration changes.
-     * - `recurring_invoice`, type `other` and an incompatible `applies_to` return 422 `tax_not_defaultable_for_document`.
-     * - A category switched off for that document returns 422 `tax_default_axis_disabled`.
+     * Set a visible tax as your company's default for one document type (invoice, quote, proforma, delivery_note, purchase_invoice). `recurring_invoice` inherits from invoice and responds 422 `tax_not_defaultable_for_document`, as do type `other` and an incompatible `applies_to`. If the tax category is switched off for that document in your company, 422 `tax_default_axis_disabled`. It only changes your company's configuration.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesSetDefaultForDocumentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TaxesSetDefaultForDocumentResponse

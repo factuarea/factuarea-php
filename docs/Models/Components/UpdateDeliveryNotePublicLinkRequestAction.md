@@ -9,4 +9,3 @@
 | `Activate` | activate   |
 | `Extend`   | extend     |
 | `Reset`    | reset      |
-| `Publish`  | publish    |

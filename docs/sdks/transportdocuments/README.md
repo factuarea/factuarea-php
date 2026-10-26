@@ -26,45 +26,6 @@
 
 Cancel an `issued` transport document with a `reason` (3–500 characters). It stores a final PDF version marked «ANULADO» that the public URL keeps serving, and the document becomes terminal (`cancelled`). A PDF over 5 MB returns 422 `transport_document_pdf_too_large` and nothing changes. Irreversible: requires `Idempotency-Key`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.cancel" method="post" path="/companies/{company}/transport-documents/{transport_document}/cancel" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsCancelRequest(
-    company: 'bf7ebe94-d45a-452b-9231-a90ac8d51af8',
-    transportDocument: '37ecebc4-30c6-4677-83d9-63f927da2581',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CancelTransportDocumentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsCancel(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.cancel" method="post" path="/companies/{company}/transport-documents/{transport_document}/cancel" example="missing_api_key" -->
@@ -104,45 +65,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.cancel" method="post" path="/companies/{company}/transport-documents/{transport_document}/cancel" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsCancelRequest(
-    company: 'ce339fb4-6061-4988-bd68-6d1b7ebe279b',
-    transportDocument: 'bf93e7fc-2501-4971-81b2-58a3617b64c5',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CancelTransportDocumentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsCancel(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.cancel" method="post" path="/companies/{company}/transport-documents/{transport_document}/cancel" example="success" -->
@@ -167,45 +89,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TransportDocumentsCancelRequest(
     company: '30c66773-d963-4f92-97da-25813844dc5d',
     transportDocument: '33ab7928-cb47-49a2-a164-ffe444a0ddf8',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CancelTransportDocumentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsCancel(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.cancel" method="post" path="/companies/{company}/transport-documents/{transport_document}/cancel" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsCancelRequest(
-    company: '844dc5d5-33ab-4792-98cb-479a2164ffe4',
-    transportDocument: '4a0ddf89-798e-47b2-81df-3049681a7333',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CancelTransportDocumentRequest(
@@ -302,47 +185,8 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsCreate
 
-Create a transport document (DeCA) in `draft`; the minimum data is only required to issue.
-- `company_role` (`shipper`/`carrier`) sets your party; `delivery_note_ids` (1 to 50) pre-fills shipments.
-- 422 `delivery_note_cancelled` or `invalid_gross_weight`; 409 `resource_conflict` is retryable.
-- Returns 201 with `Location`.
+Create a transport document (DeCA) in `draft`. `company_role` says whether your company acts as contractual shipper (`shipper`) or effective carrier (`carrier`); your party is filled with your company data and the other one from `contact_id` or from the fields you send. Pass `delivery_note_ids` (1 to 50 of your delivery notes) to pre-fill one shipment per delivery note with its destination, date and goods (services excluded, frozen weights); a cancelled delivery note is rejected with 422 `delivery_note_cancelled`. A shipment that omits `origin` gets your default loading place or, if you have none, your registered address (an explicit `origin: null` leaves it without origin). The `id` is generated by the server; `shipments[].id` is optional and an identifier already in use returns 422 on `shipments.N.id`. A goods line whose `quantity × gross_weight_kg` exceeds 9,999,999,999.9999 kg or rounds to 0 returns 422 `invalid_gross_weight` on `shipments.N.goods.M.gross_weight_kg`. A draft admits incomplete data; the minimum data is only required to issue. A concurrent write that collides on an identifier returns 409 `resource_conflict`: nothing was saved and the request can be retried. Returns 201 with the resource and a `Location` header.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.create" method="post" path="/companies/{company}/transport-documents" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateTransportDocumentRequest(
-    companyRole: Components\CreateTransportDocumentRequestCompanyRole::Shipper,
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsCreate(
-    company: '41bd730d-ae83-484a-8d4a-4a0fa64fb184',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.create" method="post" path="/companies/{company}/transport-documents" example="missing_api_key" -->
@@ -369,42 +213,6 @@ $body = new Components\CreateTransportDocumentRequest(
 
 $response = $sdk->transportDocuments->publicApiV1TransportDocumentsCreate(
     company: 'cc2b66de-2f2f-4726-af76-c0e08f8449bf',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.create" method="post" path="/companies/{company}/transport-documents" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateTransportDocumentRequest(
-    companyRole: Components\CreateTransportDocumentRequestCompanyRole::Shipper,
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsCreate(
-    company: '42737d05-4f45-4848-8cd5-0e43e66eec97',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -451,42 +259,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.create" method="post" path="/companies/{company}/transport-documents" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateTransportDocumentRequest(
-    companyRole: Components\CreateTransportDocumentRequestCompanyRole::Shipper,
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsCreate(
-    company: 'af24dfa2-8cc2-4b66-8de2-f2f726f76c0e',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -511,9 +283,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsIndex
 
-List the transport control documents (DeCA) of your company with cursor-based pagination.
-- Filters: `status`, `transport_date[gte]`/`[lte]`, `company_role`, `carrier_tax_id`, `delivery_note_id`, `q`.
-- Sort with `sort` (default `-transport_date`). Any other query parameter returns 400.
+List the transport control documents (DeCA, Spanish electronic administrative control document for road freight) of your company with cursor-based pagination. Filters: `status` (also `status[in]`), `transport_date[gte]`/`transport_date[lte]` (a document matches when the date range of its shipments overlaps the period), `company_role` (`shipper` or `carrier`), `carrier_tax_id`, `delivery_note_id` (documents with a shipment from that delivery note) and `q` (number, parties or plates). Sort with `sort` (`transport_date`, `number`, `created`, `updated`; prefix `-` for descending; default `-transport_date`). `q` takes 1 to 255 characters. Any other query parameter returns 400. The MCP tool `search_transport_documents` accepts the same `sort` and `q`.
 
 ### Example Usage
 
@@ -631,9 +401,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1TransportDocumentsShow
 
-Retrieve a transport document (DeCA) by its `id`, with parties, vehicle, shipments, goods, every version (author, reason, sha256), public URL and lifecycle dates.
-- Shipments built from a delivery note report `source_changed`/`source_changes` or `source_missing`.
-- Another company's document returns 404 `transport_document_not_found`.
+Retrieve a transport document (DeCA) by its `id`. The resource carries the parties, vehicle, shipments with their goods and declared measure, every version with its author, reason, changes and sha256, the public URL printed on the QR, and the lifecycle dates (including `reopen_deadline` and `retention_until`). Each shipment built from a delivery note reports `source_changed`/`source_changes` when the delivery note changed after the current version, and `source_missing` when it was cancelled or deleted. A document of another company returns 404 `transport_document_not_found`.
 
 ### Example Usage
 
@@ -691,9 +459,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsUpdate
 
-Partially update a transport document in `draft`: an absent field is kept, `null` clears it and `shipments` replaces the whole list.
-- Any other status returns 422 `transport_document_cannot_be_edited`; use `modify` for an issued document.
-- An impossible weight returns 422 `invalid_gross_weight`; an identifier collision returns 409 `resource_conflict` (retryable).
+Partially update a transport document in `draft`: an absent field is kept, an explicit `null` clears it and `shipments` replaces the whole list. Any other status returns 422 `transport_document_cannot_be_edited`; an issued document is changed with `POST /v1/companies/{company}/transport-documents/{transport_document}/modify`. `shipments[].id` only identifies a shipment of this document (any other returns 422 `parameter_invalid_value` on `shipments.N.id`); a goods line with an impossible weight returns 422 `invalid_gross_weight`. A concurrent write that collides on an identifier returns 409 `resource_conflict`, retryable: nothing was saved.
 
 ### Example Usage
 
@@ -752,9 +518,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsIssuanceProof
 
-Generate on demand a PDF proof of issuance with parties, every version (date, author, reason, sha256), status changes, email deliveries and public downloads.
-- Requires scope `transport_documents:read`; `pdfs:read` alone returns 403 `insufficient_scope`.
-- Not stored; pass `?download=1` for an attachment. A draft returns 422.
+Requires the scope `transport_documents:read` (it contains the issuance evidence; `pdfs:read` alone returns 403 `insufficient_scope`). Generate on demand a PDF proof of issuance with the number, public URL and QR, parties, every version with its date, author, reason, data origin and sha256, the status changes, the email deliveries and the public downloads. It is not stored: each version is verified by recomputing the sha256 of its PDF. Pass `?download=1` for `Content-Disposition: attachment`. A draft returns 422.
 
 ### Example Usage
 
@@ -813,9 +577,7 @@ if ($response->bytes !== null) {
 
 ## publicApiV1TransportDocumentsPdf
 
-Download the stored PDF of the current version or of `?version=N`, byte for byte as issued (never re-rendered).
-- Returns `application/pdf`; pass `?download=1` for an attachment.
-- A draft returns 422, a purged document 410 `transport_document_file_unavailable` and an unknown `version` 404 `transport_document_version_not_found`.
+Download the stored PDF of the current version or of `?version=N`, byte for byte as it was issued (never re-rendered): its sha256 matches `versions[].sha256`. Returns the binary stream (`application/pdf`); pass `?download=1` for `Content-Disposition: attachment`. A draft returns 422, a purged document 410 `transport_document_file_unavailable` and a `version` the document does not have 404 `transport_document_version_not_found` (`error.param` = `version`).
 
 ### Example Usage
 
@@ -873,9 +635,7 @@ if ($response->bytes !== null) {
 
 ## publicApiV1TransportDocumentsEvidence
 
-List the issuance evidence of a transport document in chronological order: versions, closes, reopenings, cancellation, supersession, email deliveries and public downloads.
-- Only the first 100 public downloads are listed; `meta.downloads_total` gives the full count.
-- Each entry names its actor in `actor_name`. A draft returns 422.
+List the issuance evidence of a transport document in chronological order: versions issued or modified, manual closes (`closed`) and automatic closes (`auto_closed`), reopenings, cancellation, supersession, email deliveries with their recipients and public downloads with truncated IP (/24 IPv4, /48 IPv6) and user agent. Public downloads are recorded once per hour for the same network and version (the user agent is stored but does not count as a different download), and only the first 100 are listed: `meta.downloads_total` is the number recorded and `meta.downloads_listed` how many are in `data`. Each entry names its actor in `actor_name` (user, API key or MCP client, with the name it had then; `null` for automatic closes and public downloads) and `occurred_at` carries its UTC offset. It is the proof of issuance of art. 7.1 of Orden FOM/2861/2012. A draft returns 422.
 
 ### Example Usage
 
@@ -1047,10 +807,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsIssue
 
-Issue a draft transport document, assigning the next `DC` number and the permanent public URL, and storing PDF version 1.
-- Missing minimum data returns 422 `transport_document_not_issuable` with the list in `error.details.missing`.
-- A PDF over 5 MB returns 422 `transport_document_pdf_too_large`; nothing is issued.
-- Irreversible: requires `Idempotency-Key`.
+Issue a draft transport document. It checks the minimum data (shipper name, tax ID and full address; carrier name and tax ID; at least one shipment with origin, destination, goods and declared measure; tractor plate; transport date), that every origin and destination is in Spain and that every transport date is today or later (Europe/Madrid). In a single atomic operation it assigns the next number of the `DC` series and the permanent public URL, renders and stores version 1 of the PDF with its sha256, and moves the document to `issued`. Missing data returns 422 `transport_document_not_issuable` with the list in `error.details.missing`, using this closed vocabulary: `shipper.name`, `shipper.tax_id`, `shipper.address`, `carrier.name`, `carrier.tax_id`, `vehicle.tractor_plate`, `transport_date`, `shipments` (no shipment) and `shipments.N.origin|destination|goods|measure` with `N` counting from 1. A PDF over 5 MB returns 422 `transport_document_pdf_too_large` and nothing is issued. Irreversible: requires `Idempotency-Key`. Hand the PDF, link or QR to the driver before the transport starts.
 
 ### Example Usage
 
@@ -1110,51 +867,8 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsModify
 
-Modify an `issued` transport document during the service, keeping its number, URL and QR; stores a new PDF version.
-- Send the changes plus `reason` and `data_origin` (`company`/`carrier_reported`); parties are immutable.
-- 422 `transport_document_no_changes`; the 49th change returns `transport_document_version_limit_reached`.
-- Irreversible: requires `Idempotency-Key`.
+Modify an `issued` transport document during the service (method 1 of the Resolution of 5 June 2026): same number, same URL and same QR. Send the changed data plus `reason` (3–500 characters) and `data_origin` (`company` or `carrier_reported`). The parties cannot change (422 `transport_document_parties_immutable`: cancel and issue a new one) and a request that changes nothing returns 422 `transport_document_no_changes`. A document has at most 50 versions and the last one is reserved for cancelling or superseding, so the 49th modification returns 422 `transport_document_version_limit_reached` (issue a new document and mark this one as superseded); a PDF over 5 MB returns 422 `transport_document_pdf_too_large`; a goods line with an impossible weight, 422 `invalid_gross_weight`; a `shipments[].id` of another document, 422 on `shipments.N.id`; and a concurrent write that collides on an identifier, 409 `resource_conflict` (retryable, nothing saved). If the result lacks minimum data it returns 422 `transport_document_cannot_be_modified` with `error.details.missing` (same vocabulary as issuing). It stores a new full PDF version that keeps the original creation date and lists the data that is no longer valid. Irreversible: requires `Idempotency-Key`. Send the modified PDF to the driver.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.modify" method="post" path="/companies/{company}/transport-documents/{transport_document}/modify" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsModifyRequest(
-    company: '2d878e99-1b17-4910-b3c8-a4d27fce7563',
-    transportDocument: '1d34f196-ae1a-49fb-adb0-341b33387af7',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ModifyTransportDocumentRequest(
-        reason: '<value>',
-        dataOrigin: Components\ModifyTransportDocumentRequestDataOrigin::Company,
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsModify(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.modify" method="post" path="/companies/{company}/transport-documents/{transport_document}/modify" example="missing_api_key" -->
@@ -1179,46 +893,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TransportDocumentsModifyRequest(
     company: '2dc749ad-8e43-4762-bb9d-3f856395cfce',
     transportDocument: '61bf4e2d-cd1d-49bc-b237-a6c51c9f6785',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ModifyTransportDocumentRequest(
-        reason: '<value>',
-        dataOrigin: Components\ModifyTransportDocumentRequestDataOrigin::Company,
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsModify(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.modify" method="post" path="/companies/{company}/transport-documents/{transport_document}/modify" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsModifyRequest(
-    company: '1de9a29d-04ad-4b13-822b-680cc2917ece',
-    transportDocument: '08ad3691-1a8f-4f21-833d-1c5ab836baad',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ModifyTransportDocumentRequest(
@@ -1275,46 +949,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.modify" method="post" path="/companies/{company}/transport-documents/{transport_document}/modify" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsModifyRequest(
-    company: '391a379e-140b-4002-a97b-e1f784646310',
-    transportDocument: '73c8adb3-a35c-4130-b07c-b03752c41efc',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ModifyTransportDocumentRequest(
-        reason: '<value>',
-        dataOrigin: Components\ModifyTransportDocumentRequestDataOrigin::Company,
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsModify(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1338,45 +972,6 @@ if ($response->object !== null) {
 
 Reopen a manually `closed` transport document with a `reason` (3–500 characters). It returns to `issued` without creating a version. Allowed only before the automatic-close deadline and never after an automatic close; otherwise 422 `transport_document_cannot_be_reopened`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.reopen" method="post" path="/companies/{company}/transport-documents/{transport_document}/reopen" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsReopenRequest(
-    company: '33b5a790-3444-4d28-8872-25db85516f61',
-    transportDocument: 'b02cac2f-03ad-4ef0-b396-dfaf8d0a9809',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReopenTransportDocumentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsReopen(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.reopen" method="post" path="/companies/{company}/transport-documents/{transport_document}/reopen" example="missing_api_key" -->
@@ -1401,45 +996,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TransportDocumentsReopenRequest(
     company: 'd4481342-56e6-4736-960c-62086f1ddd61',
     transportDocument: '62f14943-9c96-4908-a746-a7217ae9dc54',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReopenTransportDocumentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsReopen(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.reopen" method="post" path="/companies/{company}/transport-documents/{transport_document}/reopen" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsReopenRequest(
-    company: '1fbad814-5345-4812-a6d0-ac010341b766',
-    transportDocument: 'ac5539be-9616-47b5-bd06-7821336a7f2c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ReopenTransportDocumentRequest(
@@ -1494,45 +1050,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.reopen" method="post" path="/companies/{company}/transport-documents/{transport_document}/reopen" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsReopenRequest(
-    company: 'b5a6dcda-a45e-462e-9c6a-f5e808a63bbe',
-    transportDocument: 'b45270cb-8d80-47da-967d-ae78b9ae21f8',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReopenTransportDocumentRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsReopen(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1554,9 +1071,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsSend
 
-Email the stored PDF of the current version, with the public link, to up to 5 recipients across `to`, `cc` and `bcc`.
-- Only `issued` or `closed` documents; without `to`, the carrier contact's email is used, else 422 `transport_document_not_sendable`.
-- Irreversible: requires `Idempotency-Key`. A 500 `send_failed` records nothing; retry with a new key.
+Email the stored PDF of the current version, with the public link, to up to 5 recipients in total across `to`, `cc` and `bcc`, with optional `subject` and `message`. Without `to`, the email of the carrier contact is used; if there is none, 422 `transport_document_not_sendable`. Only `issued` or `closed` documents can be sent; the delivery is recorded in the issuance evidence with its recipients. Irreversible: requires `Idempotency-Key`. Returns 410 `transport_document_file_unavailable` once the files were purged, and 500 `send_failed` if the mail provider rejects or cannot take the message (nothing is recorded in the evidence; retry with a new `Idempotency-Key`).
 
 ### Example Usage
 
@@ -1615,50 +1130,8 @@ if ($response->object !== null) {
 
 ## publicApiV1TransportDocumentsSupersede
 
-Mark an `issued` transport document as superseded by the carrier's own document; it becomes terminal (`superseded`).
-- Send `reference` (1-300 characters) and `reason`. A PDF over 5 MB returns 422 `transport_document_pdf_too_large`.
-- Irreversible: requires `Idempotency-Key`.
+Mark an `issued` transport document as superseded by the carrier's own document (method 2 of the Resolution): send `reference` (1–300 characters, e.g. its number or URL) and `reason`. It stores a final PDF version marked «SUSTITUIDO» and the document becomes terminal (`superseded`). A PDF over 5 MB returns 422 `transport_document_pdf_too_large` and nothing changes. Irreversible: requires `Idempotency-Key`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.supersede" method="post" path="/companies/{company}/transport-documents/{transport_document}/supersede" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsSupersedeRequest(
-    company: '9aea0623-30a6-4a32-85af-c34c51b24f08',
-    transportDocument: 'cd4c86cf-ee0a-4e31-a0b5-5053e39710d6',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SupersedeTransportDocumentRequest(
-        reference: '<value>',
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsSupersede(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.supersede" method="post" path="/companies/{company}/transport-documents/{transport_document}/supersede" example="missing_api_key" -->
@@ -1699,46 +1172,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.supersede" method="post" path="/companies/{company}/transport-documents/{transport_document}/supersede" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsSupersedeRequest(
-    company: '96469174-6745-4832-aa7f-0737ffdde110',
-    transportDocument: '245c9764-4c9f-42ca-8427-42a8f736a1e6',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SupersedeTransportDocumentRequest(
-        reference: '<value>',
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsSupersede(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.supersede" method="post" path="/companies/{company}/transport-documents/{transport_document}/supersede" example="success" -->
@@ -1763,46 +1196,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TransportDocumentsSupersedeRequest(
     company: 'e97bc226-ed69-4642-b0ae-bb9131d59c35',
     transportDocument: 'e9f467cc-d937-43e4-91f6-977c79b0d44d',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SupersedeTransportDocumentRequest(
-        reference: '<value>',
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->transportDocuments->publicApiV1TransportDocumentsSupersede(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.transport_documents.supersede" method="post" path="/companies/{company}/transport-documents/{transport_document}/supersede" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TransportDocumentsSupersedeRequest(
-    company: '54ed1a0f-c681-4470-9827-155ae4a341e3',
-    transportDocument: '67842def-8a4e-497b-ac22-6ed696420aeb',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SupersedeTransportDocumentRequest(

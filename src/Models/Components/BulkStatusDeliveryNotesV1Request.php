@@ -30,25 +30,13 @@ class BulkStatusDeliveryNotesV1Request
     public BulkStatusDeliveryNotesV1RequestNewStatus $newStatus;
 
     /**
-     * Optional map from each affected delivery-note UUID to its complete seven-field presentation precondition. Keys must identify documents in this batch; do not reuse another document's source token. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
-     *
-     * @var ?array<string, \Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition> $presentationPreconditions
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_preconditions')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string, \Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $presentationPreconditions = null;
-
-    /**
      * @param  array<string>  $ids
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusDeliveryNotesV1RequestNewStatus  $newStatus
-     * @param  ?array<string, \Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition>  $presentationPreconditions
      * @phpstan-pure
      */
-    public function __construct(array $ids, BulkStatusDeliveryNotesV1RequestNewStatus $newStatus, ?array $presentationPreconditions = null)
+    public function __construct(array $ids, BulkStatusDeliveryNotesV1RequestNewStatus $newStatus)
     {
         $this->ids = $ids;
         $this->newStatus = $newStatus;
-        $this->presentationPreconditions = $presentationPreconditions;
     }
 }

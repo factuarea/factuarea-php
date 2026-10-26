@@ -40,7 +40,6 @@ class PublicApiV1InvoicesQuarterlyDownloadZipResponse
     public array $headers;
 
     /**
-     * Binary ZIP archive for the requested invoice quarter. Aggregate processing counts are returned in X-Quarterly-* headers; no storage path or JSON manifest is exposed.
      *
      * @var ?string $bytes
      */

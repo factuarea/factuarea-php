@@ -11,8 +11,6 @@ namespace Factuarea\Sdk\Models\Components;
 
 enum CreateApiKeyV1RequestScope: string
 {
-    case PdfTemplatesRead = 'pdf_templates:read';
-    case PdfTemplatesWrite = 'pdf_templates:write';
     case ContactsRead = 'contacts:read';
     case ContactsWrite = 'contacts:write';
     case ContactsDelete = 'contacts:delete';

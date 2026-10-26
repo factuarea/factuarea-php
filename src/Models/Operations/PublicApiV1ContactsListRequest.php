@@ -95,10 +95,10 @@ class PublicApiV1ContactsListRequest
     /**
      * Contact kind: `person` or `company`.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListKind $kind
+     * @var ?\Factuarea\Sdk\Models\Operations\Kind $kind
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=kind')]
-    public ?PublicApiV1ContactsListKind $kind = null;
+    public ?Kind $kind = null;
 
     /**
      * Exact match on any tax identifier of the contact (NIF/NIE/CIF, EU VAT number or alternative ID document).
@@ -199,7 +199,7 @@ class PublicApiV1ContactsListRequest
      * @param  ?string  $search
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoleMatch  $roleMatch
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoleStatus  $roleStatus
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListKind  $kind
+     * @param  ?\Factuarea\Sdk\Models\Operations\Kind  $kind
      * @param  ?string  $fiscalIdentity
      * @param  ?string  $externalId
      * @param  ?bool  $isArchived
@@ -213,7 +213,7 @@ class PublicApiV1ContactsListRequest
      * @param  ?\Factuarea\Sdk\Models\Operations\SortOrder  $sortOrder
      * @phpstan-pure
      */
-    public function __construct(string $company, ?array $roles = null, ?array $tags = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = null, ?string $startingAfter = null, ?string $search = null, ?PublicApiV1ContactsListRoleMatch $roleMatch = null, ?PublicApiV1ContactsListRoleStatus $roleStatus = null, ?PublicApiV1ContactsListKind $kind = null, ?string $fiscalIdentity = null, ?string $externalId = null, ?bool $isArchived = null, ?string $city = null, ?string $province = null, ?PublicApiV1ContactsListCountryCode $countryCode = null, ?bool $hasEmail = null, ?bool $hasPhone = null, ?LocalDate $createdFrom = null, ?LocalDate $createdTo = null, ?SortOrder $sortOrder = null)
+    public function __construct(string $company, ?array $roles = null, ?array $tags = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = null, ?string $startingAfter = null, ?string $search = null, ?PublicApiV1ContactsListRoleMatch $roleMatch = null, ?PublicApiV1ContactsListRoleStatus $roleStatus = null, ?Kind $kind = null, ?string $fiscalIdentity = null, ?string $externalId = null, ?bool $isArchived = null, ?string $city = null, ?string $province = null, ?PublicApiV1ContactsListCountryCode $countryCode = null, ?bool $hasEmail = null, ?bool $hasPhone = null, ?LocalDate $createdFrom = null, ?LocalDate $createdTo = null, ?SortOrder $sortOrder = null)
     {
         $this->company = $company;
         $this->roles = $roles;

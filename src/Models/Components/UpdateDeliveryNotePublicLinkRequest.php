@@ -35,24 +35,13 @@ class UpdateDeliveryNotePublicLinkRequest
     public ?int $extendDays = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNotePublicLinkRequestPublicationContext $publicationContext
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('publication_context')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateDeliveryNotePublicLinkRequestPublicationContext|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateDeliveryNotePublicLinkRequestPublicationContext $publicationContext = null;
-
-    /**
      * @param  \Factuarea\Sdk\Models\Components\UpdateDeliveryNotePublicLinkRequestAction  $action
      * @param  ?int  $extendDays
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNotePublicLinkRequestPublicationContext  $publicationContext
      * @phpstan-pure
      */
-    public function __construct(UpdateDeliveryNotePublicLinkRequestAction $action, ?int $extendDays = null, ?UpdateDeliveryNotePublicLinkRequestPublicationContext $publicationContext = null)
+    public function __construct(UpdateDeliveryNotePublicLinkRequestAction $action, ?int $extendDays = null)
     {
         $this->action = $action;
         $this->extendDays = $extendDays;
-        $this->publicationContext = $publicationContext;
     }
 }

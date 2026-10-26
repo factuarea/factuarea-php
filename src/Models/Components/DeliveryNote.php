@@ -150,15 +150,6 @@ class DeliveryNote
     public array $customFields;
 
     /**
-     * Safe summary of the retained PDF output for a document. This is not artifact metadata: it never exposes snapshots, proofs, or storage paths. `download_url` is present only for a ready artifact.
-     *
-     * @var \Factuarea\Sdk\Models\Components\DocumentPdfOutputState $pdfOutputState
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_output_state')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentPdfOutputState')]
-    public DocumentPdfOutputState $pdfOutputState;
-
-    /**
      * UUID of the price list selected for this document.
      *
      * @var ?string $priceListId
@@ -346,14 +337,6 @@ class DeliveryNote
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\DocumentPresentationState $presentation
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentPresentationState|null')]
-    public ?DocumentPresentationState $presentation;
-
-    /**
-     *
      * @var ?\DateTime $createdAt
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('created_at')]
@@ -393,7 +376,6 @@ class DeliveryNote
      * @param  array<\Factuarea\Sdk\Models\Components\DeliveryNoteLine>  $lines
      * @param  array<string>  $tags
      * @param  array<\Factuarea\Sdk\Models\Components\CustomField>  $customFields
-     * @param  \Factuarea\Sdk\Models\Components\DocumentPdfOutputState  $pdfOutputState
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?LocalDate  $issuedOn
@@ -417,13 +399,12 @@ class DeliveryNote
      * @param  ?string  $referenceNumber
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $convertedToId
-     * @param  ?\Factuarea\Sdk\Models\Components\DocumentPresentationState  $presentation
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @param  ?string  $totalGrossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, DocumentPdfOutputState $pdfOutputState, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?int $linesWithoutWeightCount = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?DocumentPresentationState $presentation = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $totalGrossWeightKg = null)
+    public function __construct(string $id, DeliveryNoteObject $object, string $number, SeriesRef $series, ClientRef $client, DeliveryNoteStatus $status, array $billingEmails, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $issuedOn = null, ?LocalDate $deliveryDate = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?\DateTime $signedAt = null, ?string $signedBy = null, ?string $signatureImageUrl = null, ?string $transportDetails = null, ?string $vehiclePlate = null, ?Driver $driver = null, ?Tracking $tracking = null, ?ReceivedBy $receivedBy = null, ?int $linesWithoutWeightCount = null, ?string $notes = null, ?string $externalId = null, ?string $referenceNumber = null, ?array $metadata = null, ?string $convertedToId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?string $totalGrossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -442,7 +423,6 @@ class DeliveryNote
         $this->lines = $lines;
         $this->tags = $tags;
         $this->customFields = $customFields;
-        $this->pdfOutputState = $pdfOutputState;
         $this->priceListId = $priceListId;
         $this->priceListName = $priceListName;
         $this->issuedOn = $issuedOn;
@@ -466,7 +446,6 @@ class DeliveryNote
         $this->referenceNumber = $referenceNumber;
         $this->metadata = $metadata;
         $this->convertedToId = $convertedToId;
-        $this->presentation = $presentation;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->totalGrossWeightKg = $totalGrossWeightKg;

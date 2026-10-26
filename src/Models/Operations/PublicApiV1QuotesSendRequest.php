@@ -46,7 +46,6 @@ class PublicApiV1QuotesSendRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Quote send accepts the `presentation_precondition` object with exactly seven fields and the optional `expected_presentation_uuid`. A draft quote is numbered and sent in one step: the precondition is checked by the numbering (the first write of the document), which captures what was reviewed, and the email carries that capture; a draft whose retained capture is stale (edited or re-templated after it was captured) and that comes without the precondition returns 428 `pdf_presentation_precondition_required` before anything is written. The object is required when revisioned presentation is enabled for the company and the document has no retained capture yet (a missing precondition returns 428 `pdf_presentation_precondition_required`); an already captured document is re-sent as captured without it and without creating a new version; otherwise it is ignored.
      *
      * @var ?\Factuarea\Sdk\Models\Components\SendQuoteRequest $body
      */

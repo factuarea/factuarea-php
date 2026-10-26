@@ -129,47 +129,9 @@ if ($response->object !== null) {
 
 ## publicApiV1StripeAutoinvoicingAccountsUpdate
 
-Updates a connected Stripe account; omitted fields keep their value.
-- Editable: `name`, `series_id` (`null` uses the company default series) and the per-account fiscal policy.
-- `invoice_note` (up to 500 characters) goes in auto-created invoices; `null` clears it.
+Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`) and the optional `invoice_note` (up to 500 characters) written in the notes of the auto-created invoices (`null` clears it; no note by default). All fields are optional; omitted ones keep their value.
 
-### Example Usage: fee_expenses_enabled
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.update" method="patch" path="/companies/{company}/connected-accounts/{account}" example="fee_expenses_enabled" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest(
-    company: '70c966a3-6c2f-4369-b927-1b75301c0302',
-    account: '1a422905-683f-4217-88f1-0449473e6d1f',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-);
-
-$response = $sdk->stripeAutoinvoicing->accounts->publicApiV1StripeAutoinvoicingAccountsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: success
+### Example Usage
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.accounts.update" method="patch" path="/companies/{company}/connected-accounts/{account}" example="success" -->
 ```php
@@ -226,9 +188,7 @@ if ($response->object !== null) {
 
 ## publicApiV1StripeAutoinvoicingAccountsList
 
-Lists the connected Stripe accounts (Stripe Connect, multi-store) of the company.
-- Each exposes `id`, `name`, `external_account_id` (`acct_xxx`), `series_id`, `status` and `connected_at`.
-- It also exposes its per-account configuration, e.g. `autoinvoicing_enabled`.
+List the connected Stripe accounts (Stripe Connect, multi-store) for your company. Each exposes its `id`, `name`, `external_account_id` (`acct_xxx`), the assigned `series_id`, its per-account configuration (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`), `status` and `connected_at`. Charges are auto-invoiced with that account's series and configuration.
 
 ### Example Usage
 

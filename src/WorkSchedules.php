@@ -176,10 +176,7 @@ class WorkSchedules
     /**
      * Assign a schedule to an employee
      *
-     * Assign the work schedule to an employee with an effective start date; the previous open assignment is closed and history is kept.
-     * - `employee_id` and `effective_from` (`Y-m-d`) are required.
-     * - An unknown employee returns 422 `assigned_employee_not_found`; moving back the start of an assignment already in effect returns 422.
-     * - Returns the created assignment.
+     * Assign the work schedule to an employee with an effective start date. `employee_id` (UUID v7, must belong to your company) and `effective_from` (`Y-m-d`) are required. Assigning closes the employee’s previously open assignment and opens the new one (an employee has at most one open assignment; history is preserved). If that previous assignment has not started yet and the new `effective_from` is on or before its start, it is cancelled instead: it is closed as an empty span (`effective_to` = its `effective_from`), kept in the history and never in effect. Moving back the start of an assignment that is already in effect still returns 422. An unknown employee returns 422 `assigned_employee_not_found`; an unknown schedule returns 404. Returns the created assignment.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesAssignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesAssignResponse
@@ -423,9 +420,7 @@ class WorkSchedules
     /**
      * Create a work schedule
      *
-     * Create a weekly work schedule for your company (resolved from the API key).
-     * - `name` and `week_pattern` are required; `mode` defaults to `validated`. `week_pattern` lists ISO weekdays (1..7) with ordered, non-overlapping `HH:MM` ranges (empty `ranges` = rest day).
-     * - Returns the schedule with its `id`; `weekly_hours` is derived.
+     * Create a weekly work schedule for the authenticated company (resolved from the API key, never from the payload). `name` and `week_pattern` are required; `mode` defaults to `validated`. The `week_pattern` is a list of weekdays (ISO 8601 1..7) each with its ordered, non-overlapping `HH:MM` time ranges (an empty `ranges` means a rest day). Returns the created schedule with its generated `id` (UUID v7); `weekly_hours` is derived from the pattern.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateWeeklyScheduleRequest  $body
      * @param  string  $company
@@ -555,9 +550,7 @@ class WorkSchedules
     /**
      * Get an employee’s schedule on a date
      *
-     * Resolve the work schedule in effect for an employee on a day; `date` (`Y-m-d`) is optional and defaults to today.
-     * - Returns the schedule, not the assignment.
-     * - 404 `schedule_assignment_not_found` if none is in effect (or the employee belongs to another company); 422 for an invalid `date`.
+     * Resolve the work schedule in effect for an employee by its `id` (UUID v7) on a given day. The optional `date` query parameter (`Y-m-d`) sets that day and defaults to today, so you can read a schedule that starts in the future, such as the one assigned from a pending hire date. Returns 404 `schedule_assignment_not_found` when the employee has no schedule in effect on that day (or belongs to another company), and 422 when `date` is not a valid `Y-m-d` date. The result is the resolved schedule (`id` = UUID v7 of the schedule), not the assignment.
      *
      * @param  string  $company
      * @param  string  $employee
@@ -1173,9 +1166,7 @@ class WorkSchedules
     /**
      * Unassign a schedule from an employee
      *
-     * Close the employee's open assignment to this schedule; `employee_id` is required and `effective_to` (`Y-m-d`) defaults to today.
-     * - An assignment not yet started is cancelled and kept in history as an empty span.
-     * - Closing an assignment in effect before its start returns 422; no open assignment returns 404. Responds 204.
+     * Close the employee’s open assignment to this schedule. `employee_id` (UUID v7) is required; `effective_to` (`Y-m-d`) is optional and defaults to today. An assignment that has not started yet and is unassigned on or before its start (including the default of today) is cancelled: it is closed as an empty span (`effective_to` = its `effective_from`) and kept in the history. Closing an assignment already in effect on a date before its start returns 422. Returns 404 when there is no open assignment. Responds 204 No Content.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUnassignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUnassignResponse
@@ -1286,9 +1277,7 @@ class WorkSchedules
     /**
      * Update a work schedule
      *
-     * Partially update a work schedule; an omitted field keeps its value.
-     * - A sent `week_pattern` replaces the whole pattern and `weekly_hours` is recomputed.
-     * - An invalid value returns 422 and changes nothing. Returns the updated schedule.
+     * Partially update a work schedule: `name`, `mode` and `week_pattern` are optional and an omitted field keeps its current value (an empty body changes nothing). When sent, `week_pattern` replaces the whole weekly pattern — there is no update of a single day — and `weekly_hours` is recomputed from it. The resulting schedule is validated as a whole, so an invalid value returns 422 and changes nothing. Returns the updated schedule.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesUpdateResponse

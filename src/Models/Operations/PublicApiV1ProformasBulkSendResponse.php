@@ -40,7 +40,6 @@ class PublicApiV1ProformasBulkSendResponse
     public array $headers;
 
     /**
-     * With revisioned presentation enabled, a row that carries its `presentation_preconditions` entry needs the measured identity of the PDF engine. If the engine does not answer (down, restarting or in the middle of a deployment) that row is NOT applied and is returned in `failures[]` with `error_code` `pdf_engine_unreachable` (transient); the batch goes on with the other rows and the request does not fail. Repeat only the ids listed in `failures[]` with that code, after a short delay, so documents that already went out are not processed again. `pdf_engine_profile_unavailable` in a row is a terminal failure of the engine.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProformasBulkSendResponseBody $object
      */

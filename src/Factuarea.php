@@ -75,7 +75,11 @@ class Factuarea
 
     public Verifactu $verifactu;
 
+    public RecurringInvoices $recurringInvoices;
+
     public Tasks $tasks;
+
+    public Invoices $invoices;
 
     public ManagedAccounts $managedAccounts;
 
@@ -89,27 +93,19 @@ class Factuarea
 
     public Contacts $contacts;
 
-    public PdfCommercialIdentities $pdfCommercialIdentities;
-
     public Projects $projects;
 
     public PurchaseScans $purchaseScans;
 
     public Series $series;
 
-    public PdfTemplates $pdfTemplates;
-
     public WorkSchedules $workSchedules;
-
-    public DeliveryNotes $deliveryNotes;
-
-    public Invoices $invoices;
 
     public PurchaseInvoices $purchaseInvoices;
 
-    public Products $products;
+    public DeliveryNotes $deliveryNotes;
 
-    public RecurringInvoices $recurringInvoices;
+    public Products $products;
 
     public Taxes $taxes;
 
@@ -138,8 +134,6 @@ class Factuarea
     public TaskLabels $taskLabels;
 
     public WebhookEndpoints $webhookEndpoints;
-
-    public PdfArtifacts $pdfArtifacts;
 
     public TaxReports $taxReports;
 
@@ -170,6 +164,8 @@ class Factuarea
     public Developers $developers;
 
     public EventCatalog $eventCatalog;
+
+    public Events $events;
 
     public Holidays $holidays;
 
@@ -209,24 +205,22 @@ class Factuarea
         $this->automations = new Automations($this->sdkConfiguration);
         $this->companies = new Companies($this->sdkConfiguration);
         $this->verifactu = new Verifactu($this->sdkConfiguration);
+        $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
         $this->tasks = new Tasks($this->sdkConfiguration);
+        $this->invoices = new Invoices($this->sdkConfiguration);
         $this->managedAccounts = new ManagedAccounts($this->sdkConfiguration);
         $this->absenceRequests = new AbsenceRequests($this->sdkConfiguration);
         $this->timeCorrections = new TimeCorrections($this->sdkConfiguration);
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
         $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->contacts = new Contacts($this->sdkConfiguration);
-        $this->pdfCommercialIdentities = new PdfCommercialIdentities($this->sdkConfiguration);
         $this->projects = new Projects($this->sdkConfiguration);
         $this->purchaseScans = new PurchaseScans($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
-        $this->pdfTemplates = new PdfTemplates($this->sdkConfiguration);
         $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
-        $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
-        $this->invoices = new Invoices($this->sdkConfiguration);
         $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
+        $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
         $this->products = new Products($this->sdkConfiguration);
-        $this->recurringInvoices = new RecurringInvoices($this->sdkConfiguration);
         $this->taxes = new Taxes($this->sdkConfiguration);
         $this->employeeBatches = new EmployeeBatches($this->sdkConfiguration);
         $this->employeeInvitations = new EmployeeInvitations($this->sdkConfiguration);
@@ -241,7 +235,6 @@ class Factuarea
         $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->taskLabels = new TaskLabels($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
-        $this->pdfArtifacts = new PdfArtifacts($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
         $this->agenda = new Agenda($this->sdkConfiguration);
         $this->gestoria = new Gestoria($this->sdkConfiguration);
@@ -257,6 +250,7 @@ class Factuarea
         $this->absenceBalances = new AbsenceBalances($this->sdkConfiguration);
         $this->developers = new Developers($this->sdkConfiguration);
         $this->eventCatalog = new EventCatalog($this->sdkConfiguration);
+        $this->events = new Events($this->sdkConfiguration);
         $this->holidays = new Holidays($this->sdkConfiguration);
         $this->integrations = new Integrations($this->sdkConfiguration);
         $this->notifications = new Notifications($this->sdkConfiguration);

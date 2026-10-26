@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** FaceSubmission - Tenant-scoped durable FACe attempt. Frozen administrative and payment versions identify the prepared source independently of subsequent invoice or contact changes. */
+/** FaceSubmission - A submission of an invoice to FACe (the Spanish B2G general entry point). Tracks the FACe registry number and the processing status reported by the FACe web service. */
 class FaceSubmission
 {
     /**
-     * New attempts use UUIDv7; retained legacy identities are not rewritten.
+     * UUID v7 of the FACe submission.
      *
      * @var string $id
      */
@@ -37,16 +37,15 @@ class FaceSubmission
     public string $invoiceId;
 
     /**
-     * FACe processing status. `prepared` and `transmission_uncertain` precede the FACe acknowledgement; afterwards `submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled` or `error`. Kept up to date by the system polling — there is no refresh endpoint in v1.
+     * FACe processing status (`submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled`, `error`). Kept up to date by the system polling — there is no refresh endpoint in v1.
      *
-     * @var \Factuarea\Sdk\Models\Components\FaceSubmissionStatus $status
+     * @var string $status
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\FaceSubmissionStatus')]
-    public FaceSubmissionStatus $status;
+    public string $status;
 
     /**
-     * Frozen role 01 of this attempt.
+     * DIR3 code of the accounting office (oficina contable, role 01) snapshotted at submission time.
      *
      * @var string $dir3AccountingOffice
      */
@@ -54,7 +53,7 @@ class FaceSubmission
     public string $dir3AccountingOffice;
 
     /**
-     * Frozen role 02 of this attempt.
+     * DIR3 code of the managing body (órgano gestor, role 02) snapshotted at submission time.
      *
      * @var string $dir3ManagingBody
      */
@@ -62,7 +61,7 @@ class FaceSubmission
     public string $dir3ManagingBody;
 
     /**
-     * Frozen role 03 of this attempt.
+     * DIR3 code of the processing unit (unidad tramitadora, role 03) snapshotted at submission time.
      *
      * @var string $dir3ProcessingUnit
      */
@@ -85,31 +84,6 @@ class FaceSubmission
     public \DateTime $createdAt;
 
     /**
-     * Only a prepared attempt with an intact retained artifact may continue; current actor send authority is also required.
-     *
-     * @var bool $canTransmit
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('can_transmit')]
-    public bool $canTransmit;
-
-    /**
-     * Uncertain transmission blocks new submissions, cancellation and automatic retry.
-     *
-     * @var bool $requiresReconciliation
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('requires_reconciliation')]
-    public bool $requiresReconciliation;
-
-    /**
-     * Legacy unverified bytes remain downloadable without inventing historical hashes or regenerating them.
-     *
-     * @var \Factuarea\Sdk\Models\Components\ArtifactStatus $artifactStatus
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('artifact_status')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ArtifactStatus')]
-    public ArtifactStatus $artifactStatus;
-
-    /**
      * Registry number assigned by FACe on presentation. Synthetic `FACE-SANDBOX-*` for sandbox (test key) submissions.
      *
      * @var ?string $registryNumber
@@ -118,15 +92,7 @@ class FaceSubmission
     public ?string $registryNumber;
 
     /**
-     * Optional frozen role 04; not substituted by a live contact value.
-     *
-     * @var ?string $dir3Proponent
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('dir3_proponent')]
-    public ?string $dir3Proponent;
-
-    /**
-     * Only error with confirmed_not_received authorizes a fresh attempt after audited reconciliation.
+     * Local transmission error code, `null` unless the submission is in `error` state.
      *
      * @var ?string $errorCode
      */
@@ -134,7 +100,7 @@ class FaceSubmission
     public ?string $errorCode;
 
     /**
-     * Safe public summary, never a raw SOAP or storage diagnostic.
+     * Human-readable transmission error message (in Spanish), `null` unless the submission is in `error` state.
      *
      * @var ?string $errorMessage
      */
@@ -150,90 +116,22 @@ class FaceSubmission
     public ?\DateTime $lastPolledAt;
 
     /**
-     *
-     * @var ?int $administrativeVersion
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_version')]
-    public ?int $administrativeVersion;
-
-    /**
-     *
-     * @var ?string $administrativeRevisionId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_revision_id')]
-    public ?string $administrativeRevisionId;
-
-    /**
-     *
-     * @var ?int $paymentTermsVersion
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_version')]
-    public ?int $paymentTermsVersion;
-
-    /**
-     *
-     * @var ?string $sourceFingerprint
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('source_fingerprint')]
-    public ?string $sourceFingerprint;
-
-    /**
-     *
-     * @var ?string $artifactSha256
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('artifact_sha256')]
-    public ?string $artifactSha256;
-
-    /**
-     *
-     * @var ?\DateTime $preparedAt
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('prepared_at')]
-    public ?\DateTime $preparedAt;
-
-    /**
-     *
-     * @var ?\DateTime $transmissionStartedAt
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('transmission_started_at')]
-    public ?\DateTime $transmissionStartedAt;
-
-    /**
-     *
-     * @var ?string $signingCertificateFingerprint
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('signing_certificate_fingerprint')]
-    public ?string $signingCertificateFingerprint;
-
-    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\FaceSubmissionObject  $object
      * @param  string  $invoiceId
-     * @param  \Factuarea\Sdk\Models\Components\FaceSubmissionStatus  $status
+     * @param  string  $status
      * @param  string  $dir3AccountingOffice
      * @param  string  $dir3ManagingBody
      * @param  string  $dir3ProcessingUnit
      * @param  \DateTime  $statusUpdatedAt
      * @param  \DateTime  $createdAt
-     * @param  bool  $canTransmit
-     * @param  bool  $requiresReconciliation
-     * @param  \Factuarea\Sdk\Models\Components\ArtifactStatus  $artifactStatus
      * @param  ?string  $registryNumber
-     * @param  ?string  $dir3Proponent
      * @param  ?string  $errorCode
      * @param  ?string  $errorMessage
      * @param  ?\DateTime  $lastPolledAt
-     * @param  ?int  $administrativeVersion
-     * @param  ?string  $administrativeRevisionId
-     * @param  ?int  $paymentTermsVersion
-     * @param  ?string  $sourceFingerprint
-     * @param  ?string  $artifactSha256
-     * @param  ?\DateTime  $preparedAt
-     * @param  ?\DateTime  $transmissionStartedAt
-     * @param  ?string  $signingCertificateFingerprint
      * @phpstan-pure
      */
-    public function __construct(string $id, FaceSubmissionObject $object, string $invoiceId, FaceSubmissionStatus $status, string $dir3AccountingOffice, string $dir3ManagingBody, string $dir3ProcessingUnit, \DateTime $statusUpdatedAt, \DateTime $createdAt, bool $canTransmit, bool $requiresReconciliation, ArtifactStatus $artifactStatus, ?string $registryNumber = null, ?string $dir3Proponent = null, ?string $errorCode = null, ?string $errorMessage = null, ?\DateTime $lastPolledAt = null, ?int $administrativeVersion = null, ?string $administrativeRevisionId = null, ?int $paymentTermsVersion = null, ?string $sourceFingerprint = null, ?string $artifactSha256 = null, ?\DateTime $preparedAt = null, ?\DateTime $transmissionStartedAt = null, ?string $signingCertificateFingerprint = null)
+    public function __construct(string $id, FaceSubmissionObject $object, string $invoiceId, string $status, string $dir3AccountingOffice, string $dir3ManagingBody, string $dir3ProcessingUnit, \DateTime $statusUpdatedAt, \DateTime $createdAt, ?string $registryNumber = null, ?string $errorCode = null, ?string $errorMessage = null, ?\DateTime $lastPolledAt = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -244,21 +142,9 @@ class FaceSubmission
         $this->dir3ProcessingUnit = $dir3ProcessingUnit;
         $this->statusUpdatedAt = $statusUpdatedAt;
         $this->createdAt = $createdAt;
-        $this->canTransmit = $canTransmit;
-        $this->requiresReconciliation = $requiresReconciliation;
-        $this->artifactStatus = $artifactStatus;
         $this->registryNumber = $registryNumber;
-        $this->dir3Proponent = $dir3Proponent;
         $this->errorCode = $errorCode;
         $this->errorMessage = $errorMessage;
         $this->lastPolledAt = $lastPolledAt;
-        $this->administrativeVersion = $administrativeVersion;
-        $this->administrativeRevisionId = $administrativeRevisionId;
-        $this->paymentTermsVersion = $paymentTermsVersion;
-        $this->sourceFingerprint = $sourceFingerprint;
-        $this->artifactSha256 = $artifactSha256;
-        $this->preparedAt = $preparedAt;
-        $this->transmissionStartedAt = $transmissionStartedAt;
-        $this->signingCertificateFingerprint = $signingCertificateFingerprint;
     }
 }

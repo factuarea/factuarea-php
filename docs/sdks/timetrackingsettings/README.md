@@ -65,9 +65,7 @@ if ($response->object !== null) {
 
 ## publicApiV1TimeTrackingSettingsUpdate
 
-Create or partially update your company's time tracking configuration; an omitted field keeps its current value.
-- Fields: `overtime_basis` (`weekly`/`daily`), overtime thresholds in minutes (`null` derives them from the schedule), `overtime_tolerance_minutes` and the clock-in reminder settings.
-- A negative threshold or tolerance returns 422.
+Create or partially update the time tracking configuration of your company (every field is optional and an omitted one keeps its current value, or the default when the company has no configuration yet): `overtime_basis` (`weekly`/`daily`), the optional daily/weekly overtime thresholds in minutes (`null` derives them from the schedule), the rounding `overtime_tolerance_minutes`, and the clock-in reminder toggle and grace minutes. A negative threshold or tolerance returns 422 in Spanish. Returns the updated settings with `id` = UUID v7 of the row.
 
 ### Example Usage: api_key_revoked
 

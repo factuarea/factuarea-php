@@ -98,45 +98,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.archive" method="delete" path="/companies/{company}/purchase-scans/{purchase_scan}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansArchiveRequest(
-    company: '21a86522-a45b-441c-a412-025d8df0f927',
-    purchaseScan: 'fe41af1d-def7-42a4-a17b-94fdfd8a8e02',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 851648,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansArchive(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.archive" method="delete" path="/companies/{company}/purchase-scans/{purchase_scan}" example="invalid_api_key" -->
@@ -254,45 +215,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.archive" method="delete" path="/companies/{company}/purchase-scans/{purchase_scan}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansArchiveRequest(
-    company: 'd24fe222-499f-4a92-a448-544ca420101f',
-    purchaseScan: '68469634-6797-4cf9-b84e-12fc92d611ca',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 851648,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansArchive(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.archive" method="delete" path="/companies/{company}/purchase-scans/{purchase_scan}" example="success" -->
@@ -317,45 +239,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansArchiveRequest(
     company: 'Crona, Greenfelder and Zieme',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 851648,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansArchive(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.archive" method="delete" path="/companies/{company}/purchase-scans/{purchase_scan}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansArchiveRequest(
-    company: 'c542888b-fe37-439f-83e9-3849dcb8afa9',
-    purchaseScan: '6c095122-ad68-4103-8e3b-e1ae6eeb5fa5',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\VersionedPurchaseScanRequest(
@@ -530,45 +413,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.convert" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/convert" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansConvertRequest(
-    company: '0a61565e-f7f0-46f5-9b4b-6eb4f3e92e51',
-    purchaseScan: '5ceb6d9a-e8ea-40d8-b9db-ba02ef237f82',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConvertPurchaseScanRequest(
-        expectedVersion: 53718,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansConvert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.convert" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/convert" example="invalid_api_key" -->
@@ -686,45 +530,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.convert" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/convert" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansConvertRequest(
-    company: '0657ff45-7d23-4b03-ae67-648b5f0684f7',
-    purchaseScan: '93146f63-b908-4452-a4af-48d74c6ca7bd',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConvertPurchaseScanRequest(
-        expectedVersion: 53718,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansConvert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.convert" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/convert" example="success" -->
@@ -749,45 +554,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansConvertRequest(
     company: 'Kemmer - Halvorson',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ConvertPurchaseScanRequest(
-        expectedVersion: 53718,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansConvert(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.convert" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/convert" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansConvertRequest(
-    company: '907833e9-a39b-4391-8fe9-4bdd10476511',
-    purchaseScan: '49aed9a1-e571-47a4-baae-3c7eeb109f49',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ConvertPurchaseScanRequest(
@@ -1021,46 +787,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.duplicate_resolution" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/duplicate-resolution" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest(
-    company: '84d1c39a-af27-4bcd-b4f3-c6da38d40a3d',
-    purchaseScan: '8c600340-53e1-40ad-b166-6481ee17679b',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ResolvePurchaseScanDuplicateV1Request(
-        expectedVersion: 48616,
-        resolution: Components\Resolution::Archive,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansDuplicateResolution(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.duplicate_resolution" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/duplicate-resolution" example="invalid_api_key" -->
@@ -1181,46 +907,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.duplicate_resolution" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/duplicate-resolution" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest(
-    company: '0d54b366-de06-4980-9793-d5c122e74a2d',
-    purchaseScan: 'ec604b5f-d574-4974-9605-9d4a808a2b02',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ResolvePurchaseScanDuplicateV1Request(
-        expectedVersion: 48616,
-        resolution: Components\Resolution::Archive,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansDuplicateResolution(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.duplicate_resolution" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/duplicate-resolution" example="success" -->
@@ -1245,46 +931,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest(
     company: 'Stokes - Hegmann',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ResolvePurchaseScanDuplicateV1Request(
-        expectedVersion: 48616,
-        resolution: Components\Resolution::Archive,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansDuplicateResolution(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.duplicate_resolution" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/duplicate-resolution" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansDuplicateResolutionRequest(
-    company: '4c0f766b-55fa-4c3a-a842-8f844758c588',
-    purchaseScan: 'fe6ac786-2c23-467e-b046-04d1a66b6c76',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ResolvePurchaseScanDuplicateV1Request(
@@ -1387,45 +1033,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansRestoreRequest(
     company: 'Adams, Schuppe and Gislason',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 263337,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansRestore(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.restore" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/restore" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansRestoreRequest(
-    company: '1a4e7809-790c-4078-b74d-4ae85815d58f',
-    purchaseScan: '15b86127-2f34-44b8-bba8-0d4105505b9e',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\VersionedPurchaseScanRequest(
@@ -1558,45 +1165,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.restore" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/restore" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansRestoreRequest(
-    company: '449f77d7-a9e0-4d43-a607-2e9ba47864ec',
-    purchaseScan: 'bee1fa74-7758-4917-9513-63bbfd894e48',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 263337,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansRestore(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.restore" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/restore" example="success" -->
@@ -1621,45 +1189,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansRestoreRequest(
     company: 'Hahn - Medhurst',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 263337,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansRestore(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.restore" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/restore" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansRestoreRequest(
-    company: '0ebfd356-6979-4097-bee6-85b4ce50f275',
-    purchaseScan: '58c85eb4-00f5-4913-88e5-b10a680dbca7',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\VersionedPurchaseScanRequest(
@@ -1761,45 +1290,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansRetryRequest(
     company: 'Harber Group',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 677254,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansRetry(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.retry" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/retry" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansRetryRequest(
-    company: 'dda6487e-c1ea-45f4-8e9c-c451d44fb30b',
-    purchaseScan: '9a6b2a79-a482-41df-b1c8-edf307a5eee2',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\VersionedPurchaseScanRequest(
@@ -1932,45 +1422,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.retry" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/retry" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansRetryRequest(
-    company: 'ae3dbc0c-0a38-452e-887c-bc89ab1117b7',
-    purchaseScan: 'f116b2cf-62a1-4e52-ba6a-d998775316aa',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 677254,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansRetry(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.retry" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/retry" example="success" -->
@@ -1995,45 +1446,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansRetryRequest(
     company: 'Terry, Fadel and Swaniawski',
     purchaseScan: '<value>',
-    idempotencyKey: '<value>',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\VersionedPurchaseScanRequest(
-        expectedVersion: 677254,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansRetry(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.retry" method="post" path="/companies/{company}/purchase-scans/{purchase_scan}/retry" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansRetryRequest(
-    company: '8da3373c-ed94-4ec3-8f30-357c4cbcf969',
-    purchaseScan: 'a2a95b70-274f-4564-90b5-ff784f8c2324',
     idempotencyKey: '<value>',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\VersionedPurchaseScanRequest(
@@ -2135,45 +1547,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansReviewRequest(
     company: 'Bernier - Tillman',
     purchaseScan: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SavePurchaseScanReviewV1Request(
-        expectedVersion: 956114,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansReview(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.review" method="patch" path="/companies/{company}/purchase-scans/{purchase_scan}/review" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansReviewRequest(
-    company: '882c2f59-258e-4662-ab27-4335a545ab2a',
-    purchaseScan: '1b6ff4a0-27c3-43e2-9e41-2d9a4f3e8741',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SavePurchaseScanReviewV1Request(
@@ -2306,45 +1679,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.review" method="patch" path="/companies/{company}/purchase-scans/{purchase_scan}/review" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansReviewRequest(
-    company: 'f753374f-e554-41ef-8de2-3546b5fbcf55',
-    purchaseScan: 'd5575139-6468-477a-9f9c-969551ce3761',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SavePurchaseScanReviewV1Request(
-        expectedVersion: 956114,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansReview(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.review" method="patch" path="/companies/{company}/purchase-scans/{purchase_scan}/review" example="success" -->
@@ -2369,45 +1703,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1PurchaseScansReviewRequest(
     company: 'Konopelski, Heaney and Dicki',
     purchaseScan: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SavePurchaseScanReviewV1Request(
-        expectedVersion: 956114,
-    ),
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansReview(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.review" method="patch" path="/companies/{company}/purchase-scans/{purchase_scan}/review" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1PurchaseScansReviewRequest(
-    company: 'a16e82a3-5f0f-4d62-887a-abb7bcdf4630',
-    purchaseScan: '1c19b98e-82c0-42bc-87bf-764e355a30bc',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SavePurchaseScanReviewV1Request(
@@ -2501,9 +1796,7 @@ if ($response->object !== null) {
 
 ## publicApiV1PurchaseScansCreate
 
-Upload up to 20 PDF, JPEG or PNG files as `multipart/form-data` (`files[]`) to the purchase scanner.
-- Responds `202` with `accepted[]` and `rejected[]`; `422` when no file was accepted.
-- Send an `Idempotency-Key` header: a replay returns the same result without re-ingesting.
+Upload up to 20 PDF, JPEG or PNG files as `multipart/form-data` (`files[]`, 20 MiB each, 100 MiB per request). Each file is scanned for safety and stored encrypted. It is queued for OCR when automatic scanning is enabled; otherwise it remains `received` until explicitly started. Responds `202` with `accepted[]` (index plus the full scan detail) and `rejected[]` (index, filename, error code); `422` when no file was accepted. Send an `Idempotency-Key` header: a replay returns the same result without re-ingesting.
 
 ### Example Usage: api_key_expired
 
@@ -2567,42 +1860,6 @@ $body = new Components\UploadPurchaseScansRequest(
 
 $response = $sdk->purchaseScans->publicApiV1PurchaseScansCreate(
     company: 'Mertz - Walter',
-    idempotencyKey: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.create" method="post" path="/companies/{company}/purchase-scans" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UploadPurchaseScansRequest(
-    files: [],
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansCreate(
-    company: 'cac738f9-e8d3-4245-ae4c-4eca29948e32',
     idempotencyKey: '<value>',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -2865,42 +2122,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.create" method="post" path="/companies/{company}/purchase-scans" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UploadPurchaseScansRequest(
-    files: [],
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansCreate(
-    company: '65a2ce28-f608-47a7-9a36-a2f49e89cee9',
-    idempotencyKey: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.create" method="post" path="/companies/{company}/purchase-scans" example="success" -->
@@ -2937,42 +2158,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.purchase_scans.create" method="post" path="/companies/{company}/purchase-scans" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UploadPurchaseScansRequest(
-    files: [],
-);
-
-$response = $sdk->purchaseScans->publicApiV1PurchaseScansCreate(
-    company: '10a50799-1bea-4178-a5fd-24f128072e6d',
-    idempotencyKey: '<value>',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -2989,10 +2174,10 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                                                 | Status Code                                                | Content Type                                               |
-| ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
-| Errors\Error                                               | 422                                                        | application/json                                           |
-| Errors\PublicApiV1PurchaseScansCreateResponseBodyException | 422                                                        | application/json                                           |
-| Errors\Error                                               | 400, 401, 403, 404, 409, 413, 429                          | application/json                                           |
-| Errors\Error                                               | 500, 503                                                   | application/json                                           |
-| Errors\APIException                                        | 4XX, 5XX                                                   | \*/\*                                                      |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 422                               | application/json                  |
+| Errors\ResponseBodyException      | 422                               | application/json                  |
+| Errors\Error                      | 400, 401, 403, 404, 409, 413, 429 | application/json                  |
+| Errors\Error                      | 500, 503                          | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |

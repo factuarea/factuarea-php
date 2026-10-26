@@ -13,46 +13,6 @@
 
 Define a custom field for the tasks of a project. `name` and `type` are required; `required`, `default_value` and `options` (for `dropdown` and `multiselect`) are optional. An inconsistent definition —options on a type that has none, a default that is not a valid value— returns 422 `invalid_custom_field_definition`. Existing tasks receive the default value.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.custom_fields.create" method="post" path="/companies/{company}/projects/{project}/custom-fields" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProjectsCustomFieldsCreateRequest(
-    company: '97006690-7b7a-4223-8ba3-3c000ac8ffd8',
-    project: 'e1ffaeae-13f6-4166-bd66-0dfbc6eb31a8',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateTaskCustomFieldV1Request(
-        name: '<value>',
-        type: '<value>',
-    ),
-);
-
-$response = $sdk->projects->customFields->publicApiV1ProjectsCustomFieldsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.custom_fields.create" method="post" path="/companies/{company}/projects/{project}/custom-fields" example="missing_api_key" -->
@@ -93,46 +53,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.custom_fields.create" method="post" path="/companies/{company}/projects/{project}/custom-fields" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProjectsCustomFieldsCreateRequest(
-    company: '2638955f-6275-46d6-8381-58ca96ad9b2f',
-    project: '7a033d90-52d4-4e49-a952-5cd5f3ef0d38',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateTaskCustomFieldV1Request(
-        name: '<value>',
-        type: '<value>',
-    ),
-);
-
-$response = $sdk->projects->customFields->publicApiV1ProjectsCustomFieldsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.custom_fields.create" method="post" path="/companies/{company}/projects/{project}/custom-fields" example="success" -->
@@ -157,46 +77,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProjectsCustomFieldsCreateRequest(
     company: 'Keebler - Durgan',
     project: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\CreateTaskCustomFieldV1Request(
-        name: '<value>',
-        type: '<value>',
-    ),
-);
-
-$response = $sdk->projects->customFields->publicApiV1ProjectsCustomFieldsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.custom_fields.create" method="post" path="/companies/{company}/projects/{project}/custom-fields" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProjectsCustomFieldsCreateRequest(
-    company: '6af3c9fa-8fd6-4081-80c5-f3a1d3f531db',
-    project: '7e63e199-40fe-4c18-bacb-491cfe4514ba',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateTaskCustomFieldV1Request(

@@ -37,25 +37,15 @@ class PublicApiV1InvoicesFacturaeRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * Own FACe attempt to export. Omitted or null exports the current legal source; a UUID returns the exact retained bytes of that attempt, never regenerated or re-signed.
-     *
-     * @var ?string $submissionId
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=submission_id')]
-    public ?string $submissionId = null;
-
-    /**
      * @param  string  $company
      * @param  string  $invoice
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?string  $submissionId
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, ?LocalDate $factuareaVersion = null, ?string $submissionId = null)
+    public function __construct(string $company, string $invoice, ?LocalDate $factuareaVersion = null)
     {
         $this->company = $company;
         $this->invoice = $invoice;
         $this->factuareaVersion = $factuareaVersion;
-        $this->submissionId = $submissionId;
     }
 }

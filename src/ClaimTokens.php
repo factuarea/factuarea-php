@@ -51,10 +51,7 @@ class ClaimTokens
     /**
      * Reissue the claim voucher of a managed account
      *
-     * Issue a NEW claim voucher for a managed account its holder has not claimed yet; pending vouchers stop working.
-     * - Returns 201; `claim_token` and `claim_url` are shown EXACTLY ONCE, or emailed with `send_email: true`.
-     * - `Idempotency-Key` required; 409 `provisioning_account_claimed` if already claimed.
-     * - Requires the privileged `accounts:write` scope.
+     * Issue a NEW claim voucher for one of your managed accounts that its holder has not claimed yet: the pending vouchers stop working and the new one goes to the same email and language. Returns **201 Created** with `object: managed_account_claim`; with `send_email: false` (the default) `claim_token` and `claim_url` are returned EXACTLY ONCE, for you to deliver; with `send_email: true` the link travels only in the email to the holder and both fields are `null`. `expires_at` (the expiry of the new voucher, not a secret) is returned in every case, also with `send_email: true`. An idempotent replay returns the token and the link as `null`: the voucher is never stored in the clear. Returns 409 `provisioning_account_claimed` when the holder already claimed the account, 422 `managed_account_not_claimable` for a test account (it cannot be claimed), and 422 `idempotency_key_required` because reissuing is irreversible. The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`.
      *
      * @param  string  $account
      * @param  string  $idempotencyKey

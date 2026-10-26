@@ -40,35 +40,35 @@ class PublicApiV1EmployeeBatchesCancelResponse
     public array $headers;
 
     /**
-     * Current durable operation.
-     *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1 $twoHundredApplicationJsonObject
-     */
-    public ?PublicApiV1EmployeeBatchesCancelResponseBody1 $twoHundredApplicationJsonObject = null;
-
-    /**
      * Accepted; retrieve this operation until terminal.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2 $twoHundredAndTwoApplicationJsonObject
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1 $twoHundredAndTwoApplicationJsonObject
      */
-    public ?PublicApiV1EmployeeBatchesCancelResponseBody2 $twoHundredAndTwoApplicationJsonObject = null;
+    public ?PublicApiV1EmployeeBatchesCancelResponseBody1 $twoHundredAndTwoApplicationJsonObject = null;
+
+    /**
+     * Current durable operation.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2 $twoHundredApplicationJsonObject
+     */
+    public ?PublicApiV1EmployeeBatchesCancelResponseBody2 $twoHundredApplicationJsonObject = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1  $twoHundredApplicationJsonObject
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2  $twoHundredAndTwoApplicationJsonObject
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1  $twoHundredAndTwoApplicationJsonObject
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2  $twoHundredApplicationJsonObject
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1EmployeeBatchesCancelResponseBody1 $twoHundredApplicationJsonObject = null, ?PublicApiV1EmployeeBatchesCancelResponseBody2 $twoHundredAndTwoApplicationJsonObject = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1EmployeeBatchesCancelResponseBody1 $twoHundredAndTwoApplicationJsonObject = null, ?PublicApiV1EmployeeBatchesCancelResponseBody2 $twoHundredApplicationJsonObject = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
         $this->twoHundredAndTwoApplicationJsonObject = $twoHundredAndTwoApplicationJsonObject;
+        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
     }
 }

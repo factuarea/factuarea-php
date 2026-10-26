@@ -15,5 +15,4 @@ enum UpdateProformaPublicLinkRequestAction: string
     case Activate = 'activate';
     case Extend = 'extend';
     case Reset = 'reset';
-    case Publish = 'publish';
 }

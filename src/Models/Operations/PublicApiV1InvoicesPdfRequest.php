@@ -37,14 +37,6 @@ class PublicApiV1InvoicesPdfRequest
     public ?string $download = null;
 
     /**
-     * Conditional request: send the `ETag` you stored from a previous response of this operation (quoted, as received) to get `304 Not Modified` without a body when the content has not changed. Omit it to always receive the full response.
-     *
-     * @var ?string $ifNoneMatch
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=If-None-Match')]
-    public ?string $ifNoneMatch = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -55,26 +47,24 @@ class PublicApiV1InvoicesPdfRequest
     /**
      * Paper of the PDF: `a4` (default), `ticket_80` (80 mm thermal roll) or `ticket_58` (58 mm roll); each format has its own `ETag`.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfQueryParamFormat $format
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfFormat $format
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=format')]
-    public ?PublicApiV1InvoicesPdfQueryParamFormat $format = null;
+    public ?PublicApiV1InvoicesPdfFormat $format = null;
 
     /**
      * @param  string  $company
      * @param  string  $invoice
      * @param  ?string  $download
-     * @param  ?string  $ifNoneMatch
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfQueryParamFormat  $format
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfFormat  $format
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, ?string $download = null, ?string $ifNoneMatch = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1InvoicesPdfQueryParamFormat $format = null)
+    public function __construct(string $company, string $invoice, ?string $download = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1InvoicesPdfFormat $format = null)
     {
         $this->company = $company;
         $this->invoice = $invoice;
         $this->download = $download;
-        $this->ifNoneMatch = $ifNoneMatch;
         $this->factuareaVersion = $factuareaVersion;
         $this->format = $format;
     }

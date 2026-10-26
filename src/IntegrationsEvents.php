@@ -169,10 +169,24 @@ class IntegrationsEvents
     /**
      * Replay a parked integration event
      *
-     * Reprocess a parked gateway event once the cause that parked it is fixed.
-     * - Needs `integration_events:write`; the event must have `is_replayable: true`, otherwise 422.
-     * - It can issue a real invoice with VeriFactu registration; confirm with the owner first.
-     * - 202 means queued, not completed; the outcome arrives as a new event, and invoices are never duplicated.
+     * Reprocess a gateway event that was parked, once the cause that prevented it from producing its effect is gone.
+     *
+     * **Before you call it**
+     *
+     * - The event must be published with `is_replayable` set to `true` — anything else returns 422.
+     * - Fix the cause first: turn automatic invoicing back on, re-link the connected account, wait for the exchange rate.
+     * - It needs the write scope `integration_events:write`, never the read scope of the inbox.
+     *
+     * **What it can do**
+     *
+     * > **This action can have real fiscal consequences.** If the cause is already resolved, the replay CAN ISSUE A REAL INVOICE, with its series number and its registration in VeriFactu. Confirm with the account owner before calling it.
+     *
+     * **What comes back**
+     *
+     * - `202` means accepted and queued, **not** completed.
+     * - The body returns the event as it stands now, not the outcome of the retry.
+     * - The outcome appears as a NEW event in the inbox — poll `GET /v1/companies/{company}/integrations/events` to see how it ended.
+     * - It never duplicates invoices: the replay goes through the same idempotency check as the original attempt.
      *
      * @param  string  $company
      * @param  string  $event

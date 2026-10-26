@@ -32,11 +32,11 @@ class ApiRequestLog
     /**
      * HTTP method of the request.
      *
-     * @var \Factuarea\Sdk\Models\Components\Method $method
+     * @var \Factuarea\Sdk\Models\Components\ApiRequestLogMethod $method
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('method')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Method')]
-    public Method $method;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ApiRequestLogMethod')]
+    public ApiRequestLogMethod $method;
 
     /**
      * Request path, without the query string (which is never stored).
@@ -148,7 +148,7 @@ class ApiRequestLog
     /**
      * @param  string  $requestId
      * @param  \Factuarea\Sdk\Models\Components\ApiRequestLogObject  $object
-     * @param  \Factuarea\Sdk\Models\Components\Method  $method
+     * @param  \Factuarea\Sdk\Models\Components\ApiRequestLogMethod  $method
      * @param  string  $path
      * @param  int  $statusCode
      * @param  int  $durationMs
@@ -164,7 +164,7 @@ class ApiRequestLog
      * @param  ?\Factuarea\Sdk\Models\Components\Axis  $axis
      * @phpstan-pure
      */
-    public function __construct(string $requestId, ApiRequestLogObject $object, Method $method, string $path, int $statusCode, int $durationMs, string $ip, ApiRequestLogEnvironment $environment, \DateTime $createdAt, ?string $apiKeyPrefix = null, ?string $userAgent = null, ?string $errorType = null, ?string $errorCode = null, ?string $factuareaVersion = null, ?ApiRequestLogCompany $company = null, ?Axis $axis = null)
+    public function __construct(string $requestId, ApiRequestLogObject $object, ApiRequestLogMethod $method, string $path, int $statusCode, int $durationMs, string $ip, ApiRequestLogEnvironment $environment, \DateTime $createdAt, ?string $apiKeyPrefix = null, ?string $userAgent = null, ?string $errorType = null, ?string $errorCode = null, ?string $factuareaVersion = null, ?ApiRequestLogCompany $company = null, ?Axis $axis = null)
     {
         $this->requestId = $requestId;
         $this->object = $object;

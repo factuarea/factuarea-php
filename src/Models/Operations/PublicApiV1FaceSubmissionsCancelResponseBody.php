@@ -12,7 +12,7 @@ use Factuarea\Sdk\Models\Components;
 class PublicApiV1FaceSubmissionsCancelResponseBody
 {
     /**
-     * Tenant-scoped durable FACe attempt. Frozen administrative and payment versions identify the prepared source independently of subsequent invoice or contact changes.
+     * A submission of an invoice to FACe (the Spanish B2G general entry point). Tracks the FACe registry number and the processing status reported by the FACe web service.
      *
      * @var \Factuarea\Sdk\Models\Components\FaceSubmission $data
      */
