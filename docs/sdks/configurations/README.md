@@ -9,9 +9,7 @@
 
 ## publicApiV1ProductsConfigurationsList
 
-List the commercial combinations (variant x presentation x option values) of a product, each with its `signature`, own price and state.
-- An EMPTY list means LEGACY mode (any cross is accepted); once one exists, the list is an allow-list.
-- Cursor-paginated (`limit`, `starting_after`); another company's product returns 404 `product_not_found`.
+List the commercial combinations (variant × presentation × option values) declared by a product, each with its canonical `signature`, its optional own price and its activation state. An EMPTY list does not mean the product cannot be sold: it means the product is in LEGACY mode and accepts any cross of its active variants and presentations. As soon as one active combination exists the list becomes an allow-list and every cross not enumerated stops being accepted. Without the `active` filter both active and inactive combinations come back — a deactivated combination still names historical lines, and hiding it would leave already issued documents without a label. Cursor-paginated (`limit`, `starting_after`); a cursor that matches no combination of this product returns 422. A product of another company returns 404 `product_not_found`.
 
 ### Example Usage
 
@@ -69,47 +67,8 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1ProductsConfigurationsImpactPreview
 
-Compute what would be lost if the commercial combinations of a product were replaced, and mint the `impact_token` that confirms that exact change.
-- A read that persists nothing, but requires `products:write`.
-- `configurations` is the COMPLETE list that stays active; an empty list retires the allow-list.
-- Send the token back when emptying `configurations`.
+Compute what would be lost if the commercial combinations of a product were replaced by the proposed ones, and mint the `impact_token` that confirms THAT exact change. It is a READ and persists nothing — asking twice over the same catalog returns the same token — but it requires `products:write`, because the only thing its answer does is authorise a destructive write. Send `configurations` as the COMPLETE list of combinations that would remain ACTIVE (an empty list means "retire the allow-list", which returns the product to the cartesian cross), plus `variant_ids`/`presentation_ids` enumerating what SURVIVES on each axis — omitting a key means "that axis is untouched", which is not the same as an empty list. The answer says whether the change needs confirmation at all (`requires_confirmation`), which crosses stop being sellable, and which negotiated prices would be retired and from which price lists. The token is a fingerprint of the current catalog AND of the set of prices at stake, not a credential: if either changes before you confirm, the confirmation is rejected and you ask for a fresh preview. Send it back as `impact_token` when emptying `configurations` on `PATCH /v1/companies/{company}/products/{product}`, or when deleting the variant or presentation whose removal would leave the product with no declared combination.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewCatalogConfigurationImpactRequest(
-    configurations: [],
-);
-
-$response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: '2e2fc5a7-0730-4c73-be62-9a8eb6ffd62b',
-    product: 'fca30174-e758-4ecd-b9c7-8207ae6ed1bf',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: insufficient_scope
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="insufficient_scope" -->
@@ -182,42 +141,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewCatalogConfigurationImpactRequest(
-    configurations: [],
-);
-
-$response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: '22d19ff2-7cbb-4ae2-9e68-c95e49e9221b',
-    product: '88938458-88ab-435a-98ec-1a397968c370',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="success" -->
@@ -245,42 +168,6 @@ $body = new Components\PreviewCatalogConfigurationImpactRequest(
 $response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
     company: 'Champlin - Stamm',
     product: 'Elegant Steel Ball',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.configurations.impact_preview" method="post" path="/companies/{company}/products/{product}/configurations/impact-preview" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\PreviewCatalogConfigurationImpactRequest(
-    configurations: [],
-);
-
-$response = $sdk->products->configurations->publicApiV1ProductsConfigurationsImpactPreview(
-    company: 'a0d0d05c-0238-4b95-8c52-ef39ac655e6e',
-    product: 'aa0013c7-3fe1-4d98-bd4f-66169e042900',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

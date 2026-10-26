@@ -51,9 +51,7 @@ class EmployeeBatches
     /**
      * Cancel an employee batch
      *
-     * Cancel an employee batch.
-     * - Preparing and refreshing never charges, provisions people or consumes an offer.
-     * - A batch holds 1 to 100 profiles or inactive employee UUIDs and sends no invitations.
+     * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponse
@@ -126,7 +124,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesCancelResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -144,7 +142,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesCancelResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesCancelResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -192,9 +190,7 @@ class EmployeeBatches
     /**
      * Confirm an employee batch
      *
-     * Confirm an employee batch, charging and provisioning it once one financial outcome is verified.
-     * - Confirm exactly the reviewed `quote_version` with a stable `Idempotency-Key`.
-     * - After a 202, error or replay, GET the same UUID until a terminal state; never create a second purchase.
+     * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponse
@@ -267,7 +263,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesConfirmResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -285,7 +281,7 @@ class EmployeeBatches
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesConfirmResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1EmployeeBatchesConfirmResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
@@ -345,9 +341,7 @@ class EmployeeBatches
     /**
      * List an employee batch
      *
-     * List the employee batches of the company.
-     * - A batch holds 1 to 100 explicit create profiles or inactive employee UUIDs and sends no invitations.
-     * - Provisioning happens only after one verified financial outcome.
+     * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesListResponse
@@ -466,10 +460,7 @@ class EmployeeBatches
     /**
      * Prepare an employee batch
      *
-     * Prepare a batch purchase of 1 to 100 employees (explicit create profiles or inactive employee UUIDs).
-     * - Preparing and refreshing never charge, provision people or send invitations.
-     * - Confirm the reviewed `quote_version` with a stable Idempotency-Key.
-     * - After a 202 or failure, GET the same UUID until terminal; never create a second purchase.
+     * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  \Factuarea\Sdk\Models\Components\PrepareEmployeeBatchBodyCreate|\Factuarea\Sdk\Models\Components\PrepareEmployeeBatchBodyReactivate  $body
      * @param  string  $company
@@ -611,10 +602,7 @@ class EmployeeBatches
     /**
      * Refresh the quote for an employee batch
      *
-     * Refresh the quote of a prepared employee batch.
-     * - Refreshing never charges, provisions people or consumes an offer.
-     * - Confirm exactly the new `quote_version` with a stable Idempotency-Key.
-     * - After a 202 or failure, GET the same batch UUID until terminal; never create a second purchase.
+     * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesRefreshQuoteRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeeBatchesRefreshQuoteResponse
@@ -747,9 +735,7 @@ class EmployeeBatches
     /**
      * Retrieve an employee batch
      *
-     * Retrieve an employee batch and its financial outcome.
-     * - GET the same UUID after a 202, failure or replay until a verified terminal state.
-     * - Unknown totals never mean free; financial history exposes no private codes or Stripe identifiers.
+     * The current credential and tenant own this operation. Preparing and refreshing never charges, provisions people or consumes an offer. Confirm exactly the reviewed quote_version with a stable Idempotency-Key. After a 202, transport failure or replay, GET this same UUID until a verified terminal state; do not create a second purchase. Unknown totals never mean free. Financial history contains no private code, profile, Stripe identifiers or internal snapshot. A batch contains 1 to 100 explicit create profiles or inactive employee UUIDs; it sends no invitations. The entire batch is provisioned only after one verified financial outcome.
      *
      * @param  string  $company
      * @param  string  $id

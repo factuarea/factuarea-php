@@ -30,15 +30,6 @@ class UpdateProformaRequest
     public ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null;
 
     /**
-     * Positive current selection version used as the body CAS. It is required exactly when pdf_template_id is present; omit both fields to leave the current presentation intent unchanged. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
-     *
-     * @var ?int $expectedSelectionVersion
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $expectedSelectionVersion = null;
-
-    /**
      *
      * @var ?LocalDate $issuedOn
      */
@@ -71,15 +62,6 @@ class UpdateProformaRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $priceListId = null;
-
-    /**
-     * Optional nullable tenant-template UUID. Omission preserves current intent; null clears manual intent and inherits; a UUID selects a compatible manual template. Send expected_selection_version whenever this field is present. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
-     *
-     * @var ?string $pdfTemplateId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $pdfTemplateId = null;
 
     /**
      *
@@ -214,12 +196,10 @@ class UpdateProformaRequest
     /**
      * @param  ?string  $clientId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProformaRequestRepriceStrategy  $repriceStrategy
-     * @param  ?int  $expectedSelectionVersion
      * @param  ?LocalDate  $issuedOn
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestLine>  $lines
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
-     * @param  ?string  $pdfTemplateId
      * @param  ?LocalDate  $validUntil
      * @param  ?int  $validityDays
      * @param  ?string  $notes
@@ -237,16 +217,14 @@ class UpdateProformaRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateProformaRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null, ?int $expectedSelectionVersion = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?string $pdfTemplateId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?UpdateProformaRequestOperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?string $clientId = null, ?UpdateProformaRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?LocalDate $validUntil = null, ?int $validityDays = null, ?string $notes = null, ?string $termsAndConditions = null, ?string $reference = null, ?string $paymentMethod = null, ?int $paymentTerms = null, ?float $shippingCost = null, ?string $deliveryTerms = null, ?LocalDate $estimatedDeliveryDate = null, ?UpdateProformaRequestOperationRegime $operationRegime = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->repriceStrategy = $repriceStrategy;
-        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->issuedOn = $issuedOn;
         $this->lines = $lines;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
-        $this->pdfTemplateId = $pdfTemplateId;
         $this->validUntil = $validUntil;
         $this->validityDays = $validityDays;
         $this->notes = $notes;

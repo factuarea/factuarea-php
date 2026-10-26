@@ -50,7 +50,7 @@ class InvoicesFaceSubmissions
     /**
      * List invoice FACe submissions
      *
-     * Flat durable history for the authorized issuer and invoice. Empty history returns data: []. Includes prepared/uncertain status, source and artifact fingerprints, retained administrative/payment versions, can_transmit and requires_reconciliation. GET performs no capture, signing, transmission or reconciliation.
+     * Lists the FACe submission history of an invoice (flat array, newest included). Returns `data: []` when the invoice has never been submitted.
      *
      * @param  string  $company
      * @param  string  $invoice
@@ -171,27 +171,54 @@ class InvoicesFaceSubmissions
     }
 
     /**
-     * Prepare or continue a FACe submission
+     * Submit invoice to FACe
      *
-     * Submit an issued invoice to FACe; needs send capability, the issuer signing certificate, DIR3 roles 01/02/03 and a contact email.
-     * - Omit the body for a fresh attempt (201); an own `submission_id` continues that prepared attempt with its retained bytes (200).
-     * - Concurrent claims and uncertain transmissions return 409; after a 500 or 502 with `attempt_id`, read that attempt before retrying.
-     * - Test keys never contact FACe.
+     * Submit an issued invoice to FACe (the Spanish B2G entry point). Requires the client's three DIR3 codes and an active signing certificate; the FacturaE 3.2.2 XML is signed XAdES-EPES and presented to FACe, returning the registry number. No request body — the DIR3 codes are read from the client. Test keys simulate the submission without contacting FACe.
      *
-     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest  $request
+     * @param  string  $company
+     * @param  string  $invoice
+     * @param  string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1InvoicesFaceSubmissionsSubmit(Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest $request, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
+    public function publicApiV1InvoicesFaceSubmissionsSubmit(string $company, string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse
     {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest(
+            company: $company,
+            invoice: $invoice,
+            idempotencyKey: $idempotencyKey,
+            factuareaVersion: $factuareaVersion,
+        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/invoices/{invoice}/face-submissions', Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest::class, $request);
         $urlOverride = null;
         $httpOptions = ['http_errors' => false];
-        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
-        if ($body !== null) {
-            $httpOptions = array_merge_recursive($httpOptions, $body);
-        }
         $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
         if (! array_key_exists('headers', $httpOptions)) {
             $httpOptions['headers'] = [];
@@ -204,7 +231,7 @@ class InvoicesFaceSubmissions
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
-            $httpResponse = $this->sdkConfiguration->client->send($httpRequest, $httpOptions);
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
         } catch (\GuzzleHttp\Exception\GuzzleException $error) {
             $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
             $httpResponse = $res;
@@ -217,37 +244,19 @@ class InvoicesFaceSubmissions
         }
 
         $statusCode = $httpResponse->getStatusCode();
-        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+        if (Utils\Utils::matchStatusCodes($statusCode, ['201'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody1', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    twoHundredApplicationJsonObject: $obj);
-
-                return $response;
-            } else {
-                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
-            }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['201'])) {
-            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
-                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
-
-                $serializer = Utils\JSON::createSerializer();
-                $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody2', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
-                $response = new Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponse(
-                    statusCode: $statusCode,
-                    contentType: $contentType,
-                    rawResponse: $httpResponse,
-                    headers: $httpResponse->getHeaders(),
-                    twoHundredAndOneApplicationJsonObject: $obj);
+                    object: $obj);
 
                 return $response;
             } else {
@@ -265,7 +274,7 @@ class InvoicesFaceSubmissions
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500', '502'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

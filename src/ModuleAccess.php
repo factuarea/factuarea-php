@@ -50,10 +50,7 @@ class ModuleAccess
     /**
      * Retrieve a member module access level
      *
-     * Retrieve the module access of an account member in the tax ID given by the required `company_id` query parameter.
-     * - `restrictions` is a DENY list per section; an empty object means no restriction.
-     * - `grants` lists administrator-only sections granted; always empty for an `owner` or `admin`.
-     * - Unknown member or tax ID returns the same 404 `member_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+     * Retrieve the module access level of an account member (`{member}` is the account member `id`) in the tax ID passed in the required `company_id` query parameter. `restrictions` is a DENY list — section to withdrawn capabilities out of `access`, `create`, `edit`, `delete`, `send` and `export` — so an empty object means no restriction at all, never no access; it applies on top of the member grant on that tax ID. `grants` is the opposite list: the administrator-only sections (never the four Administrator keys) that were GRANTED to the member in that tax ID; it is empty for most members and always empty for an `owner` or `admin`, who hold every permission of their plan. A member that does not exist, belongs to another account or has no access to that tax ID, and a tax ID outside the account or outside what your credential reads, all return the same 404 `member_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  string  $member
@@ -176,9 +173,7 @@ class ModuleAccess
     /**
      * Set a member module access level
      *
-     * Replace the FULL set of module restrictions of a member in the tax ID named by `company_id`, and optionally its `grants`.
-     * - The body replaces every previous restriction; an empty `restrictions` lifts them all. Sent `grants` replace the old ones.
-     * - 422 `business_rule_violation` for restricting yourself, the owner or an unrestrictable section; 404 `member_not_found`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+     * Replace the FULL set of module restrictions of an account member (`{member}` is the account member `id`) in the tax ID named by `company_id`, and optionally the set of administrator-only sections GRANTED to that member there. The body substitutes every previous restriction, so repeating the call leaves the same state and an empty `restrictions` object lifts them all; lifting restrictions never grants more than the member grant on that tax ID. `grants` is optional: when omitted the member grants of sections are left as they are, and when sent — even empty — it replaces them entirely, in the same transaction as the restrictions. Returns 404 `member_not_found` when the member or the tax ID is outside the account or your credential scope, and 422 `business_rule_violation` when restricting yourself, the account owner or a section that cannot be restricted; with subcode `permissions_not_applicable_to_administrator` (`param` `restrictions`) when the member is an `owner` or `admin` of the account, who take neither restrictions nor grants; with subcode `administrator_key_not_grantable` (`param` `grants`) when a granted section is one of the four Administrator keys; and with subcode `module_not_grantable` (`param` `grants`) when a granted section is not administrator-only or the company does not have it. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersModuleAccessUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersModuleAccessUpdateResponse

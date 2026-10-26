@@ -250,52 +250,8 @@ if ($response->taskAttachmentList !== null) {
 
 ## publicApiV1TasksAttachmentsCreate
 
-Upload a file to a task as `multipart/form-data` (`file`), up to 10 MB; the type is checked by content, not extension.
-- `target` places it in a new comment (default) or the description; `note` (max 1,000 characters) is the comment text.
-- Counts towards the plan storage quota (402 `storage_quota_exceeded`). Requires an `Idempotency-Key`.
+Upload a file to a task as `multipart/form-data` (`file`). Maximum 10 MB per file; the type is checked by content (magic bytes), not by extension: images (PNG, JPEG, GIF, WebP, HEIC, AVIF), PDF, Word/Excel/PowerPoint (OOXML), OpenDocument text and spreadsheet, plain text, CSV, Markdown and ZIP. `target` places it in a new comment (default) or at the end of the description, and the optional `note` (up to 1,000 characters) becomes the comment text; a longer note returns 422 `parameter_invalid_value`. The file counts towards the storage quota of your plan (402 `storage_quota_exceeded` when it is full). Requires an `Idempotency-Key`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.attachments.create" method="post" path="/companies/{company}/tasks/{task}/attachments" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksAttachmentsCreateRequest(
-    company: '0742a700-d7a5-48e3-b937-0bf1960d47e6',
-    task: 'ca4e7f21-87e2-4e52-9c65-42547dca391f',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadTaskAttachmentV1Request(
-        file: new Components\UploadTaskAttachmentV1RequestFile(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->tasks->attachments->publicApiV1TasksAttachmentsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.attachments.create" method="post" path="/companies/{company}/tasks/{task}/attachments" example="missing_api_key" -->
@@ -338,48 +294,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.attachments.create" method="post" path="/companies/{company}/tasks/{task}/attachments" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksAttachmentsCreateRequest(
-    company: '4ac9ba71-c851-4977-83fa-e19e9b019c69',
-    task: '32994ab1-c270-4ab7-a917-8168fed0b9ef',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadTaskAttachmentV1Request(
-        file: new Components\UploadTaskAttachmentV1RequestFile(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->tasks->attachments->publicApiV1TasksAttachmentsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.attachments.create" method="post" path="/companies/{company}/tasks/{task}/attachments" example="success" -->
@@ -404,48 +318,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksAttachmentsCreateRequest(
     company: 'Parisian - Rosenbaum',
     task: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadTaskAttachmentV1Request(
-        file: new Components\UploadTaskAttachmentV1RequestFile(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->tasks->attachments->publicApiV1TasksAttachmentsCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.attachments.create" method="post" path="/companies/{company}/tasks/{task}/attachments" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksAttachmentsCreateRequest(
-    company: '0141fae0-a3c1-41bd-99b2-b4c2c4371dcb',
-    task: 'bd4116c5-5095-4738-b04f-6b6ee4b883d8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadTaskAttachmentV1Request(

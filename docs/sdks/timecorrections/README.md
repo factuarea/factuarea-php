@@ -12,9 +12,7 @@
 
 ## publicApiV1TimeCorrectionsApprove
 
-Approve a pending correction request, appending the resolving `correction_entry` linked to the original entry; optional approver `note`.
-- A non-pending request or approving your own request returns 422.
-- If the entry now falls outside employment, 422 `business_rule_violation` with subcode `clocking_outside_employment_period`; the request stays pending.
+Approve a pending correction request by its `id` (UUID v7), appending the resolving `correction_entry` linked to the original time entry. An optional `note` from the approver may be supplied. A request that is not pending returns 422 (already resolved), and approving your own request returns 422 (self-approval is forbidden). Approval checks the employment period again: if the corrected entry falls outside it (for example because `hire_date` was changed after the request), it returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period`, the request stays pending and the ledger is unchanged. Returns 200 with the resolved correction.
 
 ### Example Usage: approve
 
@@ -169,9 +167,7 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1TimeCorrectionsCreate
 
-Request the correction of a time entry; it stays `pending` until a manager approves or rejects it. Returns 201 with a `Location` header.
-- `time_entry_id`, `kind` (`add_missing_entry`/`adjust_time`/`remove_entry`), `reason` and `proposed` are required.
-- A proposed time outside employment returns 422 `business_rule_violation`, subcode `clocking_outside_employment_period`.
+Request the correction of a time entry (RD-ley 8/2019). `time_entry_id` (UUID v7 of the entry to correct), `kind` (`add_missing_entry`/`adjust_time`/`remove_entry`), a `reason` and the `proposed` values are required. A correction is a new append-only entry that references the original entry without mutating it (analogous to a corrective invoice); the workflow stays `pending` until a manager approves or rejects it. An `add_missing_entry` or `adjust_time` correction whose proposed time falls outside the employee’s employment period (before `hire_date` or after `termination_date`) returns 422 `business_rule_violation` with subcode `clocking_outside_employment_period` and no request is created; `remove_entry` is never blocked by this rule. Returns 201 with the created request and a `Location` header.
 
 ### Example Usage: adjust_time
 
@@ -242,44 +238,6 @@ $body = new Components\RequestTimeCorrectionRequest(
 
 $response = $sdk->timeCorrections->publicApiV1TimeCorrectionsCreate(
     company: '4c593fb3-17cc-4190-9b75-e398204e90d7',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.create" method="post" path="/companies/{company}/time-corrections" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\RequestTimeCorrectionRequest(
-    timeEntryId: '4c593fb3-17cc-4190-9b75-e398204e90d7',
-    kind: Components\RequestTimeCorrectionRequestKind::RemoveEntry,
-    reason: '<value>',
-);
-
-$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsCreate(
-    company: 'cb5cc8c3-91e3-4093-a4d2-b1b9207471a6',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -366,44 +324,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.create" method="post" path="/companies/{company}/time-corrections" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\RequestTimeCorrectionRequest(
-    timeEntryId: '4c593fb3-17cc-4190-9b75-e398204e90d7',
-    kind: Components\RequestTimeCorrectionRequestKind::RemoveEntry,
-    reason: '<value>',
-);
-
-$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsCreate(
-    company: '4c593fb3-17cc-4190-9b75-e398204e90d7',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.create" method="post" path="/companies/{company}/time-corrections" example="success" -->
@@ -432,44 +352,6 @@ $body = new Components\RequestTimeCorrectionRequest(
 
 $response = $sdk->timeCorrections->publicApiV1TimeCorrectionsCreate(
     company: 'Emmerich and Sons',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.create" method="post" path="/companies/{company}/time-corrections" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\RequestTimeCorrectionRequest(
-    timeEntryId: '4c593fb3-17cc-4190-9b75-e398204e90d7',
-    kind: Components\RequestTimeCorrectionRequestKind::RemoveEntry,
-    reason: '<value>',
-);
-
-$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsCreate(
-    company: '0952d117-6d85-4cf7-a29c-6450120b0b94',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -530,45 +412,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
     company: '58d262ea-e822-4579-91ee-d7aabfd132c9',
     timeCorrection: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RejectTimeCorrectionRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsReject(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.reject" method="post" path="/companies/{company}/time-corrections/{time_correction}/reject" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
-    company: '3c940f2b-715a-4a00-bee2-89ae9936091d',
-    timeCorrection: 'a8c15798-84ba-4267-a7e3-4ee59c348c7f',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RejectTimeCorrectionRequest(
@@ -701,45 +544,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.reject" method="post" path="/companies/{company}/time-corrections/{time_correction}/reject" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
-    company: '58d262ea-e822-4579-91ee-d7aabfd132c9',
-    timeCorrection: '53a3a05f-4dfc-4ef3-ac1c-4c140a036b7e',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RejectTimeCorrectionRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsReject(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.reject" method="post" path="/companies/{company}/time-corrections/{time_correction}/reject" example="success" -->
@@ -764,45 +568,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
     company: 'Keeling - Cassin',
     timeCorrection: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\RejectTimeCorrectionRequest(
-        reason: '<value>',
-    ),
-);
-
-$response = $sdk->timeCorrections->publicApiV1TimeCorrectionsReject(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.time_corrections.reject" method="post" path="/companies/{company}/time-corrections/{time_correction}/reject" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TimeCorrectionsRejectRequest(
-    company: '0d303ff4-4175-4ae1-a8a6-441ddd852cda',
-    timeCorrection: '362c1664-48c4-457d-814d-c1fd84e8ea51',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\RejectTimeCorrectionRequest(

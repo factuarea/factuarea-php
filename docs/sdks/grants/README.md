@@ -11,10 +11,7 @@
 
 ## publicApiV1AccountMembersGrantsList
 
-List the per-tax-ID grants of one member.
-- The list is complete: `has_more` is always `false` and `next_cursor` is `null`.
-- Only grants on tax IDs your credential reads are published; an `owner` or `admin` returns an empty list.
-- 404 `member_not_found` if unknown or of another account. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+List the per-tax-ID grants of one member with the canonical list envelope. The collection is complete (bounded by the tax IDs of the account), so it always comes with `has_more: false` and `next_cursor: null`. Only grants on tax IDs your credential reads are published; an `owner` or `admin` returns an empty list because they reach every tax ID without a grant. Returns 404 `member_not_found` when the member does not exist or belongs to another account. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -72,10 +69,7 @@ if ($response->accountMemberGrantList !== null) {
 
 ## publicApiV1AccountMembersGrantsDelete
 
-Revoke the grant of a member on one tax ID of the account and return 204.
-- Revoking a missing grant changes nothing and also returns 204; no notification is sent.
-- The member loses access to that tax ID through app, API and MCP, and its API keys are lowered; set the grant again to restore.
-- 404 `member_not_found`; 422 `grant_company_not_in_account`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+Revoke the grant of a member on one tax ID of the account and return 204. Revoking a grant that does not exist changes nothing and returns the same 204. The member stops reaching that tax ID through the web app, the API and MCP, and its API keys are lowered accordingly; no email or notification is sent. Reversible: set the grant again to restore it. Returns 404 `member_not_found` and 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -135,9 +129,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1AccountMembersGrantsUpdate
 
-Create or replace the grant of a `member` on one tax ID with a `level` (`view` or `operate`); returns 200 with the grant.
-- A `PUT` replacement: repeating it leaves the same state; lowering it also lowers the member’s API keys.
-- 422 `grant_company_not_in_account`; 422 `grants_only_for_member` for an `owner` or `admin`; 404 `member_not_found`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+Create or replace the grant of a `member` on one tax ID of the account with the given `level` (`view` or `operate`), and return 200 with the resulting grant. It is a full replacement of a singular sub-resource addressed entirely by its path, hence `PUT`: repeating it with the same level leaves the same state and sends no email or notification. Lowering a grant also lowers the API keys of that member. Returns 404 `member_not_found`, 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope, and 422 `grants_only_for_member` when the member is an `owner` or `admin`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage: api_key_expired
 
@@ -204,46 +196,6 @@ $request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
     account: '86401896',
     member: '<value>',
     company: 'Leannon - Feil',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SetAccountMemberGrantV1Request(
-        level: Components\SetAccountMemberGrantV1RequestLevel::View,
-    ),
-);
-
-$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
-    account: '10365cd1-570c-405d-8036-c1da62879fa1',
-    member: '1ce3ab5b-47b5-4260-a027-62a06b5af0a3',
-    company: 'caa7720e-e3bb-4c4b-8538-2ba4d0b60b03',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\SetAccountMemberGrantV1Request(
@@ -379,46 +331,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
-    account: '417d70dc-39bd-42e9-939e-8a0cd43a15f6',
-    member: '600ea702-cfa0-4834-83ec-dafd5ace62d5',
-    company: '6aabb767-c1ce-4173-b33a-49cdfe3c6dac',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SetAccountMemberGrantV1Request(
-        level: Components\SetAccountMemberGrantV1RequestLevel::View,
-    ),
-);
-
-$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="success" -->
@@ -459,46 +371,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.grants.update" method="put" path="/accounts/{account}/members/{member}/grants/{company}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1AccountMembersGrantsUpdateRequest(
-    account: 'f94c645f-64ff-48f0-bf04-01abba5c3de2',
-    member: 'e3072158-ffb5-40c0-98d7-af67b610c8ee',
-    company: '4ab0bda5-fbfe-4ad7-895b-6d48bc47de54',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\SetAccountMemberGrantV1Request(
-        level: Components\SetAccountMemberGrantV1RequestLevel::View,
-    ),
-);
-
-$response = $sdk->account->members->grants->publicApiV1AccountMembersGrantsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -520,8 +392,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountMembersGrantsShow
 
-Retrieve the grant of one member on one tax ID of the account (`company_id` and `level`).
-- An unknown member, a tax ID outside the account or your credential reads, and a missing grant (any `owner` or `admin`) all return the same 404 `member_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+Retrieve the grant of one member on one tax ID of the account (`company_id` and `level`). A member that does not exist or belongs to another account, a tax ID outside the account or outside what your credential reads, and a missing grant (including any tax ID of an `owner` or `admin`, which carry no grants) all return the same 404 `member_not_found`, so the response never tells them apart. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 

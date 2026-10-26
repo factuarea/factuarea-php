@@ -50,10 +50,7 @@ class Grants
     /**
      * Revoke an account member grant
      *
-     * Revoke the grant of a member on one tax ID of the account and return 204.
-     * - Revoking a missing grant changes nothing and also returns 204; no notification is sent.
-     * - The member loses access to that tax ID through app, API and MCP, and its API keys are lowered; set the grant again to restore.
-     * - 404 `member_not_found`; 422 `grant_company_not_in_account`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+     * Revoke the grant of a member on one tax ID of the account and return 204. Revoking a grant that does not exist changes nothing and returns the same 204. The member stops reaching that tax ID through the web app, the API and MCP, and its API keys are lowered accordingly; no email or notification is sent. Reversible: set the grant again to restore it. Returns 404 `member_not_found` and 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersGrantsDeleteRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersGrantsDeleteResponse
@@ -159,10 +156,7 @@ class Grants
     /**
      * List the grants of an account member
      *
-     * List the per-tax-ID grants of one member.
-     * - The list is complete: `has_more` is always `false` and `next_cursor` is `null`.
-     * - Only grants on tax IDs your credential reads are published; an `owner` or `admin` returns an empty list.
-     * - 404 `member_not_found` if unknown or of another account. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+     * List the per-tax-ID grants of one member with the canonical list envelope. The collection is complete (bounded by the tax IDs of the account), so it always comes with `has_more: false` and `next_cursor: null`. Only grants on tax IDs your credential reads are published; an `owner` or `admin` returns an empty list because they reach every tax ID without a grant. Returns 404 `member_not_found` when the member does not exist or belongs to another account. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  string  $member
@@ -285,8 +279,7 @@ class Grants
     /**
      * Retrieve an account member grant
      *
-     * Retrieve the grant of one member on one tax ID of the account (`company_id` and `level`).
-     * - An unknown member, a tax ID outside the account or your credential reads, and a missing grant (any `owner` or `admin`) all return the same 404 `member_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+     * Retrieve the grant of one member on one tax ID of the account (`company_id` and `level`). A member that does not exist or belongs to another account, a tax ID outside the account or outside what your credential reads, and a missing grant (including any tax ID of an `owner` or `admin`, which carry no grants) all return the same 404 `member_not_found`, so the response never tells them apart. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  string  $account
      * @param  string  $member
@@ -411,9 +404,7 @@ class Grants
     /**
      * Set an account member grant
      *
-     * Create or replace the grant of a `member` on one tax ID with a `level` (`view` or `operate`); returns 200 with the grant.
-     * - A `PUT` replacement: repeating it leaves the same state; lowering it also lowers the member’s API keys.
-     * - 422 `grant_company_not_in_account`; 422 `grants_only_for_member` for an `owner` or `admin`; 404 `member_not_found`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+     * Create or replace the grant of a `member` on one tax ID of the account with the given `level` (`view` or `operate`), and return 200 with the resulting grant. It is a full replacement of a singular sub-resource addressed entirely by its path, hence `PUT`: repeating it with the same level leaves the same state and sends no email or notification. Lowering a grant also lowers the API keys of that member. Returns 404 `member_not_found`, 422 `grant_company_not_in_account` when the tax ID is outside the account or your credential scope, and 422 `grants_only_for_member` when the member is an `owner` or `admin`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersGrantsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountMembersGrantsUpdateResponse

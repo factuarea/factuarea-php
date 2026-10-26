@@ -184,9 +184,7 @@ if ($response->object !== null) {
 
 ## publicApiV1VerifactuCertificatesUpload
 
-Upload an FNMT certificate (PKCS#12) as `multipart/form-data` with `certificate_file` and `certificate_password`.
-- Validated by magic bytes and capped at 100 KB; the password is encrypted at rest.
-- It is activated automatically (previous ones are deactivated); `Location` points to `.../verifactu/certificates/active`.
+Upload an FNMT certificate (PKCS#12, `.p12`/`.pfx`) as `multipart/form-data` with `certificate_file` and `certificate_password`. The file is validated by magic bytes (ASN.1 DER) and capped at 100 KB; the password is encrypted at rest. The uploaded certificate is activated automatically (previous ones are deactivated). The `Location` header points to `/v1/companies/{company}/verifactu/certificates/active`.
 
 ### Example Usage: api_key_revoked
 
@@ -218,46 +216,6 @@ $body = new Components\UploadCompanyCertificateV1Request(
 
 $response = $sdk->verifactu->certificates->publicApiV1VerifactuCertificatesUpload(
     company: 'c44e6e0b-3670-4c2a-a0ce-05fe4f2c27a9',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.certificates.upload" method="post" path="/companies/{company}/verifactu/certificates" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UploadCompanyCertificateV1Request(
-    certificateFile: new Components\CertificateFile(
-        fileName: 'example.file',
-        content: file_get_contents('example.file');,
-    ),
-    certificatePassword: '<value>',
-);
-
-$response = $sdk->verifactu->certificates->publicApiV1VerifactuCertificatesUpload(
-    company: '095455bd-ff2a-40b3-9ae4-2702cc5fd07d',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -348,46 +306,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.certificates.upload" method="post" path="/companies/{company}/verifactu/certificates" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UploadCompanyCertificateV1Request(
-    certificateFile: new Components\CertificateFile(
-        fileName: 'example.file',
-        content: file_get_contents('example.file');,
-    ),
-    certificatePassword: '<value>',
-);
-
-$response = $sdk->verifactu->certificates->publicApiV1VerifactuCertificatesUpload(
-    company: 'c44e6e0b-3670-4c2a-a0ce-05fe4f2c27a9',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.certificates.upload" method="post" path="/companies/{company}/verifactu/certificates" example="success" -->
@@ -418,46 +336,6 @@ $body = new Components\UploadCompanyCertificateV1Request(
 
 $response = $sdk->verifactu->certificates->publicApiV1VerifactuCertificatesUpload(
     company: 'Friesen, Gottlieb and Weber',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.certificates.upload" method="post" path="/companies/{company}/verifactu/certificates" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\UploadCompanyCertificateV1Request(
-    certificateFile: new Components\CertificateFile(
-        fileName: 'example.file',
-        content: file_get_contents('example.file');,
-    ),
-    certificatePassword: '<value>',
-);
-
-$response = $sdk->verifactu->certificates->publicApiV1VerifactuCertificatesUpload(
-    company: '25ad3e43-b8aa-4b24-987e-eb340d9d13cd',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

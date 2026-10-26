@@ -9,9 +9,7 @@
 
 ## publicApiV1ProjectsTasksExport
 
-Export a project's tasks as a `factuarea.tasks.v1` JSON document with its labels, custom fields and comments.
-- The document can be re-imported with `POST /v1/companies/{company}/projects/{project}/tasks/import`.
-- Needs only `projects:read`, yet includes every task description and comment.
+Export the tasks of a project as a JSON document in the `factuarea.tasks.v1` format: the project, its labels, its custom fields and every task with its comments. The document can be imported back with `POST /v1/companies/{company}/projects/{project}/tasks/import`. Requires `projects:read` only: the export includes every task with its description and comments even if the key has no `tasks:read`, so grant `projects:read` with that in mind.
 
 ### Example Usage
 
@@ -69,53 +67,8 @@ if ($response->object !== null) {
 
 ## publicApiV1ProjectsTasksImport
 
-Import tasks into a project from a JSON document (`factuarea.tasks.v1` or a supported format).
-- Synchronous, max 200 tasks per call (more returns 422); the report lists `id`/`key` or `error`.
-- `Idempotency-Key` required (422 `idempotency_key_required`); a new key creates a new copy.
+Import tasks into a project from a JSON document (`factuarea.tasks.v1`, or an export of other task tools in a supported format). The import is synchronous only and accepts up to 200 tasks per call: more than 200 returns 422, so split the file. The report lists, per task, its `index` in the document, the created `id` and `key` or the `error` that prevented it; it has no `mode` or `run_id` because the API does not create background import runs. At most the first 200 warnings are listed; `warnings_total` counts them all and `warnings_truncated` tells whether some were left out. Requires `projects:write` only: it creates tasks and comments even if the key has no `tasks:write`. Requires an `Idempotency-Key`: repeating the call with the same key and the same body returns the same report without creating tasks again, and reusing the key with a different body returns 422 `idempotency_key_reused`. Importing again with a new key creates a new copy of the tasks. The key is mandatory over REST (a request without it is rejected with `422 idempotency_key_required`); only the MCP tool `import_project_tasks` can be called without one, and then every call creates a copy.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProjectsTasksImportRequest(
-    company: '9585c9b4-54b1-49d9-b3f5-4a4ce3d51783',
-    project: '9844d522-7f93-43e6-bf6d-a6c05b2ff9f5',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ImportProjectTasksV1Request(
-        tasks: [
-            [
-                'key' => '<value>',
-            ],
-        ],
-    ),
-);
-
-$response = $sdk->projects->tasks->publicApiV1ProjectsTasksImport(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="missing_api_key" -->
@@ -159,49 +112,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProjectsTasksImportRequest(
-    company: '54b87eb6-84de-4348-bf2c-94e0fdb8c166',
-    project: 'fa02c578-4e70-4dbd-9c63-23ee0cde6e22',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ImportProjectTasksV1Request(
-        tasks: [
-            [
-                'key' => '<value>',
-            ],
-        ],
-    ),
-);
-
-$response = $sdk->projects->tasks->publicApiV1ProjectsTasksImport(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="success" -->
@@ -226,49 +136,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProjectsTasksImportRequest(
     company: 'Gleichner LLC',
     project: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ImportProjectTasksV1Request(
-        tasks: [
-            [
-                'key' => '<value>',
-            ],
-        ],
-    ),
-);
-
-$response = $sdk->projects->tasks->publicApiV1ProjectsTasksImport(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.tasks.import" method="post" path="/companies/{company}/projects/{project}/tasks/import" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProjectsTasksImportRequest(
-    company: 'e43e8152-1d13-4f0f-bc02-b82e009b8213',
-    project: '3c1cc13d-e152-4d20-b222-b0dd40058cc7',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ImportProjectTasksV1Request(

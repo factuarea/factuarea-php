@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Brick\DateTime\LocalDate;
-use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1DeliveryNotesDuplicateRequest
 {
@@ -46,26 +45,17 @@ class PublicApiV1DeliveryNotesDuplicateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\DuplicateDeliveryNoteRequest $body
-     */
-    #[SpeakeasyMetadata('request:mediaType=application/json')]
-    public ?Components\DuplicateDeliveryNoteRequest $body = null;
-
-    /**
      * @param  string  $company
      * @param  string  $deliveryNote
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
-     * @param  ?\Factuarea\Sdk\Models\Components\DuplicateDeliveryNoteRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $company, string $deliveryNote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Components\DuplicateDeliveryNoteRequest $body = null)
+    public function __construct(string $company, string $deliveryNote, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null)
     {
         $this->company = $company;
         $this->deliveryNote = $deliveryNote;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
-        $this->body = $body;
     }
 }

@@ -77,43 +77,6 @@ if ($response->object !== null) {
 
 Create a task project with a `name`, a unique `key` (an uppercase letter followed by up to nine uppercase letters or digits, used in task keys such as `DEV-12`), an optional `icon` and `description`. The project is created with the default board columns. A `key` already used by another project of your company returns 409 `project_key_in_use`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.create" method="post" path="/companies/{company}/projects" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateProjectV1Request(
-    name: '<value>',
-    key: '<key>',
-);
-
-$response = $sdk->projects->publicApiV1ProjectsCreate(
-    company: '545de3c5-5269-45ae-867f-a579d99b1088',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.create" method="post" path="/companies/{company}/projects" example="missing_api_key" -->
@@ -141,43 +104,6 @@ $body = new Components\CreateProjectV1Request(
 
 $response = $sdk->projects->publicApiV1ProjectsCreate(
     company: 'Schamberger - Donnelly',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.create" method="post" path="/companies/{company}/projects" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateProjectV1Request(
-    name: '<value>',
-    key: '<key>',
-);
-
-$response = $sdk->projects->publicApiV1ProjectsCreate(
-    company: '0aa0c31a-2756-48b1-b725-dc9f7d272fea',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -225,43 +151,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.create" method="post" path="/companies/{company}/projects" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateProjectV1Request(
-    name: '<value>',
-    key: '<key>',
-);
-
-$response = $sdk->projects->publicApiV1ProjectsCreate(
-    company: '292ba776-7fea-4191-9dff-5574d62e9a2c',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -286,9 +175,7 @@ if ($response->object !== null) {
 
 ## publicApiV1ProjectsList
 
-List the task projects of your company in app order, with task statistics for each.
-- Archived projects are left out unless `include_archived=true`.
-- Cursor-paginated: pass `next_cursor` as `starting_after`; `has_more` tells whether more pages exist.
+List the task projects of your company, ordered by their position (the order shown in the app) with a stable tie-break by `id`. Archived projects are left out unless `include_archived=true`. Each project carries its task statistics (total, completed, completion percentage and next due date). Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
 
 ### Example Usage
 
@@ -345,9 +232,7 @@ if ($response->projectList !== null) {
 
 ## publicApiV1ProjectsDelete
 
-Permanently delete a project with all its tasks, comments, attachments and time entries.
-- Irreversible, no restore: send the required `Idempotency-Key` header.
-- A project with invoiced hours returns 422 `task_time_entry_invoiced` until that invoice is deleted.
+Permanently delete a project together with all its tasks, comments, attachments and time entries. A project that has invoiced hours (in a live time-invoicing batch or on any of its tasks) cannot be deleted: 422 `task_time_entry_invoiced` and nothing is removed until the invoice is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
 
 ### Example Usage
 
@@ -465,9 +350,7 @@ if ($response->object !== null) {
 
 ## publicApiV1ProjectsUpdate
 
-Partially update a project: only the fields you send change.
-- Editable: `name`, `key` (old key stays as alias), `icon`, `description`, billing defaults.
-- A `key` already in use returns 409 `project_key_in_use`.
+Partially update a project: only the fields you send change (`PATCH` semantics). You can change the `name`, the `key` (tasks keep answering to their previous key as an alias), the `icon`, the `description` (explicit `null` clears it) and the billing defaults used to invoice logged time (`billing_contact_id`, `billing_product_id`, `billing_hourly_rate`, up to 99,999,999.99 per hour so that the tax of one hour always fits an invoice line). A `key` already in use returns 409 `project_key_in_use`.
 
 ### Example Usage
 
@@ -528,41 +411,6 @@ if ($response->object !== null) {
 
 Look up a project by its `key` sent in the request body (case-insensitive). Returns 404 `project_not_found` when no project of your company has that key. A read-only lookup: it does not change anything and does not need an `Idempotency-Key`.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.find_by_key" method="post" path="/companies/{company}/projects/find-by-key" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProjectByKeyV1Request(
-    key: '<key>',
-);
-
-$response = $sdk->projects->publicApiV1ProjectsFindByKey(
-    company: '214e11aa-cd32-4c5c-91de-af356220616e',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.find_by_key" method="post" path="/companies/{company}/projects/find-by-key" example="missing_api_key" -->
@@ -598,41 +446,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.find_by_key" method="post" path="/companies/{company}/projects/find-by-key" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProjectByKeyV1Request(
-    key: '<key>',
-);
-
-$response = $sdk->projects->publicApiV1ProjectsFindByKey(
-    company: 'a0a5e2ce-f202-4d65-9ac8-c07af3fafae4',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.find_by_key" method="post" path="/companies/{company}/projects/find-by-key" example="success" -->
@@ -659,41 +472,6 @@ $body = new Components\FindProjectByKeyV1Request(
 
 $response = $sdk->projects->publicApiV1ProjectsFindByKey(
     company: 'Altenwerth LLC',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.projects.find_by_key" method="post" path="/companies/{company}/projects/find-by-key" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProjectByKeyV1Request(
-    key: '<key>',
-);
-
-$response = $sdk->projects->publicApiV1ProjectsFindByKey(
-    company: '3a25dd0f-af7c-462a-86a5-3d81bd8c764e',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 

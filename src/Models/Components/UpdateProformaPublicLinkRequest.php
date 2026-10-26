@@ -36,24 +36,13 @@ class UpdateProformaPublicLinkRequest
     public ?int $extendDays = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateProformaPublicLinkRequestPublicationContext $publicationContext
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('publication_context')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProformaPublicLinkRequestPublicationContext|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateProformaPublicLinkRequestPublicationContext $publicationContext = null;
-
-    /**
      * @param  \Factuarea\Sdk\Models\Components\UpdateProformaPublicLinkRequestAction  $action
      * @param  ?int  $extendDays
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProformaPublicLinkRequestPublicationContext  $publicationContext
      * @phpstan-pure
      */
-    public function __construct(UpdateProformaPublicLinkRequestAction $action, ?int $extendDays = null, ?UpdateProformaPublicLinkRequestPublicationContext $publicationContext = null)
+    public function __construct(UpdateProformaPublicLinkRequestAction $action, ?int $extendDays = null)
     {
         $this->action = $action;
         $this->extendDays = $extendDays;
-        $this->publicationContext = $publicationContext;
     }
 }

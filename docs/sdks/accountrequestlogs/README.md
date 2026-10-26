@@ -9,9 +9,7 @@
 
 ## publicApiV1AccountRequestLogsList
 
-List the requests made with ANY API key of your account, newest first, in the credential’s environment.
-- Filters: `method`, `status_range`, `only_errors`, `api_key_prefix`, `path_search`, `created_at[gte|lte]`; cursor is `starting_after`.
-- Rows are purged after 30 days. Needs a credential reaching every tax ID, issued by an owner or admin.
+Inspect the requests made with ANY API key of your account, newest first, in the environment of the credential (a `live` key sees the live traffic and a `test` key the test traffic), so you can debug your integrations without opening a support ticket: what was called, what came back, how long it took and, when a call failed, the error it returned. It takes the same filters as the company listing (`method`, `status_range`, `only_errors`, `api_key_prefix`, `path_search` and `created_at[gte|lte]`) and `starting_after` is its only cursor: `environment` and `ending_before` are not accepted (400 `parameter_unknown`). Rows are purged after 30 days, so this is a debugging window, not an audit trail. The credential must reach every tax ID of the account and the person who issued it must be an owner or admin of the account (403 `forbidden_action` otherwise).
 
 ### Example Usage
 
@@ -69,9 +67,7 @@ if ($response->apiRequestLogList !== null) {
 
 ## publicApiV1AccountRequestLogsShow
 
-Retrieve one request made with any API key of your account by the `req_…` id from the `X-Request-Id` header.
-- It is an opaque string, not a UUID v7; the body matches the listing.
-- A missing, foreign or purged request returns 404 `resource_not_found`.
+Retrieve a single request made with any API key of your account by the `request_id` the API returned in the `X-Request-Id` header of that response, in the environment of the credential. It is an opaque `req_…` string, not a UUID v7, and the body carries the same fields as the listing. A request that does not exist, belongs to another account or environment, or was purged returns 404 `resource_not_found`. It follows the same access rule as the listing.
 
 ### Example Usage
 

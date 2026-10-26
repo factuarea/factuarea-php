@@ -14,10 +14,7 @@
 
 ## publicApiV1AccountWebhooksCreate
 
-Create an account webhook endpoint for HTTPS event callbacks; returns 201 and the signing `secret` once.
-- `account_relationship` is `own`, `managed` or `all` (default).
-- Needs a live key from an owner or admin (test key: 403 `insufficient_scope`).
-- 402 `addon_required` if the plan allows none; 422 `account_webhook_endpoint_limit_reached`.
+Create a webhook endpoint of your ACCOUNT that receives event notifications via HTTPS callbacks. It can subscribe to the same events as a company endpoint plus the `account.*` events of the account (members, owner, tax IDs, access granted or received, managed accounts and bulk imports). `account_relationship` says whose tax IDs it hears about: `own` (the tax IDs of your account), `managed` (the accounts your account manages) or `all` (the default). The signing `secret` is returned **once** in this response and never again — store it securely. The endpoint is created in the environment of the credential (`live` or `test`), cannot change environment and is invisible from the other one. The credential must reach every tax ID of the account and the person who issued it must be an owner or admin of the account (403 `forbidden_action` otherwise); a test key cannot create (403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway). The number of endpoints per account and environment depends on the plan: 402 `addon_required` when the plan allows none and 422 `account_webhook_endpoint_limit_reached` at the limit. Returns 201 with a `Location` header.
 
 ### Example Usage: api_key_expired
 
@@ -83,43 +80,6 @@ $body = new Components\CreateAccountWebhookV1Request(
 
 $response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
     account: '63173023',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAccountWebhookV1Request(
-    url: 'https://urban-summer.info/',
-    enabledEvents: [],
-);
-
-$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
-    account: '2c60365e-ec55-4c31-bd27-598f2951d41b',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -241,43 +201,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAccountWebhookV1Request(
-    url: 'https://urban-summer.info/',
-    enabledEvents: [],
-);
-
-$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
-    account: '7ed60d29-ff0c-4502-9488-cb33423d5d3a',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="success" -->
@@ -315,43 +238,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.webhooks.create" method="post" path="/accounts/{account}/webhooks" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateAccountWebhookV1Request(
-    url: 'https://urban-summer.info/',
-    enabledEvents: [],
-);
-
-$response = $sdk->account->webhooks->publicApiV1AccountWebhooksCreate(
-    account: '59e04872-255c-4b87-ba64-c5ff3e3ef31f',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -376,9 +262,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountWebhooksList
 
-List the account webhook endpoints in the credential’s environment, cursor-paginated with `limit` (1-100, default 25) and `starting_after`.
-- Each shows `account_relationship`, `enabled_events`, `status` and `api_version`; the secret is never returned.
-- Needs a credential reaching every tax ID, issued by an owner or admin (403 `forbidden_action`); `ending_before` returns 400.
+List the webhook endpoints of your ACCOUNT in the environment of the credential (`live` or `test`), cursor-paginated with `limit` (1-100, default 25) and `starting_after`. Each endpoint shows its `account_relationship` filter (`own`, `managed` or `all`), the `enabled_events` it subscribes to, its `status` and its pinned `api_version`; the signing secret is never returned. The credential must reach every tax ID of the account and the person who issued it must be an owner or admin of the account (403 `forbidden_action` otherwise). A test key lists the endpoints of the test environment. `ending_before` is not accepted (400 `parameter_unknown`). An account identifier that is not yours returns 404 `account_not_found`.
 
 ### Example Usage
 
@@ -437,9 +321,7 @@ if ($response->accountWebhookList !== null) {
 
 ## publicApiV1AccountWebhooksDelete
 
-Delete an account webhook endpoint: it stops receiving events at once and its queued deliveries are cancelled. Irreversible.
-- Requires a live key and an `Idempotency-Key`; a test key gets 403 `insufficient_scope`.
-- Returns 204; an unknown or foreign endpoint returns 404 `webhook_endpoint_not_found`.
+Delete a webhook endpoint of your ACCOUNT. It stops receiving events at once, its queued and failed deliveries are cancelled, and it no longer appears in listings; this cannot be undone. Requires a live key (a test key cannot write: 403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway), the same account capability as the creation and an `Idempotency-Key`, because the deletion is irreversible. An endpoint that does not exist or belongs to another account or environment returns 404 `webhook_endpoint_not_found`. Returns 204 with no body.
 
 ### Example Usage
 
@@ -499,9 +381,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1AccountWebhooksShow
 
-Retrieve one account webhook endpoint by its `id` (UUID v7), in the credential’s environment; the signing secret is never included.
-- An unknown, deleted or foreign endpoint returns 404 `webhook_endpoint_not_found`.
-- Needs a credential reaching every tax ID, issued by an owner or admin.
+Retrieve one webhook endpoint of your ACCOUNT by its `id` (UUID v7), in the environment of the credential. The signing secret is never included. An endpoint that does not exist, was deleted or belongs to another account or environment returns the same 404 `webhook_endpoint_not_found`. It follows the same access rule as the listing: an owner or admin of the account issued the key and the key reaches every tax ID of the account.
 
 ### Example Usage
 
@@ -559,9 +439,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountWebhooksUpdate
 
-Partially update an account webhook endpoint: `url`, `enabled_events`, `account_relationship`, `description`, `api_version` or `status`.
-- Omitted fields keep their value; `description: null` clears it; `status` toggles `active`/`disabled`.
-- Requires a live key; 404 `webhook_endpoint_not_found`.
+Partially update a webhook endpoint of your ACCOUNT: `url`, `enabled_events`, `account_relationship` (`own`, `managed` or `all`), `description`, `api_version` or `status` (`active` re-enables the endpoint and `disabled` pauses it). Omitted fields keep their value and `description: null` clears it; the environment never changes. Requires a live key: a test key cannot write (403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway). It also requires the same account capability as the creation. An endpoint that does not exist, was deleted or belongs to another account or environment returns 404 `webhook_endpoint_not_found`; an unsupported `api_version` returns 422 with its own subcode.
 
 ### Example Usage
 
@@ -620,10 +498,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountWebhooksRotateSecret
 
-Rotate the signing secret of an account webhook endpoint; the new secret is returned once. Irreversible.
-- The previous secret keeps signing for 24 hours.
-- Rotating again within five minutes returns 422 subcode `webhook_secret_recently_rotated`.
-- Requires a live key and an `Idempotency-Key`; 404 `webhook_endpoint_not_found`.
+Rotate the signing secret of an account webhook endpoint. The new secret is returned **once** in this response and never again. The previous secret keeps signing for 24 hours so you can deploy the new one without downtime. Rotating again within five minutes of the last rotation returns 422 with the subcode `webhook_secret_recently_rotated`. Requires a live key (a test key cannot write: 403 `insufficient_scope`, or 403 `module_not_available_in_sandbox` if it carries the write scope anyway), the same account capability as the creation and an `Idempotency-Key`, because the rotation is irreversible. An unknown endpoint returns 404 `webhook_endpoint_not_found`.
 
 ### Example Usage
 
@@ -683,10 +558,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountWebhooksTest
 
-Queue a signed test delivery (`test: true`) to an account webhook endpoint to check reachability and signature verification.
-- Optional `type` picks the event; an unsubscribed one returns 422 subcode `event_not_subscribed`.
-- Returns 202 with the delivery id; read the result in the endpoint’s deliveries.
-- Requires a live key and an `Idempotency-Key`.
+Queue a signed test delivery to an account webhook endpoint, marked `test: true` in the delivered envelope, to check that it is reachable and that your signature verification works. `type` is optional and picks which subscribed event type to simulate (an `account.*` type included); without it the first subscribed type is used, and a type the endpoint does not subscribe to returns 422 with the subcode `event_not_subscribed`. A disabled endpoint returns 422 with the subcode `account_webhook_endpoint_not_active`. The event is synthetic: it is not stored in any event log and reaches only this endpoint, but the delivery it creates is stored, so you read its result in the deliveries of the endpoint. Returns 202 with the id of the delivery. On an endpoint of the `test` environment nothing is sent to the network: the delivery stays `pending`. Requires a live key and an `Idempotency-Key`, and it counts against its own per-route rate limit.
 
 ### Example Usage
 

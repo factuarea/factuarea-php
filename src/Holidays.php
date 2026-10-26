@@ -50,8 +50,7 @@ class Holidays
     /**
      * List all holidays
      *
-     * List the public holidays visible to your company with cursor pagination: seeded read-only national and autonomic holidays plus your custom local ones.
-     * - Filter by `year`, `ccaa`, `scope` (`national`/`autonomic`/`local`) and `source` (`reference`/`custom`).
+     * List the public holidays visible to your company with cursor-based pagination: global reference holidays (national and per autonomous community, seeded and read-only) plus your custom local holidays. Supports filtering by `year`, `ccaa` (ISO 3166-2:ES autonomous community), `scope` (`national`/`autonomic`/`local`) and `source` (`reference` for seeded rows, `custom` for your own).
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1HolidaysListResponse

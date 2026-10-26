@@ -13,14 +13,6 @@ use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1TaxCatalogShowRequest
 {
     /**
-     * Conditional request: send the `ETag` you stored from a previous response of this operation (quoted, as received) to get `304 Not Modified` without a body when the content has not changed. Omit it to always receive the full response.
-     *
-     * @var ?string $ifNoneMatch
-     */
-    #[SpeakeasyMetadata('header:style=simple,explode=false,name=If-None-Match')]
-    public ?string $ifNoneMatch = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -29,13 +21,11 @@ class PublicApiV1TaxCatalogShowRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
-     * @param  ?string  $ifNoneMatch
      * @param  ?LocalDate  $factuareaVersion
      * @phpstan-pure
      */
-    public function __construct(?string $ifNoneMatch = null, ?LocalDate $factuareaVersion = null)
+    public function __construct(?LocalDate $factuareaVersion = null)
     {
-        $this->ifNoneMatch = $ifNoneMatch;
         $this->factuareaVersion = $factuareaVersion;
     }
 }

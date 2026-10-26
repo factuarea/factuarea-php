@@ -8,23 +8,22 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
-use Factuarea\Sdk\Models\Components;
-/** PublicApiV1RecurringInvoicesGenerateResponseBody - Invoice for the business day fixed by this authorized request. Same-day replay returns the existing invoice without another counter, email or instalment set. */
+
 class PublicApiV1RecurringInvoicesGenerateResponseBody
 {
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\RecurringInvoiceGenerateResult $data
+     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesGenerateData $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringInvoiceGenerateResult')]
-    public Components\RecurringInvoiceGenerateResult $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesGenerateData')]
+    public PublicApiV1RecurringInvoicesGenerateData $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceGenerateResult  $data
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesGenerateData  $data
      * @phpstan-pure
      */
-    public function __construct(Components\RecurringInvoiceGenerateResult $data)
+    public function __construct(PublicApiV1RecurringInvoicesGenerateData $data)
     {
         $this->data = $data;
     }

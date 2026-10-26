@@ -1,0 +1,11 @@
+# EventDataProjectCreated
+
+Payload (`data`) emitted with the `project.created` event: the full resource snapshot captured at emission time under `object`, plus event-specific keys.
+
+
+## Fields
+
+| Field                                                                                                                 | Type                                                                                                                  | Required                                                                                                              | Description                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `type`                                                                                                                | *string*                                                                                                              | :heavy_check_mark:                                                                                                    | N/A                                                                                                                   |
+| `object`                                                                                                              | [Components\Project](../../Models/Components/Project.md)                                                              | :heavy_check_mark:                                                                                                    | A task project of your company: its board columns hold the tasks, and its key (`DEV`) prefixes their keys (`DEV-12`). |

@@ -39,20 +39,20 @@ class AutomationCatalogScope
     /**
      * Why the scope is not available, or `null` when it is. `module_not_granted` means the company does not have the gestoría module (upgrading the plan grants it); `company_is_managed_child` means the company is not the titular company of its account: the portfolio belongs to the account and its titular represents it, so no plan unlocks it for an additional tax ID.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\AutomationCatalogUnavailableReason $unavailableReason
+     * @var ?\Factuarea\Sdk\Models\Components\UnavailableReason $unavailableReason
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unavailable_reason')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AutomationCatalogUnavailableReason|null')]
-    public ?AutomationCatalogUnavailableReason $unavailableReason;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UnavailableReason|null')]
+    public ?UnavailableReason $unavailableReason;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\ScopeKey  $key
      * @param  string  $label
      * @param  bool  $available
-     * @param  ?\Factuarea\Sdk\Models\Components\AutomationCatalogUnavailableReason  $unavailableReason
+     * @param  ?\Factuarea\Sdk\Models\Components\UnavailableReason  $unavailableReason
      * @phpstan-pure
      */
-    public function __construct(ScopeKey $key, string $label, bool $available, ?AutomationCatalogUnavailableReason $unavailableReason = null)
+    public function __construct(ScopeKey $key, string $label, bool $available, ?UnavailableReason $unavailableReason = null)
     {
         $this->key = $key;
         $this->label = $label;

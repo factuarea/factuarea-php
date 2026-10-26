@@ -40,7 +40,6 @@ class PublicApiV1RecurringInvoicesGenerateResponse
     public array $headers;
 
     /**
-     * Invoice for the business day fixed by this authorized request. Same-day replay returns the existing invoice without another counter, email or instalment set.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1RecurringInvoicesGenerateResponseBody $object
      */

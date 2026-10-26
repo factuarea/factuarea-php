@@ -51,10 +51,7 @@ class ConnectReturnDomains
     /**
      * Add a Stripe Connect return domain
      *
-     * Allow a host as the `return_url` destination of Stripe Connect authorizations started by your account.
-     * - `domain` is the bare lower-cased host (422 subcode `invalid_return_domain`).
-     * - Returns 201 without `Location`; a duplicate returns 409 `connect_return_domain_already_exists`.
-     * - Needs a live key from an owner or admin.
+     * Allow a host as the destination of the `return_url` of Stripe Connect authorizations started by your account. `domain` is the host only, lower-cased and normalized, with no scheme, port, path or wildcard (422 `business_rule_violation` with subcode `invalid_return_domain` otherwise). Returns 201 with the `connect_return_domain` object and no `Location` header. A host already registered returns 409 `connect_return_domain_already_exists`, and an account at its limit returns 422 `connect_return_domain_limit_reached`. Writes need a live credential issued by an owner or admin of the account: a test key (`fact_test_`) cannot carry this scope (403 `insufficient_scope`) and, if one did, it would be rejected with 403 `module_not_available_in_sandbox` before anything is written.
      *
      * @param  \Factuarea\Sdk\Models\Components\AddConnectReturnDomainV1Request  $body
      * @param  string  $account
@@ -184,10 +181,7 @@ class ConnectReturnDomains
     /**
      * Remove a Stripe Connect return domain
      *
-     * Remove a return domain of your account; responds 204 with no body.
-     * - Later `return_url` values on that host are rejected with 422 `connect_return_url_not_allowed`; started authorizations keep theirs.
-     * - An unknown domain, or one of another account, returns 404 `connect_return_domain_not_found`.
-     * - Needs a live key from an owner or admin; undo by adding the host again.
+     * Remove a return domain of your account. From then on a `return_url` on that host is rejected with 422 `connect_return_url_not_allowed`; authorizations already started keep the `return_url` they were created with. Responds 204 with no body. A domain that does not exist, or that belongs to another account, returns 404 `connect_return_domain_not_found`. Removing it is undone by adding the same host again. Writes need a live credential issued by an owner or admin of the account: a test key (`fact_test_`) cannot carry this scope (403 `insufficient_scope`) and, if one did, it would be rejected with 403 `module_not_available_in_sandbox` before anything is changed.
      *
      * @param  string  $account
      * @param  string  $returnDomain
@@ -302,9 +296,7 @@ class ConnectReturnDomains
     /**
      * List Stripe Connect return domains
      *
-     * List the hosts your account allows as `return_url` destination for Stripe Connect authorizations, cursor-paginated.
-     * - Each item exposes `id` (UUID v7), `domain` and `created_at`.
-     * - The credential must reach every tax ID of the account and come from an owner or admin.
+     * List the hosts your account allows as the destination of the `return_url` of a Stripe Connect authorization, with cursor-based pagination (`limit`, `starting_after`). Each exposes its `id` (UUID v7), `domain` and `created_at`. It only shows the domains of the account of the credential, and the credential must reach every tax ID of the account and have been issued by an owner or admin of it.
      *
      * @param  string  $account
      * @param  ?int  $limit

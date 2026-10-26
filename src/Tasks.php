@@ -84,9 +84,7 @@ class Tasks
     /**
      * Assign a task
      *
-     * Assign a task to a person of your company (`assignee_id`): a member, or a person of another account with `operate` access via an account relation.
-     * - Anyone else, including view-only relation access, returns 422 `task_assignee_not_member`.
-     * - Find assignable ids with `GET /v1/companies/{company}/users`.
+     * Assign a task to a person of your company (`assignee_id`): a member, or a person of another account who reaches the company through an account relation with `operate` access (for example, the accountancy firm that manages it), whose account is not published. A user who is neither returns 422 `task_assignee_not_member`, also for people with view-only relation access. Use `GET /v1/companies/{company}/users` to find the assignable ids.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAssignRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksAssignResponse
@@ -207,9 +205,7 @@ class Tasks
     /**
      * Bulk delete tasks
      *
-     * Permanently delete up to 200 tasks (`task_ids`) with their comments, attachments and time entries.
-     * - Irreversible; requires an `Idempotency-Key`.
-     * - Missing tasks are skipped; any task with invoiced hours rejects the whole request with 422 `task_time_entry_invoiced`.
+     * Permanently delete up to 200 tasks (`task_ids`) with their comments, attachments and time entries. Tasks that no longer exist are skipped; the result reports how many were deleted. If any task in the selection has invoiced hours the whole request is rejected with 422 `task_time_entry_invoiced` and nothing is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkDeleteTasksV1Request  $body
      * @param  string  $company
@@ -599,9 +595,7 @@ class Tasks
     /**
      * Create a task
      *
-     * Create a task in a project; `project_id` and `title` are required.
-     * - It starts in the first column unless you send `column_id` or a virtual `status` (`planned` for the backlog).
-     * - `entity_link` (`type` + `id`) links a document or contact atomically; if the entity is not found or accessible, 404 `linked_entity_not_found` and no task is created.
+     * Create a task in a project. `project_id` and `title` are required. The task starts in the first column unless you send a `column_id` or a virtual `status` (`planned` for the backlog). Optional: `description` (Markdown), `priority`, `start_on`, `due_on`, `assignee_id` (a member of your company), `label_ids`, `custom_fields` (values keyed by field `id`) and `entity_link`: an object with `type` (from the entity-link vocabulary) and `id` that links the task to a document or contact in the same transaction; if that entity does not exist, belongs to another company or its module is not accessible, the call returns 404 `linked_entity_not_found` and the task is not created.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateTaskV1Request  $body
      * @param  string  $company
@@ -856,9 +850,7 @@ class Tasks
     /**
      * Duplicate a task
      *
-     * Create a copy of a task at the end of the same column or backlog, with an optional new `title`.
-     * - Keeps description, priority, dates, labels, custom fields, assignee, parent and description attachments (these count towards storage, 402 `storage_quota_exceeded`).
-     * - Comments, activity, time entries, subtasks, other relations and links are not copied.
+     * Create a copy of a task at the end of the same column or backlog, with an optional new `title`. The copy keeps description, priority, dates, labels, custom field values, the assignee (if still a member), its parent (as a sibling subtask) and the attachments referenced in the description, which count towards the storage quota (402 `storage_quota_exceeded` when it is full). Comments, activity, time entries, child subtasks, other relations, external links and entity links are not copied.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksDuplicateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksDuplicateResponse
@@ -1106,9 +1098,7 @@ class Tasks
     /**
      * List tasks linked to an entity
      *
-     * List the tasks of any project linked to a Factuarea entity (`entity_type` + `entity_id`); archived tasks are included and flagged.
-     * - An entity that does not exist or belongs to another company returns an empty list.
-     * - Cursor-paginated: pass `next_cursor` as `starting_after`; `has_more` tells if there are more.
+     * List the tasks of any project linked to a Factuarea entity (`entity_type` + `entity_id`): an invoice, quote, pro forma, delivery note, purchase invoice, recurring invoice, contact, product or employee. Archived tasks are included and flagged. An entity that does not exist or belongs to another company returns an empty list. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksLinkedRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksLinkedResponse
@@ -1468,9 +1458,7 @@ class Tasks
     /**
      * Search tasks
      *
-     * Search the tasks of your company across projects, filtering by `q`, `project_id`, `status`, `column_id`, `priority`, `assignee_id` (UUID or `me`), `label_id`, due dates and `completed`.
-     * - `sort` takes `created_at`, `updated_at`, `due_on`, `priority` or `number`; prefix `-` for descending (default `-created_at`).
-     * - Cursor-paginated: pass `next_cursor` as `starting_after`.
+     * Search the tasks of your company across projects. Filters: `q` (free text; a value shaped like a task key such as `DEV-12` also matches that key), `project_id`, `status` (`planned`, `active`, `archived`), `column_id`, `priority`, `assignee_id` (a member UUID or `me`), `label_id`, `due_before`, `due_after` and `completed`. `sort` accepts `created_at`, `updated_at`, `due_on`, `priority` or `number`, with a `-` prefix for descending (default `-created_at`); ties are broken by `id` so the order is stable. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1TasksSearchResponse

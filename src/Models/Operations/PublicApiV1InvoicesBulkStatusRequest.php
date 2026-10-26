@@ -30,7 +30,6 @@ class PublicApiV1InvoicesBulkStatusRequest
     public string $idempotencyKey;
 
     /**
-     * Bulk invoice status changes accept an optional UUID-keyed map of complete seven-field presentation preconditions. When revisioned presentation is enabled for the company and the change issues invoices (`issued` or the legacy `sent`), every draft row must carry its precondition: a draft row without one is not issued and is reported in `failures[]` with 428 `pdf_presentation_precondition_required`, while the other rows continue. With revisioned presentation disabled the precondition fields are ignored.
      *
      * @var \Factuarea\Sdk\Models\Components\BulkStatusInvoicesV1Request $body
      */

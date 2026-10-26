@@ -5,12 +5,11 @@
 ### Available Operations
 
 * [publicApiV1QuotesAccept](#publicapiv1quotesaccept) - Accept a quote
-* [publicApiV1QuotesAssignPresentation](#publicapiv1quotesassignpresentation) - Assign the quote visual template
-* [publicApiV1QuotesGetPresentation](#publicapiv1quotesgetpresentation) - Get the quote presentation
 * [publicApiV1QuotesBulkDelete](#publicapiv1quotesbulkdelete) - Bulk delete quotes
 * [publicApiV1QuotesBulkPdf](#publicapiv1quotesbulkpdf) - Bulk download quote PDFs
 * [publicApiV1QuotesBulkSend](#publicapiv1quotesbulksend) - Bulk send quotes
 * [publicApiV1QuotesBulkStatus](#publicapiv1quotesbulkstatus) - Bulk change quote status
+* [publicApiV1QuotesConvert](#publicapiv1quotesconvert) - Convert quote to invoice
 * [publicApiV1QuotesCreate](#publicapiv1quotescreate) - Create a quote
 * [publicApiV1QuotesList](#publicapiv1quoteslist) - List all quotes
 * [publicApiV1QuotesDelete](#publicapiv1quotesdelete) - Delete a quote
@@ -22,105 +21,15 @@
 * [publicApiV1QuotesPublicLinkGet](#publicapiv1quotespubliclinkget) - Retrieve quote public link
 * [publicApiV1QuotesPublicLinkUpdate](#publicapiv1quotespubliclinkupdate) - Update quote public link
 * [publicApiV1QuotesStats](#publicapiv1quotesstats) - Get quote stats
-* [publicApiV1QuotesListPresentations](#publicapiv1quoteslistpresentations) - List retained quote presentations
 * [publicApiV1QuotesStatuses](#publicapiv1quotesstatuses) - List quote statuses
 * [publicApiV1QuotesReject](#publicapiv1quotesreject) - Reject a quote
-* [publicApiV1QuotesRevisePresentation](#publicapiv1quotesrevisepresentation) - Create a quote presentation revision
 * [publicApiV1QuotesSend](#publicapiv1quotessend) - Send quote by email
 
 ## publicApiV1QuotesAccept
 
 Mark a quote as accepted by the client. Sets `accepted_at` to the current timestamp.
 
-### Example Usage: first_capture
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.accept" method="post" path="/companies/{company}/quotes/{quote}/accept" example="first_capture" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesAcceptRequest(
-    company: '99c26bfb-3dcd-4fec-a29f-110bb1c87043',
-    quote: '593e5b98-0933-4f61-b167-babfa8a3acc1',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AcceptQuoteRequest(
-        acceptedOn: LocalDate::parse('2026-06-01'),
-        presentationPrecondition: new Components\QuotePresentationPrecondition(
-            expectedSelectionVersion: 1,
-            expectedSourceToken: '2b55e9811063da7faa4c1336449948ed80d6f7440dbd686a5944c5951bd7a667',
-            expectedPreviewContextFingerprint: 'eddffdc826b8c69c7187a766dc6864a9057de391a41ef67da44d097845ce7f13',
-            expectedTemplateRevisionId: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a72',
-            expectedCommercialIdentityRevisionId: null,
-            purpose: Components\QuotePresentationPreconditionPurpose::Complete,
-            format: Components\QuotePresentationPreconditionFormat::A4,
-        ),
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesAccept(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retained_capture
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.accept" method="post" path="/companies/{company}/quotes/{quote}/accept" example="retained_capture" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesAcceptRequest(
-    company: '5471e154-def8-4ba9-b86e-17260373a40f',
-    quote: 'cc8f07fa-0984-4445-9fb5-99ef6f650611',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AcceptQuoteRequest(
-        notes: 'Aceptado por el cliente via telefono',
-        expectedPresentationUuid: '01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a73',
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesAccept(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: success
+### Example Usage
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.accept" method="post" path="/companies/{company}/quotes/{quote}/accept" example="success" -->
 ```php
@@ -169,313 +78,6 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                             | Status Code                            | Content Type                           |
-| -------------------------------------- | -------------------------------------- | -------------------------------------- |
-| Errors\Error                           | 400, 401, 403, 404, 409, 422, 428, 429 | application/json                       |
-| Errors\Error                           | 500, 503                               | application/json                       |
-| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
-
-## publicApiV1QuotesAssignPresentation
-
-Set an explicit tenant template or null inheritance without changing numbering, totals, references, payment terms or the existing capture. Supply the visual selection version and/or the strong validator from this exact presentation URI. A successful replay preserves the original result; current actor authority is still required.
-
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.assign_presentation" method="patch" path="/companies/{company}/quotes/{quote}/presentation" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesAssignPresentationRequest(
-    company: '93c96917-c2fb-486f-9345-214e30c63964',
-    quote: '06ae2c41-8f66-4326-9a36-2c677f9fa973',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesAssignPresentation(
-    request: $request
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: inherit
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.assign_presentation" method="patch" path="/companies/{company}/quotes/{quote}/presentation" example="inherit" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesAssignPresentationRequest(
-    company: '7321b275-09d0-4a99-9f07-78fbb7bc10ae',
-    quote: '62041266-d2f5-4c16-813d-def6a1945751',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesAssignPresentation(
-    request: $request
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.assign_presentation" method="patch" path="/companies/{company}/quotes/{quote}/presentation" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesAssignPresentationRequest(
-    company: '8903a4b1-e4f4-442c-8d8e-127e22100780',
-    quote: 'a7d49554-9114-4787-a283-97fb41fae506',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesAssignPresentation(
-    request: $request
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.assign_presentation" method="patch" path="/companies/{company}/quotes/{quote}/presentation" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesAssignPresentationRequest(
-    company: '1e189e0d-5c71-47df-9825-b19acc704e87',
-    quote: 'b68bfb5d-88a3-4052-95ca-d955f21847a4',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AssignDocumentPresentationRequest(
-        templateId: null,
-        expectedVersion: 1,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesAssignPresentation(
-    request: $request
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter                                                                                                                      | Type                                                                                                                           | Required                                                                                                                       | Description                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `$request`                                                                                                                     | [Operations\PublicApiV1QuotesAssignPresentationRequest](../../Models/Operations/PublicApiV1QuotesAssignPresentationRequest.md) | :heavy_check_mark:                                                                                                             | The request object to use for the request.                                                                                     |
-
-### Response
-
-**[?Operations\PublicApiV1QuotesAssignPresentationResponse](../../Models/Operations/PublicApiV1QuotesAssignPresentationResponse.md)**
-
-### Errors
-
-| Error Type                                  | Status Code                                 | Content Type                                |
-| ------------------------------------------- | ------------------------------------------- | ------------------------------------------- |
-| Errors\Error                                | 400, 401, 403, 404, 409, 412, 422, 428, 429 | application/json                            |
-| Errors\Error                                | 500                                         | application/json                            |
-| Errors\APIException                         | 4XX, 5XX                                    | \*/\*                                       |
-
-## publicApiV1QuotesGetPresentation
-
-Inspect the current visual selection and retained capture independently. Returns a virtual state before the first visual action. Reads never initialize templates, capture, publish, render or refresh legal content.
-
-### Example Usage: retained_capture
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.get_presentation" method="get" path="/companies/{company}/quotes/{quote}/presentation" example="retained_capture" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->quotes->publicApiV1QuotesGetPresentation(
-    company: 'af8175b4-3d8f-4bac-8c14-5057f14e2c14',
-    quote: '550cd9b0-c241-4c66-a42a-7b850379f6a7',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: series_candidate_requires_confirmation
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.get_presentation" method="get" path="/companies/{company}/quotes/{quote}/presentation" example="series_candidate_requires_confirmation" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->quotes->publicApiV1QuotesGetPresentation(
-    company: '86554acf-45cd-47d3-b333-8e24cef920f3',
-    quote: '6e83c17d-c449-42f4-912c-b8d00106b22d',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: virtual_legacy_head
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.get_presentation" method="get" path="/companies/{company}/quotes/{quote}/presentation" example="virtual_legacy_head" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-
-
-$response = $sdk->quotes->publicApiV1QuotesGetPresentation(
-    company: '2b7460b1-8e42-4941-b07a-1b2d1b92ddd0',
-    quote: '506fb0a4-1105-4cf9-8c3e-ae74bb00e4bf',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->documentPresentationStateEnvelope !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
-| `quote`                                                                                                                                                                                                                                                                                                                                                                      | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the quote.                                                                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
-
-### Response
-
-**[?Operations\PublicApiV1QuotesGetPresentationResponse](../../Models/Operations/PublicApiV1QuotesGetPresentationResponse.md)**
-
-### Errors
-
 | Error Type                   | Status Code                  | Content Type                 |
 | ---------------------------- | ---------------------------- | ---------------------------- |
 | Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
@@ -516,46 +118,6 @@ $body = new Components\BulkDeleteQuotesV1Request(
 
 $response = $sdk->quotes->publicApiV1QuotesBulkDelete(
     company: 'f50c6e87-e3e2-4200-9727-357d60562d3d',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteQuotesV1Request(
-    ids: [
-        '50c6e87e-3e22-4007-8273-57d60562d3d4',
-        'a866a457-2a8b-47a8-9423-17a9e928ee10',
-        'c7a563c0-6970-4cf1-862a-2ee5c91d01a4',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: '0a866a45-72a8-4b7a-8842-317a9e928ee1',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -646,46 +208,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteQuotesV1Request(
-    ids: [
-        '50c6e87e-3e22-4007-8273-57d60562d3d4',
-        'a866a457-2a8b-47a8-9423-17a9e928ee10',
-        'c7a563c0-6970-4cf1-862a-2ee5c91d01a4',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: 'f50c6e87-e3e2-4200-9727-357d60562d3d',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="success" -->
@@ -716,46 +238,6 @@ $body = new Components\BulkDeleteQuotesV1Request(
 
 $response = $sdk->quotes->publicApiV1QuotesBulkDelete(
     company: 'Waelchi LLC',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_delete" method="post" path="/companies/{company}/quotes/bulk-delete" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteQuotesV1Request(
-    ids: [
-        '50c6e87e-3e22-4007-8273-57d60562d3d4',
-        'a866a457-2a8b-47a8-9423-17a9e928ee10',
-        'c7a563c0-6970-4cf1-862a-2ee5c91d01a4',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkDelete(
-    company: '4c7a563c-0697-40cf-9162-a2ee5c91d01a',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -822,46 +304,6 @@ $body = new Components\BulkPdfQuotesV1Request(
 
 $response = $sdk->quotes->publicApiV1QuotesBulkPdf(
     company: 'c0c79c3e-a98b-4f24-bca7-ffbf1dc8c9ba',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfQuotesV1Request(
-    ids: [
-        '0c79c3ea-98bf-424c-8a7f-fbf1dc8c9bae',
-        'be108833-5a92-4a25-9212-493e66cfbcdd',
-        'e2e9abc5-2772-4592-ab01-a927e3678598',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: 'd7a63b36-3f89-4eb6-bf63-af4d990b2491',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -952,86 +394,6 @@ if ($response->bytes !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfQuotesV1Request(
-    ids: [
-        '0c79c3ea-98bf-424c-8a7f-fbf1dc8c9bae',
-        'be108833-5a92-4a25-9212-493e66cfbcdd',
-        'e2e9abc5-2772-4592-ab01-a927e3678598',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: '87e2ebdb-aba4-4d1e-8293-0d1a77c18ffc',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_pdf" method="post" path="/companies/{company}/quotes/bulk-pdf" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkPdfQuotesV1Request(
-    ids: [
-        '0c79c3ea-98bf-424c-8a7f-fbf1dc8c9bae',
-        'be108833-5a92-4a25-9212-493e66cfbcdd',
-        'e2e9abc5-2772-4592-ab01-a927e3678598',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkPdf(
-    company: 'b7a8cbd7-9c59-4821-a688-874c260aaf45',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->bytes !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1087,45 +449,6 @@ $body = new Components\BulkSendQuotesV1Request(
 
 $response = $sdk->quotes->publicApiV1QuotesBulkSend(
     company: 'a15eadab-4cf2-4672-9396-b624e564dbfe',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendQuotesV1Request(
-    ids: [
-        '15eadab4-cf26-4723-896b-624e564dbfe7',
-        'fe467341-e47e-4566-9903-ea335213c2d8',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: '6fc9ad61-049c-4e64-b026-793e206fed21',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1214,84 +537,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: pdf_engine_unreachable_row
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="pdf_engine_unreachable_row" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendQuotesV1Request(
-    ids: [
-        '15eadab4-cf26-4723-896b-624e564dbfe7',
-        'fe467341-e47e-4566-9903-ea335213c2d8',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: 'a15eadab-4cf2-4672-9396-b624e564dbfe',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendQuotesV1Request(
-    ids: [
-        '15eadab4-cf26-4723-896b-624e564dbfe7',
-        'fe467341-e47e-4566-9903-ea335213c2d8',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: '0fe46734-1e47-4e56-a690-3ea335213c2d',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="success" -->
@@ -1331,45 +576,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_send" method="post" path="/companies/{company}/quotes/bulk-send" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkSendQuotesV1Request(
-    ids: [
-        '15eadab4-cf26-4723-896b-624e564dbfe7',
-        'fe467341-e47e-4566-9903-ea335213c2d8',
-    ],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkSend(
-    company: 'e63e96ed-5d83-4da5-8c12-459893d11791',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1377,7 +583,7 @@ if ($response->object !== null) {
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkSendQuotesV1Request](../../Models/Components/BulkSendQuotesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Bulk quote send accepts an optional UUID-keyed map of complete seven-field presentation preconditions. The presentation precondition fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkSendQuotesV1Request](../../Models/Components/BulkSendQuotesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
@@ -1426,46 +632,6 @@ $body = new Components\BulkStatusQuotesV1Request(
 
 $response = $sdk->quotes->publicApiV1QuotesBulkStatus(
     company: 'bab31b60-f87e-4706-96e4-0c28ff575bd9',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusQuotesV1Request(
-    ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
-    ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: '27ee5ca3-d323-4020-9615-85bbd421b5fa',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1556,86 +722,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: pdf_engine_unreachable_row
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="pdf_engine_unreachable_row" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusQuotesV1Request(
-    ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
-    ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: 'bab31b60-f87e-4706-96e4-0c28ff575bd9',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusQuotesV1Request(
-    ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
-    ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: '952b21a8-5357-48a4-b36e-796e2c4f6540',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="success" -->
@@ -1676,46 +762,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.bulk_status" method="post" path="/companies/{company}/quotes/bulk-status" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusQuotesV1Request(
-    ids: [
-        'ab31b60f-87e7-4066-ae40-c28ff575bd96',
-        '52b21a85-3578-4a43-86e7-96e2c4f6540f',
-    ],
-    newStatus: Components\BulkStatusQuotesV1RequestNewStatus::Approved,
-);
-
-$response = $sdk->quotes->publicApiV1QuotesBulkStatus(
-    company: 'd89a4163-c064-4d14-9b65-c7c7ade59476',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -1723,7 +769,7 @@ if ($response->object !== null) {
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkStatusQuotesV1Request](../../Models/Components/BulkStatusQuotesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Bulk quote status changes accept an optional UUID-keyed map of complete seven-field presentation preconditions. The presentation precondition fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkStatusQuotesV1Request](../../Models/Components/BulkStatusQuotesV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
@@ -1737,6 +783,181 @@ if ($response->object !== null) {
 | Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
 | Errors\Error                 | 500                          | application/json             |
 | Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+
+## publicApiV1QuotesConvert
+
+Convert an accepted quote into an invoice. The new invoice references the source quote via metadata; the quote moves to status `converted`.
+
+### Example Usage: api_key_revoked
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="api_key_revoked" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesConvertRequest(
+    company: 'd7f415d4-4e1e-4bd0-87b5-50a900edda66',
+    quote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertQuoteRequest(),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: invalid_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="invalid_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesConvertRequest(
+    company: 'e893e883-0962-440f-8f3c-d2c96f1d2b57',
+    quote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertQuoteRequest(),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: missing_api_key
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="missing_api_key" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesConvertRequest(
+    company: 'Haag - Weber',
+    quote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertQuoteRequest(
+        target: Components\ConvertQuoteRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.convert" method="post" path="/companies/{company}/quotes/{quote}/convert" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1QuotesConvertRequest(
+    company: 'Harvey - Shields',
+    quote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ConvertQuoteRequest(
+        target: Components\ConvertQuoteRequestTarget::Invoice,
+    ),
+);
+
+$response = $sdk->quotes->publicApiV1QuotesConvert(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                               | [Operations\PublicApiV1QuotesConvertRequest](../../Models/Operations/PublicApiV1QuotesConvertRequest.md) | :heavy_check_mark:                                                                                       | The request object to use for the request.                                                               |
+
+### Response
+
+**[?Operations\PublicApiV1QuotesConvertResponse](../../Models/Operations/PublicApiV1QuotesConvertResponse.md)**
+
+### Errors
+
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 402, 403, 404, 409, 422, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
 
 ## publicApiV1QuotesCreate
 
@@ -1781,49 +1002,6 @@ $body = new Components\CreateQuoteRequest(
 
 $response = $sdk->quotes->publicApiV1QuotesCreate(
     company: '3dbf67ca-9645-41e6-a7cd-6a36a985fcb2',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateQuoteRequest(
-    clientId: 'bf67ca96-451e-467c-9d6a-36a985fcb29d',
-    issuedOn: LocalDate::parse('2026-12-07'),
-    validUntil: LocalDate::parse('2024-11-23'),
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    lines: [],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: 'b8ab8160-c981-4090-8ee9-d977d7c4c097',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1974,49 +1152,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateQuoteRequest(
-    clientId: 'bf67ca96-451e-467c-9d6a-36a985fcb29d',
-    issuedOn: LocalDate::parse('2026-12-07'),
-    validUntil: LocalDate::parse('2024-11-23'),
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    lines: [],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: 'dd406371-2789-4431-9c3f-a13ae55a63bf',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="success" -->
@@ -2050,49 +1185,6 @@ $body = new Components\CreateQuoteRequest(
 
 $response = $sdk->quotes->publicApiV1QuotesCreate(
     company: 'Kemmer, Kilback and Schimmel',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.create" method="post" path="/companies/{company}/quotes" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateQuoteRequest(
-    clientId: 'bf67ca96-451e-467c-9d6a-36a985fcb29d',
-    issuedOn: LocalDate::parse('2026-12-07'),
-    validUntil: LocalDate::parse('2024-11-23'),
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-    lines: [],
-);
-
-$response = $sdk->quotes->publicApiV1QuotesCreate(
-    company: '58e032a8-ca09-4689-a879-cd36b95d835b',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -2346,48 +1438,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: '5eea6272-53c1-4461-b9fb-66f893a32745',
-    quote: '41259707-fd9b-409e-86e1-ee921dc8f1dd',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuoteRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="invalid_api_key" -->
@@ -2471,48 +1521,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: 'e8998cce-ab18-483c-87f6-b91634504a46',
-    quote: 'eb0ae530-3292-4e6f-8826-896bf8eafff1',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuoteRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="success" -->
@@ -2555,48 +1563,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.update" method="patch" path="/companies/{company}/quotes/{quote}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesUpdateRequest(
-    company: '671fcc03-2b8d-4f2f-aca1-19ec531cb104',
-    quote: '8aca5e96-53e7-48e3-b32c-5dc3c564eb57',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuoteRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -2618,11 +1584,11 @@ if ($response->object !== null) {
 
 ## publicApiV1QuotesPdf
 
-Download the PDF representation of a quote. With the revisioned presentation active, a draft is served as a draft PDF (no capture, number or delivery evidence); a document that already left draft and has no retained presentation captures its original on the first download and serves it; one that is already captured serves that capture.
+Download the PDF representation of a quote.
 
-### Example Usage: failed_render_claimed_again
+### Example Usage
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.pdf" method="get" path="/companies/{company}/quotes/{quote}/pdf" example="failed_render_claimed_again" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.pdf" method="get" path="/companies/{company}/quotes/{quote}/pdf" -->
 ```php
 declare(strict_types=1);
 
@@ -2631,7 +1597,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -2641,51 +1606,13 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1QuotesPdfRequest(
-    company: 'f96f5426-bb4e-477d-a371-ec146d02eaca',
-    quote: '59aeebc7-ed35-4818-9f72-aa8962ef3c3f',
-    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-);
+
 
 $response = $sdk->quotes->publicApiV1QuotesPdf(
-    request: $request
-);
+    company: 'DuBuque Inc',
+    quote: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
-if ($response->bytes !== null) {
-    // handle response
-}
-```
-### Example Usage: pending
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.pdf" method="get" path="/companies/{company}/quotes/{quote}/pdf" example="pending" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesPdfRequest(
-    company: '835feca3-577e-411c-82fe-2d438d6612ae',
-    quote: '4d9ac608-2bd0-4332-96a6-a966d7bca3ac',
-    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesPdf(
-    request: $request
 );
 
 if ($response->bytes !== null) {
@@ -2695,9 +1622,12 @@ if ($response->bytes !== null) {
 
 ### Parameters
 
-| Parameter                                                                                        | Type                                                                                             | Required                                                                                         | Description                                                                                      |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `$request`                                                                                       | [Operations\PublicApiV1QuotesPdfRequest](../../Models/Operations/PublicApiV1QuotesPdfRequest.md) | :heavy_check_mark:                                                                               | The request object to use for the request.                                                       |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `quote`                                                                                                                                                                                                                                                                                                                                                                      | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the quote.                                                                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
+| `download`                                                                                                                                                                                                                                                                                                                                                                   | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Send `1` to get the PDF as an attachment (`Content-Disposition: attachment`) instead of inline.                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                              |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
 
@@ -2705,11 +1635,11 @@ if ($response->bytes !== null) {
 
 ### Errors
 
-| Error Type                             | Status Code                            | Content Type                           |
-| -------------------------------------- | -------------------------------------- | -------------------------------------- |
-| Errors\Error                           | 400, 401, 403, 404, 409, 410, 422, 429 | application/json                       |
-| Errors\Error                           | 500, 503                               | application/json                       |
-| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
+| Errors\Error                 | 500                          | application/json             |
+| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1QuotesDuplicate
 
@@ -2726,7 +1656,6 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -2736,15 +1665,14 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-$request = new Operations\PublicApiV1QuotesDuplicateRequest(
+
+
+$response = $sdk->quotes->publicApiV1QuotesDuplicate(
     company: 'Wyman Inc',
     quote: '<value>',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-);
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
-$response = $sdk->quotes->publicApiV1QuotesDuplicate(
-    request: $request
 );
 
 if ($response->object !== null) {
@@ -2754,9 +1682,12 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                    | Type                                                                                                         | Required                                                                                                     | Description                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `$request`                                                                                                   | [Operations\PublicApiV1QuotesDuplicateRequest](../../Models/Operations/PublicApiV1QuotesDuplicateRequest.md) | :heavy_check_mark:                                                                                           | The request object to use for the request.                                                                   |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `quote`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the quote.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ### Response
 
@@ -2800,41 +1731,6 @@ $body = new Components\FindQuoteByExternalIdRequest(
 
 $response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
     company: '37c339b1-f780-439f-b8f5-12907595118d',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindQuoteByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
-    company: '2f48948f-7dc1-4fdb-bbae-e7b49685de4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2914,41 +1810,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindQuoteByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
-    company: '37c339b1-f780-439f-b8f5-12907595118d',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="success" -->
@@ -2975,41 +1836,6 @@ $body = new Components\FindQuoteByExternalIdRequest(
 
 $response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
     company: 'Koelpin - Ryan',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.find_by_external_id" method="post" path="/companies/{company}/quotes/find-by-external-id" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindQuoteByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->quotes->publicApiV1QuotesFindByExternalId(
-    company: '7bcc5b53-144e-45c6-b220-392befaa9d10',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -3141,45 +1967,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
-    company: 'b5f12ca4-8624-4d06-a99e-95ac092f417c',
-    quote: 'f5c3dafe-0990-4493-bc21-b89dbe1eee69',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuotePublicLinkRequest(
-        action: Components\UpdateQuotePublicLinkRequestAction::Reset,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="invalid_api_key" -->
@@ -3258,45 +2045,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
-    company: 'e5888d56-15df-4674-a748-1cc0a082012b',
-    quote: '478cf2db-83d9-487a-b775-18636c434ebd',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuotePublicLinkRequest(
-        action: Components\UpdateQuotePublicLinkRequestAction::Reset,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="success" -->
@@ -3321,45 +2069,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
     company: 'Smitham Inc',
     quote: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateQuotePublicLinkRequest(
-        action: Components\UpdateQuotePublicLinkRequestAction::Reset,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesPublicLinkUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.public_link_update" method="patch" path="/companies/{company}/quotes/{quote}/public-link" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesPublicLinkUpdateRequest(
-    company: '1e42ab13-2936-47b5-ba1a-629be875af9e',
-    quote: '54b6d641-892b-4867-a847-4ec81936ddb0',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateQuotePublicLinkRequest(
@@ -3449,64 +2158,6 @@ if ($response->object !== null) {
 | Errors\Error            | 400, 401, 403, 404, 429 | application/json        |
 | Errors\Error            | 500                     | application/json        |
 | Errors\APIException     | 4XX, 5XX                | \*/\*                   |
-
-## publicApiV1QuotesListPresentations
-
-Return page-based capture history in descending number. Each summary retains its own purpose, format and availability; capture metadata does not prove prepared PDF bytes. Privacy-erased rows remain metadata tombstones.
-
-### Example Usage
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.list_presentations" method="get" path="/companies/{company}/quotes/{quote}/presentation-history" example="retained_history" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesListPresentationsRequest(
-    company: '67d69cbf-6a93-4580-84a7-0799450464f5',
-    quote: '17a907be-249f-46b3-9107-a64fb90e7bae',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesListPresentations(
-    request: $request
-);
-
-if ($response->documentPresentationHistoryEnvelope !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter                                                                                                                    | Type                                                                                                                         | Required                                                                                                                     | Description                                                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `$request`                                                                                                                   | [Operations\PublicApiV1QuotesListPresentationsRequest](../../Models/Operations/PublicApiV1QuotesListPresentationsRequest.md) | :heavy_check_mark:                                                                                                           | The request object to use for the request.                                                                                   |
-
-### Response
-
-**[?Operations\PublicApiV1QuotesListPresentationsResponse](../../Models/Operations/PublicApiV1QuotesListPresentationsResponse.md)**
-
-### Errors
-
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
 
 ## publicApiV1QuotesStatuses
 
@@ -3623,221 +2274,6 @@ if ($response->object !== null) {
 | Errors\Error                      | 500                               | application/json                  |
 | Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
-## publicApiV1QuotesRevisePresentation
-
-Append a derived capture using the authentic presentation_revision preview of the exact parent, target, policy and current source. Send the source token and preview fingerprint; a delivery or illustrative preview cannot authorize this action. Existing document state, fiscal numbering, references, instalments and totals remain intact. This action does not render, publish or send a PDF. Personal-data erasure is terminal.
-
-### Example Usage: captured_visual_revision
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.revise_presentation" method="post" path="/companies/{company}/quotes/{quote}/presentation-revisions" example="captured_visual_revision" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesRevisePresentationRequest(
-    company: '6bacf399-e376-4839-829b-7866201f8ce6',
-    quote: 'b126a53f-e63d-4133-9827-8e9a504a83cb',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesRevisePresentation(
-    request: $request
-);
-
-if ($response->documentPresentationRevisionEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.revise_presentation" method="post" path="/companies/{company}/quotes/{quote}/presentation-revisions" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesRevisePresentationRequest(
-    company: 'e06ec9b4-49ae-44f9-ad59-34b85a50af71',
-    quote: 'df9a8a1a-98fd-4704-a7e6-aeab021517c1',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesRevisePresentation(
-    request: $request
-);
-
-if ($response->documentPresentationRevisionEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.revise_presentation" method="post" path="/companies/{company}/quotes/{quote}/presentation-revisions" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesRevisePresentationRequest(
-    company: '30dddca1-42ae-4c1d-96d5-3c73ddd405f0',
-    quote: 'e54e612c-bcee-4bd5-8b7e-8acff411cc89',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesRevisePresentation(
-    request: $request
-);
-
-if ($response->documentPresentationRevisionEnvelope !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.quotes.revise_presentation" method="post" path="/companies/{company}/quotes/{quote}/presentation-revisions" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1QuotesRevisePresentationRequest(
-    company: 'fde8b68a-624e-4edb-8e7a-daf29f0b98fe',
-    quote: '40f30798-839a-4acb-8024-29e311703063',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\ReviseDocumentPresentationRequest(
-        parentId: '019e0000-0000-7000-8000-000000000201',
-        templateId: null,
-        expectedVersion: 1,
-        reason: 'Actualizar la presentación conservando el contenido.',
-        expectedSourceToken: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        expectedPreviewContextFingerprint: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        expectedTemplateRevisionId: null,
-        expectedCommercialIdentityRevisionId: null,
-        purpose: Components\ReviseDocumentPresentationRequestPurpose::Complete,
-        format: Components\ReviseDocumentPresentationRequestFormat::A4,
-    ),
-);
-
-$response = $sdk->quotes->publicApiV1QuotesRevisePresentation(
-    request: $request
-);
-
-if ($response->documentPresentationRevisionEnvelope !== null) {
-    // handle response
-}
-```
-
-### Parameters
-
-| Parameter                                                                                                                      | Type                                                                                                                           | Required                                                                                                                       | Description                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `$request`                                                                                                                     | [Operations\PublicApiV1QuotesRevisePresentationRequest](../../Models/Operations/PublicApiV1QuotesRevisePresentationRequest.md) | :heavy_check_mark:                                                                                                             | The request object to use for the request.                                                                                     |
-
-### Response
-
-**[?Operations\PublicApiV1QuotesRevisePresentationResponse](../../Models/Operations/PublicApiV1QuotesRevisePresentationResponse.md)**
-
-### Errors
-
-| Error Type                                  | Status Code                                 | Content Type                                |
-| ------------------------------------------- | ------------------------------------------- | ------------------------------------------- |
-| Errors\Error                                | 400, 401, 403, 404, 409, 410, 422, 428, 429 | application/json                            |
-| Errors\Error                                | 500, 503                                    | application/json                            |
-| Errors\APIException                         | 4XX, 5XX                                    | \*/\*                                       |
-
 ## publicApiV1QuotesSend
 
 Send a quote to the client by email.
@@ -3891,8 +2327,8 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                             | Status Code                            | Content Type                           |
-| -------------------------------------- | -------------------------------------- | -------------------------------------- |
-| Errors\Error                           | 400, 401, 403, 404, 409, 422, 428, 429 | application/json                       |
-| Errors\Error                           | 500, 503                               | application/json                       |
-| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |

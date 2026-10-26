@@ -36,24 +36,13 @@ class UpdateQuotePublicLinkRequest
     public ?int $extendDays = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateQuotePublicLinkRequestPublicationContext $publicationContext
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('publication_context')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateQuotePublicLinkRequestPublicationContext|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateQuotePublicLinkRequestPublicationContext $publicationContext = null;
-
-    /**
      * @param  \Factuarea\Sdk\Models\Components\UpdateQuotePublicLinkRequestAction  $action
      * @param  ?int  $extendDays
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateQuotePublicLinkRequestPublicationContext  $publicationContext
      * @phpstan-pure
      */
-    public function __construct(UpdateQuotePublicLinkRequestAction $action, ?int $extendDays = null, ?UpdateQuotePublicLinkRequestPublicationContext $publicationContext = null)
+    public function __construct(UpdateQuotePublicLinkRequestAction $action, ?int $extendDays = null)
     {
         $this->action = $action;
         $this->extendDays = $extendDays;
-        $this->publicationContext = $publicationContext;
     }
 }

@@ -9,10 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** How the account was linked to Stripe: `account_links` (Stripe Connect onboarding), `stripe_app` (Stripe App) or `platform` (the own Stripe account of the company that issues the Factuarea invoices; it has no stored credential and does not accept `subscription_autoinvoicing_enabled`). Read-only. */
+/** How the account was linked to Stripe: `account_links` (Stripe Connect onboarding) or `stripe_app` (Stripe App). Read-only. */
 enum ConnectionMethod: string
 {
     case AccountLinks = 'account_links';
     case StripeApp = 'stripe_app';
-    case Platform = 'platform';
 }

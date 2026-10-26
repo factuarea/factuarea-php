@@ -12,10 +12,7 @@
 
 ## publicApiV1AccountMembersCreate
 
-Create a new person as a member of the account with a `role` (`admin` or `member`) and a required `grants` list (may be empty).
-- Each grant is a `company_id` plus `level` (`view` or `operate`); returns 201 with `Location`.
-- The credential scope must cover every tax ID (403 `forbidden_action`).
-- A registered email returns 422 `business_rule_violation`. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+Create a new person as a member of the ACCOUNT with an account `role` (`admin` or `member`; ownership is transferred, never assigned) and the required `grants` list (it may be empty; only a `member` carries grants, each one a tax ID of the account by its `company_id` UUID and a `level`: `view` or `operate`). The person receives an email to verify their address. Returns 201 with the member and a `Location` header. Because it changes the team of the whole account, the credential scope must cover every tax ID of the account (403 `forbidden_action` otherwise). Returns 400 `parameter_missing` when `grants` is absent, 422 `grants_only_for_member` for grants on an `admin`, 422 `grant_company_not_in_account` when a grant names a tax ID outside the account or your credential scope, and 422 `business_rule_violation` when the email is already registered (add existing people with an invitation), a tax ID repeats or the plan user limit is reached. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage: api_key_expired
 
@@ -87,46 +84,6 @@ $body = new Components\AddAccountMemberV1Request(
 
 $response = $sdk->account->members->publicApiV1AccountMembersCreate(
     account: '47166534',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AddAccountMemberV1Request(
-    name: '<value>',
-    email: 'Luciano10@gmail.com',
-    password: 'Ynp9gKjYicJQzDC',
-    role: Components\AddAccountMemberV1RequestRole::Member,
-    grants: [],
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '65b4df91-42e7-423a-b2b2-a727b36e4a4a',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -257,46 +214,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AddAccountMemberV1Request(
-    name: '<value>',
-    email: 'Luciano10@gmail.com',
-    password: 'Ynp9gKjYicJQzDC',
-    role: Components\AddAccountMemberV1RequestRole::Member,
-    grants: [],
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: '1a1371c9-dfd4-404b-b07c-19ca4b6f80a0',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="success" -->
@@ -337,46 +254,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.account.members.create" method="post" path="/accounts/{account}/members" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\AddAccountMemberV1Request(
-    name: '<value>',
-    email: 'Luciano10@gmail.com',
-    password: 'Ynp9gKjYicJQzDC',
-    role: Components\AddAccountMemberV1RequestRole::Member,
-    grants: [],
-);
-
-$response = $sdk->account->members->publicApiV1AccountMembersCreate(
-    account: 'cd6b2f17-c2aa-4847-a88e-496ae172c344',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 
 ### Parameters
 
@@ -401,9 +278,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountMembersList
 
-List every member of the account, cursor-paginated with `limit` (1-100, default 25) and `starting_after` or `ending_before`.
-- Each item exposes `id`, `name`, `email`, `role`, `external_advisor`, `grants[]` and a `permissions` block; only grants on tax IDs you read are published.
-- Requires an owner or admin credential holder (403 `forbidden_action`). Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+List every member of the ACCOUNT, cursor-paginated with `limit` (1-100, default 25) and `starting_after` or `ending_before`. Each item exposes the member `id` (UUID v7), `name`, `email`, the account `role` (`owner`, `admin` or `member`), the `external_advisor` mark, the per-tax-ID `grants[]` of a `member` and a `permissions` block with what the credential holder can do on that member. Every member is listed, but only the grants on tax IDs your credential reads are published. The credential holder must be an owner or admin of the account with the `user_management` section available: otherwise 403 `forbidden_action`. An account identifier that is not yours returns 404 `account_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -459,10 +334,7 @@ if ($response->accountMemberList !== null) {
 
 ## publicApiV1AccountMembersUpdate
 
-Change the account `role` of a member (`admin` or `member`), its `external_advisor` mark, or both; at least one is required.
-- Moving to `admin` revokes the member’s grants. Returns 200.
-- 422 `external_advisor_already_assigned`; 422 `business_rule_violation` for the owner.
-- The credential scope must cover every tax ID. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+Change the account `role` of a member (`admin` or `member`), its `external_advisor` mark, or both; at least one is required. Both changes run in a single transaction: unmarking the advisor goes before the role change and marking goes after it, so a failure leaves the member untouched. Moving to `admin` revokes the member grants. Returns 200 with the updated member. Returns 404 `member_not_found` when the member does not exist or belongs to another account, 422 `external_advisor_already_assigned` when the account already has another external advisor, and 422 `business_rule_violation` when the member is the account owner (`cannot_change_account_owner_role`: ownership is transferred), when the advisor would not be a `member`, or when unmarking the advisor would exceed the plan user limit. The credential scope must cover every tax ID of the account. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -521,10 +393,7 @@ if ($response->object !== null) {
 
 ## publicApiV1AccountMembersDelete
 
-Remove a member from the WHOLE account: it loses every grant, session and API-key scope there. Irreversible.
-- To remove access to one tax ID, revoke that grant instead. Returns 204.
-- 422 `member_is_last_owner` for the owner (transfer ownership first); 422 `business_rule_violation` when removing yourself.
-- 404 `member_not_found` if unknown or of another account. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
+Remove a member from the WHOLE account: the person stops reaching every tax ID of the account, loses its grants and its sessions there, and its API keys lose that scope; when no other link remains the person is deleted. To remove access to a single tax ID, revoke that grant instead. No query parameter is accepted: the former `?company_id=` returns 400 `parameter_unknown`. Returns 204 on success, 422 `member_is_last_owner` for the account owner (transfer ownership first), 422 `business_rule_violation` when removing yourself, and 404 `member_not_found` when the member does not exist or belongs to another account. Irreversible. Requires the `members:write` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 
@@ -584,9 +453,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1AccountMembersShow
 
-Retrieve one member of the account by its `id` (UUID v7): `role`, `external_advisor`, `grants[]` and the caller’s `permissions` on it.
-- Grants shown are only those on tax IDs your credential reads.
-- Owner or admin only (403 `forbidden_action`); an unknown or foreign member returns 404 `member_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
+Retrieve one member of the account by its `id` (UUID v7): account `role`, `external_advisor` mark, per-tax-ID `grants[]` (only those on tax IDs your credential reads) and the `permissions` block of the credential holder on that member. Requires the credential holder to be an owner or admin of the account (403 `forbidden_action` otherwise, without revealing whether the member exists). A member that does not exist, is malformed or belongs to another account returns the same 404 `member_not_found`. Requires the `members:read` scope, which `*` does not cover: the API key must list it explicitly.
 
 ### Example Usage
 

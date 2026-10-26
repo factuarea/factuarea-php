@@ -69,15 +69,6 @@ class TransportDocumentVersion
     public int $sizeBytes;
 
     /**
-     * Template design the PDF of this version was painted with, read-only and without the plan policy. Also present in the `data.object` of the `transport_document.*` webhooks. Versions issued before the template library, or while the revisioned presentation was inactive, report `origin: legacy` and every other field `null`.
-     *
-     * @var \Factuarea\Sdk\Models\Components\TransportDocumentVersionPresentation $presentation
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TransportDocumentVersionPresentation')]
-    public TransportDocumentVersionPresentation $presentation;
-
-    /**
      * Reason of the modification, cancellation or supersession; `null` on the issue.
      *
      * @var ?string $reason
@@ -101,12 +92,11 @@ class TransportDocumentVersion
      * @param  array<\Factuarea\Sdk\Models\Components\TransportDocumentChange>  $changes
      * @param  string  $sha256
      * @param  int  $sizeBytes
-     * @param  \Factuarea\Sdk\Models\Components\TransportDocumentVersionPresentation  $presentation
      * @param  ?string  $reason
      * @param  ?string  $createdBy
      * @phpstan-pure
      */
-    public function __construct(int $number, TransportDocumentVersionKind $kind, TransportDocumentVersionDataOrigin $dataOrigin, \DateTime $createdAt, array $changes, string $sha256, int $sizeBytes, TransportDocumentVersionPresentation $presentation, ?string $reason = null, ?string $createdBy = null)
+    public function __construct(int $number, TransportDocumentVersionKind $kind, TransportDocumentVersionDataOrigin $dataOrigin, \DateTime $createdAt, array $changes, string $sha256, int $sizeBytes, ?string $reason = null, ?string $createdBy = null)
     {
         $this->number = $number;
         $this->kind = $kind;
@@ -115,7 +105,6 @@ class TransportDocumentVersion
         $this->changes = $changes;
         $this->sha256 = $sha256;
         $this->sizeBytes = $sizeBytes;
-        $this->presentation = $presentation;
         $this->reason = $reason;
         $this->createdBy = $createdBy;
     }

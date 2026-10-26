@@ -65,44 +65,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteProductsRequest(
-    ids: [
-        '6d9fa561-5f9a-4c52-b5fc-576d8f9483a2',
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkDelete(
-    company: 'dbb7d1bc-d379-40c7-884d-fb0b38fc4de7',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="invalid_api_key" -->
@@ -179,44 +141,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteProductsRequest(
-    ids: [
-        '6d9fa561-5f9a-4c52-b5fc-576d8f9483a2',
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkDelete(
-    company: '46d9fa56-15f9-4ac5-825f-c576d8f9483a',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="success" -->
@@ -245,44 +169,6 @@ $body = new Components\BulkDeleteProductsRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkDelete(
     company: 'White LLC',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkDeleteProductsRequest(
-    ids: [
-        '6d9fa561-5f9a-4c52-b5fc-576d8f9483a2',
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkDelete(
-    company: '5aa66068-f514-4933-aed0-1b224aeafca5',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -348,47 +234,6 @@ $body = new Components\BulkStatusProductsV1Request(
 
 $response = $sdk->products->publicApiV1ProductsBulkStatus(
     company: 'f7f79f88-635b-4a82-9406-d3323fd96fda',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusProductsV1Request(
-    ids: [
-        '7f79f886-35ba-4824-806d-3323fd96fda4',
-        '0def9150-4766-4497-983a-07eba5b29198',
-        '67487562-857b-4bd1-8e13-744c00b015c3',
-    ],
-    newStatus: Components\BulkStatusProductsV1RequestNewStatus::Inactive,
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkStatus(
-    company: '10def915-0476-4649-a783-a07eba5b2919',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -479,47 +324,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusProductsV1Request(
-    ids: [
-        '7f79f886-35ba-4824-806d-3323fd96fda4',
-        '0def9150-4766-4497-983a-07eba5b29198',
-        '67487562-857b-4bd1-8e13-744c00b015c3',
-    ],
-    newStatus: Components\BulkStatusProductsV1RequestNewStatus::Inactive,
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkStatus(
-    company: 'f7f79f88-635b-4a82-9406-d3323fd96fda',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="success" -->
@@ -551,47 +355,6 @@ $body = new Components\BulkStatusProductsV1Request(
 
 $response = $sdk->products->publicApiV1ProductsBulkStatus(
     company: 'Kuhic, Wiegand and Kub',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkStatusProductsV1Request(
-    ids: [
-        '7f79f886-35ba-4824-806d-3323fd96fda4',
-        '0def9150-4766-4497-983a-07eba5b29198',
-        '67487562-857b-4bd1-8e13-744c00b015c3',
-    ],
-    newStatus: Components\BulkStatusProductsV1RequestNewStatus::Inactive,
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkStatus(
-    company: '66748756-2857-4bbd-81e1-3744c00b015c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -659,47 +422,6 @@ $body = new Components\BulkUpdateProductStockRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
     company: 'e3304fd0-08f0-485d-bc01-c51ce6af1a38',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkUpdateProductStockRequest(
-    updates: [
-        new Components\Update(
-            productId: '3304fd00-8f08-45dc-b01c-51ce6af1a38e',
-            stock: 1397.07,
-        ),
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
-    company: 'c2684c5c-f5e9-4d8d-b8fa-0b514474a2c8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -839,47 +561,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkUpdateProductStockRequest(
-    updates: [
-        new Components\Update(
-            productId: '3304fd00-8f08-45dc-b01c-51ce6af1a38e',
-            stock: 1397.07,
-        ),
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
-    company: 'e3304fd0-08f0-485d-bc01-c51ce6af1a38',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="success" -->
@@ -911,47 +592,6 @@ $body = new Components\BulkUpdateProductStockRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
     company: 'Welch - Simonis',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\BulkUpdateProductStockRequest(
-    updates: [
-        new Components\Update(
-            productId: '3304fd00-8f08-45dc-b01c-51ce6af1a38e',
-            stock: 1397.07,
-        ),
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
-    company: '84666a32-f0fd-40fa-b5a9-225fbaa715c8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1019,47 +659,6 @@ $body = new Components\CreateProductRequest(
 
 $response = $sdk->products->publicApiV1ProductsCreate(
     company: 'd18c61e5-ac97-4af3-84ca-adcd9db1ea79',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateProductRequest(
-    name: '<value>',
-    price: '785.49',
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsCreate(
-    company: '07ec63d8-9050-4158-8736-3cc37fc47727',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1196,47 +795,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateProductRequest(
-    name: '<value>',
-    price: '785.49',
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsCreate(
-    company: 'd18c61e5-ac97-4af3-84ca-adcd9db1ea79',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: service
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="service" -->
@@ -1309,47 +867,6 @@ $body = new Components\CreateProductRequest(
 
 $response = $sdk->products->publicApiV1ProductsCreate(
     company: 'O\'Reilly and Sons',
-    body: $body,
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\CreateProductRequest(
-    name: '<value>',
-    price: '785.49',
-    metadata: [
-        'erp_code' => 'IVA-GEN',
-        'ledger_account' => '477000',
-    ],
-);
-
-$response = $sdk->products->publicApiV1ProductsCreate(
-    company: '03666f9a-dd83-40cd-b2ae-406b0f465ee9',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -1604,48 +1121,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsUpdateRequest(
-    company: '6a098360-325e-4e2e-8d2b-c78ba775d2bb',
-    product: '636f6c92-5e67-4ca8-a826-0ffd29f6380e',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->products->publicApiV1ProductsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="invalid_api_key" -->
@@ -1770,48 +1245,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsUpdateRequest(
-    company: '372632a8-9a97-482b-a271-03c03ec51189',
-    product: '6b5dbbec-10e6-402f-b6e4-2e273a4ea1af',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->products->publicApiV1ProductsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="success" -->
@@ -1836,48 +1269,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsUpdateRequest(
     company: 'Ebert Group',
     product: 'Practical Plastic Hat',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductRequest(
-        metadata: [
-            'erp_code' => 'IVA-GEN',
-            'ledger_account' => '477000',
-        ],
-    ),
-);
-
-$response = $sdk->products->publicApiV1ProductsUpdate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsUpdateRequest(
-    company: 'bf34c0ac-dbb1-48fd-b229-9dcd60a89bf1',
-    product: '403431bd-79cb-465d-b0de-33db94eff493',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProductRequest(
@@ -1945,41 +1336,6 @@ $body = new Components\FindProductByExternalIdRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindByExternalId(
     company: '6a3b10d6-6971-4ec6-b5c8-ba966b022b73',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProductByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->products->publicApiV1ProductsFindByExternalId(
-    company: '830cd99a-ef56-4f42-a41e-2a23e023bfb6',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2059,41 +1415,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProductByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->products->publicApiV1ProductsFindByExternalId(
-    company: '6a3b10d6-6971-4ec6-b5c8-ba966b022b73',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="success" -->
@@ -2120,41 +1441,6 @@ $body = new Components\FindProductByExternalIdRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindByExternalId(
     company: 'Pagac Group',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProductByExternalIdRequest(
-    externalId: '<id>',
-);
-
-$response = $sdk->products->publicApiV1ProductsFindByExternalId(
-    company: '11041c04-aeb6-4f30-bcc6-e205ccac84d1',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2215,41 +1501,6 @@ $body = new Components\FindProductBySkuRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindBySku(
     company: '15e6ecc4-6591-4bae-af1e-f2209027211c',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProductBySkuRequest(
-    sku: '<value>',
-);
-
-$response = $sdk->products->publicApiV1ProductsFindBySku(
-    company: 'e95919c6-99f8-417d-912d-bab4e99a6c23',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2329,41 +1580,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProductBySkuRequest(
-    sku: '<value>',
-);
-
-$response = $sdk->products->publicApiV1ProductsFindBySku(
-    company: '15e6ecc4-6591-4bae-af1e-f2209027211c',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="success" -->
@@ -2390,41 +1606,6 @@ $body = new Components\FindProductBySkuRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindBySku(
     company: 'Thompson and Sons',
-    body: $body,
-    factuareaVersion: LocalDate::parse('2026-06-01')
-
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$body = new Components\FindProductBySkuRequest(
-    sku: '<value>',
-);
-
-$response = $sdk->products->publicApiV1ProductsFindBySku(
-    company: '73b30323-55e2-4528-b86c-431b10027ef3',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -2685,9 +1866,7 @@ if ($response->object !== null) {
 
 ## publicApiV1ProductsResolveSelection
 
-Resolve a partial or complete catalog selection into the combination that would be sold, with its price and open choices.
-- A read that persists nothing; an incomplete selection returns 200 with `status` and `pending_option_groups`.
-- Sending two values of the same group returns 422.
+Resolve a partial or complete catalog selection (variant, presentation and option values) into the combination that would actually be sold, together with its price, the compatible variants, presentations and option groups still open, and the groups still pending a choice. It is a READ and persists nothing: the verb is POST because `options` is a nested list of group/value pairs that does not fit in a query string without inventing a syntax — the same reason as `POST /v1/companies/{company}/price-lists/resolve`, and the reason it is classified as a read for rate-limiting purposes. An ambiguous or incomplete selection is NOT an error here: it comes back as `200` with its `status`, its `reason_code` and `pending_option_groups`, because this endpoint exists to BUILD the line; the 422 belongs to whoever confirms it. What is a bad request is sending two values of the same group, which returns 422.
 
 ### Example Usage
 
@@ -2906,45 +2085,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsUpdateStockRequest(
-    company: 'b295552f-921f-4222-8034-56eea7bd0710',
-    product: '3abf993f-15d2-4b21-a2ca-56e11e51b041',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductStockRequest(
-        stock: 591726,
-    ),
-);
-
-$response = $sdk->products->publicApiV1ProductsUpdateStock(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="invalid_api_key" -->
@@ -3023,45 +2163,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsUpdateStockRequest(
-    company: '917e59e8-b76b-46a2-8812-2ce977065e61',
-    product: 'e3b46a84-46de-49c7-b669-7a86448ef893',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductStockRequest(
-        stock: 591726,
-    ),
-);
-
-$response = $sdk->products->publicApiV1ProductsUpdateStock(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="success" -->
@@ -3086,45 +2187,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsUpdateStockRequest(
     company: 'Hettinger, Mills and Tillman',
     product: 'Handmade Rubber Fish',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UpdateProductStockRequest(
-        stock: 591726,
-    ),
-);
-
-$response = $sdk->products->publicApiV1ProductsUpdateStock(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsUpdateStockRequest(
-    company: '1b6bd79a-8ef2-4546-b99a-d14559bdec1b',
-    product: '2d939760-ebed-48b0-969f-09b1173b32ec',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProductStockRequest(

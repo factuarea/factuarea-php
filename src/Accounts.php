@@ -171,9 +171,7 @@ class Accounts
     /**
      * List connected Stripe accounts
      *
-     * Lists the connected Stripe accounts (Stripe Connect, multi-store) of the company.
-     * - Each exposes `id`, `name`, `external_account_id` (`acct_xxx`), `series_id`, `status` and `connected_at`.
-     * - It also exposes its per-account configuration, e.g. `autoinvoicing_enabled`.
+     * List the connected Stripe accounts (Stripe Connect, multi-store) for your company. Each exposes its `id`, `name`, `external_account_id` (`acct_xxx`), the assigned `series_id`, its per-account configuration (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`), `status` and `connected_at`. Charges are auto-invoiced with that account's series and configuration.
      *
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
@@ -417,9 +415,7 @@ class Accounts
     /**
      * Update a connected Stripe account
      *
-     * Updates a connected Stripe account; omitted fields keep their value.
-     * - Editable: `name`, `series_id` (`null` uses the company default series) and the per-account fiscal policy.
-     * - `invoice_note` (up to 500 characters) goes in auto-created invoices; `null` clears it.
+     * Update a connected Stripe account: its `name`, the auto-invoicing `series_id` (`null` clears it, falling back to the company default series) and the per-account fiscal policy (`autoinvoicing_enabled`, `simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`) and the optional `invoice_note` (up to 500 characters) written in the notes of the auto-created invoices (`null` clears it; no note by default). All fields are optional; omitted ones keep their value.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateResponse

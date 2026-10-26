@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateConnectedAccountRequest - Update a connected Stripe account (multi-store). All fields are optional with merge semantics (an omitted field is left unchanged): `name`, `series_id` (auto-invoicing series UUID; `null` clears it back to the company default), `simplified_threshold_cents` (0-300000), `autoinvoicing_enabled`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`, `invoice_note` (up to 500 characters, written in the notes of the auto-created invoices; `null` clears it) and the Stripe fee expense settings `fee_expenses_enabled`, `fee_expenses_tax_treatment` and `fee_expenses_since`. Turning fee expenses on requires the purchases module of the plan (403 `feature_not_available_in_plan`) and a tax treatment and a first month, sent or already stored (400 `parameter_missing`). A treatment or month outside the catalog is rejected with 422 `parameter_invalid_value`. The company platform account does not accept `subscription_autoinvoicing_enabled`: its subscriptions are invoiced by Factuarea (422 `parameter_invalid_value`, subcode `platform_account_subscriptions_owned_by_billing`). */
+/** UpdateConnectedAccountRequest - Update a connected Stripe account (multi-store). All fields are optional with merge semantics (an omitted field is left unchanged): `name`, `series_id` (auto-invoicing series UUID; `null` clears it back to the company default), `simplified_threshold_cents` (0-300000), `autoinvoicing_enabled`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled` and `invoice_note` (up to 500 characters, written in the notes of the auto-created invoices; `null` clears it). */
 class UpdateConnectedAccountRequest
 {
     /**
@@ -61,33 +61,6 @@ class UpdateConnectedAccountRequest
     public ?bool $subscriptionAutoinvoicingEnabled = null;
 
     /**
-     * Turns on or off the monthly purchase expense that records the Stripe fees of this account (Stripe accounts only). Turning it on requires the purchases module of the plan and, once on, a `fee_expenses_tax_treatment` and a `fee_expenses_since` (sent in the same request or already stored). Turning it off keeps the stored treatment and month and the expenses already created.
-     *
-     * @var ?bool $feeExpensesEnabled
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('fee_expenses_enabled')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?bool $feeExpensesEnabled = null;
-
-    /**
-     * Tax treatment of the fee expense: `reverse_charge_eu` (intra-community purchase at 21 %, self-assessed) or `exempt` (0 %, exemption cause E1). Any other value is rejected with 422 `parameter_invalid_value`.
-     *
-     * @var ?string $feeExpensesTaxTreatment
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('fee_expenses_tax_treatment')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $feeExpensesTaxTreatment = null;
-
-    /**
-     * First month to record as a fee expense, as `YYYY-MM`. It cannot be later than the current month, and only closed months are recorded. A malformed or future month is rejected with 422 `parameter_invalid_value`.
-     *
-     * @var ?string $feeExpensesSince
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('fee_expenses_since')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $feeExpensesSince = null;
-
-    /**
      *
      * @var ?string $seriesId
      */
@@ -118,15 +91,12 @@ class UpdateConnectedAccountRequest
      * @param  ?bool  $requireNif
      * @param  ?bool  $refundsEnabled
      * @param  ?bool  $subscriptionAutoinvoicingEnabled
-     * @param  ?bool  $feeExpensesEnabled
-     * @param  ?string  $feeExpensesTaxTreatment
-     * @param  ?string  $feeExpensesSince
      * @param  ?string  $seriesId
      * @param  ?string  $defaultLineConcept
      * @param  ?string  $invoiceNote
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?int $simplifiedThresholdCents = null, ?bool $autoinvoicingEnabled = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?bool $feeExpensesEnabled = null, ?string $feeExpensesTaxTreatment = null, ?string $feeExpensesSince = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null)
+    public function __construct(?string $name = null, ?int $simplifiedThresholdCents = null, ?bool $autoinvoicingEnabled = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null)
     {
         $this->name = $name;
         $this->simplifiedThresholdCents = $simplifiedThresholdCents;
@@ -134,9 +104,6 @@ class UpdateConnectedAccountRequest
         $this->requireNif = $requireNif;
         $this->refundsEnabled = $refundsEnabled;
         $this->subscriptionAutoinvoicingEnabled = $subscriptionAutoinvoicingEnabled;
-        $this->feeExpensesEnabled = $feeExpensesEnabled;
-        $this->feeExpensesTaxTreatment = $feeExpensesTaxTreatment;
-        $this->feeExpensesSince = $feeExpensesSince;
         $this->seriesId = $seriesId;
         $this->defaultLineConcept = $defaultLineConcept;
         $this->invoiceNote = $invoiceNote;

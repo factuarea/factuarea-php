@@ -296,10 +296,7 @@ class AbsenceRequests
     /**
      * Create an absence request
      *
-     * Create an absence request for an employee; returns it with its generated `id` (UUID v7).
-     * - Required: `employee_id`, `absence_type_id`, and `start_date`/`end_date` (`YYYY-MM-DD`, end on or after start); `note` is optional.
-     * - The amount is working days minus public holidays.
-     * - A type that does not require approval is auto-approved and consumes the balance.
+     * Create an absence request for the authenticated company (resolved from the API key, never from the payload). `employee_id` (UUID v7) is required — an API key acts as a system, so the target employee must be given. `absence_type_id` (UUID v7) and the `start_date`/`end_date` range (`YYYY-MM-DD`, end on or after start) are required; `note` is optional. The requested amount is computed in working days minus the applicable public holidays. If the absence type does not require approval it is auto-approved and consumes the balance. Returns the created request with its generated `id` (UUID v7).
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsenceRequestRequest  $body
      * @param  string  $company

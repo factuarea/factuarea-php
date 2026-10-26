@@ -40,7 +40,6 @@ class PublicApiV1InvoicesFacturaeResponse
     public array $headers;
 
     /**
-     * Current Facturae 3.2.2 XML (.xml or .xsig), or the exact retained selected artifact. Does not promise a conditional 304 response.
      *
      * @var ?string $res
      */

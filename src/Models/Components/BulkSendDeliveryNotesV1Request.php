@@ -22,16 +22,6 @@ class BulkSendDeliveryNotesV1Request
     public array $ids;
 
     /**
-     * Optional map from each affected delivery-note UUID to its complete seven-field presentation precondition. Keys must identify documents in this batch; do not reuse another document's source token. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
-     *
-     * @var ?array<string, \Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition> $presentationPreconditions
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_preconditions')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string, \Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition>|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $presentationPreconditions = null;
-
-    /**
      * $to
      *
      * @var ?array<string> $to
@@ -77,7 +67,6 @@ class BulkSendDeliveryNotesV1Request
 
     /**
      * @param  array<string>  $ids
-     * @param  ?array<string, \Factuarea\Sdk\Models\Components\DeliveryNotePresentationPrecondition>  $presentationPreconditions
      * @param  ?array<string>  $to
      * @param  ?array<string>  $cc
      * @param  ?string  $subject
@@ -85,10 +74,9 @@ class BulkSendDeliveryNotesV1Request
      * @param  ?string  $language
      * @phpstan-pure
      */
-    public function __construct(array $ids, ?array $presentationPreconditions = null, ?array $to = null, ?array $cc = null, ?string $subject = null, ?string $message = null, ?string $language = null)
+    public function __construct(array $ids, ?array $to = null, ?array $cc = null, ?string $subject = null, ?string $message = null, ?string $language = null)
     {
         $this->ids = $ids;
-        $this->presentationPreconditions = $presentationPreconditions;
         $this->to = $to;
         $this->cc = $cc;
         $this->subject = $subject;

@@ -45,7 +45,6 @@ class CreateProformaRequestLine
     public float|string|null $unitPrice = null;
 
     /**
-     * Public identifier (UUID v7) of the VAT-class tax of the catalog chosen for the line. Optional. Without `tax_rate`, the rate (and the indirect-tax regime, the AEAT qualification and, for an exempt or not-subject tax, the exemption cause) comes from that tax. A tax that is not a VAT-class tax, or a `tax_rate` that differs from the rate of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line). Send only the id, or a `tax_rate` equal to the tax's own rate.
      *
      * @var ?string $taxRateId
      */
@@ -63,7 +62,6 @@ class CreateProformaRequestLine
     public ?float $taxRate = null;
 
     /**
-     * Withholding (IRPF) percentage of the line, 0–100 (the magnitude: a catalog withholding stored with a negative sign is declared here without it). Optional: when you omit it (or send `null`) and the line carries `retention_rate_id`, it is taken from that tax. If you send both and the percentage differs from the one of the chosen tax, the request is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N.
      *
      * @var ?float $retentionRate
      */
@@ -72,7 +70,6 @@ class CreateProformaRequestLine
     public ?float $retentionRate = null;
 
     /**
-     * Equivalence-surcharge percentage of the line, 0–100. Optional: when you omit it (or send `null`) and the line carries `surcharge_rate_id`, it is taken from that tax. If you send both and the percentage differs from the one of the chosen tax, the request is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N.
      *
      * @var ?float $surchargeRate
      */
@@ -81,7 +78,6 @@ class CreateProformaRequestLine
     public ?float $surchargeRate = null;
 
     /**
-     * Public identifier (UUID v7) of the withholding (IRPF) tax of the catalog chosen for the line. Optional. Without `retention_rate`, the percentage of the line is taken from that tax (its magnitude, 0–100): sending only the id never computes the withholding at 0 %. A tax of another class (for example a VAT or an equivalence-surcharge tax), or a `retention_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $retentionRateId
      */
@@ -90,7 +86,6 @@ class CreateProformaRequestLine
     public ?string $retentionRateId = null;
 
     /**
-     * Public identifier (UUID v7) of the equivalence-surcharge tax of the catalog chosen for the line. Optional. Without `surcharge_rate`, the percentage of the line is taken from that tax: sending only the id never computes the surcharge at 0 %. A tax of another class (for example a VAT or a withholding tax), or a `surcharge_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $surchargeRateId
      */

@@ -8,23 +8,23 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-use Brick\DateTime\LocalDate;
+
 /** MarkDeliveredRequest - Mark a delivery note as delivered (`draft` → `delivered`). Optional body: `delivery_date` (ISO 8601 `YYYY-MM-DD`). If omitted, the delivery date already recorded is used and, failing that, the current date. */
 class MarkDeliveredRequest
 {
     /**
      *
-     * @var ?LocalDate $deliveryDate
+     * @var ?\DateTime $deliveryDate
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_date')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?LocalDate $deliveryDate = null;
+    public ?\DateTime $deliveryDate = null;
 
     /**
-     * @param  ?LocalDate  $deliveryDate
+     * @param  ?\DateTime  $deliveryDate
      * @phpstan-pure
      */
-    public function __construct(?LocalDate $deliveryDate = null)
+    public function __construct(?\DateTime $deliveryDate = null)
     {
         $this->deliveryDate = $deliveryDate;
     }

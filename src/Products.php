@@ -1328,9 +1328,7 @@ class Products
     /**
      * Resolve a catalog selection
      *
-     * Resolve a partial or complete catalog selection into the combination that would be sold, with its price and open choices.
-     * - A read that persists nothing; an incomplete selection returns 200 with `status` and `pending_option_groups`.
-     * - Sending two values of the same group returns 422.
+     * Resolve a partial or complete catalog selection (variant, presentation and option values) into the combination that would actually be sold, together with its price, the compatible variants, presentations and option groups still open, and the groups still pending a choice. It is a READ and persists nothing: the verb is POST because `options` is a nested list of group/value pairs that does not fit in a query string without inventing a syntax — the same reason as `POST /v1/companies/{company}/price-lists/resolve`, and the reason it is classified as a read for rate-limiting purposes. An ambiguous or incomplete selection is NOT an error here: it comes back as `200` with its `status`, its `reason_code` and `pending_option_groups`, because this endpoint exists to BUILD the line; the 422 belongs to whoever confirms it. What is a bad request is sending two values of the same group, which returns 422.
      *
      * @param  string  $company
      * @param  string  $product

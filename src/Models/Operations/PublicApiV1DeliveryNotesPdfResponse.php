@@ -47,28 +47,19 @@ class PublicApiV1DeliveryNotesPdfResponse
     public ?string $bytes = null;
 
     /**
-     * PDF preparation is still in progress, including a render that failed but can be retried: this request claimed it again. Retry this URL after the Retry-After delay.
-     *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPdfResponseBody $object
-     */
-    public ?PublicApiV1DeliveryNotesPdfResponseBody $object = null;
-
-    /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
      * @param  ?string  $bytes
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPdfResponseBody  $object
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $bytes = null, ?PublicApiV1DeliveryNotesPdfResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?string $bytes = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
         $this->bytes = $bytes;
-        $this->object = $object;
     }
 }

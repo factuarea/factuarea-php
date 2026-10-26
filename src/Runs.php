@@ -53,9 +53,7 @@ class Runs
     /**
      * List automation runs
      *
-     * List automation runs of the company with cursor pagination, oldest first.
-     * - Filter by `status`, `automation_rule_id` or creation window; use `ending_before` to go backwards.
-     * - Needs the dedicated `automation_runs:read` scope, because runs embed the triggering event data.
+     * Browse the history of automation runs of the authenticated company with cursor-based pagination, filtering by `status`, by `automation_rule_id` or by creation window. It takes the dedicated `automation_runs:read` scope rather than the one that reads rules, because a run carries inside it the frozen `data.object` of the event that triggered it — amounts, recipients, action results — and that is granted separately. Pages are ordered by `id` ascending, so the history reads oldest first; walk it with `ending_before` to go the other way.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsListResponse
@@ -174,10 +172,11 @@ class Runs
     /**
      * Replay the parked steps of an automation run
      *
-     * Rearm every parked step of a run and hand it back to the engine.
-     * - The steps EXECUTE FOR REAL (email, webhooks, third parties); confirm with the account owner first.
-     * - Run not replayable (in flight or finished cleanly) returns 422 `automation_replay_not_allowed`.
-     * - Returns 202 (queued, not finished) with only the run id; check the run or its steps.
+     * Rearm every parked step of a run and hand the work back to the engine.
+     *
+     * CAREFUL — the rearmed steps EXECUTE FOR REAL: they send email, deliver webhooks and call third parties. This is not an inert retry, so confirm with the account owner before calling it.
+     *
+     * Only steps parked with a replayable reason are rearmed; a run still in flight, or one that finished cleanly, is rejected with 422 `automation_replay_not_allowed`. The response is 202 — accepted and queued, NOT finished — and its body carries only the id of the run, deliberately without a `status`, because "queued" is not one of the run statuses and a client typing it against the enum would break. Check the outcome with `GET /v1/companies/{company}/automations/runs/{run}` or, more cheaply, with its steps. Calling it twice does not duplicate the effect: the engine rechecks the state of each step inside its own lock.
      *
      * @param  string  $company
      * @param  string  $run
@@ -302,9 +301,7 @@ class Runs
     /**
      * Retrieve an automation run
      *
-     * Retrieve one run with its frozen definition version, the triggering event `data.object` and its steps in order.
-     * - The snapshots keep old runs readable after the rule changes.
-     * - A run of another company returns 404 `automation_run_not_found`.
+     * Retrieve one run with its two frozen snapshots — the version of the definition it executed and the `data.object` of the triggering event — plus its steps in execution order. Those snapshots are what keep a run from weeks ago readable after its rule has moved on several versions and the triggering event has aged out. A run of another company returns 404 `automation_run_not_found` (anti-enumeration).
      *
      * @param  string  $company
      * @param  string  $run

@@ -8,10 +8,7 @@
 
 ## publicApiV1ManagedAccountsManagementEnd
 
-End the management of one of your managed accounts: your account loses access to it and its tax IDs.
-- Irreversible; `Idempotency-Key` required (422 `idempotency_key_required`).
-- If the holder claimed and you paid, the payment moves to the holder.
-- Requires the privileged `accounts:write` scope.
+End the management of one of your managed accounts: from the next request your account loses access to it and to its tax IDs. If the holder already claimed it and your account paid it, the payment moves to the holder; when the holder has no payment method the management still ends, your account stops paying and the tax IDs of the account are suspended until the holder takes over the payment. An account whose management ends before being claimed stays non-operable until it is claimed. Returns 200 with the managed account and `management.status: ended`. Returns 422 `enterprise_contract_transition_required` for an enterprise account by contract without a destination plan, and 422 `idempotency_key_required` because ending the management is irreversible. The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`.
 
 ### Example Usage
 

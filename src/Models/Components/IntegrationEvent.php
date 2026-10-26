@@ -90,11 +90,11 @@ class IntegrationEvent
     /**
      * Typed reason why the event was discarded, from a CLOSED catalogue, or `null` when it was not discarded. This is the axis to filter and group by. A value retired from the catalogue in a later version is still returned verbatim here, but its `discard_reason_label`, `is_actionable` and `is_replayable` degrade to neutral rather than breaking the page.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\DiscardReason $discardReason
+     * @var ?\Factuarea\Sdk\Models\Components\IntegrationEventDiscardReason $discardReason
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('discard_reason')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DiscardReason|null')]
-    public ?DiscardReason $discardReason;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\IntegrationEventDiscardReason|null')]
+    public ?IntegrationEventDiscardReason $discardReason;
 
     /**
      * Human-readable label of `discard_reason`, in Spanish (the platform's end-user language). `null` when there is no discard reason, or when the stored reason is no longer part of the current catalogue.
@@ -139,14 +139,14 @@ class IntegrationEvent
      * @param  bool  $isActionable
      * @param  bool  $isReplayable
      * @param  \DateTime  $createdAt
-     * @param  ?\Factuarea\Sdk\Models\Components\DiscardReason  $discardReason
+     * @param  ?\Factuarea\Sdk\Models\Components\IntegrationEventDiscardReason  $discardReason
      * @param  ?string  $discardReasonLabel
      * @param  ?string  $errorMessage
      * @param  ?int  $durationMs
      * @param  ?string  $recommendedAction
      * @phpstan-pure
      */
-    public function __construct(string $id, IntegrationEventObject $object, IntegrationEventProvider $provider, string $eventType, string $direction, IntegrationEventStatus $status, bool $isActionable, bool $isReplayable, \DateTime $createdAt, ?DiscardReason $discardReason = null, ?string $discardReasonLabel = null, ?string $errorMessage = null, ?int $durationMs = null, ?string $recommendedAction = null)
+    public function __construct(string $id, IntegrationEventObject $object, IntegrationEventProvider $provider, string $eventType, string $direction, IntegrationEventStatus $status, bool $isActionable, bool $isReplayable, \DateTime $createdAt, ?IntegrationEventDiscardReason $discardReason = null, ?string $discardReasonLabel = null, ?string $errorMessage = null, ?int $durationMs = null, ?string $recommendedAction = null)
     {
         $this->id = $id;
         $this->object = $object;

@@ -14,12 +14,12 @@ Validation failed, or every file was rejected. Per-file rejections retain their 
 Errors\Error $value = /* values here */
 ```
 
-### `Errors\PublicApiV1PurchaseScansCreateResponseBodyException`
+### `Errors\ResponseBodyException`
 
 ```php
 /**
-* @var \Factuarea\Sdk\Models\Errors\PublicApiV1PurchaseScansCreateResponseBodyException
+* @var \Factuarea\Sdk\Models\Errors\ResponseBodyException
 */
-Errors\PublicApiV1PurchaseScansCreateResponseBodyException $value = /* values here */
+Errors\ResponseBodyException $value = /* values here */
 ```
 

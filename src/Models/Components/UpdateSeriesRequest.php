@@ -9,18 +9,8 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateSeriesRequest - Partially edit a series with PUT, preserving all fiscal guards and omitted fields. Optional pdf_template_id preserves on omission, clears on null and assigns a compatible tenant template on UUID. If the selector is provided, even null or the current UUID, supply pdf_template_expected_version (integer >=1). A purpose change with a saved preference also requires this body CAS. A parent-series ETag does not replace it: missing CAS 428, stale CAS 409; invalid or incompatible input 422 rolls back the complete fiscal and visual edit. Empty strings, the other transport selector and two selectors are invalid. number_format is the fiscal mask, not PDF paper. */
 class UpdateSeriesRequest
 {
-    /**
-     * Required visual CAS when a selector is supplied, even null or unchanged, or purpose changes with a saved template. A parent-series ETag cannot replace this body CAS.
-     *
-     * @var ?int $pdfTemplateExpectedVersion
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_expected_version')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?int $pdfTemplateExpectedVersion = null;
-
     /**
      * Series name (1-100 characters).
      *
@@ -96,16 +86,6 @@ class UpdateSeriesRequest
     public ?string $documentType = null;
 
     /**
-     * Optional tenant-template UUID. Omitted preserves (inherits on creation), null clears, empty or two selectors return 422.
-     *
-     * @var ?string $pdfTemplateId
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $pdfTemplateId = null;
-
-    /**
-     * @param  ?int  $pdfTemplateExpectedVersion
      * @param  ?string  $name
      * @param  ?string  $code
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSeriesRequestCounterReset  $counterReset
@@ -114,12 +94,10 @@ class UpdateSeriesRequest
      * @param  ?int  $initialNumber
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateSeriesRequestInvoiceKind  $invoiceKind
      * @param  ?string  $documentType
-     * @param  ?string  $pdfTemplateId
      * @phpstan-pure
      */
-    public function __construct(?int $pdfTemplateExpectedVersion = null, ?string $name = null, ?string $code = null, ?UpdateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null, ?UpdateSeriesRequestInvoiceKind $invoiceKind = null, ?string $documentType = null, ?string $pdfTemplateId = null)
+    public function __construct(?string $name = null, ?string $code = null, ?UpdateSeriesRequestCounterReset $counterReset = null, ?bool $yearReset = null, ?string $numberFormat = null, ?int $initialNumber = null, ?UpdateSeriesRequestInvoiceKind $invoiceKind = null, ?string $documentType = null)
     {
-        $this->pdfTemplateExpectedVersion = $pdfTemplateExpectedVersion;
         $this->name = $name;
         $this->code = $code;
         $this->counterReset = $counterReset;
@@ -128,6 +106,5 @@ class UpdateSeriesRequest
         $this->initialNumber = $initialNumber;
         $this->invoiceKind = $invoiceKind;
         $this->documentType = $documentType;
-        $this->pdfTemplateId = $pdfTemplateId;
     }
 }

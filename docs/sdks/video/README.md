@@ -114,48 +114,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: 'e57b5c4a-3868-432a-b8ca-9473fcad768c',
-    product: '1a2087f9-4fad-49e2-9ee4-2d1b2cf1ad81',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductVideoRequest(
-        video: new Components\UploadProductVideoRequestVideo(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->video->publicApiV1ProductsVideoUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="invalid_api_key" -->
@@ -240,48 +198,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: '0283c795-21db-43ab-86f2-76ed3399f95a',
-    product: '4d7102a6-8414-4174-9034-c192a9dc1be8',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductVideoRequest(
-        video: new Components\UploadProductVideoRequestVideo(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->video->publicApiV1ProductsVideoUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="success" -->
@@ -306,48 +222,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsVideoUploadRequest(
     company: 'Corkery - Macejkovic',
     product: 'Awesome Concrete Mouse',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\UploadProductVideoRequest(
-        video: new Components\UploadProductVideoRequestVideo(
-            fileName: 'example.file',
-            content: file_get_contents('example.file');,
-        ),
-    ),
-);
-
-$response = $sdk->products->video->publicApiV1ProductsVideoUpload(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.products.video.upload" method="post" path="/companies/{company}/products/{product}/video" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1ProductsVideoUploadRequest(
-    company: 'ae5a6cc2-0fe3-4dfc-86af-b73e5914b1fe',
-    product: 'e3693690-1892-410e-9829-42fcbce6a3a2',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UploadProductVideoRequest(

@@ -8,9 +8,7 @@
 
 ## publicApiV1WoocommerceStoresConnectionTest
 
-Test the connection with a connected WooCommerce store; it reads the store's system status and writes nothing.
-- Returns 200 with `reachable`, `credential_accepted` and, on problems, a `failure_code` (e.g. `woocommerce_credentials_rejected`).
-- Requires `Idempotency-Key`; an unknown store returns 404 `store_not_found`.
+Test the connection with one connected WooCommerce store and return the diagnosis. The check reads the WooCommerce system status resource with the stored credential and writes nothing, neither in the shop nor in Factuarea. It answers 200 with `reachable`, `credential_accepted`, the WooCommerce and WordPress versions the shop reports (WooCommerce publishes no REST API version of its own; the one this connector speaks is fixed on our side), the instant of the check and, when something went wrong, a `failure_code` — `woocommerce_store_unreachable` (the shop did not answer), `woocommerce_credentials_rejected` (the shop answered and refused the key) or `woocommerce_rest_route_missing` (the shop answered and does not publish its REST API). Those three are outcomes of a check that ran, not failures of the API, which is why they travel inside a 200 instead of as an error status. The endpoint is a `POST` because it makes an outbound call to an address you chose, so it consumes third-party resources and requires an `Idempotency-Key` header. A missing store or one from another company returns 404 `store_not_found`.
 
 ### Example Usage: credentials_rejected
 

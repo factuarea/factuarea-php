@@ -51,10 +51,7 @@ class ApiKeys
     /**
      * Create an API key
      *
-     * Create an API key in your account; its plaintext `secret` is returned exactly once.
-     * - Without `scoped_company_ids` it reaches the creator’s tax IDs, never more; a scope above the plan returns 422.
-     * - `environment: test` mints a sandbox `fact_test_` key; otherwise `fact_live_`.
-     * - An uncovered scope returns 403 `insufficient_scope`; `*` excludes `accounts:*` and admin scopes.
+     * Create a new API key in your account and return its plaintext `secret` exactly once — store it now, it cannot be retrieved later. Requesting a scope above the plan of the scoped tax IDs or outside the catalog returns 422; the credential cap is counted over the ACCOUNT. Without `scoped_company_ids` the new key reaches the same tax IDs as the credential that creates it, and it can never reach more. Pass `environment: test` to mint a sandbox key (`fact_test_`) that only reaches the sandbox company, with no real-world side effects (declaring `scoped_company_ids` with it returns 422); omit it for a live key (`fact_live_`). Creating against another account returns 404 and persists nothing. A key never gives, manages or reveals more power than it has itself: a scope the calling key does not cover or an access level above its own returns 403 `insufficient_scope` and persists nothing. The wildcard `*` does not cover `accounts:*` nor the account-administration scopes (`account:owner`, `members:*`, `invitations:*`, `nif_transfers:*`), so the calling key has to list them explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateApiKeyV1Request  $body
      * @param  string  $account
@@ -184,10 +181,7 @@ class ApiKeys
     /**
      * List your API keys
      *
-     * List the API keys of your account with cursor-based pagination; the plaintext secret is never returned.
-     * - Each key exposes `prefix`, `scopes`, `tier`, `environment` (`live`/`test`) and lifecycle timestamps.
-     * - A key is listed only when every tax ID of its scope is within the calling credential’s scope.
-     * - An account identifier that is not yours returns 404.
+     * List the API keys of your account with cursor-based pagination. The subject is the ACCOUNT, never the tax ID acting on the request, but the list is bounded by the scope of the credential that asks: a key is listed only when EVERY tax ID of its scope is within the scope of the calling credential, so a credential scoped to one tax ID does not see a key that also reaches another one. Each key exposes its `prefix`, `scopes`, `tier`, `environment` (`live`/`test`) and lifecycle timestamps. The plaintext secret is never returned — it is shown once, at creation or rotation. An account identifier that is not yours returns 404, indistinguishable from one that does not exist.
      *
      * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion
@@ -308,10 +302,7 @@ class ApiKeys
     /**
      * Revoke an API key
      *
-     * Revoke an API key of your account immediately and irreversibly; later requests with it fail with 401.
-     * - Revoking the key in use cuts off your own access.
-     * - A key of another account returns 404 `api_key_not_found`.
-     * - A key with scopes the calling key does not cover returns 403 `insufficient_scope`.
+     * Revoke an API key of your account immediately and irreversibly. Subsequent requests authenticated with that key fail with 401. You may revoke the key currently in use — doing so cuts off your own access. Revoking a key that belongs to another account returns 404 `api_key_not_found`; revoking one that has scopes the calling key does not cover returns 403 `insufficient_scope` (`*` does not cover `accounts:*` nor the account-administration scopes, so the calling key lists them explicitly).
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysRevokeRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysRevokeResponse
@@ -431,9 +422,7 @@ class ApiKeys
     /**
      * Rotate an API key secret
      *
-     * Rotate the secret of an API key: a fresh `prefix` + `secret` is returned in plaintext exactly once. Irreversible.
-     * - The previous secret keeps working for a 24-hour grace window; rotating again in that window replaces it at once.
-     * - A key with scopes the calling key does not cover returns 403 `insufficient_scope` and nothing is rotated.
+     * Rotate the secret of an API key of your account: generate a fresh `prefix` + `secret` and return the new secret in plaintext exactly once. The previous secret keeps authenticating for a 24-hour grace window and stops afterwards, so you can roll the new one out without downtime; rotating again during the grace window replaces the previous secret at once. Irreversible. Rotating a key that has scopes the calling key does not cover returns 403 `insufficient_scope` and the secret is neither rotated nor revealed (`*` does not cover `accounts:*` nor the account-administration scopes, so the calling key lists them explicitly).
      *
      * @param  string  $account
      * @param  string  $apiKey
@@ -681,10 +670,7 @@ class ApiKeys
     /**
      * Change the tax IDs an API key reaches
      *
-     * Replace the tax-ID scope of an API key with `scoped_company_ids`, the complete resulting list (not a delta).
-     * - The new scope can never exceed yours; a scope the plan of any tax ID disallows returns 422.
-     * - Test keys and browser-published keys cannot change scope.
-     * - Uncovered scopes return 403 `insufficient_scope`.
+     * Replace the scope of tax IDs of an API key of your account with `scoped_company_ids`, the complete resulting list (not a delta), and return the resulting scope. Use it to add the companies you manage to a key you already deployed. You can only change keys whose current scope is within yours, and the new scope can never exceed yours. Every scope the key already has is re-checked against the plan of ALL the tax IDs of the new scope; a scope one of them does not allow returns 422 and nothing changes. Test keys and browser-published keys cannot change scope. A key whose scopes or access level the calling key does not cover returns 403 `insufficient_scope` and nothing changes (`*` does not cover `accounts:*` nor the account-administration scopes, so the calling key lists them explicitly).
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountApiKeysUpdateNifScopeResponse
@@ -805,10 +791,7 @@ class ApiKeys
     /**
      * Retrieve the daily usage of an API key
      *
-     * Retrieve the daily usage of an API key over the last `days` days (7, 30 or 90; default 30).
-     * - `daily` lists requests, successes, 4xx, 429 and 5xx per day, oldest first; `total` sums them.
-     * - `last_used_at`/`last_used_ip` are `null` if never used. Requires `account:read`.
-     * - Unknown key returns 404 `api_key_not_found`; other `days` returns 422.
+     * Retrieve the daily usage of a single API key of your account over the last `days` days (7, 30 or 90; 30 by default). `daily` has one item per day, oldest first, with the requests made, how many succeeded (2xx and 3xx), how many failed with a 4xx status other than 429, how many were rate limited (429) and how many failed with a 5xx status; days without requests appear with every counter at 0. `total` sums the period, and `last_used_at` and `last_used_ip` tell when and from where the key was last used (`null` if it never was). It only returns counters: it never exposes quota, tier limits or prices. The key is looked up like in the retrieve operation: a key that does not exist, belongs to another account or reaches a tax ID outside the scope of the calling credential returns 404 `api_key_not_found`, with the same body in the three cases, and so does an account identifier that is not yours. A `days` value other than 7, 30 or 90 returns 422 and any other query parameter returns 400 `parameter_unknown`. Requires the `account:read` scope.
      *
      * @param  string  $account
      * @param  string  $apiKey

@@ -51,10 +51,7 @@ class AccessLevel
     /**
      * Change the access level on a managed account
      *
-     * Change the `level` (`none`, `view` or `operate`) your account keeps on one of its managed accounts.
-     * - Before the claim you can raise or lower; after it, raising returns 422 `access_level_raise_forbidden`.
-     * - A foreign or non-managed account returns 404 `account_not_found`.
-     * - Requires the privileged `accounts:write` scope.
+     * Change the `level` your account keeps on one of its managed accounts: `none`, `view` (read-only) or `operate`. Before the holder claims the account you can raise and lower it; after the claim, raising returns 422 `access_level_raise_forbidden` with no change, and lowering is always allowed. Lowering narrows at once what your credentials reach in its tax IDs. Returns 200 with the managed account and its new level. The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`.
      *
      * @param  \Factuarea\Sdk\Models\Components\ChangeManagedAccountAccessLevelV1Request  $body
      * @param  string  $account

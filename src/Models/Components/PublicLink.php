@@ -61,26 +61,15 @@ class PublicLink
     public ?\DateTime $expiresAt;
 
     /**
-     * Exact publication intent for the current presentation/CAS. `public_url` is null while queued and is populated only for the exact ready, publicly shared, authorized version. Always returned (possibly `null`) by the `public-link` sub-resource; the `public_link` embedded in an invoice omits it.
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\Publication $publication
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('publication')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Publication|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?Publication $publication = null;
-
-    /**
      * @param  \Factuarea\Sdk\Models\Components\PublicLinkObject  $object
      * @param  string  $url
      * @param  string  $id
      * @param  bool  $enabled
      * @param  int  $maxDays
      * @param  ?\DateTime  $expiresAt
-     * @param  ?\Factuarea\Sdk\Models\Components\Publication  $publication
      * @phpstan-pure
      */
-    public function __construct(PublicLinkObject $object, string $url, string $id, bool $enabled, int $maxDays, ?\DateTime $expiresAt = null, ?Publication $publication = null)
+    public function __construct(PublicLinkObject $object, string $url, string $id, bool $enabled, int $maxDays, ?\DateTime $expiresAt = null)
     {
         $this->object = $object;
         $this->url = $url;
@@ -88,6 +77,5 @@ class PublicLink
         $this->enabled = $enabled;
         $this->maxDays = $maxDays;
         $this->expiresAt = $expiresAt;
-        $this->publication = $publication;
     }
 }

@@ -12,45 +12,6 @@
 
 Add a link to an external resource (`url`, `http` or `https`, with an optional `title`) to a task. Adding the same URL again returns the existing link.
 
-### Example Usage: factuarea_version_invalid_format
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.external_links.create" method="post" path="/companies/{company}/tasks/{task}/external-links" example="factuarea_version_invalid_format" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksExternalLinksCreateRequest(
-    company: '0655e564-ed02-49ab-896b-5cd95be14276',
-    task: 'dbba2850-24fc-4655-b344-f65db3eee941',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AddTaskExternalLinkV1Request(
-        url: 'https://wee-rationale.net',
-    ),
-);
-
-$response = $sdk->tasks->externalLinks->publicApiV1TasksExternalLinksCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.external_links.create" method="post" path="/companies/{company}/tasks/{task}/external-links" example="missing_api_key" -->
@@ -90,45 +51,6 @@ if ($response->object !== null) {
     // handle response
 }
 ```
-### Example Usage: retired_active_profile_header
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.external_links.create" method="post" path="/companies/{company}/tasks/{task}/external-links" example="retired_active_profile_header" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksExternalLinksCreateRequest(
-    company: 'ffbbd56a-4613-47a3-a07e-fbc17504bdee',
-    task: '4d69a60d-b999-4d7e-ba7d-ef65055c4cc2',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AddTaskExternalLinkV1Request(
-        url: 'https://wee-rationale.net',
-    ),
-);
-
-$response = $sdk->tasks->externalLinks->publicApiV1TasksExternalLinksCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.external_links.create" method="post" path="/companies/{company}/tasks/{task}/external-links" example="success" -->
@@ -153,45 +75,6 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksExternalLinksCreateRequest(
     company: 'White, Rempel and Powlowski',
     task: '<value>',
-    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01'),
-    body: new Components\AddTaskExternalLinkV1Request(
-        url: 'https://wee-rationale.net',
-    ),
-);
-
-$response = $sdk->tasks->externalLinks->publicApiV1TasksExternalLinksCreate(
-    request: $request
-);
-
-if ($response->object !== null) {
-    // handle response
-}
-```
-### Example Usage: unsupported_api_version
-
-<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.external_links.create" method="post" path="/companies/{company}/tasks/{task}/external-links" example="unsupported_api_version" -->
-```php
-declare(strict_types=1);
-
-require 'vendor/autoload.php';
-
-use Brick\DateTime\LocalDate;
-use Factuarea\Sdk;
-use Factuarea\Sdk\Models\Components;
-use Factuarea\Sdk\Models\Operations;
-
-$sdk = Sdk\Factuarea::builder()
-    ->setSecurity(
-        new Components\Security(
-            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
-        )
-    )
-    ->build();
-
-$request = new Operations\PublicApiV1TasksExternalLinksCreateRequest(
-    company: 'f07bb280-982e-44db-91a3-0c2c90a44d44',
-    task: 'cb0dfbd7-18f4-41cb-89fa-551f6e785872',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AddTaskExternalLinkV1Request(
