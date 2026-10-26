@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Custom;
 
 use Factuarea\Sdk\Custom\Idempotency\IdempotencyClient;
+use Factuarea\Sdk\Custom\Request\RequestOverrides;
+use Factuarea\Sdk\Custom\Request\RequestOverridesClient;
 use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
@@ -26,6 +28,7 @@ use GuzzleHttp\Client;
  * - Authentication by API key. The key prefix (`fact_test_` / `fact_live_`)
  *   selects the environment server-side; there is no environment flag.
  * - Automatic `Idempotency-Key` on every mutating request (see {@see IdempotencyClient}).
+ * - Explicit `null` fields and extra headers per call (see {@see RequestOverrides}).
  * - Pinned `Factuarea-Version` header on every request (see {@see FactuareaVersionHook}),
  *   so the API behaves consistently until the integrator upgrades the SDK.
  * - Backoff retries over `429` + `5XX` honouring `Retry-After` (generated core).
@@ -37,9 +40,12 @@ use GuzzleHttp\Client;
  *
  * ```php
  * use Factuarea\Sdk\Custom\FactuareaClient;
+ * use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesListRequest;
  *
  * $factuarea = FactuareaClient::create(getenv('FACTUAREA_API_KEY'));
- * $invoices = $factuarea->invoices->publicApiV1InvoicesList();
+ * $invoices = $factuarea->invoices->publicApiV1InvoicesList(
+ *     new PublicApiV1InvoicesListRequest(company: $companyId), // the company `id` (UUID v7)
+ * );
  * ```
  */
 final class FactuareaClient
@@ -58,7 +64,7 @@ final class FactuareaClient
     ): Factuarea {
         $builder = Factuarea::builder()
             ->setSecurity(new Security(bearerAuth: $apiKey))
-            ->setClient(new IdempotencyClient(new Client(['timeout' => 60])));
+            ->setClient(new RequestOverridesClient(new IdempotencyClient(new Client(['timeout' => 60]))));
 
         if ($baseUrl !== null) {
             $builder->setServerUrl(rtrim($baseUrl, '/'));

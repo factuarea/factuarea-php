@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * $pages = new PageIterator(
  *     fn (?string $cursor) => $sdk->invoices->publicApiV1InvoicesList(
- *         new Operations\PublicApiV1InvoicesListRequest(startingAfter: $cursor),
+ *         new Operations\PublicApiV1InvoicesListRequest(company: $companyId, startingAfter: $cursor),
  *     )->rawResponse,
  * );
  *

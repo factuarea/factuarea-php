@@ -56,13 +56,21 @@ then run `composer update`.
 require 'vendor/autoload.php';
 
 use Factuarea\Sdk\Custom\FactuareaClient;
+use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesListRequest;
 
 // The key prefix selects the environment:
 //   fact_test_… → sandbox    fact_live_… → production
 $factuarea = FactuareaClient::create(getenv('FACTUAREA_API_KEY'));
 
+// Company resources live under /v1/companies/{company}/…, so every company
+// method takes the company `id` (UUID v7) — never its tax ID or its name.
+// GET /v1/me lists the companies the key reaches in `data.scope[]`.
+$companyId = $factuarea->account->publicApiV1AccountShow()->object?->data->scope[0]->id;
+
 // List the first page of invoices.
-$response = $factuarea->invoices->publicApiV1InvoicesList();
+$response = $factuarea->invoices->publicApiV1InvoicesList(
+    new PublicApiV1InvoicesListRequest(company: $companyId),
+);
 foreach ($response->paginatedList?->data ?? [] as $invoice) {
     echo $invoice->id, PHP_EOL;
 }
@@ -117,6 +125,10 @@ honouring the server's `Retry-After` header. Client errors (`4xx` other than
 `429`) are never retried. Retries reuse the same request — including its
 `Idempotency-Key` — so a retried mutation is idempotent end to end.
 
+FACe submit and cancel must not be repeated blindly: pass
+`options: NoRetry::options()` (`Custom\Request\NoRetry`) to those two calls until the
+SDK is regenerated with the `face-no-retry` overlay.
+
 ### Automatic idempotency
 
 Every mutating request (`POST`, `PUT`, `PATCH`, `DELETE`) gets a generated
@@ -124,10 +136,10 @@ Every mutating request (`POST`, `PUT`, `PATCH`, `DELETE`) gets a generated
 
 ```php
 // Auto-generated key — safe to retry.
-$factuarea->invoices->publicApiV1InvoicesCreate($body);
+$factuarea->invoices->publicApiV1InvoicesCreate($body, $companyId);
 
 // Or pin your own key for app-level deduplication.
-$factuarea->invoices->publicApiV1InvoicesCreate($body, idempotencyKey: 'order-4711');
+$factuarea->invoices->publicApiV1InvoicesCreate($body, $companyId, idempotencyKey: 'order-4711');
 ```
 
 Replaying a request with the same key returns the original result and the
@@ -145,7 +157,7 @@ use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesListRequest;
 
 $pages = new PageIterator(
     fn (?string $cursor) => $factuarea->invoices->publicApiV1InvoicesList(
-        new PublicApiV1InvoicesListRequest(startingAfter: $cursor),
+        new PublicApiV1InvoicesListRequest(company: $companyId, startingAfter: $cursor),
     )->rawResponse,
 );
 
@@ -165,7 +177,7 @@ exception message.
 use Factuarea\Sdk\Models\Errors\ErrorThrowable;
 
 try {
-    $factuarea->invoices->publicApiV1InvoicesCreate($body);
+    $factuarea->invoices->publicApiV1InvoicesCreate($body, $companyId);
 } catch (ErrorThrowable $e) {
     $error = $e->container->error;
     echo $error->type->value;   // e.g. "invalid_request_error"
@@ -200,6 +212,52 @@ try {
 The verifier accepts deliveries during a secret-rotation grace window (the header
 may carry both the new and previous `v1` signatures) and rejects payloads whose
 timestamp is outside the tolerance (default 5 minutes, configurable).
+
+### Document templates, presentation and PDF statuses
+
+The API's document-template contract (PDF templates and commercial identities,
+per-document presentation, PDF artifacts, administrative revisions and the
+conditional/`ETag` headers) is newer than the generated methods of this release.
+`spec/openapi.json` already holds it, but **the typed methods are not generated
+yet** (the regeneration is pending, see
+[`docs/REGENERATION.md`](docs/REGENERATION.md)). Like every company resource,
+the 50 new operations live under `/v1/companies/{company}/…`: pass the company
+`id` as the `{company}` path parameter. Until the regeneration:
+
+| You need | Use |
+| --- | --- |
+| One of the 50 new operations (`/companies/{company}/pdf-templates`, `.../pdf-commercial-identities`, `.../pdf-artifacts`, `.../pdf-template-previews`, `.../presentation`, `.../presentation-history`, `.../presentation-revisions`, `.../administrative-revisions`, `/companies/{company}/series/{series}/pdf-template`) | `RawRequest::send($sdk, 'PATCH', '/companies/{company}/pdf-templates/{template}', [...], ['company' => $companyId, 'template' => $id])` |
+| A header the generated method has no parameter for (`If-Match`, `If-None-Match`) or a field to clear (`null`) | `RequestOverrides::run(fn () => ..., headers: [...], clear: ['pdf_template_id'])` |
+| The status, `ETag`, `Retry-After` or JSON body of any response, including a `2xx` the generated method rejects (`202` while a PDF renders, `200` replay of a FACe submission) | `ResponseMeta::fromResponse()` / `ResponseMeta::fromException()` |
+| A request body or field the typed model cannot carry (`issue`/`send`/`duplicate` preconditions, line presentation fields, `include_non_invoiced_charges`, `?submission_id=` on Facturae) | `RawRequest` with the complete body |
+| A FACe submit or cancel that must never be repeated blindly | `options: NoRetry::options()` |
+
+`RawRequest` reuses the SDK's authenticated client: the Bearer key, the automatic
+`Idempotency-Key` on mutations, the pinned `Factuarea-Version`, and any active
+`RequestOverrides`. It does not retry and does not throw on an HTTP error status.
+
+```php
+use Factuarea\Sdk\Custom\Request\RawRequest;
+use Factuarea\Sdk\Custom\Response\ResponseMeta;
+
+$params = ['company' => $companyId, 'template' => $id];
+
+$read = ResponseMeta::fromResponse(
+    RawRequest::send($factuarea, 'GET', '/companies/{company}/pdf-templates/{template}', [], $params),
+);
+
+$update = RawRequest::send($factuarea, 'PATCH', '/companies/{company}/pdf-templates/{template}', [
+    'headers' => ['If-Match' => $read->etag],          // the literal ETag, never rebuilt
+    'json' => ['name' => 'Factura corporativa', 'description' => null], // null clears, omitted keeps
+], $params);
+```
+
+Two behaviours to know until the SDK is regenerated: the generated `.../pdf`
+downloads raise `APIException` on the `202` (JSON, PDF still rendering) instead of
+returning it, and the generated `pdf_link` method fails to parse one of the two
+`202` bodies of the contract. Both are covered in
+[`examples/document-templates.php`](examples/document-templates.php) (analysed by
+PHPStan) and tested in `Tests/Custom/Client/DocumentTemplateContractTest.php`.
 
 ---
 
