@@ -1,0 +1,21 @@
+overlay: 1.0.0
+info:
+  title: Do not retry FACe submissions or cancellations
+  version: 1.0.0
+actions:
+  # Submitting an invoice to FACe and cancelling a submission act on an external
+  # administration that is not idempotent for us: an automatic retry after a 5xx
+  # or a dropped connection could send the invoice (or the cancellation) twice.
+  # Dropping the extension makes the generated operations carry no retry policy.
+  # Must run after retry-status-code-casing.yaml, which rewrites the extension on
+  # every operation. Callers can still retry explicitly with the same
+  # Idempotency-Key.
+  #
+  # The targets carry the COMPANY AXIS (/companies/{company}/…): the flat paths
+  # no longer exist. The pinned contract already declares these two operations
+  # without x-speakeasy-retries (they carry x-no-retry), so today both removals
+  # match nothing and the overlay only guards against the extension coming back.
+  - target: $.paths['/companies/{company}/invoices/{invoice}/face-submissions'].post.x-speakeasy-retries
+    remove: true
+  - target: $.paths['/companies/{company}/face-submissions/{faceSubmission}/cancel'].post.x-speakeasy-retries
+    remove: true
