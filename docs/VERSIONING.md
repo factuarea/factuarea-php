@@ -62,6 +62,8 @@ or renamed, its concrete replacement.
 | `0.5.0`     | `2026-10-01`        | Tasks and projects: +81 operations (80 of Tasks, Projects, Task labels, Task timers, Users, Notifications and Agenda, plus `invoices.issue`). |
 | `0.6.0`     | `2026-10-01`        | Unattended checkout, VeriFactu representation and series update: +7 operations (contact imports, VeriFactu representation, blocked-record retry, `series.update`). |
 | `0.7.0`     | `2026-10-01`        | Transport control document (DeCA), Stripe charge rules and employee batches: +41 operations in the spec, 29 generated (17 of Transport documents, 6 of Stripe charge rules and non-invoiced charges, 6 of Employee batches; the 12 seat offer redemption operations are not generated). |
+| `0.8.0`     | `2026-10-01`        | Company axis: every company resource under `/v1/companies/{company}/…`; +57/−5 operations, 652 generated (the 12 seat offer redemption operations are not generated). |
+| `0.9.0`     | `2026-10-01`        | Document templates, packs, promotions, products on the web and account seats: +72/−0 operations, all 736 generated (the 12 seat offer redemption operations included). |
 
 When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 

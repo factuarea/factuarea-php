@@ -4,7 +4,7 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
-## [Unreleased]
+## [0.9.0] — 2026-11-04
 
 Regenerates the SDK from the published contract of the public API: **736
 operations** over **585 paths** (up from 664 over 534), **+72 / −0**, and a typed
