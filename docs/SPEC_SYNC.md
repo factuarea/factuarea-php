@@ -15,13 +15,11 @@ receiver. It runs on three triggers:
 - **`repository_dispatch`** with `event_type: spec-updated` — the push signal
   from the `factuarea` repo (emitter, below).
 - **`workflow_dispatch`** — manual run from the Actions tab.
-- **`schedule`** — a daily cron fallback, so a missed dispatch is still caught.
-  **Currently PAUSED** (since 2026-09-22); the reactivation condition is written
-  in the workflow itself. The emitter in the `factuarea` repo, paused with it,
-  is **active** again since 2026-10-17: it dispatches on every `v*` release tag,
-  so `repository_dispatch` is today the only unattended trigger. While the
-  schedule stays paused, a spec published after a tag's run waits for the next
-  tag or a manual run.
+- **`schedule`** — a daily cron (06:17 UTC), so a missed dispatch, or a spec
+  republished after a tag's run, is still caught within 24h. It was paused from
+  2026-09-22 to 2026-11-05, together with factuarea-node's and, until
+  2026-10-17, with the emitter in the `factuarea` repo; the evidence of its
+  restoration is written in the workflow itself.
 
 What it does:
 
@@ -77,8 +75,7 @@ separate repo (`factuarea-docs`) that has no hook back into `factuarea`, so
 there is no unambiguous "the published spec just changed" event to hang the
 emitter on — which is why the manual trigger is the primary one. A tag push may
 land before the portal is republished; the run then reports that there is
-nothing to sync, and the daily schedule picks the change up within 24h (while it
-is paused, the next tag or a manual run does).
+nothing to sync, and the daily schedule picks the change up within 24h.
 
 Earlier revisions of this document showed the emitter detecting the change by
 diffing `backend/public/docs/openapi-public.json` between commits. That file is
