@@ -125,9 +125,12 @@ honouring the server's `Retry-After` header. Client errors (`4xx` other than
 `429`) are never retried. Retries reuse the same request — including its
 `Idempotency-Key` — so a retried mutation is idempotent end to end.
 
-FACe submit and cancel must not be repeated blindly: pass
-`options: NoRetry::options()` (`Custom\Request\NoRetry`) to those two calls until the
-SDK is regenerated with the `face-no-retry` overlay.
+FACe submit and cancel are never retried automatically: their generated methods
+send the request once, so a blind retry can never submit or cancel twice. A
+dropped connection raises; repeat the call yourself with the same
+`Idempotency-Key`, which the API answers by replaying the first outcome. To turn
+the `429`/`5xx` retries off on any other call, pass `options: NoRetry::options()`
+(`Custom\Request\NoRetry`).
 
 ### Automatic idempotency
 
@@ -217,20 +220,21 @@ timestamp is outside the tolerance (default 5 minutes, configurable).
 
 The API's document-template contract (PDF templates and commercial identities,
 per-document presentation, PDF artifacts, administrative revisions and the
-conditional/`ETag` headers) is newer than the generated methods of this release.
-`spec/openapi.json` already holds it, but **the typed methods are not generated
-yet** (the regeneration is pending, see
-[`docs/REGENERATION.md`](docs/REGENERATION.md)). Like every company resource,
-the 50 new operations live under `/v1/companies/{company}/…`: pass the company
-`id` as the `{company}` path parameter. Until the regeneration:
+conditional/`ETag` headers) has typed methods like every other operation:
+`$factuarea->pdfTemplates`, `->pdfCommercialIdentities`, `->pdfTemplatePreviews`,
+`->pdfArtifacts`, `->invoices->administrativeRevisions`, the `…Presentation`
+methods of invoices, quotes, proformas and delivery notes, and
+`->series->publicApiV1SeriesGetPdfTemplate`/`…AssignPdfTemplate`. Like every
+company resource they live under `/v1/companies/{company}/…`: pass the company
+`id` as `company`. The operations with optimistic concurrency take the `ETag` as
+their `ifMatch` argument, and the downloads take `ifNoneMatch`. For what a
+generated model cannot express:
 
 | You need | Use |
 | --- | --- |
-| One of the 50 new operations (`/companies/{company}/pdf-templates`, `.../pdf-commercial-identities`, `.../pdf-artifacts`, `.../pdf-template-previews`, `.../presentation`, `.../presentation-history`, `.../presentation-revisions`, `.../administrative-revisions`, `/companies/{company}/series/{series}/pdf-template`) | `RawRequest::send($sdk, 'PATCH', '/companies/{company}/pdf-templates/{template}', [...], ['company' => $companyId, 'template' => $id])` |
-| A header the generated method has no parameter for (`If-Match`, `If-None-Match`) or a field to clear (`null`) | `RequestOverrides::run(fn () => ..., headers: [...], clear: ['pdf_template_id'])` |
-| The status, `ETag`, `Retry-After` or JSON body of any response, including a `2xx` the generated method rejects (`202` while a PDF renders, `200` replay of a FACe submission) | `ResponseMeta::fromResponse()` / `ResponseMeta::fromException()` |
-| A request body or field the typed model cannot carry (`issue`/`send`/`duplicate` preconditions, line presentation fields, `include_non_invoiced_charges`, `?submission_id=` on Facturae) | `RawRequest` with the complete body |
-| A FACe submit or cancel that must never be repeated blindly | `options: NoRetry::options()` |
+| A field to clear (`null`: the generated models omit it), or a header the generated method has no parameter for (`If-Match` on `series.update`) | `RequestOverrides::run(fn () => ..., headers: [...], clear: ['pdf_template_id'])` |
+| The status, `ETag`, `Retry-After` or JSON body of any response (`->rawResponse`), or of a status the generated method does not declare | `ResponseMeta::fromResponse()` / `ResponseMeta::fromException()` |
+| A plain JSON body sent unchanged (`null` versus omitted versus `[]` in a template or a presentation), or an operation newer than this release | `RawRequest::send($sdk, 'PATCH', '/companies/{company}/pdf-templates/{template}', [...], ['company' => $companyId, 'template' => $id])` |
 
 `RawRequest` reuses the SDK's authenticated client: the Bearer key, the automatic
 `Idempotency-Key` on mutations, the pinned `Factuarea-Version`, and any active
@@ -252,10 +256,10 @@ $update = RawRequest::send($factuarea, 'PATCH', '/companies/{company}/pdf-templa
 ], $params);
 ```
 
-Two behaviours to know until the SDK is regenerated: the generated `.../pdf`
-downloads raise `APIException` on the `202` (JSON, PDF still rendering) instead of
-returning it, and the generated `pdf_link` method fails to parse one of the two
-`202` bodies of the contract. Both are covered in
+The `.../pdf` downloads return the `202` (JSON, PDF still rendering) as a typed
+response with `bytes` set to `null`, its state in `->object->data->pdfOutputState`
+and the seconds to wait in `Retry-After`; `pdf_link` accepts both `202` bodies of
+the contract; and a FACe replay is a typed `200`. All of it is covered in
 [`examples/document-templates.php`](examples/document-templates.php) (analysed by
 PHPStan) and tested in `Tests/Custom/Client/DocumentTemplateContractTest.php`.
 
@@ -644,6 +648,12 @@ if ($response->object !== null) {
 * [publicApiV1AccountWebhooksDeliveriesRetry](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliveriesretry) - Retry an account webhook delivery
 * [publicApiV1AccountWebhooksDeliveriesShow](docs/sdks/webhooksdeliveries/README.md#publicapiv1accountwebhooksdeliveriesshow) - Retrieve an account webhook delivery
 
+### [AdditionalNifSeats](docs/sdks/additionalnifseats/README.md)
+
+* [publicApiV1AdditionalNifSeatsStatus](docs/sdks/additionalnifseats/README.md#publicapiv1additionalnifseatsstatus) - Retrieve the additional tax ID seats
+* [publicApiV1AdditionalNifSeatsUpdate](docs/sdks/additionalnifseats/README.md#publicapiv1additionalnifseatsupdate) - Set the contracted additional tax ID seats
+* [publicApiV1AdditionalNifSeatsPreview](docs/sdks/additionalnifseats/README.md#publicapiv1additionalnifseatspreview) - Preview a change of the additional tax ID seats
+
 ### [Agenda](docs/sdks/agenda/README.md)
 
 * [publicApiV1AgendaList](docs/sdks/agenda/README.md#publicapiv1agendalist) - List agenda items
@@ -737,6 +747,8 @@ if ($response->object !== null) {
 
 ### [DeliveryNotes](docs/sdks/deliverynotes/README.md)
 
+* [publicApiV1DeliveryNotesAssignPresentation](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesassignpresentation) - Assign the delivery-note visual template
+* [publicApiV1DeliveryNotesGetPresentation](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesgetpresentation) - Get the delivery-note presentation
 * [publicApiV1DeliveryNotesBulkDelete](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkdelete) - Bulk delete delivery notes
 * [publicApiV1DeliveryNotesBulkPdf](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulkpdf) - Bulk download delivery note PDFs
 * [publicApiV1DeliveryNotesBulkSend](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesbulksend) - Bulk send delivery notes
@@ -753,7 +765,9 @@ if ($response->object !== null) {
 * [publicApiV1DeliveryNotesFindByExternalId](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesfindbyexternalid) - Find a delivery note by external ID
 * [publicApiV1DeliveryNotesStats](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstats) - Retrieve delivery note stats
 * [publicApiV1DeliveryNotesStatuses](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesstatuses) - List delivery note statuses
+* [publicApiV1DeliveryNotesListPresentations](docs/sdks/deliverynotes/README.md#publicapiv1deliverynoteslistpresentations) - List retained delivery-note presentations
 * [publicApiV1DeliveryNotesMarkDelivered](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesmarkdelivered) - Mark delivery note as delivered
+* [publicApiV1DeliveryNotesRevisePresentation](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotesrevisepresentation) - Create a delivery-note presentation revision
 * [publicApiV1DeliveryNotesSend](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessend) - Send a delivery note
 * [publicApiV1DeliveryNotesSign](docs/sdks/deliverynotes/README.md#publicapiv1deliverynotessign) - Sign a delivery note
 
@@ -804,11 +818,21 @@ if ($response->object !== null) {
 * [publicApiV1EmployeesShow](docs/sdks/employees/README.md#publicapiv1employeesshow) - Retrieve an employee
 * [publicApiV1EmployeesUpdate](docs/sdks/employees/README.md#publicapiv1employeesupdate) - Update an employee
 
+### [EmployeeSeatOfferRedemptions](docs/sdks/employeeseatofferredemptions/README.md)
+
+* [publicApiV1EmployeeSeatOfferRedemptionsCancel](docs/sdks/employeeseatofferredemptions/README.md#publicapiv1employeeseatofferredemptionscancel) - Cancel an employee-seat offer redemption
+* [publicApiV1EmployeeSeatOfferRedemptionsConfirm](docs/sdks/employeeseatofferredemptions/README.md#publicapiv1employeeseatofferredemptionsconfirm) - Confirm an employee-seat offer redemption
+* [publicApiV1EmployeeSeatOfferRedemptionsList](docs/sdks/employeeseatofferredemptions/README.md#publicapiv1employeeseatofferredemptionslist) - List an employee-seat offer redemption
+* [publicApiV1EmployeeSeatOfferRedemptionsPrepare](docs/sdks/employeeseatofferredemptions/README.md#publicapiv1employeeseatofferredemptionsprepare) - Prepare an employee-seat offer redemption
+* [publicApiV1EmployeeSeatOfferRedemptionsRefreshQuote](docs/sdks/employeeseatofferredemptions/README.md#publicapiv1employeeseatofferredemptionsrefreshquote) - Refresh the quote for an employee-seat offer redemption
+* [publicApiV1EmployeeSeatOfferRedemptionsShow](docs/sdks/employeeseatofferredemptions/README.md#publicapiv1employeeseatofferredemptionsshow) - Retrieve an employee-seat offer redemption
+
 ### [EmployeeSeats](docs/sdks/employeeseats/README.md)
 
 * [publicApiV1EmployeeSeatsCancel](docs/sdks/employeeseats/README.md#publicapiv1employeeseatscancel) - Cancel the employee seat add-on
 * [publicApiV1EmployeeSeatsChangeQuantity](docs/sdks/employeeseats/README.md#publicapiv1employeeseatschangequantity) - Sync the employee seat quantity
 * [publicApiV1EmployeeSeatsStatus](docs/sdks/employeeseats/README.md#publicapiv1employeeseatsstatus) - Retrieve employee seat billing status
+* [publicApiV1EmployeeSeatsUpdate](docs/sdks/employeeseats/README.md#publicapiv1employeeseatsupdate) - Set the contracted employee seats
 * [publicApiV1EmployeeSeatsPreview](docs/sdks/employeeseats/README.md#publicapiv1employeeseatspreview) - Preview the employee seat charge
 * [publicApiV1EmployeeSeatsSubscribe](docs/sdks/employeeseats/README.md#publicapiv1employeeseatssubscribe) - Subscribe to the employee seat add-on
 
@@ -824,11 +848,20 @@ if ($response->object !== null) {
 ### [FaceSubmissions](docs/sdks/facesubmissions/README.md)
 
 * [publicApiV1FaceSubmissionsCancel](docs/sdks/facesubmissions/README.md#publicapiv1facesubmissionscancel) - Request FACe submission cancellation
-* [publicApiV1FaceSubmissionsShow](docs/sdks/facesubmissions/README.md#publicapiv1facesubmissionsshow) - Retrieve a FACe submission
+* [publicApiV1FaceSubmissionsShow](docs/sdks/facesubmissions/README.md#publicapiv1facesubmissionsshow) - Retrieve a durable FACe attempt
 
 ### [Gestoria](docs/sdks/gestoria/README.md)
 
 * [publicApiV1GestoriaWorkforceSummary](docs/sdks/gestoria/README.md#publicapiv1gestoriaworkforcesummary) - Retrieve the consolidated workforce compliance overview
+
+### [GestoriaSeatOfferRedemptions](docs/sdks/gestoriaseatofferredemptions/README.md)
+
+* [publicApiV1GestoriaSeatOfferRedemptionsCancel](docs/sdks/gestoriaseatofferredemptions/README.md#publicapiv1gestoriaseatofferredemptionscancel) - Cancel a managed-company-seat offer redemption
+* [publicApiV1GestoriaSeatOfferRedemptionsConfirm](docs/sdks/gestoriaseatofferredemptions/README.md#publicapiv1gestoriaseatofferredemptionsconfirm) - Confirm a managed-company-seat offer redemption
+* [publicApiV1GestoriaSeatOfferRedemptionsList](docs/sdks/gestoriaseatofferredemptions/README.md#publicapiv1gestoriaseatofferredemptionslist) - List a managed-company-seat offer redemption
+* [publicApiV1GestoriaSeatOfferRedemptionsPrepare](docs/sdks/gestoriaseatofferredemptions/README.md#publicapiv1gestoriaseatofferredemptionsprepare) - Prepare a managed-company-seat offer redemption
+* [publicApiV1GestoriaSeatOfferRedemptionsRefreshQuote](docs/sdks/gestoriaseatofferredemptions/README.md#publicapiv1gestoriaseatofferredemptionsrefreshquote) - Refresh the quote for a managed-company-seat offer redemption
+* [publicApiV1GestoriaSeatOfferRedemptionsShow](docs/sdks/gestoriaseatofferredemptions/README.md#publicapiv1gestoriaseatofferredemptionsshow) - Retrieve a managed-company-seat offer redemption
 
 ### [Holidays](docs/sdks/holidays/README.md)
 
@@ -845,6 +878,8 @@ if ($response->object !== null) {
 ### [Invoices](docs/sdks/invoices/README.md)
 
 * [publicApiV1InvoicesAnnul](docs/sdks/invoices/README.md#publicapiv1invoicesannul) - Annul an invoice
+* [publicApiV1InvoicesAssignPresentation](docs/sdks/invoices/README.md#publicapiv1invoicesassignpresentation) - Assign the invoice visual template
+* [publicApiV1InvoicesGetPresentation](docs/sdks/invoices/README.md#publicapiv1invoicesgetpresentation) - Get the invoice presentation
 * [publicApiV1InvoicesAssignRealNumber](docs/sdks/invoices/README.md#publicapiv1invoicesassignrealnumber) - Assign a real invoice number
 * [publicApiV1InvoicesBulkCreate](docs/sdks/invoices/README.md#publicapiv1invoicesbulkcreate) - Bulk create invoices
 * [publicApiV1InvoicesBulkDelete](docs/sdks/invoices/README.md#publicapiv1invoicesbulkdelete) - Bulk delete invoices
@@ -862,7 +897,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesDelete](docs/sdks/invoices/README.md#publicapiv1invoicesdelete) - Delete an invoice
 * [publicApiV1InvoicesShow](docs/sdks/invoices/README.md#publicapiv1invoicesshow) - Retrieve an invoice
 * [publicApiV1InvoicesUpdate](docs/sdks/invoices/README.md#publicapiv1invoicesupdate) - Update an invoice
-* [publicApiV1InvoicesFacturae](docs/sdks/invoices/README.md#publicapiv1invoicesfacturae) - Download FacturaE XML
+* [publicApiV1InvoicesFacturae](docs/sdks/invoices/README.md#publicapiv1invoicesfacturae) - Download current or retained Facturae XML
 * [publicApiV1InvoicesPdf](docs/sdks/invoices/README.md#publicapiv1invoicespdf) - Download invoice PDF
 * [publicApiV1InvoicesDuplicate](docs/sdks/invoices/README.md#publicapiv1invoicesduplicate) - Duplicate an invoice
 * [publicApiV1InvoicesExportExcel](docs/sdks/invoices/README.md#publicapiv1invoicesexportexcel) - Export invoices to a spreadsheet
@@ -873,6 +908,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesPublicLinkUpdate](docs/sdks/invoices/README.md#publicapiv1invoicespubliclinkupdate) - Update invoice public link
 * [publicApiV1InvoicesStats](docs/sdks/invoices/README.md#publicapiv1invoicesstats) - Get invoice statistics
 * [publicApiV1InvoicesIssue](docs/sdks/invoices/README.md#publicapiv1invoicesissue) - Issue an invoice
+* [publicApiV1InvoicesListPresentations](docs/sdks/invoices/README.md#publicapiv1invoiceslistpresentations) - List retained invoice presentations
 * [publicApiV1InvoicesActivities](docs/sdks/invoices/README.md#publicapiv1invoicesactivities) - List invoice activity
 * [publicApiV1InvoicesCorrectives](docs/sdks/invoices/README.md#publicapiv1invoicescorrectives) - List corrective invoices
 * [publicApiV1InvoicesPaymentsList](docs/sdks/invoices/README.md#publicapiv1invoicespaymentslist) - List invoice payments
@@ -885,6 +921,7 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesPaymentReceipt](docs/sdks/invoices/README.md#publicapiv1invoicespaymentreceipt) - Download the receipt PDF of a payment
 * [publicApiV1InvoicesReschedule](docs/sdks/invoices/README.md#publicapiv1invoicesreschedule) - Reschedule an invoice
 * [publicApiV1InvoicesPaymentsRevert](docs/sdks/invoices/README.md#publicapiv1invoicespaymentsrevert) - Revert an invoice payment
+* [publicApiV1InvoicesRevisePresentation](docs/sdks/invoices/README.md#publicapiv1invoicesrevisepresentation) - Create an invoice presentation revision
 * [publicApiV1InvoicesSchedule](docs/sdks/invoices/README.md#publicapiv1invoicesschedule) - Schedule an invoice
 * [publicApiV1InvoicesSend](docs/sdks/invoices/README.md#publicapiv1invoicessend) - Send invoice by email
 * [publicApiV1InvoicesSendReminder](docs/sdks/invoices/README.md#publicapiv1invoicessendreminder) - Send a payment reminder
@@ -893,10 +930,15 @@ if ($response->object !== null) {
 * [publicApiV1InvoicesUnsend](docs/sdks/invoices/README.md#publicapiv1invoicesunsend) - Unsend an invoice
 * [publicApiV1InvoicesVoid](docs/sdks/invoices/README.md#publicapiv1invoicesvoid) - Void an invoice
 
+#### [Invoices.AdministrativeRevisions](docs/sdks/administrativerevisions/README.md)
+
+* [publicApiV1InvoicesAdministrativeRevisionsIndex](docs/sdks/administrativerevisions/README.md#publicapiv1invoicesadministrativerevisionsindex) - Retrieve invoice administrative routing history
+* [publicApiV1InvoicesAdministrativeRevisionsStore](docs/sdks/administrativerevisions/README.md#publicapiv1invoicesadministrativerevisionsstore) - Revise invoice administrative routing
+
 #### [Invoices.FaceSubmissions](docs/sdks/invoicesfacesubmissions/README.md)
 
 * [publicApiV1InvoicesFaceSubmissionsList](docs/sdks/invoicesfacesubmissions/README.md#publicapiv1invoicesfacesubmissionslist) - List invoice FACe submissions
-* [publicApiV1InvoicesFaceSubmissionsSubmit](docs/sdks/invoicesfacesubmissions/README.md#publicapiv1invoicesfacesubmissionssubmit) - Submit invoice to FACe
+* [publicApiV1InvoicesFaceSubmissionsSubmit](docs/sdks/invoicesfacesubmissions/README.md#publicapiv1invoicesfacesubmissionssubmit) - Prepare or continue a FACe submission
 
 #### [Invoices.Quarterly](docs/sdks/quarterly/README.md)
 
@@ -952,6 +994,23 @@ if ($response->object !== null) {
 * [publicApiV1NotificationsMarkAllRead](docs/sdks/notifications/README.md#publicapiv1notificationsmarkallread) - Mark all notifications as read
 * [publicApiV1NotificationsRead](docs/sdks/notifications/README.md#publicapiv1notificationsread) - Mark a notification as read
 
+### [Packs](docs/sdks/packs/README.md)
+
+* [publicApiV1PacksArchive](docs/sdks/packs/README.md#publicapiv1packsarchive) - Archive a pack
+* [publicApiV1PacksCreate](docs/sdks/packs/README.md#publicapiv1packscreate) - Create a pack
+* [publicApiV1PacksList](docs/sdks/packs/README.md#publicapiv1packslist) - List all packs
+* [publicApiV1PacksDelete](docs/sdks/packs/README.md#publicapiv1packsdelete) - Delete a pack
+* [publicApiV1PacksShow](docs/sdks/packs/README.md#publicapiv1packsshow) - Retrieve a pack
+* [publicApiV1PacksUpdate](docs/sdks/packs/README.md#publicapiv1packsupdate) - Update a pack
+* [publicApiV1PacksPriceBreakdown](docs/sdks/packs/README.md#publicapiv1packspricebreakdown) - Get the price breakdown of a pack
+* [publicApiV1PacksRestore](docs/sdks/packs/README.md#publicapiv1packsrestore) - Restore a pack
+
+#### [Packs.Images](docs/sdks/images/README.md)
+
+* [publicApiV1PacksImagesDelete](docs/sdks/images/README.md#publicapiv1packsimagesdelete) - Remove a pack image
+* [publicApiV1PacksImagesUpdate](docs/sdks/images/README.md#publicapiv1packsimagesupdate) - Update a pack image
+* [publicApiV1PacksImagesUpload](docs/sdks/images/README.md#publicapiv1packsimagesupload) - Upload an image to a pack
+
 ### [PaymentMethods](docs/sdks/paymentmethods/README.md)
 
 * [publicApiV1PaymentMethodsList](docs/sdks/paymentmethods/README.md#publicapiv1paymentmethodslist) - List payment methods
@@ -964,6 +1023,48 @@ if ($response->object !== null) {
 ### [PayrollExportFormats](docs/sdks/payrollexportformats/README.md)
 
 * [publicApiV1PayrollExportFormatsList](docs/sdks/payrollexportformats/README.md#publicapiv1payrollexportformatslist) - List the supported payroll export formats
+
+### [PdfArtifacts](docs/sdks/pdfartifacts/README.md)
+
+* [publicApiV1PdfArtifactsDownload](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsdownload) - Download the exact retained PDF
+* [publicApiV1PdfArtifactsShow](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsshow) - Read PDF artifact metadata
+* [publicApiV1PdfArtifactsPrepare](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsprepare) - Prepare an exact presentation PDF
+* [publicApiV1PdfArtifactsRender](docs/sdks/pdfartifacts/README.md#publicapiv1pdfartifactsrender) - Render a prepared PDF artifact
+
+### [PdfCommercialIdentities](docs/sdks/pdfcommercialidentities/README.md)
+
+* [publicApiV1PdfCommercialIdentitiesArchive](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesarchive) - Archive a PDF commercial identity
+* [publicApiV1PdfCommercialIdentitiesCreate](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiescreate) - Create a PDF commercial identity
+* [publicApiV1PdfCommercialIdentitiesList](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitieslist) - List PDF commercial identities
+* [publicApiV1PdfCommercialIdentitiesFind](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesfind) - Retrieve a PDF commercial identity
+* [publicApiV1PdfCommercialIdentitiesUpdate](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesupdate) - Update PDF commercial identity metadata
+* [publicApiV1PdfCommercialIdentitiesImpact](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesimpact) - Inspect the impact of a PDF commercial identity change
+* [publicApiV1PdfCommercialIdentitiesRevision](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesrevision) - Retrieve a PDF commercial identity revision
+* [publicApiV1PdfCommercialIdentitiesPublishRevision](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiespublishrevision) - Publish a PDF commercial identity revision
+* [publicApiV1PdfCommercialIdentitiesRestore](docs/sdks/pdfcommercialidentities/README.md#publicapiv1pdfcommercialidentitiesrestore) - Restore a PDF commercial identity
+
+### [PdfTemplatePreviews](docs/sdks/pdftemplatepreviews/README.md)
+
+* [publicApiV1PdfTemplatePreviewsCreate](docs/sdks/pdftemplatepreviews/README.md#publicapiv1pdftemplatepreviewscreate) - Create a PDF template preview
+
+### [PdfTemplates](docs/sdks/pdftemplates/README.md)
+
+* [publicApiV1PdfTemplatesArchive](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesarchive) - Archive a PDF template
+* [publicApiV1PdfTemplatesCreate](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatescreate) - Create a PDF template
+* [publicApiV1PdfTemplatesList](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplateslist) - List PDF templates
+* [publicApiV1PdfTemplatesDuplicate](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesduplicate) - Duplicate a PDF template
+* [publicApiV1PdfTemplatesFind](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesfind) - Retrieve a PDF template
+* [publicApiV1PdfTemplatesUpdate](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesupdate) - Update PDF template metadata
+* [publicApiV1PdfTemplatesContactDefaultGet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatescontactdefaultget) - Retrieve a contact PDF template preference
+* [publicApiV1PdfTemplatesContactDefaultSet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatescontactdefaultset) - Set a contact PDF template preference
+* [publicApiV1PdfTemplatesDefaultsGet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesdefaultsget) - Retrieve the PDF template defaults
+* [publicApiV1PdfTemplatesDefaultsSet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesdefaultsset) - Update the PDF template defaults
+* [publicApiV1PdfTemplatesImpact](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesimpact) - Inspect the impact of a PDF template change
+* [publicApiV1PdfTemplatesAssetGet](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesassetget) - Retrieve a PDF template image
+* [publicApiV1PdfTemplatesRevision](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesrevision) - Retrieve a PDF template revision
+* [publicApiV1PdfTemplatesPublishRevision](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatespublishrevision) - Publish a PDF template revision
+* [publicApiV1PdfTemplatesRestore](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesrestore) - Restore a PDF template
+* [publicApiV1PdfTemplatesAssetUpload](docs/sdks/pdftemplates/README.md#publicapiv1pdftemplatesassetupload) - Upload a PDF template image
 
 ### [Presence](docs/sdks/presence/README.md)
 
@@ -992,6 +1093,7 @@ if ($response->object !== null) {
 
 ### [Products](docs/sdks/products/README.md)
 
+* [publicApiV1ProductsBulkChannels](docs/sdks/products/README.md#publicapiv1productsbulkchannels) - Bulk publish or withdraw products on the web
 * [publicApiV1ProductsBulkDelete](docs/sdks/products/README.md#publicapiv1productsbulkdelete) - Delete multiple products in bulk
 * [publicApiV1ProductsBulkStatus](docs/sdks/products/README.md#publicapiv1productsbulkstatus) - Bulk change product active state
 * [publicApiV1ProductsBulkUpdateStock](docs/sdks/products/README.md#publicapiv1productsbulkupdatestock) - Update stock for many products
@@ -1066,6 +1168,8 @@ if ($response->object !== null) {
 ### [Proformas](docs/sdks/proformas/README.md)
 
 * [publicApiV1ProformasAccept](docs/sdks/proformas/README.md#publicapiv1proformasaccept) - Accept a proforma
+* [publicApiV1ProformasAssignPresentation](docs/sdks/proformas/README.md#publicapiv1proformasassignpresentation) - Assign the proforma visual template
+* [publicApiV1ProformasGetPresentation](docs/sdks/proformas/README.md#publicapiv1proformasgetpresentation) - Get the proforma presentation
 * [publicApiV1ProformasBulkDelete](docs/sdks/proformas/README.md#publicapiv1proformasbulkdelete) - Bulk delete proformas
 * [publicApiV1ProformasBulkPdf](docs/sdks/proformas/README.md#publicapiv1proformasbulkpdf) - Bulk download proforma PDFs
 * [publicApiV1ProformasBulkSend](docs/sdks/proformas/README.md#publicapiv1proformasbulksend) - Bulk send proformas
@@ -1082,8 +1186,10 @@ if ($response->object !== null) {
 * [publicApiV1ProformasPublicLinkGet](docs/sdks/proformas/README.md#publicapiv1proformaspubliclinkget) - Retrieve proforma public link
 * [publicApiV1ProformasPublicLinkUpdate](docs/sdks/proformas/README.md#publicapiv1proformaspubliclinkupdate) - Update proforma public link
 * [publicApiV1ProformasStats](docs/sdks/proformas/README.md#publicapiv1proformasstats) - Get proforma stats
+* [publicApiV1ProformasListPresentations](docs/sdks/proformas/README.md#publicapiv1proformaslistpresentations) - List retained proforma presentations
 * [publicApiV1ProformasStatuses](docs/sdks/proformas/README.md#publicapiv1proformasstatuses) - List proforma statuses
 * [publicApiV1ProformasReject](docs/sdks/proformas/README.md#publicapiv1proformasreject) - Reject a proforma
+* [publicApiV1ProformasRevisePresentation](docs/sdks/proformas/README.md#publicapiv1proformasrevisepresentation) - Create a proforma presentation revision
 * [publicApiV1ProformasSend](docs/sdks/proformas/README.md#publicapiv1proformassend) - Send proforma by email
 
 ### [Projects](docs/sdks/projects/README.md)
@@ -1125,6 +1231,15 @@ if ($response->object !== null) {
 #### [Projects.TimeSummary](docs/sdks/timesummary/README.md)
 
 * [publicApiV1ProjectsTimeSummaryShow](docs/sdks/timesummary/README.md#publicapiv1projectstimesummaryshow) - Retrieve a project time summary
+
+### [Promotions](docs/sdks/promotions/README.md)
+
+* [publicApiV1PromotionsCancel](docs/sdks/promotions/README.md#publicapiv1promotionscancel) - Cancel a promotion
+* [publicApiV1PromotionsCreate](docs/sdks/promotions/README.md#publicapiv1promotionscreate) - Create a promotion
+* [publicApiV1PromotionsList](docs/sdks/promotions/README.md#publicapiv1promotionslist) - List all promotions
+* [publicApiV1PromotionsDelete](docs/sdks/promotions/README.md#publicapiv1promotionsdelete) - Delete a promotion
+* [publicApiV1PromotionsShow](docs/sdks/promotions/README.md#publicapiv1promotionsshow) - Retrieve a promotion
+* [publicApiV1PromotionsUpdate](docs/sdks/promotions/README.md#publicapiv1promotionsupdate) - Update a promotion
 
 ### [PurchaseInvoices](docs/sdks/purchaseinvoices/README.md)
 
@@ -1169,6 +1284,8 @@ if ($response->object !== null) {
 ### [Quotes](docs/sdks/quotes/README.md)
 
 * [publicApiV1QuotesAccept](docs/sdks/quotes/README.md#publicapiv1quotesaccept) - Accept a quote
+* [publicApiV1QuotesAssignPresentation](docs/sdks/quotes/README.md#publicapiv1quotesassignpresentation) - Assign the quote visual template
+* [publicApiV1QuotesGetPresentation](docs/sdks/quotes/README.md#publicapiv1quotesgetpresentation) - Get the quote presentation
 * [publicApiV1QuotesBulkDelete](docs/sdks/quotes/README.md#publicapiv1quotesbulkdelete) - Bulk delete quotes
 * [publicApiV1QuotesBulkPdf](docs/sdks/quotes/README.md#publicapiv1quotesbulkpdf) - Bulk download quote PDFs
 * [publicApiV1QuotesBulkSend](docs/sdks/quotes/README.md#publicapiv1quotesbulksend) - Bulk send quotes
@@ -1185,8 +1302,10 @@ if ($response->object !== null) {
 * [publicApiV1QuotesPublicLinkGet](docs/sdks/quotes/README.md#publicapiv1quotespubliclinkget) - Retrieve quote public link
 * [publicApiV1QuotesPublicLinkUpdate](docs/sdks/quotes/README.md#publicapiv1quotespubliclinkupdate) - Update quote public link
 * [publicApiV1QuotesStats](docs/sdks/quotes/README.md#publicapiv1quotesstats) - Get quote stats
+* [publicApiV1QuotesListPresentations](docs/sdks/quotes/README.md#publicapiv1quoteslistpresentations) - List retained quote presentations
 * [publicApiV1QuotesStatuses](docs/sdks/quotes/README.md#publicapiv1quotesstatuses) - List quote statuses
 * [publicApiV1QuotesReject](docs/sdks/quotes/README.md#publicapiv1quotesreject) - Reject a quote
+* [publicApiV1QuotesRevisePresentation](docs/sdks/quotes/README.md#publicapiv1quotesrevisepresentation) - Create a quote presentation revision
 * [publicApiV1QuotesSend](docs/sdks/quotes/README.md#publicapiv1quotessend) - Send quote by email
 
 ### [RecurringInvoices](docs/sdks/recurringinvoices/README.md)
@@ -1213,6 +1332,8 @@ if ($response->object !== null) {
 ### [Series](docs/sdks/series/README.md)
 
 * [publicApiV1SeriesArchive](docs/sdks/series/README.md#publicapiv1seriesarchive) - Archive a series
+* [publicApiV1SeriesAssignPdfTemplate](docs/sdks/series/README.md#publicapiv1seriesassignpdftemplate) - Assign the PDF template of a series
+* [publicApiV1SeriesGetPdfTemplate](docs/sdks/series/README.md#publicapiv1seriesgetpdftemplate) - Retrieve the PDF template of a series
 * [publicApiV1SeriesBootstrap](docs/sdks/series/README.md#publicapiv1seriesbootstrap) - Bootstrap the default series of a company
 * [publicApiV1SeriesCreate](docs/sdks/series/README.md#publicapiv1seriescreate) - Create a series
 * [publicApiV1SeriesList](docs/sdks/series/README.md#publicapiv1serieslist) - List all series

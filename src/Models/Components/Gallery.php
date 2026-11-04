@@ -36,15 +36,45 @@ class Gallery
     public string $contentType;
 
     /**
+     * Alternative text: the name of the product, because a product gallery has no text of its own.
+     *
+     * @var string $alt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('alt')]
+    public string $alt;
+
+    /**
+     * Width in pixels, measured on upload. `null` only when the file is missing.
+     *
+     * @var ?int $width
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('width')]
+    public ?int $width;
+
+    /**
+     * Height in pixels, measured on upload. `null` only when the file is missing.
+     *
+     * @var ?int $height
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('height')]
+    public ?int $height;
+
+    /**
      * @param  int  $index
      * @param  string  $url
      * @param  string  $contentType
+     * @param  string  $alt
+     * @param  ?int  $width
+     * @param  ?int  $height
      * @phpstan-pure
      */
-    public function __construct(int $index, string $url, string $contentType)
+    public function __construct(int $index, string $url, string $contentType, string $alt, ?int $width = null, ?int $height = null)
     {
         $this->index = $index;
         $this->url = $url;
         $this->contentType = $contentType;
+        $this->alt = $alt;
+        $this->width = $width;
+        $this->height = $height;
     }
 }

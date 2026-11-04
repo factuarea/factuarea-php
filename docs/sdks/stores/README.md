@@ -12,8 +12,49 @@
 
 ## publicApiV1StoresCreate
 
-Connect an e-commerce store to your company. `integration_id` names the provider connection the store hangs from, and `external_store_id` is the identifier the provider gives the shop — unique per provider within your company, so a second store of the same provider and identifier is rejected with `store_already_connected`. Auto-invoicing is OFF unless you turn it on: connecting a store never starts issuing invoices by itself. `remote_base_url`, if given, is checked against the outbound policy of your company and rejected with `store_url_not_allowed` when it is not permitted.
+Connects an e-commerce store to the company; auto-invoicing stays OFF until you enable it.
+- `external_store_id` is unique per provider (`store_already_connected`).
+- `remote_base_url` must pass the outbound policy (`store_url_not_allowed`).
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stores.create" method="post" path="/companies/{company}/stores" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ConnectStoreV1Request(
+    integrationId: 'f3135120-a8b4-4a87-bf9b-c29bd4ab8e04',
+    provider: Components\ConnectStoreV1RequestProvider::Prestashop,
+    externalStoreId: '<id>',
+    name: '<value>',
+);
+
+$response = $sdk->stores->publicApiV1StoresCreate(
+    company: 'daca36c6-2351-4ed5-944c-44a7c1c3c6b5',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stores.create" method="post" path="/companies/{company}/stores" example="missing_api_key" -->
@@ -43,6 +84,45 @@ $body = new Components\ConnectStoreV1Request(
 
 $response = $sdk->stores->publicApiV1StoresCreate(
     company: 'Blanda Group',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stores.create" method="post" path="/companies/{company}/stores" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ConnectStoreV1Request(
+    integrationId: 'f3135120-a8b4-4a87-bf9b-c29bd4ab8e04',
+    provider: Components\ConnectStoreV1RequestProvider::Prestashop,
+    externalStoreId: '<id>',
+    name: '<value>',
+);
+
+$response = $sdk->stores->publicApiV1StoresCreate(
+    company: 'f3135120-a8b4-4a87-bf9b-c29bd4ab8e04',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -92,6 +172,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stores.create" method="post" path="/companies/{company}/stores" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\ConnectStoreV1Request(
+    integrationId: 'f3135120-a8b4-4a87-bf9b-c29bd4ab8e04',
+    provider: Components\ConnectStoreV1RequestProvider::Prestashop,
+    externalStoreId: '<id>',
+    name: '<value>',
+);
+
+$response = $sdk->stores->publicApiV1StoresCreate(
+    company: '8608cd37-a0e9-4149-980a-101657b41a46',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -116,7 +235,9 @@ if ($response->object !== null) {
 
 ## publicApiV1StoresIndex
 
-List the e-commerce stores connected to your company, across every provider. Each exposes its `id` (UUID v7), the `integration_id` of the provider connection it hangs from, its `provider`, the `external_store_id` the provider gave the shop, and the settings that decide how its orders become invoices (`simplified_threshold`, `require_tax_id`, `prices_include_tax`, `autoinvoicing_enabled`, `autosend_enabled`), plus `environment`, `status` and `connected_at`. Cursor paginated (`limit`, `starting_after`, `ending_before`).
+Lists the e-commerce stores connected to the company across every provider, with cursor pagination.
+- Each store exposes `id` (UUID v7), `provider`, `external_store_id`, `environment` and `status`.
+- It also exposes its invoicing settings, e.g. `autoinvoicing_enabled`.
 
 ### Example Usage
 
@@ -173,7 +294,10 @@ if ($response->object !== null) {
 
 ## publicApiV1StoresDisconnect
 
-Disconnect a store: the link is closed and its credential destroyed, so reconnecting it means authorising again at the provider. The invoices it already produced are kept — under VeriFactu a document is never deleted — and later deliveries from that store are recorded without being processed. Because the operation is irreversible, it requires an `Idempotency-Key` header. Responds 204 with no body; a missing store or one from another company returns 404.
+Disconnects a store and destroys its credential; reconnecting means authorising again at the provider.
+- Irreversible: requires `Idempotency-Key`.
+- Invoices already produced are kept; later deliveries are recorded without processing.
+- Responds 204; an unknown store returns 404.
 
 ### Example Usage
 
@@ -291,7 +415,10 @@ if ($response->object !== null) {
 
 ## publicApiV1StoresUpdate
 
-Update the settings of a connected store: its `name`, the series it numbers into (`series_id`; `null` falls back to the default series of your company), the simplified-invoice threshold, whether the buyer tax ID is required, whether prices already include taxes, whether paid orders are invoiced and emailed automatically, its `remote_base_url`, its `environment` and the optional `invoice_note` (up to 500 characters) written in the notes of its automatic invoices (`null` or an empty string clears it; no note by default). All fields are optional; omitted ones keep their value. Neither the provider nor the `external_store_id` can be changed: they are the identity of the store.
+Updates the settings of a connected store; omitted fields keep their value.
+- Editable: `name`, `series_id` (`null` = default series), invoicing flags, `remote_base_url`, `environment`.
+- `invoice_note` takes up to 500 characters; `null` or empty clears it.
+- Provider and `external_store_id` cannot change.
 
 ### Example Usage
 

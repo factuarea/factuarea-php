@@ -1,6 +1,6 @@
 # PublicApiV1EmployeeBatchesConfirmResponseBody2
 
-Current durable operation.
+Accepted; retrieve this operation until terminal.
 
 
 ## Fields

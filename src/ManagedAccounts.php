@@ -66,7 +66,10 @@ class ManagedAccounts
     /**
      * Provision a managed account
      *
-     * Provision a SEPARATE account for one of your clients, with its tax ID (`tax_id`, `legal_name`), its plan (`emprendedor`, `empresario` or `integral`) and the `access_level` your account keeps on it (`none` by default, `view` or `operate`). Your account pays it: in live mode the account is charged on the `managed-accounts` subscription of your account. `external_ref` is YOUR reference and makes the call idempotent by itself: provisioning an `external_ref` you already provisioned returns 200 with that same account, creates nothing and issues no claim voucher (use the claim-token operation to issue a new one). A new account returns **201 Created** with the claim voucher the holder uses to take the account: with `send_email: false` (the default) `claim_token` and `claim_url` are returned EXACTLY ONCE, for you to deliver; with `send_email: true` the link travels only in the email to `owner_email` and both fields are `null`. An idempotent replay returns them as `null` too: the voucher is never stored in the clear, not even in the idempotency cache. `owner_email` is required with a live key and whenever `send_email` is `true`. The environment is the one of the key: a `fact_test_` key creates a TEST account, with no charge, no voucher (`claim_token` and `claim_url` are `null`) and outside your managed account limit. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`. Returns 402 `payment_method_required` when your account has no payment method to pay a live managed account, 409 `provisioning_account_claimed` when the `external_ref` names an account its holder already claimed, 409 `managed_account_external_ref_in_other_environment` when it names a managed account of the other environment, 422 `managed_account_plan_not_self_serve` for `enterprise` (it is only assigned by Factuarea by contract), 422 `managed_account_provider_in_trial` for a paid plan while your account is in trial (only test accounts), 422 `managed_accounts_limit_reached` at the managed account limit of your account, and 422 `idempotency_key_required` because provisioning is irreversible. The response also carries `claim_expires_at` (returned also when the link is emailed), `reactivated` (`true` when the call reactivated a management that had ended before the holder claimed the account) and, as in every read of the account, `claim` (the pending voucher without its secret), `payment_assumed_at` and `plan_renews_at`.
+     * Provision a SEPARATE account for one of your clients, with its tax ID, plan and your `access_level`; your account pays it.
+     * - Returns 201 with the claim voucher shown EXACTLY ONCE, or emailed with `send_email: true`.
+     * - Repeating an `external_ref` returns 200 with no new voucher; `Idempotency-Key` is required.
+     * - Requires the privileged `accounts:write` scope.
      *
      * @param  \Factuarea\Sdk\Models\Components\ProvisionManagedAccountV1Request  $body
      * @param  string  $idempotencyKey
@@ -194,7 +197,10 @@ class ManagedAccounts
     /**
      * List managed accounts
      *
-     * List the accounts your account provisioned, ONLY in the environment of the key: a `fact_test_` key lists your test managed accounts and a live key the live ones. Without `status` it lists only the managements in force. Filter by `status` (`provisioned`, `claimed` or `active` filter by the status of the account; `ended` returns the ones whose management ended, each with ONLY its `id`, your `external_ref` and the `management` block: your account no longer sees the current name, status, plan or tax IDs of an account it stopped managing) and by `external_ref` (zero or one result), cursor-paginated with `limit` (1-100, default 25) and `starting_after`. No item carries a claim voucher. Requires the privileged `accounts:read` scope, which `*` does not cover (403 `privileged_scope_required` otherwise). Returns 422 for a `status` outside the vocabulary or an `external_ref` longer than 128 characters, and 400 for an unknown query parameter or a malformed `limit`/`starting_after`.
+     * List the managed accounts your account provisioned, only in the environment of the key.
+     * - Filter by `status` and `external_ref`; cursor-paginated with `limit` (1-100) and `starting_after`.
+     * - Without `status` only managements in force are listed; `ended` items carry just the identifiers.
+     * - Requires the privileged `accounts:read` scope.
      *
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsListResponse
@@ -313,7 +319,10 @@ class ManagedAccounts
     /**
      * Preview the provisioning of a managed account
      *
-     * Preview, with no effect, provisioning a NEW managed account of the `plan` in the query (`emprendedor`, `empresario` or `integral`) for the account of the credential: what would be charged to your account today (`amount_cents`, `tax_amount_cents` and `total_cents`, with `tax_rate`; when something is charged but the payment gateway returns no VAT rate, `tax_rate`, `tax_amount_cents` and `total_cents` are `null` and the base is never published as the total), the date of the next invoice and the joint monthly fee that follows (`recurring_*`). Amounts are integer cents. Nothing is written, nothing is charged and no account is created, so it needs no `Idempotency-Key`; it is a read-only counterpart of the provisioning operation and applies its same business rules. With a test key (`fact_test_`) every amount is 0. When the charge is real and your account has no payment method, `requires_payment_method` is `true` and the amounts are 0. Returns 400 `parameter_unknown` for a query parameter other than `plan`, 403 `forbidden_action` when the person who issued the key cannot administer your account, 403 `privileged_scope_required` without the account provider privilege granted by Factuarea, 403 `insufficient_scope` without `accounts:read`, 422 on a missing or unknown `plan`, 422 `managed_account_plan_not_self_serve` for `enterprise`, 422 `managed_account_provider_in_trial` while your account is in trial and 422 `managed_accounts_limit_reached` when your account already provisioned its maximum number of managed accounts, and 503 when the payment gateway cannot resolve the unit price (retry later). Requires the privileged `accounts:read` scope, which `*` does not cover.
+     * Preview, with no effect, provisioning a NEW managed account of the `plan` in the query: what is charged today and the monthly fee after.
+     * - Amounts are integer cents; nothing is created or charged, so no `Idempotency-Key` is needed.
+     * - With a `fact_test_` key every amount is 0.
+     * - Requires the privileged `accounts:read` scope.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsProvisioningPreviewPlan  $plan
      * @param  ?LocalDate  $factuareaVersion
@@ -449,7 +458,10 @@ class ManagedAccounts
     /**
      * Retrieve a managed account
      *
-     * Retrieve one of your managed accounts by its `id` (UUID v7): status of the account, environment, plan and pending plan, your `access_level`, its tax IDs, whether its holder already claimed it and the status of the management. It works with any `access_level`, `none` included: provisioning operations only require the management in force. The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. Requires the privileged `accounts:read` scope, which `*` does not cover (403 `privileged_scope_required` otherwise).
+     * Retrieve one of your managed accounts by `id`: status, environment, plan, your `access_level`, tax IDs, claim state and management status.
+     * - Works with any `access_level`, `none` included.
+     * - A non-managed, foreign or ended account returns 404 `account_not_found`.
+     * - Requires the privileged `accounts:read` scope.
      *
      * @param  string  $account
      * @param  ?LocalDate  $factuareaVersion

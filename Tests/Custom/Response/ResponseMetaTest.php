@@ -10,6 +10,7 @@ use Factuarea\Sdk\Custom\Response\ResponseMeta;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\Security;
 use Factuarea\Sdk\Models\Errors\APIException;
+use Factuarea\Sdk\Models\Errors\ErrorThrowable;
 use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfRequest;
 use Factuarea\Sdk\Utils\Retry\RetryConfigNone;
 use GuzzleHttp\Client;
@@ -21,10 +22,11 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * How the generated SDK surfaces the binary PDF operation and the statuses the
- * pinned spec does not declare for it (202 JSON, 503 with Retry-After), and how
- * {@see ResponseMeta} reads them. Measured against
- * `GET /companies/{company}/invoices/{invoice}/pdf`.
+ * How the generated SDK surfaces the binary PDF operation and its other statuses
+ * (202 JSON while it renders, 503 with Retry-After), and how {@see ResponseMeta}
+ * reads them. Measured against `GET /companies/{company}/invoices/{invoice}/pdf`;
+ * a status an operation does not declare, against
+ * `GET /companies/{company}/invoices/{invoice}`.
  */
 final class ResponseMetaTest extends TestCase
 {
@@ -84,12 +86,28 @@ final class ResponseMetaTest extends TestCase
         $this->assertSame('"v1"', ResponseMeta::fromResponse($response->rawResponse)->etag);
     }
 
-    public function test_202_json_not_declared_by_the_spec_reaches_the_caller_as_api_exception_with_its_body(): void
+    public function test_202_json_is_a_typed_response_whose_raw_response_keeps_retry_after(): void
+    {
+        $body = ['data' => ['id' => '0199aaaa-0000-7000-8000-000000000001', 'object' => 'invoice_pdf', 'status' => 'pending', 'pdf_url' => 'https://api.factuarea.com/v1/x',
+            'pdf_output_state' => ['state' => 'queued', 'format' => 'a4', 'variant' => 'official', 'retry_after' => 3]]];
+        $sdk = $this->sdk(new Response(202, ['Content-Type' => 'application/json', 'Retry-After' => '3'], (string) json_encode($body)));
+
+        $response = $this->pdf($sdk);
+
+        $this->assertSame(202, $response->statusCode);
+        $this->assertNull($response->bytes);
+        $meta = ResponseMeta::fromResponse($response->rawResponse);
+        $this->assertSame(202, $meta->statusCode);
+        $this->assertSame(3, $meta->retryAfter);
+        $this->assertSame('queued', $meta->json()['data']['pdf_output_state']['state']);
+    }
+
+    public function test_a_status_the_operation_does_not_declare_reaches_the_caller_as_api_exception_with_its_body(): void
     {
         $sdk = $this->sdk(new Response(202, ['Content-Type' => 'application/json', 'Retry-After' => '3'], '{"status":"queued"}'));
 
         try {
-            $this->pdf($sdk);
+            $sdk->invoices->publicApiV1InvoicesShow(self::COMPANY, 'inv-1');
             $this->fail('Expected an APIException for the undeclared 202.');
         } catch (APIException $e) {
             $this->assertSame('Unknown status code received', $e->getMessage());
@@ -104,16 +122,19 @@ final class ResponseMetaTest extends TestCase
     {
         // A per-call Options::setRetryConfig() is ignored by the generated code (its
         // `else` branch rebuilds the default backoff), so retries are disabled at SDK level.
-        $sdk = $this->sdkWith(new RetryConfigNone(), new Response(503, ['Content-Type' => 'application/json', 'Retry-After' => '30'], '{"error":{"code":"pdf_unavailable"}}'));
+        $error = '{"error":{"type":"service_unavailable_error","code":"pdf_artifact_not_ready","message":"x"}}';
+        $sdk = $this->sdkWith(new RetryConfigNone(), new Response(503, ['Content-Type' => 'application/json', 'Retry-After' => '30'], $error));
 
         try {
             $this->pdf($sdk);
-            $this->fail('Expected an APIException for the 503.');
-        } catch (APIException $e) {
-            $meta = ResponseMeta::fromException($e);
+            $this->fail('Expected a typed error for the 503.');
+        } catch (ErrorThrowable $e) {
+            $this->assertSame('pdf_artifact_not_ready', $e->container->error->code);
+            $this->assertNotNull($e->container->rawResponse);
+            $meta = ResponseMeta::fromResponse($e->container->rawResponse);
             $this->assertSame(503, $meta->statusCode);
             $this->assertSame(30, $meta->retryAfter);
-            $this->assertSame('pdf_unavailable', $meta->json()['error']['code']);
+            $this->assertSame('pdf_artifact_not_ready', $meta->json()['error']['code']);
         }
         $this->assertCount(1, $this->history);
     }

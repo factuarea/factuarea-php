@@ -50,7 +50,7 @@ class FaceSubmissions
     /**
      * Request FACe submission cancellation
      *
-     * Requests the cancellation (anulación 4200) of a FACe submission with a mandatory `reason`. Only allowed while the submission is in a cancellable state (`submitted`, `registered_rcf`, `accounted`); otherwise returns 422 `face_submission_not_cancellable`. The submission transitions to `cancellation_requested` until FACe confirms.
+     * Requires current issuer/actor access, the edit capability of the Facturae module, facturae:write and a nonempty reason. Only submitted, registered_rcf and accounted with a durable registry number may request cancellation. Prepared and uncertain attempts cannot be cancelled. The durable processing state becomes cancellation_requested after the FACe request; retries never create another submission.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1FaceSubmissionsCancelRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1FaceSubmissionsCancelResponse
@@ -58,31 +58,6 @@ class FaceSubmissions
      */
     public function publicApiV1FaceSubmissionsCancel(Operations\PublicApiV1FaceSubmissionsCancelRequest $request, ?Options $options = null): Operations\PublicApiV1FaceSubmissionsCancelResponse
     {
-        $retryConfig = null;
-        if ($options) {
-            $retryConfig = $options->retryConfig;
-        }
-        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
-            $retryConfig = $this->sdkConfiguration->retryConfig;
-        } else {
-            $retryConfig = new Retry\RetryConfigBackoff(
-                initialIntervalMs: 500,
-                maxIntervalMs: 60000,
-                exponent: 1.5,
-                maxElapsedTimeMs: 3600000,
-                retryConnectionErrors: true,
-            );
-        }
-        $retryCodes = null;
-        if ($options) {
-            $retryCodes = $options->retryCodes;
-        }
-        if ($retryCodes === null) {
-            $retryCodes = [
-                '429',
-                '5xx',
-            ];
-        }
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/face-submissions/{faceSubmission}/cancel', Operations\PublicApiV1FaceSubmissionsCancelRequest::class, $request);
         $urlOverride = null;
@@ -104,7 +79,7 @@ class FaceSubmissions
         $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
         $httpRequest = Utils\Utils::removeHeaders($httpRequest);
         try {
-            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+            $httpResponse = $this->sdkConfiguration->client->send($httpRequest, $httpOptions);
         } catch (\GuzzleHttp\Exception\GuzzleException $error) {
             $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
             $httpResponse = $res;
@@ -135,7 +110,7 @@ class FaceSubmissions
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -147,7 +122,7 @@ class FaceSubmissions
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500', '502'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -169,9 +144,9 @@ class FaceSubmissions
     }
 
     /**
-     * Retrieve a FACe submission
+     * Retrieve a durable FACe attempt
      *
-     * Retrieves a FACe submission by its `id` (UUID v7). The `status` field reflects the latest known FACe processing state (`submitted`, `registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`, `cancelled`, `error`) — the system polls FACe periodically, so a plain GET is the way to track progress (there is no refresh endpoint in v1).
+     * Read one authorized own attempt, including prepared or transmission_uncertain. Unknown and foreign identities are indistinguishable. Processing polling applies only to pollable attempts with a durable registry number. An uncertain attempt blocks new submission, cancellation and automatic retry; authorized operational reconciliation is required. Read access does not imply send capability. There is no public refresh endpoint.
      *
      * @param  string  $company
      * @param  string  $faceSubmission

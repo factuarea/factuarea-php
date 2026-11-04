@@ -112,6 +112,7 @@ enum CreateAccountWebhookV1RequestEnabledEvent: string
     case ProductCreated = 'product.created';
     case ProductUpdated = 'product.updated';
     case ProductReplaced = 'product.replaced';
+    case ProductDeleted = 'product.deleted';
     case PaymentReceived = 'payment.received';
     case PaymentReversed = 'payment.reversed';
     case TaxMetadataChanged = 'tax.metadata_changed';
@@ -171,6 +172,22 @@ enum CreateAccountWebhookV1RequestEnabledEvent: string
     case ProjectUpdated = 'project.updated';
     case ProjectArchived = 'project.archived';
     case ProjectDeleted = 'project.deleted';
+    case PackCreated = 'pack.created';
+    case PackUpdated = 'pack.updated';
+    case PackArchived = 'pack.archived';
+    case PackRestored = 'pack.restored';
+    case PackDeleted = 'pack.deleted';
+    case PromotionCreated = 'promotion.created';
+    case PromotionUpdated = 'promotion.updated';
+    case PromotionStarted = 'promotion.started';
+    case PromotionEnded = 'promotion.ended';
+    case PromotionCancelled = 'promotion.cancelled';
+    case PromotionDeleted = 'promotion.deleted';
+    case PriceListCreated = 'price_list.created';
+    case PriceListUpdated = 'price_list.updated';
+    case PriceListDeleted = 'price_list.deleted';
+    case PriceListItemUpdated = 'price_list.item_updated';
+    case PriceListItemDeleted = 'price_list.item_deleted';
     case AccountMemberAdded = 'account.member_added';
     case AccountMemberRemoved = 'account.member_removed';
     case AccountMemberRoleChanged = 'account.member_role_changed';
@@ -186,4 +203,6 @@ enum CreateAccountWebhookV1RequestEnabledEvent: string
     case AccountNifTransferred = 'account.nif_transferred';
     case AccountNifArchived = 'account.nif_archived';
     case AccountImportCompleted = 'account.import_completed';
+    case AccountSeatsUpdated = 'account.seats_updated';
+    case AccountOfferPackageEnded = 'account.offer_package_ended';
 }

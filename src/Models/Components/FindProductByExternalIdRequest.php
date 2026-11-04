@@ -20,11 +20,24 @@ class FindProductByExternalIdRequest
     public string $externalId;
 
     /**
+     * Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.
+     *
+     * Malformed: 400 `parameter_invalid_iso8601`.
+     *
+     * @var ?string $date
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('date')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $date = null;
+
+    /**
      * @param  string  $externalId
+     * @param  ?string  $date
      * @phpstan-pure
      */
-    public function __construct(string $externalId)
+    public function __construct(string $externalId, ?string $date = null)
     {
         $this->externalId = $externalId;
+        $this->date = $date;
     }
 }

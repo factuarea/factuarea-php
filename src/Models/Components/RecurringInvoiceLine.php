@@ -120,7 +120,7 @@ class RecurringInvoiceLine
     public ?string $regimeKey;
 
     /**
-     * Public identifier (UUID v7) of the catalog tax applied as IRPF withholding to the line. Opaque: it does not take part in the `taxes`/`total` computation (the formula uses the flat `retention` percentage). `null` if not informed.
+     * Public identifier (UUID v7) of the catalog tax applied as IRPF withholding to the line. The `taxes`/`total` computation uses the flat `retention` percentage; when a line is written with this id and without `retention_rate`, that percentage is taken from this tax, and a tax of another kind or a different declared percentage is rejected with `tax_rate_mismatch`. `null` if not informed.
      *
      * @var ?string $retentionRateId
      */
@@ -128,7 +128,7 @@ class RecurringInvoiceLine
     public ?string $retentionRateId;
 
     /**
-     * Public identifier (UUID v7) of the catalog tax applied as equivalence surcharge to the line. Opaque: it does not take part in the `taxes`/`total` computation (the formula uses the flat `surcharge` percentage). `null` if not informed.
+     * Public identifier (UUID v7) of the catalog tax applied as equivalence surcharge to the line. The `taxes`/`total` computation uses the flat `surcharge` percentage; when a line is written with this id and without `surcharge_rate`, that percentage is taken from this tax, and a tax of another kind or a different declared percentage is rejected with `tax_rate_mismatch`. `null` if not informed.
      *
      * @var ?string $surchargeRateId
      */
@@ -309,6 +309,16 @@ class RecurringInvoiceLine
     public ?string $additionalDescription = null;
 
     /**
+     * The pack group this line belongs to, or `null` when the line is not part of a pack. See `PackGroup`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PackGroup $packGroup
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PackGroup|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?PackGroup $packGroup = null;
+
+    /**
      * Indirect tax regime override of the recurring template line: `iva`/`igic`/`ipsi` when set per-document (precedence override>zone), otherwise `null`. Writable on create/update; propagated to each generated invoice. The template must be homogeneous (a single non-null regime across all lines, 422 otherwise).
      *
      * @var ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime
@@ -358,10 +368,11 @@ class RecurringInvoiceLine
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
      * @param  ?string  $additionalDescription
+     * @param  ?\Factuarea\Sdk\Models\Components\PackGroup  $packGroup
      * @param  ?\Factuarea\Sdk\Models\Components\RecurringInvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(RecurringInvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?RecurringInvoiceLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?RecurringInvoiceLineCountedUnit $countedUnit = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $additionalDescription = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(RecurringInvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retention, float $surcharge, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $exemptionReason = null, ?string $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $productName = null, ?string $itemKind = null, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $presentationMode = null, ?string $commercialUnitCode = null, ?string $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?RecurringInvoiceLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?RecurringInvoiceLineCountedUnit $countedUnit = null, ?RecurringInvoiceLineConfiguration $configuration = null, ?RecurringInvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $additionalDescription = null, ?PackGroup $packGroup = null, ?RecurringInvoiceLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -402,6 +413,7 @@ class RecurringInvoiceLine
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
         $this->additionalDescription = $additionalDescription;
+        $this->packGroup = $packGroup;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

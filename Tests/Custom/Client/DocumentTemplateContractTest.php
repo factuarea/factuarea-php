@@ -14,13 +14,19 @@ use Factuarea\Sdk\Custom\Version\FactuareaVersionHook;
 use Factuarea\Sdk\Factuarea;
 use Factuarea\Sdk\Models\Components\BulkPdfInvoicesV1Request;
 use Factuarea\Sdk\Models\Components\CancelFaceSubmissionV1Request;
+use Factuarea\Sdk\Models\Components\IssueInvoiceRequest;
 use Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request;
 use Factuarea\Sdk\Models\Components\Security;
 use Factuarea\Sdk\Models\Components\UpdateSeriesRequest;
 use Factuarea\Sdk\Models\Errors\APIException;
 use Factuarea\Sdk\Models\Errors\ErrorThrowable;
+use Factuarea\Sdk\Models\Operations\PublicApiV1DeliveryNotesPdfRequest;
 use Factuarea\Sdk\Models\Operations\PublicApiV1FaceSubmissionsCancelRequest;
+use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest;
+use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesIssueRequest;
 use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfRequest;
+use Factuarea\Sdk\Models\Operations\PublicApiV1ProformasPdfRequest;
+use Factuarea\Sdk\Models\Operations\PublicApiV1QuotesPdfRequest;
 use Factuarea\Sdk\Models\Operations\PublicApiV1SeriesUpdateRequest;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
@@ -37,12 +43,12 @@ use Speakeasy\Serializer\Exception\PropertyMissingException;
 /**
  * Wire and response handling of the document-template contract (client flows
  * CE01-CE25 of the `document-template-client-surface-parity` acceptance
- * handoff) against what the pinned generated SDK can invoke today, with a mocked
- * transport and no network.
+ * handoff) against the generated SDK, with a mocked transport and no network.
  *
- * Operations without a typed method (the whole `/pdf-*` family, presentation,
- * administrative revisions) go through {@see RawRequest}; the existing operations
- * are called with their generated methods plus {@see RequestOverrides} and
+ * The `/pdf-*` family, presentation and administrative revisions go through
+ * {@see RawRequest}, which sends their bodies unchanged (`null` versus omitted
+ * versus `[]`); issue, FACe, the downloads and the other existing operations are
+ * called with their generated methods plus {@see RequestOverrides} and
  * {@see NoRetry}. Every company operation hangs off `/v1/companies/{company}/…`:
  * the raw calls fill the `{company}` path parameter with the company `id` and
  * the generated methods take it as their `company` argument. Scenarios that are
@@ -73,6 +79,9 @@ final class DocumentTemplateContractTest extends TestCase
     private const COMPANY = '019e0000-0000-7000-8000-0000000000c0';
 
     private const BASE = '/v1/companies/'.self::COMPANY;
+
+    /** `object` of the 202 body of each `.../pdf` download, keyed by its path segment. */
+    private const PDF_OBJECTS = ['invoices' => 'invoice_pdf', 'quotes' => 'quote_pdf', 'proformas' => 'proforma_pdf', 'delivery-notes' => 'delivery_note_pdf'];
 
     /** @var list<array{request: RequestInterface}> */
     private array $history = [];
@@ -114,7 +123,11 @@ final class DocumentTemplateContractTest extends TestCase
         return ['id' => 'f1', 'object' => 'face_submission', 'invoice_id' => 'i1', 'status' => $status,
             'dir3_accounting_office' => 'A', 'dir3_managing_body' => 'B', 'dir3_processing_unit' => 'C',
             'status_updated_at' => '2026-10-01T10:00:00+00:00', 'created_at' => '2026-10-01T10:00:00+00:00',
-            'registry_number' => null, 'error_code' => null, 'error_message' => null, 'last_polled_at' => null];
+            'registry_number' => null, 'error_code' => null, 'error_message' => null, 'last_polled_at' => null,
+            'dir3_proponent' => null, 'administrative_version' => null, 'administrative_revision_id' => null,
+            'payment_terms_version' => null, 'source_fingerprint' => null, 'artifact_sha256' => null,
+            'prepared_at' => null, 'transmission_started_at' => null, 'can_transmit' => false,
+            'requires_reconciliation' => false, 'signing_certificate_fingerprint' => null, 'artifact_status' => 'ready'];
     }
 
     private function meta(Response $response): ResponseMeta
@@ -323,28 +336,37 @@ final class DocumentTemplateContractTest extends TestCase
 
     // ---------------------------------------------------------------- CE09 / CE12 / CE13
 
-    public function test_ce09_issue_with_presentation_preconditions_needs_the_raw_body_and_a_428_is_an_api_exception_for_the_generated_method(): void
+    public function test_ce09_issue_carries_the_presentation_preconditions_in_its_typed_body_and_a_428_is_a_typed_error(): void
     {
-        // Generated method: no body, so a company with the presentation active gets 428.
+        // Without a body, a company with the presentation active gets 428.
         $sdk = $this->sdk($this->json(428, $this->error('pdf_presentation_precondition_required')));
         try {
-            $sdk->invoices->publicApiV1InvoicesIssue(self::COMPANY, 'i1', 'key-1');
+            $sdk->invoices->publicApiV1InvoicesIssue(new PublicApiV1InvoicesIssueRequest(company: self::COMPANY, invoice: 'i1', idempotencyKey: 'key-1'));
             $this->fail('A 428 must raise.');
-        } catch (APIException $e) {
-            $this->assertSame(428, $e->statusCode);
-            $this->assertSame('pdf_presentation_precondition_required', json_decode($e->body, true)['error']['code']);
+        } catch (ErrorThrowable $e) {
+            $this->assertSame(428, $e->container->rawResponse?->getStatusCode());
+            $this->assertSame('pdf_presentation_precondition_required', $e->container->error->code);
         }
         $this->assertSame('', (string) $this->request()->getBody());
 
-        // Raw call: the same operation with the preconditions and the caller's key.
-        $sdk = $this->sdk($this->json(200, ['data' => ['id' => 'i1']], ['Idempotent-Replayed' => 'true']));
-        $response = RawRequest::send($sdk, 'POST', '/companies/{company}/invoices/{invoice}/issue', [
-            'headers' => ['Idempotency-Key' => 'key-1'],
-            'json' => ['expected_selection_version' => 4, 'expected_source_token' => 'tok', 'expected_preview_context_fingerprint' => 'fp', 'expected_template_revision_id' => null],
-        ], ['company' => self::COMPANY, 'invoice' => 'i1']);
+        // With the preconditions, the caller's key and the revision cleared to an explicit null.
+        $sdk = $this->sdk($this->json(428, $this->error('pdf_presentation_precondition_required')));
+        try {
+            RequestOverrides::run(
+                fn () => $sdk->invoices->publicApiV1InvoicesIssue(new PublicApiV1InvoicesIssueRequest(
+                    company: self::COMPANY,
+                    invoice: 'i1',
+                    idempotencyKey: 'key-1',
+                    body: new IssueInvoiceRequest(expectedSelectionVersion: 4, expectedSourceToken: 'tok', expectedPreviewContextFingerprint: 'fp'),
+                )),
+                clear: ['expected_template_revision_id'],
+            );
+        } catch (ErrorThrowable) {
+            // Only the outgoing request is measured.
+        }
 
+        $this->assertSame(self::BASE.'/invoices/i1/issue', $this->request()->getUri()->getPath());
         $this->assertSame('key-1', $this->request()->getHeaderLine('Idempotency-Key'));
-        $this->assertSame('true', $response->getHeaderLine('Idempotent-Replayed'));
         $this->assertSame(
             '{"expected_selection_version":4,"expected_source_token":"tok","expected_preview_context_fingerprint":"fp","expected_template_revision_id":null}',
             (string) $this->request()->getBody(),
@@ -409,43 +431,41 @@ final class DocumentTemplateContractTest extends TestCase
 
     // ---------------------------------------------------------------- CE15
 
-    public function test_ce15_a_first_submission_is_201_and_a_replay_200_is_an_api_exception_that_response_meta_reads(): void
+    private function submitFace(string $idempotencyKey): PublicApiV1InvoicesFaceSubmissionsSubmitRequest
+    {
+        return new PublicApiV1InvoicesFaceSubmissionsSubmitRequest(company: self::COMPANY, invoice: 'i1', idempotencyKey: $idempotencyKey);
+    }
+
+    public function test_ce15_a_first_submission_is_201_and_a_replay_is_a_typed_200_with_the_replayed_header(): void
     {
         $sdk = $this->sdk($this->json(201, ['data' => $this->face()]));
-        $created = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(self::COMPANY, 'i1', 'key-1');
+        $created = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit($this->submitFace('key-1'));
         $this->assertSame(201, $created->statusCode);
+        $this->assertNotNull($created->twoHundredAndOneApplicationJsonObject);
         $this->assertSame('POST', $this->request()->getMethod());
         $this->assertSame('key-1', $this->request()->getHeaderLine('Idempotency-Key'));
 
         $sdk = $this->sdk($this->json(200, ['data' => $this->face('registered_rcf')], ['Idempotent-Replayed' => 'true']));
-        try {
-            $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(self::COMPANY, 'i1', 'key-1');
-            $this->fail('The generated method does not expect a 200.');
-        } catch (APIException $e) {
-            $meta = ResponseMeta::fromException($e);
-            $this->assertSame(200, $meta->statusCode);
-            $this->assertSame('registered_rcf', $meta->json()['data']['status']);
-            $this->assertSame('true', $e->rawResponse?->getHeaderLine('Idempotent-Replayed'));
-        }
+        $replayed = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit($this->submitFace('key-1'));
+
+        $this->assertSame(200, $replayed->statusCode);
+        $this->assertNotNull($replayed->twoHundredApplicationJsonObject);
+        $this->assertSame('registered_rcf', $this->meta($replayed->rawResponse)->json()['data']['status']);
+        $this->assertSame('true', $replayed->rawResponse->getHeaderLine('Idempotent-Replayed'));
     }
 
-    public function test_ce15_a_502_is_retried_by_the_generated_method_but_not_with_no_retry_options(): void
+    public function test_ce15_a_502_is_never_retried_by_the_generated_method(): void
     {
-        $bad = fn () => $this->json(502, $this->error('face_transmission_failed'), ['retry-after-ms' => '1']);
+        $sdk = $this->sdk($this->json(502, $this->error('face_transmission_failed'), ['retry-after-ms' => '1']), $this->json(201, ['data' => $this->face()]));
 
-        $sdk = $this->sdk($bad(), $this->json(201, ['data' => $this->face()]));
-        $retried = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(self::COMPANY, 'i1', 'key-1');
-        $this->assertSame(201, $retried->statusCode);
-        $this->assertCount(2, $this->history, 'documents the risk: the generated retry repeats the submission');
-
-        $sdk = $this->sdk($bad(), $this->json(201, ['data' => $this->face()]));
         try {
-            $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(self::COMPANY, 'i1', 'key-1', options: NoRetry::options());
+            $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit($this->submitFace('key-1'));
             $this->fail('A 502 must raise.');
         } catch (APIException|ErrorThrowable $e) {
-            $this->assertInstanceOf(\Throwable::class, $e);
+            $raw = $e instanceof APIException ? $e->rawResponse : $e->container->rawResponse;
+            $this->assertSame(502, $raw?->getStatusCode());
         }
-        $this->assertCount(1, $this->history);
+        $this->assertCount(1, $this->history, 'a blind retry could submit twice at FACe');
     }
 
     public function test_ce15_cancel_uses_the_same_single_call_and_an_uncertain_409_is_not_retried(): void
@@ -470,12 +490,20 @@ final class DocumentTemplateContractTest extends TestCase
         $this->assertCount(1, $this->history);
     }
 
-    public function test_ce15_a_dropped_connection_is_retried_with_the_same_idempotency_key(): void
+    public function test_ce15_a_dropped_connection_is_not_repeated_and_the_caller_repeats_it_with_the_same_idempotency_key(): void
     {
         $sdk = $this->sdk(new ConnectException('reset', new Request('POST', 'https://api.factuarea.com/v1')), $this->json(201, ['data' => $this->face()]));
 
-        $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(self::COMPANY, 'i1', 'key-3', options: NoRetry::options());
+        try {
+            $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit($this->submitFace('key-3'));
+            $this->fail('A dropped connection must raise.');
+        } catch (ConnectException) {
+            $this->assertCount(1, $this->history);
+        }
 
+        $created = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit($this->submitFace('key-3'));
+
+        $this->assertSame(201, $created->statusCode);
         $this->assertCount(2, $this->history);
         $this->assertSame('key-3', $this->request(0)->getHeaderLine('Idempotency-Key'));
         $this->assertSame('key-3', $this->request(1)->getHeaderLine('Idempotency-Key'));
@@ -488,9 +516,9 @@ final class DocumentTemplateContractTest extends TestCase
     {
         return [
             'invoice' => [self::BASE.'/invoices/d1/pdf', fn (Factuarea $s) => $s->invoices->publicApiV1InvoicesPdf(new PublicApiV1InvoicesPdfRequest(company: self::COMPANY, invoice: 'd1'))],
-            'quote' => [self::BASE.'/quotes/d1/pdf', fn (Factuarea $s) => $s->quotes->publicApiV1QuotesPdf(self::COMPANY, 'd1')],
-            'proforma' => [self::BASE.'/proformas/d1/pdf', fn (Factuarea $s) => $s->proformas->publicApiV1ProformasPdf(self::COMPANY, 'd1')],
-            'delivery note' => [self::BASE.'/delivery-notes/d1/pdf', fn (Factuarea $s) => $s->deliveryNotes->publicApiV1DeliveryNotesPdf(self::COMPANY, 'd1')],
+            'quote' => [self::BASE.'/quotes/d1/pdf', fn (Factuarea $s) => $s->quotes->publicApiV1QuotesPdf(new PublicApiV1QuotesPdfRequest(company: self::COMPANY, quote: 'd1'))],
+            'proforma' => [self::BASE.'/proformas/d1/pdf', fn (Factuarea $s) => $s->proformas->publicApiV1ProformasPdf(new PublicApiV1ProformasPdfRequest(company: self::COMPANY, proforma: 'd1'))],
+            'delivery note' => [self::BASE.'/delivery-notes/d1/pdf', fn (Factuarea $s) => $s->deliveryNotes->publicApiV1DeliveryNotesPdf(new PublicApiV1DeliveryNotesPdfRequest(company: self::COMPANY, deliveryNote: 'd1'))],
         ];
     }
 
@@ -515,18 +543,24 @@ final class DocumentTemplateContractTest extends TestCase
     }
 
     #[DataProvider('pdfOperations')]
-    public function test_ce16_pdf_202_json_is_never_bytes_and_a_503_keeps_retry_after(string $path, \Closure $call): void
+    public function test_ce16_pdf_202_json_is_a_typed_pending_render_never_bytes_and_keeps_retry_after(string $path, \Closure $call): void
     {
-        $sdk = $this->sdk($this->json(202, ['data' => ['status' => 'pendiente', 'document_uuid' => 'd1']], ['Retry-After' => '5']));
-        try {
-            $call($sdk);
-            $this->fail('The generated method does not declare a 202.');
-        } catch (APIException $e) {
-            $meta = ResponseMeta::fromException($e);
-            $this->assertSame(202, $meta->statusCode);
-            $this->assertSame(5, $meta->retryAfter);
-            $this->assertSame('pendiente', $meta->json()['data']['status']);
-        }
+        $sdk = $this->sdk($this->json(202, ['data' => [
+            'id' => '0199aaaa-0000-7000-8000-000000000001',
+            'object' => self::PDF_OBJECTS[explode('/', $path)[4]],
+            'status' => 'pending',
+            'pdf_url' => 'https://api.factuarea.com'.$path,
+            'pdf_output_state' => ['state' => 'processing', 'format' => 'a4', 'variant' => 'official', 'retry_after' => 5],
+        ]], ['Retry-After' => '5']));
+
+        $response = $call($sdk);
+
+        $this->assertSame(202, $response->statusCode);
+        $this->assertNull($response->bytes);
+        $this->assertNotNull($response->object);
+        $meta = $this->meta($response->rawResponse);
+        $this->assertSame(5, $meta->retryAfter);
+        $this->assertSame('processing', $meta->json()['data']['pdf_output_state']['state']);
         $this->assertCount(1, $this->history);
     }
 
@@ -547,16 +581,18 @@ final class DocumentTemplateContractTest extends TestCase
         }
     }
 
-    public function test_ce16_the_two_pdf_link_202_bodies_only_one_of_them_fits_the_generated_model(): void
+    public function test_ce16_both_pdf_link_202_bodies_fit_the_generated_model(): void
     {
         $message = 'La generación del PDF está en curso. El enlace estará disponible en unos segundos.';
         $withPath = ['data' => ['status' => 'pendiente', 'document_uuid' => 'd1', 'pdf_path' => '/p', 'pdf_url' => 'https://x'], 'message' => $message];
         $withoutPath = ['data' => ['status' => 'pendiente', 'document_uuid' => 'd1', 'pdf_url' => 'https://x'], 'message' => $message];
 
-        $this->assertSame(202, $this->sdk($this->json(202, $withPath))->invoices->publicApiV1InvoicesPdfLink(self::COMPANY, 'd1')->statusCode);
+        foreach ([$withPath, $withoutPath] as $body) {
+            $response = $this->sdk($this->json(202, $body))->invoices->publicApiV1InvoicesPdfLink(self::COMPANY, 'd1');
 
-        $this->expectException(PropertyMissingException::class);
-        $this->sdk($this->json(202, $withoutPath))->invoices->publicApiV1InvoicesPdfLink(self::COMPANY, 'd1');
+            $this->assertSame(202, $response->statusCode);
+            $this->assertNotNull($response->oneOf);
+        }
     }
 
     public function test_ce16_the_pdf_link_202_without_pdf_path_is_readable_through_the_raw_call(): void

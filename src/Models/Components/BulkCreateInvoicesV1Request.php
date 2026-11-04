@@ -9,16 +9,16 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** BulkCreateInvoicesV1Request - Create invoices in bulk. `invoices[]` holds up to 100 invoice payloads and `dry_run` (default `false`) validates each row without persisting. Per-row rules (format, duplicate `external_id`, recipient AEAT census) are reported per row instead of failing the whole batch. */
+/** BulkCreateInvoicesV1Request - Create invoices in bulk. `invoices[]` holds up to 100 invoice payloads and `dry_run` (default `false`) validates each row without persisting. Per-row rules (format, duplicate `external_id`, recipient AEAT census) are reported per row instead of failing the whole batch. Each invoices.N may include payment_terms; bulk is create-only, so duplicate `external_id` values do not upsert an existing invoice and expected_payment_terms_version is not accepted. There is no top-level calendar block. The schedule uses the same closed row/account shapes, signed strings, balance and optional non-null UUID v7 id semantics as singular create; omitted ids are generated on actual creation. dry_run does not assign persisted ids; `invalid_invoice_payment_terms` and its exact `payment_terms.N` field path are reported per row, not as a top-level 422; actual execution uses the shared assembler. */
 class BulkCreateInvoicesV1Request
 {
     /**
      * $invoices
      *
-     * @var array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequest> $invoices
+     * @var array<\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestCreateInvoiceRequest> $invoices
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('invoices')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequest>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestCreateInvoiceRequest>')]
     public array $invoices;
 
     /**
@@ -30,7 +30,7 @@ class BulkCreateInvoicesV1Request
     public ?bool $dryRun = null;
 
     /**
-     * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequest>  $invoices
+     * @param  array<\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestCreateInvoiceRequest>  $invoices
      * @param  ?bool  $dryRun
      * @phpstan-pure
      */

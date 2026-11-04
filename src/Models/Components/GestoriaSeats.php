@@ -69,7 +69,7 @@ class GestoriaSeats
     public ?string $totalPerSeat;
 
     /**
-     * Projected recurring total (`total_per_seat` × `quantity`), in euros as a 2-decimal string. Null when VAT is not resolved.
+     * Projected recurring total of the seat line: `unit_amount` × `quantity` plus the VAT on that amount, as Stripe charges it (not `total_per_seat` × `quantity`, which rounds VAT per seat). In euros as a 2-decimal string. Null when VAT is not resolved.
      *
      * @var ?string $recurringTotal
      */

@@ -4,6 +4,7 @@
 
 ### Available Operations
 
+* [publicApiV1ProductsBulkChannels](#publicapiv1productsbulkchannels) - Bulk publish or withdraw products on the web
 * [publicApiV1ProductsBulkDelete](#publicapiv1productsbulkdelete) - Delete multiple products in bulk
 * [publicApiV1ProductsBulkStatus](#publicapiv1productsbulkstatus) - Bulk change product active state
 * [publicApiV1ProductsBulkUpdateStock](#publicapiv1productsbulkupdatestock) - Update stock for many products
@@ -22,6 +23,196 @@
 * [publicApiV1ProductsSearch](#publicapiv1productssearch) - Search products
 * [publicApiV1ProductsToggleActive](#publicapiv1productstoggleactive) - Toggle product active state
 * [publicApiV1ProductsUpdateStock](#publicapiv1productsupdatestock) - Update product stock
+
+## publicApiV1ProductsBulkChannels
+
+Set `channels.web` on up to 50 products (by id) in one request. Publishing generates the missing slug from the product name; withdrawing leaves the slug untouched. Idempotent with respect to the target: a product already in the requested channel state counts as `successful`. Returns a `BulkPartialSuccessResult`; products that do not exist or belong to another company come back in `failures[]` as `product_not_found`, and a row that cannot be changed is reported with its own `error_code` without aborting the batch.
+
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_channels" method="post" path="/companies/{company}/products/bulk-channels" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChannelsProductsV1Request(
+    ids: [
+        '68a272de-4e13-45e5-9bf6-dd956bdf120d',
+    ],
+    channels: new Components\BulkChannelsProductsV1RequestChannels(
+        web: false,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkChannels(
+    company: '8e3a60a1-84ea-4caa-aa1a-76843872ea67',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_channels" method="post" path="/companies/{company}/products/bulk-channels" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChannelsProductsV1Request(
+    ids: [
+        '68a272de-4e13-45e5-9bf6-dd956bdf120d',
+    ],
+    channels: new Components\BulkChannelsProductsV1RequestChannels(
+        web: false,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkChannels(
+    company: 'fa7ac0ad-7266-4001-8731-ff5c0c760da0',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_channels" method="post" path="/companies/{company}/products/bulk-channels" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChannelsProductsV1Request(
+    ids: [
+        '68a272de-4e13-45e5-9bf6-dd956bdf120d',
+    ],
+    channels: new Components\BulkChannelsProductsV1RequestChannels(
+        web: false,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkChannels(
+    company: 'adad848f-d39c-4f5c-b8a8-d8e695d7aaf8',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_channels" method="post" path="/companies/{company}/products/bulk-channels" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChannelsProductsV1Request(
+    ids: [
+        '68a272de-4e13-45e5-9bf6-dd956bdf120d',
+    ],
+    channels: new Components\BulkChannelsProductsV1RequestChannels(
+        web: false,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkChannels(
+    company: 'f6b7e153-0764-430c-9ecc-b833fd9c08e2',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\BulkChannelsProductsV1Request](../../Models/Components/BulkChannelsProductsV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### Response
+
+**[?Operations\PublicApiV1ProductsBulkChannelsResponse](../../Models/Operations/PublicApiV1ProductsBulkChannelsResponse.md)**
+
+### Errors
+
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1ProductsBulkDelete
 
@@ -55,6 +246,44 @@ $body = new Components\BulkDeleteProductsRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkDelete(
     company: '46d9fa56-15f9-4ac5-825f-c576d8f9483a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteProductsRequest(
+    ids: [
+        '6d9fa561-5f9a-4c52-b5fc-576d8f9483a2',
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkDelete(
+    company: 'dbb7d1bc-d379-40c7-884d-fb0b38fc4de7',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -141,6 +370,44 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteProductsRequest(
+    ids: [
+        '6d9fa561-5f9a-4c52-b5fc-576d8f9483a2',
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkDelete(
+    company: '46d9fa56-15f9-4ac5-825f-c576d8f9483a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="success" -->
@@ -169,6 +436,44 @@ $body = new Components\BulkDeleteProductsRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkDelete(
     company: 'White LLC',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_delete" method="post" path="/companies/{company}/products/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteProductsRequest(
+    ids: [
+        '6d9fa561-5f9a-4c52-b5fc-576d8f9483a2',
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkDelete(
+    company: '5aa66068-f514-4933-aed0-1b224aeafca5',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -234,6 +539,47 @@ $body = new Components\BulkStatusProductsV1Request(
 
 $response = $sdk->products->publicApiV1ProductsBulkStatus(
     company: 'f7f79f88-635b-4a82-9406-d3323fd96fda',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusProductsV1Request(
+    ids: [
+        '7f79f886-35ba-4824-806d-3323fd96fda4',
+        '0def9150-4766-4497-983a-07eba5b29198',
+        '67487562-857b-4bd1-8e13-744c00b015c3',
+    ],
+    newStatus: Components\BulkStatusProductsV1RequestNewStatus::Inactive,
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkStatus(
+    company: '10def915-0476-4649-a783-a07eba5b2919',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -324,6 +670,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusProductsV1Request(
+    ids: [
+        '7f79f886-35ba-4824-806d-3323fd96fda4',
+        '0def9150-4766-4497-983a-07eba5b29198',
+        '67487562-857b-4bd1-8e13-744c00b015c3',
+    ],
+    newStatus: Components\BulkStatusProductsV1RequestNewStatus::Inactive,
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkStatus(
+    company: 'f7f79f88-635b-4a82-9406-d3323fd96fda',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="success" -->
@@ -355,6 +742,47 @@ $body = new Components\BulkStatusProductsV1Request(
 
 $response = $sdk->products->publicApiV1ProductsBulkStatus(
     company: 'Kuhic, Wiegand and Kub',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_status" method="post" path="/companies/{company}/products/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusProductsV1Request(
+    ids: [
+        '7f79f886-35ba-4824-806d-3323fd96fda4',
+        '0def9150-4766-4497-983a-07eba5b29198',
+        '67487562-857b-4bd1-8e13-744c00b015c3',
+    ],
+    newStatus: Components\BulkStatusProductsV1RequestNewStatus::Inactive,
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkStatus(
+    company: '66748756-2857-4bbd-81e1-3744c00b015c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -422,6 +850,47 @@ $body = new Components\BulkUpdateProductStockRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
     company: 'e3304fd0-08f0-485d-bc01-c51ce6af1a38',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkUpdateProductStockRequest(
+    updates: [
+        new Components\Update(
+            productId: '3304fd00-8f08-45dc-b01c-51ce6af1a38e',
+            stock: 1397.07,
+        ),
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
+    company: 'c2684c5c-f5e9-4d8d-b8fa-0b514474a2c8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -561,6 +1030,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkUpdateProductStockRequest(
+    updates: [
+        new Components\Update(
+            productId: '3304fd00-8f08-45dc-b01c-51ce6af1a38e',
+            stock: 1397.07,
+        ),
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
+    company: 'e3304fd0-08f0-485d-bc01-c51ce6af1a38',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="success" -->
@@ -592,6 +1102,47 @@ $body = new Components\BulkUpdateProductStockRequest(
 
 $response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
     company: 'Welch - Simonis',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.bulk_update_stock" method="post" path="/companies/{company}/products/bulk-update-stock" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkUpdateProductStockRequest(
+    updates: [
+        new Components\Update(
+            productId: '3304fd00-8f08-45dc-b01c-51ce6af1a38e',
+            stock: 1397.07,
+        ),
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsBulkUpdateStock(
+    company: '84666a32-f0fd-40fa-b5a9-225fbaa715c8',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -659,6 +1210,47 @@ $body = new Components\CreateProductRequest(
 
 $response = $sdk->products->publicApiV1ProductsCreate(
     company: 'd18c61e5-ac97-4af3-84ca-adcd9db1ea79',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateProductRequest(
+    name: '<value>',
+    price: '785.49',
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsCreate(
+    company: 'efb950eb-e06f-46aa-a20a-926284acf93a',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -795,6 +1387,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateProductRequest(
+    name: '<value>',
+    price: '785.49',
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsCreate(
+    company: '30cd2ae4-06b0-4f46-85ee-9db9a37358ee',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: service
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="service" -->
@@ -877,6 +1510,47 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.create" method="post" path="/companies/{company}/products" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateProductRequest(
+    name: '<value>',
+    price: '785.49',
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+);
+
+$response = $sdk->products->publicApiV1ProductsCreate(
+    company: '77658ecf-a33d-46ec-89bd-824a91370ae8',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -902,6 +1576,9 @@ if ($response->object !== null) {
 ## publicApiV1ProductsList
 
 List products in your catalog with cursor-based pagination.
+- `view=storefront` lists only the active products enabled on the web, without costs, supplier offers, `metadata` or raw stock, and with `sale_price_from`; a `slug` not on sale there returns an empty list.
+- `slug` also finds products that used it before; `channel=web` and `updated[gte]` / `updated[lte]` support incremental sync.
+- Send `If-None-Match` to get `304` with no body.
 
 ### Example Usage
 
@@ -926,6 +1603,7 @@ $sdk = Sdk\Factuarea::builder()
 
 $request = new Operations\PublicApiV1ProductsListRequest(
     company: 'Klocko, Nader and Tremblay',
+    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
     factuareaVersion: LocalDate::parse('2026-06-01'),
 );
 
@@ -933,7 +1611,7 @@ $response = $sdk->products->publicApiV1ProductsList(
     request: $request
 );
 
-if ($response->paginatedList !== null) {
+if ($response->productListData !== null) {
     // handle response
 }
 ```
@@ -1018,9 +1696,47 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1ProductsShow
 
-Retrieve a product by its `id`.
+Retrieve a product by its `id`, with its price (`price`, and `sale_price` with and without VAT), `availability` and, with `include=configurable_catalog`, its option groups and combinations.
+- `view=storefront` returns the web view with the sellable graph (active variants, presentations and combinations, each with `sale_price` and `availability`); a product that is not on sale there answers 404 `product_not_found` like an unknown id.
+- Conditional reads: send `If-None-Match` to get `304` with no body.
 
-### Example Usage
+### Example Usage: storefront_on_promotion
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.show" method="get" path="/companies/{company}/products/{product}" example="storefront_on_promotion" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsShowRequest(
+    company: '3263bf0e-b613-4ab9-80af-a8e9a1c455ce',
+    product: '9b3474c0-f1aa-4982-ac7f-42662a8bf328',
+    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
+
+$response = $sdk->products->publicApiV1ProductsShow(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.show" method="get" path="/companies/{company}/products/{product}" example="success" -->
 ```php
@@ -1031,6 +1747,7 @@ require 'vendor/autoload.php';
 use Brick\DateTime\LocalDate;
 use Factuarea\Sdk;
 use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
 
 $sdk = Sdk\Factuarea::builder()
     ->setSecurity(
@@ -1040,13 +1757,15 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
-
-
-$response = $sdk->products->publicApiV1ProductsShow(
+$request = new Operations\PublicApiV1ProductsShowRequest(
     company: 'Conroy - Jaskolski',
     product: 'Fantastic Concrete Fish',
-    factuareaVersion: LocalDate::parse('2026-06-01')
+    ifNoneMatch: '"5d41402abc4b2a76b9719d911017c592"',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
 
+$response = $sdk->products->publicApiV1ProductsShow(
+    request: $request
 );
 
 if ($response->object !== null) {
@@ -1056,12 +1775,9 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
-| `product`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the product.                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                              |
-| `include`                                                                                                                                                                                                                                                                                                                                                                    | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Related data to embed; only `configurable_catalog` is supported.                                                                                                                                                                                                                                                                                                             |                                                                                                                                                                                                                                                                                                                                                                              |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+| Parameter                                                                                              | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `$request`                                                                                             | [Operations\PublicApiV1ProductsShowRequest](../../Models/Operations/PublicApiV1ProductsShowRequest.md) | :heavy_check_mark:                                                                                     | The request object to use for the request.                                                             |
 
 ### Response
 
@@ -1103,6 +1819,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsUpdateRequest(
     company: '372632a8-9a97-482b-a271-03c03ec51189',
     product: 'Practical Plastic Hat',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProductRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsUpdateRequest(
+    company: '9dcd60a8-9bf1-4d40-b343-1bd79cb65d0d',
+    product: '33db94ef-f493-4f8c-b4e4-ea6537c0b1b2',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProductRequest(
@@ -1245,6 +2003,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsUpdateRequest(
+    company: 'c78ba775-d2bb-4263-96f6-c925e67ca882',
+    product: '0ffd29f6-380e-4abf-a34c-0acdbb18fd22',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProductRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="success" -->
@@ -1269,6 +2069,48 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsUpdateRequest(
     company: 'Ebert Group',
     product: 'Practical Plastic Hat',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProductRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.update" method="patch" path="/companies/{company}/products/{product}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsUpdateRequest(
+    company: '4558145c-0407-4eab-ae61-8d010db2760b',
+    product: '527b89a9-ba1d-4f6c-a4d1-d5d9b6e36321',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProductRequest(
@@ -1336,6 +2178,41 @@ $body = new Components\FindProductByExternalIdRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindByExternalId(
     company: '6a3b10d6-6971-4ec6-b5c8-ba966b022b73',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProductByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->products->publicApiV1ProductsFindByExternalId(
+    company: '830cd99a-ef56-4f42-a41e-2a23e023bfb6',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1415,6 +2292,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProductByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->products->publicApiV1ProductsFindByExternalId(
+    company: '6a3b10d6-6971-4ec6-b5c8-ba966b022b73',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="success" -->
@@ -1441,6 +2353,41 @@ $body = new Components\FindProductByExternalIdRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindByExternalId(
     company: 'Pagac Group',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_external_id" method="post" path="/companies/{company}/products/find-by-external-id" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProductByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->products->publicApiV1ProductsFindByExternalId(
+    company: '11041c04-aeb6-4f30-bcc6-e205ccac84d1',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1501,6 +2448,41 @@ $body = new Components\FindProductBySkuRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindBySku(
     company: '15e6ecc4-6591-4bae-af1e-f2209027211c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProductBySkuRequest(
+    sku: '<value>',
+);
+
+$response = $sdk->products->publicApiV1ProductsFindBySku(
+    company: '8b99f4e4-a353-4b34-a614-4efc955e4fc6',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1580,6 +2562,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProductBySkuRequest(
+    sku: '<value>',
+);
+
+$response = $sdk->products->publicApiV1ProductsFindBySku(
+    company: 'c9cf83e0-40f9-4eb8-9ebf-f3c7b31c830e',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="success" -->
@@ -1606,6 +2623,41 @@ $body = new Components\FindProductBySkuRequest(
 
 $response = $sdk->products->publicApiV1ProductsFindBySku(
     company: 'Thompson and Sons',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.find_by_sku" method="post" path="/companies/{company}/products/find-by-sku" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindProductBySkuRequest(
+    sku: '<value>',
+);
+
+$response = $sdk->products->publicApiV1ProductsFindBySku(
+    company: '4eb2ca50-40cc-4f0b-8322-df99058c1065',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1866,7 +2918,9 @@ if ($response->object !== null) {
 
 ## publicApiV1ProductsResolveSelection
 
-Resolve a partial or complete catalog selection (variant, presentation and option values) into the combination that would actually be sold, together with its price, the compatible variants, presentations and option groups still open, and the groups still pending a choice. It is a READ and persists nothing: the verb is POST because `options` is a nested list of group/value pairs that does not fit in a query string without inventing a syntax — the same reason as `POST /v1/companies/{company}/price-lists/resolve`, and the reason it is classified as a read for rate-limiting purposes. An ambiguous or incomplete selection is NOT an error here: it comes back as `200` with its `status`, its `reason_code` and `pending_option_groups`, because this endpoint exists to BUILD the line; the 422 belongs to whoever confirms it. What is a bad request is sending two values of the same group, which returns 422.
+Resolve a partial or complete catalog selection into the combination that would be sold, with its price and open choices.
+- A read that persists nothing; an incomplete selection returns 200 with `status` and `pending_option_groups`.
+- Sending two values of the same group returns 422.
 
 ### Example Usage
 
@@ -1968,6 +3022,7 @@ if ($response->object !== null) {
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `company`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                              |
 | `q`                                                                                                                                                                                                                                                                                                                                                                          | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Search term (1 to 120 characters) over `sku` and `name`, ranked by exact, prefix and partial match (up to 50 results).                                                                                                                                                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                              |
+| `date`                                                                                                                                                                                                                                                                                                                                                                       | *?string*                                                                                                                                                                                                                                                                                                                                                                    | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.<br/>Malformed: 400 `parameter_invalid_iso8601`.                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                              |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Response
@@ -2085,6 +3140,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsUpdateStockRequest(
+    company: 'bed8b069-f09b-4117-83b3-2ec74d4ba892',
+    product: 'f311ebf9-07c9-4246-9db3-3ce03bf03ef5',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProductStockRequest(
+        stock: 591726,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsUpdateStock(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="invalid_api_key" -->
@@ -2163,6 +3257,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsUpdateStockRequest(
+    company: '5d2b212c-a56e-411e-a51b-04181b6bd79a',
+    product: 'ef254699-ad14-4559-bbde-c1bd2d939760',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProductStockRequest(
+        stock: 591726,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsUpdateStock(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="success" -->
@@ -2187,6 +3320,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProductsUpdateStockRequest(
     company: 'Hettinger, Mills and Tillman',
     product: 'Handmade Rubber Fish',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateProductStockRequest(
+        stock: 591726,
+    ),
+);
+
+$response = $sdk->products->publicApiV1ProductsUpdateStock(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.products.update_stock" method="patch" path="/companies/{company}/products/{product}/stock" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProductsUpdateStockRequest(
+    company: 'e582e1ea-8120-4e83-99dd-e4ec8bef912d',
+    product: '67dc50f0-d232-4c01-86d4-3e753bec25ae',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateProductStockRequest(

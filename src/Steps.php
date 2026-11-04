@@ -49,7 +49,9 @@ class Steps
     /**
      * List the steps of an automation run
      *
-     * List the steps of a single run in execution order, with cursor-based pagination. It serves exactly the same step documents that the run detail embeds; what it saves is payload rather than queries — it leaves out the two frozen snapshots, which are what weigh when you poll every few seconds while a step retries. `step_index` is the identity of a step: it is what you replay, and what the `automation_run.step_dead_lettered` event points at.
+     * List the steps of a run in execution order with cursor pagination.
+     * - Same step documents as the run detail, without the two heavy frozen snapshots; cheaper to poll.
+     * - `step_index` identifies a step: it is what you replay.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsStepsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsStepsListResponse
@@ -168,11 +170,10 @@ class Steps
     /**
      * Replay one step of an automation run
      *
-     * Rearm a single parked step, leaving its siblings untouched with their state, their reason and their timestamps.
-     *
-     * CAREFUL — the step EXECUTES FOR REAL: it sends email, delivers webhooks and calls third parties. This is not an inert retry, so confirm with the account owner before calling it.
-     *
-     * `step_index` is the index published by `GET /v1/companies/{company}/automations/runs/{run}/steps`, not the position of the action in the rule definition. The response is 202 — accepted and queued, not finished — with the run id and the index that was rearmed. An index outside the range of the run returns 404, exactly like a run that is not yours, so probing indices reveals nothing.
+     * Rearm a single parked step, leaving its siblings untouched.
+     * - The step EXECUTES FOR REAL (email, webhooks, third parties); confirm with the account owner first.
+     * - `step_index` is the one published by the steps listing; an out-of-range index returns 404.
+     * - Returns 202 (queued, not finished) with the run id and the index.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsStepsReplayRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AutomationsRunsStepsReplayResponse

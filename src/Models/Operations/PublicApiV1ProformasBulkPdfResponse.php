@@ -40,6 +40,7 @@ class PublicApiV1ProformasBulkPdfResponse
     public array $headers;
 
     /**
+     * Binary ZIP archive of the available PDFs. Aggregate partial-success counts are returned in X-Bulk-* headers; per-document failures do not expose storage paths or private artifact metadata.
      *
      * @var ?string $bytes
      */

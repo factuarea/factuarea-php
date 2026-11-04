@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class UpdateCompanyV1Request
 {
     /**
-     * Trade name of the company (1-255 characters).
+     * Name the company is known by (1-100 characters): its trade name or, without a distinct legal name, its legal name.
      *
      * @var ?string $name
      */
@@ -22,7 +22,7 @@ class UpdateCompanyV1Request
     public ?string $name = null;
 
     /**
-     * Legal/registered business name of the company.
+     * Legal/registered business name of the company when it differs from `name` (up to 100 characters). `""` makes `name` the legal name.
      *
      * @var ?string $businessName
      */

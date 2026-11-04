@@ -13,11 +13,10 @@ class UpdateTransportDocumentRequestDeclaredMeasure
 {
     /**
      *
-     * @var ?string $type
+     * @var string $type
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('type')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $type = null;
+    public string $type;
 
     /**
      *
@@ -44,13 +43,13 @@ class UpdateTransportDocumentRequestDeclaredMeasure
     public ?string $unit = null;
 
     /**
-     * @param  ?string  $type
+     * @param  string  $type
      * @param  ?float  $weightKg
      * @param  ?float  $value
      * @param  ?string  $unit
      * @phpstan-pure
      */
-    public function __construct(?string $type = null, ?float $weightKg = null, ?float $value = null, ?string $unit = null)
+    public function __construct(string $type, ?float $weightKg = null, ?float $value = null, ?string $unit = null)
     {
         $this->type = $type;
         $this->weightKg = $weightKg;

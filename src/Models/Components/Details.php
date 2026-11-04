@@ -125,7 +125,7 @@ class Details
     public ?int $limit = null;
 
     /**
-     * Resource whose quota was reached on plan_limit_exceeded, for example documents_year or users.
+     * Resource whose quota was reached on plan_limit_exceeded, for example documents_year, users or packs.
      *
      * @var ?string $resource
      */

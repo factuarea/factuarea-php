@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class ResolveCatalogPriceRequest
 {
     /**
@@ -19,12 +19,22 @@ class ResolveCatalogPriceRequest
     public string $productId;
 
     /**
+     * Price list (UUID v7) as in a document: the one sent wins and `null` means no price list. If omitted, the default price list of the `client_id` applies. An inactive price list responds 422.
      *
      * @var ?string $priceListId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $priceListId = null;
+
+    /**
+     * Web customer (UUID v7 of a company contact with the customer role): the same `client_id` as a document. Without `price_list_id`, its active default price list applies.
+     *
+     * @var ?string $clientId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('client_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $clientId = null;
 
     /**
      *
@@ -69,23 +79,47 @@ class ResolveCatalogPriceRequest
     public ?array $optionValueIds = null;
 
     /**
+     * Offers (`catalog-promotions` 3.5): the day (in the company time zone, today if omitted) and the channel (documents if omitted).
+     *
+     * @var ?LocalDate $date
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('date')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $date = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ResolveCatalogPriceRequestChannel $channel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channel')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResolveCatalogPriceRequestChannel|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ResolveCatalogPriceRequestChannel $channel = null;
+
+    /**
      * @param  string  $productId
      * @param  ?string  $priceListId
+     * @param  ?string  $clientId
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
      * @param  ?string  $configurationId
      * @param  ?string  $selectionSignature
      * @param  ?array<string>  $optionValueIds
+     * @param  ?LocalDate  $date
+     * @param  ?\Factuarea\Sdk\Models\Components\ResolveCatalogPriceRequestChannel  $channel
      * @phpstan-pure
      */
-    public function __construct(string $productId, ?string $priceListId = null, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $selectionSignature = null, ?array $optionValueIds = null)
+    public function __construct(string $productId, ?string $priceListId = null, ?string $clientId = null, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $selectionSignature = null, ?array $optionValueIds = null, ?LocalDate $date = null, ?ResolveCatalogPriceRequestChannel $channel = null)
     {
         $this->productId = $productId;
         $this->priceListId = $priceListId;
+        $this->clientId = $clientId;
         $this->variantId = $variantId;
         $this->presentationId = $presentationId;
         $this->configurationId = $configurationId;
         $this->selectionSignature = $selectionSignature;
         $this->optionValueIds = $optionValueIds;
+        $this->date = $date;
+        $this->channel = $channel;
     }
 }

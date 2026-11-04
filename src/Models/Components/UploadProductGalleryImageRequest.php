@@ -15,16 +15,16 @@ class UploadProductGalleryImageRequest
     /**
      * Maximum file size: 3072 kilobytes.
      *
-     * @var \Factuarea\Sdk\Models\Components\Image $image
+     * @var \Factuarea\Sdk\Models\Components\UploadProductGalleryImageRequestImage $image
      */
     #[SpeakeasyMetadata('multipartForm:file=true,name=image')]
-    public Image $image;
+    public UploadProductGalleryImageRequestImage $image;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\Image  $image
+     * @param  \Factuarea\Sdk\Models\Components\UploadProductGalleryImageRequestImage  $image
      * @phpstan-pure
      */
-    public function __construct(Image $image)
+    public function __construct(UploadProductGalleryImageRequestImage $image)
     {
         $this->image = $image;
     }

@@ -9,9 +9,19 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** SendProformaRequest - Email a proforma. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters) and `body` (string). If the client has no email and `to` is absent, it returns 422 `missing_required_param`. */
+/** SendProformaRequest - Email a proforma. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters), `body` (string) and, when revisioned presentation is enabled, `presentation_precondition` and `expected_presentation_uuid`. If the client has no email and `to` is absent, it returns 422 `missing_required_param`. */
 class SendProformaRequest
 {
+    /**
+     * Proforma action precondition as accepted by the v1 proforma actions. All seven values travel together; nullable revision IDs remain required keys.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition $presentationPrecondition
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_precondition')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProformaPresentationPrecondition $presentationPrecondition = null;
+
     /**
      *
      * @var ?string $to
@@ -57,19 +67,32 @@ class SendProformaRequest
     public ?string $body = null;
 
     /**
+     * UUID of the presentation the caller reviewed. If it is no longer the current presentation of the document the request is rejected with 409 and nothing is changed. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. Only for re-sending a proforma that already has a retained capture.
+     *
+     * @var ?string $expectedPresentationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationUuid = null;
+
+    /**
+     * @param  ?\Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition  $presentationPrecondition
      * @param  ?string  $to
      * @param  ?array<string>  $cc
      * @param  ?array<string>  $bcc
      * @param  ?string  $subject
      * @param  ?string  $body
+     * @param  ?string  $expectedPresentationUuid
      * @phpstan-pure
      */
-    public function __construct(?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null)
+    public function __construct(?ProformaPresentationPrecondition $presentationPrecondition = null, ?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null, ?string $expectedPresentationUuid = null)
     {
+        $this->presentationPrecondition = $presentationPrecondition;
         $this->to = $to;
         $this->cc = $cc;
         $this->bcc = $bcc;
         $this->subject = $subject;
         $this->body = $body;
+        $this->expectedPresentationUuid = $expectedPresentationUuid;
     }
 }

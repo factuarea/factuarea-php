@@ -30,7 +30,7 @@ class Company
     public CompanyObject $object;
 
     /**
-     * Commercial name of the tax ID.
+     * Name the tax ID is known by: its trade name or, when `business_name` is `null`, its legal name.
      *
      * @var string $name
      */
@@ -63,7 +63,7 @@ class Company
     public \DateTime $createdAt;
 
     /**
-     * Legal/registered business name (razón social), or `null` if not set.
+     * Legal/registered business name (razón social) when it differs from `name`; `null` when `name` is the legal name.
      *
      * @var ?string $businessName
      */

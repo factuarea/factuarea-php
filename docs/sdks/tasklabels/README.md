@@ -14,6 +14,43 @@
 
 Add a label to the catalog with a `name` (unique in your company, case-insensitive: 409 `task_label_name_in_use`) and a `color` from the task palette.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.task_labels.create" method="post" path="/companies/{company}/task-labels" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateTaskLabelV1Request(
+    name: '<value>',
+    color: 'red',
+);
+
+$response = $sdk->taskLabels->publicApiV1TaskLabelsCreate(
+    company: 'cac6bb6e-1f24-4dcc-9a1b-7c0d78b9ad34',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.task_labels.create" method="post" path="/companies/{company}/task-labels" example="missing_api_key" -->
@@ -51,6 +88,43 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.task_labels.create" method="post" path="/companies/{company}/task-labels" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateTaskLabelV1Request(
+    name: '<value>',
+    color: 'red',
+);
+
+$response = $sdk->taskLabels->publicApiV1TaskLabelsCreate(
+    company: 'aa3f8d28-c5b0-4c8b-9a09-c6a1631d1398',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.task_labels.create" method="post" path="/companies/{company}/task-labels" example="success" -->
@@ -78,6 +152,43 @@ $body = new Components\CreateTaskLabelV1Request(
 
 $response = $sdk->taskLabels->publicApiV1TaskLabelsCreate(
     company: 'Nikolaus, Dooley and Wiza',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.task_labels.create" method="post" path="/companies/{company}/task-labels" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateTaskLabelV1Request(
+    name: '<value>',
+    color: 'red',
+);
+
+$response = $sdk->taskLabels->publicApiV1TaskLabelsCreate(
+    company: '6fe40b11-9c05-4847-99fb-59693f2f2624',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')

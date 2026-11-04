@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** EmployeeSeatBillingStatus - Billing status of the per-employee add-on for your company (Control Horario). Whether the dedicated `employee-seats` subscription is active, how many seats are billed, how many employees are active and the recurring per-seat cost. Amounts are euro 2-decimal strings and are null when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. Employees never count towards the plan `users` seat limit. Read `subscribed` together with `seats_billable` to tell a legitimate no-charge state apart from a billing anomaly. */
+/** EmployeeSeatBillingStatus - Billing status of the per-employee add-on for your company (Control Horario). Whether the dedicated `employee-seats` subscription is active, how many seats are billed, how many employees are active and the recurring per-seat cost. Amounts are euro 2-decimal strings and are null when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. Employees never count towards the plan `users` seat limit. Read `subscribed` together with `seats_billable` to tell a legitimate no-charge state apart from a billing anomaly. `seats` is the contracted-seats block of the paying account (contracted, occupied, free, pending reduction), or null when the company has no paying account of its own. */
 class EmployeeSeatBillingStatus
 {
     /**
@@ -30,7 +30,7 @@ class EmployeeSeatBillingStatus
     public bool $subscribed;
 
     /**
-     * Number of BILLED seats: while subscribed it follows the number of active employees; 0 when not subscribed.
+     * Number of BILLED seats: the contracted seats of the account (`seats.contracted`) while subscribed, whether or not employees occupy them; 0 when not subscribed.
      *
      * @var int $quantity
      */
@@ -102,7 +102,7 @@ class EmployeeSeatBillingStatus
     public ?string $totalPerSeat;
 
     /**
-     * Projected recurring total (`total_per_seat` × `quantity`), in euros as a 2-decimal string. Null when VAT is not resolved.
+     * Projected recurring total of the seat line: `unit_amount` × `quantity` plus the VAT on that amount, as Stripe charges it (not `total_per_seat` × `quantity`, which rounds VAT per seat). In euros as a 2-decimal string. Null when VAT is not resolved.
      *
      * @var ?string $recurringTotal
      */
@@ -127,6 +127,15 @@ class EmployeeSeatBillingStatus
     public ?\DateTime $nextInvoiceAt;
 
     /**
+     * Contracted seats of the paying account for employees: contracted, occupied, free, agreed minimum, pending reduction and whether seats are enforced. Null when the company has no paying account of its own (a managed account paid by its provider).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ContractedSeats $seats
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seats')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ContractedSeats|null')]
+    public ?ContractedSeats $seats;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\EmployeeSeatBillingStatusObject  $object
      * @param  bool  $subscribed
      * @param  int  $quantity
@@ -141,9 +150,10 @@ class EmployeeSeatBillingStatus
      * @param  ?string  $recurringTotal
      * @param  ?\Factuarea\Sdk\Models\Components\EmployeeSeatBillingStatusBillingInterval  $billingInterval
      * @param  ?\DateTime  $nextInvoiceAt
+     * @param  ?\Factuarea\Sdk\Models\Components\ContractedSeats  $seats
      * @phpstan-pure
      */
-    public function __construct(EmployeeSeatBillingStatusObject $object, bool $subscribed, int $quantity, int $activeEmployees, string $currency, bool $requiresActivePlan, bool $seatsBillable, ?string $unitAmount = null, ?int $taxRate = null, ?string $taxAmount = null, ?string $totalPerSeat = null, ?string $recurringTotal = null, ?EmployeeSeatBillingStatusBillingInterval $billingInterval = null, ?\DateTime $nextInvoiceAt = null)
+    public function __construct(EmployeeSeatBillingStatusObject $object, bool $subscribed, int $quantity, int $activeEmployees, string $currency, bool $requiresActivePlan, bool $seatsBillable, ?string $unitAmount = null, ?int $taxRate = null, ?string $taxAmount = null, ?string $totalPerSeat = null, ?string $recurringTotal = null, ?EmployeeSeatBillingStatusBillingInterval $billingInterval = null, ?\DateTime $nextInvoiceAt = null, ?ContractedSeats $seats = null)
     {
         $this->object = $object;
         $this->subscribed = $subscribed;
@@ -159,5 +169,6 @@ class EmployeeSeatBillingStatus
         $this->recurringTotal = $recurringTotal;
         $this->billingInterval = $billingInterval;
         $this->nextInvoiceAt = $nextInvoiceAt;
+        $this->seats = $seats;
     }
 }

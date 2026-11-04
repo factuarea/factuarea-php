@@ -8,7 +8,10 @@
 
 ## publicApiV1StripeAutoinvoicingAuthorizationsCreate
 
-Start the connection of a Stripe account to the company of the path from your own portal, and get back the Stripe onboarding link to open. Factuarea creates the Standard `acct` in Stripe, stores it with a signed single-use state and returns 201 with the `connected_account_authorization` object: `url` (the Stripe link), `return_url`, `status` (`pending`), `expires_at` and `company_id`. `return_url` is required, must be `https` and its host must be one of the return domains of the account of the credential (`POST /v1/accounts/{account}/connected-accounts/return-domains`); otherwise 422 `connect_return_url_not_allowed`. Only live credentials can start it: a test key (`fact_test_`) never reaches Stripe and is rejected before anything is created: it cannot carry this scope (403 `insufficient_scope`, or 404 `profile_not_found` when the tax ID is not reachable from the sandbox), a key that carried it anyway gets 403 `module_not_available_in_sandbox` and, if it got past that, 403 `live_credential_required`. Only the account that owns the tax ID or the provider with `operate` access on it can; an account that only received access gets 403 `forbidden_action`. Repeating the call while a previous authorization of that company and account is still valid reuses it: the same `acct` and the same authorization `id` come back with a fresh link. The `Idempotency-Key` header is required (422 `idempotency_key_required`). When the person finishes in Stripe, Factuarea completes the connection itself and redirects the browser to your `return_url` with these query parameters: `status` (`success` or `error`), `provider` (always `stripe`) and `authorization_id` always; on success `company_id` (the company `id`, UUID v7), `connected_account_id` (the connected account `id`, UUID v7) and `account` (the Stripe `acct_...`); on error `error` (the public error code) and, when there is one, `error_subcode`. A Stripe account already connected to another company fails with `error=resource_already_exists` and `error_subcode=connected_account_in_use`. This operation has no MCP tool: it needs a browser redirect.
+Starts connecting a Stripe account to the company and returns the Stripe onboarding `url` (201, `status` `pending`).
+- Needs `Idempotency-Key` and an `https` `return_url` on an allowed domain (`connect_return_url_not_allowed`).
+- Live credentials only: test keys fail with 403 `live_credential_required`.
+- No MCP tool: it needs a browser redirect.
 
 ### Example Usage: api_key_expired
 
@@ -72,6 +75,42 @@ $body = new Components\StartConnectedAccountAuthorizationV1Request(
 
 $response = $sdk->stripeAutoinvoicing->authorizations->publicApiV1StripeAutoinvoicingAuthorizationsCreate(
     company: 'Stanton, Okuneva and Anderson',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.authorizations.create" method="post" path="/companies/{company}/connected-accounts/authorizations" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\StartConnectedAccountAuthorizationV1Request(
+    returnUrl: 'https://buzzing-chiffonier.name/',
+);
+
+$response = $sdk->stripeAutoinvoicing->authorizations->publicApiV1StripeAutoinvoicingAuthorizationsCreate(
+    company: 'dd834b36-5d0f-45c6-b681-4af6905f12b2',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -190,6 +229,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.authorizations.create" method="post" path="/companies/{company}/connected-accounts/authorizations" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\StartConnectedAccountAuthorizationV1Request(
+    returnUrl: 'https://buzzing-chiffonier.name/',
+);
+
+$response = $sdk->stripeAutoinvoicing->authorizations->publicApiV1StripeAutoinvoicingAuthorizationsCreate(
+    company: '41282f11-09e1-4b8d-8393-bda0b01e9620',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.authorizations.create" method="post" path="/companies/{company}/connected-accounts/authorizations" example="success" -->
@@ -216,6 +291,42 @@ $body = new Components\StartConnectedAccountAuthorizationV1Request(
 
 $response = $sdk->stripeAutoinvoicing->authorizations->publicApiV1StripeAutoinvoicingAuthorizationsCreate(
     company: 'Baumbach - Medhurst',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.stripe_autoinvoicing.authorizations.create" method="post" path="/companies/{company}/connected-accounts/authorizations" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\StartConnectedAccountAuthorizationV1Request(
+    returnUrl: 'https://buzzing-chiffonier.name/',
+);
+
+$response = $sdk->stripeAutoinvoicing->authorizations->publicApiV1StripeAutoinvoicingAuthorizationsCreate(
+    company: '48835807-a152-4a74-972a-76cea71158e3',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')

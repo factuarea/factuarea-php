@@ -252,6 +252,15 @@ class QuoteLine
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
+     * The pack group this line belongs to, or `null` when the line is not part of a pack. See `PackGroup`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PackGroup $packGroup
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PackGroup|null')]
+    public ?PackGroup $packGroup;
+
+    /**
      * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
      *
      * @var ?\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime $indirectTaxRegime
@@ -293,10 +302,11 @@ class QuoteLine
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?\Factuarea\Sdk\Models\Components\PackGroup  $packGroup
      * @param  ?\Factuarea\Sdk\Models\Components\QuoteLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(QuoteLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?QuoteLineVariant $variant = null, ?QuoteLinePresentation $presentation = null, ?string $itemKind = null, ?QuoteLineCommercialUnitCode $commercialUnitCode = null, ?QuoteLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?QuoteLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?QuoteLineCountedUnit $countedUnit = null, ?QuoteLineConfiguration $configuration = null, ?QuoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(QuoteLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?QuoteLineVariant $variant = null, ?QuoteLinePresentation $presentation = null, ?string $itemKind = null, ?QuoteLineCommercialUnitCode $commercialUnitCode = null, ?QuoteLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?QuoteLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?QuoteLineCountedUnit $countedUnit = null, ?QuoteLineConfiguration $configuration = null, ?QuoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?PackGroup $packGroup = null, ?QuoteLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -329,6 +339,7 @@ class QuoteLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->packGroup = $packGroup;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

@@ -103,6 +103,36 @@ class ProductPresentation
     public ?string $commercialPriceOverride;
 
     /**
+     * Sale price with and without VAT, measured as a document line of quantity 1 (no customer rate, company regime, today). Returned inside the `Product` read (`all` and `storefront`), not by the standalone sub-resource endpoints. The `net` amount keeps the scale of the catalog price.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogSalePrice $salePrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sale_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogSalePrice|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogSalePrice $salePrice = null;
+
+    /**
+     * The promotion that applies to the item on the web channel today, or on the day of the `date` parameter, or `null` when there is none. `sale_price` is still the regular price: with a promotion, show `promotion.price` and, only when `promotion.announce_reduction` is `true`, `promotion.previous_price` as the previous price. In schema.org, `Offer.price` is `promotion.price.gross` and `Offer.priceValidUntil` is `promotion.ends_at`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogPromotion|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogPromotion $promotion = null;
+
+    /**
+     * Availability. Returned inside the `Product` read only; `null` for a variant that does not manage its own stock.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProductAvailability $availability
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('availability')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductAvailability|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProductAvailability $availability = null;
+
+    /**
      * Own gross transport weight in kg per COMMERCIAL unit (decimal string, up to 4 decimals, greater than 0), packaging included; it overrides any derivation from the product or variant weight. `null` when the presentation declares none. Rejected with 422 `gross_weight_not_allowed` on `variable_measure` presentations.
      *
      * @var ?string $grossWeightKg
@@ -124,10 +154,13 @@ class ProductPresentation
      * @param  ?string  $nominalBaseQuantity
      * @param  ?string  $barcode
      * @param  ?string  $commercialPriceOverride
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogSalePrice  $salePrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogPromotion  $promotion
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductAvailability  $availability
      * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductPresentationObject $object, string $productId, string $name, ProductPresentationMode $mode, ProductPresentationUnit $unit, array $specifications, bool $active, ?string $conversionFactor = null, ?string $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null, ?string $grossWeightKg = null)
+    public function __construct(string $id, ProductPresentationObject $object, string $productId, string $name, ProductPresentationMode $mode, ProductPresentationUnit $unit, array $specifications, bool $active, ?string $conversionFactor = null, ?string $nominalBaseQuantity = null, ?string $barcode = null, ?string $commercialPriceOverride = null, ?CatalogSalePrice $salePrice = null, ?CatalogPromotion $promotion = null, ?ProductAvailability $availability = null, ?string $grossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -141,6 +174,9 @@ class ProductPresentation
         $this->nominalBaseQuantity = $nominalBaseQuantity;
         $this->barcode = $barcode;
         $this->commercialPriceOverride = $commercialPriceOverride;
+        $this->salePrice = $salePrice;
+        $this->promotion = $promotion;
+        $this->availability = $availability;
         $this->grossWeightKg = $grossWeightKg;
     }
 }

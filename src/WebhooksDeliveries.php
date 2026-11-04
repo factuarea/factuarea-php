@@ -50,7 +50,9 @@ class WebhooksDeliveries
     /**
      * List account webhook deliveries
      *
-     * List the delivery attempts of one account webhook endpoint, cursor-paginated with `limit` (1-100, default 25) and `starting_after`, optionally filtered by `status` (`pending`, `delivered`, `failed`, `failed_permanently` or `cancelled`). Deliveries come OLDEST FIRST (ascending by `id`, a time-ordered UUID v7), so to look for recent failures filter by `status=failed` (or `failed_permanently`) and keep paginating with `starting_after` until `has_more` is `false`. Deliveries of an endpoint of the `test` environment are recorded but never sent: they stay `pending` with `attempt` 0. Each delivery carries the event it delivers, the tax ID it is about (`company_id`, `null` in `account.*` events that are not about a tax ID), its relationship with your account (`own` or `managed`), the attempt counters, the HTTP response of your server and the signed `payload`. An endpoint the account does not see (unknown, deleted, or of another account or environment) returns 404 `webhook_endpoint_not_found`, never an empty page. `ending_before` is not accepted (400 `parameter_unknown`).
+     * List the delivery attempts of one account webhook endpoint, cursor-paginated with `limit` (1-100, default 25).
+     * - OLDEST FIRST; filter by `status` (`pending`, `delivered`, `failed`, `failed_permanently`, `cancelled`) to find failures.
+     * - Test-environment deliveries stay `pending`; `ending_before` returns 400 `parameter_unknown`; unseen endpoint returns 404.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountWebhooksDeliveriesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountWebhooksDeliveriesListResponse
@@ -169,7 +171,9 @@ class WebhooksDeliveries
     /**
      * Retry an account webhook delivery
      *
-     * Re-arm a delivery that did not reach your server: the SAME delivery goes back to `pending` (its attempt counters are kept, and `manual_retry_count` grows) and is sent again with the current signing secret. Only `failed` and `failed_permanently` deliveries can be retried; a `delivered`, `pending` or `cancelled` one returns 422 with the subcode `account_webhook_retry_not_allowed`, and a delivery of a disabled endpoint returns 422 with the subcode `account_webhook_endpoint_not_active`. A delivery or endpoint the account does not see returns 404 `webhook_delivery_not_found`. Returns 202. Requires a live key and an `Idempotency-Key`, and it counts against its own per-route rate limit.
+     * Re-arm a failed delivery: the SAME delivery returns to `pending` and is sent again with the current signing secret.
+     * - Only `failed` and `failed_permanently` can be retried; others return 422 subcode `account_webhook_retry_not_allowed`.
+     * - Returns 202; requires a live key and an `Idempotency-Key`; 404 `webhook_delivery_not_found`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AccountWebhooksDeliveriesRetryRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AccountWebhooksDeliveriesRetryResponse
@@ -285,7 +289,8 @@ class WebhooksDeliveries
     /**
      * Retrieve an account webhook delivery
      *
-     * Retrieve one delivery of an account webhook endpoint by its `id` (UUID v7), with the signed envelope that was sent (`payload`) and the response of your server (`response_status` and a truncated `response_body`). A delivery the account does not see — unknown, or under an endpoint it does not see — returns 404 `webhook_delivery_not_found`.
+     * Retrieve one account webhook delivery by its `id` (UUID v7) with the signed `payload` sent and your server’s `response_status` and truncated `response_body`.
+     * - An unseen delivery or endpoint returns 404 `webhook_delivery_not_found`.
      *
      * @param  string  $account
      * @param  string  $webhook

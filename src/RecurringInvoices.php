@@ -140,7 +140,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -425,7 +425,9 @@ class RecurringInvoices
     /**
      * Bulk change recurring invoice status
      *
-     * Move up to 50 recurring invoices (by id) to a status from the closed set `[active, paused]`: `paused` pauses the active ones and `active` resumes the paused ones, each through the same single transition —and therefore the same aggregate guards— as `POST /companies/{company}/recurring-invoices/{recurring_invoice}/pause` and `/resume`. Returns a `BulkPartialSuccessResult`; nothing aborts the batch: ids that are not found, already in the target status, cancelled or with their occurrences exhausted come back in `failures[]` with their `error_code` and a Spanish `error_message`.
+     * Moves up to 50 recurring invoices (by id) to `active` or `paused`, each through the same transition as `pause` and `resume`.
+     * - Returns a `BulkPartialSuccessResult`; the batch never aborts.
+     * - Not found, already in target status, cancelled or exhausted ids come back in `failures[]` with `error_code`.
      *
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusRecurringInvoicesV1Request  $body
      * @param  string  $company
@@ -774,7 +776,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '428', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -1053,7 +1055,7 @@ class RecurringInvoices
     /**
      * Generate an invoice from a recurring template
      *
-     * Trigger immediate invoice generation from the recurring configuration, outside the scheduled cycle.
+     * Trigger immediate invoice generation from the recurring configuration, outside the scheduled cycle. The server fixes generation date and attempt identity. No public date/child/intent overrides are accepted. Current authority precedes idempotent replay; retained same-day success is returned before new presentation selection.
      *
      * @param  string  $company
      * @param  string  $recurringInvoice
@@ -1749,7 +1751,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -2238,7 +2240,7 @@ class RecurringInvoices
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '428', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

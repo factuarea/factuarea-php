@@ -102,6 +102,46 @@ class EmployeeSeatChargePreview
     public bool $seatsBillable;
 
     /**
+     * Free contracted seats that the activation would occupy.
+     *
+     * @var int $freeSeatsUsed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('free_seats_used')]
+    public int $freeSeatsUsed;
+
+    /**
+     * Seats that would have to be bought (and charged) for the activation. 0 when the free seats cover it.
+     *
+     * @var int $seatsToBuy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seats_to_buy')]
+    public int $seatsToBuy;
+
+    /**
+     * true when the free contracted seats cover the whole operation: the amount is 0 and no payment method is needed.
+     *
+     * @var bool $includedInSeats
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('included_in_seats')]
+    public bool $includedInSeats;
+
+    /**
+     * true when the operation would cancel a pending seat reduction (the new total of occupied seats exceeds its target).
+     *
+     * @var bool $cancelsPendingReduction
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cancels_pending_reduction')]
+    public bool $cancelsPendingReduction;
+
+    /**
+     * How many employees would have to be chosen in `deactivate` for the reduction; 0 outside a reduction.
+     *
+     * @var int $deactivationsRequired
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('deactivations_required')]
+    public int $deactivationsRequired;
+
+    /**
      * Applied VAT rate (e.g. 21), or null when Stripe Tax did not resolve it (then `tax_amount` is 0 and `total` = `amount`).
      *
      * @var ?int $taxRate
@@ -142,6 +182,33 @@ class EmployeeSeatChargePreview
     public ?int $recurringTotalCents;
 
     /**
+     * Contracted-seats block AFTER the operation, or null when the company has no paying account of its own.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ContractedSeats $seats
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seats')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ContractedSeats|null')]
+    public ?ContractedSeats $seats;
+
+    /**
+     * Only with `contracted_seats` when it is a reduction: the pending reduction it would schedule (no selection, `deactivations` empty). Null otherwise.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PendingSeatReduction $pendingReduction
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pending_reduction')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PendingSeatReduction|null')]
+    public ?PendingSeatReduction $pendingReduction;
+
+    /**
+     * What the applied offer package would lose if the reduction goes ahead (confirm it with `accept_offer_package_loss`), or null.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SeatOfferPackageLoss $offerPackageLoss
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('offer_package_loss')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SeatOfferPackageLoss|null')]
+    public ?SeatOfferPackageLoss $offerPackageLoss;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\EmployeeSeatChargePreviewObject  $object
      * @param  string  $amount
      * @param  string  $taxAmount
@@ -153,14 +220,22 @@ class EmployeeSeatChargePreview
      * @param  bool  $alreadyCovered
      * @param  bool  $isFirstSeat
      * @param  bool  $seatsBillable
+     * @param  int  $freeSeatsUsed
+     * @param  int  $seatsToBuy
+     * @param  bool  $includedInSeats
+     * @param  bool  $cancelsPendingReduction
+     * @param  int  $deactivationsRequired
      * @param  ?int  $taxRate
      * @param  ?\DateTime  $nextInvoiceDate
      * @param  ?int  $recurringQuantity
      * @param  ?int  $recurringBaseCents
      * @param  ?int  $recurringTotalCents
+     * @param  ?\Factuarea\Sdk\Models\Components\ContractedSeats  $seats
+     * @param  ?\Factuarea\Sdk\Models\Components\PendingSeatReduction  $pendingReduction
+     * @param  ?\Factuarea\Sdk\Models\Components\SeatOfferPackageLoss  $offerPackageLoss
      * @phpstan-pure
      */
-    public function __construct(EmployeeSeatChargePreviewObject $object, string $amount, string $taxAmount, string $total, string $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, bool $seatsBillable, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null)
+    public function __construct(EmployeeSeatChargePreviewObject $object, string $amount, string $taxAmount, string $total, string $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, bool $seatsBillable, int $freeSeatsUsed, int $seatsToBuy, bool $includedInSeats, bool $cancelsPendingReduction, int $deactivationsRequired, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null, ?ContractedSeats $seats = null, ?PendingSeatReduction $pendingReduction = null, ?SeatOfferPackageLoss $offerPackageLoss = null)
     {
         $this->object = $object;
         $this->amount = $amount;
@@ -173,10 +248,18 @@ class EmployeeSeatChargePreview
         $this->alreadyCovered = $alreadyCovered;
         $this->isFirstSeat = $isFirstSeat;
         $this->seatsBillable = $seatsBillable;
+        $this->freeSeatsUsed = $freeSeatsUsed;
+        $this->seatsToBuy = $seatsToBuy;
+        $this->includedInSeats = $includedInSeats;
+        $this->cancelsPendingReduction = $cancelsPendingReduction;
+        $this->deactivationsRequired = $deactivationsRequired;
         $this->taxRate = $taxRate;
         $this->nextInvoiceDate = $nextInvoiceDate;
         $this->recurringQuantity = $recurringQuantity;
         $this->recurringBaseCents = $recurringBaseCents;
         $this->recurringTotalCents = $recurringTotalCents;
+        $this->seats = $seats;
+        $this->pendingReduction = $pendingReduction;
+        $this->offerPackageLoss = $offerPackageLoss;
     }
 }

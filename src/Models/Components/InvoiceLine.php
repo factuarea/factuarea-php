@@ -97,6 +97,22 @@ class InvoiceLine
 
     /**
      *
+     * @var string $id
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('id')]
+    public string $id;
+
+    /**
+     * Ordered delivery-note references; duplicates are preserved. A supplied list replaces the previous list.
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference> $deliveryNotesReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_notes_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference>')]
+    public array $deliveryNotesReferences;
+
+    /**
+     *
      * @var ?string $description
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
@@ -252,6 +268,15 @@ class InvoiceLine
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
+     * The pack group this line belongs to, or `null` when the line is not part of a pack. See `PackGroup`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PackGroup $packGroup
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PackGroup|null')]
+    public ?PackGroup $packGroup;
+
+    /**
      * Kind of line. `NORMAL` is an ordinary line of the issuer's own operation. `SUPLIDO` is a DISBURSEMENT: an amount the issuer paid in the name and on behalf of the client (an official fee, duty or registry charge) and now re-invoices at cost. Under art. 78.Tres.3 of the Spanish VAT Act (LIVA) a disbursement is not part of the issuer's taxable base, so a `SUPLIDO` line stays out of `subtotal`, `taxes_total` and `total`, is aggregated into `total_disbursements` instead, carries no VAT, withholding, surcharge, discount or product, and is never declared in the AEAT VeriFactu record. Always present and never `null` in a response (a line created before this field existed reads as `NORMAL`); optional on write, where it defaults to `NORMAL`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineLineType $lineType
@@ -260,6 +285,22 @@ class InvoiceLine
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineLineType|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?InvoiceLineLineType $lineType = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineReferences $businessReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineReferences|null')]
+    public ?InvoiceLineReferences $businessReferences;
+
+    /**
+     * Optional sequence. JSON integers only: 0 is valid; booleans, floats and numeric strings are rejected.
+     *
+     * @var ?int $sequenceNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sequence_number')]
+    public ?int $sequenceNumber;
 
     /**
      * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
@@ -347,6 +388,8 @@ class InvoiceLine
      * @param  string  $taxes
      * @param  string  $total
      * @param  array<\Factuarea\Sdk\Models\Components\InvoiceLineOption>  $options
+     * @param  string  $id
+     * @param  array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference>  $deliveryNotesReferences
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
      * @param  ?\Factuarea\Sdk\Models\Components\ProductRef  $product
@@ -367,7 +410,10 @@ class InvoiceLine
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?\Factuarea\Sdk\Models\Components\PackGroup  $packGroup
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineLineType  $lineType
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineReferences  $businessReferences
+     * @param  ?int  $sequenceNumber
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineIndirectTaxRegime  $indirectTaxRegime
      * @param  ?string  $regimeKey
      * @param  ?string  $exemptionReason
@@ -378,7 +424,7 @@ class InvoiceLine
      * @param  ?string  $exemptionReasonText
      * @phpstan-pure
      */
-    public function __construct(InvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?InvoiceLineVariant $variant = null, ?InvoiceLinePresentation $presentation = null, ?string $itemKind = null, ?InvoiceLineCommercialUnitCode $commercialUnitCode = null, ?InvoiceLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?InvoiceLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?InvoiceLineCountedUnit $countedUnit = null, ?InvoiceLineConfiguration $configuration = null, ?InvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
+    public function __construct(InvoiceLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, string $id, array $deliveryNotesReferences, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?InvoiceLineVariant $variant = null, ?InvoiceLinePresentation $presentation = null, ?string $itemKind = null, ?InvoiceLineCommercialUnitCode $commercialUnitCode = null, ?InvoiceLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?InvoiceLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?InvoiceLineCountedUnit $countedUnit = null, ?InvoiceLineConfiguration $configuration = null, ?InvoiceLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?PackGroup $packGroup = null, ?InvoiceLineLineType $lineType = null, ?InvoiceLineReferences $businessReferences = null, ?int $sequenceNumber = null, ?InvoiceLineIndirectTaxRegime $indirectTaxRegime = null, ?string $regimeKey = null, ?string $exemptionReason = null, ?string $aeatTaxCode = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -391,6 +437,8 @@ class InvoiceLine
         $this->taxes = $taxes;
         $this->total = $total;
         $this->options = $options;
+        $this->id = $id;
+        $this->deliveryNotesReferences = $deliveryNotesReferences;
         $this->description = $description;
         $this->additionalDescription = $additionalDescription;
         $this->product = $product;
@@ -411,7 +459,10 @@ class InvoiceLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->packGroup = $packGroup;
         $this->lineType = $lineType;
+        $this->businessReferences = $businessReferences;
+        $this->sequenceNumber = $sequenceNumber;
         $this->indirectTaxRegime = $indirectTaxRegime;
         $this->regimeKey = $regimeKey;
         $this->exemptionReason = $exemptionReason;

@@ -1,0 +1,13 @@
+# PdfTemplateAsset
+
+
+## Fields
+
+| Field                                                                              | Type                                                                               | Required                                                                           | Description                                                                        |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `id`                                                                               | *string*                                                                           | :heavy_check_mark:                                                                 | N/A                                                                                |
+| `kind`                                                                             | [Components\PdfTemplateAssetKind](../../Models/Components/PdfTemplateAssetKind.md) | :heavy_check_mark:                                                                 | N/A                                                                                |
+| `mime`                                                                             | [Components\Mime](../../Models/Components/Mime.md)                                 | :heavy_check_mark:                                                                 | N/A                                                                                |
+| `sha256`                                                                           | *string*                                                                           | :heavy_check_mark:                                                                 | N/A                                                                                |
+| `sizeBytes`                                                                        | *int*                                                                              | :heavy_check_mark:                                                                 | N/A                                                                                |
+| `createdAt`                                                                        | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                      | :heavy_check_mark:                                                                 | N/A                                                                                |

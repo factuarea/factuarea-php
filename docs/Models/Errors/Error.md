@@ -1,11 +1,11 @@
 # Error
 
-Missing or invalid API key.
+`parameter_unknown` with `subcode` `retired_active_profile_header`: the retired `X-Active-Profile` header was sent; the company goes in the path. `parameter_invalid_format` on `Factuarea-Version`: the header is not a `YYYY-MM-DD` date. `unsupported_api_version`: the `Factuarea-Version` date is not a supported version.
 
 
 ## Fields
 
 | Field                                                                                                        | Type                                                                                                         | Required                                                                                                     | Description                                                                                                  |
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `error`                                                                                                      | [Components\ErrorError](../../Models/Components/ErrorError.md)                                               | :heavy_check_mark:                                                                                           | N/A                                                                                                          |
+| `error`                                                                                                      | [Components\Error2](../../Models/Components/Error2.md)                                                       | :heavy_check_mark:                                                                                           | N/A                                                                                                          |
 | `rawResponse`                                                                                                | [\Psr\Http\Message\ResponseInterface](https://www.php-fig.org/psr/psr-7/#33-psrhttpmessageresponseinterface) | :heavy_minus_sign:                                                                                           | Raw HTTP response; suitable for custom response parsing                                                      |

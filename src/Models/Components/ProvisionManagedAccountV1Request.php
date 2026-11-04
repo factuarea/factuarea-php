@@ -38,7 +38,7 @@ class ProvisionManagedAccountV1Request
     public string $taxId;
 
     /**
-     * Legal name of the managed account.
+     * Legal name of the managed account (up to 100 characters).
      *
      * @var string $legalName
      */
@@ -65,7 +65,7 @@ class ProvisionManagedAccountV1Request
     public ?bool $sendEmail = null;
 
     /**
-     * Visible name of the account and of its tax ID; without it, the legal name.
+     * Visible name of the account and trade name of its tax ID (up to 100 characters); without it, the legal name.
      *
      * @var ?string $displayName
      */

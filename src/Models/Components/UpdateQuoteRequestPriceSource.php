@@ -19,4 +19,5 @@ enum UpdateQuoteRequestPriceSource: string
     case Manual = 'manual';
     case SupplierOffer = 'supplier_offer';
     case PackSnapshot = 'pack_snapshot';
+    case Promotion = 'promotion';
 }

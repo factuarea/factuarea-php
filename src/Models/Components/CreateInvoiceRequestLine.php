@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class CreateInvoiceRequestLine
 {
     /**
@@ -17,6 +17,70 @@ class CreateInvoiceRequestLine
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
     public float $quantity;
+
+    /**
+     *
+     * @var mixed $id
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('id')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $id = null;
+
+    /**
+     *
+     * @var mixed $uuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('uuid')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $uuid = null;
+
+    /**
+     *
+     * @var mixed $sourceLineUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_line_uuid')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $sourceLineUuid = null;
+
+    /**
+     *
+     * @var mixed $sourceLineId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_line_id')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $sourceLineId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineReferences $businessReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineReferences|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceLineReferences $businessReferences = null;
+
+    /**
+     * $deliveryNotesReferences
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference> $deliveryNotesReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_notes_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $deliveryNotesReferences = null;
+
+    /**
+     * Optional sequence. JSON integers only: 0 is valid; booleans, floats and numeric strings are rejected.
+     *
+     * @var ?int $sequenceNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sequence_number')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $sequenceNumber = null;
 
     /**
      *
@@ -45,6 +109,7 @@ class CreateInvoiceRequestLine
     public float|string|null $unitPrice = null;
 
     /**
+     * Public identifier (UUID v7) of the VAT-class tax of the catalog chosen for the line. Optional. Without `tax_rate`, the rate (and the indirect-tax regime, the AEAT qualification and, for an exempt or not-subject tax, the exemption cause) comes from that tax. A tax that is not a VAT-class tax, or a `tax_rate` that differs from the rate of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line). Send only the id, or a `tax_rate` equal to the tax's own rate.
      *
      * @var ?string $taxRateId
      */
@@ -62,6 +127,7 @@ class CreateInvoiceRequestLine
     public ?float $taxRate = null;
 
     /**
+     * Withholding (IRPF) percentage of the line, 0–100 (the magnitude: a catalog withholding stored with a negative sign is declared here without it). Optional: when you omit it (or send `null`) and the line carries `retention_rate_id`, it is taken from that tax. If you send both and the percentage differs from the one of the chosen tax, the request is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N.
      *
      * @var ?float $retentionRate
      */
@@ -70,6 +136,7 @@ class CreateInvoiceRequestLine
     public ?float $retentionRate = null;
 
     /**
+     * Equivalence-surcharge percentage of the line, 0–100. Optional: when you omit it (or send `null`) and the line carries `surcharge_rate_id`, it is taken from that tax. If you send both and the percentage differs from the one of the chosen tax, the request is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N.
      *
      * @var ?float $surchargeRate
      */
@@ -78,6 +145,7 @@ class CreateInvoiceRequestLine
     public ?float $surchargeRate = null;
 
     /**
+     * Public identifier (UUID v7) of the withholding (IRPF) tax of the catalog chosen for the line. Optional. Without `retention_rate`, the percentage of the line is taken from that tax (its magnitude, 0–100): sending only the id never computes the withholding at 0 %. A tax of another class (for example a VAT or an equivalence-surcharge tax), or a `retention_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $retentionRateId
      */
@@ -86,6 +154,7 @@ class CreateInvoiceRequestLine
     public ?string $retentionRateId = null;
 
     /**
+     * Public identifier (UUID v7) of the equivalence-surcharge tax of the catalog chosen for the line. Optional. Without `surcharge_rate`, the percentage of the line is taken from that tax: sending only the id never computes the surcharge at 0 %. A tax of another class (for example a VAT or a withholding tax), or a `surcharge_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $surchargeRateId
      */
@@ -218,6 +287,40 @@ class CreateInvoiceRequestLine
 
     /**
      *
+     * @var ?string $packId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packId = null;
+
+    /**
+     *
+     * @var ?string $packGroupId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packGroupId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPrintMode $printMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('print_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPrintMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestPrintMode $printMode = null;
+
+    /**
+     * When `true`, the `unit_price` of every line is the FINAL price with taxes (VAT included) and the system computes the net base to the cent, so the invoice total equals the sum of the amounts you sent. If no distribution of the cents reaches that total the request is rejected with 422 `amount_reconciliation_failed` and nothing is issued. Catalog lines (`product_id`) are not accepted in this mode. Defaults to `false`.
+     *
+     * @var ?bool $pricesIncludeTax
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('prices_include_tax')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $pricesIncludeTax = null;
+
+    /**
+     *
      * @var ?string $configurationUuid
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_uuid')]
@@ -293,7 +396,55 @@ class CreateInvoiceRequestLine
     public ?bool $optionAdjustmentsAbsorbed = null;
 
     /**
+     *
+     * @var ?string $promotionUuidSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_uuid_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionUuidSnapshot = null;
+
+    /**
+     *
+     * @var ?string $promotionNameSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_name_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionNameSnapshot = null;
+
+    /**
+     *
+     * @var ?float $regularUnitPrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_unit_price')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $regularUnitPrice = null;
+
+    /**
+     *
+     * @var ?LocalDate $soldOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sold_on')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $soldOn = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestChannel $channel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channel')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestChannel|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestChannel $channel = null;
+
+    /**
      * @param  float  $quantity
+     * @param  mixed  $id
+     * @param  mixed  $uuid
+     * @param  mixed  $sourceLineUuid
+     * @param  mixed  $sourceLineId
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineReferences  $businessReferences
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference>  $deliveryNotesReferences
+     * @param  ?int  $sequenceNumber
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
      * @param  float|string|null  $unitPrice
@@ -317,6 +468,10 @@ class CreateInvoiceRequestLine
      * @param  ?string  $unit
      * @param  ?string  $exemptionReasonText
      * @param  ?float  $lineTotal
+     * @param  ?string  $packId
+     * @param  ?string  $packGroupId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPrintMode  $printMode
+     * @param  ?bool  $pricesIncludeTax
      * @param  ?string  $configurationUuid
      * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOption>  $options
@@ -326,11 +481,23 @@ class CreateInvoiceRequestLine
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPriceSemantics  $priceSemantics
      * @param  ?float  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?string  $promotionUuidSnapshot
+     * @param  ?string  $promotionNameSnapshot
+     * @param  ?float  $regularUnitPrice
+     * @param  ?LocalDate  $soldOn
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestChannel  $channel
      * @phpstan-pure
      */
-    public function __construct(float $quantity, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?CreateInvoiceRequestRegimeKey $regimeKey = null, ?CreateInvoiceRequestExemptionReason $exemptionReason = null, ?CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateInvoiceRequestPriceSource $priceSource = null, ?CreateInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, mixed $id = null, mixed $uuid = null, mixed $sourceLineUuid = null, mixed $sourceLineId = null, ?InvoiceLineReferences $businessReferences = null, ?array $deliveryNotesReferences = null, ?int $sequenceNumber = null, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $discountPercent = null, ?CreateInvoiceRequestRegimeKey $regimeKey = null, ?CreateInvoiceRequestExemptionReason $exemptionReason = null, ?CreateInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?CreateInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?array $sourceInvoiceIds = null, ?string $unit = null, ?string $exemptionReasonText = null, ?float $lineTotal = null, ?string $packId = null, ?string $packGroupId = null, ?CreateInvoiceRequestPrintMode $printMode = null, ?bool $pricesIncludeTax = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateInvoiceRequestPriceSource $priceSource = null, ?CreateInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $promotionUuidSnapshot = null, ?string $promotionNameSnapshot = null, ?float $regularUnitPrice = null, ?LocalDate $soldOn = null, ?CreateInvoiceRequestChannel $channel = null)
     {
         $this->quantity = $quantity;
+        $this->id = $id;
+        $this->uuid = $uuid;
+        $this->sourceLineUuid = $sourceLineUuid;
+        $this->sourceLineId = $sourceLineId;
+        $this->businessReferences = $businessReferences;
+        $this->deliveryNotesReferences = $deliveryNotesReferences;
+        $this->sequenceNumber = $sequenceNumber;
         $this->description = $description;
         $this->additionalDescription = $additionalDescription;
         $this->unitPrice = $unitPrice;
@@ -354,6 +521,10 @@ class CreateInvoiceRequestLine
         $this->unit = $unit;
         $this->exemptionReasonText = $exemptionReasonText;
         $this->lineTotal = $lineTotal;
+        $this->packId = $packId;
+        $this->packGroupId = $packGroupId;
+        $this->printMode = $printMode;
+        $this->pricesIncludeTax = $pricesIncludeTax;
         $this->configurationUuid = $configurationUuid;
         $this->countedQuantity = $countedQuantity;
         $this->options = $options;
@@ -363,5 +534,10 @@ class CreateInvoiceRequestLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->promotionUuidSnapshot = $promotionUuidSnapshot;
+        $this->promotionNameSnapshot = $promotionNameSnapshot;
+        $this->regularUnitPrice = $regularUnitPrice;
+        $this->soldOn = $soldOn;
+        $this->channel = $channel;
     }
 }

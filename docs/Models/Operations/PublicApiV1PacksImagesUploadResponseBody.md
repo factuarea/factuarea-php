@@ -1,0 +1,10 @@
+# PublicApiV1PacksImagesUploadResponseBody
+
+Image uploaded. There is no `Location` header: an image has no read endpoint of its own.
+
+
+## Fields
+
+| Field                                                                                                                                             | Type                                                                                                                                              | Required                                                                                                                                          | Description                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`                                                                                                                                            | [Components\PackImage](../../Models/Components/PackImage.md)                                                                                      | :heavy_check_mark:                                                                                                                                | An image of the pack gallery, as returned by uploading or editing it. It has no read endpoint of its own: the whole gallery is in `Pack.gallery`. |

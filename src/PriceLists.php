@@ -263,7 +263,7 @@ class PriceLists
                 contentType: $contentType,
                 rawResponse: $httpResponse
             );
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -546,7 +546,10 @@ class PriceLists
     /**
      * Resolve a catalog price
      *
-     * Resolve the effective catalog price for a complete catalog selection — product, optional variant, optional presentation, optional commercial combination (`configuration_id`), its canonical `selection_signature` and the chosen `option_value_ids` — under an optional price list. The combination and its signature are NOT mutually exclusive here: a real selection carries both, because the signature is derived from the combination. What is rejected is repeating the cross the combination already identifies (`variant_id` / `presentation_id`). No amount is ever accepted in the payload: every own price and every option adjustment comes from the catalog, so a caller cannot price its own line. The response carries the breakdown (`unit_semantics`, `source_amount`, `option_adjustment_total`, `option_adjustments_absorbed`) so a double charge is detectable from the preview — `source` alone cannot tell a price-list entry that ABSORBS the option adjustments from a legacy one that ADDS them, and both say `price_list`.
+     * Resolve the catalog price of a complete selection (product, variant, presentation, combination, `option_value_ids`); no amount is accepted in the payload.
+     * - Returns `source_amount` and `option_adjustment_total` to detect double charges, and `regular_unit_price`, `regular_source` and `promotion` (`null` if none).
+     * - `date` and `channel` (`documents` or `web`) apply the running promotions; `client_id` picks the price list as a document does (`price_list_id` wins, `null` = none).
+     * - Promotion `gross` uses the item VAT and company regime: for the exact amount use `taxes/calculate-totals`.
      *
      * @param  \Factuarea\Sdk\Models\Components\ResolveCatalogPriceRequest  $body
      * @param  string  $company
@@ -674,7 +677,10 @@ class PriceLists
     /**
      * Resolve many catalog prices
      *
-     * Reprice a whole document in one request: resolve the effective price of up to 100 catalog selections and compare each with the unit price the line has frozen today (`current_unit_price`), returning `changed` and `difference`. It is a READ and persists nothing; the verb is POST because the list of selections, with their combinations and option values, does not fit in a query string — the same reason as `POST /v1/companies/{company}/price-lists/resolve`. Each selection carries exactly what the document line assembler will see, so the previewed amount is the one the line will freeze. A target that cannot be resolved is attributed to ITS index (`targets.<n>`) instead of failing the whole batch: with forty lines, knowing WHICH one is the whole point.
+     * Reprice a document: resolve up to 100 selections and compare each with the line's `current_unit_price`. Persists nothing.
+     * - An unresolvable target is reported under `targets.<n>` instead of failing the batch.
+     * - `date` and `channel` (`documents` or `web`) apply to every target with the running promotions; `client_id` picks the price list as a document does (`price_list_id` wins, `null` = none).
+     * - Each price carries `regular_unit_price`, `regular_source` and `promotion`; its `gross` uses the item VAT and company regime (exact amount: `taxes/calculate-totals`).
      *
      * @param  \Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequest  $body
      * @param  string  $company
@@ -1010,7 +1016,7 @@ class PriceLists
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

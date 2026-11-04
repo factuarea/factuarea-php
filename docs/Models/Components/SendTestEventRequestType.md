@@ -106,6 +106,7 @@
 | `ProductCreated`                     | product.created                      |
 | `ProductUpdated`                     | product.updated                      |
 | `ProductReplaced`                    | product.replaced                     |
+| `ProductDeleted`                     | product.deleted                      |
 | `PaymentReceived`                    | payment.received                     |
 | `PaymentReversed`                    | payment.reversed                     |
 | `TaxMetadataChanged`                 | tax.metadata_changed                 |
@@ -168,3 +169,19 @@
 | `ProjectUpdated`                     | project.updated                      |
 | `ProjectArchived`                    | project.archived                     |
 | `ProjectDeleted`                     | project.deleted                      |
+| `PackCreated`                        | pack.created                         |
+| `PackUpdated`                        | pack.updated                         |
+| `PackArchived`                       | pack.archived                        |
+| `PackRestored`                       | pack.restored                        |
+| `PackDeleted`                        | pack.deleted                         |
+| `PromotionCreated`                   | promotion.created                    |
+| `PromotionUpdated`                   | promotion.updated                    |
+| `PromotionStarted`                   | promotion.started                    |
+| `PromotionEnded`                     | promotion.ended                      |
+| `PromotionCancelled`                 | promotion.cancelled                  |
+| `PromotionDeleted`                   | promotion.deleted                    |
+| `PriceListCreated`                   | price_list.created                   |
+| `PriceListUpdated`                   | price_list.updated                   |
+| `PriceListDeleted`                   | price_list.deleted                   |
+| `PriceListItemUpdated`               | price_list.item_updated              |
+| `PriceListItemDeleted`               | price_list.item_deleted              |

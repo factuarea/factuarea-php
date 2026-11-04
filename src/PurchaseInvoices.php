@@ -432,7 +432,9 @@ class PurchaseInvoices
     /**
      * Create an expense
      *
-     * Record an invoice received from a supplier. Catalog lines accept `product_id`, `variant_id`, `presentation_id`, `supplier_offer_id` and an optional `confirmed_base_quantity`. When `supplier_offer_id` is provided, the supplier cost, purchase unit and base-unit conversion are frozen in the invoice line snapshot; `unit_price` may be omitted. Creating the invoice as `pending` registers the inbound stock once. A `draft` invoice does not affect stock until it is later marked as paid.
+     * Record an invoice received from a supplier.
+     * - With `supplier_offer_id`, cost, purchase unit and base conversion are frozen; `unit_price` is optional.
+     * - `pending` registers inbound stock once; `draft` leaves stock untouched until marked as paid.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreatePurchaseInvoiceRequest  $body
      * @param  string  $company
@@ -1425,7 +1427,9 @@ class PurchaseInvoices
     /**
      * Mark expense as paid
      *
-     * Record payment of an expense using the optional `paid_on` date (defaults to today; it cannot be later than today, and an earlier date than the supplier document issue date is accepted as an advance payment). When a draft expense contains stock-managed catalog lines, this transition registers their frozen base quantities as inbound stock exactly once. A pending expense has already registered them, so marking it as paid never duplicates stock.
+     * Record payment of an expense, using the optional `paid_on` date (defaults to today, never later than today).
+     * - A draft expense with stock-managed lines registers its inbound stock exactly once on this transition.
+     * - A pending expense already registered it, so marking it paid never duplicates stock.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesMarkPaidResponse
@@ -1664,7 +1668,9 @@ class PurchaseInvoices
     /**
      * Download the receipt PDF of an expense payment
      *
-     * Streams the PDF receipt of ONE payment of an expense, partial payments included: every active payment has its own receipt, which shows the expense as it stood right after that payment (payments up to it, amount paid and amount pending). Without `payment_id` it returns the receipt of the most recent active payment (by payment date, then by registration). Returns 422 when the expense has no active payments or when the requested payment has been reversed, and 404 when the expense or `payment_id` does not exist.
+     * Stream the PDF receipt of one payment of an expense, partial payments included.
+     * - Without `payment_id`, returns the receipt of the most recent active payment.
+     * - Returns 422 without active payments or if reversed; 404 if the expense or `payment_id` is unknown.
      *
      * @param  string  $company
      * @param  string  $purchaseInvoice
@@ -1908,7 +1914,9 @@ class PurchaseInvoices
     /**
      * Register an expense payment
      *
-     * Record a partial (or total) payment against an expense and append it to its ledger. Body: `amount`, `paid_on`, `payment_method`, plus the optional `bank_account_id`, `reference` and `notes`. Three invariants are enforced and return `422`: the amount must be greater than zero and no larger than the outstanding balance, `paid_on` cannot be later than today (an earlier date than the supplier document issue date is accepted as an advance payment), and a cancelled expense accepts no payments. Once the accumulated payments cover the total, the expense settles on its own — you do not need to call `mark_paid` as well. Returns `201` with the payment just created and a `Location` header pointing at the ledger.
+     * Record a partial or total payment against an expense and append it to its ledger; returns `201` with a `Location` header.
+     * - Returns `422` if amount is zero or above the balance, `paid_on` is future, or the expense is cancelled.
+     * - When payments cover the total the expense settles on its own; no `mark_paid` call is needed.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1PurchaseInvoicesRegisterPaymentResponse

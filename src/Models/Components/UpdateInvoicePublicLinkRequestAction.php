@@ -15,4 +15,5 @@ enum UpdateInvoicePublicLinkRequestAction: string
     case Activate = 'activate';
     case Extend = 'extend';
     case Reset = 'reset';
+    case Publish = 'publish';
 }

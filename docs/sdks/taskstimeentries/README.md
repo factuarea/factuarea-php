@@ -192,7 +192,9 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksTimeEntriesList
 
-List the time logged on a task, newest first, with its author, period, duration, whether it is billable and whether it was invoiced. Task time entries are the time spent on work, not the working-day clock-ins of the time tracking module (`/v1/companies/{company}/time-entries`). Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+List the time logged on a task, newest first, with author, period, duration, `billable` flag and whether it was invoiced.
+- It is task time, not the working-day clock-ins at `/v1/companies/{company}/time-entries`.
+- Cursor-paginated: pass `next_cursor` as `starting_after`; `has_more` tells if there are more.
 
 ### Example Usage
 
@@ -252,6 +254,46 @@ if ($response->taskTimeEntryList !== null) {
 
 Log a closed period of work on a task (`started_at`, `ended_at`, ISO 8601), with an optional `description` and `billable` flag (default `true`). The period must end after it starts (422 `invalid_time_entry_period`). This is task time, unrelated to the working-day records of the time tracking module.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.time_entries.create" method="post" path="/companies/{company}/tasks/{task}/time-entries" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksTimeEntriesCreateRequest(
+    company: '9a984b97-e8c2-4395-a340-ca8bd2ae6bb8',
+    task: '028a1547-6645-4b7b-919a-bc3add7af4ad',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\LogTaskTimeV1Request(
+        startedAt: '<value>',
+        endedAt: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->timeEntries->publicApiV1TasksTimeEntriesCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.time_entries.create" method="post" path="/companies/{company}/tasks/{task}/time-entries" example="missing_api_key" -->
@@ -292,6 +334,46 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.time_entries.create" method="post" path="/companies/{company}/tasks/{task}/time-entries" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksTimeEntriesCreateRequest(
+    company: '969664ea-3059-4e24-8d43-0aee6cda8c23',
+    task: '5c27c96b-750c-42d1-af51-b9fc0447e3f4',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\LogTaskTimeV1Request(
+        startedAt: '<value>',
+        endedAt: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->timeEntries->publicApiV1TasksTimeEntriesCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.time_entries.create" method="post" path="/companies/{company}/tasks/{task}/time-entries" example="success" -->
@@ -316,6 +398,46 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksTimeEntriesCreateRequest(
     company: 'Howe LLC',
     task: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\LogTaskTimeV1Request(
+        startedAt: '<value>',
+        endedAt: '<value>',
+    ),
+);
+
+$response = $sdk->tasks->timeEntries->publicApiV1TasksTimeEntriesCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.time_entries.create" method="post" path="/companies/{company}/tasks/{task}/time-entries" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksTimeEntriesCreateRequest(
+    company: 'e71cf90f-d6e6-4e62-a895-8659fe823398',
+    task: '4f6ba977-d689-42e7-972d-27373540b355',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\LogTaskTimeV1Request(

@@ -46,6 +46,7 @@ class PublicApiV1ProformasSendRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Proforma send accepts the `presentation_precondition` object with exactly seven fields and the optional `expected_presentation_uuid`. The object is required when revisioned presentation is enabled for the company and the document has no retained capture yet (a missing precondition returns 428 `pdf_presentation_precondition_required`); an already captured document is re-sent as captured without it and without creating a new version; otherwise it is ignored.
      *
      * @var ?\Factuarea\Sdk\Models\Components\SendProformaRequest $body
      */

@@ -13,7 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class CreateCompanyV1Request
 {
     /**
-     * Trade name of the company registered under this tax ID (1-255 characters).
+     * Name the company is known by (1-100 characters): its trade name or, without `business_name`, its legal name.
      *
      * @var string $name
      */
@@ -29,7 +29,7 @@ class CreateCompanyV1Request
     public string $taxId;
 
     /**
-     * Legal/registered business name.
+     * Legal/registered business name when it differs from `name` (up to 100 characters). Omitted, `name` is the legal name.
      *
      * @var ?string $businessName
      */

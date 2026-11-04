@@ -29,6 +29,14 @@ class PublicApiV1ProductsShowRequest
     public string $product;
 
     /**
+     * Conditional request: send the `ETag` you stored from a previous response of this operation (quoted, as received) to get `304 Not Modified` without a body when the content has not changed. Omit it to always receive the full response.
+     *
+     * @var ?string $ifNoneMatch
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=If-None-Match')]
+    public ?string $ifNoneMatch = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -45,17 +53,41 @@ class PublicApiV1ProductsShowRequest
     public ?string $include = null;
 
     /**
+     * Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.
+     *
+     * Malformed: 400 `parameter_invalid_iso8601`.
+     *
+     * @var ?string $date
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date')]
+    public ?string $date = null;
+
+    /**
+     * Shape: `all` (default) is the full product; `storefront` only what a web shop may show (no costs or supplier offers) and only for products on sale there, else 404.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsShowView $view
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=view')]
+    public ?PublicApiV1ProductsShowView $view = null;
+
+    /**
      * @param  string  $company
      * @param  string  $product
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsShowView  $view
+     * @param  ?string  $ifNoneMatch
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $include
+     * @param  ?string  $date
      * @phpstan-pure
      */
-    public function __construct(string $company, string $product, ?LocalDate $factuareaVersion = null, ?string $include = null)
+    public function __construct(string $company, string $product, ?string $ifNoneMatch = null, ?LocalDate $factuareaVersion = null, ?string $include = null, ?string $date = null, ?PublicApiV1ProductsShowView $view = PublicApiV1ProductsShowView::All)
     {
         $this->company = $company;
         $this->product = $product;
+        $this->ifNoneMatch = $ifNoneMatch;
         $this->factuareaVersion = $factuareaVersion;
         $this->include = $include;
+        $this->date = $date;
+        $this->view = $view;
     }
 }

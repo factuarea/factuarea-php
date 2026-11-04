@@ -16,9 +16,8 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Status, `ETag`, `Retry-After` and JSON body of a response, whichever way the
  * generated operation surfaced it: as its typed response (`->rawResponse`) or as
- * an {@see APIException} (a status the pinned spec does not declare, such as a
- * 202 or a 503, reaches the caller that way and the exception keeps the raw
- * response and body).
+ * an {@see APIException} (a status the operation does not declare reaches the
+ * caller that way, and the exception keeps the raw response and body).
  */
 final class ResponseMeta
 {

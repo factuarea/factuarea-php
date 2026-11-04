@@ -14,6 +14,45 @@
 
 Add a column at the end of the project board. `name` is required; `icon`, `color` (from the task palette) and `is_final` are optional. The `slug` is derived from the name and must be unique in the project: a clash returns 409 `column_slug_in_use`, and a reserved slug (`planned`, `archived`) returns 422 `column_slug_reserved`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.create" method="post" path="/companies/{company}/projects/{project}/columns" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsColumnsCreateRequest(
+    company: '22baf439-7a11-4f4f-bb86-2973d7c2e18e',
+    project: '4d1543d3-bcbe-4d8e-9405-5d3cafbaf996',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateProjectColumnV1Request(
+        name: '<value>',
+    ),
+);
+
+$response = $sdk->projects->columns->publicApiV1ProjectsColumnsCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.create" method="post" path="/companies/{company}/projects/{project}/columns" example="missing_api_key" -->
@@ -53,6 +92,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.create" method="post" path="/companies/{company}/projects/{project}/columns" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsColumnsCreateRequest(
+    company: '0293b59b-9031-434f-aa0d-7b12483207b5',
+    project: 'e4b73055-6c88-4178-aeac-f9eb641f49ce',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateProjectColumnV1Request(
+        name: '<value>',
+    ),
+);
+
+$response = $sdk->projects->columns->publicApiV1ProjectsColumnsCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.create" method="post" path="/companies/{company}/projects/{project}/columns" example="success" -->
@@ -77,6 +155,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProjectsColumnsCreateRequest(
     company: 'Collier - Mayert',
     project: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\CreateProjectColumnV1Request(
+        name: '<value>',
+    ),
+);
+
+$response = $sdk->projects->columns->publicApiV1ProjectsColumnsCreate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.create" method="post" path="/companies/{company}/projects/{project}/columns" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsColumnsCreateRequest(
+    company: 'ab7a9faa-13e3-486b-bc00-2f9f30d331e1',
+    project: '2a124ac3-b7ab-4239-be4f-3c6c0cc15608',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\CreateProjectColumnV1Request(
@@ -171,7 +288,9 @@ if ($response->projectColumnList !== null) {
 
 ## publicApiV1ProjectsColumnsDelete
 
-Permanently delete a board column. The optional query `move_to_column_id` is the UUID of another column of the same project that receives its tasks: if the column has tasks and it is not sent, the call returns 409 `column_has_tasks`; a target that does not exist, belongs to another project or is the column being deleted returns 422 `invalid_move_target_column`. With a valid target, the tasks are appended to the end of that column in their order, each one emits its status-change event, and the column is deleted in the same transaction. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
+Permanently delete a board column; irreversible, so send the required `Idempotency-Key` header.
+- If the column has tasks and `move_to_column_id` is missing, returns 409 `column_has_tasks`.
+- An invalid target returns 422 `invalid_move_target_column`; a valid one receives the tasks at its end.
 
 ### Example Usage
 
@@ -293,6 +412,47 @@ if ($response->object !== null) {
 
 Set the board order of the project columns by sending all their ids in `column_ids`, in the new order. The list must contain every column of the project exactly once; an unknown column returns 404 `project_column_not_found`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.reorder" method="put" path="/companies/{company}/projects/{project}/columns/reorder" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsColumnsReorderRequest(
+    company: '8f7a5a76-79d0-4c76-abc6-1164ef493267',
+    project: '45f0c8f1-5170-468c-990e-c93f9713cba4',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ReorderProjectColumnsV1Request(
+        columnIds: [
+            '0ded0743-8ef6-44fb-ae64-fef93040867a',
+        ],
+    ),
+);
+
+$response = $sdk->projects->columns->publicApiV1ProjectsColumnsReorder(
+    request: $request
+);
+
+if ($response->projectColumnList !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.reorder" method="put" path="/companies/{company}/projects/{project}/columns/reorder" example="missing_api_key" -->
@@ -334,6 +494,47 @@ if ($response->projectColumnList !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.reorder" method="put" path="/companies/{company}/projects/{project}/columns/reorder" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsColumnsReorderRequest(
+    company: '60ded074-38ef-464f-abe6-4fef93040867',
+    project: 'b36d04b6-6e55-45b0-8314-cc0ecdd52670',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ReorderProjectColumnsV1Request(
+        columnIds: [
+            '0ded0743-8ef6-44fb-ae64-fef93040867a',
+        ],
+    ),
+);
+
+$response = $sdk->projects->columns->publicApiV1ProjectsColumnsReorder(
+    request: $request
+);
+
+if ($response->projectColumnList !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.reorder" method="put" path="/companies/{company}/projects/{project}/columns/reorder" example="success" -->
@@ -358,6 +559,47 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1ProjectsColumnsReorderRequest(
     company: 'Baumbach and Sons',
     project: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\ReorderProjectColumnsV1Request(
+        columnIds: [
+            '0ded0743-8ef6-44fb-ae64-fef93040867a',
+        ],
+    ),
+);
+
+$response = $sdk->projects->columns->publicApiV1ProjectsColumnsReorder(
+    request: $request
+);
+
+if ($response->projectColumnList !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.projects.columns.reorder" method="put" path="/companies/{company}/projects/{project}/columns/reorder" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1ProjectsColumnsReorderRequest(
+    company: 'd4dae26e-ec24-4f57-b9a1-42a090205cb4',
+    project: '45aeb0b6-886e-4482-9249-53d68e4c87b3',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\ReorderProjectColumnsV1Request(

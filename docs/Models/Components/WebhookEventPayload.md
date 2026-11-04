@@ -914,6 +914,15 @@ Components\WebhookEventPayloadProductUpdated $value = /* values here */
 Components\WebhookEventPayloadProductReplaced $value = /* values here */
 ```
 
+### `Components\WebhookEventPayloadProductDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProductDeleted
+*/
+Components\WebhookEventPayloadProductDeleted $value = /* values here */
+```
+
 ### `Components\WebhookEventPayloadPaymentReceived`
 
 ```php
@@ -1443,5 +1452,149 @@ Components\WebhookEventPayloadProjectArchived $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadProjectDeleted
 */
 Components\WebhookEventPayloadProjectDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPackCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPackCreated
+*/
+Components\WebhookEventPayloadPackCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPackUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPackUpdated
+*/
+Components\WebhookEventPayloadPackUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPackArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPackArchived
+*/
+Components\WebhookEventPayloadPackArchived $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPackRestored`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPackRestored
+*/
+Components\WebhookEventPayloadPackRestored $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPackDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPackDeleted
+*/
+Components\WebhookEventPayloadPackDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPromotionCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPromotionCreated
+*/
+Components\WebhookEventPayloadPromotionCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPromotionUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPromotionUpdated
+*/
+Components\WebhookEventPayloadPromotionUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPromotionStarted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPromotionStarted
+*/
+Components\WebhookEventPayloadPromotionStarted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPromotionEnded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPromotionEnded
+*/
+Components\WebhookEventPayloadPromotionEnded $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPromotionCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPromotionCancelled
+*/
+Components\WebhookEventPayloadPromotionCancelled $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPromotionDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPromotionDeleted
+*/
+Components\WebhookEventPayloadPromotionDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPriceListCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPriceListCreated
+*/
+Components\WebhookEventPayloadPriceListCreated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPriceListUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPriceListUpdated
+*/
+Components\WebhookEventPayloadPriceListUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPriceListDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPriceListDeleted
+*/
+Components\WebhookEventPayloadPriceListDeleted $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPriceListItemUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPriceListItemUpdated
+*/
+Components\WebhookEventPayloadPriceListItemUpdated $value = /* values here */
+```
+
+### `Components\WebhookEventPayloadPriceListItemDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadPriceListItemDeleted
+*/
+Components\WebhookEventPayloadPriceListItemDeleted $value = /* values here */
 ```
 

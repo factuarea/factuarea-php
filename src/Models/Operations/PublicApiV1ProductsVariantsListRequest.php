@@ -61,15 +61,26 @@ class PublicApiV1ProductsVariantsListRequest
     public ?string $startingAfter = null;
 
     /**
+     * Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.
+     *
+     * Malformed: 400 `parameter_invalid_iso8601`.
+     *
+     * @var ?string $date
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date')]
+    public ?string $date = null;
+
+    /**
      * @param  string  $company
      * @param  string  $product
      * @param  ?int  $limit
      * @param  ?bool  $active
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $startingAfter
+     * @param  ?string  $date
      * @phpstan-pure
      */
-    public function __construct(string $company, string $product, ?int $limit = null, ?bool $active = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
+    public function __construct(string $company, string $product, ?int $limit = null, ?bool $active = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null, ?string $date = null)
     {
         $this->company = $company;
         $this->product = $product;
@@ -77,5 +88,6 @@ class PublicApiV1ProductsVariantsListRequest
         $this->active = $active;
         $this->factuareaVersion = $factuareaVersion;
         $this->startingAfter = $startingAfter;
+        $this->date = $date;
     }
 }

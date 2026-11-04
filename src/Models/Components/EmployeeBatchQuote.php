@@ -118,6 +118,27 @@ class EmployeeBatchQuote
 
     /**
      *
+     * @var int $seatsToBuy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seats_to_buy')]
+    public int $seatsToBuy;
+
+    /**
+     *
+     * @var int $freeSeatsUsed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('free_seats_used')]
+    public int $freeSeatsUsed;
+
+    /**
+     *
+     * @var bool $cancelsPendingReduction
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cancels_pending_reduction')]
+    public bool $cancelsPendingReduction;
+
+    /**
+     *
      * @var string $fingerprint
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('fingerprint')]
@@ -153,6 +174,20 @@ class EmployeeBatchQuote
 
     /**
      *
+     * @var ?int $originalQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('original_quantity')]
+    public ?int $originalQuantity;
+
+    /**
+     *
+     * @var ?int $projectedQuantity
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('projected_quantity')]
+    public ?int $projectedQuantity;
+
+    /**
+     *
      * @var string $currency
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('currency')]
@@ -174,15 +209,20 @@ class EmployeeBatchQuote
      * @param  int  $transferredPaidSlots
      * @param  int  $chargeableCount
      * @param  int  $finalActiveCount
+     * @param  int  $seatsToBuy
+     * @param  int  $freeSeatsUsed
+     * @param  bool  $cancelsPendingReduction
      * @param  string  $fingerprint
      * @param  string  $currency
      * @param  bool  $seatsBillable
      * @param  bool  $requiresPaymentMethod
      * @param  bool  $requiresFinancialAttempt
      * @param  \DateTime  $expiresAt
+     * @param  ?int  $originalQuantity
+     * @param  ?int  $projectedQuantity
      * @phpstan-pure
      */
-    public function __construct(int $baseCents, int $discountCents, int $taxCents, int $totalCents, int $recurringBaseCents, int $recurringDiscountCents, int $recurringTaxCents, int $recurringTotalCents, int $prorationDate, int $requested, int $activeBefore, int $coveredCount, int $transferredPaidSlots, int $chargeableCount, int $finalActiveCount, string $fingerprint, bool $seatsBillable, bool $requiresPaymentMethod, bool $requiresFinancialAttempt, \DateTime $expiresAt, string $currency = 'EUR')
+    public function __construct(int $baseCents, int $discountCents, int $taxCents, int $totalCents, int $recurringBaseCents, int $recurringDiscountCents, int $recurringTaxCents, int $recurringTotalCents, int $prorationDate, int $requested, int $activeBefore, int $coveredCount, int $transferredPaidSlots, int $chargeableCount, int $finalActiveCount, int $seatsToBuy, int $freeSeatsUsed, bool $cancelsPendingReduction, string $fingerprint, bool $seatsBillable, bool $requiresPaymentMethod, bool $requiresFinancialAttempt, \DateTime $expiresAt, ?int $originalQuantity = null, ?int $projectedQuantity = null, string $currency = 'EUR')
     {
         $this->baseCents = $baseCents;
         $this->discountCents = $discountCents;
@@ -199,11 +239,16 @@ class EmployeeBatchQuote
         $this->transferredPaidSlots = $transferredPaidSlots;
         $this->chargeableCount = $chargeableCount;
         $this->finalActiveCount = $finalActiveCount;
+        $this->seatsToBuy = $seatsToBuy;
+        $this->freeSeatsUsed = $freeSeatsUsed;
+        $this->cancelsPendingReduction = $cancelsPendingReduction;
         $this->fingerprint = $fingerprint;
         $this->seatsBillable = $seatsBillable;
         $this->requiresPaymentMethod = $requiresPaymentMethod;
         $this->requiresFinancialAttempt = $requiresFinancialAttempt;
         $this->expiresAt = $expiresAt;
+        $this->originalQuantity = $originalQuantity;
+        $this->projectedQuantity = $projectedQuantity;
         $this->currency = $currency;
     }
 }

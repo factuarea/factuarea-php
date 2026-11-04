@@ -321,7 +321,9 @@ class Projects
     /**
      * Delete a project
      *
-     * Permanently delete a project together with all its tasks, comments, attachments and time entries. A project that has invoiced hours (in a live time-invoicing batch or on any of its tasks) cannot be deleted: 422 `task_time_entry_invoiced` and nothing is removed until the invoice is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
+     * Permanently delete a project with all its tasks, comments, attachments and time entries.
+     * - Irreversible, no restore: send the required `Idempotency-Key` header.
+     * - A project with invoiced hours returns 422 `task_time_entry_invoiced` until that invoice is deleted.
      *
      * @param  string  $company
      * @param  string  $project
@@ -574,7 +576,9 @@ class Projects
     /**
      * List projects
      *
-     * List the task projects of your company, ordered by their position (the order shown in the app) with a stable tie-break by `id`. Archived projects are left out unless `include_archived=true`. Each project carries its task statistics (total, completed, completion percentage and next due date). Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+     * List the task projects of your company in app order, with task statistics for each.
+     * - Archived projects are left out unless `include_archived=true`.
+     * - Cursor-paginated: pass `next_cursor` as `starting_after`; `has_more` tells whether more pages exist.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsListResponse
@@ -941,7 +945,9 @@ class Projects
     /**
      * Update a project
      *
-     * Partially update a project: only the fields you send change (`PATCH` semantics). You can change the `name`, the `key` (tasks keep answering to their previous key as an alias), the `icon`, the `description` (explicit `null` clears it) and the billing defaults used to invoice logged time (`billing_contact_id`, `billing_product_id`, `billing_hourly_rate`, up to 99,999,999.99 per hour so that the tax of one hour always fits an invoice line). A `key` already in use returns 409 `project_key_in_use`.
+     * Partially update a project: only the fields you send change.
+     * - Editable: `name`, `key` (old key stays as alias), `icon`, `description`, billing defaults.
+     * - A `key` already in use returns 409 `project_key_in_use`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsUpdateResponse

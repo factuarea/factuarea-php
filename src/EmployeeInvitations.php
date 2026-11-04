@@ -287,7 +287,7 @@ class EmployeeInvitations
     /**
      * Resend an employee invitation
      *
-     * Resend a pending employee invitation identified by its `id` (UUID v7), regenerating its token and expiry and re-sending the invitation email. Returns 422 if the invitation was already accepted or canceled, and 404 if it does not exist in your company.
+     * Resend a pending employee invitation identified by its `id` (UUID v7), regenerating its token and expiry and re-sending the invitation email. Returns 422 if the invitation was already accepted or canceled or its email belongs to a terminated employee (`employee_inactive`), and 404 if it does not exist in your company.
      *
      * @param  string  $company
      * @param  string  $invitation
@@ -412,7 +412,10 @@ class EmployeeInvitations
     /**
      * Send an employee invitation
      *
-     * Invite a person to join your company as an employee (Control Horario portal). Only `email` is required — the `employee` role is fixed by the server, never taken from the payload. The invited person receives an email with an acceptance link. Inviting an email that already belongs to a company user, or one that already has a pending invitation, returns 422. Employee invitations do not consume the plan `users` seat limit.
+     * Invite a person to your company as an employee (Control Horario portal); only `email` is required and the role is fixed to `employee`.
+     * - The person receives an email with an acceptance link.
+     * - Returns 422 for an email that already belongs to a company user or has a pending invitation, and 422 `business_rule_violation` (`employee_inactive`) for the email of a terminated employee.
+     * - Does not consume the plan `users` seat limit.
      *
      * @param  \Factuarea\Sdk\Models\Components\SendEmployeeInvitationRequest  $body
      * @param  string  $company

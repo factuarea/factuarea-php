@@ -13,6 +13,7 @@ namespace Factuarea\Sdk\Models\Components;
 class Series
 {
     /**
+     * Public series UUID v7.
      *
      * @var string $id
      */
@@ -50,6 +51,14 @@ class Series
     public string $documentType;
 
     /**
+     * Independent visual association version; fiscal-only edits do not increment it.
+     *
+     * @var int $pdfTemplateVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_version')]
+    public int $pdfTemplateVersion;
+
+    /**
      * Legacy alias for code. Use code field. Will be removed in v2.
      *
      * @var string $prefix
@@ -58,7 +67,7 @@ class Series
     public string $prefix;
 
     /**
-     * Canonical numbering mask describing how the document number is rendered: padding (the block of zeros), year token (`{YYYY}` 4 digits / `{YY}` 2 digits / omitted for no year), optional month token (`{MM}` 2 digits) and separator. Example: `{code}-{YYYY}-{000}` (default) or `{code}-{YYYY}-{00000}` for 5-digit padding. When `counter_reset` is `monthly`, the mask must include the `{MM}` token (e.g. `F-{YYYY}-{MM}-{000}`) so the rendered number stays unique across months; otherwise two months would both start at `1`. Set on creation and editable with `PATCH /v1/companies/{company}/series/{series}` until the first document is issued; fixed afterwards (`series_format_immutable_with_documents`). Mirrors Holded's `format`.
+     * Canonical numbering mask describing how the document number is rendered: padding (the block of zeros), year token (`{YYYY}` 4 digits / `{YY}` 2 digits / omitted for no year), optional month token (`{MM}` 2 digits) and separator. Example: `{code}-{YYYY}-{0000}` (default for a series created without a mask) or `{code}-{YYYY}-{00000}` for 5-digit padding. When `counter_reset` is `monthly`, the mask must include the `{MM}` token (e.g. `F-{YYYY}-{MM}-{000}`) so the rendered number stays unique across months; otherwise two months would both start at `1`. Set on creation and editable with `PATCH /v1/companies/{company}/series/{series}` until the first document is issued; fixed afterwards (`series_format_immutable_with_documents`). Mirrors Holded's `format`.
      *
      * @var string $numberFormat
      */
@@ -131,6 +140,14 @@ class Series
     public ?SeriesInvoiceKind $invoiceKind;
 
     /**
+     * Saved tenant-template UUID v7, or null to inherit. Kept even if the saved template later becomes unavailable.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    public ?string $pdfTemplateId;
+
+    /**
      *
      * @var ?\DateTime $createdAt
      */
@@ -150,6 +167,7 @@ class Series
      * @param  string  $code
      * @param  string  $name
      * @param  string  $documentType
+     * @param  int  $pdfTemplateVersion
      * @param  string  $prefix
      * @param  string  $numberFormat
      * @param  int  $nextNumber
@@ -160,17 +178,19 @@ class Series
      * @param  bool  $isDefault
      * @param  bool  $isActive
      * @param  ?\Factuarea\Sdk\Models\Components\SeriesInvoiceKind  $invoiceKind
+     * @param  ?string  $pdfTemplateId
      * @param  ?\DateTime  $createdAt
      * @param  ?\DateTime  $updatedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, SeriesObject $object, string $code, string $name, string $documentType, string $prefix, string $numberFormat, int $nextNumber, int $currentNumber, int $initialNumber, SeriesCounterReset $counterReset, bool $yearReset, bool $isDefault, bool $isActive, ?SeriesInvoiceKind $invoiceKind = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
+    public function __construct(string $id, SeriesObject $object, string $code, string $name, string $documentType, int $pdfTemplateVersion, string $prefix, string $numberFormat, int $nextNumber, int $currentNumber, int $initialNumber, SeriesCounterReset $counterReset, bool $yearReset, bool $isDefault, bool $isActive, ?SeriesInvoiceKind $invoiceKind = null, ?string $pdfTemplateId = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->code = $code;
         $this->name = $name;
         $this->documentType = $documentType;
+        $this->pdfTemplateVersion = $pdfTemplateVersion;
         $this->prefix = $prefix;
         $this->numberFormat = $numberFormat;
         $this->nextNumber = $nextNumber;
@@ -181,6 +201,7 @@ class Series
         $this->isDefault = $isDefault;
         $this->isActive = $isActive;
         $this->invoiceKind = $invoiceKind;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
     }

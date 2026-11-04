@@ -40,6 +40,7 @@ class PublicApiV1ProductsShowResponse
     public array $headers;
 
     /**
+     * The product, in the requested `view`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsShowResponseBody $object
      */

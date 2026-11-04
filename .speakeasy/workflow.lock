@@ -1,9 +1,9 @@
-speakeasyVersion: 1.802.0
+speakeasyVersion: 1.806.0
 sources:
     Factuarea Public API:
         sourceNamespace: factuarea-public-api
-        sourceRevisionDigest: sha256:2acb7e2e36a4056ac0c5b53ca609cfe3a26f04d85b5a7c391b614cbba4b93e30
-        sourceBlobDigest: sha256:0a9f0254adaa1897f3768ff4dca8715ad504c15cbbe042ff48d7f473383fb7d8
+        sourceRevisionDigest: sha256:ec16de2e2dccdb81bed576fe3c872bbe51cbf8f7f80ce069ec3f798cd5fa139b
+        sourceBlobDigest: sha256:96269456b62fffdc584613692972835919e8bbbbee6403383203489dcc3c8598
         tags:
             - latest
             - 1.0.0
@@ -11,10 +11,10 @@ targets:
     factuarea:
         source: Factuarea Public API
         sourceNamespace: factuarea-public-api
-        sourceRevisionDigest: sha256:2acb7e2e36a4056ac0c5b53ca609cfe3a26f04d85b5a7c391b614cbba4b93e30
-        sourceBlobDigest: sha256:0a9f0254adaa1897f3768ff4dca8715ad504c15cbbe042ff48d7f473383fb7d8
+        sourceRevisionDigest: sha256:ec16de2e2dccdb81bed576fe3c872bbe51cbf8f7f80ce069ec3f798cd5fa139b
+        sourceBlobDigest: sha256:96269456b62fffdc584613692972835919e8bbbbee6403383203489dcc3c8598
         codeSamplesNamespace: factuarea-public-api-php-code-samples
-        codeSamplesRevisionDigest: sha256:05c23a48923742631a3c5d651568c4f461bde386e2a68231ed54fa86d8ce64ad
+        codeSamplesRevisionDigest: sha256:a47f4cb82f1dac64ad0b5e0cf05f2557d97d272b2eed41942d1a0ef39c5e1cc5
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -26,6 +26,7 @@ workflow:
                 - location: .speakeasy/overlays/retry-status-code-casing.yaml
                 - location: .speakeasy/overlays/product-options-namespace.yaml
                 - location: .speakeasy/overlays/drop-speakeasy-pagination.yaml
+                - location: .speakeasy/overlays/face-no-retry.yaml
             output: .speakeasy/out.openapi.yaml
             registry:
                 location: registry.speakeasyapi.dev/factuarea/factuarea/factuarea-public-api

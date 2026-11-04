@@ -40,6 +40,7 @@ class PublicApiV1InvoicesBulkCreateResponse
     public array $headers;
 
     /**
+     * Invoice rows are classified independently. A row whose line chooses a catalog tax by id and contradicts it (`tax_rate_mismatch`) is created by none: with `dry_run=false` it is returned in failures[] with `error_code` `parameter_invalid_value` and the Spanish `error_message` of the line (the subcode, `param` and `line_index` of the single-invoice 422 are not repeated per row), while `dry_run=true` does not run that check. invalid_invoice_payment_terms is returned as a row error: results[].errors[] in dry-run or failures[].error_code/errors[] during creation. It does not create a top-level 422. Bulk is create-only; expected_payment_terms_version is not accepted and calendar 409/428 responses do not apply.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesBulkCreateResponseBody $object
      */

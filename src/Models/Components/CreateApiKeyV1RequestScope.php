@@ -11,12 +11,20 @@ namespace Factuarea\Sdk\Models\Components;
 
 enum CreateApiKeyV1RequestScope: string
 {
+    case PdfTemplatesRead = 'pdf_templates:read';
+    case PdfTemplatesWrite = 'pdf_templates:write';
     case ContactsRead = 'contacts:read';
     case ContactsWrite = 'contacts:write';
     case ContactsDelete = 'contacts:delete';
     case ProductsRead = 'products:read';
     case ProductsWrite = 'products:write';
     case ProductsDelete = 'products:delete';
+    case PacksRead = 'packs:read';
+    case PacksWrite = 'packs:write';
+    case PacksDelete = 'packs:delete';
+    case PromotionsRead = 'promotions:read';
+    case PromotionsWrite = 'promotions:write';
+    case PromotionsDelete = 'promotions:delete';
     case PriceListsRead = 'price_lists:read';
     case PriceListsWrite = 'price_lists:write';
     case InvoicesRead = 'invoices:read';

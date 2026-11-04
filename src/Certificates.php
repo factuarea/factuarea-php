@@ -527,7 +527,9 @@ class Certificates
     /**
      * Upload a company certificate
      *
-     * Upload an FNMT certificate (PKCS#12, `.p12`/`.pfx`) as `multipart/form-data` with `certificate_file` and `certificate_password`. The file is validated by magic bytes (ASN.1 DER) and capped at 100 KB; the password is encrypted at rest. The uploaded certificate is activated automatically (previous ones are deactivated). The `Location` header points to `/v1/companies/{company}/verifactu/certificates/active`.
+     * Upload an FNMT certificate (PKCS#12) as `multipart/form-data` with `certificate_file` and `certificate_password`.
+     * - Validated by magic bytes and capped at 100 KB; the password is encrypted at rest.
+     * - It is activated automatically (previous ones are deactivated); `Location` points to `.../verifactu/certificates/active`.
      *
      * @param  \Factuarea\Sdk\Models\Components\UploadCompanyCertificateV1Request  $body
      * @param  string  $company

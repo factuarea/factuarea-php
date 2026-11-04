@@ -9,9 +9,56 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** SendInvoiceRequest - Email an invoice. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters) and `body` (string). If the client has no email and `to` is absent, it returns 422 `missing_required_param`. */
+/** SendInvoiceRequest - Email an invoice. A draft is issued and then emailed in one step: the reviewed presentation precondition is checked once, by the issue (the first write of the document), and the email carries the capture that issue left; repeating the precondition is neither needed nor checked against the issued invoice. Optional body: `to` (string), `cc[]` and `bcc[]` (arrays of emails), `subject` (max 200 characters), `body` (string), `attach_facturae` (boolean) and `submission_id` (UUID of a retained FACe submission; requires `attach_facturae: true`). A selected submission attaches its exact retained XML for this invoice; it does not submit to FACe or regenerate the artifact. If the client has no email and `to` is absent, it returns 422 `missing_required_param`. Presentation precondition fields (`expected_selection_version`, `expected_source_token`, `expected_preview_context_fingerprint`, `expected_template_revision_id`, `expected_commercial_identity_revision_id`, `purpose`, `format`) only take effect when revisioned presentation is enabled for the company; otherwise they are ignored. When revisioned presentation is enabled, the seven fields are all-or-none and are only required while the invoice has no retained capture (an already captured invoice is re-sent as captured without them). */
 class SendInvoiceRequest
 {
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?int $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedSelectionVersion = null;
+
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?string $expectedSourceToken
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_source_token')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSourceToken = null;
+
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?string $expectedPreviewContextFingerprint
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_preview_context_fingerprint')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPreviewContextFingerprint = null;
+
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SendInvoiceRequestPurpose $purpose
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('purpose')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SendInvoiceRequestPurpose|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?SendInvoiceRequestPurpose $purpose = null;
+
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SendInvoiceRequestFormat $format
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('format')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SendInvoiceRequestFormat|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?SendInvoiceRequestFormat $format = null;
+
     /**
      *
      * @var ?string $to
@@ -57,19 +104,84 @@ class SendInvoiceRequest
     public ?string $body = null;
 
     /**
+     * Attach the invoice Facturae XML. When `submission_id` is supplied, the XML comes from that exact retained FACe submission.
+     *
+     * @var ?bool $attachFacturae
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('attach_facturae')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $attachFacturae = null;
+
+    /**
+     * UUID of an existing FACe submission belonging to this invoice and company. Requires `attach_facturae: true`; attaches the retained XML without submitting again or regenerating it.
+     *
+     * @var ?string $submissionId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('submission_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $submissionId = null;
+
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?string $expectedTemplateRevisionId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_template_revision_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedTemplateRevisionId = null;
+
+    /**
+     * Top-level Invoice presentation precondition field. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. When enabled, supply all seven fields together, or omit all seven when no reviewed context is being submitted.
+     *
+     * @var ?string $expectedCommercialIdentityRevisionId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_commercial_identity_revision_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedCommercialIdentityRevisionId = null;
+
+    /**
+     * UUID of the presentation the caller reviewed. If it is no longer the current presentation of the document the request is rejected with 409 and nothing is changed. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored. Only for re-sending an invoice that already has a retained capture; when a draft is issued and sent in one step it is not needed, because the email carries the capture the issue just left.
+     *
+     * @var ?string $expectedPresentationUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_uuid')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationUuid = null;
+
+    /**
+     * @param  ?int  $expectedSelectionVersion
+     * @param  ?string  $expectedSourceToken
+     * @param  ?string  $expectedPreviewContextFingerprint
+     * @param  ?\Factuarea\Sdk\Models\Components\SendInvoiceRequestPurpose  $purpose
+     * @param  ?\Factuarea\Sdk\Models\Components\SendInvoiceRequestFormat  $format
      * @param  ?string  $to
      * @param  ?array<string>  $cc
      * @param  ?array<string>  $bcc
      * @param  ?string  $subject
      * @param  ?string  $body
+     * @param  ?bool  $attachFacturae
+     * @param  ?string  $submissionId
+     * @param  ?string  $expectedTemplateRevisionId
+     * @param  ?string  $expectedCommercialIdentityRevisionId
+     * @param  ?string  $expectedPresentationUuid
      * @phpstan-pure
      */
-    public function __construct(?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null)
+    public function __construct(?int $expectedSelectionVersion = null, ?string $expectedSourceToken = null, ?string $expectedPreviewContextFingerprint = null, ?SendInvoiceRequestPurpose $purpose = null, ?SendInvoiceRequestFormat $format = null, ?string $to = null, ?array $cc = null, ?array $bcc = null, ?string $subject = null, ?string $body = null, ?bool $attachFacturae = null, ?string $submissionId = null, ?string $expectedTemplateRevisionId = null, ?string $expectedCommercialIdentityRevisionId = null, ?string $expectedPresentationUuid = null)
     {
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
+        $this->expectedSourceToken = $expectedSourceToken;
+        $this->expectedPreviewContextFingerprint = $expectedPreviewContextFingerprint;
+        $this->purpose = $purpose;
+        $this->format = $format;
         $this->to = $to;
         $this->cc = $cc;
         $this->bcc = $bcc;
         $this->subject = $subject;
         $this->body = $body;
+        $this->attachFacturae = $attachFacturae;
+        $this->submissionId = $submissionId;
+        $this->expectedTemplateRevisionId = $expectedTemplateRevisionId;
+        $this->expectedCommercialIdentityRevisionId = $expectedCommercialIdentityRevisionId;
+        $this->expectedPresentationUuid = $expectedPresentationUuid;
     }
 }

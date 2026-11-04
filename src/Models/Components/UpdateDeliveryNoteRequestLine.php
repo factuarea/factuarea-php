@@ -8,16 +8,15 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class UpdateDeliveryNoteRequestLine
 {
     /**
      *
-     * @var ?float $quantity
+     * @var float $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $quantity = null;
+    public float $quantity;
 
     /**
      *
@@ -46,6 +45,7 @@ class UpdateDeliveryNoteRequestLine
     public float|string|null $unitPrice = null;
 
     /**
+     * Public identifier (UUID v7) of the VAT-class tax of the catalog chosen for the line. Optional. Without `tax_rate`, the rate (and the indirect-tax regime, the AEAT qualification and, for an exempt or not-subject tax, the exemption cause) comes from that tax. A tax that is not a VAT-class tax, or a `tax_rate` that differs from the rate of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.tax_rate` and `error.line_index` = N (the zero-based index of the line). Send only the id, or a `tax_rate` equal to the tax's own rate.
      *
      * @var ?string $taxRateId
      */
@@ -63,6 +63,7 @@ class UpdateDeliveryNoteRequestLine
     public ?float $taxRate = null;
 
     /**
+     * Withholding (IRPF) percentage of the line, 0–100 (the magnitude: a catalog withholding stored with a negative sign is declared here without it). Optional: when you omit it (or send `null`) and the line carries `retention_rate_id`, it is taken from that tax. If you send both and the percentage differs from the one of the chosen tax, the request is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N.
      *
      * @var ?float $retentionRate
      */
@@ -71,6 +72,7 @@ class UpdateDeliveryNoteRequestLine
     public ?float $retentionRate = null;
 
     /**
+     * Equivalence-surcharge percentage of the line, 0–100. Optional: when you omit it (or send `null`) and the line carries `surcharge_rate_id`, it is taken from that tax. If you send both and the percentage differs from the one of the chosen tax, the request is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N.
      *
      * @var ?float $surchargeRate
      */
@@ -79,6 +81,7 @@ class UpdateDeliveryNoteRequestLine
     public ?float $surchargeRate = null;
 
     /**
+     * Public identifier (UUID v7) of the withholding (IRPF) tax of the catalog chosen for the line. Optional. Without `retention_rate`, the percentage of the line is taken from that tax (its magnitude, 0–100): sending only the id never computes the withholding at 0 %. A tax of another class (for example a VAT or an equivalence-surcharge tax), or a `retention_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $retentionRateId
      */
@@ -87,6 +90,7 @@ class UpdateDeliveryNoteRequestLine
     public ?string $retentionRateId = null;
 
     /**
+     * Public identifier (UUID v7) of the equivalence-surcharge tax of the catalog chosen for the line. Optional. Without `surcharge_rate`, the percentage of the line is taken from that tax: sending only the id never computes the surcharge at 0 %. A tax of another class (for example a VAT or a withholding tax), or a `surcharge_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $surchargeRateId
      */
@@ -150,6 +154,39 @@ class UpdateDeliveryNoteRequestLine
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestIndirectTaxRegime|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?UpdateDeliveryNoteRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
+     *
+     * @var ?string $packId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packId = null;
+
+    /**
+     *
+     * @var ?string $packGroupId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packGroupId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestPrintMode $printMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('print_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestPrintMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateDeliveryNoteRequestPrintMode $printMode = null;
+
+    /**
+     *
+     * @var ?bool $pricesIncludeTax
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('prices_include_tax')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $pricesIncludeTax = null;
 
     /**
      *
@@ -228,7 +265,48 @@ class UpdateDeliveryNoteRequestLine
     public ?bool $optionAdjustmentsAbsorbed = null;
 
     /**
-     * @param  ?float  $quantity
+     *
+     * @var ?string $promotionUuidSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_uuid_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionUuidSnapshot = null;
+
+    /**
+     *
+     * @var ?string $promotionNameSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_name_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionNameSnapshot = null;
+
+    /**
+     *
+     * @var ?float $regularUnitPrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_unit_price')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $regularUnitPrice = null;
+
+    /**
+     *
+     * @var ?LocalDate $soldOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sold_on')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $soldOn = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestChannel $channel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channel')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestChannel|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateDeliveryNoteRequestChannel $channel = null;
+
+    /**
+     * @param  float  $quantity
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
      * @param  float|string|null  $unitPrice
@@ -245,6 +323,10 @@ class UpdateDeliveryNoteRequestLine
      * @param  ?float  $baseQuantity
      * @param  ?float  $discountPercent
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $packId
+     * @param  ?string  $packGroupId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestPrintMode  $printMode
+     * @param  ?bool  $pricesIncludeTax
      * @param  ?string  $configurationUuid
      * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestOption>  $options
@@ -254,9 +336,14 @@ class UpdateDeliveryNoteRequestLine
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestPriceSemantics  $priceSemantics
      * @param  ?float  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?string  $promotionUuidSnapshot
+     * @param  ?string  $promotionNameSnapshot
+     * @param  ?float  $regularUnitPrice
+     * @param  ?LocalDate  $soldOn
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateDeliveryNoteRequestChannel  $channel
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $baseQuantity = null, ?float $discountPercent = null, ?UpdateDeliveryNoteRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateDeliveryNoteRequestPriceSource $priceSource = null, ?UpdateDeliveryNoteRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $taxRateId = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $baseQuantity = null, ?float $discountPercent = null, ?UpdateDeliveryNoteRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $packId = null, ?string $packGroupId = null, ?UpdateDeliveryNoteRequestPrintMode $printMode = null, ?bool $pricesIncludeTax = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdateDeliveryNoteRequestPriceSource $priceSource = null, ?UpdateDeliveryNoteRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $promotionUuidSnapshot = null, ?string $promotionNameSnapshot = null, ?float $regularUnitPrice = null, ?LocalDate $soldOn = null, ?UpdateDeliveryNoteRequestChannel $channel = null)
     {
         $this->quantity = $quantity;
         $this->description = $description;
@@ -275,6 +362,10 @@ class UpdateDeliveryNoteRequestLine
         $this->baseQuantity = $baseQuantity;
         $this->discountPercent = $discountPercent;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->packId = $packId;
+        $this->packGroupId = $packGroupId;
+        $this->printMode = $printMode;
+        $this->pricesIncludeTax = $pricesIncludeTax;
         $this->configurationUuid = $configurationUuid;
         $this->countedQuantity = $countedQuantity;
         $this->options = $options;
@@ -284,5 +375,10 @@ class UpdateDeliveryNoteRequestLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->promotionUuidSnapshot = $promotionUuidSnapshot;
+        $this->promotionNameSnapshot = $promotionNameSnapshot;
+        $this->regularUnitPrice = $regularUnitPrice;
+        $this->soldOn = $soldOn;
+        $this->channel = $channel;
     }
 }

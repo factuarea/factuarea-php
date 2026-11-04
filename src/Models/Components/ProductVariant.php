@@ -106,6 +106,36 @@ class ProductVariant
     public ?string $lowStockThreshold;
 
     /**
+     * Sale price with and without VAT, measured as a document line of quantity 1 (no customer rate, company regime, today). Returned inside the `Product` read (`all` and `storefront`), not by the standalone sub-resource endpoints. The `net` amount keeps the scale of the catalog price.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogSalePrice $salePrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sale_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogSalePrice|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogSalePrice $salePrice = null;
+
+    /**
+     * The promotion that applies to the item on the web channel today, or on the day of the `date` parameter, or `null` when there is none. `sale_price` is still the regular price: with a promotion, show `promotion.price` and, only when `promotion.announce_reduction` is `true`, `promotion.previous_price` as the previous price. In schema.org, `Offer.price` is `promotion.price.gross` and `Offer.priceValidUntil` is `promotion.ends_at`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogPromotion|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogPromotion $promotion = null;
+
+    /**
+     * Availability. Returned inside the `Product` read only; `null` for a variant that does not manage its own stock.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProductAvailability $availability
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('availability')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductAvailability|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProductAvailability $availability = null;
+
+    /**
      * Own gross transport weight in kg per BASE unit (decimal string, up to 4 decimals, greater than 0) that replaces the product weight for this variant; `null` inherits the product weight. Rejected with 422 `gross_weight_not_allowed` when the product base unit is a mass unit.
      *
      * @var ?string $grossWeightKg
@@ -128,10 +158,13 @@ class ProductVariant
      * @param  ?string  $basePriceOverride
      * @param  ?string  $unitCostOverride
      * @param  ?string  $lowStockThreshold
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogSalePrice  $salePrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogPromotion  $promotion
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductAvailability  $availability
      * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductVariantObject $object, string $productId, string $name, bool $manageStock, string $stock, array $specifications, bool $active, ?string $sku = null, ?string $barcode = null, ?string $basePriceOverride = null, ?string $unitCostOverride = null, ?string $lowStockThreshold = null, ?string $grossWeightKg = null)
+    public function __construct(string $id, ProductVariantObject $object, string $productId, string $name, bool $manageStock, string $stock, array $specifications, bool $active, ?string $sku = null, ?string $barcode = null, ?string $basePriceOverride = null, ?string $unitCostOverride = null, ?string $lowStockThreshold = null, ?CatalogSalePrice $salePrice = null, ?CatalogPromotion $promotion = null, ?ProductAvailability $availability = null, ?string $grossWeightKg = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -146,6 +179,9 @@ class ProductVariant
         $this->basePriceOverride = $basePriceOverride;
         $this->unitCostOverride = $unitCostOverride;
         $this->lowStockThreshold = $lowStockThreshold;
+        $this->salePrice = $salePrice;
+        $this->promotion = $promotion;
+        $this->availability = $availability;
         $this->grossWeightKg = $grossWeightKg;
     }
 }

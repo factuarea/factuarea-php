@@ -23,8 +23,49 @@
 
 ## publicApiV1TasksAssign
 
-Assign a task to a person of your company (`assignee_id`): a member, or a person of another account who reaches the company through an account relation with `operate` access (for example, the accountancy firm that manages it), whose account is not published. A user who is neither returns 422 `task_assignee_not_member`, also for people with view-only relation access. Use `GET /v1/companies/{company}/users` to find the assignable ids.
+Assign a task to a person of your company (`assignee_id`): a member, or a person of another account with `operate` access via an account relation.
+- Anyone else, including view-only relation access, returns 422 `task_assignee_not_member`.
+- Find assignable ids with `GET /v1/companies/{company}/users`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.assign" method="post" path="/companies/{company}/tasks/{task}/assign" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksAssignRequest(
+    company: '22b47321-aa81-45ab-984b-ded892df0bd6',
+    task: 'cb33143b-96b8-4626-ac13-9765d19eddd0',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignTaskV1Request(
+        assigneeId: 'dd458295-db30-479a-806c-f8d0667b9cc3',
+    ),
+);
+
+$response = $sdk->tasks->publicApiV1TasksAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.assign" method="post" path="/companies/{company}/tasks/{task}/assign" example="missing_api_key" -->
@@ -49,6 +90,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksAssignRequest(
     company: 'Collier LLC',
     task: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignTaskV1Request(
+        assigneeId: 'dd458295-db30-479a-806c-f8d0667b9cc3',
+    ),
+);
+
+$response = $sdk->tasks->publicApiV1TasksAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.assign" method="post" path="/companies/{company}/tasks/{task}/assign" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksAssignRequest(
+    company: 'dd458295-db30-479a-806c-f8d0667b9cc3',
+    task: 'ed027c39-dbe7-405d-ac5d-d979616eba2b',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\AssignTaskV1Request(
@@ -103,6 +183,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.assign" method="post" path="/companies/{company}/tasks/{task}/assign" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksAssignRequest(
+    company: '90aa1e80-19d1-4d75-ba8c-d69a8efd6a60',
+    task: '52293012-fa80-4acd-806d-48219b23df14',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\AssignTaskV1Request(
+        assigneeId: 'dd458295-db30-479a-806c-f8d0667b9cc3',
+    ),
+);
+
+$response = $sdk->tasks->publicApiV1TasksAssign(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -126,6 +245,45 @@ if ($response->object !== null) {
 
 Move up to 200 tasks (`task_ids`) to one board target: a `column_id` or a virtual `status`. Tasks that no longer exist or were moved are skipped silently; the result reports how many changed. More than 200 ids returns 422 `bulk_task_selection_too_large`. Requires an `Idempotency-Key`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_status" method="post" path="/companies/{company}/tasks/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChangeTaskStatusV1Request(
+    taskIds: [
+        '2aa1773b-55cd-4480-a14c-0b9909ffb14b',
+        'cb406ef7-505d-45cd-8ff5-f69aa6cad9bf',
+    ],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkStatus(
+    company: '9cb406ef-7505-4d5c-bdff-5f69aa6cad9b',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_status" method="post" path="/companies/{company}/tasks/bulk-status" example="missing_api_key" -->
@@ -155,6 +313,45 @@ $body = new Components\BulkChangeTaskStatusV1Request(
 
 $response = $sdk->tasks->publicApiV1TasksBulkStatus(
     company: 'Bradtke Inc',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_status" method="post" path="/companies/{company}/tasks/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChangeTaskStatusV1Request(
+    taskIds: [
+        '2aa1773b-55cd-4480-a14c-0b9909ffb14b',
+        'cb406ef7-505d-45cd-8ff5-f69aa6cad9bf',
+    ],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkStatus(
+    company: '92aa1773-b55c-4d48-a014-c0b9909ffb14',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -204,6 +401,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_status" method="post" path="/companies/{company}/tasks/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkChangeTaskStatusV1Request(
+    taskIds: [
+        '2aa1773b-55cd-4480-a14c-0b9909ffb14b',
+        'cb406ef7-505d-45cd-8ff5-f69aa6cad9bf',
+    ],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkStatus(
+    company: '2030f6f7-c3b5-45c6-8f40-af5172eadb8d',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -228,8 +464,49 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksBulkDelete
 
-Permanently delete up to 200 tasks (`task_ids`) with their comments, attachments and time entries. Tasks that no longer exist are skipped; the result reports how many were deleted. If any task in the selection has invoiced hours the whole request is rejected with 422 `task_time_entry_invoiced` and nothing is deleted. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
+Permanently delete up to 200 tasks (`task_ids`) with their comments, attachments and time entries.
+- Irreversible; requires an `Idempotency-Key`.
+- Missing tasks are skipped; any task with invoiced hours rejects the whole request with 422 `task_time_entry_invoiced`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_delete" method="post" path="/companies/{company}/tasks/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteTasksV1Request(
+    taskIds: [
+        '80903067-ba12-4a9e-af7f-3c6386b4485a',
+        '5b548708-10c0-471c-ad25-c1f13dd3b018',
+    ],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkDelete(
+    company: '95b54870-810c-4071-acd2-5c1f13dd3b01',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_delete" method="post" path="/companies/{company}/tasks/bulk-delete" example="missing_api_key" -->
@@ -259,6 +536,45 @@ $body = new Components\BulkDeleteTasksV1Request(
 
 $response = $sdk->tasks->publicApiV1TasksBulkDelete(
     company: 'Farrell - Baumbach',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_delete" method="post" path="/companies/{company}/tasks/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteTasksV1Request(
+    taskIds: [
+        '80903067-ba12-4a9e-af7f-3c6386b4485a',
+        '5b548708-10c0-471c-ad25-c1f13dd3b018',
+    ],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkDelete(
+    company: 'b8090306-7ba1-42a9-aef7-f3c6386b4485',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -308,6 +624,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_delete" method="post" path="/companies/{company}/tasks/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteTasksV1Request(
+    taskIds: [
+        '80903067-ba12-4a9e-af7f-3c6386b4485a',
+        '5b548708-10c0-471c-ad25-c1f13dd3b018',
+    ],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkDelete(
+    company: 'b6917824-7c13-4af8-9ba5-505661e5fa3c',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -334,6 +689,42 @@ if ($response->object !== null) {
 
 Apply the same change to up to 200 tasks (`task_ids`): `priority`, `assignee_id` (`null` unassigns), `due_on` (`null` clears it), `add_label_id` and/or `remove_label_id`. A key you do not send is left untouched. Sending no change, or adding and removing the same label, returns 422. Requires an `Idempotency-Key`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_update" method="post" path="/companies/{company}/tasks/bulk-update" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkUpdateTasksV1Request(
+    taskIds: [],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkUpdate(
+    company: '8fc6e48e-7176-44fd-92b5-66d27c305e48',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_update" method="post" path="/companies/{company}/tasks/bulk-update" example="missing_api_key" -->
@@ -370,6 +761,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_update" method="post" path="/companies/{company}/tasks/bulk-update" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkUpdateTasksV1Request(
+    taskIds: [],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkUpdate(
+    company: '0d6163eb-1587-4406-aed7-aeb2c84a0eed',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_update" method="post" path="/companies/{company}/tasks/bulk-update" example="success" -->
@@ -396,6 +823,42 @@ $body = new Components\BulkUpdateTasksV1Request(
 
 $response = $sdk->tasks->publicApiV1TasksBulkUpdate(
     company: 'Shields - Jacobs',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.bulk_update" method="post" path="/companies/{company}/tasks/bulk-update" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkUpdateTasksV1Request(
+    taskIds: [],
+);
+
+$response = $sdk->tasks->publicApiV1TasksBulkUpdate(
+    company: '10bb9de5-f497-44fc-af1e-56b8452faf5c',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -489,8 +952,47 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksCreate
 
-Create a task in a project. `project_id` and `title` are required. The task starts in the first column unless you send a `column_id` or a virtual `status` (`planned` for the backlog). Optional: `description` (Markdown), `priority`, `start_on`, `due_on`, `assignee_id` (a member of your company), `label_ids`, `custom_fields` (values keyed by field `id`) and `entity_link`: an object with `type` (from the entity-link vocabulary) and `id` that links the task to a document or contact in the same transaction; if that entity does not exist, belongs to another company or its module is not accessible, the call returns 404 `linked_entity_not_found` and the task is not created.
+Create a task in a project; `project_id` and `title` are required.
+- It starts in the first column unless you send `column_id` or a virtual `status` (`planned` for the backlog).
+- `entity_link` (`type` + `id`) links a document or contact atomically; if the entity is not found or accessible, 404 `linked_entity_not_found` and no task is created.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.create" method="post" path="/companies/{company}/tasks" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateTaskV1Request(
+    projectId: 'a538e5c3-806d-40f4-b47a-a451f007bf97',
+    title: '<value>',
+);
+
+$response = $sdk->tasks->publicApiV1TasksCreate(
+    company: 'ba5bfaec-8583-4f86-b112-4fcf0bf4809e',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.create" method="post" path="/companies/{company}/tasks" example="missing_api_key" -->
@@ -518,6 +1020,43 @@ $body = new Components\CreateTaskV1Request(
 
 $response = $sdk->tasks->publicApiV1TasksCreate(
     company: 'Heaney, Runolfsson and Ebert',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.create" method="post" path="/companies/{company}/tasks" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateTaskV1Request(
+    projectId: 'a538e5c3-806d-40f4-b47a-a451f007bf97',
+    title: '<value>',
+);
+
+$response = $sdk->tasks->publicApiV1TasksCreate(
+    company: 'a538e5c3-806d-40f4-b47a-a451f007bf97',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -565,6 +1104,43 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.create" method="post" path="/companies/{company}/tasks" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateTaskV1Request(
+    projectId: 'a538e5c3-806d-40f4-b47a-a451f007bf97',
+    title: '<value>',
+);
+
+$response = $sdk->tasks->publicApiV1TasksCreate(
+    company: 'c35997c3-ac23-40cb-a435-5ec72fc5756e',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -589,7 +1165,9 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksSearch
 
-Search the tasks of your company across projects. Filters: `q` (free text; a value shaped like a task key such as `DEV-12` also matches that key), `project_id`, `status` (`planned`, `active`, `archived`), `column_id`, `priority`, `assignee_id` (a member UUID or `me`), `label_id`, `due_before`, `due_after` and `completed`. `sort` accepts `created_at`, `updated_at`, `due_on`, `priority` or `number`, with a `-` prefix for descending (default `-created_at`); ties are broken by `id` so the order is stable. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+Search the tasks of your company across projects, filtering by `q`, `project_id`, `status`, `column_id`, `priority`, `assignee_id` (UUID or `me`), `label_id`, due dates and `completed`.
+- `sort` takes `created_at`, `updated_at`, `due_on`, `priority` or `number`; prefix `-` for descending (default `-created_at`).
+- Cursor-paginated: pass `next_cursor` as `starting_after`.
 
 ### Example Usage
 
@@ -823,7 +1401,9 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksDuplicate
 
-Create a copy of a task at the end of the same column or backlog, with an optional new `title`. The copy keeps description, priority, dates, labels, custom field values, the assignee (if still a member), its parent (as a sibling subtask) and the attachments referenced in the description, which count towards the storage quota (402 `storage_quota_exceeded` when it is full). Comments, activity, time entries, child subtasks, other relations, external links and entity links are not copied.
+Create a copy of a task at the end of the same column or backlog, with an optional new `title`.
+- Keeps description, priority, dates, labels, custom fields, assignee, parent and description attachments (these count towards storage, 402 `storage_quota_exceeded`).
+- Comments, activity, time entries, subtasks, other relations and links are not copied.
 
 ### Example Usage
 
@@ -884,6 +1464,41 @@ if ($response->object !== null) {
 
 Look up a task by its key (`DEV-12`) sent in the request body. Previous keys of a task keep working after moving it to another project or renaming the project key. Returns 404 `task_not_found` when no task of your company matches; a malformed key returns 422 `invalid_task_key`. A read-only lookup: no `Idempotency-Key` needed.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.find_by_key" method="post" path="/companies/{company}/tasks/find-by-key" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindTaskByKeyV1Request(
+    key: '<key>',
+);
+
+$response = $sdk->tasks->publicApiV1TasksFindByKey(
+    company: 'e0c38674-15b5-4e84-8e17-fd7eb2d6b311',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.find_by_key" method="post" path="/companies/{company}/tasks/find-by-key" example="missing_api_key" -->
@@ -910,6 +1525,41 @@ $body = new Components\FindTaskByKeyV1Request(
 
 $response = $sdk->tasks->publicApiV1TasksFindByKey(
     company: 'Halvorson, Boyle and Yost',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.find_by_key" method="post" path="/companies/{company}/tasks/find-by-key" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindTaskByKeyV1Request(
+    key: '<key>',
+);
+
+$response = $sdk->tasks->publicApiV1TasksFindByKey(
+    company: 'cceef51f-cff5-4833-b31d-14a62ee46876',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -954,6 +1604,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.find_by_key" method="post" path="/companies/{company}/tasks/find-by-key" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindTaskByKeyV1Request(
+    key: '<key>',
+);
+
+$response = $sdk->tasks->publicApiV1TasksFindByKey(
+    company: '4fb18f9b-c45a-4a85-957e-c242242aa233',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -977,7 +1662,9 @@ if ($response->object !== null) {
 
 ## publicApiV1TasksLinked
 
-List the tasks of any project linked to a Factuarea entity (`entity_type` + `entity_id`): an invoice, quote, pro forma, delivery note, purchase invoice, recurring invoice, contact, product or employee. Archived tasks are included and flagged. An entity that does not exist or belongs to another company returns an empty list. Cursor-paginated: pass the `next_cursor` of a page as `starting_after` to get the next one; `has_more` tells whether there are more.
+List the tasks of any project linked to a Factuarea entity (`entity_type` + `entity_id`); archived tasks are included and flagged.
+- An entity that does not exist or belongs to another company returns an empty list.
+- Cursor-paginated: pass `next_cursor` as `starting_after`; `has_more` tells if there are more.
 
 ### Example Usage
 
@@ -1097,6 +1784,45 @@ if ($response->object !== null) {
 
 Move a task to another project of your company (`project_id`), optionally to a `column_id` or virtual `status` of the destination. The task gets a new key in the destination and keeps answering to its previous one. Custom field values the destination does not define are dropped. Moving it to the project it is already in returns 422 `task_already_in_project`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.move" method="post" path="/companies/{company}/tasks/{task}/move" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksMoveRequest(
+    company: '53be9dec-c123-4362-be5e-acb3ea5f5e3e',
+    task: '6dd1c324-dfe2-41a7-bba9-e350bb14de55',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\MoveTaskToProjectV1Request(
+        projectId: 'b5169ff7-6ded-42c2-947a-5793582d7967',
+    ),
+);
+
+$response = $sdk->tasks->publicApiV1TasksMove(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.move" method="post" path="/companies/{company}/tasks/{task}/move" example="missing_api_key" -->
@@ -1136,6 +1862,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.move" method="post" path="/companies/{company}/tasks/{task}/move" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksMoveRequest(
+    company: 'b5169ff7-6ded-42c2-947a-5793582d7967',
+    task: '6916be4b-f8b4-49f4-aeb5-47d6a5110e26',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\MoveTaskToProjectV1Request(
+        projectId: 'b5169ff7-6ded-42c2-947a-5793582d7967',
+    ),
+);
+
+$response = $sdk->tasks->publicApiV1TasksMove(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.tasks.move" method="post" path="/companies/{company}/tasks/{task}/move" example="success" -->
@@ -1160,6 +1925,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1TasksMoveRequest(
     company: 'Heller, Bogan and Huels',
     task: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\MoveTaskToProjectV1Request(
+        projectId: 'b5169ff7-6ded-42c2-947a-5793582d7967',
+    ),
+);
+
+$response = $sdk->tasks->publicApiV1TasksMove(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.tasks.move" method="post" path="/companies/{company}/tasks/{task}/move" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1TasksMoveRequest(
+    company: '10484c50-3b5f-49aa-998a-0ff9a2d86ac3',
+    task: '8511c547-22b6-4b01-8cb6-072fbfe3c629',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\MoveTaskToProjectV1Request(

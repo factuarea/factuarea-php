@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** CreateCorrectiveInvoiceRequest - Generate a corrective (rectificativa) invoice for a previously issued invoice. `correction_reason` (required) maps to a VeriFactu R-code; `correction_type` is `full` or `partial`; the optional `correction_nature` is `I` (by differences: void the whole invoice with `full` and no `lines`, or correct amounts with `partial` and the adjustment `lines`) or `S` (substitution: `full` with the final `lines`, no negative quantity) — omitted, `full` with `lines` is `S` and the rest `I`; `unit_price` is never negative (a negative `quantity` subtracts); the optional `correction_code` (`R1`..`R5`) forces the explicit R-code and is validated against the AEAT legal matrix for the original invoice type. Optional `justification`, `notes`, and `lines[]` (none to void the whole invoice; required for a partial correction and for a substitution). Each line may also declare the fiscal nature of the line it corrects — `unit`, `regime_key`, `exemption_reason` and `exemption_reason_text` — with the same rules as `POST /v1/companies/{company}/invoices`: a key you OMIT inherits the value of the original line at the same index, a key you SEND (even `null`) replaces it, and `null` means explicitly none. */
+/** CreateCorrectiveInvoiceRequest - Generate a corrective (rectificativa) invoice for a previously issued invoice. `correction_reason` (required) maps to a VeriFactu R-code; `correction_type` is `full` or `partial`; the optional `correction_nature` is `I` (by differences: void the whole invoice with `full` and no `lines`, or correct amounts with `partial` and the adjustment `lines`) or `S` (substitution: `full` with the final `lines`, no negative quantity) — omitted, `full` with `lines` is `S` and the rest `I`; `unit_price` is never negative (a negative `quantity` subtracts); the optional `correction_code` (`R1`..`R5`) forces the explicit R-code and is validated against the AEAT legal matrix for the original invoice type. Optional `justification`, `notes`, and `lines[]` (none to void the whole invoice; required for a partial correction and for a substitution). Each line may also declare the fiscal nature of the line it corrects — `unit`, `regime_key`, `exemption_reason` and `exemption_reason_text` — with the same rules as `POST /v1/companies/{company}/invoices`: a key you OMIT inherits the value of the original line at the same index, a key you SEND (even `null`) replaces it, and `null` means explicitly none. Commercial line inheritance is identity-based: lines.N.source_line_id may identify an active UUID v7 line of the original invoice once. Omitted commercial values inherit only from that identified source; there is no positional fallback for commercial data. New destination line ids are generated and caller-supplied destination ids are rejected. Header commercial data is copied from the source; do not send header commercial fields or read-only snapshot/source/version fields. payment_terms defaults to [] for the new corrective. A negative payable accepts only explicit negative signed two-decimal rows whose exact sum balances. New row ids may be omitted and are returned UUID v7; supplied null/empty ids are invalid. Account 02/04 must be present before this corrective is issued; no automatic schedule or collection is created. The corrective falls due on its last instalment, or 30 days after issue without a schedule. */
 class CreateCorrectiveInvoiceRequest
 {
     /**
@@ -37,6 +37,106 @@ class CreateCorrectiveInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLine>|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?array $lines = null;
+
+    /**
+     *
+     * @var mixed $expectedPaymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_payment_terms_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $expectedPaymentTermsVersion = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsVersion = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsSource = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsCurrency
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_currency')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsCurrency = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsCapturedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_captured_at')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsCapturedAt = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsFrozenAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_frozen_at')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsFrozenAt = null;
+
+    /**
+     *
+     * @var mixed $legacyContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legacy_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $legacyContext = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsLegacyContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_legacy_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsLegacyContext = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSelectionVersion = null;
+
+    /**
+     * Create omitted/null means unknown; [] means explicitly no schedule, including a positive payable. Update omitted preserves, null removes the schedule only on a draft, [] explicitly selects none, and a list replaces all rows. No merge or automatic matching by index. A nonempty list must balance exactly; total zero allows only null/[]. With a nonempty list the invoice falls due on its last instalment: `due_on` must be that date when the invoice is issued (422 `invoice_due_date_not_last_instalment`), a draft keeps the date you send, and an update that replaces the list without `due_on` moves it to the last instalment.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput> $paymentTerms
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $paymentTerms = null;
+
+    /**
+     * Optional nullable tenant-template UUID for the corrective invoice. Omit it to inherit the default; a UUID requests a compatible manual selection. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
 
     /**
      *
@@ -105,6 +205,17 @@ class CreateCorrectiveInvoiceRequest
      * @param  \Factuarea\Sdk\Models\Components\CorrectionReason  $correctionReason
      * @param  \Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCorrectionType  $correctionType
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestLine>  $lines
+     * @param  mixed  $expectedPaymentTermsVersion
+     * @param  mixed  $paymentTermsVersion
+     * @param  mixed  $paymentTermsSource
+     * @param  mixed  $paymentTermsCurrency
+     * @param  mixed  $paymentTermsCapturedAt
+     * @param  mixed  $paymentTermsFrozenAt
+     * @param  mixed  $legacyContext
+     * @param  mixed  $paymentTermsLegacyContext
+     * @param  ?string  $expectedSelectionVersion
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput>  $paymentTerms
+     * @param  ?string  $pdfTemplateId
      * @param  ?\Factuarea\Sdk\Models\Components\CorrectionCode  $correctionCode
      * @param  ?\Factuarea\Sdk\Models\Components\CorrectionNature  $correctionNature
      * @param  ?string  $seriesId
@@ -114,11 +225,22 @@ class CreateCorrectiveInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(CorrectionReason $correctionReason, CreateCorrectiveInvoiceRequestCorrectionType $correctionType, ?array $lines = null, ?CorrectionCode $correctionCode = null, ?CorrectionNature $correctionNature = null, ?string $seriesId = null, ?string $justification = null, ?string $notes = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(CorrectionReason $correctionReason, CreateCorrectiveInvoiceRequestCorrectionType $correctionType, ?array $lines = null, mixed $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $expectedSelectionVersion = null, ?array $paymentTerms = null, ?string $pdfTemplateId = null, ?CorrectionCode $correctionCode = null, ?CorrectionNature $correctionNature = null, ?string $seriesId = null, ?string $justification = null, ?string $notes = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->correctionReason = $correctionReason;
         $this->correctionType = $correctionType;
         $this->lines = $lines;
+        $this->expectedPaymentTermsVersion = $expectedPaymentTermsVersion;
+        $this->paymentTermsVersion = $paymentTermsVersion;
+        $this->paymentTermsSource = $paymentTermsSource;
+        $this->paymentTermsCurrency = $paymentTermsCurrency;
+        $this->paymentTermsCapturedAt = $paymentTermsCapturedAt;
+        $this->paymentTermsFrozenAt = $paymentTermsFrozenAt;
+        $this->legacyContext = $legacyContext;
+        $this->paymentTermsLegacyContext = $paymentTermsLegacyContext;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
+        $this->paymentTerms = $paymentTerms;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->correctionCode = $correctionCode;
         $this->correctionNature = $correctionNature;
         $this->seriesId = $seriesId;

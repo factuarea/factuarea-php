@@ -50,7 +50,9 @@ class TimeEntriesChain
     /**
      * Validate the time record hash chain
      *
-     * Recompute the SHA-256 hash chain (`huella`) of your company time record ledger and compare it against the persisted values without mutating data. Returns whether the chain is intact and, if not, the `id` (UUID v7) of the first corrupted record — the fingerprints themselves are never exposed. Rate-limited to 1 request per minute per credential and company (never shared across companies, credentials or routes) and rejected with 422 `dataset_too_large` for datasets over 50,000 records.
+     * Recompute the SHA-256 hash chain (`huella`) of your time record ledger and compare it with the stored values, without changing data.
+     * - Returns whether the chain is intact and, if not, the `id` of the first corrupted record.
+     * - Limited to 1 request per minute per credential and company; datasets over 50,000 records return 422 `dataset_too_large`.
      *
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion

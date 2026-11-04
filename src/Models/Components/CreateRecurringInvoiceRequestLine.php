@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class CreateRecurringInvoiceRequestLine
 {
     /**
@@ -120,6 +120,7 @@ class CreateRecurringInvoiceRequestLine
     public ?CreateRecurringInvoiceRequestRegimeKey $regimeKey = null;
 
     /**
+     * Public identifier (UUID v7) of the withholding (IRPF) tax of the catalog chosen for the line. Optional. Without `retention_rate`, the percentage of the line is taken from that tax (its magnitude, 0–100): sending only the id never computes the withholding at 0 %. A tax of another class (for example a VAT or an equivalence-surcharge tax), or a `retention_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.retention_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $retentionRateId
      */
@@ -128,6 +129,7 @@ class CreateRecurringInvoiceRequestLine
     public ?string $retentionRateId = null;
 
     /**
+     * Public identifier (UUID v7) of the equivalence-surcharge tax of the catalog chosen for the line. Optional. Without `surcharge_rate`, the percentage of the line is taken from that tax: sending only the id never computes the surcharge at 0 %. A tax of another class (for example a VAT or a withholding tax), or a `surcharge_rate` that differs from the percentage of the chosen tax, is rejected with 422 `parameter_invalid_value` (subcode `tax_rate_mismatch`), with `error.param` = `lines.N.surcharge_rate` and `error.line_index` = N (the zero-based index of the line).
      *
      * @var ?string $surchargeRateId
      */
@@ -143,6 +145,39 @@ class CreateRecurringInvoiceRequestLine
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestIndirectTaxRegime|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CreateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null;
+
+    /**
+     *
+     * @var ?string $packId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packId = null;
+
+    /**
+     *
+     * @var ?string $packGroupId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packGroupId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPrintMode $printMode
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('print_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPrintMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateRecurringInvoiceRequestPrintMode $printMode = null;
+
+    /**
+     *
+     * @var ?bool $pricesIncludeTax
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('prices_include_tax')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $pricesIncludeTax = null;
 
     /**
      *
@@ -221,6 +256,47 @@ class CreateRecurringInvoiceRequestLine
     public ?bool $optionAdjustmentsAbsorbed = null;
 
     /**
+     *
+     * @var ?string $promotionUuidSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_uuid_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionUuidSnapshot = null;
+
+    /**
+     *
+     * @var ?string $promotionNameSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_name_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionNameSnapshot = null;
+
+    /**
+     *
+     * @var ?float $regularUnitPrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_unit_price')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $regularUnitPrice = null;
+
+    /**
+     *
+     * @var ?LocalDate $soldOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sold_on')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $soldOn = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestChannel $channel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channel')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestChannel|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateRecurringInvoiceRequestChannel $channel = null;
+
+    /**
      * @param  float  $quantity
      * @param  ?string  $description
      * @param  ?string  $additionalDescription
@@ -237,6 +313,10 @@ class CreateRecurringInvoiceRequestLine
      * @param  ?string  $retentionRateId
      * @param  ?string  $surchargeRateId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
+     * @param  ?string  $packId
+     * @param  ?string  $packGroupId
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPrintMode  $printMode
+     * @param  ?bool  $pricesIncludeTax
      * @param  ?string  $configurationUuid
      * @param  ?float  $countedQuantity
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestOption>  $options
@@ -246,9 +326,14 @@ class CreateRecurringInvoiceRequestLine
      * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestPriceSemantics  $priceSemantics
      * @param  ?float  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?string  $promotionUuidSnapshot
+     * @param  ?string  $promotionNameSnapshot
+     * @param  ?float  $regularUnitPrice
+     * @param  ?LocalDate  $soldOn
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequestChannel  $channel
      * @phpstan-pure
      */
-    public function __construct(float $quantity, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?CreateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?CreateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?CreateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateRecurringInvoiceRequestPriceSource $priceSource = null, ?CreateRecurringInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, ?string $description = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?float $taxRate = null, ?float $retention = null, ?float $surcharge = null, ?CreateRecurringInvoiceRequestExemptionReason $exemptionReason = null, ?CreateRecurringInvoiceRequestRegimeKey $regimeKey = null, ?string $retentionRateId = null, ?string $surchargeRateId = null, ?CreateRecurringInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $packId = null, ?string $packGroupId = null, ?CreateRecurringInvoiceRequestPrintMode $printMode = null, ?bool $pricesIncludeTax = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?CreateRecurringInvoiceRequestPriceSource $priceSource = null, ?CreateRecurringInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $promotionUuidSnapshot = null, ?string $promotionNameSnapshot = null, ?float $regularUnitPrice = null, ?LocalDate $soldOn = null, ?CreateRecurringInvoiceRequestChannel $channel = null)
     {
         $this->quantity = $quantity;
         $this->description = $description;
@@ -266,6 +351,10 @@ class CreateRecurringInvoiceRequestLine
         $this->retentionRateId = $retentionRateId;
         $this->surchargeRateId = $surchargeRateId;
         $this->indirectTaxRegime = $indirectTaxRegime;
+        $this->packId = $packId;
+        $this->packGroupId = $packGroupId;
+        $this->printMode = $printMode;
+        $this->pricesIncludeTax = $pricesIncludeTax;
         $this->configurationUuid = $configurationUuid;
         $this->countedQuantity = $countedQuantity;
         $this->options = $options;
@@ -275,5 +364,10 @@ class CreateRecurringInvoiceRequestLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->promotionUuidSnapshot = $promotionUuidSnapshot;
+        $this->promotionNameSnapshot = $promotionNameSnapshot;
+        $this->regularUnitPrice = $regularUnitPrice;
+        $this->soldOn = $soldOn;
+        $this->channel = $channel;
     }
 }

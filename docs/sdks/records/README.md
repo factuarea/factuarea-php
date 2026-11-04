@@ -18,6 +18,42 @@
 
 Look up a VeriFactu record by the `aeat_csv` (Código Seguro de Verificación) returned by AEAT on acceptance, sent in the JSON body. Returns the matching record or 404 `verifactu_record_not_found`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
+    aeatCsv: 'A1B2C3D4E5F6G7H8',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
+    company: 'f58b21f6-ea1d-4a19-94c3-f61764a11972',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="missing_api_key" -->
@@ -45,6 +81,42 @@ $body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
     company: 'Leuschke Group',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
+    aeatCsv: 'A1B2C3D4E5F6G7H8',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
+    company: '10c74c78-0623-499f-8585-b544c0ec01d0',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -90,6 +162,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_csv" method="post" path="/companies/{company}/verifactu/records/find-by-csv" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByCsvRequestBody(
+    aeatCsv: 'A1B2C3D4E5F6G7H8',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByCsv(
+    company: 'a4858ab1-f645-41df-bf70-908334b0a8b0',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -115,6 +223,42 @@ if ($response->object !== null) {
 
 Look up a VeriFactu record by its `huella` (the chained SHA-256 fingerprint sent in the JSON body). Returns the matching record or 404 `verifactu_record_not_found` if none exists within your company.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
+    huella: 'a7f392e180c6d45b3e9a21f067d48c5e913ab7260fe854d39ca871b2e6d04f35',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
+    company: 'e04ffc7c-0aa9-4627-8deb-f712d1de7abd',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="missing_api_key" -->
@@ -142,6 +286,42 @@ $body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
     company: 'Powlowski, Rice and Anderson',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
+    huella: 'a7f392e180c6d45b3e9a21f067d48c5e913ab7260fe854d39ca871b2e6d04f35',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
+    company: '6b9c97bc-bb0a-4bbf-8905-1ace6a748bce',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -187,6 +367,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_huella" method="post" path="/companies/{company}/verifactu/records/find-by-huella" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByHuellaRequestBody(
+    huella: 'a7f392e180c6d45b3e9a21f067d48c5e913ab7260fe854d39ca871b2e6d04f35',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByHuella(
+    company: 'db5b7b92-b731-4284-9bcf-3d3835f225e7',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -212,6 +428,43 @@ if ($response->object !== null) {
 
 Look up the VeriFactu record associated with a given invoice number (sent in the JSON body). Returns the matching record or 404 `verifactu_record_not_found` if the invoice has no record within your company.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody(
+    series: 'FAC-2026',
+    number: '00042',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
+    company: '185b3857-c8c1-4981-924f-8b6df89631fa',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="missing_api_key" -->
@@ -249,6 +502,43 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody(
+    series: 'FAC-2026',
+    number: '00042',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
+    company: 'b9542564-d9c5-454f-946c-b854b373d9ca',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="success" -->
@@ -277,6 +567,43 @@ $body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody
 
 $response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
     company: 'Hahn - Kertzmann',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.verifactu.records.find_by_invoice_number" method="post" path="/companies/{company}/verifactu/records/find-by-invoice-number" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Operations\PublicApiV1VerifactuRecordsFindByInvoiceNumberRequestBody(
+    series: 'FAC-2026',
+    number: '00042',
+);
+
+$response = $sdk->verifactu->records->publicApiV1VerifactuRecordsFindByInvoiceNumber(
+    company: '16e0ca76-a338-498f-97bf-394910475b3a',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -434,7 +761,9 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1VerifactuRecordsRetryBlocked
 
-Reactivates ALL the blocked records of your company at once and schedules their remission batch. A record is blocked when it is in `error` with no automatic retry because something needs your action: no usable certificate, no current representation for the third-party remission mode, a presenter that AEAT has not enabled (`4112`/`3003`) or a client-side rejection (`is_blocked: true` and its `block_reason` on the record). Blocked records hold back the rest of the chain, so fix the cause first (upload the certificate, register the representation, change the mode) and then call this. It sends nothing by itself: the records go out inside the ordered batch of your company, respecting the AEAT flow control, and there is NO retry limit (art. 16.4 of Order HAC/1177/2024). Returns `202` with `data.reactivated`, how many records were reactivated (`0` when none was blocked). It is the bulk equivalent of `POST /v1/companies/{company}/verifactu/records/{record}/retry`; `GET /v1/companies/{company}/verifactu/stats` reports how many records are blocked in `blocked_incident_count`.
+Reactivate all blocked VeriFactu records of your company and schedule their remission batch.
+- Blocked means in `error` and needing your action (certificate, representation, presenter, rejection); fix the cause first.
+- Returns 202 with `data.reactivated` (`0` if none). Bulk equivalent of `.../records/{record}/retry`.
 
 ### Example Usage: none_blocked
 
@@ -525,7 +854,9 @@ if ($response->object !== null) {
 
 ## publicApiV1VerifactuRecordsRetry
 
-Schedules the AEAT remission batch of your company so that a failed VeriFactu record goes out in it. The record is sent inside the ordered batch of its company, respecting the AEAT flow control (`TiempoEsperaEnvio`) and never ahead of an earlier record of the chain. There is NO retry limit: while a technical incident lasts, art. 16.4 of Order HAC/1177/2024 requires retrying at least once an hour with no maximum, so `max_retries_exceeded` is no longer returned for records (it still applies to events: `POST /v1/companies/{company}/verifactu/events/{event}/retry`). Returns 404 if the record does not exist and 422 `business_rule_violation` / `record_already_accepted` if AEAT already accepted it.
+Schedule your company's AEAT remission batch so a failed VeriFactu record goes out in it, never ahead of an earlier record of the chain.
+- There is no retry limit for records.
+- Returns 404 if the record does not exist and 422 `business_rule_violation` / `record_already_accepted` if AEAT accepted it.
 
 ### Example Usage
 
@@ -676,7 +1007,9 @@ if ($response->object !== null) {
 
 ## publicApiV1VerifactuRecordsSubsanar
 
-Corrects (subsana) a VeriFactu `alta` that AEAT ACCEPTED (or accepted with errors) or REJECTED. The record is never edited in place: AEAT requires a NEW record and the original stays untouched (AEAT web services description, §9.1.2 and §9.1.3). The invoice master data is refreshed, a new correction (*subsanación*) `alta` is generated for the same invoice key with its own `huella` and chain position, and the remission batch of your company is re-queued. The new `alta` always goes with `Subsanacion=S` and the `RechazoPrevio` of its case: for an ACCEPTED record, a subsanación `alta` with no `RechazoPrevio` (§9.1.2); for a REJECTED record whose invoice AEAT does not hold, an «alta por rechazo» with `RechazoPrevio=X` (§9.1.3, the rejected record never existed in AEAT); and for a REJECTED subsanación of an invoice AEAT does hold, `RechazoPrevio=S`. Returns `202` with `data.id`: the id of the NEW record, the one that is transmitted — read it with `GET /v1/companies/{company}/verifactu/records/{record}`; the status of the new record starts as `pending`. `can_subsanar` on the record tells you whether it is admitted. Returns 422 `record_not_rejected` if the record is neither accepted nor rejected (pending or in error), `record_not_subsanable` if it is not an `alta`, it is not the last `alta` of its invoice, the invoice is annulled or a rejected record already waits for its resend, or `requires_annulment` when the correction would change a field of the fingerprint (annul and issue a new `alta` instead).
+Correct (subsanar) an accepted or rejected VeriFactu `alta` by generating a NEW correction `alta`; the original is never edited.
+- Returns 202 with `data.id` of the new record, which starts `pending`; `can_subsanar` says if it is admitted.
+- 422 `record_not_rejected`, `record_not_subsanable` or `requires_annulment` (annul and issue a new `alta`).
 
 ### Example Usage
 

@@ -252,6 +252,15 @@ class DeliveryNoteLine
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
+     * The pack group this line belongs to, or `null` when the line is not part of a pack. See `PackGroup`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PackGroup $packGroup
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PackGroup|null')]
+    public ?PackGroup $packGroup;
+
+    /**
      * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
      *
      * @var ?\Factuarea\Sdk\Models\Components\DeliveryNoteLineIndirectTaxRegime $indirectTaxRegime
@@ -302,11 +311,12 @@ class DeliveryNoteLine
      * @param  ?\Factuarea\Sdk\Models\Components\DeliveryNoteLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?\Factuarea\Sdk\Models\Components\PackGroup  $packGroup
      * @param  ?\Factuarea\Sdk\Models\Components\DeliveryNoteLineIndirectTaxRegime  $indirectTaxRegime
      * @param  ?string  $grossWeightKg
      * @phpstan-pure
      */
-    public function __construct(DeliveryNoteLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?DeliveryNoteLineVariant $variant = null, ?DeliveryNoteLinePresentation $presentation = null, ?string $itemKind = null, ?DeliveryNoteLineCommercialUnitCode $commercialUnitCode = null, ?DeliveryNoteLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?DeliveryNoteLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?DeliveryNoteLineCountedUnit $countedUnit = null, ?DeliveryNoteLineConfiguration $configuration = null, ?DeliveryNoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?DeliveryNoteLineIndirectTaxRegime $indirectTaxRegime = null, ?string $grossWeightKg = null)
+    public function __construct(DeliveryNoteLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?DeliveryNoteLineVariant $variant = null, ?DeliveryNoteLinePresentation $presentation = null, ?string $itemKind = null, ?DeliveryNoteLineCommercialUnitCode $commercialUnitCode = null, ?DeliveryNoteLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?DeliveryNoteLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?DeliveryNoteLineCountedUnit $countedUnit = null, ?DeliveryNoteLineConfiguration $configuration = null, ?DeliveryNoteLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?PackGroup $packGroup = null, ?DeliveryNoteLineIndirectTaxRegime $indirectTaxRegime = null, ?string $grossWeightKg = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -339,6 +349,7 @@ class DeliveryNoteLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->packGroup = $packGroup;
         $this->indirectTaxRegime = $indirectTaxRegime;
         $this->grossWeightKg = $grossWeightKg;
     }

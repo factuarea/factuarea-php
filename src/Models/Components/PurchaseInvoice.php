@@ -57,7 +57,7 @@ class PurchaseInvoice
     public string $subtotal;
 
     /**
-     * VAT BORNE (IVA soportado) of this expense, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here: `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
+     * VAT BORNE (IVA soportado) of this expense, WITHOUT surcharge and WITHOUT withholding. Careful: on the sales-side documents (invoice, delivery note, quote, proforma) the SAME field name carries the NET aggregate `total_vat + total_surcharge − total_retention` instead. Header invariant here (except for self-assessed `operation_class` `intracomunitaria` and `isp`, see `total`): `total === subtotal + taxes_total + total_surcharge − total_retention`. Read `total_vat` for a VAT figure whose meaning does not depend on the document family.
      *
      * @var string $taxesTotal
      */
@@ -89,7 +89,7 @@ class PurchaseInvoice
     public string $totalSurcharge;
 
     /**
-     * Total of the expense. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side.
+     * Total of the expense. Two equivalent ways to reconstruct it from the published amounts, and only these two: the EXPLICIT one, identical in the five document families - `total = subtotal + total_vat + total_surcharge - total_retention` - or the one specific to this family, where `taxes_total` is the VAT alone - `total = subtotal + taxes_total + total_surcharge - total_retention`. Note that the aggregate shortcut of the sales-side families (`subtotal + taxes_total`) does NOT apply here: the same field name carries a different meaning on each side. Exception: when `operation_class` is `intracomunitaria` or `isp` the VAT is self-assessed (the supplier does not charge it), so it is NOT part of the total: `total = subtotal - total_retention + total_surcharge`, and `total_vat` / `taxes_total` still publish the self-assessed VAT amount.
      *
      * @var string $total
      */

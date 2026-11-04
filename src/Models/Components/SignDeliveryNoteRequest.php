@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** SignDeliveryNoteRequest - Sign a delivery note on receipt. Required: `signed_by` (name of the person who receives it), `recipient_dni` (Spanish DNI/NIE of the signer) and `signature_image_base64` (the signature as a raw base64 PNG, without the `data:` prefix). Optional: `signed_at` (ISO 8601, defaults to now). A signature image that cannot be decoded or is too large returns 422 `invalid_param_format` or `payload_too_large`. */
+/** SignDeliveryNoteRequest - Sign a delivery note on receipt. Required: `signed_by` (name of the person who receives it, at most 120 characters), `recipient_dni` (Spanish DNI/NIE of the signer) and `signature_image_base64` (the signature as a raw base64 PNG, without the `data:` prefix). Optional: `signed_at` (ISO 8601) is deprecated and ignored: it is still accepted so existing clients keep working, but the signature date is always set by the server. A signature image that cannot be decoded or is too large returns 422 `invalid_param_format` or `payload_too_large`. */
 class SignDeliveryNoteRequest
 {
     /**
+     * Name of the person who receives the delivery note (at most 120 characters).
      *
      * @var string $signedBy
      */
@@ -34,25 +35,82 @@ class SignDeliveryNoteRequest
     public string $signatureImageBase64;
 
     /**
+     * UUID of the retained presentation of the delivery note that the signature is bound to. Part of the exact presentation context, which is all-or-nothing: when any of the five `expected_*` fields is sent, all except `expected_publication_id` are required, and the request must carry an `Idempotency-Key` header with a UUID v7. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $expectedPresentationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPresentationId = null;
+
+    /**
+     * Positive external version of the presentation the signature is bound to. Required together with the rest of the exact presentation context. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?int $expectedExternalVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_external_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedExternalVersion = null;
+
+    /**
+     * Source token of the reviewed presentation: 64 lowercase hexadecimal characters. Required together with the rest of the exact presentation context. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $expectedSourceToken
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_source_token')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSourceToken = null;
+
+    /**
+     * UUID of the exact PDF artifact the recipient reviewed before signing. Required together with the rest of the exact presentation context. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $expectedArtifactId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_artifact_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedArtifactId = null;
+
+    /**
+     * Deprecated and ignored: accepted only for compatibility with existing clients. The signature date is always set by the server.
      *
      * @var ?\DateTime $signedAt
+     * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('signed_at')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?\DateTime $signedAt = null;
 
     /**
+     * UUID of the publication the signature is bound to, or null when the presentation has none. Optional member of the exact presentation context (all-or-nothing with the other `expected_*` fields). It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $expectedPublicationId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_publication_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPublicationId = null;
+
+    /**
      * @param  string  $signedBy
      * @param  string  $recipientDni
      * @param  string  $signatureImageBase64
+     * @param  ?string  $expectedPresentationId
+     * @param  ?int  $expectedExternalVersion
+     * @param  ?string  $expectedSourceToken
+     * @param  ?string  $expectedArtifactId
      * @param  ?\DateTime  $signedAt
+     * @param  ?string  $expectedPublicationId
      * @phpstan-pure
      */
-    public function __construct(string $signedBy, string $recipientDni, string $signatureImageBase64, ?\DateTime $signedAt = null)
+    public function __construct(string $signedBy, string $recipientDni, string $signatureImageBase64, ?string $expectedPresentationId = null, ?int $expectedExternalVersion = null, ?string $expectedSourceToken = null, ?string $expectedArtifactId = null, ?\DateTime $signedAt = null, ?string $expectedPublicationId = null)
     {
         $this->signedBy = $signedBy;
         $this->recipientDni = $recipientDni;
         $this->signatureImageBase64 = $signatureImageBase64;
+        $this->expectedPresentationId = $expectedPresentationId;
+        $this->expectedExternalVersion = $expectedExternalVersion;
+        $this->expectedSourceToken = $expectedSourceToken;
+        $this->expectedArtifactId = $expectedArtifactId;
         $this->signedAt = $signedAt;
+        $this->expectedPublicationId = $expectedPublicationId;
     }
 }

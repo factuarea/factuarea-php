@@ -257,6 +257,15 @@ class Invoice
     public InvoiceOrigin $origin;
 
     /**
+     * Safe summary of the retained PDF output for a document. This is not artifact metadata: it never exposes snapshots, proofs, or storage paths. `download_url` is present only for a ready artifact.
+     *
+     * @var \Factuarea\Sdk\Models\Components\DocumentPdfOutputState $pdfOutputState
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_output_state')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentPdfOutputState')]
+    public DocumentPdfOutputState $pdfOutputState;
+
+    /**
      *
      * @var \DateTime $createdAt
      */
@@ -269,6 +278,48 @@ class Invoice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('updated_at')]
     public \DateTime $updatedAt;
+
+    /**
+     * Ordered legal text supplied by the business. Each item has at most 250 Unicode characters. Order and duplicate items are preserved; null or [] clears the list. This is independent of calculated fiscal legal_mentions.
+     *
+     * @var array<string> $legalLiterals
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legal_literals')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $legalLiterals;
+
+    /**
+     *
+     * @var int $administrativeVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_version')]
+    public int $administrativeVersion;
+
+    /**
+     * $structuredSourceSnapshots
+     *
+     * @var array<\Factuarea\Sdk\Models\Components\InvoiceStructuredFiscalSourceSnapshot|\Factuarea\Sdk\Models\Components\InvoiceStructuredVisualSourceSnapshot> $structuredSourceSnapshots
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('structured_source_snapshots')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceStructuredFiscalSourceSnapshot|\Factuarea\Sdk\Models\Components\InvoiceStructuredVisualSourceSnapshot>')]
+    public array $structuredSourceSnapshots;
+
+    /**
+     * 0 means no component row; a persisted row starts at 1. Calendar CAS is independent of administrative and visual versions.
+     *
+     * @var int $paymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_version')]
+    public int $paymentTermsVersion;
+
+    /**
+     * none unknown; explicit business intent (including []); legacy an observed adaptation, not historical evidence.
+     *
+     * @var \Factuarea\Sdk\Models\Components\InvoicePaymentTermsSource $paymentTermsSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoicePaymentTermsSource')]
+    public InvoicePaymentTermsSource $paymentTermsSource;
 
     /**
      * Definitive invoice number, or `null` for drafts (where `is_number_assigned` is `false`).
@@ -473,6 +524,95 @@ class Invoice
     public ?string $sourceStoreId;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\DocumentPresentationState $presentation
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentPresentationState|null')]
+    public ?DocumentPresentationState $presentation;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences $businessReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences|null')]
+    public ?InvoiceHeaderReferences $businessReferences;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod $invoicingPeriod
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoicing_period')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod|null')]
+    public ?InvoiceInvoicingPeriod $invoicingPeriod;
+
+    /**
+     * $administrativeSnapshot
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre> $administrativeSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>|null')]
+    public ?array $administrativeSnapshot;
+
+    /**
+     * $administrativeOverride
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre> $administrativeOverride
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_override')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>|null')]
+    public ?array $administrativeOverride;
+
+    /**
+     * $administrativeCentres
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre> $administrativeCentres
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_centres')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>|null')]
+    public ?array $administrativeCentres;
+
+    /**
+     *
+     * @var ?string $administrativeRevisionId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_revision_id')]
+    public ?string $administrativeRevisionId;
+
+    /**
+     * Contractual instalments, independent of payments and collection status. Order and persisted identities are preserved. Reading never captures legacy data or queries live bank accounts.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalment> $paymentTerms
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceInstalment>|null')]
+    public ?array $paymentTerms;
+
+    /**
+     *
+     * @var ?\DateTime $paymentTermsCapturedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_captured_at')]
+    public ?\DateTime $paymentTermsCapturedAt;
+
+    /**
+     * Frozen once before issuance or internal legacy capture; no change on collection/reversal. Unknown none is not frozen or adapted automatically on issue.
+     *
+     * @var ?\DateTime $paymentTermsFrozenAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_frozen_at')]
+    public ?\DateTime $paymentTermsFrozenAt;
+
+    /**
+     *
+     * @var string $paymentTermsCurrency
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_currency')]
+    public string $paymentTermsCurrency;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\InvoiceObject  $object
      * @param  bool  $isNumberAssigned
@@ -503,8 +643,15 @@ class Invoice
      * @param  bool  $isCorrective
      * @param  bool  $isSent
      * @param  \Factuarea\Sdk\Models\Components\InvoiceOrigin  $origin
+     * @param  \Factuarea\Sdk\Models\Components\DocumentPdfOutputState  $pdfOutputState
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
+     * @param  array<string>  $legalLiterals
+     * @param  int  $administrativeVersion
+     * @param  array<\Factuarea\Sdk\Models\Components\InvoiceStructuredFiscalSourceSnapshot|\Factuarea\Sdk\Models\Components\InvoiceStructuredVisualSourceSnapshot>  $structuredSourceSnapshots
+     * @param  int  $paymentTermsVersion
+     * @param  \Factuarea\Sdk\Models\Components\InvoicePaymentTermsSource  $paymentTermsSource
+     * @param  string  $paymentTermsCurrency
      * @param  ?string  $number
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
@@ -530,9 +677,19 @@ class Invoice
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceScheduledAction  $scheduledAction
      * @param  ?string  $channel
      * @param  ?string  $sourceStoreId
+     * @param  ?\Factuarea\Sdk\Models\Components\DocumentPresentationState  $presentation
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences  $businessReferences
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod  $invoicingPeriod
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>  $administrativeSnapshot
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>  $administrativeOverride
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>  $administrativeCentres
+     * @param  ?string  $administrativeRevisionId
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalment>  $paymentTerms
+     * @param  ?\DateTime  $paymentTermsCapturedAt
+     * @param  ?\DateTime  $paymentTermsFrozenAt
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceStatus $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $totalDisbursements, string $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, string $paidAmount, string $pendingAmount, InvoicePayments $payments, bool $isCorrective, bool $isSent, InvoiceOrigin $origin, \DateTime $createdAt, \DateTime $updatedAt, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null)
+    public function __construct(string $id, InvoiceObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceStatus $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $totalDisbursements, string $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, string $paidAmount, string $pendingAmount, InvoicePayments $payments, bool $isCorrective, bool $isSent, InvoiceOrigin $origin, DocumentPdfOutputState $pdfOutputState, \DateTime $createdAt, \DateTime $updatedAt, array $legalLiterals, int $administrativeVersion, array $structuredSourceSnapshots, int $paymentTermsVersion, InvoicePaymentTermsSource $paymentTermsSource, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?DocumentPresentationState $presentation = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $administrativeSnapshot = null, ?array $administrativeOverride = null, ?array $administrativeCentres = null, ?string $administrativeRevisionId = null, ?array $paymentTerms = null, ?\DateTime $paymentTermsCapturedAt = null, ?\DateTime $paymentTermsFrozenAt = null, string $paymentTermsCurrency = 'EUR')
     {
         $this->id = $id;
         $this->object = $object;
@@ -564,8 +721,14 @@ class Invoice
         $this->isCorrective = $isCorrective;
         $this->isSent = $isSent;
         $this->origin = $origin;
+        $this->pdfOutputState = $pdfOutputState;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->legalLiterals = $legalLiterals;
+        $this->administrativeVersion = $administrativeVersion;
+        $this->structuredSourceSnapshots = $structuredSourceSnapshots;
+        $this->paymentTermsVersion = $paymentTermsVersion;
+        $this->paymentTermsSource = $paymentTermsSource;
         $this->number = $number;
         $this->priceListId = $priceListId;
         $this->priceListName = $priceListName;
@@ -591,5 +754,16 @@ class Invoice
         $this->scheduledAction = $scheduledAction;
         $this->channel = $channel;
         $this->sourceStoreId = $sourceStoreId;
+        $this->presentation = $presentation;
+        $this->businessReferences = $businessReferences;
+        $this->invoicingPeriod = $invoicingPeriod;
+        $this->administrativeSnapshot = $administrativeSnapshot;
+        $this->administrativeOverride = $administrativeOverride;
+        $this->administrativeCentres = $administrativeCentres;
+        $this->administrativeRevisionId = $administrativeRevisionId;
+        $this->paymentTerms = $paymentTerms;
+        $this->paymentTermsCapturedAt = $paymentTermsCapturedAt;
+        $this->paymentTermsFrozenAt = $paymentTermsFrozenAt;
+        $this->paymentTermsCurrency = $paymentTermsCurrency;
     }
 }

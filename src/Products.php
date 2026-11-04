@@ -195,6 +195,136 @@ class Products
     }
 
     /**
+     * Bulk publish or withdraw products on the web
+     *
+     * Set `channels.web` on up to 50 products (by id) in one request. Publishing generates the missing slug from the product name; withdrawing leaves the slug untouched. Idempotent with respect to the target: a product already in the requested channel state counts as `successful`. Returns a `BulkPartialSuccessResult`; products that do not exist or belong to another company come back in `failures[]` as `product_not_found`, and a row that cannot be changed is reported with its own `error_code` without aborting the batch.
+     *
+     * @param  \Factuarea\Sdk\Models\Components\BulkChannelsProductsV1Request  $body
+     * @param  string  $company
+     * @param  string  $idempotencyKey
+     * @param  ?LocalDate  $factuareaVersion
+     * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsBulkChannelsResponse
+     * @throws \Factuarea\Sdk\Models\Errors\APIException
+     */
+    public function publicApiV1ProductsBulkChannels(Components\BulkChannelsProductsV1Request $body, string $company, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsBulkChannelsResponse
+    {
+        $retryConfig = null;
+        if ($options) {
+            $retryConfig = $options->retryConfig;
+        }
+        if ($retryConfig === null && $this->sdkConfiguration->retryConfig) {
+            $retryConfig = $this->sdkConfiguration->retryConfig;
+        } else {
+            $retryConfig = new Retry\RetryConfigBackoff(
+                initialIntervalMs: 500,
+                maxIntervalMs: 60000,
+                exponent: 1.5,
+                maxElapsedTimeMs: 3600000,
+                retryConnectionErrors: true,
+            );
+        }
+        $retryCodes = null;
+        if ($options) {
+            $retryCodes = $options->retryCodes;
+        }
+        if ($retryCodes === null) {
+            $retryCodes = [
+                '429',
+                '5xx',
+            ];
+        }
+        $request = new Operations\PublicApiV1ProductsBulkChannelsRequest(
+            company: $company,
+            idempotencyKey: $idempotencyKey,
+            body: $body,
+            factuareaVersion: $factuareaVersion,
+        );
+        $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
+        $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/bulk-channels', Operations\PublicApiV1ProductsBulkChannelsRequest::class, $request);
+        $urlOverride = null;
+        $httpOptions = ['http_errors' => false];
+        $body = Utils\Utils::serializeRequestBody($request, 'body', 'json');
+        if ($body === null) {
+            throw new \Exception('Request body is required');
+        }
+        $httpOptions = array_merge_recursive($httpOptions, $body);
+        $httpOptions = array_merge_recursive($httpOptions, Utils\Utils::getHeaders($request));
+        if (! array_key_exists('headers', $httpOptions)) {
+            $httpOptions['headers'] = [];
+        }
+        $httpOptions['headers']['Accept'] = 'application/json';
+        $httpOptions['headers']['user-agent'] = $this->sdkConfiguration->userAgent;
+        $httpRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $hookContext = new HookContext($this->sdkConfiguration, $baseUrl, 'public-api.v1.products.bulk_channels', null, $this->sdkConfiguration->securitySource);
+        $httpRequest = $this->sdkConfiguration->hooks->beforeRequest(new Hooks\BeforeRequestContext($hookContext), $httpRequest);
+        $httpOptions = Utils\Utils::convertHeadersToOptions($httpRequest, $httpOptions);
+        $httpRequest = Utils\Utils::removeHeaders($httpRequest);
+        try {
+            $httpResponse = RetryUtils::retryWrapper(fn () => $this->sdkConfiguration->client->send($httpRequest, $httpOptions), $retryConfig, $retryCodes);
+        } catch (\GuzzleHttp\Exception\GuzzleException $error) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), null, $error);
+            $httpResponse = $res;
+        }
+        $contentType = $httpResponse->getHeader('Content-Type')[0] ?? '';
+
+        if (Utils\Utils::matchStatusCodes($httpResponse->getStatusCode(), ['4XX', '5XX'])) {
+            $res = $this->sdkConfiguration->hooks->afterError(new Hooks\AfterErrorContext($hookContext), $httpResponse, null);
+            $httpResponse = $res;
+        }
+
+        $statusCode = $httpResponse->getStatusCode();
+        if (Utils\Utils::matchStatusCodes($statusCode, ['200'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsBulkChannelsResponseBody', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $response = new Operations\PublicApiV1ProductsBulkChannelsResponse(
+                    statusCode: $statusCode,
+                    contentType: $contentType,
+                    rawResponse: $httpResponse,
+                    headers: $httpResponse->getHeaders(),
+                    object: $obj);
+
+                return $response;
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['500'])) {
+            if (Utils\Utils::matchContentType($contentType, 'application/json')) {
+                $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+                $serializer = Utils\JSON::createSerializer();
+                $responseData = (string) $httpResponse->getBody();
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Errors\Error', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj->rawResponse = $httpResponse;
+                throw $obj->toException();
+            } else {
+                throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+            }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['4XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['5XX'])) {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('API error occurred', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        } else {
+            throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown status code received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
+        }
+    }
+
+    /**
      * Delete multiple products in bulk
      *
      * Delete up to 200 products in one request. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`); products included in packs or taking part in a base unit replacement (`product_in_base_unit_replacement`) are reported in `failures`. Decrements the plan usage counter accordingly.
@@ -1089,6 +1219,9 @@ class Products
      * List all products
      *
      * List products in your catalog with cursor-based pagination.
+     * - `view=storefront` lists only the active products enabled on the web, without costs, supplier offers, `metadata` or raw stock, and with `sale_price_from`; a `slug` not on sale there returns an empty list.
+     * - `slug` also finds products that used it before; `channel=web` and `updated[gte]` / `updated[lte]` support incremental sync.
+     * - Send `If-None-Match` to get `304` with no body.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListResponse
@@ -1159,18 +1292,26 @@ class Products
 
                 $serializer = Utils\JSON::createSerializer();
                 $responseData = (string) $httpResponse->getBody();
-                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListPaginatedList', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
+                $obj = $serializer->deserialize($responseData, '\Factuarea\Sdk\Models\Operations\ProductListData', 'json', DeserializationContext::create()->setRequireAllRequiredProperties(true));
                 $response = new Operations\PublicApiV1ProductsListResponse(
                     statusCode: $statusCode,
                     contentType: $contentType,
                     rawResponse: $httpResponse,
                     headers: $httpResponse->getHeaders(),
-                    paginatedList: $obj);
+                    productListData: $obj);
 
                 return $response;
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['304'])) {
+            $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+            return new Operations\PublicApiV1ProductsListResponse(
+                statusCode: $statusCode,
+                contentType: $contentType,
+                rawResponse: $httpResponse
+            );
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
@@ -1328,7 +1469,9 @@ class Products
     /**
      * Resolve a catalog selection
      *
-     * Resolve a partial or complete catalog selection (variant, presentation and option values) into the combination that would actually be sold, together with its price, the compatible variants, presentations and option groups still open, and the groups still pending a choice. It is a READ and persists nothing: the verb is POST because `options` is a nested list of group/value pairs that does not fit in a query string without inventing a syntax — the same reason as `POST /v1/companies/{company}/price-lists/resolve`, and the reason it is classified as a read for rate-limiting purposes. An ambiguous or incomplete selection is NOT an error here: it comes back as `200` with its `status`, its `reason_code` and `pending_option_groups`, because this endpoint exists to BUILD the line; the 422 belongs to whoever confirms it. What is a bad request is sending two values of the same group, which returns 422.
+     * Resolve a partial or complete catalog selection into the combination that would be sold, with its price and open choices.
+     * - A read that persists nothing; an incomplete selection returns 200 with `status` and `pending_option_groups`.
+     * - Sending two values of the same group returns 422.
      *
      * @param  string  $company
      * @param  string  $product
@@ -1584,11 +1727,12 @@ class Products
      *
      * @param  string  $company
      * @param  string  $q
+     * @param  ?string  $date
      * @param  ?LocalDate  $factuareaVersion
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSearchResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsSearch(string $company, string $q, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsSearchResponse
+    public function publicApiV1ProductsSearch(string $company, string $q, ?string $date = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsSearchResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1618,6 +1762,7 @@ class Products
         $request = new Operations\PublicApiV1ProductsSearchRequest(
             company: $company,
             q: $q,
+            date: $date,
             factuareaVersion: $factuareaVersion,
         );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
@@ -1706,16 +1851,15 @@ class Products
     /**
      * Retrieve a product
      *
-     * Retrieve a product by its `id`.
+     * Retrieve a product by its `id`, with its price (`price`, and `sale_price` with and without VAT), `availability` and, with `include=configurable_catalog`, its option groups and combinations.
+     * - `view=storefront` returns the web view with the sellable graph (active variants, presentations and combinations, each with `sale_price` and `availability`); a product that is not on sale there answers 404 `product_not_found` like an unknown id.
+     * - Conditional reads: send `If-None-Match` to get `304` with no body.
      *
-     * @param  string  $company
-     * @param  string  $product
-     * @param  ?string  $include
-     * @param  ?LocalDate  $factuareaVersion
+     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsShowRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProductsShowResponse
      * @throws \Factuarea\Sdk\Models\Errors\APIException
      */
-    public function publicApiV1ProductsShow(string $company, string $product, ?string $include = null, ?LocalDate $factuareaVersion = null, ?Options $options = null): Operations\PublicApiV1ProductsShowResponse
+    public function publicApiV1ProductsShow(Operations\PublicApiV1ProductsShowRequest $request, ?Options $options = null): Operations\PublicApiV1ProductsShowResponse
     {
         $retryConfig = null;
         if ($options) {
@@ -1742,12 +1886,6 @@ class Products
                 '5xx',
             ];
         }
-        $request = new Operations\PublicApiV1ProductsShowRequest(
-            company: $company,
-            product: $product,
-            include: $include,
-            factuareaVersion: $factuareaVersion,
-        );
         $baseUrl = $this->sdkConfiguration->getTemplatedServerUrl();
         $url = Utils\Utils::generateUrl($baseUrl, '/companies/{company}/products/{product}', Operations\PublicApiV1ProductsShowRequest::class, $request);
         $urlOverride = null;
@@ -1798,6 +1936,14 @@ class Products
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['304'])) {
+            $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
+
+            return new Operations\PublicApiV1ProductsShowResponse(
+                statusCode: $statusCode,
+                contentType: $contentType,
+                rawResponse: $httpResponse
+            );
         } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);

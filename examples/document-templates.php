@@ -3,16 +3,16 @@
 /**
  * Document templates, presentation and PDF statuses with the Factuarea PHP SDK.
  *
- * The pinned generated SDK predates the document-template operations, so this
- * example uses the three hand-written helpers of `src/Custom` for what the
- * generated methods cannot express (see docs/REGENERATION.md):
+ * Every operation has a typed method. This example combines them with the
+ * hand-written helpers of `src/Custom` for what the generated models cannot
+ * express (see docs/REGENERATION.md):
  *
- * - RawRequest      calls an operation that has no typed method yet.
- * - RequestOverrides adds headers (If-Match, If-None-Match) and sends explicit
- *                    JSON nulls on a generated method.
+ * - RawRequest      calls any operation with a plain JSON body: an explicit
+ *                    `null` in a template, or an operation newer than this release.
+ * - RequestOverrides adds headers (If-Match) and sends explicit JSON nulls on a
+ *                    generated method.
  * - ResponseMeta    reads status, ETag, Retry-After and the JSON body of any
- *                    response, including a 2xx the generated method rejects.
- * - NoRetry         stops the automatic 429/5xx retries (FACe).
+ *                    response, or of a status the generated method does not declare.
  *
  * Every company operation lives under `/v1/companies/{company}/…`, so each
  * function takes the company `id` (UUID v7, `data.scope[].id` of `GET /v1/me`):
@@ -30,13 +30,15 @@ declare(strict_types=1);
 require __DIR__.'/../vendor/autoload.php';
 
 use Factuarea\Sdk\Custom\FactuareaClient;
-use Factuarea\Sdk\Custom\Request\NoRetry;
 use Factuarea\Sdk\Custom\Request\RawRequest;
 use Factuarea\Sdk\Custom\Request\RequestOverrides;
 use Factuarea\Sdk\Custom\Response\ResponseMeta;
 use Factuarea\Sdk\Factuarea;
+use Factuarea\Sdk\Models\Components\IssueInvoiceRequest;
 use Factuarea\Sdk\Models\Components\UpdateSeriesRequest;
-use Factuarea\Sdk\Models\Errors\APIException;
+use Factuarea\Sdk\Models\Errors\ErrorThrowable;
+use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitRequest;
+use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesIssueRequest;
 use Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPdfRequest;
 use Factuarea\Sdk\Models\Operations\PublicApiV1SeriesUpdateRequest;
 
@@ -86,72 +88,70 @@ function unassignSeriesTemplate(Factuarea $sdk, string $companyId, string $serie
 
 /**
  * Issues an invoice when the company has the revisioned presentation active: the
- * preconditions of the preview travel in the body, which the generated `issue`
- * method has no parameter for. The same key repeats the same call safely.
+ * preconditions of the preview travel in the typed body. The same key repeats
+ * the same call safely.
  */
 function issueWithPreconditions(Factuarea $sdk, string $companyId, string $invoiceId, string $idempotencyKey, string $sourceToken, string $fingerprint, int $selectionVersion): bool
 {
-    $response = RawRequest::send($sdk, 'POST', '/companies/{company}/invoices/{invoice}/issue', [
-        'headers' => ['Idempotency-Key' => $idempotencyKey],
-        'json' => [
-            'expected_selection_version' => $selectionVersion,
-            'expected_source_token' => $sourceToken,
-            'expected_preview_context_fingerprint' => $fingerprint,
-        ],
-    ], ['company' => $companyId, 'invoice' => $invoiceId]);
+    try {
+        $sdk->invoices->publicApiV1InvoicesIssue(new PublicApiV1InvoicesIssueRequest(
+            company: $companyId,
+            invoice: $invoiceId,
+            idempotencyKey: $idempotencyKey,
+            body: new IssueInvoiceRequest(
+                expectedSelectionVersion: $selectionVersion,
+                expectedSourceToken: $sourceToken,
+                expectedPreviewContextFingerprint: $fingerprint,
+            ),
+        ));
 
-    // 428: a precondition is missing; 409: the source changed since the preview.
-    return $response->getStatusCode() === 200;
+        return true;
+    } catch (ErrorThrowable $e) {
+        // 428: a precondition is missing; 409: the source changed since the preview.
+        if (in_array($e->container->rawResponse?->getStatusCode(), [409, 428], true)) {
+            return false;
+        }
+
+        throw $e;
+    }
 }
 
 /**
  * Downloads an invoice PDF: 200 bytes, 304 when the cached copy is current, or
- * a 202 JSON body while the PDF renders (the generated method raises for it).
+ * a 202 JSON body while the PDF renders, with the seconds to wait.
  *
  * @return array{status: int, bytes: ?string, etag: ?string, retryAfter: ?int}
  */
 function downloadInvoicePdf(Factuarea $sdk, string $companyId, string $invoiceId, ?string $cachedEtag = null): array
 {
-    try {
-        $call = fn () => $sdk->invoices->publicApiV1InvoicesPdf(new PublicApiV1InvoicesPdfRequest(company: $companyId, invoice: $invoiceId));
-        $response = $cachedEtag === null ? $call() : RequestOverrides::run($call, headers: ['If-None-Match' => $cachedEtag]);
-        $meta = ResponseMeta::fromResponse($response->rawResponse);
+    // 409 legal source changed, 410 erased, 422 and 5xx raise ErrorThrowable.
+    $response = $sdk->invoices->publicApiV1InvoicesPdf(new PublicApiV1InvoicesPdfRequest(company: $companyId, invoice: $invoiceId, ifNoneMatch: $cachedEtag));
+    $meta = ResponseMeta::fromResponse($response->rawResponse);
 
-        return ['status' => $response->statusCode, 'bytes' => $response->bytes, 'etag' => $meta->etag ?? $cachedEtag, 'retryAfter' => null];
-    } catch (APIException $e) {
-        $meta = ResponseMeta::fromException($e);
-        if ($meta->statusCode === 202) {
-            return ['status' => 202, 'bytes' => null, 'etag' => null, 'retryAfter' => $meta->retryAfter];
-        }
-
-        throw $e; // 409 legal source changed, 410 erased, 422, 5xx...
+    if ($response->statusCode === 202) {
+        return ['status' => 202, 'bytes' => null, 'etag' => null, 'retryAfter' => $meta->retryAfter ?? $response->object?->data->pdfOutputState->retryAfter];
     }
+
+    return ['status' => $response->statusCode, 'bytes' => $response->bytes, 'etag' => $meta->etag ?? $cachedEtag, 'retryAfter' => null];
 }
 
 /**
- * FACe: one call, never a blind retry. A 200 is the replay of an accepted
- * submission (the generated method raises for it); a 502 or a 409 with an
- * attempt means the outcome is uncertain: reconcile with a GET, do not resend.
+ * FACe: one call, never a blind retry (the generated method does not retry it).
+ * A 201 is a new submission and a 200 the replay of an accepted one; a 502 or a
+ * 409 with an attempt means the outcome is uncertain: reconcile with a GET, do
+ * not resend.
  */
 function submitToFace(Factuarea $sdk, string $companyId, string $invoiceId, string $idempotencyKey): string
 {
-    try {
-        $created = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(
-            company: $companyId,
-            invoice: $invoiceId,
-            idempotencyKey: $idempotencyKey,
-            options: NoRetry::options(),
-        );
+    $response = $sdk->invoices->faceSubmissions->publicApiV1InvoicesFaceSubmissionsSubmit(new PublicApiV1InvoicesFaceSubmissionsSubmitRequest(
+        company: $companyId,
+        invoice: $invoiceId,
+        idempotencyKey: $idempotencyKey,
+    ));
 
-        return (string) $created->object?->data->status;
-    } catch (APIException $e) {
-        $meta = ResponseMeta::fromException($e);
-        if ($meta->statusCode === 200) {
-            return (string) ($meta->json()['data']['status'] ?? 'unknown');
-        }
+    $submission = $response->twoHundredAndOneApplicationJsonObject->data ?? $response->twoHundredApplicationJsonObject?->data;
 
-        throw $e;
-    }
+    return $submission?->status->value ?? 'unknown';
 }
 
 /**
