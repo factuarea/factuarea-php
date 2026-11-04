@@ -480,9 +480,9 @@ State of the follow-ups on 2026-11-04:
   `transmission_uncertain`, `submitted`, `registered_rcf`, `accounted`, `paid`,
   `rejected`, `cancellation_requested`, `cancelled`, `error`), so a status added
   later breaks a deserialization until the SDK is regenerated.
-- (f) At the release: set `php.version` in `.speakeasy/gen.yaml`, regenerate so
-  the SDK version and the User-Agent report it, and move the `[Unreleased]`
-  entry of `CHANGELOG.md` to the released version.
+- (f) Done in `0.9.0`: `php.version` set in `.speakeasy/gen.yaml`, the SDK
+  regenerated so its version and the User-Agent report it, and the changelog
+  entry released as `[0.9.0]`.
 
 ### Client flow coverage (CE01-CE25)
 
