@@ -6,18 +6,21 @@ adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 
 ## [Unreleased]
 
-Pins the **document-template contract** of the public API on top of `0.8.0`:
-**714 operations** over **572 paths** (up from 664 over 534), **+50 / −0**, every
-new one under `/v1/companies/{company}/…`. No operation moves or loses a
-status, parameter or schema. **`src/` is not regenerated from it yet** (pending;
-see [`docs/REGENERATION.md`](docs/REGENERATION.md)): the typed methods and
-models of the new operations do not exist, so this entry is completed when the
-regeneration lands. The default `Factuarea-Version` is unchanged.
+Regenerates the SDK from the published contract of the public API: **736
+operations** over **585 paths** (up from 664 over 534), **+72 / −0**, and a typed
+method for every one of them (**736**, up from 652): the **document-template
+contract** (+50, every one under `/v1/companies/{company}/…`), packs, promotions,
+product web channels and the account seats (+22), and the 12 seat offer
+redemption operations that `0.8.0` could not generate. Some existing methods take
+a request object or a new argument and some generated classes are renamed: see
+*Changed — breaking*. The default `Factuarea-Version` is unchanged
+(`2026-10-01`). In `0.x` a breaking change travels in a `minor`. Detail and the
+checks that were run in [`docs/REGENERATION.md`](docs/REGENERATION.md).
 
 ### Added
 
-- **50 operations in the pinned contract**, reachable with `RawRequest` until the
-  regeneration (the company `id` is the `{company}` path parameter): the PDF
+- **50 document-template operations** with typed methods (the company `id` is
+  their `company` argument): the PDF
   template library (`pdf-templates`: templates, revisions, assets, impact,
   defaults and per-contact defaults), commercial identities
   (`pdf-commercial-identities`), template previews (`pdf-template-previews`), PDF
@@ -33,23 +36,38 @@ regeneration lands. The default `Factuarea-Version` is unchanged.
   previews accept the same fields for an unsaved identity, which requires its six
   base keys (nullable). A template's `branding.size` accepts `inherit`, and
   `sections.notes_mode` prints the document notes with `auto` and hides them with
-  `no` (`yes` behaves like `auto`).
-- `Custom\Request\RawRequest` calls an operation that has no typed method yet, or
-  sends a request body the generated model cannot carry, through the SDK's
-  authenticated client (Bearer key, automatic `Idempotency-Key`, pinned
-  `Factuarea-Version`). It never retries and never throws on an HTTP status.
+  `no` (`yes` behaves like `auto`). The operations with optimistic concurrency
+  take the `ETag` as their `ifMatch` argument.
+- **22 operations published since**: packs (`$factuarea->packs`: list, show,
+  create, update, archive, restore, delete and price breakdown, and
+  `->packs->images` upload, update and delete), promotions (`->promotions`: list,
+  show, create, update, cancel and delete), `products.bulk_channels` (publish or
+  withdraw products on the web in bulk), the additional tax ID seats of an account
+  (`->additionalNifSeats`: status, preview and update) and `employee-seats.update`
+  (set the contracted employee seats). Their events (`pack.*`, `promotion.*`,
+  `price_list.*`, `product.deleted`) join the event and webhook payload unions.
+- **The 12 seat offer redemption operations are generated**
+  (`->employeeSeatOfferRedemptions`, `->gestoriaSeatOfferRedemptions`: prepare,
+  show, list, refresh quote, confirm and cancel): the contract no longer uses
+  JSON Schema `not`. This closes the *Known gap* of `0.8.0`.
+- `Custom\Request\RawRequest` calls any operation with a plain JSON body sent
+  unchanged (`null` versus omitted versus `[]`), or one newer than this release,
+  through the SDK's authenticated client (Bearer key, automatic
+  `Idempotency-Key`, pinned `Factuarea-Version`). It never retries and never
+  throws on an HTTP status.
 - `Custom\Request\RequestOverrides::run()` sends chosen fields of a generated
   request as an explicit JSON `null` (the generated models omit `null`, so the
   "null clears the value" `PATCH` contract was unreachable) and adds headers a
   generated method has no parameter for, such as `If-Match`.
   `FactuareaClient::create()` wires it in.
 - `Custom\Response\ResponseMeta` reads status, `ETag`, `Retry-After` and the JSON
-  body from a typed response or from the `APIException` that carries a `202`,
-  `200` replay or `503` the generated method does not declare.
+  body from a typed response (`->rawResponse`) or from the `APIException` of a
+  status the generated method does not declare.
 - `Custom\Request\NoRetry::options()` disables the generated `429`/`5xx` retries
-  per call; use it for FACe submit and cancel until the regeneration.
+  per call. FACe submit and cancel need none: see *Changed*.
 - Overlay `face-no-retry.yaml` (on the company-axis paths): FACe submission and
-  cancellation are never retried automatically after the regeneration.
+  cancellation are never retried automatically, even if the contract declares
+  retries on them again.
 - `examples/document-templates.php` and a README section on templates,
   presentation and PDF statuses (`202`, `304`, `ETag`, `Retry-After`), both on
   the company axis.
@@ -63,16 +81,44 @@ regeneration lands. The default `Factuarea-Version` is unchanged.
   preconditions (`409` `pdf_presentation_conflict` and
   `pdf_presentation_context_changed` on document writes and downloads), optional
   request bodies with the presentation preconditions on `issue`, `duplicate` and
-  FACe `submit`, and the `submission_id` query of Facturae. Until the
-  regeneration, read those statuses with `ResponseMeta` and send those fields
-  with `RawRequest`/`RequestOverrides`.
+  FACe `submit`, and the `submission_id` query of Facturae. The generated methods
+  declare them: the `202` of the four `.../pdf` downloads is a typed response
+  (`bytes` is `null`; `->object->data->pdfOutputState` and `Retry-After` say when
+  to come back), a FACe replay is a typed `200`, `pdf_link` accepts both of its
+  `202` bodies, and the declared errors raise `ErrorThrowable`.
 - **44 existing operations gain request-body fields**: presentation preconditions,
   `pdf_template_id`, payment terms and recurring presentation policies, among
-  others. `quotes.accept` and `proformas.accept` gain the optional
-  `presentation_precondition` and `expected_presentation_uuid` (the retained
-  capture that was reviewed; a stale one is refused with `409` without writing).
-  Their methods already take a request object, so the regeneration only adds
-  fields to `AcceptQuoteRequest` and `AcceptProformaRequest`.
+  others, now in their generated request models. `quotes.accept` and
+  `proformas.accept` gain the optional `presentation_precondition` and
+  `expected_presentation_uuid` (the retained capture that was reviewed; a stale
+  one is refused with `409` without writing) in `AcceptQuoteRequest` and
+  `AcceptProformaRequest`.
+- **FACe submit and cancel are never retried automatically**: the contract no
+  longer declares retries on them, so their generated methods send the request
+  once. A dropped connection raises; repeat the call with the same
+  `Idempotency-Key`, which the API answers by replaying the first outcome.
+- **Products on the web**: products gain `slug`, `summary`, `seo`, `channels`,
+  `availability`, `previous_slugs`, `promotion`, `sale_price` and
+  `sale_price_from`; variants, presentations, configurations and resolved prices
+  gain the active `promotion` and `sale_price`. `products.list` and
+  `products.show` accept `If-None-Match` (`304`), `date` (the day the promotion
+  is resolved for) and `view` (`storefront` returns only what a web shop may
+  show); `products.list` also filters by `channel`, `slug` and
+  `updated[gte]`/`updated[lte]`, and `date` reaches search, variants,
+  presentations, configurations and the price resolution.
+- Document lines of invoices, quotes, proformas and delivery notes carry
+  `pack_group` (the pack a line belongs to, or `null`); recurring invoice lines
+  accept it.
+- Price lists: `updated[gte]`/`updated[lte]` filters on the lists and their
+  items, and `409` on update, delete and item writes.
+- Seats: the charge previews of employee and company seats and the employee batch
+  quote gain the seats to buy, the free seats used and the pending reduction they
+  cancel (the previews also the offer package lost); offer quotes gain
+  `minimum_quantity` and `target_quantity`; `employee-seats.preview` accepts
+  `contracted_seats` and `employee-seats.cancel` an optional body.
+- `ConnectedAccount` gains `email_invoice_to_payer`, which
+  `UpdateConnectedAccountRequest` accepts.
+- `companies.deactivate` and `companies.delete` no longer document a `409`.
 - The PDF operations document `500` with `pdf_original_unavailable`,
   `pdf_original_corrupt` and the new `pdf_original_layout_unavailable` (the
   original is intact but this API version no longer serves its layout: contact
@@ -89,28 +135,54 @@ regeneration lands. The default `Factuarea-Version` is unchanged.
 - The README quickstart and the hand-written examples pass the company `id` to
   every company method, as `0.8.0` requires.
 
-### Expected with the regeneration (to confirm when it runs)
+- **Already published by the API, now generated**: `ConnectedAccount` gains
+  `fee_expenses_enabled`, `fee_expenses_tax_treatment` and `fee_expenses_since`,
+  which `UpdateConnectedAccountRequest` accepts; `connection_method` gains
+  `platform` (`0.8.0` could not deserialize it); `StripePayout.composition` gains
+  `refunds_total`, `standalone_fee_total` and `other_total`; the
+  `platform_account_subscriptions_owned_by_billing` subcode is new.
 
-- **Breaking for positional callers**: `Invoices::publicApiV1InvoicesIssue`,
-  `InvoicesFaceSubmissions::publicApiV1InvoicesFaceSubmissionsSubmit`, the four
-  `…Duplicate` methods and the `…Pdf` methods of `Quotes`, `Proformas` and
-  `DeliveryNotes` move to a request object; `Invoices::publicApiV1InvoicesFacturae`
-  and `TaxCatalog::publicApiV1TaxCatalogShow` gain an optional argument before
-  `$factuareaVersion`. Detail in `docs/REGENERATION.md`.
-- 50 new typed methods (one per new operation, none retired) in `PdfTemplates`,
-  `PdfCommercialIdentities`, `PdfTemplatePreviews`, `PdfArtifacts`,
-  `Invoices->administrativeRevisions`, `Invoices`, `Quotes`, `Proformas`,
-  `DeliveryNotes` and `Series`.
-- **Also picked up from the API already in production** (not part of the
-  document-template contract). The open automatic spec sync of `main` (#23)
-  carries the same changes; if it ships first, they belong to its release and
-  leave this entry.
-  - `ConnectedAccount` gains `fee_expenses_enabled`, `fee_expenses_tax_treatment`
-    and `fee_expenses_since`, and `UpdateConnectedAccountRequest` accepts them.
-  - `connection_method` gains `platform`. `0.8.0` cannot deserialize that value.
-  - `StripePayout.composition` gains `refunds_total`, `standalone_fee_total` and
-    `other_total`.
-  - The `platform_account_subscriptions_owned_by_billing` subcode is new.
+### Changed — breaking
+
+- **15 methods change their signature**, which breaks positional callers:
+  - to a request object (`Operations\…Request`): `Invoices::publicApiV1InvoicesIssue`,
+    `InvoicesFaceSubmissions::publicApiV1InvoicesFaceSubmissionsSubmit`, the four
+    `…Duplicate` methods of `Invoices`, `Quotes`, `Proformas` and
+    `DeliveryNotes`, the `…Pdf` methods of `Quotes`, `Proformas` and
+    `DeliveryNotes`, `Products::publicApiV1ProductsShow` and
+    `EmployeeSeats::publicApiV1EmployeeSeatsPreview`;
+  - a new optional argument before `$factuareaVersion`:
+    `Invoices::publicApiV1InvoicesFacturae` (`$submissionId`),
+    `TaxCatalog::publicApiV1TaxCatalogShow` (`$ifNoneMatch`, first argument),
+    `Products::publicApiV1ProductsSearch` (`$date`) and
+    `EmployeeSeats::publicApiV1EmployeeSeatsCancel` (`$body`).
+- **Renamed response properties**: `PublicApiV1ProductsListResponse::$paginatedList`
+  is `$productListData`; `PublicApiV1InvoicesFaceSubmissionsSubmitResponse::$object`
+  is `$twoHundredAndOneApplicationJsonObject` (`201`), next to
+  `$twoHundredApplicationJsonObject` (`200` replay); `PublicApiV1InvoicesPdfLinkResponse`
+  carries the `200` in `$object` and either `202` body in `$oneOf`.
+- **22 generated classes are renamed** by the name resolution of the new schemas.
+  A caller that names one switches to the class the property now declares, for
+  example `Components\ErrorError` → `Components\Error2` (`Errors\Error::$error`),
+  `Operations\PublicApiV1InvoicesPdfFormat` → `PublicApiV1InvoicesPdfQueryParamFormat`,
+  `Errors\ResponseBodyException` → `Errors\PublicApiV1PurchaseScansCreateResponseBodyException`,
+  `Components\Data` → `AccountEventEnvelopeData`, `Components\Payment` →
+  `CreateInvoiceRequestPayment` and `Components\Image` →
+  `UploadProductGalleryImageRequestImage`. The two response body classes of
+  `contacts.create`, `invoices.create`, `employee-batches.cancel` and
+  `employee-batches.confirm` swap their `1`/`2` suffix, and
+  `PublicApiV1RecurringInvoicesGenerateResponseBody::$data` is a
+  `Components\RecurringInvoiceGenerateResult`.
+- **Stricter types**: `FaceSubmission::$status` is the `FaceSubmissionStatus`
+  enum (it was a string); `MarkDeliveredRequest::$deliveryDate` is a `LocalDate`;
+  `quantity` is required on the update lines of invoices, quotes, proformas,
+  delivery notes, recurring invoices and expenses (and `taxRate` on expense
+  lines), `description`, `quantity` and `unitPrice` on corrective invoice lines,
+  and `type` on the declared measures of transport documents.
+- **`Product` fields the `storefront` view omits are nullable**: `price`, `stock`,
+  `isActive`, `isInStock`, `isLowStock`, `supplierOfferCount`,
+  `catalogAvailabilityMode`, `presentations`, `variants`, `supplierOffers`,
+  `optionGroups` and `configurations`.
 
 ## [0.8.0] — 2026-10-17
 

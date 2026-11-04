@@ -28,28 +28,28 @@ entirely in `src/Custom/` for this reason.
 ## The pinned spec
 
 `spec/openapi.json` is a copy of the Factuarea public OpenAPI document (OpenAPI
-3.1), exported with `php artisan public-api:export-spec --api=public-api` from
-commit `0c2bc0e5fc` of the Factuarea API. It is committed so the SDK is
-reproducible from this repo alone, and it is copied byte for byte (`cp`, no
-reformatting, no trailing newline added).
+3.1) published at `https://docs.factuarea.com/api/openapi`, pinned the way the
+Spec sync workflow pins it: `x-codeSamples` (docs-only snippets) removed and
+pretty-printed by `jq`. It is committed so the SDK is reproducible from this repo
+alone.
 
 | Pin | Value |
 | --- | --- |
-| Operations | **714** over **572** paths: 633 under `/companies/{company}`, 70 under `/accounts/{account}`, 11 at the root |
-| SHA-256 of the file | `0219a93b32c6a223dd6c75b1b97371fa1ec3272ecca1f2da2c9d50b2ca55bf14` |
-| Canonical SHA-256 (keys sorted recursively, `x-codeSamples` dropped, compact JSON) | `6ec087d0d39bb4cc62d2051c3a960f9d5d7c641c3ad3a4d0db9f28d75c40a44b` |
+| Operations | **736** over **585** paths: 651 under `/companies/{company}`, 74 under `/accounts/{account}`, 11 at the root |
+| SHA-256 of the file | `654efa53248850093d740527dcffae483b7dd5f30f7623444b41c96cbfe99980` |
+| Canonical SHA-256 (keys sorted recursively, `x-codeSamples` dropped, compact JSON) | `88d74e59e5c60812610f09622fa6b3ad831c8bcedfdbd597d36ada9451b48b40` |
 
-**`src/` is NOT regenerated from this pin yet.** It is the generation of `0.8.0`,
-made from the 664-operation axis contract (SHA-256 `fcf93063…85848`, 652
-generated methods). Against that contract the pin adds the **50
-document-template operations**, all under `/companies/{company}/…`, and removes
-none; 34 existing operations gain response statuses, parameters or a request
-body, and 44 gain request-body fields. Until the regeneration the new operations
-and fields are reachable with `RawRequest`; see
-[Document-template contract](#document-template-contract-pending-regeneration-and-how-to-work-meanwhile)
-for the details and the checks to run after regenerating. The pin also carries a
-few changes that the production API already publishes and `0.8.0` was not
-generated from: see [Changes already published by the API](#changes-already-published-by-the-api).
+`src/` is generated from this pin (Speakeasy `1.806.0`, generator `2.956.1`):
+**736 typed methods, one per operation**. Against the 664-operation contract of
+`0.8.0` (652 generated methods) it adds the **50 document-template operations**,
+generates the **12 seat offer redemption operations** that `0.8.0` could not
+(the contract no longer uses JSON Schema `not`) and adds **22 operations** the
+API published since: packs, promotions, product web channels and the account
+seats. No operation is removed. See
+[Document-template contract](#document-template-contract-regenerated) for the
+signature changes and the checks that were run, and
+[Changes already published by the API](#changes-already-published-by-the-api)
+for the rest.
 
 To update the SDK to a newer API version, replace `spec/openapi.json` with the new
 pinned document and regenerate (below). Bump the version in
@@ -136,19 +136,16 @@ retry could submit or cancel twice at FACe. It must stay after
 longer declares `x-speakeasy-retries` on those two operations (they carry
 `x-no-retry` instead), so against it both `remove` actions match nothing: the
 overlay is a defensive no-op that keeps the retries off if the extension ever
-comes back. Keep it until a regeneration confirms that the Speakeasy overlay
-engine accepts a `remove` with no match; if it rejects it, delete the overlay
-and its `workflow.yaml` entry, because the spec already carries the behaviour.
-After regenerating, check that both generated methods no longer carry the `5xx`
-retry codes.
+comes back. The regeneration of 2026-11-04 confirmed that the Speakeasy overlay
+engine accepts a `remove` with no match, so it stays.
 
-Until then the **currently generated** methods do retry (`429` and `5xx`): the
-`0.8.0` contract still declared the extension on them.
-`Custom\Request\NoRetry::options()` disables the status-code retries per call
-(the generated code ignores a per-call `Options::setRetryConfig()`: its `else`
-branch rebuilds the default backoff, so only `retryCodes` is honoured). A dropped
-connection is still retried, always with the same caller-supplied
-`Idempotency-Key`, which the API answers by replaying the first outcome.
+Both generated methods carry no retry at all: they send the request once. A
+dropped connection raises (the `afterError` hook rethrows it); the caller repeats
+the call with the same `Idempotency-Key`, which the API answers by replaying the
+first outcome. On every other operation, `Custom\Request\NoRetry::options()`
+disables the status-code retries per call (the generated code ignores a per-call
+`Options::setRetryConfig()`: its `else` branch rebuilds the default backoff, so
+only `retryCodes` is honoured).
 
 ### Manual layer for field presence and extra headers
 
@@ -174,25 +171,25 @@ real assertion.
 
 ---
 
-## Document-template contract: pending regeneration and how to work meanwhile
+## Document-template contract: regenerated
 
-**The Speakeasy regeneration of the pinned spec is PENDING.** It needs the
-`SPEAKEASY_API_KEY` of the `factuarea/factuarea` workspace. Everything else is
-ready: the pin, the overlays (all four checked against it, below) and the manual
-layer on the company axis. Nothing under `src/` outside `src/Custom/` was
-hand-edited.
+The regeneration that `0.8.0` left pending ran on 2026-11-04 from the pin above,
+with the four overlays of `workflow.yaml`. Nothing under `src/` outside
+`src/Custom/` was hand-edited. Until it ran, every Spec sync run failed: it
+regenerated `src/` and the tests of `Tests/Custom/`, written against the `0.8.0`
+generation, broke on the new signatures and response models.
 
-### Regenerating this pin (maintainer with the Speakeasy key)
+### Regenerating a pin (maintainer with the Speakeasy key)
 
 ```bash
 # 0. The pin, unchanged.
 sha256sum spec/openapi.json
-# 0219a93b32c6a223dd6c75b1b97371fa1ec3272ecca1f2da2c9d50b2ca55bf14
+# 654efa53248850093d740527dcffae483b7dd5f30f7623444b41c96cbfe99980
 
 # 1. Public methods of the generated layer BEFORE (src/*.php: neither src/Custom nor src/Hooks).
 grep -o 'public function publicApi[A-Za-z0-9]*' src/*.php \
   | sed -E 's#^src/([A-Za-z0-9]+)\.php:public function #\1::#' | LC_ALL=C sort > /tmp/methods-before.txt
-wc -l < /tmp/methods-before.txt      # 652
+wc -l < /tmp/methods-before.txt      # 736
 
 # 2. Set the release version in .speakeasy/gen.yaml (php.version) BEFORE
 #    generating: the generator writes it into SDKConfiguration and the User-Agent.
@@ -216,22 +213,31 @@ vendor/bin/pint --test src/Custom Tests examples
 git diff --stat -- src/Custom Tests examples   # manual layer untouched
 ```
 
-The diff of step 4 must be **exactly 50 added lines and no removed line** (702
-methods): one `Class::method` per row of the table below, with the class of its
-group (`PdfTemplates`, `PdfCommercialIdentities`, `PdfTemplatePreviews`,
-`PdfArtifacts`, `AdministrativeRevisions`, `Invoices`, `Quotes`, `Proformas`,
-`DeliveryNotes`, `Series`). The 12 seat offer redemption operations stay
-ungenerated (`0.8.0` *Known gaps*). A method in the diff without its operation in
-the table is an upstream problem: fix the contract, never rename in the SDK.
+Against the `0.8.0` generation, the diff of step 4 on 2026-11-04 was **84 added
+lines and no removed line** (652 → 736 methods):
 
-### What the manual layer (`src/Custom/`, protected) offers meanwhile
+- the 50 document-template operations of the table below, each with the class of
+  its group (`PdfTemplates`, `PdfCommercialIdentities`, `PdfTemplatePreviews`,
+  `PdfArtifacts`, `AdministrativeRevisions`, `Invoices`, `Quotes`, `Proformas`,
+  `DeliveryNotes`, `Series`) and the expected name and call shape;
+- the 12 seat offer redemption operations (`EmployeeSeatOfferRedemptions`,
+  `GestoriaSeatOfferRedemptions`), no longer a *Known gap*;
+- the 22 operations published after the pin of the document-template contract:
+  `Packs` (8) and `Images` (3, `packs.images`), `Promotions` (6),
+  `Products::publicApiV1ProductsBulkChannels`, `AdditionalNifSeats` (3) and
+  `EmployeeSeats::publicApiV1EmployeeSeatsUpdate`.
+
+A method in a future diff without its operation in the contract is an upstream
+problem: fix the contract, never rename in the SDK.
+
+### What the manual layer (`src/Custom/`, protected) offers
 
 | File | Purpose |
 | --- | --- |
-| `Request/RequestOverrides.php`, `Request/RequestOverridesClient.php` | Per-call extra headers (`If-Match`, `If-None-Match`) and explicit JSON `null` on a generated method. |
-| `Response/ResponseMeta.php` | Status, `ETag`, `Retry-After` and JSON body of any response or of an `APIException` (202, 200 replay, 503). |
-| `Request/RawRequest.php` | Calls an operation without a typed method (or with a request field a generated model cannot carry) through the SDK's own authenticated client: URL, `Accept`, `User-Agent`, `Factuarea-Version`, automatic `Idempotency-Key`, active `RequestOverrides`. The company `id` is one more path parameter (`/companies/{company}/…`). No retries; never throws on an HTTP status. |
-| `Request/NoRetry.php` | `Options` that disable the generated `429`/`5xx` retries per call (FACe). |
+| `Request/RequestOverrides.php`, `Request/RequestOverridesClient.php` | Per-call extra headers (`If-Match` where the operation declares none, such as `series.update`) and explicit JSON `null` on a generated method. |
+| `Response/ResponseMeta.php` | Status, `ETag`, `Retry-After` and JSON body of any typed response (`->rawResponse`) or of an `APIException` (a status the operation does not declare). |
+| `Request/RawRequest.php` | Calls any operation with a plain JSON body sent unchanged (or one newer than this release) through the SDK's own authenticated client: URL, `Accept`, `User-Agent`, `Factuarea-Version`, automatic `Idempotency-Key`, active `RequestOverrides`. The company `id` is one more path parameter (`/companies/{company}/…`). No retries; never throws on an HTTP status. |
+| `Request/NoRetry.php` | `Options` that disable the generated `429`/`5xx` retries per call. FACe needs none: its two methods do not retry. |
 | `FactuareaClient.php`, `Idempotency/*`, `Pagination/*`, `Version/*`, `Webhooks/*` | Unchanged. |
 
 After any regeneration these files and `Tests/Custom/` must be untouched
@@ -244,20 +250,17 @@ request model would fork the generator output and be overwritten by the next
 regeneration, and a second local runner would only duplicate `speakeasy run` with
 the committed `workflow.yaml`.
 
-### Operations that still have no typed method (50)
+### Document-template operations (50)
 
-Call them with `RawRequest` (see `examples/document-templates.php` and the
-README), passing the company `id` as the `{company}` path parameter. The last two
-columns are the name and the call shape the generator should produce. They are
-derived from the rules it applied to every one of the 652 methods of `0.8.0`
-(the method is the camelCased `operationId`; parameters plus body above
+The last two columns are the typed method and its call shape, **verified against
+the generated layer** on 2026-11-04 (all 50 match). The rules behind them: the
+method is the camelCased `operationId`; parameters plus body above
 `maxMethodParams: 4` make an `Operations\…Request` object, otherwise the
 arguments are positional: required body first, then required parameters, then
-optional ones, in spec order). They are **not verified** until the regeneration:
-the classes do not exist yet.
+optional ones, in spec order. `RawRequest` still reaches any of them with a
+plain JSON body (see `examples/document-templates.php` and the README).
 
-Their payloads have no generated model yet either, so the fields travel as plain
-JSON through `RawRequest`. A commercial-identity revision carries
+Their payloads have generated models. A commercial-identity revision carries
 `logo_dark_asset_id`, `brand_image_dark_asset_id`, `dark_background_fallback`
 (`silhouette` | `plate`) and `brand_size` (`small` | `medium` | `large`). `create`
 and `publish_revision` accept them, and so does the unsaved identity of a
@@ -321,11 +324,12 @@ address. A template's `branding.size` also accepts `inherit`, and
 | `GET /companies/{company}/series/{series}/pdf-template` | `public-api.v1.series.get_pdf_template` | `$sdk->series->publicApiV1SeriesGetPdfTemplate` | ($company, $series, ?$factuareaVersion) |
 | `PATCH /companies/{company}/series/{series}/pdf-template` | `public-api.v1.series.assign_pdf_template` | `$sdk->series->publicApiV1SeriesAssignPdfTemplate` | `Operations\PublicApiV1SeriesAssignPdfTemplateRequest` |
 
-### Existing methods whose signature changes on regeneration (11)
+### Existing methods whose signature changed (15)
 
-The pin adds a request body or a header parameter to operations that already have
-a typed method. By the same rules, the regeneration should change these
-signatures, which breaks positional callers (record it in the release notes):
+The contract adds a request body or a parameter to operations that already had a
+typed method, which breaks positional callers (record it in the release notes).
+Measured by comparing every `public function publicApi…(…)` of the `0.8.0`
+generation with this one:
 
 - **Positional → request object** (`Operations\…Request`), because the operation
   gains an optional request body: `Invoices::publicApiV1InvoicesIssue`,
@@ -334,11 +338,18 @@ signatures, which breaks positional callers (record it in the release notes):
 - **Positional → request object**, because the operation gains the
   `If-None-Match` header: `Quotes::publicApiV1QuotesPdf`,
   `Proformas::publicApiV1ProformasPdf` and `DeliveryNotes::publicApiV1DeliveryNotesPdf`
-  (`Invoices::publicApiV1InvoicesPdf` already takes a request object, which gains
+  (`Invoices::publicApiV1InvoicesPdf` already took a request object, which gains
   `ifNoneMatch`).
+- **Positional → request object**, because the operation gains query or header
+  parameters published after the document-template pin:
+  `Products::publicApiV1ProductsShow` (`ifNoneMatch`, `date`, `view`) and
+  `EmployeeSeats::publicApiV1EmployeeSeatsPreview` (`contractedSeats`).
 - **A new optional argument before `$factuareaVersion`**:
-  `Invoices::publicApiV1InvoicesFacturae` (`?string $submissionId`) and
-  `TaxCatalog::publicApiV1TaxCatalogShow` (`?string $ifNoneMatch`, first argument).
+  `Invoices::publicApiV1InvoicesFacturae` (`?string $submissionId`),
+  `TaxCatalog::publicApiV1TaxCatalogShow` (`?string $ifNoneMatch`, first argument),
+  `Products::publicApiV1ProductsSearch` (`?string $date`) and
+  `EmployeeSeats::publicApiV1EmployeeSeatsCancel`
+  (`?Components\CancelEmployeeSeatAddonV1Request $body`).
 
 No other method changes its signature. `Quotes::publicApiV1QuotesAccept` and
 `Proformas::publicApiV1ProformasAccept` already take a request object: the pin
@@ -347,12 +358,12 @@ only adds two optional fields, `presentation_precondition` and
 longer the current one the acceptance is refused with `409` and nothing is
 written), to `Components\AcceptQuoteRequest` and `Components\AcceptProformaRequest`.
 
-After the regeneration, the request bodies of `issue`, `duplicate` and FACe
-`submit`, the `If-None-Match` of the downloads and the tax catalog, and the
-`submission_id` of Facturae no longer need `RawRequest` or `RequestOverrides`.
+The request bodies of `issue`, `duplicate` and FACe `submit`, the `If-None-Match`
+of the downloads and the tax catalog, and the `submission_id` of Facturae have
+typed parameters: they no longer need `RawRequest` or `RequestOverrides`.
 
-Until then, the 44 existing operations whose request body gains fields go through
-`RawRequest` when the caller needs those fields: the presentation preconditions
+The 44 existing operations whose request body gained fields carry them in their
+generated request models: the presentation preconditions
 (`presentation_precondition(s)`, `expected_selection_version`,
 `expected_source_token`, `expected_presentation_uuid`, …) of `send`, `issue`,
 `duplicate`, `convert`, `sign`, the bulk actions and `quotes`/`proformas`
@@ -360,26 +371,29 @@ Until then, the 44 existing operations whose request body gains fields go throug
 presentation policies on `create`/`update`; the administrative centres, business
 references, invoicing period and legal literals of `invoices.create`;
 `dir3_proponent` of the customer profile; and the public link `publish` action.
-`stripe_autoinvoicing.accounts.update` also gains the `fee_expenses_*` fields that
-the API already publishes (below), 45 operations in total.
-`quarterly.download_zip` `include_non_invoiced_charges` needs it to send `null`.
-The generated `pdf_link` method rejects the second `202` body of the contract (it
-has no `pdf_path`) with a `PropertyMissingException`: read that endpoint with
-`RawRequest`.
+To send one of them as an explicit `null` (for example
+`expected_template_revision_id`, or `include_non_invoiced_charges` of
+`quarterly.download_zip`), use `RequestOverrides::run(clear: [...])`: the
+generated models omit `null`. The generated `pdf_link` method accepts both
+`202` bodies of the contract (with and without `pdf_path`) in `->oneOf`.
 
-### Statuses the generated methods do not expect
-
-A status a generated method does not declare raises `APIException` even when it
-is a success. Read it with `ResponseMeta::fromException()`:
+### Statuses of the changed operations
 
 - `202` JSON from the four `.../pdf` downloads (invoices, quotes, proformas,
-  delivery notes): the PDF is still rendering, or a failed render that can be
-  retried was claimed again (`failed_render_claimed_again`); `Retry-After` when
-  present.
-- `200` from FACe submit: replay of an already accepted submission.
+  delivery notes) is a typed response: `bytes` is `null`,
+  `->object->data->pdfOutputState` says where the render is (`prepared`,
+  `queued`, `processing`) and `Retry-After` how long to wait
+  (`ResponseMeta::fromResponse($response->rawResponse)->retryAfter`). The PDF is
+  still rendering, or a failed render that can be retried was claimed again
+  (`failed_render_claimed_again`).
+- `200` from FACe submit is a typed response
+  (`->twoHundredApplicationJsonObject`): the replay of an already accepted
+  submission. A new one is a `201` (`->twoHundredAndOneApplicationJsonObject`).
 - `428`, `409`, `410`, `412`, `422`, `500`, `502`, `503` on the changed operations
-  arrive as `APIException` (generic 4XX/5XX branch) or `ErrorThrowable` (declared
-  ones); the status and body are available in both. `idempotency_key_reused` is a
+  raise `ErrorThrowable` when the operation declares them (`->container->error`
+  and `->container->rawResponse`) and `APIException` otherwise (generic 4XX/5XX
+  branch, read it with `ResponseMeta::fromException()`); the status and body are
+  available in both. `idempotency_key_reused` is a
   `422`. Many document writes and downloads declare `409`
   `pdf_presentation_conflict` and `pdf_presentation_context_changed`: reread the
   presentation and retry with its current state. `invoices.create`,
@@ -408,26 +422,24 @@ is a success. Read it with `ResponseMeta::fromException()`:
 
 | Overlay | Target | Matches |
 | --- | --- | --- |
-| `retry-status-code-casing.yaml` | `$.paths[*][*].x-speakeasy-retries` (and its `statusCodes`) | 712 of 714 operations (the two FACe operations declare none) |
+| `retry-status-code-casing.yaml` | `$.paths[*][*].x-speakeasy-retries` (and its `statusCodes`) | 734 of 736 operations (the two FACe operations declare none) |
 | `product-options-namespace.yaml` | `GET /companies/{company}/products/{product}/options` | 1 |
 | `drop-speakeasy-pagination.yaml` | `$.paths[*][*].x-speakeasy-pagination` | 1 (`GET /companies/{company}/stores`) |
 | `face-no-retry.yaml` | `x-speakeasy-retries` of the two FACe operations | 0 (the operations exist; the extension does not, see above) |
 
-No new overlay is needed by the document-template operations as far as static
-analysis can tell. The new groups are `pdfTemplates`, `pdfCommercialIdentities`,
-`pdfTemplatePreviews`, `pdfArtifacts` and the nested
-`invoices.administrativeRevisions`, which Speakeasy flattens into an
-`AdministrativeRevisions` class. No generated class has any of those names, and
-none matches a short name the generated classes import (`Components`,
-`DeserializationContext`, `HookContext`, `LocalDate`, `Operations`, `Options`,
-`Retry`, `RetryConfig`, `RetryUtils`). Still, check for a PHP class-name clash
-after the first run, as happened with `products.options`.
+No new overlay was needed. The new groups are `pdfTemplates`,
+`pdfCommercialIdentities`, `pdfTemplatePreviews`, `pdfArtifacts`, `packs`,
+`promotions`, `additionalNifSeats`, the seat offer redemptions and the nested
+`invoices.administrativeRevisions` and `packs.images`, which Speakeasy flattens
+into `AdministrativeRevisions` and `Images` classes. None clashes with a short
+name the generated classes import: PHP loads them and PHPStan passes. Check for
+a clash after every regeneration that adds a group, as happened with
+`products.options`.
 
 ### Changes already published by the API
 
-The pin also carries API changes that are already live in production but that
-`0.8.0` was not generated from. They are not part of the document-template
-contract:
+The regeneration also picks up API changes that were already live in production
+when `0.8.0` was generated. They are not part of the document-template contract:
 
 - Connected Stripe accounts: `ConnectedAccount` gains `fee_expenses_enabled`,
   `fee_expenses_tax_treatment` and `fee_expenses_since` (always present in the
@@ -441,29 +453,36 @@ contract:
 - `PurchaseInvoice`: the descriptions of `total` and `taxes_total` cover
   self-assessed VAT.
 
-The generated enums are strict, and the `ConnectionMethod` enum of `0.8.0` has no
-`platform` case: reading a connected account linked as `platform` fails to
-deserialize until the regeneration, so read it with `RawRequest` meanwhile. The
-open automatic spec-sync pull request of `main` (#23) carries these same changes.
-If it is merged first, merge `main` into this branch and regenerate once from
-this pin; the changes then belong to that release's changelog entry.
+The `ConnectionMethod` enum of `0.8.0` had no `platform` case, so `0.8.0` cannot
+deserialize a connected account linked as `platform`; the regenerated enum can.
+Every other change of the contract since the document-template pin (packs,
+promotions, products on the web, `pack_group` on document lines, price list
+filters, seat previews) is listed in the `[Unreleased]` entry of `CHANGELOG.md`.
 
 ### After the regeneration
 
-In this order: (a) turn the typed methods that now exist into the call path of
-`examples/document-templates.php` and the README, keeping `RawRequest` only for
-what is still missing (it stays as the escape hatch); (b) rewrite
-`Tests/Custom/Client/DocumentTemplateContractTest.php` against the generated
-methods, keeping the same wire assertions; (c) re-check the retry codes of the
-two FACe methods and remove `NoRetry` from the docs if the overlay or the spec made
-it redundant; (d) the incomplete test in `Tests/Custom/Request/PresenceWireTest.php`
-when Speakeasy emits a tri-state; (e) the generated enums are strict (`from()`; an
-unknown value fails as `PropertyMissingException`): FACe `status` is an enum in
-the pinned contract (`prepared`, `transmission_uncertain`, `submitted`,
-`registered_rcf`, `accounted`, `paid`, `rejected`, `cancellation_requested`,
-`cancelled`, `error`), so a status added later will break a deserialization until
-the SDK is regenerated; (f) move the `[Unreleased]` entry of `CHANGELOG.md` to
-the released version, with the signature changes listed above.
+State of the follow-ups on 2026-11-04:
+
+- (a) Done for `issue`, the downloads and FACe: `examples/document-templates.php`
+  and the README use their typed methods. Templates, presentations and
+  artifacts keep `RawRequest` in the example, which stays as the escape hatch for
+  bodies sent unchanged.
+- (b) Done where the generation changed the behaviour:
+  `Tests/Custom/Client/DocumentTemplateContractTest.php` measures `issue`, FACe,
+  the downloads, `pdf_link` and the typed `202`/`503` through the generated
+  methods, with the same wire assertions; the `RawRequest` flows stay.
+- (c) Done: the two FACe methods carry no retry, and the docs no longer ask for
+  `NoRetry` on them.
+- (d) Pending: the incomplete test in `Tests/Custom/Request/PresenceWireTest.php`,
+  until Speakeasy emits a tri-state.
+- (e) Still applies: the generated enums are strict (`from()`; an unknown value
+  fails as `PropertyMissingException`). FACe `status` is an enum (`prepared`,
+  `transmission_uncertain`, `submitted`, `registered_rcf`, `accounted`, `paid`,
+  `rejected`, `cancellation_requested`, `cancelled`, `error`), so a status added
+  later breaks a deserialization until the SDK is regenerated.
+- (f) At the release: set `php.version` in `.speakeasy/gen.yaml`, regenerate so
+  the SDK version and the User-Agent report it, and move the `[Unreleased]`
+  entry of `CHANGELOG.md` to the released version.
 
 ### Client flow coverage (CE01-CE25)
 
