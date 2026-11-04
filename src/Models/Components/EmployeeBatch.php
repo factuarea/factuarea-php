@@ -90,10 +90,10 @@ class EmployeeBatch
     /**
      * $allowedActions
      *
-     * @var array<\Factuarea\Sdk\Models\Components\AllowedAction> $allowedActions
+     * @var array<\Factuarea\Sdk\Models\Components\EmployeeBatchAllowedAction> $allowedActions
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('allowed_actions')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\AllowedAction>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\EmployeeBatchAllowedAction>')]
     public array $allowedActions;
 
     /**
@@ -164,7 +164,7 @@ class EmployeeBatch
      * @param  bool  $financialAttemptStarted
      * @param  array<\Factuarea\Sdk\Models\Components\EmployeeBatchItem>  $items
      * @param  array<\Factuarea\Sdk\Models\Components\EmployeeBatchResult>  $result
-     * @param  array<\Factuarea\Sdk\Models\Components\AllowedAction>  $allowedActions
+     * @param  array<\Factuarea\Sdk\Models\Components\EmployeeBatchAllowedAction>  $allowedActions
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?int  $acceptedVersion

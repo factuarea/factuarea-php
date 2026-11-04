@@ -27,4 +27,6 @@ enum AccountEventType: string
     case AccountNifTransferred = 'account.nif_transferred';
     case AccountNifArchived = 'account.nif_archived';
     case AccountImportCompleted = 'account.import_completed';
+    case AccountSeatsUpdated = 'account.seats_updated';
+    case AccountOfferPackageEnded = 'account.offer_package_ended';
 }

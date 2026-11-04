@@ -5,12 +5,20 @@
 
 | Name                           | Value                          |
 | ------------------------------ | ------------------------------ |
+| `PdfTemplatesRead`             | pdf_templates:read             |
+| `PdfTemplatesWrite`            | pdf_templates:write            |
 | `ContactsRead`                 | contacts:read                  |
 | `ContactsWrite`                | contacts:write                 |
 | `ContactsDelete`               | contacts:delete                |
 | `ProductsRead`                 | products:read                  |
 | `ProductsWrite`                | products:write                 |
 | `ProductsDelete`               | products:delete                |
+| `PacksRead`                    | packs:read                     |
+| `PacksWrite`                   | packs:write                    |
+| `PacksDelete`                  | packs:delete                   |
+| `PromotionsRead`               | promotions:read                |
+| `PromotionsWrite`              | promotions:write               |
+| `PromotionsDelete`             | promotions:delete              |
 | `PriceListsRead`               | price_lists:read               |
 | `PriceListsWrite`              | price_lists:write              |
 | `InvoicesRead`                 | invoices:read                  |

@@ -37,15 +37,27 @@ class PublicApiV1ProductsSearchRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.
+     *
+     * Malformed: 400 `parameter_invalid_iso8601`.
+     *
+     * @var ?string $date
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date')]
+    public ?string $date = null;
+
+    /**
      * @param  string  $company
      * @param  string  $q
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $date
      * @phpstan-pure
      */
-    public function __construct(string $company, string $q, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $q, ?LocalDate $factuareaVersion = null, ?string $date = null)
     {
         $this->company = $company;
         $this->q = $q;
         $this->factuareaVersion = $factuareaVersion;
+        $this->date = $date;
     }
 }

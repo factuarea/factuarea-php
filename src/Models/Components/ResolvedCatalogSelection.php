@@ -165,6 +165,24 @@ class ResolvedCatalogSelection
     public ?string $configurationPrice;
 
     /**
+     * Sale price with and without VAT of the resolved combination (`status: resolved`), measured with the same engine as a document line of quantity 1: official catalog precedence, option adjustments included, no customer rate, company regime, today. `null` while the selection is not resolved. `net` keeps the scale of the catalog price; `tax` and `gross` have two decimals.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogSalePrice $salePrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sale_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogSalePrice|null')]
+    public ?CatalogSalePrice $salePrice;
+
+    /**
+     * The promotion that applies to the resolved combination on the web channel today, or `null` when there is none. `sale_price` is still the regular price: with a promotion, show `promotion.price` and, only when `promotion.announce_reduction` is `true`, `promotion.previous_price` as the previous price. In schema.org, `Offer.price` is `promotion.price.gross` and `Offer.priceValidUntil` is `promotion.ends_at`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogPromotion|null')]
+    public ?CatalogPromotion $promotion;
+
+    /**
      * Machine-readable cause when the selection is not resolved.
      *
      * @var ?string $reasonCode
@@ -200,11 +218,13 @@ class ResolvedCatalogSelection
      * @param  ?string  $configurationName
      * @param  ?string  $configurationSignature
      * @param  ?string  $configurationPrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogSalePrice  $salePrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogPromotion  $promotion
      * @param  ?string  $reasonCode
      * @param  ?string  $reason
      * @phpstan-pure
      */
-    public function __construct(ResolvedCatalogSelectionObject $object, string $productId, ResolvedCatalogSelectionMode $mode, ResolvedCatalogSelectionStatus $status, bool $compatible, bool $complete, array $selectedOptions, string $optionAdjustmentTotal, array $candidateConfigurationIds, array $compatibleVariants, array $compatiblePresentations, array $compatibleOptionGroups, array $pendingOptionGroups, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $configurationName = null, ?string $configurationSignature = null, ?string $configurationPrice = null, ?string $reasonCode = null, ?string $reason = null)
+    public function __construct(ResolvedCatalogSelectionObject $object, string $productId, ResolvedCatalogSelectionMode $mode, ResolvedCatalogSelectionStatus $status, bool $compatible, bool $complete, array $selectedOptions, string $optionAdjustmentTotal, array $candidateConfigurationIds, array $compatibleVariants, array $compatiblePresentations, array $compatibleOptionGroups, array $pendingOptionGroups, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $configurationName = null, ?string $configurationSignature = null, ?string $configurationPrice = null, ?CatalogSalePrice $salePrice = null, ?CatalogPromotion $promotion = null, ?string $reasonCode = null, ?string $reason = null)
     {
         $this->object = $object;
         $this->productId = $productId;
@@ -225,6 +245,8 @@ class ResolvedCatalogSelection
         $this->configurationName = $configurationName;
         $this->configurationSignature = $configurationSignature;
         $this->configurationPrice = $configurationPrice;
+        $this->salePrice = $salePrice;
+        $this->promotion = $promotion;
         $this->reasonCode = $reasonCode;
         $this->reason = $reason;
     }

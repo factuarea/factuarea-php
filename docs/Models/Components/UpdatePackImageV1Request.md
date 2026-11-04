@@ -1,0 +1,11 @@
+# UpdatePackImageV1Request
+
+Edit one image of the pack gallery. Send `alt`, `position` or both; what you omit does not change.
+
+
+## Fields
+
+| Field                                                                                                             | Type                                                                                                              | Required                                                                                                          | Description                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `alt`                                                                                                             | *?string*                                                                                                         | :heavy_minus_sign:                                                                                                | Alternative text of the image. `null` clears it.                                                                  |
+| `position`                                                                                                        | *?int*                                                                                                            | :heavy_minus_sign:                                                                                                | New 1-based position in the gallery. The other images shift to make room; the first one is the cover of the pack. |

@@ -40,25 +40,26 @@ class PublicApiV1ProductsListResponse
     public array $headers;
 
     /**
+     * Page of products, in the requested `view`.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListPaginatedList $paginatedList
+     * @var ?\Factuarea\Sdk\Models\Operations\ProductListData $productListData
      */
-    public ?PublicApiV1ProductsListPaginatedList $paginatedList = null;
+    public ?ProductListData $productListData = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListPaginatedList  $paginatedList
+     * @param  ?\Factuarea\Sdk\Models\Operations\ProductListData  $productListData
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1ProductsListPaginatedList $paginatedList = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?ProductListData $productListData = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->paginatedList = $paginatedList;
+        $this->productListData = $productListData;
     }
 }

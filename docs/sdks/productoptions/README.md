@@ -8,7 +8,9 @@
 
 ## publicApiV1ProductsOptionsList
 
-"Options" here are the SELLABLE choices of the configurable catalog (finish, flavour, service level), not the informational `specifications` sheet, which is not chosen and travels inside the product, variant or presentation it belongs to. Each group returns its values with their `price_adjustment`. The `active` filter applies to the GROUPS only: their values always come back in full, active and inactive, because a historical document line has the right to keep the name and adjustment of the value it froze even after the catalog retired it — each value carries its own `is_active` to say whether it can still be chosen. Cursor-paginated (`limit`, `starting_after`); a cursor that matches no group of this product returns 422, never 404. A product of another company returns 404 `product_not_found`, exactly like a product that does not exist.
+List the SELLABLE option groups of a product (finish, flavour, service level) with their values and `price_adjustment`.
+- The `active` filter applies to groups only; values always come back in full, each with `is_active`.
+- Cursor-paginated (`limit`, `starting_after`); a product of another company returns 404 `product_not_found`.
 
 ### Example Usage
 

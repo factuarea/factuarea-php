@@ -87,6 +87,38 @@ class CompanySeatChargePreview
     public bool $isFirstSeat;
 
     /**
+     * Free contracted seats that the registration or activation would occupy.
+     *
+     * @var int $freeSeatsUsed
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('free_seats_used')]
+    public int $freeSeatsUsed;
+
+    /**
+     * Seats that would have to be bought (and charged) for the operation. 0 when the free seats cover it.
+     *
+     * @var int $seatsToBuy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seats_to_buy')]
+    public int $seatsToBuy;
+
+    /**
+     * true when the free contracted seats cover the whole operation: the amount is 0, `zero_reason` is `included_in_seats` and no payment method is needed.
+     *
+     * @var bool $includedInSeats
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('included_in_seats')]
+    public bool $includedInSeats;
+
+    /**
+     * true when the operation would cancel a pending seat reduction (the occupied seats would exceed its target).
+     *
+     * @var bool $cancelsPendingReduction
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cancels_pending_reduction')]
+    public bool $cancelsPendingReduction;
+
+    /**
      *
      * @var ?int $taxRate
      */
@@ -122,13 +154,31 @@ class CompanySeatChargePreview
     public ?int $recurringTotalCents;
 
     /**
-     * Explicit reason for no immediate charge. A null reason never implies an Enterprise contract; negotiated_free_price preserves the acquired private seat price.
+     * Explicit reason for no immediate charge. A null reason never implies an Enterprise contract; negotiated_free_price preserves the acquired private seat price; included_in_seats means the free contracted seats cover the whole operation.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\ZeroReason $zeroReason
+     * @var ?\Factuarea\Sdk\Models\Components\CompanySeatChargePreviewZeroReason $zeroReason
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('zero_reason')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ZeroReason|null')]
-    public ?ZeroReason $zeroReason;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CompanySeatChargePreviewZeroReason|null')]
+    public ?CompanySeatChargePreviewZeroReason $zeroReason;
+
+    /**
+     * Contracted-seats block of additional tax IDs AFTER the operation, or null when the account has no seats to show.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ContractedSeats $seats
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seats')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ContractedSeats|null')]
+    public ?ContractedSeats $seats;
+
+    /**
+     * What the applied offer package would lose, or null.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\SeatOfferPackageLoss $offerPackageLoss
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('offer_package_loss')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SeatOfferPackageLoss|null')]
+    public ?SeatOfferPackageLoss $offerPackageLoss;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\CompanySeatChargePreviewObject  $object
@@ -141,15 +191,21 @@ class CompanySeatChargePreview
      * @param  bool  $includedInTrial
      * @param  bool  $alreadyCovered
      * @param  bool  $isFirstSeat
+     * @param  int  $freeSeatsUsed
+     * @param  int  $seatsToBuy
+     * @param  bool  $includedInSeats
+     * @param  bool  $cancelsPendingReduction
      * @param  ?int  $taxRate
      * @param  ?\DateTime  $nextInvoiceDate
      * @param  ?int  $recurringQuantity
      * @param  ?int  $recurringBaseCents
      * @param  ?int  $recurringTotalCents
-     * @param  ?\Factuarea\Sdk\Models\Components\ZeroReason  $zeroReason
+     * @param  ?\Factuarea\Sdk\Models\Components\CompanySeatChargePreviewZeroReason  $zeroReason
+     * @param  ?\Factuarea\Sdk\Models\Components\ContractedSeats  $seats
+     * @param  ?\Factuarea\Sdk\Models\Components\SeatOfferPackageLoss  $offerPackageLoss
      * @phpstan-pure
      */
-    public function __construct(CompanySeatChargePreviewObject $object, string $amount, string $taxAmount, string $total, CompanySeatChargePreviewCurrency $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null, ?ZeroReason $zeroReason = null)
+    public function __construct(CompanySeatChargePreviewObject $object, string $amount, string $taxAmount, string $total, CompanySeatChargePreviewCurrency $currency, bool $requiresPaymentMethod, bool $requiresActivePlan, bool $includedInTrial, bool $alreadyCovered, bool $isFirstSeat, int $freeSeatsUsed, int $seatsToBuy, bool $includedInSeats, bool $cancelsPendingReduction, ?int $taxRate = null, ?\DateTime $nextInvoiceDate = null, ?int $recurringQuantity = null, ?int $recurringBaseCents = null, ?int $recurringTotalCents = null, ?CompanySeatChargePreviewZeroReason $zeroReason = null, ?ContractedSeats $seats = null, ?SeatOfferPackageLoss $offerPackageLoss = null)
     {
         $this->object = $object;
         $this->amount = $amount;
@@ -161,11 +217,17 @@ class CompanySeatChargePreview
         $this->includedInTrial = $includedInTrial;
         $this->alreadyCovered = $alreadyCovered;
         $this->isFirstSeat = $isFirstSeat;
+        $this->freeSeatsUsed = $freeSeatsUsed;
+        $this->seatsToBuy = $seatsToBuy;
+        $this->includedInSeats = $includedInSeats;
+        $this->cancelsPendingReduction = $cancelsPendingReduction;
         $this->taxRate = $taxRate;
         $this->nextInvoiceDate = $nextInvoiceDate;
         $this->recurringQuantity = $recurringQuantity;
         $this->recurringBaseCents = $recurringBaseCents;
         $this->recurringTotalCents = $recurringTotalCents;
         $this->zeroReason = $zeroReason;
+        $this->seats = $seats;
+        $this->offerPackageLoss = $offerPackageLoss;
     }
 }

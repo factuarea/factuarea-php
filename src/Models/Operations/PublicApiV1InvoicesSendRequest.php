@@ -46,6 +46,7 @@ class PublicApiV1InvoicesSendRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Invoice send accepts the seven precondition fields at the request top level; they are all-or-none, and the optional `expected_presentation_uuid`. A draft is issued and sent in one step: the precondition is checked by the issue and the email carries the capture the issue left. The seven fields are required when revisioned presentation is enabled for the company and the invoice has no retained capture yet (missing fields return 428 `pdf_presentation_precondition_required`); an already captured invoice is re-sent as captured without them and without creating a new version; otherwise they are ignored.
      *
      * @var ?\Factuarea\Sdk\Models\Components\SendInvoiceRequest $body
      */

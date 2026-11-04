@@ -96,11 +96,11 @@ class PurchaseScanListItem
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\DocumentKind $documentKind
+     * @var \Factuarea\Sdk\Models\Components\PurchaseScanListItemDocumentKind $documentKind
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('document_kind')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\DocumentKind')]
-    public DocumentKind $documentKind;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PurchaseScanListItemDocumentKind')]
+    public PurchaseScanListItemDocumentKind $documentKind;
 
     /**
      *
@@ -203,7 +203,7 @@ class PurchaseScanListItem
      * @param  \Factuarea\Sdk\Models\Components\PurchaseScanListItemUploadedBy  $uploadedBy
      * @param  int  $issueCount
      * @param  array<\Factuarea\Sdk\Models\Components\PurchaseScanListItemAvailableAction>  $availableActions
-     * @param  \Factuarea\Sdk\Models\Components\DocumentKind  $documentKind
+     * @param  \Factuarea\Sdk\Models\Components\PurchaseScanListItemDocumentKind  $documentKind
      * @param  \Factuarea\Sdk\Models\Components\FileKind  $fileKind
      * @param  \Factuarea\Sdk\Models\Components\SupplierLinkState  $supplierLinkState
      * @param  ?string  $supplierId
@@ -218,7 +218,7 @@ class PurchaseScanListItem
      * @param  ?\Factuarea\Sdk\Models\Components\PurchaseScanListItemDeferredReason  $deferredReason
      * @phpstan-pure
      */
-    public function __construct(string $id, int $version, PurchaseScanListItemSource $source, PurchaseScanListItemStatus $status, string $originalFilename, string $mimeType, int $pageCount, \DateTime $receivedAt, PurchaseScanListItemUploadedBy $uploadedBy, int $issueCount, array $availableActions, DocumentKind $documentKind, FileKind $fileKind, SupplierLinkState $supplierLinkState, ?string $supplierId = null, ?string $supplierName = null, ?string $documentNumber = null, ?LocalDate $issueDate = null, ?string $currency = null, ?string $total = null, ?string $purchaseInvoiceId = null, ?PurchaseScanListItemLastError $lastError = null, ?\DateTime $deferredUntil = null, ?PurchaseScanListItemDeferredReason $deferredReason = null)
+    public function __construct(string $id, int $version, PurchaseScanListItemSource $source, PurchaseScanListItemStatus $status, string $originalFilename, string $mimeType, int $pageCount, \DateTime $receivedAt, PurchaseScanListItemUploadedBy $uploadedBy, int $issueCount, array $availableActions, PurchaseScanListItemDocumentKind $documentKind, FileKind $fileKind, SupplierLinkState $supplierLinkState, ?string $supplierId = null, ?string $supplierName = null, ?string $documentNumber = null, ?LocalDate $issueDate = null, ?string $currency = null, ?string $total = null, ?string $purchaseInvoiceId = null, ?PurchaseScanListItemLastError $lastError = null, ?\DateTime $deferredUntil = null, ?PurchaseScanListItemDeferredReason $deferredReason = null)
     {
         $this->id = $id;
         $this->version = $version;

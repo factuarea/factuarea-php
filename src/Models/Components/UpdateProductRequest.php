@@ -13,6 +13,24 @@ class UpdateProductRequest
 {
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestChannels $channels
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channels')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestChannels|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProductRequestChannels $channels = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateProductRequestSeo $seo
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seo')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestSeo|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateProductRequestSeo $seo = null;
+
+    /**
+     *
      * @var ?string $name
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('name')]
@@ -70,6 +88,22 @@ class UpdateProductRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateProductRequestCatalogAvailabilityMode|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null;
+
+    /**
+     *
+     * @var ?string $slug
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('slug')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $slug = null;
+
+    /**
+     *
+     * @var ?string $summary
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('summary')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $summary = null;
 
     /**
      *
@@ -200,6 +234,8 @@ class UpdateProductRequest
     public ?string $impactToken = null;
 
     /**
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestChannels  $channels
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestSeo  $seo
      * @param  ?string  $name
      * @param  ?string  $price
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestItemKind  $itemKind
@@ -207,6 +243,8 @@ class UpdateProductRequest
      * @param  ?bool  $manageStock
      * @param  ?bool  $isActive
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateProductRequestCatalogAvailabilityMode  $catalogAvailabilityMode
+     * @param  ?string  $slug
+     * @param  ?string  $summary
      * @param  ?string  $sku
      * @param  ?string  $description
      * @param  ?array<string>  $tags
@@ -223,8 +261,10 @@ class UpdateProductRequest
      * @param  ?string  $impactToken
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?string $price = null, ?UpdateProductRequestItemKind $itemKind = null, ?UpdateProductRequestBaseUnit $baseUnit = null, ?bool $manageStock = null, ?bool $isActive = null, ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
+    public function __construct(?UpdateProductRequestChannels $channels = null, ?UpdateProductRequestSeo $seo = null, ?string $name = null, ?string $price = null, ?UpdateProductRequestItemKind $itemKind = null, ?UpdateProductRequestBaseUnit $baseUnit = null, ?bool $manageStock = null, ?bool $isActive = null, ?UpdateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $slug = null, ?string $summary = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?UpdateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
     {
+        $this->channels = $channels;
+        $this->seo = $seo;
         $this->name = $name;
         $this->price = $price;
         $this->itemKind = $itemKind;
@@ -232,6 +272,8 @@ class UpdateProductRequest
         $this->manageStock = $manageStock;
         $this->isActive = $isActive;
         $this->catalogAvailabilityMode = $catalogAvailabilityMode;
+        $this->slug = $slug;
+        $this->summary = $summary;
         $this->sku = $sku;
         $this->description = $description;
         $this->tags = $tags;

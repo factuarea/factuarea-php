@@ -9,8 +9,91 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
+/** UpdateInvoiceRequest - Update a draft invoice. Omitted commercial fields preserve their values; null clears, reference objects merge by key and lists replace while preserving order and duplicates. Retain lines.N.id (UUID v7) to keep a line when reordering; omit it for a new line. Repeated, retired or foreign identities reject the whole update. A non-null reference date requires its paired reference after merging. Header references have only three supported keys (20 characters); line references have five pairs, delivery-note numbers have 30 characters, literals 250 and sequence_number accepts only JSON integers 0-2147483647. Administrative centres null inherits the frozen snapshot; [] selects none. Source line ids, source trees and administrative snapshot/version fields are read-only. payment_terms omitted preserves; null removes only in draft, [] explicitly selects none, list replaces the whole schedule. A nonempty replacement sent without `due_on` moves `due_on` to its last instalment, the date on which the invoice falls due. Every supplied calendar requires raw JSON-integer expected_payment_terms_version >= 0, including no-op/null/[]. If total_to_pay changes with a nonempty current calendar, provide a balanced replacement in the same request. Missing version=428, stale=409 with current_version after authorization; no partial line/fiscal-tree/calendar save. Optional row id is non-null UUID v7; omission always makes a new identity and excluded old identities retire. Versions/source/currency/timestamps/legacy_context are server-owned. Explicit row accounts never use a live fallback; reads do not adapt legacy. */
 class UpdateInvoiceRequest
 {
+    /**
+     * $lines
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine> $lines
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('lines')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $lines = null;
+
+    /**
+     * Body CAS for editing an existing calendar, including null/[] and a no-op. Also required if total_to_pay changes with a nonempty current schedule. Missing returns 428, stale returns 409 with current_version only after parent authorization. 0 means no row. New creation needs no version; POST external_id upsert follows the update rules. Idempotent replay precedes CAS. Neither If-Match nor expected_version/administrative_version substitutes this field.
+     *
+     * @var ?int $expectedPaymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_payment_terms_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedPaymentTermsVersion = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsVersion = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsSource = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsCurrency
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_currency')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsCurrency = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsCapturedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_captured_at')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsCapturedAt = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsFrozenAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_frozen_at')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsFrozenAt = null;
+
+    /**
+     *
+     * @var mixed $legacyContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legacy_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $legacyContext = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsLegacyContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_legacy_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsLegacyContext = null;
+
     /**
      *
      * @var ?string $clientId
@@ -38,6 +121,15 @@ class UpdateInvoiceRequest
     public ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null;
 
     /**
+     * Positive current selection version used as the body CAS. It is required exactly when pdf_template_id is present; omit both fields to leave the current presentation intent unchanged. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?int $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedSelectionVersion = null;
+
+    /**
      *
      * @var ?LocalDate $issuedOn
      */
@@ -46,6 +138,7 @@ class UpdateInvoiceRequest
     public ?LocalDate $issuedOn = null;
 
     /**
+     * New due date (YYYY-MM-DD), only while the invoice is a draft. With a nonempty schedule the invoice falls due on its last instalment: when you replace `payment_terms` and leave `due_on` out, it moves to that date; when you send both and they differ, the draft keeps them and issuing it returns 422 `invoice_due_date_not_last_instalment`.
      *
      * @var ?LocalDate $dueOn
      */
@@ -54,14 +147,52 @@ class UpdateInvoiceRequest
     public ?LocalDate $dueOn = null;
 
     /**
-     * $lines
      *
-     * @var ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine> $lines
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences $businessReferences
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('lines')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>|null')]
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?array $lines = null;
+    public ?InvoiceHeaderReferences $businessReferences = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod $invoicingPeriod
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoicing_period')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceInvoicingPeriod $invoicingPeriod = null;
+
+    /**
+     * $legalLiterals
+     *
+     * @var ?array<string> $legalLiterals
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legal_literals')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $legalLiterals = null;
+
+    /**
+     * $administrativeCentres
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre> $administrativeCentres
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_centres')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $administrativeCentres = null;
+
+    /**
+     * Create omitted/null means unknown; [] means explicitly no schedule, including a positive payable. Update omitted preserves, null removes the schedule only on a draft, [] explicitly selects none, and a list replaces all rows. No merge or automatic matching by index. A nonempty list must balance exactly; total zero allows only null/[]. With a nonempty list the invoice falls due on its last instalment: `due_on` must be that date when the invoice is issued (422 `invoice_due_date_not_last_instalment`), a draft keeps the date you send, and an update that replaces the list without `due_on` moves it to the last instalment.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput> $paymentTerms
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $paymentTerms = null;
 
     /**
      *
@@ -78,6 +209,15 @@ class UpdateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('price_list_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $priceListId = null;
+
+    /**
+     * Optional nullable tenant-template UUID. Omission preserves current intent; null clears manual intent and inherits; a UUID selects a compatible manual template. Send expected_selection_version whenever this field is present. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
 
     /**
      * Date the operation took place (YYYY-MM-DD) when it differs from the issue date. It can only be changed while the invoice is a draft, and it cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15.
@@ -138,14 +278,29 @@ class UpdateInvoiceRequest
     public ?array $customFields = null;
 
     /**
+     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>  $lines
+     * @param  ?int  $expectedPaymentTermsVersion
+     * @param  mixed  $paymentTermsVersion
+     * @param  mixed  $paymentTermsSource
+     * @param  mixed  $paymentTermsCurrency
+     * @param  mixed  $paymentTermsCapturedAt
+     * @param  mixed  $paymentTermsFrozenAt
+     * @param  mixed  $legacyContext
+     * @param  mixed  $paymentTermsLegacyContext
      * @param  ?string  $clientId
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestType  $type
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestRepriceStrategy  $repriceStrategy
+     * @param  ?int  $expectedSelectionVersion
      * @param  ?LocalDate  $issuedOn
      * @param  ?LocalDate  $dueOn
-     * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestLine>  $lines
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences  $businessReferences
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod  $invoicingPeriod
+     * @param  ?array<string>  $legalLiterals
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>  $administrativeCentres
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput>  $paymentTerms
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
+     * @param  ?string  $pdfTemplateId
      * @param  ?LocalDate  $operationOn
      * @param  ?string  $notes
      * @param  ?string  $externalId
@@ -154,16 +309,31 @@ class UpdateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(?string $clientId = null, ?UpdateInvoiceRequestType $type = null, ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?array $lines = null, ?string $seriesId = null, ?string $priceListId = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(?array $lines = null, ?int $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $clientId = null, ?UpdateInvoiceRequestType $type = null, ?UpdateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?int $expectedSelectionVersion = null, ?LocalDate $issuedOn = null, ?LocalDate $dueOn = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $legalLiterals = null, ?array $administrativeCentres = null, ?array $paymentTerms = null, ?string $seriesId = null, ?string $priceListId = null, ?string $pdfTemplateId = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
+        $this->lines = $lines;
+        $this->expectedPaymentTermsVersion = $expectedPaymentTermsVersion;
+        $this->paymentTermsVersion = $paymentTermsVersion;
+        $this->paymentTermsSource = $paymentTermsSource;
+        $this->paymentTermsCurrency = $paymentTermsCurrency;
+        $this->paymentTermsCapturedAt = $paymentTermsCapturedAt;
+        $this->paymentTermsFrozenAt = $paymentTermsFrozenAt;
+        $this->legacyContext = $legacyContext;
+        $this->paymentTermsLegacyContext = $paymentTermsLegacyContext;
         $this->clientId = $clientId;
         $this->type = $type;
         $this->repriceStrategy = $repriceStrategy;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
-        $this->lines = $lines;
+        $this->businessReferences = $businessReferences;
+        $this->invoicingPeriod = $invoicingPeriod;
+        $this->legalLiterals = $legalLiterals;
+        $this->administrativeCentres = $administrativeCentres;
+        $this->paymentTerms = $paymentTerms;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->operationOn = $operationOn;
         $this->notes = $notes;
         $this->externalId = $externalId;

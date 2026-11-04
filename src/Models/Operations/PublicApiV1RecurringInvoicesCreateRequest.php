@@ -22,6 +22,7 @@ class PublicApiV1RecurringInvoicesCreateRequest
     public string $company;
 
     /**
+     * Presentation policy and relative payment terms preserve omitted/null/empty distinctions. New creation starts at configuration version 1. Creating from an invoice does not copy its overdue calendar or private visual intent. An existing external_id upsert uses update CAS. Saving configuration never resumes a paused recurrence. `presentation_policy`, `payment_terms_template` and `expected_presentation_policy_version` only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
      *
      * @var \Factuarea\Sdk\Models\Components\CreateRecurringInvoiceRequest $body
      */

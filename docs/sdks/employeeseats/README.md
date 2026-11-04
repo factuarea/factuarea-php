@@ -7,12 +7,15 @@
 * [publicApiV1EmployeeSeatsCancel](#publicapiv1employeeseatscancel) - Cancel the employee seat add-on
 * [publicApiV1EmployeeSeatsChangeQuantity](#publicapiv1employeeseatschangequantity) - Sync the employee seat quantity
 * [publicApiV1EmployeeSeatsStatus](#publicapiv1employeeseatsstatus) - Retrieve employee seat billing status
+* [publicApiV1EmployeeSeatsUpdate](#publicapiv1employeeseatsupdate) - Set the contracted employee seats
 * [publicApiV1EmployeeSeatsPreview](#publicapiv1employeeseatspreview) - Preview the employee seat charge
 * [publicApiV1EmployeeSeatsSubscribe](#publicapiv1employeeseatssubscribe) - Subscribe to the employee seat add-on
 
 ## publicApiV1EmployeeSeatsCancel
 
-Cancel the per-employee billing add-on: the `employee-seats` subscription is cancelled at period end (the current month is already paid) and the per-employee coverage is purged. The plan subscription is never touched. Returns the resulting billing status, where `subscribed` stays `true` until the period ends. The person who issued the credential must be able to operate the billing of the account (owner or admin): otherwise 403 `forbidden_action`. Returns 403 `billing_managed_by_provider`, with no charge and no change, when the billing of the account is managed by its provider.
+Cancel the per-employee billing add-on at period end; the plan subscription is untouched.
+- Returns the billing status; `subscribed` stays `true` until the period ends.
+- Owner or admin only (403 `forbidden_action`); 403 `billing_managed_by_provider` if the provider manages billing.
 
 ### Example Usage
 
@@ -39,7 +42,8 @@ $sdk = Sdk\Factuarea::builder()
 $response = $sdk->employeeSeats->publicApiV1EmployeeSeatsCancel(
     account: '91505870',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
-    factuareaVersion: LocalDate::parse('2026-06-01')
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: $body
 
 );
 
@@ -55,6 +59,7 @@ if ($response->object !== null) {
 | `account`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [?Components\CancelEmployeeSeatAddonV1Request](../../Models/Components/CancelEmployeeSeatAddonV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ### Response
 
@@ -70,7 +75,9 @@ if ($response->object !== null) {
 
 ## publicApiV1EmployeeSeatsChangeQuantity
 
-Reconcile the seat quantity of the add-on to the real number of active employees (SET with `proration_behavior: none`, no invoice). Idempotent: when the quantity already matches it is a no-op. Returns the resulting billing status. The person who issued the credential must be able to operate the billing of the account (owner or admin): otherwise 403 `forbidden_action`. Returns 403 `billing_managed_by_provider`, with no charge and no change, when the billing of the account is managed by its provider.
+Sync the add-on seat quantity to the real number of active employees (no proration, no invoice).
+- Idempotent: a no-op when the quantity already matches.
+- Owner or admin only (403 `forbidden_action`); 403 `billing_managed_by_provider` if the provider manages billing.
 
 ### Example Usage
 
@@ -128,7 +135,10 @@ if ($response->object !== null) {
 
 ## publicApiV1EmployeeSeatsStatus
 
-Return the billing status of the per-employee add-on for your company: whether the `employee-seats` subscription is active, how many seats are billed (`quantity`), how many employees are active, and the recurring per-seat cost with VAT. Amounts are euros as 2-decimal strings and are `null` when the cost is not resolvable (not subscribed, no active plan, enterprise outside Stripe, sandbox) — never a misleading 0. `seats_billable` tells whether your plan MUST be paying per seat, independently of `subscribed`: `subscribed: false` with `seats_billable: true` and active employees is a billing anomaly, while `seats_billable: false` is a legitimate no-charge state (enterprise by contract, trial or sandbox). Employees never count towards the plan `users` seat limit. Returns 403 `billing_managed_by_provider` when the billing of the account is managed by its provider.
+Return the billing status of the per-employee add-on: `quantity` billed, active employees and recurring per-seat cost with VAT.
+- Amounts are `null` when not resolvable, never a misleading 0.
+- `subscribed: false` with `seats_billable: true` and active employees is a billing anomaly.
+- 403 `billing_managed_by_provider` when the provider manages billing.
 
 ### Example Usage
 
@@ -182,13 +192,16 @@ if ($response->object !== null) {
 | Errors\Error            | 500                     | application/json        |
 | Errors\APIException     | 4XX, 5XX                | \*/\*                   |
 
-## publicApiV1EmployeeSeatsPreview
+## publicApiV1EmployeeSeatsUpdate
 
-Preview the prorated per-seat amount for activating or hiring employees, computed from the Stripe upcoming invoice of the `employee-seats` subscription, without charging. Use `count` (≥1, up to 1000) for a batch preview, or `employee_ids` (UUID v7) for a coverage-aware preview: employees still covered for the current period cost 0 (`already_covered: true`). `amount` is the taxable base in euros as a 2-decimal string (`tax_amount` and `total` too; only `recurring_base_cents` and `recurring_total_cents` are in cents); `requires_payment_method` is `true` when no payment method is on file. It returns 403 `billing_managed_by_provider` when the billing of the account is managed by its provider; otherwise it never throws — it degrades to a neutral preview.
+Set the contracted employee seats of the account to an absolute `contracted_seats`.
+- A higher value buys the missing seats now, with the payment method on file; a lower one is a reduction applied at renewal, without refund.
+- Going below the occupied seats needs `deactivate` with exactly the surplus; breaking an offer package needs `accept_offer_package_loss`.
+- `Idempotency-Key` is mandatory.
 
-### Example Usage
+### Example Usage: factuarea_version_invalid_format
 
-<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.preview" method="get" path="/accounts/{account}/employee-seats/preview" example="success" -->
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.update" method="patch" path="/accounts/{account}/employee-seats" example="factuarea_version_invalid_format" -->
 ```php
 declare(strict_types=1);
 
@@ -206,10 +219,158 @@ $sdk = Sdk\Factuarea::builder()
     )
     ->build();
 
+$body = new Components\UpdateContractedSeatsV1Request(
+    contractedSeats: 5,
+);
 
+$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsUpdate(
+    account: '7520360e-e7bd-47ef-b696-d07f5fef15a7',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
 
-$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsPreview(
-    account: '32551988',
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: reduction_scheduled
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.update" method="patch" path="/accounts/{account}/employee-seats" example="reduction_scheduled" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateContractedSeatsV1Request(
+    contractedSeats: 5,
+);
+
+$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsUpdate(
+    account: '34273b2f-0314-4d16-9e24-cbe8696b3ea2',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.update" method="patch" path="/accounts/{account}/employee-seats" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateContractedSeatsV1Request(
+    contractedSeats: 5,
+);
+
+$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsUpdate(
+    account: '497a9abe-252e-4c0a-a34c-3be36ae7553f',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: success
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.update" method="patch" path="/accounts/{account}/employee-seats" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateContractedSeatsV1Request(
+    contractedSeats: 5,
+);
+
+$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsUpdate(
+    account: '0f3da0b1-a068-4c4f-bd01-403166409129',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.update" method="patch" path="/accounts/{account}/employee-seats" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\UpdateContractedSeatsV1Request(
+    contractedSeats: 5,
+);
+
+$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsUpdate(
+    account: '43e69c7b-f63e-4978-89b0-a3cd9a0a3301',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
@@ -221,12 +382,71 @@ if ($response->object !== null) {
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                    | Type                                                                                                                                                                                                                                                                                                                                                                         | Required                                                                                                                                                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                                                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `account`                                                                                                                                                                                                                                                                                                                                                                    | *string*                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                           | Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                              |
-| `count`                                                                                                                                                                                                                                                                                                                                                                      | *?int*                                                                                                                                                                                                                                                                                                                                                                       | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Number of employees that would be activated in bulk (at least 1, default 1).                                                                                                                                                                                                                                                                                                 |                                                                                                                                                                                                                                                                                                                                                                              |
-| `employeeIds`                                                                                                                                                                                                                                                                                                                                                                | array<*string*>                                                                                                                                                                                                                                                                                                                                                              | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Public identifiers (UUID v7) of the employees to preview; omit it to preview `count` employees.                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                              |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                           | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                           | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning). | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                   |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `account`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of your account. Get it from `GET /v1/me` (`data.account.id`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). **Required on this operation**: repeating it delivers an effect that cannot be taken back (an email sent, a file generated, a third-party call, a charge), so a request without this header is rejected with `422 idempotency_key_required` before any business logic runs. | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\UpdateContractedSeatsV1Request](../../Models/Components/UpdateContractedSeatsV1Request.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                                                                                                                                                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### Response
+
+**[?Operations\PublicApiV1EmployeeSeatsUpdateResponse](../../Models/Operations/PublicApiV1EmployeeSeatsUpdateResponse.md)**
+
+### Errors
+
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 402, 403, 404, 409, 422, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
+
+## publicApiV1EmployeeSeatsPreview
+
+Preview the prorated per-seat charge for activating or hiring employees, without charging.
+- Send `count` (1 to 1000) or `employee_ids` (UUID v7); already covered employees cost 0.
+- Amounts are 2-decimal euro strings; 403 `billing_managed_by_provider` when the provider manages billing.
+
+### Example Usage
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.employee-seats.preview" method="get" path="/accounts/{account}/employee-seats/preview" example="success" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1EmployeeSeatsPreviewRequest(
+    account: '32551988',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+);
+
+$response = $sdk->employeeSeats->publicApiV1EmployeeSeatsPreview(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+
+### Parameters
+
+| Parameter                                                                                                              | Type                                                                                                                   | Required                                                                                                               | Description                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `$request`                                                                                                             | [Operations\PublicApiV1EmployeeSeatsPreviewRequest](../../Models/Operations/PublicApiV1EmployeeSeatsPreviewRequest.md) | :heavy_check_mark:                                                                                                     | The request object to use for the request.                                                                             |
 
 ### Response
 
@@ -242,7 +462,9 @@ if ($response->object !== null) {
 
 ## publicApiV1EmployeeSeatsSubscribe
 
-Opt in to the per-employee billing add-on: create the dedicated monthly `employee-seats` subscription with `quantity` set to the number of active employees, charging the first period with the payment method on file. The charge is atomic — with no payment method it returns 402 `employee_seat_payment_method_required` (the envelope carries `error.details.payment_setup_url`), and a declined charge returns 402 `employee_seat_charge_failed`; in both cases nothing is subscribed. Returns the resulting billing status. The person who issued the credential must be able to operate the billing of the account (owner or admin): otherwise 403 `forbidden_action`. Returns 403 `billing_managed_by_provider`, with no charge and no change, when the billing of the account is managed by its provider.
+Subscribe to the monthly per-employee add-on, charging the first period with the payment method on file.
+- Atomic: 402 `employee_seat_payment_method_required` or `employee_seat_charge_failed` subscribes nothing.
+- Owner or admin only (403 `forbidden_action`); 403 `billing_managed_by_provider` if the provider manages billing.
 
 ### Example Usage
 

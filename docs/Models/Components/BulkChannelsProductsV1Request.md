@@ -1,0 +1,11 @@
+# BulkChannelsProductsV1Request
+
+Publish or withdraw several products on the web in one request, up to 50 per batch. `ids` is an array of product UUIDs and `channels.web` the target state. Publishing generates the missing slug; the change is idempotent. Products that do not exist or belong to another company are returned under `failures[]`.
+
+
+## Fields
+
+| Field                                                                                                                | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `ids`                                                                                                                | array<*string*>                                                                                                      | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `channels`                                                                                                           | [Components\BulkChannelsProductsV1RequestChannels](../../Models/Components/BulkChannelsProductsV1RequestChannels.md) | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |

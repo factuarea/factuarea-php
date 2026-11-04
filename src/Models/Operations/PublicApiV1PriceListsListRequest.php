@@ -53,6 +53,22 @@ class PublicApiV1PriceListsListRequest
     public ?PublicApiV1PriceListsListStatus $status = null;
 
     /**
+     * Last update of the price list (ISO 8601), which also moves when one of its prices changes. Use both `updated[gte]` and `updated[lte]` for a window. Greater than or equal to the given value.
+     *
+     * @var ?\DateTime $updatedGte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=updated[gte],dateTimeFormat=Y-m-d\TH:i:s.up')]
+    public ?\DateTime $updatedGte = null;
+
+    /**
+     * Last update of the price list (ISO 8601), which also moves when one of its prices changes. Use both `updated[gte]` and `updated[lte]` for a window. Less than or equal to the given value.
+     *
+     * @var ?\DateTime $updatedLte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=updated[lte],dateTimeFormat=Y-m-d\TH:i:s.up')]
+    public ?\DateTime $updatedLte = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -74,17 +90,21 @@ class PublicApiV1PriceListsListRequest
      * @param  ?int  $limit
      * @param  ?string  $search
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1PriceListsListStatus  $status
+     * @param  ?\DateTime  $updatedGte
+     * @param  ?\DateTime  $updatedLte
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(string $company, ?int $page = null, ?int $limit = null, ?string $search = null, ?PublicApiV1PriceListsListStatus $status = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
+    public function __construct(string $company, ?int $page = null, ?int $limit = null, ?string $search = null, ?PublicApiV1PriceListsListStatus $status = null, ?\DateTime $updatedGte = null, ?\DateTime $updatedLte = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
     {
         $this->company = $company;
         $this->page = $page;
         $this->limit = $limit;
         $this->search = $search;
         $this->status = $status;
+        $this->updatedGte = $updatedGte;
+        $this->updatedLte = $updatedLte;
         $this->factuareaVersion = $factuareaVersion;
         $this->startingAfter = $startingAfter;
     }

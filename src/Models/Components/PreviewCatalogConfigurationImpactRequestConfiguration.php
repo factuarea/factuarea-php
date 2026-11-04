@@ -13,24 +13,27 @@ class PreviewCatalogConfigurationImpactRequestConfiguration
 {
     /**
      *
-     * @var bool $restrictsAvailability
+     * @var ?bool $restrictsAvailability
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('restricts_availability')]
-    public bool $restrictsAvailability;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $restrictsAvailability = null;
 
     /**
      *
      * @var ?string $variantId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
-    public ?string $variantId;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
 
     /**
      *
      * @var ?string $presentationId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
-    public ?string $presentationId;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationId = null;
 
     /**
      * $optionValueIds
@@ -39,16 +42,17 @@ class PreviewCatalogConfigurationImpactRequestConfiguration
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('option_value_ids')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    public ?array $optionValueIds;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $optionValueIds = null;
 
     /**
-     * @param  bool  $restrictsAvailability
+     * @param  ?bool  $restrictsAvailability
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
      * @param  ?array<string>  $optionValueIds
      * @phpstan-pure
      */
-    public function __construct(bool $restrictsAvailability, ?string $variantId = null, ?string $presentationId = null, ?array $optionValueIds = null)
+    public function __construct(?bool $restrictsAvailability = null, ?string $variantId = null, ?string $presentationId = null, ?array $optionValueIds = null)
     {
         $this->restrictsAvailability = $restrictsAvailability;
         $this->variantId = $variantId;

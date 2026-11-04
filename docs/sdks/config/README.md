@@ -9,7 +9,9 @@
 
 ## publicApiV1StripeAutoinvoicingConfigShow
 
-Return the Stripe Connect integration state and auto-invoicing configuration: whether Stripe is connected and enabled, the series used, the plan gating, and the fiscal policy (`simplified_threshold_cents`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`). With multiple connected accounts it returns 422 `per_account_config_required` — read each via `GET /v1/companies/{company}/connected-accounts`.
+Returns the Stripe Connect state and auto-invoicing configuration: enabled, series, plan gating, fiscal policy.
+- With several connected accounts it returns 422 `per_account_config_required`.
+- Read each account via `GET /v1/companies/{company}/connected-accounts`.
 
 ### Example Usage
 
@@ -65,7 +67,9 @@ if ($response->object !== null) {
 
 ## publicApiV1StripeAutoinvoicingConfigUpdate
 
-Partially update the auto-invoicing of Stripe Connect charges: enable or disable it (`enabled`) and choose the series used. Optionally tune the fiscal policy (`simplified_threshold_cents` in cents [0, 300000], `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`); omitted fields keep their value. With multiple connected accounts it returns 422 `per_account_config_required` — configure each account individually.
+Partially updates auto-invoicing of Stripe Connect charges: `enabled`, series and fiscal policy; omitted fields keep their value.
+- `simplified_threshold_cents` accepts [0, 300000].
+- With several connected accounts it returns 422 `per_account_config_required`.
 
 ### Example Usage: api_key_revoked
 

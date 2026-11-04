@@ -30,13 +30,25 @@ class BulkStatusProformasV1Request
     public BulkStatusProformasV1RequestNewStatus $newStatus;
 
     /**
+     * Optional map from each affected proforma UUID to its complete seven-field presentation precondition. Keys must identify documents in this batch; do not reuse another document's source token. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?array<string, \Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition> $presentationPreconditions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_preconditions')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, \Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $presentationPreconditions = null;
+
+    /**
      * @param  array<string>  $ids
      * @param  \Factuarea\Sdk\Models\Components\BulkStatusProformasV1RequestNewStatus  $newStatus
+     * @param  ?array<string, \Factuarea\Sdk\Models\Components\ProformaPresentationPrecondition>  $presentationPreconditions
      * @phpstan-pure
      */
-    public function __construct(array $ids, BulkStatusProformasV1RequestNewStatus $newStatus)
+    public function __construct(array $ids, BulkStatusProformasV1RequestNewStatus $newStatus, ?array $presentationPreconditions = null)
     {
         $this->ids = $ids;
         $this->newStatus = $newStatus;
+        $this->presentationPreconditions = $presentationPreconditions;
     }
 }

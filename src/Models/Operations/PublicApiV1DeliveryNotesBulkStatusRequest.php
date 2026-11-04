@@ -30,6 +30,7 @@ class PublicApiV1DeliveryNotesBulkStatusRequest
     public string $idempotencyKey;
 
     /**
+     * Bulk delivery-note status changes accept an optional UUID-keyed map of complete seven-field presentation preconditions. The presentation precondition fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
      *
      * @var \Factuarea\Sdk\Models\Components\BulkStatusDeliveryNotesV1Request $body
      */

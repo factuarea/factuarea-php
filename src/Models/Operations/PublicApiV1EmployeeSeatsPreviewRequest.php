@@ -45,17 +45,27 @@ class PublicApiV1EmployeeSeatsPreviewRequest
     public ?int $count = null;
 
     /**
+     * Contracted seats to preview (absolute value; mutually exclusive with `count` and `employee_ids`).
+     *
+     * @var ?int $contractedSeats
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=contracted_seats')]
+    public ?int $contractedSeats = null;
+
+    /**
      * @param  string  $account
      * @param  ?array<string>  $employeeIds
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?int  $count
+     * @param  ?int  $contractedSeats
      * @phpstan-pure
      */
-    public function __construct(string $account, ?array $employeeIds = null, ?LocalDate $factuareaVersion = null, ?int $count = null)
+    public function __construct(string $account, ?array $employeeIds = null, ?LocalDate $factuareaVersion = null, ?int $count = null, ?int $contractedSeats = null)
     {
         $this->account = $account;
         $this->employeeIds = $employeeIds;
         $this->factuareaVersion = $factuareaVersion;
         $this->count = $count;
+        $this->contractedSeats = $contractedSeats;
     }
 }

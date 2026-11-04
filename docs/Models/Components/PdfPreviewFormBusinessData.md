@@ -1,0 +1,10 @@
+# PdfPreviewFormBusinessData
+
+
+## Fields
+
+| Field                                                                                                  | Type                                                                                                   | Required                                                                                               | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `businessReferences`                                                                                   | [Components\BusinessDataBusinessReferences](../../Models/Components/BusinessDataBusinessReferences.md) | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `invoicingPeriod`                                                                                      | [Components\InvoicingPeriod](../../Models/Components/InvoicingPeriod.md)                               | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
+| `legalLiterals`                                                                                        | array<*string*>                                                                                        | :heavy_check_mark:                                                                                     | N/A                                                                                                    |

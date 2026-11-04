@@ -23,35 +23,40 @@ class ResolveManyCatalogPricesRequestTarget
      * @var ?string $variantId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
-    public ?string $variantId;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
 
     /**
      *
      * @var ?string $presentationId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_id')]
-    public ?string $presentationId;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationId = null;
 
     /**
      *
      * @var ?float $currentUnitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('current_unit_price')]
-    public ?float $currentUnitPrice;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $currentUnitPrice = null;
 
     /**
      *
      * @var ?string $configurationId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_id')]
-    public ?string $configurationId;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $configurationId = null;
 
     /**
      *
      * @var ?string $selectionSignature
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('selection_signature')]
-    public ?string $selectionSignature;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $selectionSignature = null;
 
     /**
      * $optionValueIds
@@ -60,7 +65,8 @@ class ResolveManyCatalogPricesRequestTarget
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('option_value_ids')]
     #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
-    public ?array $optionValueIds;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $optionValueIds = null;
 
     /**
      * @param  string  $productId

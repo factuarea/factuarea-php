@@ -13,3 +13,4 @@
 | `Manual`        | manual          |
 | `SupplierOffer` | supplier_offer  |
 | `PackSnapshot`  | pack_snapshot   |
+| `Promotion`     | promotion       |

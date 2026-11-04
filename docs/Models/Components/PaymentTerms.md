@@ -1,0 +1,11 @@
+# PaymentTerms
+
+
+## Fields
+
+| Field                                                                                | Type                                                                                 | Required                                                                             | Description                                                                          |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `dueDate`                                                                            | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                        | :heavy_check_mark:                                                                   | N/A                                                                                  |
+| `amount`                                                                             | *string*                                                                             | :heavy_check_mark:                                                                   | N/A                                                                                  |
+| `paymentMeans`                                                                       | *string*                                                                             | :heavy_check_mark:                                                                   | N/A                                                                                  |
+| `account`                                                                            | [Components\PdfPreviewFormAccount](../../Models/Components/PdfPreviewFormAccount.md) | :heavy_check_mark:                                                                   | N/A                                                                                  |

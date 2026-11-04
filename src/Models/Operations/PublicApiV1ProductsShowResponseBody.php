@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
+/** PublicApiV1ProductsShowResponseBody - The product, in the requested `view`. */
 class PublicApiV1ProductsShowResponseBody
 {
     /**
-     * A product in your catalog.
+     * A product in your catalog. The `all` view (default) returns every field. The `storefront` view (`view=storefront`, only for active products enabled on the web) returns the common storefront contract (`id`, `object`, `name`, `slug`, `previous_slugs`, `summary`, `description`, `seo`, `tags`, `currency`, `sale_price`, `availability`, `gallery`, `updated_at`) plus `sku`, `item_kind`, `base_unit`, `tax_rate`, `specifications` and `video`; in the detail it adds the sellable graph (active `variants`, `presentations`, `option_groups` and `configurations`, each with its own `sale_price` and `availability`), and in the list only their counts and `sale_price_from`. It never returns costs, supplier offers, `metadata`, `external_id`, raw stock or the base unit change blocks.
      *
      * @var \Factuarea\Sdk\Models\Components\Product $data
      */

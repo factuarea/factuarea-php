@@ -93,17 +93,23 @@ class Factuarea
 
     public Contacts $contacts;
 
+    public PdfCommercialIdentities $pdfCommercialIdentities;
+
+    public Packs $packs;
+
     public Projects $projects;
 
     public PurchaseScans $purchaseScans;
 
     public Series $series;
 
+    public PdfTemplates $pdfTemplates;
+
     public WorkSchedules $workSchedules;
 
-    public PurchaseInvoices $purchaseInvoices;
-
     public DeliveryNotes $deliveryNotes;
+
+    public PurchaseInvoices $purchaseInvoices;
 
     public Products $products;
 
@@ -117,6 +123,12 @@ class Factuarea
 
     public FaceSubmissions $faceSubmissions;
 
+    public Promotions $promotions;
+
+    public EmployeeSeatOfferRedemptions $employeeSeatOfferRedemptions;
+
+    public GestoriaSeatOfferRedemptions $gestoriaSeatOfferRedemptions;
+
     public TransportDocuments $transportDocuments;
 
     public TimeEntries $timeEntries;
@@ -129,13 +141,19 @@ class Factuarea
 
     public Employees $employees;
 
+    public PdfTemplatePreviews $pdfTemplatePreviews;
+
     public PriceLists $priceLists;
 
     public TaskLabels $taskLabels;
 
     public WebhookEndpoints $webhookEndpoints;
 
+    public PdfArtifacts $pdfArtifacts;
+
     public TaxReports $taxReports;
+
+    public AdditionalNifSeats $additionalNifSeats;
 
     public Agenda $agenda;
 
@@ -214,28 +232,37 @@ class Factuarea
         $this->absencePolicies = new AbsencePolicies($this->sdkConfiguration);
         $this->absenceTypes = new AbsenceTypes($this->sdkConfiguration);
         $this->contacts = new Contacts($this->sdkConfiguration);
+        $this->pdfCommercialIdentities = new PdfCommercialIdentities($this->sdkConfiguration);
+        $this->packs = new Packs($this->sdkConfiguration);
         $this->projects = new Projects($this->sdkConfiguration);
         $this->purchaseScans = new PurchaseScans($this->sdkConfiguration);
         $this->series = new Series($this->sdkConfiguration);
+        $this->pdfTemplates = new PdfTemplates($this->sdkConfiguration);
         $this->workSchedules = new WorkSchedules($this->sdkConfiguration);
-        $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
         $this->deliveryNotes = new DeliveryNotes($this->sdkConfiguration);
+        $this->purchaseInvoices = new PurchaseInvoices($this->sdkConfiguration);
         $this->products = new Products($this->sdkConfiguration);
         $this->taxes = new Taxes($this->sdkConfiguration);
         $this->employeeBatches = new EmployeeBatches($this->sdkConfiguration);
         $this->employeeInvitations = new EmployeeInvitations($this->sdkConfiguration);
         $this->employeeSeats = new EmployeeSeats($this->sdkConfiguration);
         $this->faceSubmissions = new FaceSubmissions($this->sdkConfiguration);
+        $this->promotions = new Promotions($this->sdkConfiguration);
+        $this->employeeSeatOfferRedemptions = new EmployeeSeatOfferRedemptions($this->sdkConfiguration);
+        $this->gestoriaSeatOfferRedemptions = new GestoriaSeatOfferRedemptions($this->sdkConfiguration);
         $this->transportDocuments = new TransportDocuments($this->sdkConfiguration);
         $this->timeEntries = new TimeEntries($this->sdkConfiguration);
         $this->monthlyTimeRecordCloses = new MonthlyTimeRecordCloses($this->sdkConfiguration);
         $this->stores = new Stores($this->sdkConfiguration);
         $this->stripeAutoinvoicing = new StripeAutoinvoicing($this->sdkConfiguration);
         $this->employees = new Employees($this->sdkConfiguration);
+        $this->pdfTemplatePreviews = new PdfTemplatePreviews($this->sdkConfiguration);
         $this->priceLists = new PriceLists($this->sdkConfiguration);
         $this->taskLabels = new TaskLabels($this->sdkConfiguration);
         $this->webhookEndpoints = new WebhookEndpoints($this->sdkConfiguration);
+        $this->pdfArtifacts = new PdfArtifacts($this->sdkConfiguration);
         $this->taxReports = new TaxReports($this->sdkConfiguration);
+        $this->additionalNifSeats = new AdditionalNifSeats($this->sdkConfiguration);
         $this->agenda = new Agenda($this->sdkConfiguration);
         $this->gestoria = new Gestoria($this->sdkConfiguration);
         $this->users = new Users($this->sdkConfiguration);

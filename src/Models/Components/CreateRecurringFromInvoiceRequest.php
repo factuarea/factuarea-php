@@ -29,12 +29,138 @@ class CreateRecurringFromInvoiceRequest
 
     /**
      *
+     * @var mixed $expectedPresentationPolicyVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_presentation_policy_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $expectedPresentationPolicyVersion = null;
+
+    /**
+     *
+     * @var mixed $recurringIntent
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recurring_intent')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $recurringIntent = null;
+
+    /**
+     *
+     * @var mixed $recurringPresentationIntent
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recurringPresentationIntent')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $recurringPresentationIntent = null;
+
+    /**
+     *
+     * @var mixed $generationDate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('generation_date')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $generationDate = null;
+
+    /**
+     *
+     * @var mixed $attemptKey
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('attempt_key')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $attemptKey = null;
+
+    /**
+     *
+     * @var mixed $childUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('child_uuid')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $childUuid = null;
+
+    /**
+     *
+     * @var mixed $expectedPolicyVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_policy_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $expectedPolicyVersion = null;
+
+    /**
+     *
+     * @var mixed $sourceContextHash
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_context_hash')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $sourceContextHash = null;
+
+    /**
+     *
+     * @var ?string $expectedSourceContextHash
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_source_context_hash')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSourceContextHash = null;
+
+    /**
+     *
+     * @var ?string $recovery
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recovery')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $recovery = null;
+
+    /**
+     *
      * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null;
+
+    /**
+     *
+     * @var mixed $presentationPolicyVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_policy_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $presentationPolicyVersion = null;
+
+    /**
+     *
+     * @var mixed $presentationPauseReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_pause_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $presentationPauseReason = null;
+
+    /**
+     * Create omitted/null means latest inherited. Update omitted preserves; null resets inheritance; a complete object replaces the policy. {} and partial objects are invalid. This field only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var \Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3|null $presentationPolicy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_policy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3|null $presentationPolicy = null;
+
+    /**
+     * null means unknown, [] means explicitly no calendar, a list replaces the whole relative calendar. No row id or due_date is accepted. Each new invoice receives fresh instalment UUIDs and dates from its fixed generation date; a replay creates none.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\RecurringPaymentTermsEntry> $paymentTermsTemplate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_template')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\RecurringPaymentTermsEntry>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $paymentTermsTemplate = null;
 
     /**
      *
@@ -118,7 +244,21 @@ class CreateRecurringFromInvoiceRequest
     /**
      * @param  \Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestFrequency  $frequency
      * @param  LocalDate  $startOn
+     * @param  mixed  $expectedPresentationPolicyVersion
+     * @param  mixed  $recurringIntent
+     * @param  mixed  $recurringPresentationIntent
+     * @param  mixed  $generationDate
+     * @param  mixed  $attemptKey
+     * @param  mixed  $childUuid
+     * @param  mixed  $expectedPolicyVersion
+     * @param  mixed  $sourceContextHash
+     * @param  ?string  $expectedSourceContextHash
+     * @param  ?string  $recovery
      * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery  $autoDelivery
+     * @param  mixed  $presentationPolicyVersion
+     * @param  mixed  $presentationPauseReason
+     * @param  \Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3|null  $presentationPolicy
+     * @param  ?array<\Factuarea\Sdk\Models\Components\RecurringPaymentTermsEntry>  $paymentTermsTemplate
      * @param  ?LocalDate  $endOn
      * @param  ?string  $name
      * @param  ?string  $description
@@ -130,11 +270,25 @@ class CreateRecurringFromInvoiceRequest
      * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestGenerationMode  $generationMode
      * @phpstan-pure
      */
-    public function __construct(CreateRecurringFromInvoiceRequestFrequency $frequency, LocalDate $startOn, ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null, ?LocalDate $endOn = null, ?string $name = null, ?string $description = null, ?string $notes = null, ?array $metadata = null, ?string $holidayHandling = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?CreateRecurringFromInvoiceRequestGenerationMode $generationMode = null)
+    public function __construct(CreateRecurringFromInvoiceRequestFrequency $frequency, LocalDate $startOn, mixed $expectedPresentationPolicyVersion = null, mixed $recurringIntent = null, mixed $recurringPresentationIntent = null, mixed $generationDate = null, mixed $attemptKey = null, mixed $childUuid = null, mixed $expectedPolicyVersion = null, mixed $sourceContextHash = null, ?string $expectedSourceContextHash = null, ?string $recovery = null, ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null, mixed $presentationPolicyVersion = null, mixed $presentationPauseReason = null, RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3|null $presentationPolicy = null, ?array $paymentTermsTemplate = null, ?LocalDate $endOn = null, ?string $name = null, ?string $description = null, ?string $notes = null, ?array $metadata = null, ?string $holidayHandling = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?CreateRecurringFromInvoiceRequestGenerationMode $generationMode = null)
     {
         $this->frequency = $frequency;
         $this->startOn = $startOn;
+        $this->expectedPresentationPolicyVersion = $expectedPresentationPolicyVersion;
+        $this->recurringIntent = $recurringIntent;
+        $this->recurringPresentationIntent = $recurringPresentationIntent;
+        $this->generationDate = $generationDate;
+        $this->attemptKey = $attemptKey;
+        $this->childUuid = $childUuid;
+        $this->expectedPolicyVersion = $expectedPolicyVersion;
+        $this->sourceContextHash = $sourceContextHash;
+        $this->expectedSourceContextHash = $expectedSourceContextHash;
+        $this->recovery = $recovery;
         $this->autoDelivery = $autoDelivery;
+        $this->presentationPolicyVersion = $presentationPolicyVersion;
+        $this->presentationPauseReason = $presentationPauseReason;
+        $this->presentationPolicy = $presentationPolicy;
+        $this->paymentTermsTemplate = $paymentTermsTemplate;
         $this->endOn = $endOn;
         $this->name = $name;
         $this->description = $description;

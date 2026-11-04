@@ -51,7 +51,7 @@ class AbsenceRequests
     /**
      * Approve an absence request
      *
-     * Approve a pending absence request (transition `pending` → `approved`), consuming the employee’s balance. No request body (an optional `note` is accepted). A reviewer cannot approve the request they themselves created (422). Returns the updated request.
+     * Approve a pending absence request (transition `pending` → `approved`), consuming the employee’s balance. No request body (an optional `note` is accepted). A reviewer cannot approve the request they themselves created (422). For a terminated employee, an absence that ends after their termination date returns 422 `business_rule_violation` (`employee_inactive`) and stays pending. Returns the updated request.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsApproveRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1AbsenceRequestsApproveResponse
@@ -296,7 +296,10 @@ class AbsenceRequests
     /**
      * Create an absence request
      *
-     * Create an absence request for the authenticated company (resolved from the API key, never from the payload). `employee_id` (UUID v7) is required — an API key acts as a system, so the target employee must be given. `absence_type_id` (UUID v7) and the `start_date`/`end_date` range (`YYYY-MM-DD`, end on or after start) are required; `note` is optional. The requested amount is computed in working days minus the applicable public holidays. If the absence type does not require approval it is auto-approved and consumes the balance. Returns the created request with its generated `id` (UUID v7).
+     * Create an absence request for an employee; returns it with its generated `id` (UUID v7).
+     * - Required: `employee_id`, `absence_type_id`, and `start_date`/`end_date` (`YYYY-MM-DD`, end on or after start); `note` is optional.
+     * - The amount is working days minus public holidays.
+     * - A type that does not require approval is auto-approved and consumes the balance.
      *
      * @param  \Factuarea\Sdk\Models\Components\CreateAbsenceRequestRequest  $body
      * @param  string  $company

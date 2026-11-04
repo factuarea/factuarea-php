@@ -171,6 +171,32 @@ class ResolvedCatalogPricePreview
     public ?string $difference;
 
     /**
+     * Price WITHOUT the promotion, with four decimals like `unit_price`. Without a promotion it is the same as `unit_price`.
+     *
+     * @var ?string $regularUnitPrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_unit_price')]
+    public ?string $regularUnitPrice;
+
+    /**
+     * Source of `regular_unit_price`. With a promotion, `source` is `promotion` and this is the source the promotion reduced (`price_list` when it beat the customer's price list).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPricePreviewRegularSource $regularSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResolvedCatalogPricePreviewRegularSource|null')]
+    public ?ResolvedCatalogPricePreviewRegularSource $regularSource;
+
+    /**
+     * The promotion applied to this price, or `null`. The price list is chosen as in a document: an explicit `price_list_id` wins (`null` means no price list), otherwise the default price list of the `client_id`, ignored when inactive.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ResolvedPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResolvedPromotion|null')]
+    public ?ResolvedPromotion $promotion;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ResolvedCatalogPricePreviewObject  $object
      * @param  int  $index
      * @param  string  $productId
@@ -192,9 +218,12 @@ class ResolvedCatalogPricePreview
      * @param  ?string  $currentUnitPrice
      * @param  ?bool  $changed
      * @param  ?string  $difference
+     * @param  ?string  $regularUnitPrice
+     * @param  ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPricePreviewRegularSource  $regularSource
+     * @param  ?\Factuarea\Sdk\Models\Components\ResolvedPromotion  $promotion
      * @phpstan-pure
      */
-    public function __construct(ResolvedCatalogPricePreviewObject $object, int $index, string $productId, string $unitPrice, string $currency, string $priceUnit, string $baseUnit, ResolvedCatalogPricePreviewSource $source, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $selectionSignature = null, ?string $priceListId = null, ?string $priceListName = null, ?ResolvedCatalogPricePreviewUnitSemantics $unitSemantics = null, ?string $sourceAmount = null, ?string $optionAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $currentUnitPrice = null, ?bool $changed = null, ?string $difference = null)
+    public function __construct(ResolvedCatalogPricePreviewObject $object, int $index, string $productId, string $unitPrice, string $currency, string $priceUnit, string $baseUnit, ResolvedCatalogPricePreviewSource $source, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $selectionSignature = null, ?string $priceListId = null, ?string $priceListName = null, ?ResolvedCatalogPricePreviewUnitSemantics $unitSemantics = null, ?string $sourceAmount = null, ?string $optionAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $currentUnitPrice = null, ?bool $changed = null, ?string $difference = null, ?string $regularUnitPrice = null, ?ResolvedCatalogPricePreviewRegularSource $regularSource = null, ?ResolvedPromotion $promotion = null)
     {
         $this->object = $object;
         $this->index = $index;
@@ -217,5 +246,8 @@ class ResolvedCatalogPricePreview
         $this->currentUnitPrice = $currentUnitPrice;
         $this->changed = $changed;
         $this->difference = $difference;
+        $this->regularUnitPrice = $regularUnitPrice;
+        $this->regularSource = $regularSource;
+        $this->promotion = $promotion;
     }
 }

@@ -42,6 +42,15 @@ class CreateQuoteRequest
     public array $lines;
 
     /**
+     * Optional positive selection version. When POST upserts an existing external_id, it is the selection CAS and must be sent together with pdf_template_id. A new document initializes its selection version. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?int $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedSelectionVersion = null;
+
+    /**
      *
      * @var ?string $seriesId
      */
@@ -65,6 +74,15 @@ class CreateQuoteRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateQuoteRequestRepriceStrategy|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CreateQuoteRequestRepriceStrategy $repriceStrategy = null;
+
+    /**
+     * Optional tenant-template UUID. On a new document, omission or null inherits the current default; a UUID requests a compatible manual selection. If POST resolves to an existing external_id, omission preserves intent and null clears it. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
 
     /**
      *
@@ -137,9 +155,11 @@ class CreateQuoteRequest
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $validUntil
      * @param  array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestLine>  $lines
+     * @param  ?int  $expectedSelectionVersion
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateQuoteRequestRepriceStrategy  $repriceStrategy
+     * @param  ?string  $pdfTemplateId
      * @param  ?string  $notes
      * @param  ?string  $terms
      * @param  ?string  $externalId
@@ -149,15 +169,17 @@ class CreateQuoteRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateQuoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, LocalDate $issuedOn, LocalDate $validUntil, array $lines, ?string $seriesId = null, ?string $priceListId = null, ?CreateQuoteRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?CreateQuoteRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, LocalDate $issuedOn, LocalDate $validUntil, array $lines, ?int $expectedSelectionVersion = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateQuoteRequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $terms = null, ?string $externalId = null, ?CreateQuoteRequestCurrency $currency = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->issuedOn = $issuedOn;
         $this->validUntil = $validUntil;
         $this->lines = $lines;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->notes = $notes;
         $this->terms = $terms;
         $this->externalId = $externalId;

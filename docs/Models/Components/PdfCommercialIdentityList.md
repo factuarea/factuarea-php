@@ -1,0 +1,9 @@
+# PdfCommercialIdentityList
+
+
+## Fields
+
+| Field                                                                                                | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `items`                                                                                              | array<[Components\PdfCommercialIdentity](../../Models/Components/PdfCommercialIdentity.md)>          | :heavy_check_mark:                                                                                   | N/A                                                                                                  |
+| `meta`                                                                                               | [Components\PdfCommercialIdentityListMeta](../../Models/Components/PdfCommercialIdentityListMeta.md) | :heavy_check_mark:                                                                                   | N/A                                                                                                  |

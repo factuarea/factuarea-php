@@ -86,6 +86,7 @@ class PriceList
     public \DateTime $createdAt;
 
     /**
+     * Last change of the price list, which also moves when one of its prices changes. Use it with the `updated[gte]` filter to synchronise.
      *
      * @var \DateTime $updatedAt
      */

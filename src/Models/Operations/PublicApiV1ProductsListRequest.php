@@ -181,6 +181,38 @@ class PublicApiV1ProductsListRequest
     public ?string $tagIn = null;
 
     /**
+     * Product slug. It also finds the products that used it before, so a web can redirect the old address to the new `slug` that comes back. Exact match on `slug`.
+     *
+     * @var ?string $slug
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=slug')]
+    public ?string $slug = null;
+
+    /**
+     * Sales channel the product is enabled for. Today only `web`. Exact match on `channel`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListChannel $channel
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=channel')]
+    public ?PublicApiV1ProductsListChannel $channel = null;
+
+    /**
+     * Last update date (ISO 8601). Use both `updated[gte]` and `updated[lte]` for a window. Greater than or equal to the given value.
+     *
+     * @var ?\DateTime $updatedGte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=updated[gte],dateTimeFormat=Y-m-d\TH:i:s.up')]
+    public ?\DateTime $updatedGte = null;
+
+    /**
+     * Last update date (ISO 8601). Use both `updated[gte]` and `updated[lte]` for a window. Less than or equal to the given value.
+     *
+     * @var ?\DateTime $updatedLte
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=updated[lte],dateTimeFormat=Y-m-d\TH:i:s.up')]
+    public ?\DateTime $updatedLte = null;
+
+    /**
      * Free-text search. Escaped `LIKE %term%` (case-insensitive, max 80 chars) across the resource's key text columns, combined with the other filters (AND) and compatible with the cursor.
      *
      * @var ?string $search
@@ -197,6 +229,14 @@ class PublicApiV1ProductsListRequest
     public ?array $metadata = null;
 
     /**
+     * Conditional request: send the `ETag` you stored from a previous response of this operation (quoted, as received) to get `304 Not Modified` without a body when the content has not changed. Omit it to always receive the full response.
+     *
+     * @var ?string $ifNoneMatch
+     */
+    #[SpeakeasyMetadata('header:style=simple,explode=false,name=If-None-Match')]
+    public ?string $ifNoneMatch = null;
+
+    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -205,12 +245,30 @@ class PublicApiV1ProductsListRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.
+     *
+     * Malformed: 400 `parameter_invalid_iso8601`.
+     *
+     * @var ?string $date
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=date')]
+    public ?string $date = null;
+
+    /**
      * Number of objects to return, between 1 and 100 (default 25).
      *
      * @var ?int $limit
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=limit')]
     public ?int $limit = null;
+
+    /**
+     * Shape: `all` (default) is the full product; `storefront` only what a web shop may show (no costs or supplier offers) and only for products on sale there, else 404.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListView $view
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=view')]
+    public ?PublicApiV1ProductsListView $view = null;
 
     /**
      * @param  string  $company
@@ -235,12 +293,19 @@ class PublicApiV1ProductsListRequest
      * @param  ?bool  $lowStock
      * @param  ?string  $tag
      * @param  ?string  $tagIn
+     * @param  ?string  $slug
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListChannel  $channel
+     * @param  ?\DateTime  $updatedGte
+     * @param  ?\DateTime  $updatedLte
      * @param  ?string  $search
      * @param  ?array<string, string>  $metadata
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsListView  $view
+     * @param  ?string  $ifNoneMatch
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?string  $date
      * @phpstan-pure
      */
-    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $sku = null, ?string $skuIn = null, ?string $skuContains = null, ?string $name = null, ?string $nameContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?float $priceGte = null, ?float $priceLte = null, ?float $priceGt = null, ?float $priceLt = null, ?bool $inStock = null, ?bool $lowStock = null, ?string $tag = null, ?string $tagIn = null, ?string $search = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = 25)
+    public function __construct(string $company, ?string $startingAfter = null, ?string $endingBefore = null, ?string $sku = null, ?string $skuIn = null, ?string $skuContains = null, ?string $name = null, ?string $nameContains = null, ?bool $isActive = null, ?\DateTime $createdGte = null, ?\DateTime $createdLte = null, ?\DateTime $createdGt = null, ?\DateTime $createdLt = null, ?float $priceGte = null, ?float $priceLte = null, ?float $priceGt = null, ?float $priceLt = null, ?bool $inStock = null, ?bool $lowStock = null, ?string $tag = null, ?string $tagIn = null, ?string $slug = null, ?PublicApiV1ProductsListChannel $channel = null, ?\DateTime $updatedGte = null, ?\DateTime $updatedLte = null, ?string $search = null, ?array $metadata = null, ?string $ifNoneMatch = null, ?LocalDate $factuareaVersion = null, ?string $date = null, ?int $limit = 25, ?PublicApiV1ProductsListView $view = PublicApiV1ProductsListView::All)
     {
         $this->company = $company;
         $this->startingAfter = $startingAfter;
@@ -263,9 +328,16 @@ class PublicApiV1ProductsListRequest
         $this->lowStock = $lowStock;
         $this->tag = $tag;
         $this->tagIn = $tagIn;
+        $this->slug = $slug;
+        $this->channel = $channel;
+        $this->updatedGte = $updatedGte;
+        $this->updatedLte = $updatedLte;
         $this->search = $search;
         $this->metadata = $metadata;
+        $this->ifNoneMatch = $ifNoneMatch;
         $this->factuareaVersion = $factuareaVersion;
+        $this->date = $date;
         $this->limit = $limit;
+        $this->view = $view;
     }
 }

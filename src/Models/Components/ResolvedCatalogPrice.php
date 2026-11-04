@@ -141,6 +141,32 @@ class ResolvedCatalogPrice
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
+     * Price WITHOUT the promotion, with four decimals like `unit_price`. Without a promotion it is the same as `unit_price`.
+     *
+     * @var ?string $regularUnitPrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_unit_price')]
+    public ?string $regularUnitPrice;
+
+    /**
+     * Source of `regular_unit_price`. With a promotion, `source` is `promotion` and this is the source the promotion reduced (`price_list` when it beat the customer's price list).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPriceRegularSource $regularSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResolvedCatalogPriceRegularSource|null')]
+    public ?ResolvedCatalogPriceRegularSource $regularSource;
+
+    /**
+     * The promotion applied to this price, or `null`. The price list is chosen as in a document: an explicit `price_list_id` wins (`null` means no price list), otherwise the default price list of the `client_id`, ignored when inactive.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ResolvedPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResolvedPromotion|null')]
+    public ?ResolvedPromotion $promotion;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ResolvedCatalogPriceObject  $object
      * @param  string  $productId
      * @param  string  $unitPrice
@@ -158,9 +184,12 @@ class ResolvedCatalogPrice
      * @param  ?string  $sourceAmount
      * @param  ?string  $optionAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?string  $regularUnitPrice
+     * @param  ?\Factuarea\Sdk\Models\Components\ResolvedCatalogPriceRegularSource  $regularSource
+     * @param  ?\Factuarea\Sdk\Models\Components\ResolvedPromotion  $promotion
      * @phpstan-pure
      */
-    public function __construct(ResolvedCatalogPriceObject $object, string $productId, string $unitPrice, string $currency, string $priceUnit, string $baseUnit, ResolvedCatalogPriceSource $source, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $selectionSignature = null, ?string $priceListId = null, ?string $priceListName = null, ?ResolvedCatalogPriceUnitSemantics $unitSemantics = null, ?string $sourceAmount = null, ?string $optionAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(ResolvedCatalogPriceObject $object, string $productId, string $unitPrice, string $currency, string $priceUnit, string $baseUnit, ResolvedCatalogPriceSource $source, ?string $variantId = null, ?string $presentationId = null, ?string $configurationId = null, ?string $selectionSignature = null, ?string $priceListId = null, ?string $priceListName = null, ?ResolvedCatalogPriceUnitSemantics $unitSemantics = null, ?string $sourceAmount = null, ?string $optionAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $regularUnitPrice = null, ?ResolvedCatalogPriceRegularSource $regularSource = null, ?ResolvedPromotion $promotion = null)
     {
         $this->object = $object;
         $this->productId = $productId;
@@ -179,5 +208,8 @@ class ResolvedCatalogPrice
         $this->sourceAmount = $sourceAmount;
         $this->optionAdjustmentTotal = $optionAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->regularUnitPrice = $regularUnitPrice;
+        $this->regularSource = $regularSource;
+        $this->promotion = $promotion;
     }
 }

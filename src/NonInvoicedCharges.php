@@ -49,7 +49,9 @@ class NonInvoicedCharges
     /**
      * List non-invoiced charges of a connected Stripe account
      *
-     * List the charges of a connected Stripe account that were deliberately not invoiced because a charge treatment rule excluded them. Each item exposes `id`, `connected_account_id`, `transaction_id`, `amount`, `refunded_amount` (cumulative amount Stripe has refunded, `0` if none), `net_amount` (`amount` minus `refunded_amount`), `currency`, `reason`, `charge_rule_id` (`null` if the rule was deleted), `description`, `occurred_at` and `refunded_at` (date of the latest refund, `null` if none); the three monetary fields use the same format. Filter by period with `occurred_from` and `occurred_to` (`YYYY-MM-DD`, both included, by the date the charge happened); a malformed date or an `occurred_to` earlier than `occurred_from` returns 422. Cursor paginated (`limit` 1-100, `starting_after`, `ending_before`), newest first.
+     * Lists charges of a connected Stripe account that a rule deliberately excluded from invoicing, newest first.
+     * - Items expose `amount`, `refunded_amount`, `net_amount`, `reason`, `charge_rule_id` and `occurred_at`.
+     * - Filter with `occurred_from`/`occurred_to` (`YYYY-MM-DD`); an invalid range returns 422.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesListRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsNonInvoicedChargesListResponse

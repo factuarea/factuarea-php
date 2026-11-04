@@ -40,25 +40,35 @@ class PublicApiV1InvoicesFaceSubmissionsSubmitResponse
     public array $headers;
 
     /**
+     * Continued the same prepared attempt, or returned its already durable result without a second transmission.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody $object
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody1 $twoHundredApplicationJsonObject
      */
-    public ?PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody $object = null;
+    public ?PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody1 $twoHundredApplicationJsonObject = null;
+
+    /**
+     * Created a fresh durable attempt and returned its current result.
+     *
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody2 $twoHundredAndOneApplicationJsonObject
+     */
+    public ?PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody2 $twoHundredAndOneApplicationJsonObject = null;
 
     /**
      * @param  string  $contentType
      * @param  int  $statusCode
      * @param  \Psr\Http\Message\ResponseInterface  $rawResponse
      * @param  array<string, array<string>>  $headers
-     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody  $object
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody1  $twoHundredApplicationJsonObject
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody2  $twoHundredAndOneApplicationJsonObject
      * @phpstan-pure
      */
-    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody $object = null, ?array $headers = [])
+    public function __construct(string $contentType, int $statusCode, \Psr\Http\Message\ResponseInterface $rawResponse, ?PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody1 $twoHundredApplicationJsonObject = null, ?PublicApiV1InvoicesFaceSubmissionsSubmitResponseBody2 $twoHundredAndOneApplicationJsonObject = null, ?array $headers = [])
     {
         $this->contentType = $contentType;
         $this->statusCode = $statusCode;
         $this->rawResponse = $rawResponse;
         $this->headers = $headers;
-        $this->object = $object;
+        $this->twoHundredApplicationJsonObject = $twoHundredApplicationJsonObject;
+        $this->twoHundredAndOneApplicationJsonObject = $twoHundredAndOneApplicationJsonObject;
     }
 }

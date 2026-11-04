@@ -51,7 +51,8 @@ class Quarterly
     /**
      * List quarters to export
      *
-     * Returns the quarters that have at least one invoice, with breakdown by invoice type (F1/F2/F3/R5), and the quarters that only have charges left out of invoicing by the company's connected Stripe accounts (or refunds of such charges): those come back with `invoice_count` 0 and an empty breakdown, and their quarterly ZIP contains only the charges CSV. Useful to populate "quarter to export" selectors.
+     * List the quarters with at least one invoice, broken down by type (F1/F2/F3/R5), plus quarters with only Stripe charges left out of invoicing.
+     * - Those come back with `invoice_count` 0 and an empty breakdown; their ZIP holds only the charges CSV.
      *
      * @param  string  $company
      * @param  ?LocalDate  $factuareaVersion
@@ -172,7 +173,7 @@ class Quarterly
     /**
      * Generate quarterly ZIP archive
      *
-     * Builds a ZIP with all invoice PDFs of the given quarter. When the company has charges left out of invoicing in that quarter (from any of its connected Stripe accounts) and `include_non_invoiced_charges` is not `false` (default `true`), the ZIP also includes the CSV `cobros_sin_factura_Q{quarter}_{year}.csv` with the charges of the quarter and the refunds that happen in the quarter (date, type, description, origin, reason, reference, currency, amount, refunded amount and net amount; a refund of a charge from an earlier quarter is a negative line) and totals per currency; without such charges the file is not added. If the quarter has no invoices but has such charges, the ZIP contains only the CSV. Returns ZIP metadata (path, processed counts, errors).
+     * Builds and streams a binary ZIP with all invoice PDFs for the requested quarter. When the company has charges left out of invoicing in that quarter and `include_non_invoiced_charges` is not `false` (default `true`), it also includes the quarterly charges/refunds CSV and per-currency totals; without such charges the file is omitted, and if the quarter has no invoices the ZIP contains only that CSV. The response reports aggregate counts in X-Quarterly-* headers; it never returns a storage path or JSON metadata payload.
      *
      * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $body
      * @param  string  $company
@@ -263,7 +264,7 @@ class Quarterly
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '413', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '413', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 
@@ -299,7 +300,9 @@ class Quarterly
     /**
      * Email quarterly ZIP to accountant
      *
-     * Generates the quarterly ZIP and emails it to the recipient, typically the tax accountant. When the company has charges left out of invoicing in that quarter (from any of its connected Stripe accounts) and `include_non_invoiced_charges` is not `false` (default `true`), the ZIP also includes the CSV `cobros_sin_factura_Q{quarter}_{year}.csv` with the charges of the quarter and the refunds that happen in the quarter (date, type, description, origin, reason, reference, currency, amount, refunded amount and net amount; a refund of a charge from an earlier quarter is a negative line) and totals per currency; without such charges the file is not added. If the quarter has no invoices but has such charges, the ZIP contains only the CSV.
+     * Generate the quarterly ZIP and email it to a recipient, typically the tax accountant.
+     * - Unless `include_non_invoiced_charges` is `false`, it adds a CSV of charges left out of invoicing and their refunds.
+     * - A quarter with only such charges yields a CSV-only ZIP.
      *
      * @param  \Factuarea\Sdk\Models\Components\QuarterlyDownloadV1Request  $body
      * @param  string  $company
@@ -393,7 +396,7 @@ class Quarterly
             } else {
                 throw new \Factuarea\Sdk\Models\Errors\APIException('Unknown content type received', $statusCode, $httpResponse->getBody()->getContents(), $httpResponse);
             }
-        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '422', '429'])) {
+        } elseif (Utils\Utils::matchStatusCodes($statusCode, ['400', '401', '403', '404', '409', '422', '429'])) {
             if (Utils\Utils::matchContentType($contentType, 'application/json')) {
                 $httpResponse = $this->sdkConfiguration->hooks->afterSuccess(new Hooks\AfterSuccessContext($hookContext), $httpResponse);
 

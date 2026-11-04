@@ -51,7 +51,10 @@ class MonthlyTimeRecordCloses
     /**
      * Close a monthly time record
      *
-     * Freeze the immutable monthly close of the time record register for a finished `(year, month)`: it snapshots, for every employee whose employment period overlaps the month (hired on or before its last day and not terminated before its first day, whatever their current status), the balance totals and absence breakdown/balances (reusing the balance contract, never recomputing) and locks the period against retroactive entries and corrections. `year` and `month` (1-12) are required. A month that has not ended yet returns 422 in Spanish; a period already closed returns 409. Reopening a previously reopened period re-closes it, keeping its original `id`. Returns 201 with the created close and a `Location` header.
+     * Freeze the immutable monthly close of the time record register for a finished `(year, month)`.
+     * - Snapshots balances and absences of every employee in the period and locks it against retroactive entries.
+     * - A month not yet ended returns 422; an already closed period returns 409.
+     * - Returns 201 with the close and a `Location` header.
      *
      * @param  \Factuarea\Sdk\Models\Components\CloseMonthlyTimeRecordRequest  $body
      * @param  string  $company
@@ -425,7 +428,9 @@ class MonthlyTimeRecordCloses
     /**
      * Download the payroll export of a closed month
      *
-     * Download the payroll incidents file of a closed month in the format of a Spanish payroll software (`a3` for A3 Wolters Kluwer, `sage` for Sage, `nominasol` for NominaSOL), read from the frozen snapshot of the monthly close without recomputation. Each row is one employee with their fiscal identity (tax ID and name), worked vs expected minutes, overtime, balance and the approved absences broken down by type. `format` is optional and defaults to `a3`; a format outside the catalog returns 422. A period without a close returns 404. The response is a binary spreadsheet download.
+     * Download the payroll incidents file of a closed month for a Spanish payroll software, read from the frozen snapshot.
+     * - `format` is optional (`a3` default, `sage`, `nominasol`); an unknown format returns 422.
+     * - A period without a close returns 404; the response is a binary spreadsheet.
      *
      * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
@@ -675,7 +680,9 @@ class MonthlyTimeRecordCloses
     /**
      * Retrieve the report of a closed period
      *
-     * Return the monthly report of a closed period by the close `id` (UUID v7), read from the frozen snapshot without recomputation, so the totals never drift from the sheet at the moment of closing. It holds the company aggregate totals and one row per employee with totals, absence breakdown and balances, and the daily detail. Totals are in minutes. A period without a close returns 404. A computed resource: it exposes `close_id`, never an `id` of its own.
+     * Return the monthly report of a closed period by close `id`, read from the frozen snapshot so totals never drift.
+     * - Holds company totals and one row per employee with absences, balances and daily detail; totals in minutes.
+     * - A period without a close returns 404; exposes `close_id`, never an `id` of its own.
      *
      * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
@@ -798,7 +805,9 @@ class MonthlyTimeRecordCloses
     /**
      * Seal a monthly time record register
      *
-     * Seal (digitally sign) a `closed` monthly time record register by the close `id` (UUID v7): it freezes a canonical SHA-256 digest of the close snapshot and a detached RSA-SHA256 signature made with the company certificate, so the register is tamper-evident and independently verifiable. A close that is not `closed` returns 422 in Spanish, a period already sealed returns 409 (one seal per close, no re-sealing), and a company without an active usable certificate returns 422. A close belonging to another company returns 404. Returns 201 with the seal (including its live verification state) and a `Location` header.
+     * Seal (digitally sign) a `closed` monthly register with the company certificate, making it tamper-evident.
+     * - One seal per close: a sealed period returns 409; a non-`closed` close or no active certificate returns 422.
+     * - Returns 201 with the seal and a `Location` header.
      *
      * @param  string  $company
      * @param  string  $monthlyTimeRecordClose
@@ -923,7 +932,9 @@ class MonthlyTimeRecordCloses
     /**
      * Retrieve the seal of a monthly register
      *
-     * Retrieve the digital seal of a monthly time record register by the close `id` (UUID v7), together with its verification state recomputed live against the current snapshot: `verified` is `true` when the snapshot and the signature are intact, otherwise `verification_reason` explains the mismatch (`snapshot_mismatch`, `signature_invalid` or `certificate_unreadable`). The seal exposes its digest, signature and signing certificate so a third party can verify it. A close without a seal — or belonging to another company — returns 404 `monthly_register_signature_not_found` (anti-enumeration).
+     * Retrieve the digital seal of a monthly register by close `id`, with its verification state recomputed live.
+     * - `verified` is `true` when snapshot and signature are intact; otherwise `verification_reason` says why.
+     * - A close without a seal returns 404 `monthly_register_signature_not_found`.
      *
      * @param  string  $company
      * @param  string  $monthlyTimeRecordClose

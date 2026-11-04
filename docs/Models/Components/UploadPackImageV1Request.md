@@ -1,0 +1,12 @@
+# UploadPackImageV1Request
+
+Upload one image to the pack gallery as `multipart/form-data`: the `photo` field (`image` is accepted as an alias) with a jpeg, png, jpg, gif or webp file of at most 3 MB, and an optional `alt`. The gallery holds up to 5 images. The image is stored as WebP with a 480 px thumbnail and without EXIF data. Requires the `Idempotency-Key` header.
+
+
+## Fields
+
+| Field                                                                                                 | Type                                                                                                  | Required                                                                                              | Description                                                                                           |
+| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `photo`                                                                                               | [?Components\Photo](../../Models/Components/Photo.md)                                                 | :heavy_minus_sign:                                                                                    | Image file (jpeg, png, jpg, gif or webp, max 3 MB). Send either `photo` or `image`.                   |
+| `image`                                                                                               | [?Components\UploadPackImageV1RequestImage](../../Models/Components/UploadPackImageV1RequestImage.md) | :heavy_minus_sign:                                                                                    | Alias of `photo`.                                                                                     |
+| `alt`                                                                                                 | *?string*                                                                                             | :heavy_minus_sign:                                                                                    | Alternative text of the image.                                                                        |

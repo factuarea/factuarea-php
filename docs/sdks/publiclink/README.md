@@ -108,6 +108,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: '5ab38a1a-7575-43f5-bfd7-255e40232a3e',
+    deliveryNote: '6790f818-df31-41a8-b3da-738b997f203a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateDeliveryNotePublicLinkRequest(
+        action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicLink->publicApiV1DeliveryNotesPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="invalid_api_key" -->
@@ -186,6 +225,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: '943a1537-2346-4372-a8a3-854334ff4aa3',
+    deliveryNote: '7236d4e7-fc65-45dd-8374-8e2c98b94110',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateDeliveryNotePublicLinkRequest(
+        action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicLink->publicApiV1DeliveryNotesPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="success" -->
@@ -210,6 +288,45 @@ $sdk = Sdk\Factuarea::builder()
 $request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
     company: 'Buckridge Inc',
     deliveryNote: '<value>',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateDeliveryNotePublicLinkRequest(
+        action: Components\UpdateDeliveryNotePublicLinkRequestAction::Extend,
+    ),
+);
+
+$response = $sdk->deliveryNotes->publicLink->publicApiV1DeliveryNotesPublicLinkUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.delivery_notes.public_link.update" method="patch" path="/companies/{company}/delivery-notes/{delivery_note}/public-link" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1DeliveryNotesPublicLinkUpdateRequest(
+    company: '9348ebe8-c7c4-40a6-a0c3-2b08371a76f0',
+    deliveryNote: '58dc25e9-01e4-4685-b7ee-8afe36ea3568',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01'),
     body: new Components\UpdateDeliveryNotePublicLinkRequest(

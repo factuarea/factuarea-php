@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Factuarea\Sdk\Models\Components;
-/** PublicApiV1EmployeeBatchesCancelResponseBody2 - Current durable operation. */
+/** PublicApiV1EmployeeBatchesCancelResponseBody2 - Accepted; retrieve this operation until terminal. */
 class PublicApiV1EmployeeBatchesCancelResponseBody2
 {
     /**

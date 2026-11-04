@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** ConvertProformaRequest - Convert a proforma. Required body: `target`, whose only accepted value is `invoice`: a proforma can only be converted to an invoice, so the other targets (`proforma`, `delivery_note`) do not apply. */
+/** ConvertProformaRequest - Convert a proforma. Required body: `target`, whose only accepted value is `invoice`: a proforma can only be converted to an invoice, so the other targets (`proforma`, `delivery_note`) do not apply. Presentation precondition fields (`presentation_precondition`, `expected_*`, `purpose`, `format`) are not accepted by this operation: with revisioned presentation enabled for the company they are rejected with 422; otherwise they are ignored. */
 class ConvertProformaRequest
 {
     /**
@@ -21,11 +21,99 @@ class ConvertProformaRequest
     public ConvertProformaRequestTarget $target;
 
     /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $presentationPrecondition
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_precondition')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $presentationPrecondition = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSelectionVersion = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedSourceToken
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_source_token')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSourceToken = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedPreviewContextFingerprint
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_preview_context_fingerprint')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedPreviewContextFingerprint = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedTemplateRevisionId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_template_revision_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedTemplateRevisionId = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedCommercialIdentityRevisionId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_commercial_identity_revision_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedCommercialIdentityRevisionId = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $purpose
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('purpose')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $purpose = null;
+
+    /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $format
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('format')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $format = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ConvertProformaRequestTarget  $target
+     * @param  ?string  $presentationPrecondition
+     * @param  ?string  $expectedSelectionVersion
+     * @param  ?string  $expectedSourceToken
+     * @param  ?string  $expectedPreviewContextFingerprint
+     * @param  ?string  $expectedTemplateRevisionId
+     * @param  ?string  $expectedCommercialIdentityRevisionId
+     * @param  ?string  $purpose
+     * @param  ?string  $format
      * @phpstan-pure
      */
-    public function __construct(ConvertProformaRequestTarget $target)
+    public function __construct(ConvertProformaRequestTarget $target, ?string $presentationPrecondition = null, ?string $expectedSelectionVersion = null, ?string $expectedSourceToken = null, ?string $expectedPreviewContextFingerprint = null, ?string $expectedTemplateRevisionId = null, ?string $expectedCommercialIdentityRevisionId = null, ?string $purpose = null, ?string $format = null)
     {
         $this->target = $target;
+        $this->presentationPrecondition = $presentationPrecondition;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
+        $this->expectedSourceToken = $expectedSourceToken;
+        $this->expectedPreviewContextFingerprint = $expectedPreviewContextFingerprint;
+        $this->expectedTemplateRevisionId = $expectedTemplateRevisionId;
+        $this->expectedCommercialIdentityRevisionId = $expectedCommercialIdentityRevisionId;
+        $this->purpose = $purpose;
+        $this->format = $format;
     }
 }

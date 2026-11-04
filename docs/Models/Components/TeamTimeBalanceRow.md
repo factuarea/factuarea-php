@@ -1,6 +1,6 @@
 # TeamTimeBalanceRow
 
-A single row of the team time balance summary: the monthly totals of one active employee for the Control Horario (time tracking) module. The `total_*` fields project the whole month; `to_date` holds the accumulation of the closed days.
+A single row of the team time balance summary: the monthly totals of one employee employed during the month for the Control Horario (time tracking) module. The `total_*` fields project the whole month; `to_date` holds the accumulation of the closed days.
 
 
 ## Fields

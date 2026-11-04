@@ -28,6 +28,15 @@ class SubstituteSimplifiedV1Request
     public array $simplifiedInvoiceIds;
 
     /**
+     * Not accepted by this operation: rejected with 422 when revisioned presentation is enabled for the company, ignored otherwise.
+     *
+     * @var ?string $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $expectedSelectionVersion = null;
+
+    /**
      *
      * @var ?string $notes
      */
@@ -36,15 +45,28 @@ class SubstituteSimplifiedV1Request
     public ?string $notes = null;
 
     /**
+     * Optional nullable tenant-template UUID for the substitute invoice. Omit it to inherit the default; a UUID requests a compatible manual selection. It only takes effect when revisioned presentation is enabled for the company; otherwise it is ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
+
+    /**
      * @param  string  $clientId
      * @param  array<string>  $simplifiedInvoiceIds
+     * @param  ?string  $expectedSelectionVersion
      * @param  ?string  $notes
+     * @param  ?string  $pdfTemplateId
      * @phpstan-pure
      */
-    public function __construct(string $clientId, array $simplifiedInvoiceIds, ?string $notes = null)
+    public function __construct(string $clientId, array $simplifiedInvoiceIds, ?string $expectedSelectionVersion = null, ?string $notes = null, ?string $pdfTemplateId = null)
     {
         $this->clientId = $clientId;
         $this->simplifiedInvoiceIds = $simplifiedInvoiceIds;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->notes = $notes;
+        $this->pdfTemplateId = $pdfTemplateId;
     }
 }

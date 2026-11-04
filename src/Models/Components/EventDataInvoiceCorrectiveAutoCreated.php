@@ -23,11 +23,11 @@ class EventDataInvoiceCorrectiveAutoCreated
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\Corrective $corrective
+     * @var \Factuarea\Sdk\Models\Components\EventDataInvoiceCorrectiveAutoCreatedCorrective $corrective
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('corrective')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Corrective')]
-    public Corrective $corrective;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EventDataInvoiceCorrectiveAutoCreatedCorrective')]
+    public EventDataInvoiceCorrectiveAutoCreatedCorrective $corrective;
 
     /**
      *
@@ -39,10 +39,10 @@ class EventDataInvoiceCorrectiveAutoCreated
     /**
      * @param  string  $type
      * @param  \Factuarea\Sdk\Models\Components\Invoice  $object
-     * @param  \Factuarea\Sdk\Models\Components\Corrective  $corrective
+     * @param  \Factuarea\Sdk\Models\Components\EventDataInvoiceCorrectiveAutoCreatedCorrective  $corrective
      * @phpstan-pure
      */
-    public function __construct(Invoice $object, Corrective $corrective, string $type = 'invoice.corrective_auto_created')
+    public function __construct(Invoice $object, EventDataInvoiceCorrectiveAutoCreatedCorrective $corrective, string $type = 'invoice.corrective_auto_created')
     {
         $this->object = $object;
         $this->corrective = $corrective;

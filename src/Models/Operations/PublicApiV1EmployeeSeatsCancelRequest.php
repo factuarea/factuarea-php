@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Brick\DateTime\LocalDate;
+use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1EmployeeSeatsCancelRequest
 {
@@ -37,15 +38,24 @@ class PublicApiV1EmployeeSeatsCancelRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CancelEmployeeSeatAddonV1Request $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\CancelEmployeeSeatAddonV1Request $body = null;
+
+    /**
      * @param  string  $account
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\CancelEmployeeSeatAddonV1Request  $body
      * @phpstan-pure
      */
-    public function __construct(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $account, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Components\CancelEmployeeSeatAddonV1Request $body = null)
     {
         $this->account = $account;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }

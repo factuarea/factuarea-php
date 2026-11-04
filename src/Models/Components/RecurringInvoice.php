@@ -228,6 +228,22 @@ class RecurringInvoice
     public \DateTime $updatedAt;
 
     /**
+     * Complete five-key policy. latest with template_id=null inherits; a template UUID selects its current revision. latest requires the other three IDs null. pinned retains template/revision and a coherent brand pair, including null/null for known absence. A newly selected pin must include its effective brand when present; an unchanged retained pin never borrows a newer default.
+     *
+     * @var \Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3 $presentationPolicy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_policy')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3')]
+    public RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3 $presentationPolicy;
+
+    /**
+     *
+     * @var int $presentationPolicyVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_policy_version')]
+    public int $presentationPolicyVersion;
+
+    /**
      * UUID of the price list selected for generated invoices.
      *
      * @var ?string $priceListId
@@ -327,6 +343,23 @@ class RecurringInvoice
     public ?string $externalId;
 
     /**
+     * null means unknown, [] means explicitly no calendar, a list replaces the whole relative calendar. No row id or due_date is accepted. Each new invoice receives fresh instalment UUIDs and dates from its fixed generation date; a replay creates none.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\RecurringPaymentTermsEntry> $paymentTermsTemplate
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_template')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\RecurringPaymentTermsEntry>|null')]
+    public ?array $paymentTermsTemplate;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PresentationPauseReason $presentationPauseReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_pause_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PresentationPauseReason|null')]
+    public ?PresentationPauseReason $presentationPauseReason;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceObject  $object
      * @param  \Factuarea\Sdk\Models\Components\ClientRef  $client
@@ -354,6 +387,8 @@ class RecurringInvoice
      * @param  \Factuarea\Sdk\Models\Components\RecurringInvoiceAutoDelivery  $autoDelivery
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
+     * @param  \Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3  $presentationPolicy
+     * @param  int  $presentationPolicyVersion
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?string  $description
@@ -366,9 +401,11 @@ class RecurringInvoice
      * @param  ?\DateTime  $cancelledAt
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $externalId
+     * @param  ?array<\Factuarea\Sdk\Models\Components\RecurringPaymentTermsEntry>  $paymentTermsTemplate
+     * @param  ?\Factuarea\Sdk\Models\Components\PresentationPauseReason  $presentationPauseReason
      * @phpstan-pure
      */
-    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, RecurringInvoiceGenerationMode $generationMode, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, ?string $priceListId = null, ?string $priceListName = null, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null)
+    public function __construct(string $id, RecurringInvoiceObject $object, ClientRef $client, SeriesRef $series, string $status, string $frequency, string $name, bool $sendAutomatically, RecurringInvoiceGenerationMode $generationMode, int $daysBeforeDue, int $occurrencesCount, string $holidayHandling, LocalDate $startOn, string $nextRunAt, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $currency, array $lines, array $tags, array $customFields, RecurringInvoiceAutoDelivery $autoDelivery, \DateTime $createdAt, \DateTime $updatedAt, RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3 $presentationPolicy, int $presentationPolicyVersion, ?string $priceListId = null, ?string $priceListName = null, ?string $description = null, ?string $notes = null, ?string $emailTo = null, ?int $maxOccurrences = null, ?int $remainingOccurrences = null, ?LocalDate $endOn = null, ?string $lastRunAt = null, ?\DateTime $cancelledAt = null, ?array $metadata = null, ?string $externalId = null, ?array $paymentTermsTemplate = null, ?PresentationPauseReason $presentationPauseReason = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -397,6 +434,8 @@ class RecurringInvoice
         $this->autoDelivery = $autoDelivery;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->presentationPolicy = $presentationPolicy;
+        $this->presentationPolicyVersion = $presentationPolicyVersion;
         $this->priceListId = $priceListId;
         $this->priceListName = $priceListName;
         $this->description = $description;
@@ -409,5 +448,7 @@ class RecurringInvoice
         $this->cancelledAt = $cancelledAt;
         $this->metadata = $metadata;
         $this->externalId = $externalId;
+        $this->paymentTermsTemplate = $paymentTermsTemplate;
+        $this->presentationPauseReason = $presentationPauseReason;
     }
 }

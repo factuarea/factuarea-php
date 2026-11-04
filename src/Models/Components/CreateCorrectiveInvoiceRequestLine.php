@@ -13,27 +13,88 @@ class CreateCorrectiveInvoiceRequestLine
 {
     /**
      *
-     * @var ?string $description
+     * @var string $description
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('description')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?string $description = null;
+    public string $description;
 
     /**
      *
-     * @var ?float $quantity
+     * @var float $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $quantity = null;
+    public float $quantity;
 
     /**
      *
-     * @var ?float $unitPrice
+     * @var float $unitPrice
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('unit_price')]
+    public float $unitPrice;
+
+    /**
+     *
+     * @var mixed $id
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('id')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $unitPrice = null;
+    public mixed $id = null;
+
+    /**
+     *
+     * @var mixed $uuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('uuid')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $uuid = null;
+
+    /**
+     *
+     * @var mixed $sourceLineUuid
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_line_uuid')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $sourceLineUuid = null;
+
+    /**
+     * Optional UUID v7 of a line of the corrected invoice. Copies omitted commercial values from that source, never from its position. Each source may occur once; destination id is generated.
+     *
+     * @var ?string $sourceLineId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_line_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $sourceLineId = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceLineReferences $businessReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceLineReferences|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceLineReferences $businessReferences = null;
+
+    /**
+     * $deliveryNotesReferences
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference> $deliveryNotesReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('delivery_notes_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $deliveryNotesReferences = null;
+
+    /**
+     * Optional sequence. JSON integers only: 0 is valid; booleans, floats and numeric strings are rejected.
+     *
+     * @var ?int $sequenceNumber
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sequence_number')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $sequenceNumber = null;
 
     /**
      *
@@ -91,6 +152,14 @@ class CreateCorrectiveInvoiceRequestLine
     #[\Speakeasy\Serializer\Annotation\SerializedName('product_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $productId = null;
+
+    /**
+     *
+     * @var ?string $sourcePackGroupId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('source_pack_group_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $sourcePackGroupId = null;
 
     /**
      *
@@ -199,9 +268,16 @@ class CreateCorrectiveInvoiceRequestLine
     public ?array $options = null;
 
     /**
-     * @param  ?string  $description
-     * @param  ?float  $quantity
-     * @param  ?float  $unitPrice
+     * @param  string  $description
+     * @param  float  $quantity
+     * @param  float  $unitPrice
+     * @param  mixed  $id
+     * @param  mixed  $uuid
+     * @param  mixed  $sourceLineUuid
+     * @param  ?string  $sourceLineId
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceLineReferences  $businessReferences
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceDeliveryNoteReference>  $deliveryNotesReferences
+     * @param  ?int  $sequenceNumber
      * @param  ?string  $additionalDescription
      * @param  ?float  $taxRate
      * @param  ?float  $retentionRate
@@ -209,6 +285,7 @@ class CreateCorrectiveInvoiceRequestLine
      * @param  ?float  $discountPercent
      * @param  ?\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestIndirectTaxRegime  $indirectTaxRegime
      * @param  ?string  $productId
+     * @param  ?string  $sourcePackGroupId
      * @param  ?string  $variantId
      * @param  ?string  $presentationId
      * @param  ?float  $confirmedBaseQuantity
@@ -223,11 +300,18 @@ class CreateCorrectiveInvoiceRequestLine
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateCorrectiveInvoiceRequestOption>  $options
      * @phpstan-pure
      */
-    public function __construct(?string $description = null, ?float $quantity = null, ?float $unitPrice = null, ?string $additionalDescription = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?string $unit = null, ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null, ?CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason = null, ?string $exemptionReasonText = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null)
+    public function __construct(string $description, float $quantity, float $unitPrice, mixed $id = null, mixed $uuid = null, mixed $sourceLineUuid = null, ?string $sourceLineId = null, ?InvoiceLineReferences $businessReferences = null, ?array $deliveryNotesReferences = null, ?int $sequenceNumber = null, ?string $additionalDescription = null, ?float $taxRate = null, ?float $retentionRate = null, ?float $surchargeRate = null, ?float $discountPercent = null, ?CreateCorrectiveInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?string $productId = null, ?string $sourcePackGroupId = null, ?string $variantId = null, ?string $presentationId = null, ?float $confirmedBaseQuantity = null, ?CreateCorrectiveInvoiceRequestLineType $lineType = null, ?string $sourceInvoiceReference = null, ?string $unit = null, ?CreateCorrectiveInvoiceRequestRegimeKey $regimeKey = null, ?CreateCorrectiveInvoiceRequestExemptionReason $exemptionReason = null, ?string $exemptionReasonText = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
+        $this->id = $id;
+        $this->uuid = $uuid;
+        $this->sourceLineUuid = $sourceLineUuid;
+        $this->sourceLineId = $sourceLineId;
+        $this->businessReferences = $businessReferences;
+        $this->deliveryNotesReferences = $deliveryNotesReferences;
+        $this->sequenceNumber = $sequenceNumber;
         $this->additionalDescription = $additionalDescription;
         $this->taxRate = $taxRate;
         $this->retentionRate = $retentionRate;
@@ -235,6 +319,7 @@ class CreateCorrectiveInvoiceRequestLine
         $this->discountPercent = $discountPercent;
         $this->indirectTaxRegime = $indirectTaxRegime;
         $this->productId = $productId;
+        $this->sourcePackGroupId = $sourcePackGroupId;
         $this->variantId = $variantId;
         $this->presentationId = $presentationId;
         $this->confirmedBaseQuantity = $confirmedBaseQuantity;

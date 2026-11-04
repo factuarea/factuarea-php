@@ -51,7 +51,10 @@ class Plan
     /**
      * Preview a managed account plan change
      *
-     * Preview, with no effect, changing the plan of a managed account your account pays to the `plan` in the query (`emprendedor`, `empresario` or `integral`): `effective` is `immediate` for an upgrade (charged at once, `prorated_amount_cents`) and `period_end` for a downgrade, which stays pending until `effective_at`; `next_invoice_amount_cents` is the monthly fee of the requested plan on the next periodic invoice. `renews_at` is the end of the current billing period (also for an upgrade) and, for a downgrade, `deactivates` lists the active additional tax IDs (`id`, `name`, `tax_id`) that the change would deactivate. Amounts are integer cents, taxable base without VAT. A managed account that is not charged to your account (a test one, or one blocked by its payer) has no real charge: both amounts are 0 and the change is immediate. Returns 422 `managed_account_plan_not_self_serve` for `enterprise`. Unlike retrieving the managed account, it requires your `access_level` on it to be `operate`: with `view` or `none` it returns 403 `forbidden_action` (raise the level first). The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. A managed account whose holder took over the payment also returns 404 `account_not_found`. Requires the privileged `accounts:read` scope, which `*` does not cover (403 `privileged_scope_required` otherwise).
+     * Preview, with no effect, changing the plan of a managed account your account pays.
+     * - Upgrades are `immediate` and charged at once; downgrades are `period_end` and list tax IDs to deactivate.
+     * - Requires `operate` access on the account (403 `forbidden_action`).
+     * - Requires the privileged `accounts:read` scope.
      *
      * @param  string  $account
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ManagedAccountsPlanPreviewPlan  $plan
@@ -177,7 +180,10 @@ class Plan
     /**
      * Change the plan of a managed account
      *
-     * Change the plan of a managed account your account pays, also after the holder claimed it: an upgrade takes effect at once and is charged immediately in one update of your subscription; a downgrade stays pending until the end of the period (`pending_plan`). Preview the amounts first with the preview operation. Returns 200 with the managed account. Returns 422 `managed_account_plan_not_self_serve` for `enterprise` (only assigned by Factuarea by contract) and 422 `idempotency_key_required` because changing the plan is irreversible. It requires your `access_level` on the managed account to be `operate`: with `view` or `none` it returns 403 `forbidden_action` without changing anything (raise the level first). The account axis admits only a managed account provisioned by the credential account, with the management in force and in the same environment as the key; your own account, a foreign or non-existent one, one of the other environment and one whose management ended all return the same 404 `account_not_found`. A managed account whose holder took over the payment also returns 404 `account_not_found`. Requires the privileged `accounts:write` scope, which `*` does not cover: without the account provider privilege granted by Factuarea, or when the person who issued the key is no longer an owner or admin of your account, it returns 403 `privileged_scope_required`.
+     * Change the plan of a managed account your account pays.
+     * - An upgrade applies and is charged at once; a downgrade stays pending until period end (`pending_plan`).
+     * - Irreversible: `Idempotency-Key` required; `enterprise` returns 422 `managed_account_plan_not_self_serve`.
+     * - Requires `operate` access on the account (403 `forbidden_action`) and the privileged `accounts:write` scope.
      *
      * @param  \Factuarea\Sdk\Models\Components\ChangeManagedAccountPlanV1Request  $body
      * @param  string  $account

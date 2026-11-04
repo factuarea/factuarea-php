@@ -171,7 +171,9 @@ class Columns
     /**
      * Delete a project column
      *
-     * Permanently delete a board column. The optional query `move_to_column_id` is the UUID of another column of the same project that receives its tasks: if the column has tasks and it is not sent, the call returns 409 `column_has_tasks`; a target that does not exist, belongs to another project or is the column being deleted returns 422 `invalid_move_target_column`. With a valid target, the tasks are appended to the end of that column in their order, each one emits its status-change event, and the column is deleted in the same transaction. Irreversible: there is no trash or restore, so send an `Idempotency-Key` header (required) to retry safely.
+     * Permanently delete a board column; irreversible, so send the required `Idempotency-Key` header.
+     * - If the column has tasks and `move_to_column_id` is missing, returns 409 `column_has_tasks`.
+     * - An invalid target returns 422 `invalid_move_target_column`; a valid one receives the tasks at its end.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsColumnsDeleteRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1ProjectsColumnsDeleteResponse

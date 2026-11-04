@@ -111,6 +111,26 @@ class ProductConfiguration
     public ?string $commercialPrice;
 
     /**
+     * Sale price with and without VAT, measured as a document line of quantity 1 (no customer rate, company regime, today). Returned inside the `Product` read (`all` and `storefront`), not by the standalone sub-resource endpoints. The `net` amount keeps the scale of the catalog price.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogSalePrice $salePrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sale_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogSalePrice|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogSalePrice $salePrice = null;
+
+    /**
+     * The promotion that applies to the item on the web channel today, or on the day of the `date` parameter, or `null` when there is none. `sale_price` is still the regular price: with a promotion, show `promotion.price` and, only when `promotion.announce_reduction` is `true`, `promotion.previous_price` as the previous price. In schema.org, `Offer.price` is `promotion.price.gross` and `Offer.priceValidUntil` is `promotion.ends_at`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogPromotion|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogPromotion $promotion = null;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ProductConfigurationObject  $object
      * @param  string  $productId
@@ -124,9 +144,11 @@ class ProductConfiguration
      * @param  ?string  $presentationId
      * @param  ?string  $presentationName
      * @param  ?string  $commercialPrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogSalePrice  $salePrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogPromotion  $promotion
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductConfigurationObject $object, string $productId, string $name, string $signature, bool $active, bool $restrictsAvailability, array $options, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $commercialPrice = null)
+    public function __construct(string $id, ProductConfigurationObject $object, string $productId, string $name, string $signature, bool $active, bool $restrictsAvailability, array $options, ?string $variantId = null, ?string $variantName = null, ?string $presentationId = null, ?string $presentationName = null, ?string $commercialPrice = null, ?CatalogSalePrice $salePrice = null, ?CatalogPromotion $promotion = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -141,5 +163,7 @@ class ProductConfiguration
         $this->presentationId = $presentationId;
         $this->presentationName = $presentationName;
         $this->commercialPrice = $commercialPrice;
+        $this->salePrice = $salePrice;
+        $this->promotion = $promotion;
     }
 }

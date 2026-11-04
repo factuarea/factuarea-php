@@ -46,6 +46,7 @@ class PublicApiV1SeriesUpdateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     * The visual preference is optional and independent of fiscal numbering. An update requires `pdf_template_expected_version` in the body when a selector is provided or the purpose changes with a saved preference; the parent ETag is not sufficient. Fresh actor authority precedes any idempotent replay, resource lookup and CAS.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateSeriesRequest $body
      */

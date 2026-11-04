@@ -252,6 +252,15 @@ class ProformaLine
     public ?bool $optionAdjustmentsAbsorbed;
 
     /**
+     * The pack group this line belongs to, or `null` when the line is not part of a pack. See `PackGroup`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\PackGroup $packGroup
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pack_group')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PackGroup|null')]
+    public ?PackGroup $packGroup;
+
+    /**
      * Indirect tax regime of the line: the per-document override (`iva`/`igic`/`ipsi`) when the user set it (precedence override>zone), otherwise `null` (derived from the establishment AEAT zone). Writable per-document input on create/update; the document must be homogeneous (a single non-null regime across all lines, 422 otherwise).
      *
      * @var ?\Factuarea\Sdk\Models\Components\ProformaLineIndirectTaxRegime $indirectTaxRegime
@@ -293,10 +302,11 @@ class ProformaLine
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLinePriceSemantics  $priceSemantics
      * @param  ?string  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?\Factuarea\Sdk\Models\Components\PackGroup  $packGroup
      * @param  ?\Factuarea\Sdk\Models\Components\ProformaLineIndirectTaxRegime  $indirectTaxRegime
      * @phpstan-pure
      */
-    public function __construct(ProformaLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?ProformaLineVariant $variant = null, ?ProformaLinePresentation $presentation = null, ?string $itemKind = null, ?ProformaLineCommercialUnitCode $commercialUnitCode = null, ?ProformaLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?ProformaLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?ProformaLineCountedUnit $countedUnit = null, ?ProformaLineConfiguration $configuration = null, ?ProformaLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?ProformaLineIndirectTaxRegime $indirectTaxRegime = null)
+    public function __construct(ProformaLineObject $object, float $quantity, string $unitPrice, float $taxRate, float $retentionRate, float $surchargeRate, float $discountPercent, string $subtotal, string $taxes, string $total, array $options, ?string $description = null, ?string $additionalDescription = null, ?ProductRef $product = null, ?ProformaLineVariant $variant = null, ?ProformaLinePresentation $presentation = null, ?string $itemKind = null, ?ProformaLineCommercialUnitCode $commercialUnitCode = null, ?ProformaLineBaseUnitCode $baseUnitCode = null, ?string $conversionFactor = null, ?string $baseQuantity = null, ?string $priceListId = null, ?string $priceListName = null, ?string $priceSource = null, ?ProformaLinePriceUnitCode $priceUnitCode = null, ?string $countedQuantity = null, ?ProformaLineCountedUnit $countedUnit = null, ?ProformaLineConfiguration $configuration = null, ?ProformaLinePriceSemantics $priceSemantics = null, ?string $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?PackGroup $packGroup = null, ?ProformaLineIndirectTaxRegime $indirectTaxRegime = null)
     {
         $this->object = $object;
         $this->quantity = $quantity;
@@ -329,6 +339,7 @@ class ProformaLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->packGroup = $packGroup;
         $this->indirectTaxRegime = $indirectTaxRegime;
     }
 }

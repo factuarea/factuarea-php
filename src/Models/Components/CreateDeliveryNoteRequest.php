@@ -28,6 +28,15 @@ class CreateDeliveryNoteRequest
     public array $lines;
 
     /**
+     * Optional positive selection version. When POST upserts an existing external_id, it is the selection CAS and must be sent together with pdf_template_id. A new document initializes its selection version. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?int $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedSelectionVersion = null;
+
+    /**
      *
      * @var ?string $seriesId
      */
@@ -217,6 +226,15 @@ class CreateDeliveryNoteRequest
     public ?CreateDeliveryNoteRequestRepriceStrategy $repriceStrategy = null;
 
     /**
+     * Optional tenant-template UUID. On a new document, omission or null inherits the current default; a UUID requests a compatible manual selection. If POST resolves to an existing external_id, omission preserves intent and null clears it. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
+
+    /**
      * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
      *
      *
@@ -252,6 +270,7 @@ class CreateDeliveryNoteRequest
     /**
      * @param  string  $clientId
      * @param  array<\Factuarea\Sdk\Models\Components\CreateDeliveryNoteRequestLine>  $lines
+     * @param  ?int  $expectedSelectionVersion
      * @param  ?string  $seriesId
      * @param  ?LocalDate  $deliveryDate
      * @param  ?string  $notes
@@ -275,15 +294,17 @@ class CreateDeliveryNoteRequest
      * @param  ?\Factuarea\Sdk\Models\Components\CreateDeliveryNoteRequestCurrency  $currency
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateDeliveryNoteRequestRepriceStrategy  $repriceStrategy
+     * @param  ?string  $pdfTemplateId
      * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $tags
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateDeliveryNoteRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(string $clientId, array $lines, ?string $seriesId = null, ?LocalDate $deliveryDate = null, ?string $notes = null, ?string $internalNotes = null, ?string $referenceNumber = null, ?string $transportDetails = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?string $vehiclePlate = null, ?string $driverName = null, ?string $driverTaxId = null, ?string $trackingNumber = null, ?string $carrierCompany = null, ?string $receivedByName = null, ?string $receivedByTaxId = null, ?array $billingEmails = null, ?string $externalId = null, ?CreateDeliveryNoteRequestCurrency $currency = null, ?string $priceListId = null, ?CreateDeliveryNoteRequestRepriceStrategy $repriceStrategy = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(string $clientId, array $lines, ?int $expectedSelectionVersion = null, ?string $seriesId = null, ?LocalDate $deliveryDate = null, ?string $notes = null, ?string $internalNotes = null, ?string $referenceNumber = null, ?string $transportDetails = null, ?string $deliveryAddress = null, ?string $deliveryCity = null, ?string $deliveryPostalCode = null, ?string $deliveryProvince = null, ?string $deliveryCountry = null, ?string $vehiclePlate = null, ?string $driverName = null, ?string $driverTaxId = null, ?string $trackingNumber = null, ?string $carrierCompany = null, ?string $receivedByName = null, ?string $receivedByTaxId = null, ?array $billingEmails = null, ?string $externalId = null, ?CreateDeliveryNoteRequestCurrency $currency = null, ?string $priceListId = null, ?CreateDeliveryNoteRequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
         $this->clientId = $clientId;
         $this->lines = $lines;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->seriesId = $seriesId;
         $this->deliveryDate = $deliveryDate;
         $this->notes = $notes;
@@ -307,6 +328,7 @@ class CreateDeliveryNoteRequest
         $this->currency = $currency;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->metadata = $metadata;
         $this->tags = $tags;
         $this->customFields = $customFields;

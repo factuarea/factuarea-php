@@ -77,11 +77,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1RecurringInvoicesBulkDelete
 
@@ -113,6 +113,42 @@ $body = new Components\BulkDeleteRecurringInvoicesRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
     company: '21f2575e-e368-4b6a-a489-5863eac0e24e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteRecurringInvoicesRequest(
+    ids: [],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
+    company: '13d4881e-3a8d-44c3-a2e6-a345f42d1c82',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -195,6 +231,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteRecurringInvoicesRequest(
+    ids: [],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
+    company: '21f2575e-e368-4b6a-a489-5863eac0e24e',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="success" -->
@@ -231,6 +303,42 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk-delete" method="post" path="/companies/{company}/recurring-invoices/bulk-delete" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkDeleteRecurringInvoicesRequest(
+    ids: [],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkDelete(
+    company: 'aada0a85-bbc1-4aa2-8ff1-c2d8b760f41a',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -255,8 +363,49 @@ if ($response->object !== null) {
 
 ## publicApiV1RecurringInvoicesBulkStatus
 
-Move up to 50 recurring invoices (by id) to a status from the closed set `[active, paused]`: `paused` pauses the active ones and `active` resumes the paused ones, each through the same single transition —and therefore the same aggregate guards— as `POST /companies/{company}/recurring-invoices/{recurring_invoice}/pause` and `/resume`. Returns a `BulkPartialSuccessResult`; nothing aborts the batch: ids that are not found, already in the target status, cancelled or with their occurrences exhausted come back in `failures[]` with their `error_code` and a Spanish `error_message`.
+Moves up to 50 recurring invoices (by id) to `active` or `paused`, each through the same transition as `pause` and `resume`.
+- Returns a `BulkPartialSuccessResult`; the batch never aborts.
+- Not found, already in target status, cancelled or exhausted ids come back in `failures[]` with `error_code`.
 
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusRecurringInvoicesV1Request(
+    ids: [
+        '9fdc4d2e-2ef6-4e57-a569-db18a914455c',
+    ],
+    newStatus: Components\BulkStatusRecurringInvoicesV1RequestNewStatus::Active,
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
+    company: 'b43a546c-ec12-46a1-9994-1c9ade2b8eb7',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: missing_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="missing_api_key" -->
@@ -296,6 +445,45 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusRecurringInvoicesV1Request(
+    ids: [
+        '9fdc4d2e-2ef6-4e57-a569-db18a914455c',
+    ],
+    newStatus: Components\BulkStatusRecurringInvoicesV1RequestNewStatus::Active,
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
+    company: '79fdc4d2-e2ef-46e5-b756-9db18a914455',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="success" -->
@@ -325,6 +513,45 @@ $body = new Components\BulkStatusRecurringInvoicesV1Request(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
     company: 'Mayert and Sons',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.bulk_status" method="post" path="/companies/{company}/recurring-invoices/bulk-status" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\BulkStatusRecurringInvoicesV1Request(
+    ids: [
+        '9fdc4d2e-2ef6-4e57-a569-db18a914455c',
+    ],
+    newStatus: Components\BulkStatusRecurringInvoicesV1RequestNewStatus::Active,
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesBulkStatus(
+    company: '18b8bc42-a046-406f-834b-a6493a12a265',
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -454,6 +681,53 @@ $body = new Components\CreateRecurringInvoiceRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
     company: 'fde75c17-ddda-405e-907b-451493319737',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateRecurringInvoiceRequest(
+    clientId: '51493319-7376-4241-9b8a-c13e605d7d5a',
+    frequency: Components\CreateRecurringInvoiceRequestFrequency::Monthly,
+    startOn: LocalDate::parse('2025-04-18'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateRecurringInvoiceRequestLine(
+            quantity: 4510.94,
+        ),
+    ],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
+    company: 'af5248b0-8c84-4e20-8674-3b662c7e7fbf',
     body: $body,
     idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
     factuareaVersion: LocalDate::parse('2026-06-01')
@@ -604,6 +878,53 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateRecurringInvoiceRequest(
+    clientId: '51493319-7376-4241-9b8a-c13e605d7d5a',
+    frequency: Components\CreateRecurringInvoiceRequestFrequency::Monthly,
+    startOn: LocalDate::parse('2025-04-18'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateRecurringInvoiceRequestLine(
+            quantity: 4510.94,
+        ),
+    ],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
+    company: '7a14c453-0d6d-43ad-a219-61fa22afb6f4',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="success" -->
@@ -651,15 +972,62 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.create" method="post" path="/companies/{company}/recurring-invoices" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\CreateRecurringInvoiceRequest(
+    clientId: '51493319-7376-4241-9b8a-c13e605d7d5a',
+    frequency: Components\CreateRecurringInvoiceRequestFrequency::Monthly,
+    startOn: LocalDate::parse('2025-04-18'),
+    metadata: [
+        'erp_code' => 'IVA-GEN',
+        'ledger_account' => '477000',
+    ],
+    lines: [
+        new Components\CreateRecurringInvoiceRequestLine(
+            quantity: 4510.94,
+        ),
+    ],
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesCreate(
+    company: 'ee465521-e51d-4dcb-8032-c8335a0ae138',
+    body: $body,
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [Components\CreateRecurringInvoiceRequest](../../Models/Components/CreateRecurringInvoiceRequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency). | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `company`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Public identifier (UUID v7) of the company. Get it from `GET /v1/me` (`data.scope[].id`).                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `body`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Components\CreateRecurringInvoiceRequest](../../Models/Components/CreateRecurringInvoiceRequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                                    | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Presentation policy and relative payment terms preserve omitted/null/empty distinctions. New creation starts at configuration version 1. Creating from an invoice does not copy its overdue calendar or private visual intent. An existing external_id upsert uses update CAS. Saving configuration never resumes a paused recurrence. `presentation_policy`, `payment_terms_template` and `expected_presentation_policy_version` only take effect when revisioned presentation is enabled for the company; otherwise they are ignored. |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `idempotencyKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | *?string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Client-generated opaque key (up to 255 characters; UUID v7 recommended) that makes retries safe: the first response is cached and replayed for repeats without re-executing the mutation. Reusing a key with a different body returns `422 idempotency_key_reused`; the values of secret fields (`password`, `secret`…) count as part of the body, so retrying with a corrected secret under the same key is a different request, never the replay of the earlier answer. See the [Idempotency guide](/guides/idempotency).             | 01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `factuareaVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [\DateTime](https://www.php.net/manual/en/class.datetime.php)                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).                                                                                                                                                            | 2026-06-01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ### Response
 
@@ -667,11 +1035,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                        | Status Code                       | Content Type                      |
-| --------------------------------- | --------------------------------- | --------------------------------- |
-| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
-| Errors\Error                      | 500                               | application/json                  |
-| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 403, 404, 409, 422, 428, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
 
 ## publicApiV1RecurringInvoicesList
 
@@ -895,6 +1263,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
+    company: '22a0c04f-2787-49ca-afc2-4a9b713098e9',
+    recurringInvoice: '131b8168-dafe-4201-b951-8cd968e6f083',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateRecurringInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: invalid_api_key
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="invalid_api_key" -->
@@ -979,6 +1389,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
+    company: '1d31603d-0973-4ee7-a162-dcce6f7a8ec3',
+    recurringInvoice: '935955a8-ff02-4a74-847c-ad00949a56b5',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateRecurringInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="success" -->
@@ -1021,6 +1473,48 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.update" method="patch" path="/companies/{company}/recurring-invoices/{recurring_invoice}" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+use Factuarea\Sdk\Models\Operations;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$request = new Operations\PublicApiV1RecurringInvoicesUpdateRequest(
+    company: '59f831c6-c0ee-4e3a-973b-5cd9d43fb707',
+    recurringInvoice: '705b89cc-edb6-4455-9468-4dcdff8d96b5',
+    idempotencyKey: '01928f10-7c0e-7c4a-9b7d-2f8a6e3c1d4b',
+    factuareaVersion: LocalDate::parse('2026-06-01'),
+    body: new Components\UpdateRecurringInvoiceRequest(
+        metadata: [
+            'erp_code' => 'IVA-GEN',
+            'ledger_account' => '477000',
+        ],
+    ),
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesUpdate(
+    request: $request
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -1034,11 +1528,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                        | Status Code                       | Content Type                      |
-| --------------------------------- | --------------------------------- | --------------------------------- |
-| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
-| Errors\Error                      | 500                               | application/json                  |
-| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
+| Error Type                             | Status Code                            | Content Type                           |
+| -------------------------------------- | -------------------------------------- | -------------------------------------- |
+| Errors\Error                           | 400, 401, 403, 404, 409, 422, 428, 429 | application/json                       |
+| Errors\Error                           | 500                                    | application/json                       |
+| Errors\APIException                    | 4XX, 5XX                               | \*/\*                                  |
 
 ## publicApiV1RecurringInvoicesFindByExternalId
 
@@ -1070,6 +1564,41 @@ $body = new Components\FindRecurringInvoiceByExternalIdRequest(
 
 $response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
     company: '5e0e0e91-d10f-43fd-bb90-d27e6d9cdf1c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: factuarea_version_invalid_format
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="factuarea_version_invalid_format" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindRecurringInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
+    company: '9a6ca220-0210-4e0e-b7d4-2dbcc2a9a181',
     body: $body,
     factuareaVersion: LocalDate::parse('2026-06-01')
 
@@ -1149,6 +1678,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: retired_active_profile_header
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="retired_active_profile_header" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindRecurringInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
+    company: '5e0e0e91-d10f-43fd-bb90-d27e6d9cdf1c',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="success" -->
@@ -1184,6 +1748,41 @@ if ($response->object !== null) {
     // handle response
 }
 ```
+### Example Usage: unsupported_api_version
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.recurring_invoices.find_by_external_id" method="post" path="/companies/{company}/recurring-invoices/find-by-external-id" example="unsupported_api_version" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+$body = new Components\FindRecurringInvoiceByExternalIdRequest(
+    externalId: '<id>',
+);
+
+$response = $sdk->recurringInvoices->publicApiV1RecurringInvoicesFindByExternalId(
+    company: 'b6bcc514-1250-421f-a561-76d31c07e187',
+    body: $body,
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 
 ### Parameters
 
@@ -1207,7 +1806,7 @@ if ($response->object !== null) {
 
 ## publicApiV1RecurringInvoicesGenerate
 
-Trigger immediate invoice generation from the recurring configuration, outside the scheduled cycle.
+Trigger immediate invoice generation from the recurring configuration, outside the scheduled cycle. The server fixes generation date and attempt identity. No public date/child/intent overrides are accepted. Current authority precedes idempotent replay; retained same-day success is returned before new presentation selection.
 
 ### Example Usage
 
@@ -1611,11 +2210,11 @@ if ($response->object !== null) {
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| Errors\Error                 | 400, 401, 403, 404, 422, 429 | application/json             |
-| Errors\Error                 | 500                          | application/json             |
-| Errors\APIException          | 4XX, 5XX                     | \*/\*                        |
+| Error Type                        | Status Code                       | Content Type                      |
+| --------------------------------- | --------------------------------- | --------------------------------- |
+| Errors\Error                      | 400, 401, 403, 404, 409, 422, 429 | application/json                  |
+| Errors\Error                      | 500                               | application/json                  |
+| Errors\APIException               | 4XX, 5XX                          | \*/\*                             |
 
 ## publicApiV1RecurringInvoicesSkip
 

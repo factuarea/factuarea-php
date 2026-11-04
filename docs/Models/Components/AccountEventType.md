@@ -22,3 +22,5 @@ Type of an account-level event (the `account.*` catalog). Only account webhook e
 | `AccountNifTransferred`             | account.nif_transferred             |
 | `AccountNifArchived`                | account.nif_archived                |
 | `AccountImportCompleted`            | account.import_completed            |
+| `AccountSeatsUpdated`               | account.seats_updated               |
+| `AccountOfferPackageEnded`          | account.offer_package_ended         |

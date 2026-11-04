@@ -9,23 +9,9 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** CreateInvoiceRequest - Create an invoice. Required: `series_id`, `issued_on`, `due_on`, `lines[]` (at least one) and `client_id` — except on a simplified invoice (`type: F2`), where the client is optional. A terminal can issue an already-paid simplified invoice in ONE idempotent call (unattended checkout): send `type: F2`, `prices_include_tax`, a `payment` block and `options.register_verifactu`, and identify the operation with `external_id`. Optional: `notes`, `metadata`, `tags`, `custom_fields`, and an `options` object to atomically create, issue, send and wait for the PDF in a single call. Without `options` the invoice is created as a draft. A line may also be a DISBURSEMENT (`line_type: "SUPLIDO"`): an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) that is re-invoiced at cost and, under art. 78.Tres.3 of the Spanish VAT Act (LIVA), stays out of the taxable base — it carries no VAT, withholding, surcharge, discount or product, requires `source_invoice_reference`, and is not allowed on a simplified (`F2`) invoice. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line returns `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. */
+/** CreateInvoiceRequest - Create an invoice. Required: `series_id`, `issued_on`, `due_on`, `lines[]` (at least one) and `client_id` — except on a simplified invoice (`type: F2`), where the client is optional. A terminal can issue an already-paid simplified invoice in ONE idempotent call (unattended checkout): send `type: F2`, `prices_include_tax`, a `payment` block and `options.register_verifactu`, and identify the operation with `external_id`. Optional: `notes`, `metadata`, `tags`, `custom_fields`, and an `options` object to atomically create, issue, send and wait for the PDF in a single call. Without `options` the invoice is created as a draft. A line may also be a DISBURSEMENT (`line_type: "SUPLIDO"`): an amount paid in the name and on behalf of the client (an official fee, duty or registry charge) that is re-invoiced at cost and, under art. 78.Tres.3 of the Spanish VAT Act (LIVA), stays out of the taxable base — it carries no VAT, withholding, surcharge, discount or product, requires `source_invoice_reference`, and is not allowed on a simplified (`F2`) invoice. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line returns `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. Optional commercial data: business_references has only receiver_contract_reference, receiver_transaction_reference and file_reference (20 Unicode characters each); invoicing_period requires start_date <= end_date; legal_literals is an ordered list (250 characters per item). Lines support five reference/date pairs, delivery_notes_references (number up to 30 characters, optional date) and a JSON-integer sequence_number from 0 to 2147483647. Administrative centres accept one DIR3 code per role 01..04; omission or null inherits a frozen contact snapshot, [] selects none. All public line ids are generated; caller-supplied ids and read-only source/snapshot/version fields are rejected. payment_terms accepts null/[]/an ordered instalment list; new row id may be omitted, but present id must be non-null UUID v7. due_date is real YYYY-MM-DD, amount is a nonzero signed two-decimal EUR string, payment_means is 01-19, and optional account contains IBAN and nullable BIC8/11 only for 02/04. Exact sum equals total_to_pay including disbursements. Omission/null means unknown, [] explicitly no schedule. Draft can save missing 02/04 accounts; immediate issue cannot. With a nonempty schedule the invoice falls due on its last instalment: `due_on` must be that date to issue it (422 `invoice_due_date_not_last_instalment` otherwise), while a draft keeps the date you send. New creation needs no CAS; existing external_id upsert requires expected_payment_terms_version when modifying a calendar. */
 class CreateInvoiceRequest
 {
-    /**
-     *
-     * @var LocalDate $issuedOn
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('issued_on')]
-    public LocalDate $issuedOn;
-
-    /**
-     *
-     * @var LocalDate $dueOn
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('due_on')]
-    public LocalDate $dueOn;
-
     /**
      * $lines
      *
@@ -34,6 +20,93 @@ class CreateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('lines')]
     #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>')]
     public array $lines;
+
+    /**
+     *
+     * @var LocalDate $issuedOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('issued_on')]
+    public LocalDate $issuedOn;
+
+    /**
+     * Due date (YYYY-MM-DD). It drives the overdue status, payment reminders and debt ageing. With a nonempty `payment_terms` schedule the invoice falls due on its last instalment, so send that date: a draft keeps a different one, but issuing it (in this call through `options`, or later) returns 422 `invoice_due_date_not_last_instalment` and nothing is issued.
+     *
+     * @var LocalDate $dueOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('due_on')]
+    public LocalDate $dueOn;
+
+    /**
+     * Body CAS for editing an existing calendar, including null/[] and a no-op. Also required if total_to_pay changes with a nonempty current schedule. Missing returns 428, stale returns 409 with current_version only after parent authorization. 0 means no row. New creation needs no version; POST external_id upsert follows the update rules. Idempotent replay precedes CAS. Neither If-Match nor expected_version/administrative_version substitutes this field.
+     *
+     * @var ?int $expectedPaymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_payment_terms_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedPaymentTermsVersion = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_version')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsVersion = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsSource
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_source')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsSource = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsCurrency
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_currency')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsCurrency = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsCapturedAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_captured_at')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsCapturedAt = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsFrozenAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_frozen_at')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsFrozenAt = null;
+
+    /**
+     *
+     * @var mixed $legacyContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legacy_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $legacyContext = null;
+
+    /**
+     *
+     * @var mixed $paymentTermsLegacyContext
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms_legacy_context')]
+    #[\Speakeasy\Serializer\Annotation\Type('mixed')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public mixed $paymentTermsLegacyContext = null;
 
     /**
      * Id of the client (UUID v7). Required with `type: F1` (or without `type`), and the client must have a complete tax ID. Optional with `type: F2`: without it the invoice is an anonymous ticket; with it, a qualified simplified invoice (the client must belong to your company).
@@ -47,12 +120,21 @@ class CreateInvoiceRequest
     /**
      * Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Payment $payment
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment $payment
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Payment|null')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?Payment $payment = null;
+    public ?CreateInvoiceRequestPayment $payment = null;
+
+    /**
+     * Positive selection version. It applies only when POST resolves to an existing external_id, where it is the selection CAS for pdf_template_id; a new invoice rejects it with 422. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?int $expectedSelectionVersion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $expectedSelectionVersion = null;
 
     /**
      *
@@ -62,6 +144,54 @@ class CreateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions|null')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?CreateInvoiceRequestOptions $options = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences $businessReferences
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('business_references')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceHeaderReferences $businessReferences = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod $invoicingPeriod
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('invoicing_period')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?InvoiceInvoicingPeriod $invoicingPeriod = null;
+
+    /**
+     * $legalLiterals
+     *
+     * @var ?array<string> $legalLiterals
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('legal_literals')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $legalLiterals = null;
+
+    /**
+     * $administrativeCentres
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre> $administrativeCentres
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('administrative_centres')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $administrativeCentres = null;
+
+    /**
+     * Create omitted/null means unknown; [] means explicitly no schedule, including a positive payable. Update omitted preserves, null removes the schedule only on a draft, [] explicitly selects none, and a list replaces all rows. No merge or automatic matching by index. A nonempty list must balance exactly; total zero allows only null/[]. With a nonempty list the invoice falls due on its last instalment: `due_on` must be that date when the invoice is issued (422 `invoice_due_date_not_last_instalment`), a draft keeps the date you send, and an update that replaces the list without `due_on` moves it to the last instalment.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput> $paymentTerms
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment_terms')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $paymentTerms = null;
 
     /**
      * Invoice type: `F1` (complete invoice, the default) or `F2` (simplified invoice, the ticket of a terminal). A simplified invoice needs simplified invoices enabled for the company (422 `simplified_invoices_disabled`) and cannot exceed the absolute cap of 3,000 € VAT included (422 `simplified_invoice_not_allowed`).
@@ -117,6 +247,15 @@ class CreateInvoiceRequest
     public ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null;
 
     /**
+     * Optional tenant-template UUID. On a new invoice, omission or null inherits the current default; a UUID requests a compatible manual selection. If POST resolves to an existing external_id, omission preserves intent and null clears it. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
+     *
+     * @var ?string $pdfTemplateId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('pdf_template_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $pdfTemplateId = null;
+
+    /**
      *
      * @var ?string $notes
      */
@@ -166,18 +305,33 @@ class CreateInvoiceRequest
     public ?array $customFields = null;
 
     /**
+     * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $dueOn
-     * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
+     * @param  ?int  $expectedPaymentTermsVersion
+     * @param  mixed  $paymentTermsVersion
+     * @param  mixed  $paymentTermsSource
+     * @param  mixed  $paymentTermsCurrency
+     * @param  mixed  $paymentTermsCapturedAt
+     * @param  mixed  $paymentTermsFrozenAt
+     * @param  mixed  $legacyContext
+     * @param  mixed  $paymentTermsLegacyContext
      * @param  ?string  $clientId
-     * @param  ?\Factuarea\Sdk\Models\Components\Payment  $payment
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment  $payment
+     * @param  ?int  $expectedSelectionVersion
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions  $options
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences  $businessReferences
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod  $invoicingPeriod
+     * @param  ?array<string>  $legalLiterals
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceAdministrativeCentre>  $administrativeCentres
+     * @param  ?array<\Factuarea\Sdk\Models\Components\InvoiceInstalmentInput>  $paymentTerms
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestType  $type
      * @param  ?bool  $pricesIncludeTax
      * @param  ?LocalDate  $operationOn
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy  $repriceStrategy
+     * @param  ?string  $pdfTemplateId
      * @param  ?string  $notes
      * @param  ?string  $externalId
      * @param  ?array<string, string>  $metadata
@@ -185,20 +339,35 @@ class CreateInvoiceRequest
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
      * @phpstan-pure
      */
-    public function __construct(LocalDate $issuedOn, LocalDate $dueOn, array $lines, ?string $clientId = null, ?Payment $payment = null, ?CreateInvoiceRequestOptions $options = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(array $lines, LocalDate $issuedOn, LocalDate $dueOn, ?int $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $clientId = null, ?CreateInvoiceRequestPayment $payment = null, ?int $expectedSelectionVersion = null, ?CreateInvoiceRequestOptions $options = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $legalLiterals = null, ?array $administrativeCentres = null, ?array $paymentTerms = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
     {
+        $this->lines = $lines;
         $this->issuedOn = $issuedOn;
         $this->dueOn = $dueOn;
-        $this->lines = $lines;
+        $this->expectedPaymentTermsVersion = $expectedPaymentTermsVersion;
+        $this->paymentTermsVersion = $paymentTermsVersion;
+        $this->paymentTermsSource = $paymentTermsSource;
+        $this->paymentTermsCurrency = $paymentTermsCurrency;
+        $this->paymentTermsCapturedAt = $paymentTermsCapturedAt;
+        $this->paymentTermsFrozenAt = $paymentTermsFrozenAt;
+        $this->legacyContext = $legacyContext;
+        $this->paymentTermsLegacyContext = $paymentTermsLegacyContext;
         $this->clientId = $clientId;
         $this->payment = $payment;
+        $this->expectedSelectionVersion = $expectedSelectionVersion;
         $this->options = $options;
+        $this->businessReferences = $businessReferences;
+        $this->invoicingPeriod = $invoicingPeriod;
+        $this->legalLiterals = $legalLiterals;
+        $this->administrativeCentres = $administrativeCentres;
+        $this->paymentTerms = $paymentTerms;
         $this->type = $type;
         $this->pricesIncludeTax = $pricesIncludeTax;
         $this->operationOn = $operationOn;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
+        $this->pdfTemplateId = $pdfTemplateId;
         $this->notes = $notes;
         $this->externalId = $externalId;
         $this->metadata = $metadata;

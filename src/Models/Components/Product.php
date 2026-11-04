@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** Product - A product in your catalog. */
+/** Product - A product in your catalog. The `all` view (default) returns every field. The `storefront` view (`view=storefront`, only for active products enabled on the web) returns the common storefront contract (`id`, `object`, `name`, `slug`, `previous_slugs`, `summary`, `description`, `seo`, `tags`, `currency`, `sale_price`, `availability`, `gallery`, `updated_at`) plus `sku`, `item_kind`, `base_unit`, `tax_rate`, `specifications` and `video`; in the detail it adds the sellable graph (active `variants`, `presentations`, `option_groups` and `configurations`, each with its own `sale_price` and `availability`), and in the list only their counts and `sale_price_from`. It never returns costs, supplier offers, `metadata`, `external_id`, raw stock or the base unit change blocks. */
 class Product
 {
     /**
@@ -35,14 +35,6 @@ class Product
     public string $name;
 
     /**
-     * Monetary amount as a string with two decimal places (Stripe-style), e.g. "1234.56".
-     *
-     * @var string $price
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('price')]
-    public string $price;
-
-    /**
      *
      * @var string $currency
      */
@@ -50,12 +42,31 @@ class Product
     public string $currency;
 
     /**
-     * Available stock quantity with four-decimal scale.
+     * Slugs the product used before, most recent first. A web redirects them (301) to the current `slug`: `GET /v1/companies/{company}/products?slug=old` still finds the product.
      *
-     * @var string $stock
+     * @var array<string> $previousSlugs
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
-    public string $stock;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('previous_slugs')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string>')]
+    public array $previousSlugs;
+
+    /**
+     * Search engine texts, already resolved: when the pack has no own SEO title or description they fall back to its `name` and `summary`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\PackSeo $seo
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seo')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PackSeo')]
+    public PackSeo $seo;
+
+    /**
+     * Availability of a product, a variant with its own stock or a presentation. In the `all` view `quantity` is always present when stock is tracked. In the `storefront` view it follows the `web_stock_display` setting of the company: `status` shows only `status`; `low_only` (default) adds `quantity` only when `status` is `low`; `exact` adds `quantity` whenever there is one. A presentation counts in its commercial units, `floor(stock / conversion_factor)`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ProductAvailability $availability
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('availability')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductAvailability')]
+    public ProductAvailability $availability;
 
     /**
      * Catalog item kind.
@@ -85,13 +96,6 @@ class Product
     public array $gallery;
 
     /**
-     *
-     * @var bool $isActive
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('is_active')]
-    public bool $isActive;
-
-    /**
      * Product classification tags.
      *
      * @var array<string> $tags
@@ -115,13 +119,6 @@ class Product
     public int $variantCount;
 
     /**
-     *
-     * @var int $supplierOfferCount
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offer_count')]
-    public int $supplierOfferCount;
-
-    /**
      * Number of option groups the product declares (active and inactive). Always reported, so a listing that omits `option_groups` for brevity never reads as a plain product.
      *
      * @var int $optionGroupCount
@@ -136,76 +133,6 @@ class Product
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('configuration_count')]
     public int $configurationCount;
-
-    /**
-     * `open` keeps the Cartesian product of active axes sellable; only configurations with `restricts_availability=true` constrain their own variant. `closed` treats all active configurations as the exact allow-list.
-     *
-     * @var \Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode $catalogAvailabilityMode
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('catalog_availability_mode')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode')]
-    public ProductCatalogAvailabilityMode $catalogAvailabilityMode;
-
-    /**
-     * $presentations
-     *
-     * @var array<\Factuarea\Sdk\Models\Components\ProductPresentation> $presentations
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('presentations')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductPresentation>')]
-    public array $presentations;
-
-    /**
-     * $variants
-     *
-     * @var array<\Factuarea\Sdk\Models\Components\ProductVariant> $variants
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('variants')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductVariant>')]
-    public array $variants;
-
-    /**
-     * $supplierOffers
-     *
-     * @var array<\Factuarea\Sdk\Models\Components\SupplierProductOffer> $supplierOffers
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offers')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\SupplierProductOffer>')]
-    public array $supplierOffers;
-
-    /**
-     * Sellable option groups (finish, flavour, quality) with their values. Always an array; `[]` when the product declares none. Populated only when the caller asks for the configurable catalog.
-     *
-     * @var array<\Factuarea\Sdk\Models\Components\ProductOptionGroup> $optionGroups
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('option_groups')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductOptionGroup>')]
-    public array $optionGroups;
-
-    /**
-     * Commercial configurations used for exact pricing and, depending on `catalog_availability_mode`, availability. In `open`, they do not restrict unless a row explicitly opts in. In `closed`, active rows form the exact allow-list; an empty active list means nothing is sellable.
-     *
-     * @var array<\Factuarea\Sdk\Models\Components\ProductConfiguration> $configurations
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('configurations')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductConfiguration>')]
-    public array $configurations;
-
-    /**
-     * Indicates whether the current stock is below the configured threshold.
-     *
-     * @var bool $isLowStock
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('is_low_stock')]
-    public bool $isLowStock;
-
-    /**
-     * Whether there is stock available (> 0).
-     *
-     * @var bool $isInStock
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('is_in_stock')]
-    public bool $isInStock;
 
     /**
      * Structured technical specifications of the product (free key-value pairs). Empty object `{}` when there are no specifications.
@@ -224,12 +151,73 @@ class Product
     public ?string $sku;
 
     /**
+     * Monetary amount as a string with two decimal places (Stripe-style), e.g. "1234.56".
+     *
+     * @var ?string $price
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('price')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $price = null;
+
+    /**
+     * Channels the product is offered in. `all` view only. `web` is `false` by default, also in existing products, so nothing is published without a decision.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ProductChannels $channels
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channels')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductChannels|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProductChannels $channels = null;
+
+    /**
+     * Web address: lowercase letters, digits and hyphens. Unique among the products and packs of the company, also against their previous slugs. Generated from the name when the product enters the web without one; `null` until then.
+     *
+     * @var ?string $slug
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('slug')]
+    public ?string $slug;
+
+    /**
+     * Plain-text summary for the web.
+     *
+     * @var ?string $summary
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('summary')]
+    public ?string $summary;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogSalePrice $salePrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sale_price')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogSalePrice|null')]
+    public ?CatalogSalePrice $salePrice;
+
+    /**
+     * The promotion that applies to the product on the web channel today, or on the day of the `date` parameter, or `null` when there is none. `sale_price` is still the regular price: with a promotion, show `promotion.price` and, only when `promotion.announce_reduction` is `true`, `promotion.previous_price` as the previous price. In schema.org, `Offer.price` is `promotion.price.gross` and `Offer.priceValidUntil` is `promotion.ends_at`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogPromotion $promotion
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogPromotion|null')]
+    public ?CatalogPromotion $promotion;
+
+    /**
      *
      * @var ?\Factuarea\Sdk\Models\Components\TaxRateRef $taxRate
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_rate')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\TaxRateRef|null')]
     public ?TaxRateRef $taxRate;
+
+    /**
+     * Available stock quantity with four-decimal scale.
+     *
+     * @var ?string $stock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $stock = null;
 
     /**
      * Product attached video, or `null` if there is none.
@@ -241,6 +229,14 @@ class Product
     public ?ProductVideo $video;
 
     /**
+     *
+     * @var ?bool $isActive
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_active')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $isActive = null;
+
+    /**
      * Free-text description of the product.
      *
      * @var ?string $description
@@ -249,38 +245,90 @@ class Product
     public ?string $description;
 
     /**
-     * Threshold below which stock is considered low, or `null` if not configured.
      *
-     * @var ?string $lowStockThreshold
+     * @var ?int $supplierOfferCount
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
-    public ?string $lowStockThreshold;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offer_count')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?int $supplierOfferCount = null;
 
     /**
+     * `open` keeps the Cartesian product of active axes sellable; only configurations with `restricts_availability=true` constrain their own variant. `closed` treats all active configurations as the exact allow-list.
      *
-     * @var ?string $preferredSupplierOfferId
+     * @var ?\Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode $catalogAvailabilityMode
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('preferred_supplier_offer_id')]
-    public ?string $preferredSupplierOfferId;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('catalog_availability_mode')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ProductCatalogAvailabilityMode $catalogAvailabilityMode = null;
 
     /**
-     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     * $presentations
      *
-     *
-     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
-     *
-     * @var ?array<string, string> $metadata
+     * @var ?array<\Factuarea\Sdk\Models\Components\ProductPresentation> $presentations
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('metadata')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
-    public ?array $metadata;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('presentations')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductPresentation>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $presentations = null;
 
     /**
+     * $variants
      *
-     * @var ?\DateTime $createdAt
+     * @var ?array<\Factuarea\Sdk\Models\Components\ProductVariant> $variants
      */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('created_at')]
-    public ?\DateTime $createdAt;
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variants')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductVariant>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $variants = null;
+
+    /**
+     * $supplierOffers
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\SupplierProductOffer> $supplierOffers
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_offers')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\SupplierProductOffer>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $supplierOffers = null;
+
+    /**
+     * Sellable option groups (finish, flavour, quality) with their values. Always an array; `[]` when the product declares none. Populated only when the caller asks for the configurable catalog.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\ProductOptionGroup> $optionGroups
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('option_groups')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductOptionGroup>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $optionGroups = null;
+
+    /**
+     * Commercial configurations used for exact pricing and, depending on `catalog_availability_mode`, availability. In `open`, they do not restrict unless a row explicitly opts in. In `closed`, active rows form the exact allow-list; an empty active list means nothing is sellable.
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Components\ProductConfiguration> $configurations
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('configurations')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\ProductConfiguration>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $configurations = null;
+
+    /**
+     * Indicates whether the current stock is below the configured threshold.
+     *
+     * @var ?bool $isLowStock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_low_stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $isLowStock = null;
+
+    /**
+     * Whether there is stock available (> 0).
+     *
+     * @var ?bool $isInStock
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('is_in_stock')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $isInStock = null;
 
     /**
      *
@@ -300,6 +348,16 @@ class Product
     public ?BaseUnitChange $baseUnitChange = null;
 
     /**
+     * `storefront` list only: the lowest sellable price among the product and its active variants, presentations and configurations, to show "from".
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CatalogSalePrice $salePriceFrom
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sale_price_from')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CatalogSalePrice|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CatalogSalePrice $salePriceFrom = null;
+
+    /**
      * Gross transport weight in kg per BASE unit (decimal string, up to 4 decimals, greater than 0), packaging included; `null` when unknown. Rejected with 422 `gross_weight_not_allowed` for services and for products whose base unit is a mass unit (`KGM`, `GRM`), where the weight is the quantity itself. A variant weight replaces it for that variant; a fixed presentation may declare its own weight per commercial unit.
      *
      * @var ?string $grossWeightKg
@@ -309,6 +367,36 @@ class Product
     public ?string $grossWeightKg = null;
 
     /**
+     * Threshold below which stock is considered low, or `null` if not configured.
+     *
+     * @var ?string $lowStockThreshold
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('low_stock_threshold')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $lowStockThreshold = null;
+
+    /**
+     *
+     * @var ?string $preferredSupplierOfferId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('preferred_supplier_offer_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $preferredSupplierOfferId = null;
+
+    /**
+     * A free map of up to 50 key→value pairs for storing arbitrary structured data (values are strings up to 500 characters). Unlike `custom_fields` — an ordered list of typed `{field, value}` pairs with display semantics, present on the six document resources — `metadata` is an unordered map for opaque integration data; a document may carry both. The master resources (Client, Supplier) have no `custom_fields`, so their `metadata` doubles as the custom-fields store.
+     *
+     *
+     * **Reserved keys (read-only).** When the system auto-issues an invoice from a payment correlation (Stripe/GoCardless/MONEI), it writes `stripe_subscription_id`, `stripe_invoice_id`, `billing_reason`, `period_start` and `period_end` into that invoice metadata automatically. Do not set or overwrite them by hand — the platform owns them and a manual value may be replaced when the correlation runs.
+     *
+     * @var ?array<string, string> $metadata
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('metadata')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<string, string>|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?array $metadata = null;
+
+    /**
      * External integration key (ERP/CRM/e-commerce) mapping this product to a record in a third-party system. Free-format, unique per company, orthogonal to the catalog `sku` (a product may have both, neither, or either).
      *
      * @var ?string $externalId
@@ -316,6 +404,14 @@ class Product
     #[\Speakeasy\Serializer\Annotation\SerializedName('external_id')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $externalId = null;
+
+    /**
+     *
+     * @var ?\DateTime $createdAt
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('created_at')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?\DateTime $createdAt = null;
 
     /**
      *
@@ -348,63 +444,85 @@ class Product
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ProductObject  $object
      * @param  string  $name
-     * @param  string  $price
      * @param  string  $currency
-     * @param  string  $stock
+     * @param  array<string>  $previousSlugs
+     * @param  \Factuarea\Sdk\Models\Components\PackSeo  $seo
+     * @param  \Factuarea\Sdk\Models\Components\ProductAvailability  $availability
      * @param  \Factuarea\Sdk\Models\Components\ProductItemKind  $itemKind
      * @param  \Factuarea\Sdk\Models\Components\ProductBaseUnit  $baseUnit
      * @param  array<\Factuarea\Sdk\Models\Components\Gallery>  $gallery
-     * @param  bool  $isActive
      * @param  array<string>  $tags
      * @param  int  $presentationCount
      * @param  int  $variantCount
-     * @param  int  $supplierOfferCount
      * @param  int  $optionGroupCount
      * @param  int  $configurationCount
-     * @param  \Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode  $catalogAvailabilityMode
-     * @param  array<\Factuarea\Sdk\Models\Components\ProductPresentation>  $presentations
-     * @param  array<\Factuarea\Sdk\Models\Components\ProductVariant>  $variants
-     * @param  array<\Factuarea\Sdk\Models\Components\SupplierProductOffer>  $supplierOffers
-     * @param  array<\Factuarea\Sdk\Models\Components\ProductOptionGroup>  $optionGroups
-     * @param  array<\Factuarea\Sdk\Models\Components\ProductConfiguration>  $configurations
-     * @param  bool  $isLowStock
-     * @param  bool  $isInStock
      * @param  array<string, mixed>  $specifications
      * @param  ?string  $sku
+     * @param  ?string  $price
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductChannels  $channels
+     * @param  ?string  $slug
+     * @param  ?string  $summary
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogSalePrice  $salePrice
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogPromotion  $promotion
      * @param  ?\Factuarea\Sdk\Models\Components\TaxRateRef  $taxRate
+     * @param  ?string  $stock
      * @param  ?bool  $manageStock
      * @param  ?\Factuarea\Sdk\Models\Components\ProductVideo  $video
+     * @param  ?bool  $isActive
      * @param  ?string  $description
+     * @param  ?int  $supplierOfferCount
+     * @param  ?\Factuarea\Sdk\Models\Components\ProductCatalogAvailabilityMode  $catalogAvailabilityMode
+     * @param  ?array<\Factuarea\Sdk\Models\Components\ProductPresentation>  $presentations
+     * @param  ?array<\Factuarea\Sdk\Models\Components\ProductVariant>  $variants
+     * @param  ?array<\Factuarea\Sdk\Models\Components\SupplierProductOffer>  $supplierOffers
+     * @param  ?array<\Factuarea\Sdk\Models\Components\ProductOptionGroup>  $optionGroups
+     * @param  ?array<\Factuarea\Sdk\Models\Components\ProductConfiguration>  $configurations
+     * @param  ?bool  $isLowStock
+     * @param  ?bool  $isInStock
+     * @param  ?\DateTime  $updatedAt
+     * @param  ?\Factuarea\Sdk\Models\Components\BaseUnitChange  $baseUnitChange
+     * @param  ?\Factuarea\Sdk\Models\Components\CatalogSalePrice  $salePriceFrom
+     * @param  ?string  $grossWeightKg
      * @param  ?string  $lowStockThreshold
      * @param  ?string  $preferredSupplierOfferId
      * @param  ?array<string, string>  $metadata
-     * @param  ?\DateTime  $createdAt
-     * @param  ?\DateTime  $updatedAt
-     * @param  ?\Factuarea\Sdk\Models\Components\BaseUnitChange  $baseUnitChange
-     * @param  ?string  $grossWeightKg
      * @param  ?string  $externalId
+     * @param  ?\DateTime  $createdAt
      * @param  ?\Factuarea\Sdk\Models\Components\ProductReplacementLink  $replaces
      * @param  ?\Factuarea\Sdk\Models\Components\ProductReplacementLink  $replacedBy
      * @phpstan-pure
      */
-    public function __construct(string $id, ProductObject $object, string $name, string $price, string $currency, string $stock, ProductItemKind $itemKind, ProductBaseUnit $baseUnit, array $gallery, bool $isActive, array $tags, int $presentationCount, int $variantCount, int $supplierOfferCount, int $optionGroupCount, int $configurationCount, ProductCatalogAvailabilityMode $catalogAvailabilityMode, array $presentations, array $variants, array $supplierOffers, array $optionGroups, array $configurations, bool $isLowStock, bool $isInStock, array $specifications, ?string $sku = null, ?TaxRateRef $taxRate = null, ?ProductVideo $video = null, ?string $description = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null, ?BaseUnitChange $baseUnitChange = null, ?string $grossWeightKg = null, ?string $externalId = null, ?ProductReplacementLink $replaces = null, ?ProductReplacementLink $replacedBy = null, ?bool $manageStock = false)
+    public function __construct(string $id, ProductObject $object, string $name, string $currency, array $previousSlugs, PackSeo $seo, ProductAvailability $availability, ProductItemKind $itemKind, ProductBaseUnit $baseUnit, array $gallery, array $tags, int $presentationCount, int $variantCount, int $optionGroupCount, int $configurationCount, array $specifications, ?string $sku = null, ?string $price = null, ?ProductChannels $channels = null, ?string $slug = null, ?string $summary = null, ?CatalogSalePrice $salePrice = null, ?CatalogPromotion $promotion = null, ?TaxRateRef $taxRate = null, ?string $stock = null, ?ProductVideo $video = null, ?bool $isActive = null, ?string $description = null, ?int $supplierOfferCount = null, ?ProductCatalogAvailabilityMode $catalogAvailabilityMode = null, ?array $presentations = null, ?array $variants = null, ?array $supplierOffers = null, ?array $optionGroups = null, ?array $configurations = null, ?bool $isLowStock = null, ?bool $isInStock = null, ?\DateTime $updatedAt = null, ?BaseUnitChange $baseUnitChange = null, ?CatalogSalePrice $salePriceFrom = null, ?string $grossWeightKg = null, ?string $lowStockThreshold = null, ?string $preferredSupplierOfferId = null, ?array $metadata = null, ?string $externalId = null, ?\DateTime $createdAt = null, ?ProductReplacementLink $replaces = null, ?ProductReplacementLink $replacedBy = null, ?bool $manageStock = false)
     {
         $this->id = $id;
         $this->object = $object;
         $this->name = $name;
-        $this->price = $price;
         $this->currency = $currency;
-        $this->stock = $stock;
+        $this->previousSlugs = $previousSlugs;
+        $this->seo = $seo;
+        $this->availability = $availability;
         $this->itemKind = $itemKind;
         $this->baseUnit = $baseUnit;
         $this->gallery = $gallery;
-        $this->isActive = $isActive;
         $this->tags = $tags;
         $this->presentationCount = $presentationCount;
         $this->variantCount = $variantCount;
-        $this->supplierOfferCount = $supplierOfferCount;
         $this->optionGroupCount = $optionGroupCount;
         $this->configurationCount = $configurationCount;
+        $this->specifications = $specifications;
+        $this->sku = $sku;
+        $this->price = $price;
+        $this->channels = $channels;
+        $this->slug = $slug;
+        $this->summary = $summary;
+        $this->salePrice = $salePrice;
+        $this->promotion = $promotion;
+        $this->taxRate = $taxRate;
+        $this->stock = $stock;
+        $this->video = $video;
+        $this->isActive = $isActive;
+        $this->description = $description;
+        $this->supplierOfferCount = $supplierOfferCount;
         $this->catalogAvailabilityMode = $catalogAvailabilityMode;
         $this->presentations = $presentations;
         $this->variants = $variants;
@@ -413,19 +531,15 @@ class Product
         $this->configurations = $configurations;
         $this->isLowStock = $isLowStock;
         $this->isInStock = $isInStock;
-        $this->specifications = $specifications;
-        $this->sku = $sku;
-        $this->taxRate = $taxRate;
-        $this->video = $video;
-        $this->description = $description;
+        $this->updatedAt = $updatedAt;
+        $this->baseUnitChange = $baseUnitChange;
+        $this->salePriceFrom = $salePriceFrom;
+        $this->grossWeightKg = $grossWeightKg;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->preferredSupplierOfferId = $preferredSupplierOfferId;
         $this->metadata = $metadata;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
-        $this->baseUnitChange = $baseUnitChange;
-        $this->grossWeightKg = $grossWeightKg;
         $this->externalId = $externalId;
+        $this->createdAt = $createdAt;
         $this->replaces = $replaces;
         $this->replacedBy = $replacedBy;
         $this->manageStock = $manageStock;

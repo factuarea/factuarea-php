@@ -82,10 +82,10 @@ class Task
     /**
      * Labels of the task.
      *
-     * @var array<\Factuarea\Sdk\Models\Components\Label> $labels
+     * @var array<\Factuarea\Sdk\Models\Components\TaskLabel1> $labels
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('labels')]
-    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\Label>')]
+    #[\Speakeasy\Serializer\Annotation\Type('array<\Factuarea\Sdk\Models\Components\TaskLabel1>')]
     public array $labels;
 
     /**
@@ -179,7 +179,7 @@ class Task
      * @param  \Factuarea\Sdk\Models\Components\TaskStatus  $status
      * @param  \Factuarea\Sdk\Models\Components\TaskPriority  $priority
      * @param  string  $title
-     * @param  array<\Factuarea\Sdk\Models\Components\Label>  $labels
+     * @param  array<\Factuarea\Sdk\Models\Components\TaskLabel1>  $labels
      * @param  array<\Factuarea\Sdk\Models\Components\TaskCustomField>  $customFields
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt

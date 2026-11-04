@@ -28,11 +28,24 @@ class FindProductBySkuRequest
     public string $sku;
 
     /**
+     * Day (`YYYY-MM-DD`, company time zone) the `promotion` is resolved for; default today. A date-time uses its day.
+     *
+     * Malformed: 400 `parameter_invalid_iso8601`.
+     *
+     * @var ?string $date
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('date')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $date = null;
+
+    /**
      * @param  string  $sku
+     * @param  ?string  $date
      * @phpstan-pure
      */
-    public function __construct(string $sku)
+    public function __construct(string $sku, ?string $date = null)
     {
         $this->sku = $sku;
+        $this->date = $date;
     }
 }

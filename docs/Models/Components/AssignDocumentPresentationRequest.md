@@ -1,0 +1,11 @@
+# AssignDocumentPresentationRequest
+
+Supply expected_version and/or a strong If-Match from GET of this exact presentation URI. Sending neither returns 428; a mismatched tag returns 412 before a stale version returns 409. No document numbering, fiscal content, parties, alias selector or query override is accepted.
+
+
+## Fields
+
+| Field                                                                                                                     | Type                                                                                                                      | Required                                                                                                                  | Description                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `templateId`                                                                                                              | *string*                                                                                                                  | :heavy_check_mark:                                                                                                        | Required presence: null inherits; a UUID v7 explicitly selects a tenant template. Blank or omitted selectors are invalid. |
+| `expectedVersion`                                                                                                         | [int\|string\|null](../../Models/Components/AssignDocumentPresentationRequestExpectedVersion.md)                          | :heavy_minus_sign:                                                                                                        | Positive canonical version bounded by the server integer range; booleans, floats and leading zeros are invalid.           |

@@ -47,10 +47,10 @@ class PublicApiV1ProductsSupplierOffersListRequest
     /**
      * Only offers with this availability: `available`, `unavailable`, `unknown`, `seasonal` or `store_dependent`.
      *
-     * @var ?\Factuarea\Sdk\Models\Operations\Availability $availability
+     * @var ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSupplierOffersListAvailability $availability
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=availability')]
-    public ?Availability $availability = null;
+    public ?PublicApiV1ProductsSupplierOffersListAvailability $availability = null;
 
     /**
      * `true` returns only the preferred offer and `false` only the rest.
@@ -89,14 +89,14 @@ class PublicApiV1ProductsSupplierOffersListRequest
      * @param  string  $product
      * @param  ?string  $supplierId
      * @param  ?string  $variantId
-     * @param  ?\Factuarea\Sdk\Models\Operations\Availability  $availability
+     * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ProductsSupplierOffersListAvailability  $availability
      * @param  ?bool  $preferred
      * @param  ?int  $limit
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(string $company, string $product, ?string $supplierId = null, ?string $variantId = null, ?Availability $availability = null, ?bool $preferred = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
+    public function __construct(string $company, string $product, ?string $supplierId = null, ?string $variantId = null, ?PublicApiV1ProductsSupplierOffersListAvailability $availability = null, ?bool $preferred = null, ?int $limit = null, ?LocalDate $factuareaVersion = null, ?string $startingAfter = null)
     {
         $this->company = $company;
         $this->product = $product;

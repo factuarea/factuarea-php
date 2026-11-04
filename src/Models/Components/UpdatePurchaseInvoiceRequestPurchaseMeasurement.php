@@ -24,7 +24,8 @@ class UpdatePurchaseInvoiceRequestPurchaseMeasurement
      * @var ?string $packageQuantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('package_quantity')]
-    public ?string $packageQuantity;
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $packageQuantity = null;
 
     /**
      * @param  \Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestCostBasis  $costBasis

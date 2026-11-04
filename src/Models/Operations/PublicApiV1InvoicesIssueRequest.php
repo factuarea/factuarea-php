@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Brick\DateTime\LocalDate;
+use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesIssueRequest
 {
@@ -45,17 +46,26 @@ class PublicApiV1InvoicesIssueRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\IssueInvoiceRequest $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\IssueInvoiceRequest $body = null;
+
+    /**
      * @param  string  $company
      * @param  string  $invoice
      * @param  string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\IssueInvoiceRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $invoice, string $idempotencyKey, ?LocalDate $factuareaVersion = null, ?Components\IssueInvoiceRequest $body = null)
     {
         $this->company = $company;
         $this->invoice = $invoice;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }

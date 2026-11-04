@@ -914,6 +914,15 @@ Components\EventDataProductUpdated $value = /* values here */
 Components\EventDataProductReplaced $value = /* values here */
 ```
 
+### `Components\EventDataProductDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataProductDeleted
+*/
+Components\EventDataProductDeleted $value = /* values here */
+```
+
 ### `Components\EventDataPaymentReceived`
 
 ```php
@@ -1443,5 +1452,149 @@ Components\EventDataProjectArchived $value = /* values here */
 * @var \Factuarea\Sdk\Models\Components\EventDataProjectDeleted
 */
 Components\EventDataProjectDeleted $value = /* values here */
+```
+
+### `Components\EventDataPackCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPackCreated
+*/
+Components\EventDataPackCreated $value = /* values here */
+```
+
+### `Components\EventDataPackUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPackUpdated
+*/
+Components\EventDataPackUpdated $value = /* values here */
+```
+
+### `Components\EventDataPackArchived`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPackArchived
+*/
+Components\EventDataPackArchived $value = /* values here */
+```
+
+### `Components\EventDataPackRestored`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPackRestored
+*/
+Components\EventDataPackRestored $value = /* values here */
+```
+
+### `Components\EventDataPackDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPackDeleted
+*/
+Components\EventDataPackDeleted $value = /* values here */
+```
+
+### `Components\EventDataPromotionCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPromotionCreated
+*/
+Components\EventDataPromotionCreated $value = /* values here */
+```
+
+### `Components\EventDataPromotionUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPromotionUpdated
+*/
+Components\EventDataPromotionUpdated $value = /* values here */
+```
+
+### `Components\EventDataPromotionStarted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPromotionStarted
+*/
+Components\EventDataPromotionStarted $value = /* values here */
+```
+
+### `Components\EventDataPromotionEnded`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPromotionEnded
+*/
+Components\EventDataPromotionEnded $value = /* values here */
+```
+
+### `Components\EventDataPromotionCancelled`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPromotionCancelled
+*/
+Components\EventDataPromotionCancelled $value = /* values here */
+```
+
+### `Components\EventDataPromotionDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPromotionDeleted
+*/
+Components\EventDataPromotionDeleted $value = /* values here */
+```
+
+### `Components\EventDataPriceListCreated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPriceListCreated
+*/
+Components\EventDataPriceListCreated $value = /* values here */
+```
+
+### `Components\EventDataPriceListUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPriceListUpdated
+*/
+Components\EventDataPriceListUpdated $value = /* values here */
+```
+
+### `Components\EventDataPriceListDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPriceListDeleted
+*/
+Components\EventDataPriceListDeleted $value = /* values here */
+```
+
+### `Components\EventDataPriceListItemUpdated`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPriceListItemUpdated
+*/
+Components\EventDataPriceListItemUpdated $value = /* values here */
+```
+
+### `Components\EventDataPriceListItemDeleted`
+
+```php
+/**
+* @var \Factuarea\Sdk\Models\Components\EventDataPriceListItemDeleted
+*/
+Components\EventDataPriceListItemDeleted $value = /* values here */
 ```
 

@@ -8,25 +8,23 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class UpdatePurchaseInvoiceRequestLine
 {
     /**
      *
-     * @var ?float $quantity
+     * @var float $quantity
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('quantity')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $quantity = null;
+    public float $quantity;
 
     /**
      * Per-line VAT rate (0–100). REQUIRED whenever `lines` is sent: sending `lines` replaces the whole set of lines, so omitting it would wipe the VAT the invoice already had. A purchase with no VAT is declared explicitly as `tax_rate: 0`.
      *
-     * @var ?float $taxRate
+     * @var float $taxRate
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('tax_rate')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?float $taxRate = null;
+    public float $taxRate;
 
     /**
      *
@@ -249,8 +247,49 @@ class UpdatePurchaseInvoiceRequestLine
     public ?bool $optionAdjustmentsAbsorbed = null;
 
     /**
-     * @param  ?float  $quantity
-     * @param  ?float  $taxRate
+     *
+     * @var ?string $promotionUuidSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_uuid_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionUuidSnapshot = null;
+
+    /**
+     *
+     * @var ?string $promotionNameSnapshot
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('promotion_name_snapshot')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $promotionNameSnapshot = null;
+
+    /**
+     *
+     * @var ?float $regularUnitPrice
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('regular_unit_price')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?float $regularUnitPrice = null;
+
+    /**
+     *
+     * @var ?LocalDate $soldOn
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('sold_on')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $soldOn = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestChannel $channel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channel')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestChannel|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdatePurchaseInvoiceRequestChannel $channel = null;
+
+    /**
+     * @param  float  $quantity
+     * @param  float  $taxRate
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPurchaseMeasurement  $purchaseMeasurement
      * @param  ?string  $description
      * @param  ?float  $discountPercent
@@ -277,9 +316,14 @@ class UpdatePurchaseInvoiceRequestLine
      * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestPriceSemantics  $priceSemantics
      * @param  ?float  $priceAdjustmentTotal
      * @param  ?bool  $optionAdjustmentsAbsorbed
+     * @param  ?string  $promotionUuidSnapshot
+     * @param  ?string  $promotionNameSnapshot
+     * @param  ?float  $regularUnitPrice
+     * @param  ?LocalDate  $soldOn
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdatePurchaseInvoiceRequestChannel  $channel
      * @phpstan-pure
      */
-    public function __construct(?float $quantity = null, ?float $taxRate = null, ?UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null)
+    public function __construct(float $quantity, float $taxRate, ?UpdatePurchaseInvoiceRequestPurchaseMeasurement $purchaseMeasurement = null, ?string $description = null, ?float $discountPercent = null, ?string $additionalDescription = null, float|string|null $unitPrice = null, ?string $productId = null, ?string $variantId = null, ?string $presentationId = null, ?string $supplierOfferId = null, ?float $confirmedBaseQuantity = null, ?string $unit = null, ?float $retentionRate = null, ?bool $vatDeductible = null, ?float $surchargeRate = null, ?UpdatePurchaseInvoiceRequestExemptionReason $exemptionReason = null, ?UpdatePurchaseInvoiceRequestIndirectTaxRegime $indirectTaxRegime = null, ?UpdatePurchaseInvoiceRequestPriceSource $priceSource = null, ?int $sourceLineIndex = null, ?string $configurationUuid = null, ?float $countedQuantity = null, ?array $options = null, ?string $configurationSignature = null, ?string $configurationName = null, ?UpdatePurchaseInvoiceRequestPriceSemantics $priceSemantics = null, ?float $priceAdjustmentTotal = null, ?bool $optionAdjustmentsAbsorbed = null, ?string $promotionUuidSnapshot = null, ?string $promotionNameSnapshot = null, ?float $regularUnitPrice = null, ?LocalDate $soldOn = null, ?UpdatePurchaseInvoiceRequestChannel $channel = null)
     {
         $this->quantity = $quantity;
         $this->taxRate = $taxRate;
@@ -309,5 +353,10 @@ class UpdatePurchaseInvoiceRequestLine
         $this->priceSemantics = $priceSemantics;
         $this->priceAdjustmentTotal = $priceAdjustmentTotal;
         $this->optionAdjustmentsAbsorbed = $optionAdjustmentsAbsorbed;
+        $this->promotionUuidSnapshot = $promotionUuidSnapshot;
+        $this->promotionNameSnapshot = $promotionNameSnapshot;
+        $this->regularUnitPrice = $regularUnitPrice;
+        $this->soldOn = $soldOn;
+        $this->channel = $channel;
     }
 }

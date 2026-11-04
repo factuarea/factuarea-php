@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Components;
 
-
+use Brick\DateTime\LocalDate;
 class ResolveManyCatalogPricesRequest
 {
     /**
@@ -21,6 +21,7 @@ class ResolveManyCatalogPricesRequest
     public array $targets;
 
     /**
+     * Price list (UUID v7) as in a document: the one sent wins and `null` means no price list. If omitted, the default price list of the `client_id` applies. An inactive price list responds 422.
      *
      * @var ?string $priceListId
      */
@@ -29,13 +30,46 @@ class ResolveManyCatalogPricesRequest
     public ?string $priceListId = null;
 
     /**
+     * Web customer (UUID v7 of a company contact with the customer role): the same `client_id` as a document. Without `price_list_id`, its active default price list applies.
+     *
+     * @var ?string $clientId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('client_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $clientId = null;
+
+    /**
+     * Offers (`catalog-promotions` 3.5): the day (in the company time zone, today if omitted) and the channel (documents if omitted).
+     *
+     * @var ?LocalDate $date
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('date')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?LocalDate $date = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequestChannel $channel
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channel')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequestChannel|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?ResolveManyCatalogPricesRequestChannel $channel = null;
+
+    /**
      * @param  array<\Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequestTarget>  $targets
      * @param  ?string  $priceListId
+     * @param  ?string  $clientId
+     * @param  ?LocalDate  $date
+     * @param  ?\Factuarea\Sdk\Models\Components\ResolveManyCatalogPricesRequestChannel  $channel
      * @phpstan-pure
      */
-    public function __construct(array $targets, ?string $priceListId = null)
+    public function __construct(array $targets, ?string $priceListId = null, ?string $clientId = null, ?LocalDate $date = null, ?ResolveManyCatalogPricesRequestChannel $channel = null)
     {
         $this->targets = $targets;
         $this->priceListId = $priceListId;
+        $this->clientId = $clientId;
+        $this->date = $date;
+        $this->channel = $channel;
     }
 }

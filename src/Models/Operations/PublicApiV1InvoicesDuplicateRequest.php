@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Operations;
 
 use Brick\DateTime\LocalDate;
+use Factuarea\Sdk\Models\Components;
 use Factuarea\Sdk\Utils\SpeakeasyMetadata;
 class PublicApiV1InvoicesDuplicateRequest
 {
@@ -45,17 +46,26 @@ class PublicApiV1InvoicesDuplicateRequest
     public ?LocalDate $factuareaVersion = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\DuplicateInvoiceRequest $body
+     */
+    #[SpeakeasyMetadata('request:mediaType=application/json')]
+    public ?Components\DuplicateInvoiceRequest $body = null;
+
+    /**
      * @param  string  $company
      * @param  string  $invoice
      * @param  ?string  $idempotencyKey
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?\Factuarea\Sdk\Models\Components\DuplicateInvoiceRequest  $body
      * @phpstan-pure
      */
-    public function __construct(string $company, string $invoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null)
+    public function __construct(string $company, string $invoice, ?string $idempotencyKey = null, ?LocalDate $factuareaVersion = null, ?Components\DuplicateInvoiceRequest $body = null)
     {
         $this->company = $company;
         $this->invoice = $invoice;
         $this->idempotencyKey = $idempotencyKey;
         $this->factuareaVersion = $factuareaVersion;
+        $this->body = $body;
     }
 }
