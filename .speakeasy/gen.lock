@@ -6,9 +6,9 @@ management:
   generationVersion: 2.956.1
   releaseVersion: 0.9.0
 persistentEdits:
-  generation_id: 2bdc6a3b-c95a-4a78-8b86-ecdd4467c518
-  pristine_commit_hash: 1a9522b1cb3132c93ea83a568582bcfac9cf7dc2
-  pristine_tree_hash: 96437200c41f54e2843ebd5f80d56a75d1b884dd
+  generation_id: cabac5f5-fc99-4804-914d-a2107bcaf71b
+  pristine_commit_hash: 928a2f1297785127a376fb1b6dc807abcf563346
+  pristine_tree_hash: 6ce54ed21fbc8b986374809f41ef936944c8e784
 features:
   php:
     additionalProperties: 0.1.1
@@ -2505,8 +2505,8 @@ trackedFiles:
     pristine_git_object: 68bc47934d4264dec2ad4f460d280024fe566b53
   docs/Models/Components/CreatePromotionV1RequestItem.md:
     id: acd898c64f04
-    last_write_checksum: sha1:6d86b5d1b02a02467d7ce7506c52f5411d98ebb5
-    pristine_git_object: b748a09a2c14dd3a07d0681c33ef784a8dd46abe
+    last_write_checksum: sha1:7291b6ad863f8485a4037b4dd693851b6e1248e0
+    pristine_git_object: a05311875316b6fad7e7c6d0e6266c827b4dad69
   docs/Models/Components/CreatePromotionV1RequestMode.md:
     id: 7a4a2b2064f3
     last_write_checksum: sha1:6aaba2de126e82ad05e81b14789a3e3877418cc9
@@ -7233,8 +7233,8 @@ trackedFiles:
     pristine_git_object: a2fb465fef1b59c6d5c239fa586ac6f6d17c0576
   docs/Models/Components/PromotionItem.md:
     id: f592518c073a
-    last_write_checksum: sha1:2035fa7bba2c514e5dfd7b00aa42486022edbbc8
-    pristine_git_object: 992958c0d7a27cfe57cd4be1fa8c45fa1e583dc5
+    last_write_checksum: sha1:0fe809f8116d80a720e05ef705b87fce88dbbca3
+    pristine_git_object: e1e924952b8ac21c55ea3e4f37c331795b2b0ccb
   docs/Models/Components/PromotionItemBasis.md:
     id: 9dd6b49a83b8
     last_write_checksum: sha1:8768ffb04bb84f3dc76bd1dd0556648a791384dd
@@ -10237,8 +10237,8 @@ trackedFiles:
     pristine_git_object: e020870be40b3fde892a36e80f5cb8a4a9df73a6
   docs/Models/Components/UpdatePromotionV1RequestItem.md:
     id: 2bf15998a735
-    last_write_checksum: sha1:91567b8ffa011705cd3695de8c0f4b455cabbb66
-    pristine_git_object: 8d152d0647ca3873569f467cad6d22af0d143210
+    last_write_checksum: sha1:e7900dbd4959d9509398c4d6324e2f917009536d
+    pristine_git_object: 9f43dcb245ce4d590c57e877e7e9cce1d099ba4f
   docs/Models/Components/UpdatePromotionV1RequestMode.md:
     id: a1571b68b10e
     last_write_checksum: sha1:febf243b5d9653037aa08f62510373f3e5db3f17
@@ -10569,12 +10569,12 @@ trackedFiles:
     pristine_git_object: 7b77bd16e98c6cf52fbec3d3a7f029985de0ea57
   docs/Models/Components/UpdateVeriFactuSettingsV1Request.md:
     id: dcac90f5cf3e
-    last_write_checksum: sha1:ee0e00aaee644d739de7b310f736d9df3b7358ba
-    pristine_git_object: e92aab6533e24ad89f0f17512265c4db0106226f
+    last_write_checksum: sha1:e1483becbd1ba2eccd2976efb3f64596277be961
+    pristine_git_object: 0b04f7503369ee9b73682496977136c746e90202
   docs/Models/Components/UpdateVeriFactuSettingsV1RequestEnvironment.md:
     id: 3c3aa1062beb
-    last_write_checksum: sha1:08316398e6e2d4f4a19cbe6cb5f7e4412cea265e
-    pristine_git_object: 3d7cac011e211dda1fc4f82fe847e6b51e12b895
+    last_write_checksum: sha1:5f6af7b4ee7b2055a90db62a957adb89e3711a30
+    pristine_git_object: 7fac9254acab94f42e16f341d28c593a72a04224
   docs/Models/Components/UpdateVeriFactuSettingsV1RequestMode.md:
     id: b9b4533ca6f6
     last_write_checksum: sha1:d6b147f3bea1eb76236bc1684e933e228644976a
@@ -10717,8 +10717,12 @@ trackedFiles:
     pristine_git_object: 14e1977efeff39a05ae5e35dfd02771583b86ef5
   docs/Models/Components/VeriFactuConfig.md:
     id: b2485b4a60f9
-    last_write_checksum: sha1:df8a6fff8fb831e6915d7c96c1fe83e986d89a29
-    pristine_git_object: e0a56bc84e5977521c20c614717a66fe2478743e
+    last_write_checksum: sha1:72bdef411152cb63c1310375619c1b04f0c5954c
+    pristine_git_object: 63f8ba759712f686cedd1040b6453dee2269d7b2
+  docs/Models/Components/VeriFactuConfigEnvironment.md:
+    id: 4ec0116e3c1c
+    last_write_checksum: sha1:1e08eb0d3955d278b42bf9395560dfde5917bbd2
+    pristine_git_object: 19e693bc70eb938be404dc58d6fe0de008b2cf07
   docs/Models/Components/VeriFactuConfigObject.md:
     id: fec750a03a19
     last_write_checksum: sha1:0fde290d8d180c053a7e1c3262772aee41f1258b
@@ -10745,12 +10749,16 @@ trackedFiles:
     pristine_git_object: eefa987956cff1c8cf15d677536df4331af0b637
   docs/Models/Components/VeriFactuRecord.md:
     id: 1df5b97abda5
-    last_write_checksum: sha1:23c94ecd40b4f72986290702cdc18bb31aaea8b5
-    pristine_git_object: e21251ccf3821656fe19e49378b5ce33d1dc397a
+    last_write_checksum: sha1:130d82dec208199c70e12ee076944c0d904334cf
+    pristine_git_object: 990b84bd1baa52f8d65683a2588a11d6ef0ec8b8
   docs/Models/Components/VeriFactuRecordBlockReason.md:
     id: 0521ba671ad2
     last_write_checksum: sha1:81735bdbc9f35eff11a66b9a637d6d63c8e8821f
     pristine_git_object: 56155442dd66fcc65b9f1fa1a5299c4df032e90b
+  docs/Models/Components/VeriFactuRecordEnvironment.md:
+    id: ced15ff948fa
+    last_write_checksum: sha1:d6bde3cc6a5196b0062f582923047f5f8c8a5dff
+    pristine_git_object: 647caebb65335c3227c79b020543498c45bf76c2
   docs/Models/Components/VeriFactuRecordObject.md:
     id: 015c50c54f87
     last_write_checksum: sha1:33b750584eaebe58177c1df2f102e5ee377c4796
@@ -20381,8 +20389,8 @@ trackedFiles:
     pristine_git_object: ce642c13b0b582b7a0c545cda38b39b18023fc95
   docs/Models/Operations/PublicApiV1VerifactuConfigResponseBody.md:
     id: 15b2b63bef88
-    last_write_checksum: sha1:bfa326cf4631cbec54d919627a6cc983e79ed8a7
-    pristine_git_object: 1df7081dfe5d345a93910103e4f6b6bead8a5a7c
+    last_write_checksum: sha1:371964cf621cc4dd3b914706160d5d0f1a375b0e
+    pristine_git_object: 93030b6fbd1b5f3eb980d310467678d50a2bd555
   docs/Models/Operations/PublicApiV1VerifactuDeclaracionCurrentRequest.md:
     id: ef43614821a2
     last_write_checksum: sha1:a181ea93788db6e9ae86070e9b2e663060f616cc
@@ -20525,8 +20533,8 @@ trackedFiles:
     pristine_git_object: e3b1364fe926abc556bce17844e2e731527fd54a
   docs/Models/Operations/PublicApiV1VerifactuRecordsListRequest.md:
     id: 8e855d725b53
-    last_write_checksum: sha1:0e1697975bacd8f97f65c4f1f0d4b10e442ebfa5
-    pristine_git_object: 3dc8cdbaca38465ae8ddc0b5703624a9256cad7e
+    last_write_checksum: sha1:249aee39ea1da6bf1f85be062bf9fa76742d15a6
+    pristine_git_object: b26959348dcde7b500f5a5a60ac5f9e2a1e68d32
   docs/Models/Operations/PublicApiV1VerifactuRecordsListResponse.md:
     id: 5d622c2d9983
     last_write_checksum: sha1:033d84b2f5aba3f15f22e53c85dbfe9e76379d68
@@ -20633,12 +20641,12 @@ trackedFiles:
     pristine_git_object: 192136b9c22008459da1cdfce6ebf30faa393de1
   docs/Models/Operations/PublicApiV1VerifactuSettingsUpdateResponseBody.md:
     id: 55c32d390b50
-    last_write_checksum: sha1:4e2368da20c5d7b0c006840880e2a229f3a15af7
-    pristine_git_object: a35f63fc90cb129f6e15db837690f714328b1223
+    last_write_checksum: sha1:51e8d9ac6e859f971136d4e2675888932d2dc753
+    pristine_git_object: cece4d3f65bb21cdced72201263e020d2f06c976
   docs/Models/Operations/PublicApiV1VerifactuStatsRequest.md:
     id: 9f7918e18e29
-    last_write_checksum: sha1:a2710b2fd9612d74bb74c3849548976f431c518b
-    pristine_git_object: 3e5e61d209ffb3f2b630a43bf51a22bb3221b0f8
+    last_write_checksum: sha1:73f0513cf28d0e5b573bc9442f7fd6429d203f03
+    pristine_git_object: 6793c9527495b1aa6efb7ad5d64038956c2b67e0
   docs/Models/Operations/PublicApiV1VerifactuStatsResponse.md:
     id: 3ac6d95c0af7
     last_write_checksum: sha1:a279227dd43e30e7a631e61067069d84e74d4885
@@ -21373,8 +21381,8 @@ trackedFiles:
     pristine_git_object: 3ed3cc5caff8e76b5a05622c27de698991eff4ae
   docs/sdks/records/README.md:
     id: db86bab024d3
-    last_write_checksum: sha1:5a83ae5656be1edf184fb47aabc946f583918afa
-    pristine_git_object: 89f3dd847f043a6f07af9e680d34283e511ef8dd
+    last_write_checksum: sha1:0f22cc2c106994d0817e5b4a2e46b1cdc80813b8
+    pristine_git_object: 7a91a2268e4de23f52376d817e031f296645efc0
   docs/sdks/recurringinvoices/README.md:
     id: b52eb13f8292
     last_write_checksum: sha1:5cd01e9fc6be55074aa912c77c40ca026bc5a116
@@ -21401,8 +21409,8 @@ trackedFiles:
     pristine_git_object: e55df013c0c9171426cf23e166cf7a28e8c18b6a
   docs/sdks/settings/README.md:
     id: ffd4dbcfc0ce
-    last_write_checksum: sha1:a31a3058f5ffef881ba9e1454314c4085134aa02
-    pristine_git_object: a24b1601b3892d20d6182e6c50546c2bff47b4c5
+    last_write_checksum: sha1:30742f1d20d94551d932546089f47f5b859535a3
+    pristine_git_object: 29db388df0e813576f9e2571950caca47874b516
   docs/sdks/shopifystores/README.md:
     id: 8f036c1e14bf
     last_write_checksum: sha1:31e03ede280eeb6748501e5b8f597a3a744d46d6
@@ -21513,8 +21521,8 @@ trackedFiles:
     pristine_git_object: 2f1396b0a615aedc5d050f4df7ff6c816e8835eb
   docs/sdks/verifactu/README.md:
     id: 3c0d0e1d9c7b
-    last_write_checksum: sha1:3f2288be826bca69a4845cbc98babd5c72856ca0
-    pristine_git_object: 33747a85df647e52740c92d20765f125c7a091b1
+    last_write_checksum: sha1:455dd4313d1a727617bd5c69d4b9017713a61d41
+    pristine_git_object: 3f7463314a0493aeaebb7061a8c8648f5ba22b83
   docs/sdks/verifactuchain/README.md:
     id: 498cb40086b7
     last_write_checksum: sha1:c87bf4bafb85cd8fda9429c86f43634fefa14ef7
@@ -24057,8 +24065,8 @@ trackedFiles:
     pristine_git_object: 8d7975fdfbfabd258a9440f73ee84f6414d56708
   src/Models/Components/CreatePdfTemplatePreviewRequest2.php:
     id: 8293481ddffd
-    last_write_checksum: sha1:a16ef6c57ec289499a1f71a5de2f2307edd323ff
-    pristine_git_object: 1fdc1de8befd08ce04f1b0ae1ae2ad232b6a2ad5
+    last_write_checksum: sha1:dfa932375bbc96f59c0fc4bcb5afa1210cf10c63
+    pristine_git_object: af6a5ad1f06fe8fa5934364cf0e4d9be39206ee1
   src/Models/Components/CreatePdfTemplatePreviewRequestA4.php:
     id: bf98d72cb82d
     last_write_checksum: sha1:d503802cc2f5391fc9ac98257c32acfd3bf8911a
@@ -24317,8 +24325,8 @@ trackedFiles:
     pristine_git_object: 1b9bd20c163d404baf5d4c31de59c77a5103b882
   src/Models/Components/CreatePromotionV1RequestItem.php:
     id: a1fa3d9db01b
-    last_write_checksum: sha1:152cfb7002d365c2150d749fa3fefa0aa8cf73d5
-    pristine_git_object: f8000a5fdb86e1d22b96742843f684350817632b
+    last_write_checksum: sha1:128e4b82088d3db55c364e29d601ba9d45323bfb
+    pristine_git_object: c5b31bb2557bb60859daf6b82c594688e01ac2a2
   src/Models/Components/CreatePromotionV1RequestMode.php:
     id: 86cc4f6edce9
     last_write_checksum: sha1:f2616d2c9988c9d86aa4181e65c950f76f393c65
@@ -28917,8 +28925,8 @@ trackedFiles:
     pristine_git_object: 5cd3ed9bfbec5169307f8c51123d341a87422cdc
   src/Models/Components/PromotionItem.php:
     id: 7c2d0bfab021
-    last_write_checksum: sha1:4007fe6daa7c4bfd5740b269723ce31b836b93d9
-    pristine_git_object: 9e2e4ff4d83b1657f1ece8c23b4523e90544892f
+    last_write_checksum: sha1:fbab9ffa9db10a1755f39eb0cb69b633e3641ad8
+    pristine_git_object: 150a2bd757008b5a27308ef8d0137db5e6bc8f90
   src/Models/Components/PromotionItemBasis.php:
     id: 6dba868b1f99
     last_write_checksum: sha1:321e7c16f7c038d865e2d97c7dc4288eade21e65
@@ -31873,8 +31881,8 @@ trackedFiles:
     pristine_git_object: aea9f4c11324dcbf10fcd019cb64462779bcf35c
   src/Models/Components/UpdatePromotionV1RequestItem.php:
     id: ae620a7bbe41
-    last_write_checksum: sha1:6dc41b483c93ddd4dbde0afe45b69f581eb7582b
-    pristine_git_object: 8a3b7ffcb644f6833adf45230856ce912f715757
+    last_write_checksum: sha1:a79d3f98d3709bf05921af397d7f3cdfdc61759f
+    pristine_git_object: 1032ea74345f7401869f8a477b14ea9e16bda66e
   src/Models/Components/UpdatePromotionV1RequestMode.php:
     id: c1532ce3f46b
     last_write_checksum: sha1:6f205dc301a5127f657e16259fd98bab966e8a4a
@@ -32185,12 +32193,12 @@ trackedFiles:
     pristine_git_object: a9362c05abd9ea6b9c2a936dc29b44bebb24023e
   src/Models/Components/UpdateVeriFactuSettingsV1Request.php:
     id: 7c7b8b4e55d0
-    last_write_checksum: sha1:9983c24208d08f9f7b25cad9e160f5a970291805
-    pristine_git_object: 0db2653cac8f90028d28f2da372941e6824db3c8
+    last_write_checksum: sha1:10acad534723fc8c7066537e90d5bc545af16d98
+    pristine_git_object: 9ab1a4664cc0f7a841ae86772e0286a897f20eee
   src/Models/Components/UpdateVeriFactuSettingsV1RequestEnvironment.php:
     id: bde6cb590548
-    last_write_checksum: sha1:955f26abecff0b12e68553d660f301e629915199
-    pristine_git_object: 43a1d9bae98fc7bf3a35c8987a8388fdfab9ecde
+    last_write_checksum: sha1:a013540dc151585cad277314cc8ad5bf5e0b9f57
+    pristine_git_object: 991a4700c9940fbdd1bafd5d0902b7fb1fa2cee8
   src/Models/Components/UpdateVeriFactuSettingsV1RequestMode.php:
     id: cfd610bf043d
     last_write_checksum: sha1:51b5a340abe35e646c68499efd87559345d3f69a
@@ -32333,8 +32341,12 @@ trackedFiles:
     pristine_git_object: a1593fdb87e79df7551e8282e8dd9ab3e9824f9f
   src/Models/Components/VeriFactuConfig.php:
     id: 3aaf7eb462f9
-    last_write_checksum: sha1:e3c5ad28840c1c7efb9b0472738e20c641bb6197
-    pristine_git_object: d68b4d1b458d4a03ec12b8dcd4dea511d07ffe09
+    last_write_checksum: sha1:8f5c55b343af1c924334f9fadf9a7fb5decc14c3
+    pristine_git_object: c101f83659a4dd1585ffe0bfa63adba0c1e7ec44
+  src/Models/Components/VeriFactuConfigEnvironment.php:
+    id: e38c2357633f
+    last_write_checksum: sha1:ff417717ae4e30e4c8faddb38019e26c8cbdf8cb
+    pristine_git_object: d796ef09665626c1b25f0d2613039f68bd95daf7
   src/Models/Components/VeriFactuConfigObject.php:
     id: 51e5ad200c4e
     last_write_checksum: sha1:3047ffab97d86441a285a8d541a338b880545175
@@ -32361,12 +32373,16 @@ trackedFiles:
     pristine_git_object: 77d5177369b9aef74694228eed5cb7475fd40cc5
   src/Models/Components/VeriFactuRecord.php:
     id: 5891b241abe6
-    last_write_checksum: sha1:868db12ace97593bd6729128f90bb326ea30dcd2
-    pristine_git_object: 9900967437d66c0cda6c251c93bc78f267bd49b3
+    last_write_checksum: sha1:e027fb115e16461088003bcd932e9dccdfefcacd
+    pristine_git_object: 60ba68a59ddd84bc9aa011f2bdf54259bc1e3458
   src/Models/Components/VeriFactuRecordBlockReason.php:
     id: 76d695555652
     last_write_checksum: sha1:7d17082c867596721eac07bf8cca8d626538da1f
     pristine_git_object: 4a5211785aa5523cf32f6107bafb4b82283497b9
+  src/Models/Components/VeriFactuRecordEnvironment.php:
+    id: e4f2ee4422dc
+    last_write_checksum: sha1:f4df223b9a4d9a7d97b0fe961f8d8a84a0b3196e
+    pristine_git_object: 3a0e7a9dc60c0f8f6b055a02e0e13bb6660e55a0
   src/Models/Components/VeriFactuRecordObject.php:
     id: 62b90cb8adbc
     last_write_checksum: sha1:f81fed543db5e1bf8fa0cbbb6449ce57a575b17a
@@ -41993,8 +42009,8 @@ trackedFiles:
     pristine_git_object: c3265963c0f1d9c26a431c060e23f2ea9ffecda6
   src/Models/Operations/PublicApiV1VerifactuConfigResponseBody.php:
     id: 9c2247e6c19a
-    last_write_checksum: sha1:b7be827a975517e63b38ecd99255c88d56344e06
-    pristine_git_object: 8a20d59bfa680ce026de0fd685e70a5aef9d5ae8
+    last_write_checksum: sha1:908c40cd9bfca38a6d64e3ea0ca1953b27a489b2
+    pristine_git_object: 12c4b1abb4ef81ce01c28fd8793d6e1ed8868618
   src/Models/Operations/PublicApiV1VerifactuDeclaracionCurrentRequest.php:
     id: 89177000c1fc
     last_write_checksum: sha1:4dc2c05eccbd6571a5e0f3d19096d948d6fc03db
@@ -42137,8 +42153,8 @@ trackedFiles:
     pristine_git_object: a12c90d145030a2cee963df38e8ed0adf37d3a7c
   src/Models/Operations/PublicApiV1VerifactuRecordsListRequest.php:
     id: 9c0573b2ce54
-    last_write_checksum: sha1:75b38410e99b5c28fe35bc0549d0c88ff6841cf6
-    pristine_git_object: fe56d15b90201bda851dca58ccda1aabedca2fac
+    last_write_checksum: sha1:f0f576b4fc7639cda521937a359a27b937d37996
+    pristine_git_object: 60e13bc6e39ac5cd5848f98b6928776c9394bea6
   src/Models/Operations/PublicApiV1VerifactuRecordsListResponse.php:
     id: a5e1a0d7c436
     last_write_checksum: sha1:57fbaced51086004df7bc3f37ac7d3afe4cd56c2
@@ -42245,12 +42261,12 @@ trackedFiles:
     pristine_git_object: fd9ce1fe2565af9ebdb208a0c05b21d2954714ba
   src/Models/Operations/PublicApiV1VerifactuSettingsUpdateResponseBody.php:
     id: f97b1a711c6f
-    last_write_checksum: sha1:5470308e0f8e37eb2583c5ec6c7cdcf337432c07
-    pristine_git_object: ce0a048353ba8b944b4c9af265a7e49a87ee53d4
+    last_write_checksum: sha1:7fca8564d0b74b9b7d6fcc334ce1645d3be288c7
+    pristine_git_object: 5fe83a790a21f9fde4915912cb1e3022858f9799
   src/Models/Operations/PublicApiV1VerifactuStatsRequest.php:
     id: b02f9a554855
-    last_write_checksum: sha1:83039ae5103ef6d0f83170d5d7fb9c64bda5a371
-    pristine_git_object: 4cb7d28e9dfc83ba525fd43a747b91303054c501
+    last_write_checksum: sha1:f11660d0d5ad151b5e3bc345cb9161b668c0a2fe
+    pristine_git_object: 44391ed3afb2f782fef3060093c1450b28428904
   src/Models/Operations/PublicApiV1VerifactuStatsResponse.php:
     id: 791b164dad43
     last_write_checksum: sha1:6b66a9462a6ab3a3501f1d4d4860d27e7a956969
@@ -42741,8 +42757,8 @@ trackedFiles:
     pristine_git_object: af3a0ca0147e47223a7125e035f5f736ecbad8f0
   src/Records.php:
     id: f371f68fb416
-    last_write_checksum: sha1:3d7764559400efec2e25ce0f6664254636e3a9f7
-    pristine_git_object: 53de48dbe7925f17f97d7d964b437b4bb212283f
+    last_write_checksum: sha1:0d993bdb0cda475ac0122a707dbc887f213b04b2
+    pristine_git_object: 32d2cc5541468aa2c87017c9a0100ba4d74faa37
   src/RecurringInvoices.php:
     id: 8a999e550ef2
     last_write_checksum: sha1:42e213750d393d1102fd17ecd4e8bb2ccd03e78c
@@ -42773,8 +42789,8 @@ trackedFiles:
     pristine_git_object: fdbaa05a527c7eb4bfbce9a73f2d29167fa977a7
   src/Settings.php:
     id: 0998d1ce5e2f
-    last_write_checksum: sha1:e65b518a9823ad767b418ea7425a2729e9443ae4
-    pristine_git_object: de41ac255880cb09b757e68066583082e41bcb01
+    last_write_checksum: sha1:fed3aced4df5dcc6666e8d6fbebc0d65eadc09eb
+    pristine_git_object: 3b83849cc77ac3114969d5dba860901fc112f24e
   src/Shopify.php:
     id: fdd12389671c
     last_write_checksum: sha1:b1f1f96f73b342c2fb0066831c68eb9a7feb5e7f
@@ -43033,8 +43049,8 @@ trackedFiles:
     pristine_git_object: faea02a2ec8f59b3280982129aabc2053e3c6830
   src/Verifactu.php:
     id: 7ee8adbdb5e2
-    last_write_checksum: sha1:0a86ef3ed472496ec2cdb0a7079430d4f764791a
-    pristine_git_object: 8b219a59442390396cd8554d6b72407643689421
+    last_write_checksum: sha1:d56ca7fe87ec01fa1734f68417d99c82c76a1b87
+    pristine_git_object: a2e28029be30d9d160f31e64e77e94e4b7a936e1
   src/VerifactuChain.php:
     id: fddb2fbaa3f3
     last_write_checksum: sha1:21bb737953e04f0be8b32dac5198df8aa61512d0
@@ -91877,7 +91893,7 @@ examples:
           Factuarea-Version: "2026-06-01"
       responses:
         "200":
-          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa002", "object": "promotion", "name": "Precio especial Pack Huerto", "label": "Oferta", "status": "cancelled", "currency": "EUR", "starts_on": "2026-11-14", "ends_on": "2026-11-30", "original_ends_on": "2026-11-30", "starts_at": "2026-11-14T00:00:00+01:00", "ends_at": "2026-11-30T23:59:59+01:00", "is_extension": false, "channels": {"documents": false, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "pack", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f9b01", "name": "Pack Huerto urbano", "selection_label": null, "sku": "PACK-HUERTO", "kind": "pack", "tax_rate": 10, "mode": "fixed", "value": "54.90", "basis": "gross", "regular_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "price": {"net": "49.91", "tax": "4.99", "gross": "54.90"}, "previous_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "reduction_percent": 8.35, "announce_reduction": true}], "created_at": "2026-10-22T11:40:00+02:00", "updated_at": "2026-10-29T10:05:00+01:00"}}
+          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa002", "object": "promotion", "name": "Precio especial Pack Huerto", "label": "Oferta", "status": "cancelled", "currency": "EUR", "starts_on": "2026-11-14", "ends_on": "2026-11-30", "original_ends_on": "2026-11-30", "starts_at": "2026-11-14T00:00:00+01:00", "ends_at": "2026-11-30T23:59:59+01:00", "is_extension": false, "channels": {"documents": false, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "pack", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f9b01", "variant_id": null, "name": "Pack Huerto urbano", "selection_label": null, "sku": "PACK-HUERTO", "kind": "pack", "tax_rate": 10, "mode": "fixed", "value": "54.90", "basis": "gross", "regular_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "price": {"net": "49.91", "tax": "4.99", "gross": "54.90"}, "previous_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "reduction_percent": 8.35, "announce_reduction": true}], "created_at": "2026-10-22T11:40:00+02:00", "updated_at": "2026-10-29T10:05:00+01:00"}}
     retired_active_profile_header:
       parameters:
         path:
@@ -91945,7 +91961,7 @@ examples:
         application/json: {"name": "<value>", "starts_on": "2026-10-29", "ends_on": "2024-10-11", "channels": {"documents": true, "web": true}, "items": [{"target_type": "product", "target_id": "bade81b9-2823-4b93-af44-f920c5919cf8", "mode": "fixed", "value": 793.63}]}
       responses:
         "201":
-          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-02", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-02T23:59:59+01:00", "is_extension": false, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-20T09:15:00+02:00"}}
+          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-02", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-02T23:59:59+01:00", "is_extension": false, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "variant_id": null, "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "variant_id": null, "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-20T09:15:00+02:00"}}
     retired_active_profile_header:
       parameters:
         path:
@@ -92052,7 +92068,7 @@ examples:
           Factuarea-Version: "2026-06-01"
       responses:
         "200":
-          application/json: {"data": [{"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-02", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-02T23:59:59+01:00", "is_extension": false, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-20T09:15:00+02:00"}, {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa002", "object": "promotion", "name": "Precio especial Pack Huerto", "label": "Oferta", "status": "scheduled", "currency": "EUR", "starts_on": "2026-11-14", "ends_on": "2026-11-30", "original_ends_on": "2026-11-30", "starts_at": "2026-11-14T00:00:00+01:00", "ends_at": "2026-11-30T23:59:59+01:00", "is_extension": false, "channels": {"documents": false, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "pack", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f9b01", "name": "Pack Huerto urbano", "selection_label": null, "sku": "PACK-HUERTO", "kind": "pack", "tax_rate": 10, "mode": "fixed", "value": "54.90", "basis": "gross", "regular_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "price": {"net": "49.91", "tax": "4.99", "gross": "54.90"}, "previous_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "reduction_percent": 8.35, "announce_reduction": true}], "created_at": "2026-10-22T11:40:00+02:00", "updated_at": "2026-10-22T11:40:00+02:00"}], "has_more": false, "next_cursor": null}
+          application/json: {"data": [{"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-02", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-02T23:59:59+01:00", "is_extension": false, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "variant_id": null, "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "variant_id": null, "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-20T09:15:00+02:00"}, {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa002", "object": "promotion", "name": "Precio especial Pack Huerto", "label": "Oferta", "status": "scheduled", "currency": "EUR", "starts_on": "2026-11-14", "ends_on": "2026-11-30", "original_ends_on": "2026-11-30", "starts_at": "2026-11-14T00:00:00+01:00", "ends_at": "2026-11-30T23:59:59+01:00", "is_extension": false, "channels": {"documents": false, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "pack", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f9b01", "variant_id": null, "name": "Pack Huerto urbano", "selection_label": null, "sku": "PACK-HUERTO", "kind": "pack", "tax_rate": 10, "mode": "fixed", "value": "54.90", "basis": "gross", "regular_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "price": {"net": "49.91", "tax": "4.99", "gross": "54.90"}, "previous_price": {"net": "54.45", "tax": "5.45", "gross": "59.90"}, "reduction_percent": 8.35, "announce_reduction": true}], "created_at": "2026-10-22T11:40:00+02:00", "updated_at": "2026-10-22T11:40:00+02:00"}], "has_more": false, "next_cursor": null}
     parameter_unknown:
       parameters:
         path:
@@ -92141,7 +92157,7 @@ examples:
           Factuarea-Version: "2026-06-01"
       responses:
         "200":
-          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-02", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-02T23:59:59+01:00", "is_extension": false, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-20T09:15:00+02:00"}}
+          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-02", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-02T23:59:59+01:00", "is_extension": false, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "variant_id": null, "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "variant_id": null, "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-20T09:15:00+02:00"}}
     retired_active_profile_header:
       parameters:
         path:
@@ -92189,7 +92205,7 @@ examples:
           Factuarea-Version: "2026-06-01"
       responses:
         "200":
-          application/json: {"data": {"id": "fb24596b-0a4c-4388-a1b5-de6314aa5fab", "object": "promotion", "name": "<value>", "label": "<value>", "status": "cancelled", "currency": "EUR", "starts_on": "2025-10-09", "ends_on": "2026-09-25", "original_ends_on": "2024-11-26", "starts_at": "2024-07-06T16:50:39.175Z", "ends_at": "2026-05-29T10:22:30.776Z", "is_extension": true, "channels": {"documents": true, "web": true}, "include_price_list_customers": true, "perishable": true, "history_complete": false, "history_complete_until": "2024-09-20", "items": [{"target_type": "variant", "target_id": "089993cc-58e2-4535-aeb5-61d002b1afbd", "name": "<value>", "selection_label": "<value>", "sku": "<value>", "kind": "service", "tax_rate": 875.13, "mode": "percent_off", "value": "<value>", "basis": "gross", "regular_price": {"net": "<value>", "tax": "<value>", "gross": "<value>"}, "price": {"net": "<value>", "tax": "<value>", "gross": "<value>"}, "previous_price": {"net": "<value>", "tax": "<value>", "gross": "<value>"}, "reduction_percent": 3720.37, "announce_reduction": false}], "created_at": "2024-01-30T03:58:46.145Z", "updated_at": "2024-06-07T22:26:40.745Z"}}
+          application/json: {"data": {"id": "fb24596b-0a4c-4388-a1b5-de6314aa5fab", "object": "promotion", "name": "<value>", "label": "<value>", "status": "cancelled", "currency": "EUR", "starts_on": "2025-10-09", "ends_on": "2026-09-25", "original_ends_on": "2024-11-26", "starts_at": "2024-07-06T16:50:39.175Z", "ends_at": "2026-05-29T10:22:30.776Z", "is_extension": true, "channels": {"documents": true, "web": true}, "include_price_list_customers": true, "perishable": true, "history_complete": false, "history_complete_until": "2024-09-20", "items": [{"target_type": "variant", "target_id": "089993cc-58e2-4535-aeb5-61d002b1afbd", "variant_id": "17334796-9516-4352-a652-47614ddf1749", "name": "<value>", "selection_label": "<value>", "sku": "<value>", "kind": "service", "tax_rate": 875.13, "mode": "percent_off", "value": "<value>", "basis": "gross", "regular_price": {"net": "<value>", "tax": "<value>", "gross": "<value>"}, "price": {"net": "<value>", "tax": "<value>", "gross": "<value>"}, "previous_price": {"net": "<value>", "tax": "<value>", "gross": "<value>"}, "reduction_percent": 3720.37, "announce_reduction": false}], "created_at": "2024-01-30T03:58:46.145Z", "updated_at": "2024-06-07T22:26:40.745Z"}}
         "400":
           application/json: {"error": {"type": "authentication_error", "code": "missing_api_key", "subcode": "tax_id_already_exists", "message": "No se ha proporcionado una API key válida en el header Authorization.", "doc_url": "https://docs.factuarea.com/guides/errors#missing_api_key", "request_id": "req_01HKQS5N8VR7QXJ9K3T6BWPMZA"}}
         "500":
@@ -92204,7 +92220,7 @@ examples:
           Factuarea-Version: "2026-06-01"
       responses:
         "200":
-          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-05", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-05T23:59:59+01:00", "is_extension": true, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-29T10:02:00+01:00"}}
+          application/json: {"data": {"id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fa001", "object": "promotion", "name": "Semana del jardín", "label": "Oferta", "status": "active", "currency": "EUR", "starts_on": "2026-10-26", "ends_on": "2026-11-05", "original_ends_on": "2026-11-02", "starts_at": "2026-10-26T00:00:00+01:00", "ends_at": "2026-11-05T23:59:59+01:00", "is_extension": true, "channels": {"documents": true, "web": true}, "include_price_list_customers": false, "perishable": false, "history_complete": true, "history_complete_until": null, "items": [{"target_type": "product", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb001", "variant_id": null, "name": "Olivo en maceta", "selection_label": null, "sku": "OLIVO-60", "kind": "product", "tax_rate": 10, "mode": "percent_off", "value": "15.00", "basis": null, "regular_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "price": {"net": "33.15", "tax": "3.32", "gross": "36.47"}, "previous_price": {"net": "39.00", "tax": "3.90", "gross": "42.90"}, "reduction_percent": 14.99, "announce_reduction": true}, {"target_type": "variant", "target_id": "01931b3e-7c4a-7f2e-9a8b-3c5d6e7fb002", "variant_id": null, "name": "Maceta de terracota", "selection_label": "10,5 cm", "sku": "MACETA-TER-105", "kind": "product", "tax_rate": 21, "mode": "fixed", "value": "7.50", "basis": "gross", "regular_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "price": {"net": "6.20", "tax": "1.30", "gross": "7.50"}, "previous_price": {"net": "8.00", "tax": "1.68", "gross": "9.68"}, "reduction_percent": 22.52, "announce_reduction": true}], "created_at": "2026-10-20T09:15:00+02:00", "updated_at": "2026-10-29T10:02:00+01:00"}}
     retired_active_profile_header:
       parameters:
         path:
