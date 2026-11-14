@@ -90,7 +90,15 @@ class PromotionItem
     public bool $announceReduction;
 
     /**
-     * Readable description of the variant, presentation or configuration, or `null` for a product or a pack.
+     * With `target_type` `presentation`, the variant it is sold with (a product without declared configurations sells "variant + presentation" as its own item, with its own price). `null` for a presentation on its own and for every other `target_type`.
+     *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    public ?string $variantId;
+
+    /**
+     * Readable description of the variant, presentation (with its variant, "Soft · Box of 12") or configuration, or `null` for a product or a pack.
      *
      * @var ?string $selectionLabel
      */
@@ -149,6 +157,7 @@ class PromotionItem
      * @param  \Factuarea\Sdk\Models\Components\PromotionPrice  $regularPrice
      * @param  \Factuarea\Sdk\Models\Components\PromotionPrice  $price
      * @param  bool  $announceReduction
+     * @param  ?string  $variantId
      * @param  ?string  $selectionLabel
      * @param  ?string  $sku
      * @param  ?float  $taxRate
@@ -157,7 +166,7 @@ class PromotionItem
      * @param  ?float  $reductionPercent
      * @phpstan-pure
      */
-    public function __construct(PromotionItemTargetType $targetType, string $targetId, string $name, PromotionItemKind $kind, PromotionItemMode $mode, string $value, PromotionPrice $regularPrice, PromotionPrice $price, bool $announceReduction, ?string $selectionLabel = null, ?string $sku = null, ?float $taxRate = null, ?PromotionItemBasis $basis = null, ?PromotionPrice $previousPrice = null, ?float $reductionPercent = null)
+    public function __construct(PromotionItemTargetType $targetType, string $targetId, string $name, PromotionItemKind $kind, PromotionItemMode $mode, string $value, PromotionPrice $regularPrice, PromotionPrice $price, bool $announceReduction, ?string $variantId = null, ?string $selectionLabel = null, ?string $sku = null, ?float $taxRate = null, ?PromotionItemBasis $basis = null, ?PromotionPrice $previousPrice = null, ?float $reductionPercent = null)
     {
         $this->targetType = $targetType;
         $this->targetId = $targetId;
@@ -168,6 +177,7 @@ class PromotionItem
         $this->regularPrice = $regularPrice;
         $this->price = $price;
         $this->announceReduction = $announceReduction;
+        $this->variantId = $variantId;
         $this->selectionLabel = $selectionLabel;
         $this->sku = $sku;
         $this->taxRate = $taxRate;

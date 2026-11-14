@@ -23,33 +23,6 @@ class UpdateTransportDocumentRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestVehicle $vehicle
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('vehicle')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestVehicle|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateTransportDocumentRequestVehicle $vehicle = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipper $shipper
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('shipper')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipper|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateTransportDocumentRequestShipper $shipper = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCarrier $carrier
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('carrier')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCarrier|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateTransportDocumentRequestCarrier $carrier = null;
-
-    /**
-     *
      * @var ?string $specialAuthorization
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('special_authorization')]
@@ -73,6 +46,15 @@ class UpdateTransportDocumentRequest
     public ?string $observations = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestVehicle $vehicle
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('vehicle')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestVehicle|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateTransportDocumentRequestVehicle $vehicle = null;
+
+    /**
      * $shipments
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipment> $shipments
@@ -83,25 +65,43 @@ class UpdateTransportDocumentRequest
     public ?array $shipments = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipper $shipper
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('shipper')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipper|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateTransportDocumentRequestShipper $shipper = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCarrier $carrier
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('carrier')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCarrier|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateTransportDocumentRequestCarrier $carrier = null;
+
+    /**
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCompanyRole  $companyRole
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestVehicle  $vehicle
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipper  $shipper
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCarrier  $carrier
      * @param  ?string  $specialAuthorization
      * @param  ?LocalDate  $transportDate
      * @param  ?string  $observations
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestVehicle  $vehicle
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipment>  $shipments
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestShipper  $shipper
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateTransportDocumentRequestCarrier  $carrier
      * @phpstan-pure
      */
-    public function __construct(?UpdateTransportDocumentRequestCompanyRole $companyRole = null, ?UpdateTransportDocumentRequestVehicle $vehicle = null, ?UpdateTransportDocumentRequestShipper $shipper = null, ?UpdateTransportDocumentRequestCarrier $carrier = null, ?string $specialAuthorization = null, ?LocalDate $transportDate = null, ?string $observations = null, ?array $shipments = null)
+    public function __construct(?UpdateTransportDocumentRequestCompanyRole $companyRole = null, ?string $specialAuthorization = null, ?LocalDate $transportDate = null, ?string $observations = null, ?UpdateTransportDocumentRequestVehicle $vehicle = null, ?array $shipments = null, ?UpdateTransportDocumentRequestShipper $shipper = null, ?UpdateTransportDocumentRequestCarrier $carrier = null)
     {
         $this->companyRole = $companyRole;
-        $this->vehicle = $vehicle;
-        $this->shipper = $shipper;
-        $this->carrier = $carrier;
         $this->specialAuthorization = $specialAuthorization;
         $this->transportDate = $transportDate;
         $this->observations = $observations;
+        $this->vehicle = $vehicle;
         $this->shipments = $shipments;
+        $this->shipper = $shipper;
+        $this->carrier = $carrier;
     }
 }

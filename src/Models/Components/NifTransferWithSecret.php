@@ -55,12 +55,21 @@ class NifTransferWithSecret
     public NifTransferWithSecretStatus $status;
 
     /**
-     * Opaque identifier (UUID v7) of the ONLY account that can accept this transfer, or `null` when whoever holds the secret can accept it.
+     * Opaque identifier (UUID v7) of the ONLY account that can accept this transfer, or `null` when it is not addressed to an account: whoever holds the secret can accept it, unless `recipient_member` is set.
      *
      * @var ?string $recipientAccountId
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('recipient_account_id')]
     public ?string $recipientAccountId;
+
+    /**
+     * The team member this transfer is addressed to, or `null`. It is set only on a transfer issued from the web app to a person of the issuing account (an administrator or a member, never the owner), who takes the tax ID by opening a new account of their own: nobody else can accept it, and no secret is ever handed over. It is never set together with `recipient_account_id`: a transfer goes to nobody in particular (whoever holds the secret can accept it), to one account, or to one team member. A transfer issued through the API is never addressed to a member, so `null` is what you get for it. Only the identifier is published, never the name of the person.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\NifTransferWithSecretRecipientMember $recipientMember
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recipient_member')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\NifTransferWithSecretRecipientMember|null')]
+    public ?NifTransferWithSecretRecipientMember $recipientMember;
 
     /**
      * When the transfer was issued (ISO 8601), or `null` when the instant is not recorded.
@@ -101,13 +110,14 @@ class NifTransferWithSecret
      * @param  \DateTime  $expiresAt
      * @param  \Factuarea\Sdk\Models\Components\NifTransferWithSecretStatus  $status
      * @param  ?string  $recipientAccountId
+     * @param  ?\Factuarea\Sdk\Models\Components\NifTransferWithSecretRecipientMember  $recipientMember
      * @param  ?\DateTime  $issuedAt
      * @param  ?\DateTime  $consumedAt
      * @param  ?\DateTime  $revokedAt
      * @param  ?string  $secret
      * @phpstan-pure
      */
-    public function __construct(string $id, NifTransferWithSecretObject $object, string $companyId, \DateTime $expiresAt, NifTransferWithSecretStatus $status, ?string $recipientAccountId = null, ?\DateTime $issuedAt = null, ?\DateTime $consumedAt = null, ?\DateTime $revokedAt = null, ?string $secret = null)
+    public function __construct(string $id, NifTransferWithSecretObject $object, string $companyId, \DateTime $expiresAt, NifTransferWithSecretStatus $status, ?string $recipientAccountId = null, ?NifTransferWithSecretRecipientMember $recipientMember = null, ?\DateTime $issuedAt = null, ?\DateTime $consumedAt = null, ?\DateTime $revokedAt = null, ?string $secret = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -115,6 +125,7 @@ class NifTransferWithSecret
         $this->expiresAt = $expiresAt;
         $this->status = $status;
         $this->recipientAccountId = $recipientAccountId;
+        $this->recipientMember = $recipientMember;
         $this->issuedAt = $issuedAt;
         $this->consumedAt = $consumedAt;
         $this->revokedAt = $revokedAt;

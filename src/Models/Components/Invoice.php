@@ -69,6 +69,7 @@ class Invoice
     public InvoiceStatus $status;
 
     /**
+     * Issue date. A draft carries the date it was prepared with; when the invoice is issued it takes the date of the day of issue (Europe/Madrid), whatever the draft held, and it is immutable from then on. If the series already has an issued invoice with a later date, issuing is rejected with 422 `issue_date_before_series_last_issue_date`.
      *
      * @var LocalDate $issuedOn
      */
@@ -353,7 +354,7 @@ class Invoice
     public ?LocalDate $dueOn;
 
     /**
-     * Date the operation took place when it differs from `issued_on` (arts. 6.1.f and 7.1.c of Royal Decree 1619/2012), or `null` when both coincide. It cannot be later than `issued_on` unless the first line that declares a `regime_key` uses 14 or 15 (otherwise 422 `operation_date_after_issue_date`), and it is immutable once the invoice is issued. A corrective invoice inherits the date of the original. It is printed on the PDF and reported in the VeriFactu record (`FechaOperacion`).
+     * Date the operation took place when it differs from `issued_on` (arts. 6.1.i and 7.1.c of Royal Decree 1619/2012), or `null` when both coincide. It cannot be later than `issued_on` unless the first line that declares a `regime_key` uses 14 or 15 (otherwise 422 `operation_date_after_issue_date`), and it is immutable once the invoice is issued. A corrective invoice inherits the date of the original. When a draft is issued with no `operation_on` and an `issued_on` earlier than the day of issue, that earlier date becomes `operation_on` (a scheduled issue does not do it). It is printed on the PDF and reported in the VeriFactu record (`FechaOperacion`).
      *
      * @var ?LocalDate $operationOn
      */

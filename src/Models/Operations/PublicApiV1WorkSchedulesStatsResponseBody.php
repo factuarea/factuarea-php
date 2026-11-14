@@ -8,22 +8,23 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
-
+use Factuarea\Sdk\Models\Components;
 class PublicApiV1WorkSchedulesStatsResponseBody
 {
     /**
+     * Number of weekly work schedules of the authenticated company by status and by clocking mode, and employees with a schedule assigned today. Returned by `GET /v1/companies/{company}/work-schedules/stats`.
      *
-     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesStatsData $data
+     * @var \Factuarea\Sdk\Models\Components\WorkScheduleStats $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesStatsData')]
-    public PublicApiV1WorkSchedulesStatsData $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\WorkScheduleStats')]
+    public Components\WorkScheduleStats $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1WorkSchedulesStatsData  $data
+     * @param  \Factuarea\Sdk\Models\Components\WorkScheduleStats  $data
      * @phpstan-pure
      */
-    public function __construct(PublicApiV1WorkSchedulesStatsData $data)
+    public function __construct(Components\WorkScheduleStats $data)
     {
         $this->data = $data;
     }

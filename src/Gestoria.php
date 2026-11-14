@@ -50,7 +50,7 @@ class Gestoria
     /**
      * Retrieve the consolidated workforce compliance overview
      *
-     * Return the consolidated time-tracking compliance panel: one row per `active` company in your credential scope (the owner company excluded).
+     * Return the consolidated time-tracking compliance panel: one row per `active` company in your credential scope, the account owner company included as one more row of its own (`relation_origin` is `null`).
      * - Each row projects the latest monthly close: closed status, last closed period, balance, overtime and `employee_count`.
      * - Scope-bound: rows come from the tax IDs your credential reaches, never from the payload.
      *

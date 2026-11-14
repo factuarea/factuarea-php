@@ -6,12 +6,14 @@
 
 declare(strict_types=1);
 
-namespace Factuarea\Sdk\Models\Operations;
+namespace Factuarea\Sdk\Models\Components;
 
 
-class PublicApiV1SeriesStatsData
+/** SeriesStats - Number of numbering series of the authenticated company, archived ones included, in total and per document type. Returned by `GET /v1/companies/{company}/series/stats`. */
+class SeriesStats
 {
     /**
+     * All the series of the company, of every type.
      *
      * @var int $total
      */
@@ -19,6 +21,7 @@ class PublicApiV1SeriesStatsData
     public int $total;
 
     /**
+     * Invoice series.
      *
      * @var int $invoice
      */
@@ -26,6 +29,7 @@ class PublicApiV1SeriesStatsData
     public int $invoice;
 
     /**
+     * Quote series.
      *
      * @var int $quote
      */
@@ -33,6 +37,7 @@ class PublicApiV1SeriesStatsData
     public int $quote;
 
     /**
+     * Delivery note series.
      *
      * @var int $deliveryNote
      */
@@ -40,6 +45,7 @@ class PublicApiV1SeriesStatsData
     public int $deliveryNote;
 
     /**
+     * Proforma series.
      *
      * @var int $proforma
      */
@@ -47,6 +53,7 @@ class PublicApiV1SeriesStatsData
     public int $proforma;
 
     /**
+     * Transport document series.
      *
      * @var int $transportDocument
      */

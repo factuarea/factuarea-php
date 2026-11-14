@@ -117,15 +117,6 @@ class CreateRecurringFromInvoiceRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null;
-
-    /**
-     *
      * @var mixed $presentationPolicyVersion
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('presentation_policy_version')]
@@ -242,6 +233,15 @@ class CreateRecurringFromInvoiceRequest
     public ?CreateRecurringFromInvoiceRequestGenerationMode $generationMode = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestFrequency  $frequency
      * @param  LocalDate  $startOn
      * @param  mixed  $expectedPresentationPolicyVersion
@@ -254,7 +254,6 @@ class CreateRecurringFromInvoiceRequest
      * @param  mixed  $sourceContextHash
      * @param  ?string  $expectedSourceContextHash
      * @param  ?string  $recovery
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery  $autoDelivery
      * @param  mixed  $presentationPolicyVersion
      * @param  mixed  $presentationPauseReason
      * @param  \Factuarea\Sdk\Models\Components\RecurringPresentationPolicy1|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy2|\Factuarea\Sdk\Models\Components\RecurringPresentationPolicy3|null  $presentationPolicy
@@ -268,9 +267,10 @@ class CreateRecurringFromInvoiceRequest
      * @param  ?int  $daysBeforeDue
      * @param  ?int  $maxOccurrences
      * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestGenerationMode  $generationMode
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateRecurringFromInvoiceRequestAutoDelivery  $autoDelivery
      * @phpstan-pure
      */
-    public function __construct(CreateRecurringFromInvoiceRequestFrequency $frequency, LocalDate $startOn, mixed $expectedPresentationPolicyVersion = null, mixed $recurringIntent = null, mixed $recurringPresentationIntent = null, mixed $generationDate = null, mixed $attemptKey = null, mixed $childUuid = null, mixed $expectedPolicyVersion = null, mixed $sourceContextHash = null, ?string $expectedSourceContextHash = null, ?string $recovery = null, ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null, mixed $presentationPolicyVersion = null, mixed $presentationPauseReason = null, RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3|null $presentationPolicy = null, ?array $paymentTermsTemplate = null, ?LocalDate $endOn = null, ?string $name = null, ?string $description = null, ?string $notes = null, ?array $metadata = null, ?string $holidayHandling = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?CreateRecurringFromInvoiceRequestGenerationMode $generationMode = null)
+    public function __construct(CreateRecurringFromInvoiceRequestFrequency $frequency, LocalDate $startOn, mixed $expectedPresentationPolicyVersion = null, mixed $recurringIntent = null, mixed $recurringPresentationIntent = null, mixed $generationDate = null, mixed $attemptKey = null, mixed $childUuid = null, mixed $expectedPolicyVersion = null, mixed $sourceContextHash = null, ?string $expectedSourceContextHash = null, ?string $recovery = null, mixed $presentationPolicyVersion = null, mixed $presentationPauseReason = null, RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3|null $presentationPolicy = null, ?array $paymentTermsTemplate = null, ?LocalDate $endOn = null, ?string $name = null, ?string $description = null, ?string $notes = null, ?array $metadata = null, ?string $holidayHandling = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?CreateRecurringFromInvoiceRequestGenerationMode $generationMode = null, ?CreateRecurringFromInvoiceRequestAutoDelivery $autoDelivery = null)
     {
         $this->frequency = $frequency;
         $this->startOn = $startOn;
@@ -284,7 +284,6 @@ class CreateRecurringFromInvoiceRequest
         $this->sourceContextHash = $sourceContextHash;
         $this->expectedSourceContextHash = $expectedSourceContextHash;
         $this->recovery = $recovery;
-        $this->autoDelivery = $autoDelivery;
         $this->presentationPolicyVersion = $presentationPolicyVersion;
         $this->presentationPauseReason = $presentationPauseReason;
         $this->presentationPolicy = $presentationPolicy;
@@ -298,5 +297,6 @@ class CreateRecurringFromInvoiceRequest
         $this->daysBeforeDue = $daysBeforeDue;
         $this->maxOccurrences = $maxOccurrences;
         $this->generationMode = $generationMode;
+        $this->autoDelivery = $autoDelivery;
     }
 }

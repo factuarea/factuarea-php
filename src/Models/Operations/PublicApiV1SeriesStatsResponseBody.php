@@ -8,22 +8,23 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
-
+use Factuarea\Sdk\Models\Components;
 class PublicApiV1SeriesStatsResponseBody
 {
     /**
+     * Number of numbering series of the authenticated company, archived ones included, in total and per document type. Returned by `GET /v1/companies/{company}/series/stats`.
      *
-     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesStatsData $data
+     * @var \Factuarea\Sdk\Models\Components\SeriesStats $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1SeriesStatsData')]
-    public PublicApiV1SeriesStatsData $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\SeriesStats')]
+    public Components\SeriesStats $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1SeriesStatsData  $data
+     * @param  \Factuarea\Sdk\Models\Components\SeriesStats  $data
      * @phpstan-pure
      */
-    public function __construct(PublicApiV1SeriesStatsData $data)
+    public function __construct(Components\SeriesStats $data)
     {
         $this->data = $data;
     }

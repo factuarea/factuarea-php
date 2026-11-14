@@ -73,24 +73,6 @@ class CreateBusinessContactV1Request
     public ?bool $accumulate347 = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestCustomerProfile $customerProfile
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('customer_profile')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestCustomerProfile|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateBusinessContactV1RequestCustomerProfile $customerProfile = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestSupplierProfile $supplierProfile
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_profile')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestSupplierProfile|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateBusinessContactV1RequestSupplierProfile $supplierProfile = null;
-
-    /**
      * $bankAccounts
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestBankAccount> $bankAccounts
@@ -252,6 +234,24 @@ class CreateBusinessContactV1Request
     public ?float $longitude = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestCustomerProfile $customerProfile
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('customer_profile')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestCustomerProfile|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateBusinessContactV1RequestCustomerProfile $customerProfile = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestSupplierProfile $supplierProfile
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('supplier_profile')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestSupplierProfile|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateBusinessContactV1RequestSupplierProfile $supplierProfile = null;
+
+    /**
      * @param  string  $name
      * @param  \Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestKind  $kind
      * @param  array<\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestRole>  $roles
@@ -259,8 +259,6 @@ class CreateBusinessContactV1Request
      * @param  ?array<string>  $billingEmails
      * @param  ?array<string>  $tags
      * @param  ?bool  $accumulate347
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestCustomerProfile  $customerProfile
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestSupplierProfile  $supplierProfile
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestBankAccount>  $bankAccounts
      * @param  ?string  $taxId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestAlternativeIdType  $alternativeIdType
@@ -280,9 +278,11 @@ class CreateBusinessContactV1Request
      * @param  ?string  $externalId
      * @param  ?float  $latitude
      * @param  ?float  $longitude
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestCustomerProfile  $customerProfile
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateBusinessContactV1RequestSupplierProfile  $supplierProfile
      * @phpstan-pure
      */
-    public function __construct(string $name, CreateBusinessContactV1RequestKind $kind, array $roles, ?CreateBusinessContactV1RequestAddress $address = null, ?array $billingEmails = null, ?array $tags = null, ?bool $accumulate347 = null, ?CreateBusinessContactV1RequestCustomerProfile $customerProfile = null, ?CreateBusinessContactV1RequestSupplierProfile $supplierProfile = null, ?array $bankAccounts = null, ?string $taxId = null, ?CreateBusinessContactV1RequestAlternativeIdType $alternativeIdType = null, ?string $alternativeIdValue = null, ?CreateBusinessContactV1RequestAlternativeIdCountryCode $alternativeIdCountryCode = null, ?string $vatId = null, ?string $businessName = null, ?string $commercialName = null, ?string $contactPerson = null, ?string $email = null, ?string $phone = null, ?string $mobile = null, ?string $fax = null, ?string $website = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?float $latitude = null, ?float $longitude = null)
+    public function __construct(string $name, CreateBusinessContactV1RequestKind $kind, array $roles, ?CreateBusinessContactV1RequestAddress $address = null, ?array $billingEmails = null, ?array $tags = null, ?bool $accumulate347 = null, ?array $bankAccounts = null, ?string $taxId = null, ?CreateBusinessContactV1RequestAlternativeIdType $alternativeIdType = null, ?string $alternativeIdValue = null, ?CreateBusinessContactV1RequestAlternativeIdCountryCode $alternativeIdCountryCode = null, ?string $vatId = null, ?string $businessName = null, ?string $commercialName = null, ?string $contactPerson = null, ?string $email = null, ?string $phone = null, ?string $mobile = null, ?string $fax = null, ?string $website = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?float $latitude = null, ?float $longitude = null, ?CreateBusinessContactV1RequestCustomerProfile $customerProfile = null, ?CreateBusinessContactV1RequestSupplierProfile $supplierProfile = null)
     {
         $this->name = $name;
         $this->kind = $kind;
@@ -291,8 +291,6 @@ class CreateBusinessContactV1Request
         $this->billingEmails = $billingEmails;
         $this->tags = $tags;
         $this->accumulate347 = $accumulate347;
-        $this->customerProfile = $customerProfile;
-        $this->supplierProfile = $supplierProfile;
         $this->bankAccounts = $bankAccounts;
         $this->taxId = $taxId;
         $this->alternativeIdType = $alternativeIdType;
@@ -312,5 +310,7 @@ class CreateBusinessContactV1Request
         $this->externalId = $externalId;
         $this->latitude = $latitude;
         $this->longitude = $longitude;
+        $this->customerProfile = $customerProfile;
+        $this->supplierProfile = $supplierProfile;
     }
 }
