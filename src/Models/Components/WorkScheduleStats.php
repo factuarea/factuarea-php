@@ -6,12 +6,14 @@
 
 declare(strict_types=1);
 
-namespace Factuarea\Sdk\Models\Operations;
+namespace Factuarea\Sdk\Models\Components;
 
 
-class PublicApiV1WorkSchedulesStatsData
+/** WorkScheduleStats - Number of weekly work schedules of the authenticated company by status and by clocking mode, and employees with a schedule assigned today. Returned by `GET /v1/companies/{company}/work-schedules/stats`. */
+class WorkScheduleStats
 {
     /**
+     * All the work schedules, active and archived.
      *
      * @var int $total
      */
@@ -19,6 +21,7 @@ class PublicApiV1WorkSchedulesStatsData
     public int $total;
 
     /**
+     * Active work schedules.
      *
      * @var int $active
      */
@@ -26,6 +29,7 @@ class PublicApiV1WorkSchedulesStatsData
     public int $active;
 
     /**
+     * Archived work schedules.
      *
      * @var int $archived
      */
@@ -33,6 +37,7 @@ class PublicApiV1WorkSchedulesStatsData
     public int $archived;
 
     /**
+     * Work schedules in validated mode.
      *
      * @var int $validated
      */
@@ -40,6 +45,7 @@ class PublicApiV1WorkSchedulesStatsData
     public int $validated;
 
     /**
+     * Work schedules in real clocking mode.
      *
      * @var int $realClocking
      */
@@ -47,6 +53,7 @@ class PublicApiV1WorkSchedulesStatsData
     public int $realClocking;
 
     /**
+     * Distinct employees with a schedule assignment still in force.
      *
      * @var int $assignedEmployees
      */

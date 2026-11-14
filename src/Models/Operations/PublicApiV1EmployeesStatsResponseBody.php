@@ -8,22 +8,23 @@ declare(strict_types=1);
 
 namespace Factuarea\Sdk\Models\Operations;
 
-
+use Factuarea\Sdk\Models\Components;
 class PublicApiV1EmployeesStatsResponseBody
 {
     /**
+     * Number of employees of the authenticated company by status and by type of working day. Returned by `GET /v1/companies/{company}/employees/stats`.
      *
-     * @var \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesStatsData $data
+     * @var \Factuarea\Sdk\Models\Components\EmployeeStats $data
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('data')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesStatsData')]
-    public PublicApiV1EmployeesStatsData $data;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\EmployeeStats')]
+    public Components\EmployeeStats $data;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1EmployeesStatsData  $data
+     * @param  \Factuarea\Sdk\Models\Components\EmployeeStats  $data
      * @phpstan-pure
      */
-    public function __construct(PublicApiV1EmployeesStatsData $data)
+    public function __construct(Components\EmployeeStats $data)
     {
         $this->data = $data;
     }

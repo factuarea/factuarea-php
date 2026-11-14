@@ -51,7 +51,8 @@ class Settings
     /**
      * Update VeriFactu settings
      *
-     * Update your company's VeriFactu settings (mode, environment and, with `remission_mode`, who remits to AEAT).
+     * Update your company's VeriFactu settings (activation, mode, notification emails and, with `remission_mode`, who remits to AEAT).
+     * - `auto_transmit` and `environment` are deprecated and ignored (accepted until 2026-12-07): the AEAT environment and automatic submission are set by the instance and returned in the response.
      * - A locked transition returns 422 `business_rule_violation`; once enabled, VeriFactu mode cannot be disabled.
      * - A third-party `remission_mode` needs a current representation of its kind, else 422 subcode `representation_required`.
      * - Every mode change is audited.

@@ -152,15 +152,6 @@ class UpdateRecurringInvoiceRequest
     public ?bool $sendAutomatically = null;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null;
-
-    /**
      * $lines
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestLine> $lines
@@ -332,6 +323,15 @@ class UpdateRecurringInvoiceRequest
     public ?UpdateRecurringInvoiceRequestGenerationMode $generationMode = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('auto_delivery')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null;
+
+    /**
      * @param  ?int  $expectedPresentationPolicyVersion
      * @param  mixed  $recurringIntent
      * @param  mixed  $recurringPresentationIntent
@@ -348,7 +348,6 @@ class UpdateRecurringInvoiceRequest
      * @param  ?string  $holidayHandling
      * @param  ?LocalDate  $startOn
      * @param  ?bool  $sendAutomatically
-     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery  $autoDelivery
      * @param  ?array<\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestLine>  $lines
      * @param  mixed  $presentationPolicyVersion
      * @param  mixed  $presentationPauseReason
@@ -368,9 +367,10 @@ class UpdateRecurringInvoiceRequest
      * @param  ?int  $maxOccurrences
      * @param  ?string  $emailTo
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestGenerationMode  $generationMode
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateRecurringInvoiceRequestAutoDelivery  $autoDelivery
      * @phpstan-pure
      */
-    public function __construct(?int $expectedPresentationPolicyVersion = null, mixed $recurringIntent = null, mixed $recurringPresentationIntent = null, mixed $generationDate = null, mixed $attemptKey = null, mixed $childUuid = null, mixed $expectedPolicyVersion = null, mixed $sourceContextHash = null, ?string $expectedSourceContextHash = null, ?string $recovery = null, ?string $clientId = null, ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null, ?array $lines = null, mixed $presentationPolicyVersion = null, mixed $presentationPauseReason = null, RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3|null $presentationPolicy = null, ?array $paymentTermsTemplate = null, ?string $seriesId = null, ?string $priceListId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?UpdateRecurringInvoiceRequestGenerationMode $generationMode = null)
+    public function __construct(?int $expectedPresentationPolicyVersion = null, mixed $recurringIntent = null, mixed $recurringPresentationIntent = null, mixed $generationDate = null, mixed $attemptKey = null, mixed $childUuid = null, mixed $expectedPolicyVersion = null, mixed $sourceContextHash = null, ?string $expectedSourceContextHash = null, ?string $recovery = null, ?string $clientId = null, ?UpdateRecurringInvoiceRequestRepriceStrategy $repriceStrategy = null, ?UpdateRecurringInvoiceRequestFrequency $frequency = null, ?string $holidayHandling = null, ?LocalDate $startOn = null, ?bool $sendAutomatically = null, ?array $lines = null, mixed $presentationPolicyVersion = null, mixed $presentationPauseReason = null, RecurringPresentationPolicy1|RecurringPresentationPolicy2|RecurringPresentationPolicy3|null $presentationPolicy = null, ?array $paymentTermsTemplate = null, ?string $seriesId = null, ?string $priceListId = null, ?string $name = null, ?string $description = null, ?LocalDate $endOn = null, ?string $notes = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?string $externalId = null, ?int $daysBeforeDue = null, ?int $maxOccurrences = null, ?string $emailTo = null, ?UpdateRecurringInvoiceRequestGenerationMode $generationMode = null, ?UpdateRecurringInvoiceRequestAutoDelivery $autoDelivery = null)
     {
         $this->expectedPresentationPolicyVersion = $expectedPresentationPolicyVersion;
         $this->recurringIntent = $recurringIntent;
@@ -388,7 +388,6 @@ class UpdateRecurringInvoiceRequest
         $this->holidayHandling = $holidayHandling;
         $this->startOn = $startOn;
         $this->sendAutomatically = $sendAutomatically;
-        $this->autoDelivery = $autoDelivery;
         $this->lines = $lines;
         $this->presentationPolicyVersion = $presentationPolicyVersion;
         $this->presentationPauseReason = $presentationPauseReason;
@@ -408,5 +407,6 @@ class UpdateRecurringInvoiceRequest
         $this->maxOccurrences = $maxOccurrences;
         $this->emailTo = $emailTo;
         $this->generationMode = $generationMode;
+        $this->autoDelivery = $autoDelivery;
     }
 }

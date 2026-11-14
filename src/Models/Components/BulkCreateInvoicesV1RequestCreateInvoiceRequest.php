@@ -22,6 +22,7 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
     public array $lines;
 
     /**
+     * Date of the draft (YYYY-MM-DD). It is not the date the invoice ends up with: when the invoice is issued (in this call with `options`, `payment` or `type: F2`, or later with `issue`) it takes the date of the day of issue (Europe/Madrid), whatever this value. If this date is earlier than that day and `operation_on` is empty, it is kept as `operation_on`. If the series already has an issued invoice with a later date, issuing is rejected with 422 `issue_date_before_series_last_issue_date` and no number is consumed.
      *
      * @var LocalDate $issuedOn
      */
@@ -118,16 +119,6 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
     public ?string $clientId = null;
 
     /**
-     * Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestPayment $payment
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestPayment|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?BulkCreateInvoicesV1RequestPayment $payment = null;
-
-    /**
      * Positive selection version. It applies only when POST resolves to an existing external_id, where it is the selection CAS for pdf_template_id; a new invoice rejects it with 422. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
      *
      * @var ?int $expectedSelectionVersion
@@ -135,15 +126,6 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?int $expectedSelectionVersion = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestOptions $options
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestOptions|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?BulkCreateInvoicesV1RequestOptions $options = null;
 
     /**
      *
@@ -213,13 +195,23 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
     public ?bool $pricesIncludeTax = null;
 
     /**
-     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date (arts. 6.1.f and 7.1.c of Royal Decree 1619/2012). It cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. It is printed on the PDF and reported in the VeriFactu record.
+     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date (arts. 6.1.i and 7.1.c of Royal Decree 1619/2012). It cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. It is printed on the PDF and reported in the VeriFactu record. When the invoice is issued with this field empty and an `issued_on` earlier than the day of issue, that earlier date is kept here.
      *
      * @var ?LocalDate $operationOn
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('operation_on')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?LocalDate $operationOn = null;
+
+    /**
+     * Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestPayment $payment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestPayment|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?BulkCreateInvoicesV1RequestPayment $payment = null;
 
     /**
      *
@@ -305,6 +297,16 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
     public ?array $customFields = null;
 
     /**
+     * Atomic creation options. Without them the invoice is created as a draft. When an option issues the invoice, it takes the date of the day of issue (Europe/Madrid), not `issued_on`; an earlier `issued_on` is kept as `operation_on` when that is empty. If the series already has an issued invoice with a later date, the call is rejected with 422 `issue_date_before_series_last_issue_date` and no number is consumed.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestOptions $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestOptions|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?BulkCreateInvoicesV1RequestOptions $options = null;
+
+    /**
      * @param  array<\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestLine>  $lines
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $dueOn
@@ -317,9 +319,7 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
      * @param  mixed  $legacyContext
      * @param  mixed  $paymentTermsLegacyContext
      * @param  ?string  $clientId
-     * @param  ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestPayment  $payment
      * @param  ?int  $expectedSelectionVersion
-     * @param  ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestOptions  $options
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences  $businessReferences
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod  $invoicingPeriod
      * @param  ?array<string>  $legalLiterals
@@ -328,6 +328,7 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
      * @param  ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestType  $type
      * @param  ?bool  $pricesIncludeTax
      * @param  ?LocalDate  $operationOn
+     * @param  ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestPayment  $payment
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestRepriceStrategy  $repriceStrategy
@@ -337,9 +338,10 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
      * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $tags
      * @param  ?array<\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestCustomField>  $customFields
+     * @param  ?\Factuarea\Sdk\Models\Components\BulkCreateInvoicesV1RequestOptions  $options
      * @phpstan-pure
      */
-    public function __construct(array $lines, LocalDate $issuedOn, LocalDate $dueOn, mixed $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $clientId = null, ?BulkCreateInvoicesV1RequestPayment $payment = null, ?int $expectedSelectionVersion = null, ?BulkCreateInvoicesV1RequestOptions $options = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $legalLiterals = null, ?array $administrativeCentres = null, ?array $paymentTerms = null, ?BulkCreateInvoicesV1RequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?BulkCreateInvoicesV1RequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(array $lines, LocalDate $issuedOn, LocalDate $dueOn, mixed $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $clientId = null, ?int $expectedSelectionVersion = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $legalLiterals = null, ?array $administrativeCentres = null, ?array $paymentTerms = null, ?BulkCreateInvoicesV1RequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?BulkCreateInvoicesV1RequestPayment $payment = null, ?string $seriesId = null, ?string $priceListId = null, ?BulkCreateInvoicesV1RequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?BulkCreateInvoicesV1RequestOptions $options = null)
     {
         $this->lines = $lines;
         $this->issuedOn = $issuedOn;
@@ -353,9 +355,7 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
         $this->legacyContext = $legacyContext;
         $this->paymentTermsLegacyContext = $paymentTermsLegacyContext;
         $this->clientId = $clientId;
-        $this->payment = $payment;
         $this->expectedSelectionVersion = $expectedSelectionVersion;
-        $this->options = $options;
         $this->businessReferences = $businessReferences;
         $this->invoicingPeriod = $invoicingPeriod;
         $this->legalLiterals = $legalLiterals;
@@ -364,6 +364,7 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
         $this->type = $type;
         $this->pricesIncludeTax = $pricesIncludeTax;
         $this->operationOn = $operationOn;
+        $this->payment = $payment;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
@@ -373,5 +374,6 @@ class BulkCreateInvoicesV1RequestCreateInvoiceRequest
         $this->metadata = $metadata;
         $this->tags = $tags;
         $this->customFields = $customFields;
+        $this->options = $options;
     }
 }

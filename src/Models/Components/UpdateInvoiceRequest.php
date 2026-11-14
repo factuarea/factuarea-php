@@ -130,6 +130,7 @@ class UpdateInvoiceRequest
     public ?int $expectedSelectionVersion = null;
 
     /**
+     * New date of the draft (YYYY-MM-DD), only while the invoice is a draft. It is not the date the invoice ends up with: when the draft is issued it takes the date of the day of issue (Europe/Madrid), whatever this value, and an earlier `issued_on` is kept as `operation_on` when that is empty. If the series already has an issued invoice with a later date, issuing is rejected with 422 `issue_date_before_series_last_issue_date`.
      *
      * @var ?LocalDate $issuedOn
      */
@@ -220,7 +221,7 @@ class UpdateInvoiceRequest
     public ?string $pdfTemplateId = null;
 
     /**
-     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date. It can only be changed while the invoice is a draft, and it cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15.
+     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date. It can only be changed while the invoice is a draft, and it cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. When the draft is issued with this field empty and an `issued_on` earlier than the day of issue, that earlier date is kept here.
      *
      * @var ?LocalDate $operationOn
      */

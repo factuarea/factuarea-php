@@ -47,6 +47,15 @@ class CreatePromotionV1RequestItem
     public string|float $value;
 
     /**
+     * Only with `target_type` `presentation`: the variant of the same product it is sold with, for a product without declared configurations ("Soft · Box of 12"). A variant of another product, or a variant with any other `target_type`, is rejected with 422 `invalid_promotion_item`. Omit it for the presentation on its own.
+     *
+     * @var ?string $variantId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('variant_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $variantId = null;
+
+    /**
      * Required with `fixed`: whether the price is without VAT (`net`) or with VAT (`gross`). Omit it with `percent_off`.
      *
      * @var ?\Factuarea\Sdk\Models\Components\CreatePromotionV1RequestBasis $basis
@@ -61,15 +70,17 @@ class CreatePromotionV1RequestItem
      * @param  string  $targetId
      * @param  \Factuarea\Sdk\Models\Components\CreatePromotionV1RequestMode  $mode
      * @param  string|float  $value
+     * @param  ?string  $variantId
      * @param  ?\Factuarea\Sdk\Models\Components\CreatePromotionV1RequestBasis  $basis
      * @phpstan-pure
      */
-    public function __construct(CreatePromotionV1RequestTargetType $targetType, string $targetId, CreatePromotionV1RequestMode $mode, string|float $value, ?CreatePromotionV1RequestBasis $basis = null)
+    public function __construct(CreatePromotionV1RequestTargetType $targetType, string $targetId, CreatePromotionV1RequestMode $mode, string|float $value, ?string $variantId = null, ?CreatePromotionV1RequestBasis $basis = null)
     {
         $this->targetType = $targetType;
         $this->targetId = $targetId;
         $this->mode = $mode;
         $this->value = $value;
+        $this->variantId = $variantId;
         $this->basis = $basis;
     }
 }

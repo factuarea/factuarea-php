@@ -21,14 +21,6 @@ class PublicApiV1EmployeeSeatsPreviewRequest
     public string $account;
 
     /**
-     * Public identifiers (UUID v7) of the employees to preview; omit it to preview `count` employees.
-     *
-     * @var ?array<string> $employeeIds
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=employee_ids[]')]
-    public ?array $employeeIds = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -45,6 +37,14 @@ class PublicApiV1EmployeeSeatsPreviewRequest
     public ?int $count = null;
 
     /**
+     * Public identifiers (UUID v7) of the employees to preview; omit it to preview `count` employees.
+     *
+     * @var ?array<string> $employeeIds
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=employee_ids[]')]
+    public ?array $employeeIds = null;
+
+    /**
      * Contracted seats to preview (absolute value; mutually exclusive with `count` and `employee_ids`).
      *
      * @var ?int $contractedSeats
@@ -54,18 +54,18 @@ class PublicApiV1EmployeeSeatsPreviewRequest
 
     /**
      * @param  string  $account
-     * @param  ?array<string>  $employeeIds
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?int  $count
+     * @param  ?array<string>  $employeeIds
      * @param  ?int  $contractedSeats
      * @phpstan-pure
      */
-    public function __construct(string $account, ?array $employeeIds = null, ?LocalDate $factuareaVersion = null, ?int $count = null, ?int $contractedSeats = null)
+    public function __construct(string $account, ?LocalDate $factuareaVersion = null, ?int $count = null, ?array $employeeIds = null, ?int $contractedSeats = null)
     {
         $this->account = $account;
-        $this->employeeIds = $employeeIds;
         $this->factuareaVersion = $factuareaVersion;
         $this->count = $count;
+        $this->employeeIds = $employeeIds;
         $this->contractedSeats = $contractedSeats;
     }
 }

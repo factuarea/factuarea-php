@@ -6,12 +6,14 @@
 
 declare(strict_types=1);
 
-namespace Factuarea\Sdk\Models\Operations;
+namespace Factuarea\Sdk\Models\Components;
 
 
-class PublicApiV1EmployeesStatsData
+/** EmployeeStats - Number of employees of the authenticated company by status and by type of working day. Returned by `GET /v1/companies/{company}/employees/stats`. */
+class EmployeeStats
 {
     /**
+     * All the employees, active and inactive.
      *
      * @var int $total
      */
@@ -19,6 +21,7 @@ class PublicApiV1EmployeesStatsData
     public int $total;
 
     /**
+     * Active employees.
      *
      * @var int $active
      */
@@ -26,6 +29,7 @@ class PublicApiV1EmployeesStatsData
     public int $active;
 
     /**
+     * Deactivated employees.
      *
      * @var int $inactive
      */
@@ -33,6 +37,7 @@ class PublicApiV1EmployeesStatsData
     public int $inactive;
 
     /**
+     * Employees with a full-time working day.
      *
      * @var int $fullTime
      */
@@ -40,6 +45,7 @@ class PublicApiV1EmployeesStatsData
     public int $fullTime;
 
     /**
+     * Employees with a part-time working day.
      *
      * @var int $partTime
      */

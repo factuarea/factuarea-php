@@ -29,16 +29,20 @@ class UpdateVeriFactuSettingsV1Request
     public ?UpdateVeriFactuSettingsV1RequestMode $mode = null;
 
     /**
+     * Deprecated and ignored: records are submitted to AEAT automatically as decided by the Factuarea instance (always on the production API), and the response returns the real value in `auto_transmit`. Still accepted so existing clients keep working; it will be removed on 2026-12-07.
      *
      * @var ?bool $autoTransmit
+     * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('auto_transmit')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?bool $autoTransmit = null;
 
     /**
+     * Deprecated and ignored: the AEAT environment is set by the Factuarea instance, not per company (`production`, the real AEAT, on the production API), and the response returns it in `environment`. Still accepted so existing clients keep working; it will be removed on 2026-12-07.
      *
      * @var ?\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestEnvironment $environment
+     * @deprecated  field: This will be removed in a future release, please migrate away from it as soon as possible.
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateVeriFactuSettingsV1RequestEnvironment|null')]

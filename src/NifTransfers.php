@@ -53,7 +53,7 @@ class NifTransfers
      *
      * Accept a tax ID transfer with its `secret`: the tax ID moves to the account in the path. Irreversible.
      * - The body carries only `secret`; requires `Idempotency-Key` (else 422 `idempotency_key_required`).
-     * - Plan gates run first, e.g. 402 `additional_nif_plan_required`, 402 `payment_method_required`.
+     * - Plan gates run first, e.g. 402 `additional_nif_plan_required`. It never charges: with no free tax ID seat, the tax ID is covered until the next renewal, which then bills its seat.
      * - 422 `nif_transfer_invalid` for an unusable secret; 422 `nif_transfer_expired`. Requires the `nif_transfers:write` scope, which `*` does not cover: the API key must list it explicitly.
      *
      * @param  \Factuarea\Sdk\Models\Components\AcceptNifTransferV1Request  $body
