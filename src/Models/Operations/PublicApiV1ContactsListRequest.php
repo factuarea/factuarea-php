@@ -21,30 +21,6 @@ class PublicApiV1ContactsListRequest
     public string $company;
 
     /**
-     * Only contacts with these roles: `customer`, `supplier`, `lead` or `unassigned` (repeat it or send a comma-separated list).
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoles> $roles
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=roles[]')]
-    public ?array $roles = null;
-
-    /**
-     * Only contacts carrying all these tags (case-insensitive, up to 50).
-     *
-     * @var ?array<string> $tags
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=tags[]')]
-    public ?array $tags = null;
-
-    /**
-     * Metadata filter as `metadata[key]=value` (exact match, up to 20 pairs, all must match).
-     *
-     * @var ?array<string> $metadata
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=metadata[]')]
-    public ?array $metadata = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -75,6 +51,14 @@ class PublicApiV1ContactsListRequest
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=search')]
     public ?string $search = null;
+
+    /**
+     * Only contacts with these roles: `customer`, `supplier`, `lead` or `unassigned` (repeat it or send a comma-separated list).
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoles> $roles
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=roles[]')]
+    public ?array $roles = null;
 
     /**
      * `any` (default) matches at least one of the `roles[]`; `all` requires all of them.
@@ -115,6 +99,14 @@ class PublicApiV1ContactsListRequest
      */
     #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=external_id')]
     public ?string $externalId = null;
+
+    /**
+     * Only contacts carrying all these tags (case-insensitive, up to 50).
+     *
+     * @var ?array<string> $tags
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=tags[]')]
+    public ?array $tags = null;
 
     /**
      * `true` returns only archived contacts and `false` only the rest; omit it to return both.
@@ -181,6 +173,14 @@ class PublicApiV1ContactsListRequest
     public ?LocalDate $createdTo = null;
 
     /**
+     * Metadata filter as `metadata[key]=value` (exact match, up to 20 pairs, all must match).
+     *
+     * @var ?array<string> $metadata
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=metadata[]')]
+    public ?array $metadata = null;
+
+    /**
      * Sort direction by creation date: `asc` (default) or `desc`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\SortOrder $sortOrder
@@ -190,18 +190,17 @@ class PublicApiV1ContactsListRequest
 
     /**
      * @param  string  $company
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoles>  $roles
-     * @param  ?array<string>  $tags
-     * @param  ?array<string>  $metadata
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @param  ?string  $search
+     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoles>  $roles
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoleMatch  $roleMatch
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListRoleStatus  $roleStatus
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsListKind  $kind
      * @param  ?string  $fiscalIdentity
      * @param  ?string  $externalId
+     * @param  ?array<string>  $tags
      * @param  ?bool  $isArchived
      * @param  ?string  $city
      * @param  ?string  $province
@@ -210,24 +209,24 @@ class PublicApiV1ContactsListRequest
      * @param  ?bool  $hasPhone
      * @param  ?LocalDate  $createdFrom
      * @param  ?LocalDate  $createdTo
+     * @param  ?array<string>  $metadata
      * @param  ?\Factuarea\Sdk\Models\Operations\SortOrder  $sortOrder
      * @phpstan-pure
      */
-    public function __construct(string $company, ?array $roles = null, ?array $tags = null, ?array $metadata = null, ?LocalDate $factuareaVersion = null, ?int $limit = null, ?string $startingAfter = null, ?string $search = null, ?PublicApiV1ContactsListRoleMatch $roleMatch = null, ?PublicApiV1ContactsListRoleStatus $roleStatus = null, ?PublicApiV1ContactsListKind $kind = null, ?string $fiscalIdentity = null, ?string $externalId = null, ?bool $isArchived = null, ?string $city = null, ?string $province = null, ?PublicApiV1ContactsListCountryCode $countryCode = null, ?bool $hasEmail = null, ?bool $hasPhone = null, ?LocalDate $createdFrom = null, ?LocalDate $createdTo = null, ?SortOrder $sortOrder = null)
+    public function __construct(string $company, ?LocalDate $factuareaVersion = null, ?int $limit = null, ?string $startingAfter = null, ?string $search = null, ?array $roles = null, ?PublicApiV1ContactsListRoleMatch $roleMatch = null, ?PublicApiV1ContactsListRoleStatus $roleStatus = null, ?PublicApiV1ContactsListKind $kind = null, ?string $fiscalIdentity = null, ?string $externalId = null, ?array $tags = null, ?bool $isArchived = null, ?string $city = null, ?string $province = null, ?PublicApiV1ContactsListCountryCode $countryCode = null, ?bool $hasEmail = null, ?bool $hasPhone = null, ?LocalDate $createdFrom = null, ?LocalDate $createdTo = null, ?array $metadata = null, ?SortOrder $sortOrder = null)
     {
         $this->company = $company;
-        $this->roles = $roles;
-        $this->tags = $tags;
-        $this->metadata = $metadata;
         $this->factuareaVersion = $factuareaVersion;
         $this->limit = $limit;
         $this->startingAfter = $startingAfter;
         $this->search = $search;
+        $this->roles = $roles;
         $this->roleMatch = $roleMatch;
         $this->roleStatus = $roleStatus;
         $this->kind = $kind;
         $this->fiscalIdentity = $fiscalIdentity;
         $this->externalId = $externalId;
+        $this->tags = $tags;
         $this->isArchived = $isArchived;
         $this->city = $city;
         $this->province = $province;
@@ -236,6 +235,7 @@ class PublicApiV1ContactsListRequest
         $this->hasPhone = $hasPhone;
         $this->createdFrom = $createdFrom;
         $this->createdTo = $createdTo;
+        $this->metadata = $metadata;
         $this->sortOrder = $sortOrder;
     }
 }

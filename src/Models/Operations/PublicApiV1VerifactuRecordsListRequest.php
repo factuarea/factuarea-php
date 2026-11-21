@@ -77,7 +77,7 @@ class PublicApiV1VerifactuRecordsListRequest
     public ?string $dateTo = null;
 
     /**
-     * Optional environment filter.
+     * AEAT environment: `production` (the real AEAT) or `sandbox`. Records go to the environment of the instance, so its value returns every record and any other value none.
      *
      * @var ?string $environment
      */

@@ -28,24 +28,6 @@ class CreateProductRequest
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestChannels $channels
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('channels')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestChannels|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateProductRequestChannels $channels = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestSeo $seo
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('seo')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestSeo|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateProductRequestSeo $seo = null;
-
-    /**
-     *
      * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestItemKind $itemKind
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('item_kind')]
@@ -73,6 +55,15 @@ class CreateProductRequest
 
     /**
      *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestChannels $channels
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('channels')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestChannels|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProductRequestChannels $channels = null;
+
+    /**
+     *
      * @var ?string $slug
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('slug')]
@@ -86,6 +77,15 @@ class CreateProductRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('summary')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?string $summary = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateProductRequestSeo $seo
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('seo')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateProductRequestSeo|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateProductRequestSeo $seo = null;
 
     /**
      * Stock keeping unit (your own product code), unique per company. Optional; up to 100 characters.
@@ -237,13 +237,13 @@ class CreateProductRequest
     /**
      * @param  string  $name
      * @param  string  $price
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestChannels  $channels
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestSeo  $seo
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestItemKind  $itemKind
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestBaseUnit  $baseUnit
      * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestCatalogAvailabilityMode  $catalogAvailabilityMode
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestChannels  $channels
      * @param  ?string  $slug
      * @param  ?string  $summary
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateProductRequestSeo  $seo
      * @param  ?string  $sku
      * @param  ?string  $description
      * @param  ?array<string>  $tags
@@ -262,17 +262,17 @@ class CreateProductRequest
      * @param  ?string  $impactToken
      * @phpstan-pure
      */
-    public function __construct(string $name, string $price, ?CreateProductRequestChannels $channels = null, ?CreateProductRequestSeo $seo = null, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?string $slug = null, ?string $summary = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
+    public function __construct(string $name, string $price, ?CreateProductRequestItemKind $itemKind = null, ?CreateProductRequestBaseUnit $baseUnit = null, ?CreateProductRequestCatalogAvailabilityMode $catalogAvailabilityMode = null, ?CreateProductRequestChannels $channels = null, ?string $slug = null, ?string $summary = null, ?CreateProductRequestSeo $seo = null, ?string $sku = null, ?string $description = null, ?array $tags = null, ?array $specifications = null, ?float $stock = null, ?float $lowStockThreshold = null, ?float $grossWeightKg = null, ?bool $manageStock = null, ?CreateProductRequestCurrency $currency = null, ?string $taxRateId = null, ?bool $isActive = null, ?array $metadata = null, ?string $externalId = null, ?array $optionGroups = null, ?array $configurations = null, ?string $impactToken = null)
     {
         $this->name = $name;
         $this->price = $price;
-        $this->channels = $channels;
-        $this->seo = $seo;
         $this->itemKind = $itemKind;
         $this->baseUnit = $baseUnit;
         $this->catalogAvailabilityMode = $catalogAvailabilityMode;
+        $this->channels = $channels;
         $this->slug = $slug;
         $this->summary = $summary;
+        $this->seo = $seo;
         $this->sku = $sku;
         $this->description = $description;
         $this->tags = $tags;

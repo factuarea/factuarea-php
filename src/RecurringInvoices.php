@@ -1055,7 +1055,7 @@ class RecurringInvoices
     /**
      * Generate an invoice from a recurring template
      *
-     * Trigger immediate invoice generation from the recurring configuration, outside the scheduled cycle. The server fixes generation date and attempt identity. No public date/child/intent overrides are accepted. Current authority precedes idempotent replay; retained same-day success is returned before new presentation selection.
+     * Trigger immediate invoice generation from the recurring configuration, outside the scheduled cycle. With `issue` or `issue_and_send` the invoice is born issued, dated the day of issue (Europe/Madrid); an earlier generation date is kept as `operation_on`. A later issued invoice in the series: 422 `issue_date_before_series_last_issue_date`, nothing is generated. The server fixes generation date and attempt identity. No public date/child/intent overrides are accepted. Current authority precedes idempotent replay; retained same-day success is returned before new presentation selection.
      *
      * @param  string  $company
      * @param  string  $recurringInvoice
