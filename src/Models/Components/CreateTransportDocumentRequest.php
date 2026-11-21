@@ -21,33 +21,6 @@ class CreateTransportDocumentRequest
     public CreateTransportDocumentRequestCompanyRole $companyRole;
 
     /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestVehicle $vehicle
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('vehicle')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestVehicle|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateTransportDocumentRequestVehicle $vehicle = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipper $shipper
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('shipper')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipper|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateTransportDocumentRequestShipper $shipper = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCarrier $carrier
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('carrier')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCarrier|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateTransportDocumentRequestCarrier $carrier = null;
-
-    /**
      * $deliveryNoteIds
      *
      * @var ?array<string> $deliveryNoteIds
@@ -82,6 +55,15 @@ class CreateTransportDocumentRequest
     public ?string $observations = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestVehicle $vehicle
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('vehicle')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestVehicle|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateTransportDocumentRequestVehicle $vehicle = null;
+
+    /**
      * $shipments
      *
      * @var ?array<\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipment> $shipments
@@ -92,27 +74,45 @@ class CreateTransportDocumentRequest
     public ?array $shipments = null;
 
     /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipper $shipper
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('shipper')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipper|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateTransportDocumentRequestShipper $shipper = null;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCarrier $carrier
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('carrier')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCarrier|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateTransportDocumentRequestCarrier $carrier = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCompanyRole  $companyRole
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestVehicle  $vehicle
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipper  $shipper
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCarrier  $carrier
      * @param  ?array<string>  $deliveryNoteIds
      * @param  ?string  $specialAuthorization
      * @param  ?LocalDate  $transportDate
      * @param  ?string  $observations
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestVehicle  $vehicle
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipment>  $shipments
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestShipper  $shipper
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateTransportDocumentRequestCarrier  $carrier
      * @phpstan-pure
      */
-    public function __construct(CreateTransportDocumentRequestCompanyRole $companyRole, ?CreateTransportDocumentRequestVehicle $vehicle = null, ?CreateTransportDocumentRequestShipper $shipper = null, ?CreateTransportDocumentRequestCarrier $carrier = null, ?array $deliveryNoteIds = null, ?string $specialAuthorization = null, ?LocalDate $transportDate = null, ?string $observations = null, ?array $shipments = null)
+    public function __construct(CreateTransportDocumentRequestCompanyRole $companyRole, ?array $deliveryNoteIds = null, ?string $specialAuthorization = null, ?LocalDate $transportDate = null, ?string $observations = null, ?CreateTransportDocumentRequestVehicle $vehicle = null, ?array $shipments = null, ?CreateTransportDocumentRequestShipper $shipper = null, ?CreateTransportDocumentRequestCarrier $carrier = null)
     {
         $this->companyRole = $companyRole;
-        $this->vehicle = $vehicle;
-        $this->shipper = $shipper;
-        $this->carrier = $carrier;
         $this->deliveryNoteIds = $deliveryNoteIds;
         $this->specialAuthorization = $specialAuthorization;
         $this->transportDate = $transportDate;
         $this->observations = $observations;
+        $this->vehicle = $vehicle;
         $this->shipments = $shipments;
+        $this->shipper = $shipper;
+        $this->carrier = $carrier;
     }
 }

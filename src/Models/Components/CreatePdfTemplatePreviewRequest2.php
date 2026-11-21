@@ -13,53 +13,54 @@ class CreatePdfTemplatePreviewRequest2
 {
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestDocumentType4 $documentType
+     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestDocumentType6 $documentType
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('document_type')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestDocumentType4')]
-    public CreatePdfTemplatePreviewRequestDocumentType4 $documentType;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestDocumentType6')]
+    public CreatePdfTemplatePreviewRequestDocumentType6 $documentType;
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestPurpose4 $purpose
+     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestPurpose6 $purpose
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('purpose')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestPurpose4')]
-    public CreatePdfTemplatePreviewRequestPurpose4 $purpose;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestPurpose6')]
+    public CreatePdfTemplatePreviewRequestPurpose6 $purpose;
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestFormat4 $format
+     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestFormat6 $format
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('format')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestFormat4')]
-    public CreatePdfTemplatePreviewRequestFormat4 $format;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestFormat6')]
+    public CreatePdfTemplatePreviewRequestFormat6 $format;
 
     /**
      *
-     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestLocale4 $locale
+     * @var \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestLocale6 $locale
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('locale')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestLocale4')]
-    public CreatePdfTemplatePreviewRequestLocale4 $locale;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestLocale6')]
+    public CreatePdfTemplatePreviewRequestLocale6 $locale;
 
     /**
+     * Exact retained parent, authentic current owner UUID, explicit nullable target, captured/current_legal policy and positive integer CAS. The returned revision_precondition token authorizes only an explicit Revise; it cannot authorize issue, send, accept or sign.
      *
-     * @var \Factuarea\Sdk\Models\Components\PdfPreviewPersistedDraftSource $source
+     * @var \Factuarea\Sdk\Models\Components\PdfPreviewPresentationRevisionSource $source
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('source')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PdfPreviewPersistedDraftSource')]
-    public PdfPreviewPersistedDraftSource $source;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PdfPreviewPresentationRevisionSource')]
+    public PdfPreviewPresentationRevisionSource $source;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestDocumentType4  $documentType
-     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestPurpose4  $purpose
-     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestFormat4  $format
-     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestLocale4  $locale
-     * @param  \Factuarea\Sdk\Models\Components\PdfPreviewPersistedDraftSource  $source
+     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestDocumentType6  $documentType
+     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestPurpose6  $purpose
+     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestFormat6  $format
+     * @param  \Factuarea\Sdk\Models\Components\CreatePdfTemplatePreviewRequestLocale6  $locale
+     * @param  \Factuarea\Sdk\Models\Components\PdfPreviewPresentationRevisionSource  $source
      * @phpstan-pure
      */
-    public function __construct(CreatePdfTemplatePreviewRequestDocumentType4 $documentType, CreatePdfTemplatePreviewRequestPurpose4 $purpose, CreatePdfTemplatePreviewRequestFormat4 $format, CreatePdfTemplatePreviewRequestLocale4 $locale, PdfPreviewPersistedDraftSource $source)
+    public function __construct(CreatePdfTemplatePreviewRequestDocumentType6 $documentType, CreatePdfTemplatePreviewRequestPurpose6 $purpose, CreatePdfTemplatePreviewRequestFormat6 $format, CreatePdfTemplatePreviewRequestLocale6 $locale, PdfPreviewPresentationRevisionSource $source)
     {
         $this->documentType = $documentType;
         $this->purpose = $purpose;

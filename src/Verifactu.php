@@ -74,7 +74,8 @@ class Verifactu
     /**
      * Retrieve VeriFactu config
      *
-     * Return your company's VeriFactu configuration (mode, environment, enrollment status) and how it remits to AEAT.
+     * Return your company's VeriFactu configuration (mode, enrollment status, the AEAT environment your records go to) and how it remits to AEAT.
+     * - `environment` and `auto_transmit` are set by the Factuarea instance, not per company: on the production API records always go to the real AEAT (`production`), automatically.
      * - `remission_mode` is `own_certificate`, `social_collaborator` or `power_of_attorney`; `presenter_certificate_status` is `valid`, `invalid` or `not_configured`.
      * - Includes active representation fields and `social_collaborator_available`. Passwords are never exposed.
      *
@@ -198,7 +199,7 @@ class Verifactu
      * Get VeriFactu stats
      *
      * Return aggregated KPIs of your VeriFactu records: totals, counts per status, breakdown by record and invoice type and last transmission time.
-     * - Optional filters: `date_from`, `date_to`, `environment`.
+     * - Optional filters: `date_from`, `date_to`, `environment` (a value other than the AEAT environment of the instance counts no records).
      * - `pending_incident_count`, `blocked_incident_count` and `oldest_pending_at` report the pending-remission alert and ignore the filters.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1VerifactuStatsRequest  $request
