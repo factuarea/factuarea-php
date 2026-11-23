@@ -1,6 +1,6 @@
 # AcceptQuoteRequest
 
-Optional body to record the acceptance of the quote: `accepted_on` (date, defaults to today) and `notes` and, when revisioned presentation is enabled, `presentation_precondition` (first capture) and `expected_presentation_uuid` (retained capture). A quote whose `valid_until` date has already passed cannot be accepted (422 `quote_expired`).
+Optional body to record the acceptance of the quote: `accepted_on` (date, defaults to today) and `notes` and, when revisioned presentation is enabled, `presentation_precondition` (first capture) and `expected_presentation_uuid` (retained capture). A quote whose `valid_until` date has already passed can still be accepted: the validity date does not block the acceptance.
 
 
 ## Fields

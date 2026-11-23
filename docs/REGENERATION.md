@@ -36,16 +36,18 @@ alone.
 | Pin | Value |
 | --- | --- |
 | Operations | **736** over **585** paths: 651 under `/companies/{company}`, 74 under `/accounts/{account}`, 11 at the root |
-| SHA-256 of the file | `654efa53248850093d740527dcffae483b7dd5f30f7623444b41c96cbfe99980` |
-| Canonical SHA-256 (keys sorted recursively, `x-codeSamples` dropped, compact JSON) | `88d74e59e5c60812610f09622fa6b3ad831c8bcedfdbd597d36ada9451b48b40` |
+| SHA-256 of the file | `75ab1ece535f0cca2f988869f995bac34fbf3f1512b338a836938c5f30f446cb` |
+| Canonical SHA-256 (keys sorted recursively, `x-codeSamples` dropped, compact JSON) | `2566ded607d7c8db2ef389fb3d14731c79f7a8c9036470c15ef71128eb626343` |
 
-`src/` is generated from this pin (Speakeasy `1.806.0`, generator `2.956.1`):
+`src/` is generated from this pin (Speakeasy `1.811.0`, generator `2.968.1`):
 **736 typed methods, one per operation**. Against the 664-operation contract of
 `0.8.0` (652 generated methods) it adds the **50 document-template operations**,
 generates the **12 seat offer redemption operations** that `0.8.0` could not
 (the contract no longer uses JSON Schema `not`) and adds **22 operations** the
 API published since: packs, promotions, product web channels and the account
-seats. No operation is removed. See
+seats. No operation is removed. The `0.10.0` pin keeps those 736 operations and
+drops the legacy client events with their models (see
+[`CHANGELOG.md`](../CHANGELOG.md)). See
 [Document-template contract](#document-template-contract-regenerated) for the
 signature changes and the checks that were run, and
 [Changes already published by the API](#changes-already-published-by-the-api)
@@ -184,7 +186,7 @@ generation, broke on the new signatures and response models.
 ```bash
 # 0. The pin, unchanged.
 sha256sum spec/openapi.json
-# 654efa53248850093d740527dcffae483b7dd5f30f7623444b41c96cbfe99980
+# 75ab1ece535f0cca2f988869f995bac34fbf3f1512b338a836938c5f30f446cb
 
 # 1. Public methods of the generated layer BEFORE (src/*.php: neither src/Custom nor src/Hooks).
 grep -o 'public function publicApi[A-Za-z0-9]*' src/*.php \

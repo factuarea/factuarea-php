@@ -205,11 +205,11 @@ class BusinessContact
     /**
      * Geographic coordinates. Each axis is nullable independently; the object is null only when neither axis is recorded.
      *
-     * @var ?\Factuarea\Sdk\Models\Components\BusinessContactCoordinates $coordinates
+     * @var ?\Factuarea\Sdk\Models\Components\Coordinates $coordinates
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('coordinates')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\BusinessContactCoordinates|null')]
-    public ?BusinessContactCoordinates $coordinates;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Coordinates|null')]
+    public ?Coordinates $coordinates;
 
     /**
      *
@@ -295,7 +295,7 @@ class BusinessContact
      * @param  ?string  $mobile
      * @param  ?string  $fax
      * @param  ?string  $website
-     * @param  ?\Factuarea\Sdk\Models\Components\BusinessContactCoordinates  $coordinates
+     * @param  ?\Factuarea\Sdk\Models\Components\Coordinates  $coordinates
      * @param  ?string  $notes
      * @param  ?array<string, string>  $metadata
      * @param  ?string  $externalId
@@ -305,7 +305,7 @@ class BusinessContact
      * @param  ?\DateTime  $archivedAt
      * @phpstan-pure
      */
-    public function __construct(string $id, BusinessContactObject $object, BusinessContactKind $kind, string $name, BusinessContactAddress $address, array $billingEmails, array $tags, bool $accumulate347, array $roles, array $bankAccounts, FinancialSummary $financialSummary, bool $isArchived, \DateTime $createdAt, \DateTime $updatedAt, ?string $businessName = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?AlternativeId $alternativeId = null, ?string $contactPerson = null, ?string $email = null, ?string $phone = null, ?string $mobile = null, ?string $fax = null, ?string $website = null, ?BusinessContactCoordinates $coordinates = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?BusinessContactCustomerProfile $customerProfile = null, ?BusinessContactSupplierProfile $supplierProfile = null, ?LatestActivity $latestActivity = null, ?\DateTime $archivedAt = null)
+    public function __construct(string $id, BusinessContactObject $object, BusinessContactKind $kind, string $name, BusinessContactAddress $address, array $billingEmails, array $tags, bool $accumulate347, array $roles, array $bankAccounts, FinancialSummary $financialSummary, bool $isArchived, \DateTime $createdAt, \DateTime $updatedAt, ?string $businessName = null, ?string $commercialName = null, ?string $taxId = null, ?string $vatId = null, ?AlternativeId $alternativeId = null, ?string $contactPerson = null, ?string $email = null, ?string $phone = null, ?string $mobile = null, ?string $fax = null, ?string $website = null, ?Coordinates $coordinates = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?BusinessContactCustomerProfile $customerProfile = null, ?BusinessContactSupplierProfile $supplierProfile = null, ?LatestActivity $latestActivity = null, ?\DateTime $archivedAt = null)
     {
         $this->id = $id;
         $this->object = $object;

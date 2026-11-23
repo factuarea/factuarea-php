@@ -21,14 +21,6 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public string $account;
 
     /**
-     * Public identifiers (UUID v7) of the companies to preview; omit it to preview `count` companies.
-     *
-     * @var ?array<string> $companyIds
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=company_ids[]')]
-    public ?array $companyIds = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -45,17 +37,25 @@ class PublicApiV1CompaniesSeatChargePreviewRequest
     public ?int $count = null;
 
     /**
+     * Public identifiers (UUID v7) of the companies to preview; omit it to preview `count` companies.
+     *
+     * @var ?array<string> $companyIds
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=company_ids[]')]
+    public ?array $companyIds = null;
+
+    /**
      * @param  string  $account
-     * @param  ?array<string>  $companyIds
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?int  $count
+     * @param  ?array<string>  $companyIds
      * @phpstan-pure
      */
-    public function __construct(string $account, ?array $companyIds = null, ?LocalDate $factuareaVersion = null, ?int $count = null)
+    public function __construct(string $account, ?LocalDate $factuareaVersion = null, ?int $count = null, ?array $companyIds = null)
     {
         $this->account = $account;
-        $this->companyIds = $companyIds;
         $this->factuareaVersion = $factuareaVersion;
         $this->count = $count;
+        $this->companyIds = $companyIds;
     }
 }

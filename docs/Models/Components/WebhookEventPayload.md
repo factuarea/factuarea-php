@@ -752,42 +752,6 @@ Components\WebhookEventPayloadRecurringInvoiceMetadataChanged $value = /* values
 Components\WebhookEventPayloadRecurringInvoiceCancelled $value = /* values here */
 ```
 
-### `Components\WebhookEventPayloadClientCreated`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadClientCreated
-*/
-Components\WebhookEventPayloadClientCreated $value = /* values here */
-```
-
-### `Components\WebhookEventPayloadClientUpdated`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadClientUpdated
-*/
-Components\WebhookEventPayloadClientUpdated $value = /* values here */
-```
-
-### `Components\WebhookEventPayloadClientDeleted`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadClientDeleted
-*/
-Components\WebhookEventPayloadClientDeleted $value = /* values here */
-```
-
-### `Components\WebhookEventPayloadClientMetadataChanged`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\WebhookEventPayloadClientMetadataChanged
-*/
-Components\WebhookEventPayloadClientMetadataChanged $value = /* values here */
-```
-
 ### `Components\WebhookEventPayloadContactCreated`
 
 ```php

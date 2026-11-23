@@ -29,14 +29,6 @@ class PublicApiV1ContactsActivitiesRequest
     public string $contact;
 
     /**
-     * Only activity in these directions: `sales`, `purchases` or `relationship` (all three when omitted).
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection> $direction
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=direction[]')]
-    public ?array $direction = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
@@ -53,19 +45,27 @@ class PublicApiV1ContactsActivitiesRequest
     public ?PublicApiV1ContactsActivitiesCategory $category = null;
 
     /**
+     * Only activity in these directions: `sales`, `purchases` or `relationship` (all three when omitted).
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection> $direction
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=direction[]')]
+    public ?array $direction = null;
+
+    /**
      * @param  string  $company
      * @param  string  $contact
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection>  $direction
      * @param  ?LocalDate  $factuareaVersion
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesCategory  $category
+     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsActivitiesDirection>  $direction
      * @phpstan-pure
      */
-    public function __construct(string $company, string $contact, ?array $direction = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsActivitiesCategory $category = null)
+    public function __construct(string $company, string $contact, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsActivitiesCategory $category = null, ?array $direction = null)
     {
         $this->company = $company;
         $this->contact = $contact;
-        $this->direction = $direction;
         $this->factuareaVersion = $factuareaVersion;
         $this->category = $category;
+        $this->direction = $direction;
     }
 }

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** InviteAccountMemberV1RequestGrant - Grant on one tax ID of your account: its identifier and its access level. */
 class InviteAccountMemberV1RequestGrant
 {
     /**

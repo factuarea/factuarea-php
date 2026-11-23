@@ -88,10 +88,6 @@
 | `RecurringInvoiceFailed`             | recurring_invoice.failed             |
 | `RecurringInvoiceMetadataChanged`    | recurring_invoice.metadata_changed   |
 | `RecurringInvoiceCancelled`          | recurring_invoice.cancelled          |
-| `ClientCreated`                      | client.created                       |
-| `ClientUpdated`                      | client.updated                       |
-| `ClientDeleted`                      | client.deleted                       |
-| `ClientMetadataChanged`              | client.metadata_changed              |
 | `ContactCreated`                     | contact.created                      |
 | `ContactUpdated`                     | contact.updated                      |
 | `ContactArchived`                    | contact.archived                     |

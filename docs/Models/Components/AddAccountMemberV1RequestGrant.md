@@ -1,5 +1,7 @@
 # AddAccountMemberV1RequestGrant
 
+Grant on one tax ID of your account: its identifier and its access level.
+
 
 ## Fields
 

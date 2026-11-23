@@ -85,12 +85,13 @@ class VeriFactuRecord
     public string $huella;
 
     /**
-     * AEAT environment (`sandbox` / `production`).
+     * AEAT environment the record is submitted to: `production` (the real AEAT) or `sandbox` (the AEAT pre-production test environment). It is the environment of the Factuarea instance, the same as `environment` in `GET /v1/companies/{company}/verifactu/config`: always `production` on the production API.
      *
-     * @var string $environment
+     * @var \Factuarea\Sdk\Models\Components\VeriFactuRecordEnvironment $environment
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
-    public string $environment;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\VeriFactuRecordEnvironment')]
+    public VeriFactuRecordEnvironment $environment;
 
     /**
      * Whether the invoice is simplified (F2).
@@ -190,7 +191,7 @@ class VeriFactuRecord
      * @param  string  $amount
      * @param  string  $status
      * @param  string  $huella
-     * @param  string  $environment
+     * @param  \Factuarea\Sdk\Models\Components\VeriFactuRecordEnvironment  $environment
      * @param  bool  $isSimplificada
      * @param  bool  $isSubstituteForSimplified
      * @param  \DateTime  $createdAt
@@ -204,7 +205,7 @@ class VeriFactuRecord
      * @param  ?bool  $aeatWarningRequiresSubsanation
      * @phpstan-pure
      */
-    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, string $amount, string $status, string $huella, string $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, bool $isBlocked, bool $canSubsanar, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null, ?string $aeatErrorCode = null, ?VeriFactuRecordBlockReason $blockReason = null, ?bool $aeatWarningRequiresSubsanation = null)
+    public function __construct(string $id, VeriFactuRecordObject $object, string $type, string $invoiceType, string $invoiceNumber, string $date, string $amount, string $status, string $huella, VeriFactuRecordEnvironment $environment, bool $isSimplificada, bool $isSubstituteForSimplified, \DateTime $createdAt, bool $isBlocked, bool $canSubsanar, ?string $aeatSubmissionId = null, ?string $aeatCsv = null, ?\DateTime $transmittedAt = null, ?string $aeatErrorCode = null, ?VeriFactuRecordBlockReason $blockReason = null, ?bool $aeatWarningRequiresSubsanation = null)
     {
         $this->id = $id;
         $this->object = $object;

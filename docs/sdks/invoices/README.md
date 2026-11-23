@@ -763,6 +763,7 @@ Create up to 100 invoices in one call, each a full invoice payload; returns a `B
 - `dry_run=true` validates every row without persisting and classifies each in `results[]`.
 - `dry_run=false` creates only the valid rows and reports the rest in `failures[]`.
 - Rows may carry `payment_terms`; bulk never upserts, and `invalid_invoice_payment_terms` is reported per row.
+- Rows are drafts, never issued here: `issued_on` is the draft date, and an issued invoice takes the date of the day of issue.
 
 ### Example Usage: api_key_revoked
 
@@ -1924,7 +1925,7 @@ if ($response->bytes !== null) {
 
 ## publicApiV1InvoicesBulkSend
 
-Sends up to 200 invoices by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful` and `failed` counts plus a `failures` list (`id` + `error_code` + Spanish `error_message`) for each invoice that could not be sent (not found, terminal status or no resolvable recipient).
+Sends up to 200 invoices by email (queued) in one call, reusing the single-send path per id. Returns a `BulkPartialSuccessResult` with `total`, `successful`, `failed` and a `failures` list (`id` + `error_code` + Spanish `error_message`) for each invoice not sent (not found, terminal status, no resolvable recipient, or a draft the series date order rejects: `business_rule_violation`). Drafts are issued first, oldest first, not in `ids` order, dated the day of issue; with revisioned presentation disabled, that rejection aborts the call with 422 `issue_date_before_series_last_issue_date`.
 
 ### Example Usage: api_key_revoked
 
@@ -2272,7 +2273,8 @@ if ($response->object !== null) {
 
 Move up to 50 invoices to `issued`, `sent` (alias of `issued`) or `paid` in one call, with partial success.
 - `paid` requires `payment_date` (not in the future), applied to every invoice.
-- Failures are `resource_not_found` or `invalid_status_transition`, in a `BulkPartialSuccessResult`.
+- Issuing goes oldest date first, not in `ids` order; each invoice takes the date of the day of issue (an earlier `issued_on` moves to an empty `operation_on`).
+- Failures, in a `BulkPartialSuccessResult`, are `resource_not_found`, `invalid_status_transition` or `business_rule_violation` (a later issued invoice in the series: no number consumed, no row subcode).
 
 ### Example Usage: api_key_revoked
 
@@ -3609,7 +3611,7 @@ if ($response->object !== null) {
 Create a `draft` invoice, or issue it at once with `options.issue_directly: true`.
 - Send an `Idempotency-Key`; a duplicate `external_id` upserts; `201` is not AEAT acceptance.
 - `type: F2`, `payment` or `options.register_verifactu` make it a paid one-call checkout.
-- `payment_terms` must balance `total_to_pay`.
+- Issuing dates it the day of issue, not `issued_on`.
 
 **Signing certificate (NO VERI*FACTU).** Only in that mode, a missing or invalid company certificate is rejected before the invoice is issued: 422 `verifactu_not_eligible`, `error.subcode: signing_certificate_unavailable`; nothing is consumed, so fix it and repeat the call.
 
@@ -8081,8 +8083,8 @@ if ($response->object !== null) {
 
 Issue a draft without sending it, assigning its series number.
 - Irreversible; send an `Idempotency-Key`. Only a `draft`, else 422 `invalid_status_transition`.
-- Freezes `payment_terms`: a 02/04 instalment without account is a 422 `invalid_invoice_payment_terms`.
-- With instalments, `due_on` must be the last one, else 422 `invoice_due_date_not_last_instalment`.
+- Dated the day of issue (Europe/Madrid); `issued_on` moves to an empty `operation_on`. A later issued invoice in the series: 422 `issue_date_before_series_last_issue_date`.
+- Freezes `payment_terms`; `due_on` must be the last instalment (422 `invoice_due_date_not_last_instalment`).
 - NO VERI*FACTU: without a valid company certificate, 422 `verifactu_not_eligible` (`signing_certificate_unavailable`); nothing is consumed.
 
 ### Example Usage
@@ -8802,7 +8804,7 @@ if ($response->object !== null) {
 ## publicApiV1InvoicesMarkSent
 
 Record delivery of an invoice; the meaning depends on the API version.
-- Before `2026-10-01` it issues a draft.
+- Before `2026-10-01` it issues a draft, dated the day of issue.
 - From `2026-10-01` it only sets `is_sent`, on `issued`/`overdue`; else 422 `invoice_cannot_be_marked_as_sent`.
 
 **Signing certificate (NO VERI*FACTU).** Only in that mode, a missing or invalid company certificate is rejected before the invoice is issued: 422 `verifactu_not_eligible`, `error.subcode: signing_certificate_unavailable`; nothing is consumed, so fix it and repeat the call.
@@ -9841,7 +9843,7 @@ Reserve the issuance of a draft invoice for a future instant (`scheduled_for`).
 - The invoice moves to `scheduled` and keeps its `BORRADOR` number; no series number is consumed yet.
 - Only a `draft` can be scheduled and the date must be in the future (422).
 - With instalments, `due_on` must be the last one, else 422 `invoice_due_date_not_last_instalment`.
-- `issue_and_send` also emails the client if it has an email on file.
+- It is issued when it runs, dated that day (not the draft date); if the series then has a later issued invoice it stays `scheduled` and is retried. `issue_and_send` also emails the client.
 
 ### Example Usage: api_key_revoked
 
@@ -10148,8 +10150,8 @@ if ($response->object !== null) {
 ## publicApiV1InvoicesSend
 
 Send an invoice to the client by email, to the email on file unless the payload overrides it.
-- `attach_facturae: true` attaches the Facturae XML; `submission_id` attaches the exact retained XML of that FACe submission of this invoice.
-- It never submits to FACe or regenerates the submission.
+- `attach_facturae: true` attaches the Facturae XML, `submission_id` the exact XML retained for that FACe submission; nothing is submitted to FACe.
+- A draft is issued first, dated the day of issue.
 
 **Signing certificate (NO VERI*FACTU).** Only in that mode, a missing or invalid company certificate is rejected before the invoice is issued: 422 `verifactu_not_eligible`, `error.subcode: signing_certificate_unavailable`; nothing is consumed, so fix it and repeat the call.
 

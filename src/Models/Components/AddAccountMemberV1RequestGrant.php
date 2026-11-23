@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
+/** AddAccountMemberV1RequestGrant - Grant on one tax ID of your account: its identifier and its access level. */
 class AddAccountMemberV1RequestGrant
 {
     /**

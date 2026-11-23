@@ -2119,7 +2119,7 @@ class Contacts
     /**
      * Preview a contact import
      *
-     * Validate a contact import without writing. Each row is classified as create, update, add-role, merge candidate, conflict or invalid; ambiguous identities are never merged automatically. A file containing only column headers returns 200 with total 0, no rows and source_headers preserved in their original order, so clients can inspect template columns before adding data.
+     * Validate a contact import without writing. Each row is classified as `create`, `update`, `add_role`, `merge_candidate`, `skip`, `conflict` or `invalid`; ambiguous identities are never merged automatically. A file containing only column headers returns 200 with total 0, no rows and source_headers preserved in their original order, so clients can inspect template columns before adding data.
      *
      * @param  \Factuarea\Sdk\Models\Components\PreviewBusinessContactImportV1Request  $body
      * @param  string  $company

@@ -752,42 +752,6 @@ Components\EventDataRecurringInvoiceMetadataChanged $value = /* values here */
 Components\EventDataRecurringInvoiceCancelled $value = /* values here */
 ```
 
-### `Components\EventDataClientCreated`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\EventDataClientCreated
-*/
-Components\EventDataClientCreated $value = /* values here */
-```
-
-### `Components\EventDataClientUpdated`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\EventDataClientUpdated
-*/
-Components\EventDataClientUpdated $value = /* values here */
-```
-
-### `Components\EventDataClientDeleted`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\EventDataClientDeleted
-*/
-Components\EventDataClientDeleted $value = /* values here */
-```
-
-### `Components\EventDataClientMetadataChanged`
-
-```php
-/**
-* @var \Factuarea\Sdk\Models\Components\EventDataClientMetadataChanged
-*/
-Components\EventDataClientMetadataChanged $value = /* values here */
-```
-
 ### `Components\EventDataContactCreated`
 
 ```php
