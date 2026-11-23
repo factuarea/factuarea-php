@@ -29,20 +29,20 @@ class PublicApiV1ContactsSearchRequest
     public string $q;
 
     /**
-     * Only contacts with these roles: `customer`, `supplier` or `lead` (repeat it or send a comma-separated list).
-     *
-     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles> $roles
-     */
-    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=roles[]')]
-    public ?array $roles = null;
-
-    /**
      * Pin the API version (`YYYY-MM-DD`, Stripe-style date versioning) for this request; omit to use the key's pinned version, or the latest if none. Unsupported version → `400 unsupported_api_version`; malformed → `400 parameter_invalid_format`. The effective version is echoed in the `Factuarea-Version` response header. See the [Versioning guide](/guides/versioning).
      *
      * @var ?LocalDate $factuareaVersion
      */
     #[SpeakeasyMetadata('header:style=simple,explode=false,name=Factuarea-Version,dateTimeFormat=Y-m-d')]
     public ?LocalDate $factuareaVersion = null;
+
+    /**
+     * Only contacts with these roles: `customer`, `supplier` or `lead` (repeat it or send a comma-separated list).
+     *
+     * @var ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles> $roles
+     */
+    #[SpeakeasyMetadata('queryParam:style=form,explode=true,name=roles[]')]
+    public ?array $roles = null;
 
     /**
      * `any` (default) matches at least one of the `roles[]`; `all` requires all of them.
@@ -79,20 +79,20 @@ class PublicApiV1ContactsSearchRequest
     /**
      * @param  string  $company
      * @param  string  $q
-     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles>  $roles
      * @param  ?LocalDate  $factuareaVersion
+     * @param  ?array<\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoles>  $roles
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleMatch  $roleMatch
      * @param  ?\Factuarea\Sdk\Models\Operations\PublicApiV1ContactsSearchRoleStatus  $roleStatus
      * @param  ?int  $limit
      * @param  ?string  $startingAfter
      * @phpstan-pure
      */
-    public function __construct(string $company, string $q, ?array $roles = null, ?LocalDate $factuareaVersion = null, ?PublicApiV1ContactsSearchRoleMatch $roleMatch = null, ?PublicApiV1ContactsSearchRoleStatus $roleStatus = null, ?int $limit = null, ?string $startingAfter = null)
+    public function __construct(string $company, string $q, ?LocalDate $factuareaVersion = null, ?array $roles = null, ?PublicApiV1ContactsSearchRoleMatch $roleMatch = null, ?PublicApiV1ContactsSearchRoleStatus $roleStatus = null, ?int $limit = null, ?string $startingAfter = null)
     {
         $this->company = $company;
         $this->q = $q;
-        $this->roles = $roles;
         $this->factuareaVersion = $factuareaVersion;
+        $this->roles = $roles;
         $this->roleMatch = $roleMatch;
         $this->roleStatus = $roleStatus;
         $this->limit = $limit;

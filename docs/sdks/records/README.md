@@ -696,7 +696,7 @@ if ($response->paginatedList !== null) {
 
 ## publicApiV1VerifactuRecordsList
 
-List the VeriFactu (Spanish AEAT SIF) records of your company with cursor-based pagination. Each record captures the alta/anulación submitted to AEAT, its hash chain (`huella`), `aeat_csv`, and transmission status. Supports filtering by `status`, `type`, `date_from`/`date_to`, and `environment`.
+List the VeriFactu (Spanish AEAT SIF) records of your company with cursor-based pagination. Each record captures the alta/anulación submitted to AEAT, its hash chain (`huella`), `aeat_csv`, and transmission status. Supports filtering by `status`, `type`, `date_from`/`date_to`, and `environment`: every record goes to the AEAT environment of the instance, so a matching value returns all records and any other value none.
 
 ### Example Usage
 

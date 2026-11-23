@@ -1,5 +1,7 @@
 # CreateInvoiceRequestOptions
 
+Atomic creation options. Without them the invoice is created as a draft. When an option issues the invoice, it takes the date of the day of issue (Europe/Madrid), not `issued_on`; an earlier `issued_on` is kept as `operation_on` when that is empty. If the series already has an issued invoice with a later date, the call is rejected with 422 `issue_date_before_series_last_issue_date` and no number is consumed.
+
 
 ## Fields
 

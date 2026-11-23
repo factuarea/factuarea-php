@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** VeriFactuConfig - VeriFactu configuration of your company (mode, environment, enrollment). Returned by `GET /v1/companies/{company}/verifactu/config` and `PATCH /v1/companies/{company}/verifactu/settings`. The certificate password is never exposed. */
+/** VeriFactuConfig - VeriFactu configuration of your company (mode, enrollment, the AEAT environment your records go to). Returned by `GET /v1/companies/{company}/verifactu/config` and `PATCH /v1/companies/{company}/verifactu/settings`. The certificate password is never exposed. */
 class VeriFactuConfig
 {
     /**
@@ -37,7 +37,7 @@ class VeriFactuConfig
     public string $mode;
 
     /**
-     * Indicates whether transmissions to AEAT are sent automatically.
+     * Whether records are submitted to AEAT automatically after issuing, with no further action on your side. It is set by the Factuarea instance, not per company: always `true` on the production API.
      *
      * @var bool $autoTransmit
      */
@@ -45,12 +45,13 @@ class VeriFactuConfig
     public bool $autoTransmit;
 
     /**
-     * AEAT environment (`sandbox` / `production`).
+     * AEAT environment your records are submitted to: `production` (the real AEAT) or `sandbox` (the AEAT pre-production test environment). It is set by the Factuarea instance, not per company: always `production` on the production API. Test mode (`fact_test_` keys) never reaches AEAT: VeriFactu operations return 403 `module_not_available_in_sandbox` there.
      *
-     * @var string $environment
+     * @var \Factuarea\Sdk\Models\Components\VeriFactuConfigEnvironment $environment
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('environment')]
-    public string $environment;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\VeriFactuConfigEnvironment')]
+    public VeriFactuConfigEnvironment $environment;
 
     /**
      * Notification emails for VeriFactu events.
@@ -164,7 +165,7 @@ class VeriFactuConfig
      * @param  bool  $enabled
      * @param  string  $mode
      * @param  bool  $autoTransmit
-     * @param  string  $environment
+     * @param  \Factuarea\Sdk\Models\Components\VeriFactuConfigEnvironment  $environment
      * @param  array<string>  $notificationEmails
      * @param  bool  $hasActiveCertificate
      * @param  \Factuarea\Sdk\Models\Components\VeriFactuConfigRemissionMode  $remissionMode
@@ -180,7 +181,7 @@ class VeriFactuConfig
      * @param  ?LocalDate  $activeRepresentationValidUntil
      * @phpstan-pure
      */
-    public function __construct(VeriFactuConfigObject $object, bool $enabled, string $mode, bool $autoTransmit, string $environment, array $notificationEmails, bool $hasActiveCertificate, VeriFactuConfigRemissionMode $remissionMode, bool $hasActiveRepresentation, bool $activeRepresentationIsExpired, bool $socialCollaboratorAvailable, PresenterCertificateStatus $presenterCertificateStatus, ?\DateTime $isLockedUntil = null, ?string $activeCertificateId = null, ?\DateTime $updatedAt = null, ?string $activeRepresentationId = null, ?ActiveRepresentationKind $activeRepresentationKind = null, ?LocalDate $activeRepresentationValidUntil = null)
+    public function __construct(VeriFactuConfigObject $object, bool $enabled, string $mode, bool $autoTransmit, VeriFactuConfigEnvironment $environment, array $notificationEmails, bool $hasActiveCertificate, VeriFactuConfigRemissionMode $remissionMode, bool $hasActiveRepresentation, bool $activeRepresentationIsExpired, bool $socialCollaboratorAvailable, PresenterCertificateStatus $presenterCertificateStatus, ?\DateTime $isLockedUntil = null, ?string $activeCertificateId = null, ?\DateTime $updatedAt = null, ?string $activeRepresentationId = null, ?ActiveRepresentationKind $activeRepresentationKind = null, ?LocalDate $activeRepresentationValidUntil = null)
     {
         $this->object = $object;
         $this->enabled = $enabled;

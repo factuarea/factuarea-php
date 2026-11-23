@@ -80,7 +80,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?int $paymentTermsDays = null;
 
     /**
-     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PUT) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null.
+     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PATCH) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null.
      *
      * @var ?string $dir3AccountingOffice
      */
@@ -89,7 +89,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?string $dir3AccountingOffice = null;
 
     /**
-     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PUT) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null.
+     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PATCH) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null.
      *
      * @var ?string $dir3ManagingBody
      */
@@ -98,7 +98,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?string $dir3ManagingBody = null;
 
     /**
-     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PUT) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null.
+     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PATCH) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null.
      *
      * @var ?string $dir3ProcessingUnit
      */
@@ -107,7 +107,7 @@ class CreateBusinessContactV1RequestCustomerProfile
     public ?string $dir3ProcessingUnit = null;
 
     /**
-     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PUT) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null. Proposing body (role 04).
+     * Optional DIR3 string: 9-10 alphanumeric characters starting with a letter after trim and uppercase normalization. Lowercase and surrounding whitespace are accepted; null, empty or whitespace-only strings mean null. Omitting the field is the same as sending null: on a customer-profile update (PATCH) or on an upsert that carries `customer_profile` it clears the stored code, so resend the current code to keep it; on a new contact it stays null. Proposing body (role 04).
      *
      * @var ?string $dir3Proponent
      */

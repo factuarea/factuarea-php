@@ -22,6 +22,7 @@ class CreateInvoiceRequest
     public array $lines;
 
     /**
+     * Date of the draft (YYYY-MM-DD). It is not the date the invoice ends up with: when the invoice is issued (in this call with `options`, `payment` or `type: F2`, or later with `issue`) it takes the date of the day of issue (Europe/Madrid), whatever this value. If this date is earlier than that day and `operation_on` is empty, it is kept as `operation_on`. If the series already has an issued invoice with a later date, issuing is rejected with 422 `issue_date_before_series_last_issue_date` and no number is consumed.
      *
      * @var LocalDate $issuedOn
      */
@@ -118,16 +119,6 @@ class CreateInvoiceRequest
     public ?string $clientId = null;
 
     /**
-     * Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment $payment
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateInvoiceRequestPayment $payment = null;
-
-    /**
      * Positive selection version. It applies only when POST resolves to an existing external_id, where it is the selection CAS for pdf_template_id; a new invoice rejects it with 422. Both fields only take effect when revisioned presentation is enabled for the company; otherwise they are ignored.
      *
      * @var ?int $expectedSelectionVersion
@@ -135,15 +126,6 @@ class CreateInvoiceRequest
     #[\Speakeasy\Serializer\Annotation\SerializedName('expected_selection_version')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?int $expectedSelectionVersion = null;
-
-    /**
-     *
-     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions $options
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions|null')]
-    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
-    public ?CreateInvoiceRequestOptions $options = null;
 
     /**
      *
@@ -213,13 +195,23 @@ class CreateInvoiceRequest
     public ?bool $pricesIncludeTax = null;
 
     /**
-     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date (arts. 6.1.f and 7.1.c of Royal Decree 1619/2012). It cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. It is printed on the PDF and reported in the VeriFactu record.
+     * Date the operation took place (YYYY-MM-DD) when it differs from the issue date (arts. 6.1.i and 7.1.c of Royal Decree 1619/2012). It cannot be later than `issued_on` (422 `operation_date_after_issue_date`) unless the first line that declares a `regime_key` uses 14 or 15. It is printed on the PDF and reported in the VeriFactu record. When the invoice is issued with this field empty and an `issued_on` earlier than the day of issue, that earlier date is kept here.
      *
      * @var ?LocalDate $operationOn
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('operation_on')]
     #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
     public ?LocalDate $operationOn = null;
+
+    /**
+     * Payment recorded in the same call: after issuing, a payment is registered for the whole amount due and the invoice ends up paid. It implies issuing. Its presence makes the request an unattended checkout.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment $payment
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('payment')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestPayment $payment = null;
 
     /**
      *
@@ -305,6 +297,16 @@ class CreateInvoiceRequest
     public ?array $customFields = null;
 
     /**
+     * Atomic creation options. Without them the invoice is created as a draft. When an option issues the invoice, it takes the date of the day of issue (Europe/Madrid), not `issued_on`; an earlier `issued_on` is kept as `operation_on` when that is empty. If the series already has an issued invoice with a later date, the call is rejected with 422 `issue_date_before_series_last_issue_date` and no number is consumed.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions $options
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('options')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?CreateInvoiceRequestOptions $options = null;
+
+    /**
      * @param  array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestLine>  $lines
      * @param  LocalDate  $issuedOn
      * @param  LocalDate  $dueOn
@@ -317,9 +319,7 @@ class CreateInvoiceRequest
      * @param  mixed  $legacyContext
      * @param  mixed  $paymentTermsLegacyContext
      * @param  ?string  $clientId
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment  $payment
      * @param  ?int  $expectedSelectionVersion
-     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions  $options
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences  $businessReferences
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod  $invoicingPeriod
      * @param  ?array<string>  $legalLiterals
@@ -328,6 +328,7 @@ class CreateInvoiceRequest
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestType  $type
      * @param  ?bool  $pricesIncludeTax
      * @param  ?LocalDate  $operationOn
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestPayment  $payment
      * @param  ?string  $seriesId
      * @param  ?string  $priceListId
      * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestRepriceStrategy  $repriceStrategy
@@ -337,9 +338,10 @@ class CreateInvoiceRequest
      * @param  ?array<string, string>  $metadata
      * @param  ?array<string>  $tags
      * @param  ?array<\Factuarea\Sdk\Models\Components\CreateInvoiceRequestCustomField>  $customFields
+     * @param  ?\Factuarea\Sdk\Models\Components\CreateInvoiceRequestOptions  $options
      * @phpstan-pure
      */
-    public function __construct(array $lines, LocalDate $issuedOn, LocalDate $dueOn, ?int $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $clientId = null, ?CreateInvoiceRequestPayment $payment = null, ?int $expectedSelectionVersion = null, ?CreateInvoiceRequestOptions $options = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $legalLiterals = null, ?array $administrativeCentres = null, ?array $paymentTerms = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null)
+    public function __construct(array $lines, LocalDate $issuedOn, LocalDate $dueOn, ?int $expectedPaymentTermsVersion = null, mixed $paymentTermsVersion = null, mixed $paymentTermsSource = null, mixed $paymentTermsCurrency = null, mixed $paymentTermsCapturedAt = null, mixed $paymentTermsFrozenAt = null, mixed $legacyContext = null, mixed $paymentTermsLegacyContext = null, ?string $clientId = null, ?int $expectedSelectionVersion = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $legalLiterals = null, ?array $administrativeCentres = null, ?array $paymentTerms = null, ?CreateInvoiceRequestType $type = null, ?bool $pricesIncludeTax = null, ?LocalDate $operationOn = null, ?CreateInvoiceRequestPayment $payment = null, ?string $seriesId = null, ?string $priceListId = null, ?CreateInvoiceRequestRepriceStrategy $repriceStrategy = null, ?string $pdfTemplateId = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?array $tags = null, ?array $customFields = null, ?CreateInvoiceRequestOptions $options = null)
     {
         $this->lines = $lines;
         $this->issuedOn = $issuedOn;
@@ -353,9 +355,7 @@ class CreateInvoiceRequest
         $this->legacyContext = $legacyContext;
         $this->paymentTermsLegacyContext = $paymentTermsLegacyContext;
         $this->clientId = $clientId;
-        $this->payment = $payment;
         $this->expectedSelectionVersion = $expectedSelectionVersion;
-        $this->options = $options;
         $this->businessReferences = $businessReferences;
         $this->invoicingPeriod = $invoicingPeriod;
         $this->legalLiterals = $legalLiterals;
@@ -364,6 +364,7 @@ class CreateInvoiceRequest
         $this->type = $type;
         $this->pricesIncludeTax = $pricesIncludeTax;
         $this->operationOn = $operationOn;
+        $this->payment = $payment;
         $this->seriesId = $seriesId;
         $this->priceListId = $priceListId;
         $this->repriceStrategy = $repriceStrategy;
@@ -373,5 +374,6 @@ class CreateInvoiceRequest
         $this->metadata = $metadata;
         $this->tags = $tags;
         $this->customFields = $customFields;
+        $this->options = $options;
     }
 }

@@ -132,6 +132,16 @@ class UpdateBusinessContactV1Request
     public ?UpdateBusinessContactV1RequestAlternativeIdCountryCode $alternativeIdCountryCode = null;
 
     /**
+     * The foreign identification exactly as the API returns it (`{type, value, country_code}`, or `null` for a contact with a Spanish tax ID): equivalent to sending `alternative_id_type`, `alternative_id_value` and `alternative_id_country_code`, so a contact read from the API can be sent back unchanged. If both forms are sent their values must match; the rest of the rules (exclusive with `tax_id`, type-country matrix) are the same.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateBusinessContactV1RequestAlternativeId $alternativeId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('alternative_id')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateBusinessContactV1RequestAlternativeId|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateBusinessContactV1RequestAlternativeId $alternativeId = null;
+
+    /**
      *
      * @var ?string $vatId
      */
@@ -263,6 +273,7 @@ class UpdateBusinessContactV1Request
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateBusinessContactV1RequestAlternativeIdType  $alternativeIdType
      * @param  ?string  $alternativeIdValue
      * @param  ?\Factuarea\Sdk\Models\Components\UpdateBusinessContactV1RequestAlternativeIdCountryCode  $alternativeIdCountryCode
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateBusinessContactV1RequestAlternativeId  $alternativeId
      * @param  ?string  $vatId
      * @param  ?string  $businessName
      * @param  ?string  $commercialName
@@ -279,7 +290,7 @@ class UpdateBusinessContactV1Request
      * @param  ?float  $longitude
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?UpdateBusinessContactV1RequestKind $kind = null, ?UpdateBusinessContactV1RequestAddress $address = null, ?array $billingEmails = null, ?array $tags = null, ?bool $accumulate347 = null, ?string $roles = null, ?string $bankAccounts = null, ?string $customerProfile = null, ?string $supplierProfile = null, ?string $taxId = null, ?UpdateBusinessContactV1RequestAlternativeIdType $alternativeIdType = null, ?string $alternativeIdValue = null, ?UpdateBusinessContactV1RequestAlternativeIdCountryCode $alternativeIdCountryCode = null, ?string $vatId = null, ?string $businessName = null, ?string $commercialName = null, ?string $contactPerson = null, ?string $email = null, ?string $phone = null, ?string $mobile = null, ?string $fax = null, ?string $website = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?float $latitude = null, ?float $longitude = null)
+    public function __construct(?string $name = null, ?UpdateBusinessContactV1RequestKind $kind = null, ?UpdateBusinessContactV1RequestAddress $address = null, ?array $billingEmails = null, ?array $tags = null, ?bool $accumulate347 = null, ?string $roles = null, ?string $bankAccounts = null, ?string $customerProfile = null, ?string $supplierProfile = null, ?string $taxId = null, ?UpdateBusinessContactV1RequestAlternativeIdType $alternativeIdType = null, ?string $alternativeIdValue = null, ?UpdateBusinessContactV1RequestAlternativeIdCountryCode $alternativeIdCountryCode = null, ?UpdateBusinessContactV1RequestAlternativeId $alternativeId = null, ?string $vatId = null, ?string $businessName = null, ?string $commercialName = null, ?string $contactPerson = null, ?string $email = null, ?string $phone = null, ?string $mobile = null, ?string $fax = null, ?string $website = null, ?string $notes = null, ?array $metadata = null, ?string $externalId = null, ?float $latitude = null, ?float $longitude = null)
     {
         $this->name = $name;
         $this->kind = $kind;
@@ -295,6 +306,7 @@ class UpdateBusinessContactV1Request
         $this->alternativeIdType = $alternativeIdType;
         $this->alternativeIdValue = $alternativeIdValue;
         $this->alternativeIdCountryCode = $alternativeIdCountryCode;
+        $this->alternativeId = $alternativeId;
         $this->vatId = $vatId;
         $this->businessName = $businessName;
         $this->commercialName = $commercialName;

@@ -9,19 +9,11 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** AlternativeId - Alternative tax identification for non-Spanish clients. Mutually exclusive with `tax_id` (NIF/CIF/NIE). */
+/** AlternativeId - Alternative tax identification of a non-Spanish contact, as returned in `alternative_id` (`null` for a contact with a Spanish tax ID). Mutually exclusive with `tax_id` (NIF/CIF/NIE). The same object is accepted as `alternative_id` when creating or updating a contact, so a contact read from the API can be sent back unchanged. */
 class AlternativeId
 {
     /**
-     *
-     * @var \Factuarea\Sdk\Models\Components\AlternativeIdObject $object
-     */
-    #[\Speakeasy\Serializer\Annotation\SerializedName('object')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\AlternativeIdObject')]
-    public AlternativeIdObject $object;
-
-    /**
-     * AEAT IDType (lista L7): nif_iva, passport, country_id, residence_certificate, other_document or not_registered. The legacy values `tax_id_foreign` and `national_id` are accepted on input and normalized.
+     * AEAT IDType (lista L7): nif_iva, passport, country_id, residence_certificate, other_document or not_registered. On input the legacy values `tax_id_foreign` and `national_id` are also accepted and normalized, so the response never returns them.
      *
      * @var \Factuarea\Sdk\Models\Components\AlternativeIdType $type
      */
@@ -46,15 +38,13 @@ class AlternativeId
     public string $countryCode;
 
     /**
-     * @param  \Factuarea\Sdk\Models\Components\AlternativeIdObject  $object
      * @param  \Factuarea\Sdk\Models\Components\AlternativeIdType  $type
      * @param  string  $value
      * @param  string  $countryCode
      * @phpstan-pure
      */
-    public function __construct(AlternativeIdObject $object, AlternativeIdType $type, string $value, string $countryCode)
+    public function __construct(AlternativeIdType $type, string $value, string $countryCode)
     {
-        $this->object = $object;
         $this->type = $type;
         $this->value = $value;
         $this->countryCode = $countryCode;

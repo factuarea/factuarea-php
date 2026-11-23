@@ -94,10 +94,6 @@ enum UpdateWebhookEndpointRequestEnabledEvent: string
     case RecurringInvoiceFailed = 'recurring_invoice.failed';
     case RecurringInvoiceMetadataChanged = 'recurring_invoice.metadata_changed';
     case RecurringInvoiceCancelled = 'recurring_invoice.cancelled';
-    case ClientCreated = 'client.created';
-    case ClientUpdated = 'client.updated';
-    case ClientDeleted = 'client.deleted';
-    case ClientMetadataChanged = 'client.metadata_changed';
     case ContactCreated = 'contact.created';
     case ContactUpdated = 'contact.updated';
     case ContactArchived = 'contact.archived';
