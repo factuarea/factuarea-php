@@ -4,6 +4,89 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.11.0] — 2026-11-23
+
+Regenerates the SDK from the published contract (API `v1.17.79`) after two
+additions: the **rectification chain of an invoice** (`superseded_by`,
+`credited_amount`, `inherited_paid_amount` and the new meaning of `paid_amount`
+and `pending_amount`) and the **exemption cause of the Stripe charge rules**:
+**736 operations** over **585 paths** (+0 / −0) and a typed method for every one
+of them. Two classes are added and none is removed or renamed. Two response
+models take new required constructor arguments and one request class of the PDF
+template preview is re-pointed: see *Changed — breaking*. The default
+`Factuarea-Version` is unchanged (`2026-10-01`). In `0.x` a breaking change
+travels in a `minor`.
+
+### Changed — breaking
+
+- **`Invoice` and `InvoiceWithCheckoutBlocks`, the models the invoice operations
+  return, gain two required fields and one optional.** `creditedAmount` and
+  `inheritedPaidAmount` (strings with two decimals, `"0.00"` when nothing applies)
+  take the positions right after `pendingAmount` in the constructor, and
+  `supersededBy` (`InvoiceSupersededBy`, see *Added*) goes right after
+  `substitutedBy`. Reading a response is unaffected. Code that builds these two
+  models by hand, such as test doubles, has to pass the new arguments, by name.
+- **`CreatePdfTemplatePreviewRequest2`, the body of a template preview without the
+  `base_preset`, `layout_version` and `configuration` triple, now carries the
+  `presentation_revision` source.** It is `PdfPreviewPresentationRevisionSource`
+  with `CreatePdfTemplatePreviewRequestDocumentType6`, `…Purpose6`, `…Format6` and
+  `…Locale6`; before it was `PdfPreviewPersistedDraftSource` with the `…4` enums,
+  which no class uses any more (they stay in the package). The contract of that
+  operation did not change: its seven variants still include a `persisted_draft`
+  and a `presentation_revision` without the triple, and the generator folds both
+  (and `invoice_substitution`) into two classes, so one of them is not typed.
+  The body of `pdfTemplatePreviews->publicApiV1PdfTemplatePreviewsCreate` is still
+  the same union of six classes. A `persisted_draft` preview that omits the triple
+  is sent with `RawRequest` (README, *Document templates, presentation and PDF
+  statuses*); the `presentation_revision` one, with the typed class.
+
+### Added
+
+- **Rectification chain of an invoice.** `Invoice` and `InvoiceWithCheckoutBlocks`
+  carry:
+  - `supersededBy`, `InvoiceSupersededBy` with the `id` and the `number` of the
+    corrective invoice (by substitution) that replaced the invoice for collection
+    purposes, or `null`. An original that has been replaced is not voided but no
+    longer demands payment.
+  - `creditedAmount`, what the credit notes of the chain (corrective invoices by
+    differences with a negative amount) deduct from what the invoice demands.
+  - `inheritedPaidAmount`, the payments registered on the original that count
+    towards the corrective invoice that substitutes it. It is included in
+    `paidAmount`; the payments stay listed on the original.
+- **`exemptionReason` in the Stripe charge rules.** `ChargeRule` returns it as
+  `ChargeRuleExemptionReason` (`E1` to `E6`, `N1`, `N2`, or `null`) and
+  `ChargeRuleRequest` takes it as an optional string, the last argument of its
+  constructor: the cause of exemption or non-subjection that the lines of the
+  invoices the rule produces carry. It is accepted only with `outcome` `invoice`
+  and a `vat_rate` of `0`; any other combination, or a value outside the list,
+  answers `422` `charge_rule_invalid` with `error.param` = `exemption_reason`.
+  `chargeRules->publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate` replaces
+  the whole rule: leaving `exemptionReason` out clears the stored cause.
+
+### Changed
+
+- **`paidAmount` and `pendingAmount` of an invoice follow its rectification chain.**
+  Without corrective invoices nothing changes. A corrective invoice that replaces
+  the original also counts the payments registered on that original, and an
+  original replaced by a corrective invoice publishes `0.00` in both. On a live
+  invoice `pendingAmount = totalToPay - creditedAmount - paidAmount`, measured
+  against `totalToPay`, not against `total`: the documented invariant
+  `paidAmount + pendingAmount = total` is no longer promised. An original that
+  was already overdue goes back to `issued` when a corrective invoice replaces it;
+  until that clean-up runs its `status` can still read `overdue`.
+- **New `422` answers, with no new class: the error code of the SDK is a string.**
+  `invoices->publicApiV1InvoicesPaymentsCreate` answers `business_rule_violation`
+  with the subcode `invoice_not_payable` (a status that rejects payments) or
+  `invoice_superseded_by_corrective` (an original replaced by a corrective
+  invoice: register the payment on the corrective one); a `paid_on` later than
+  today keeps its own `422`. The preview and the send of a payment reminder answer
+  `reminder_not_applicable` when the invoice was replaced by a corrective invoice
+  (remind from the corrective one) or nothing is outstanding after its corrective
+  invoices.
+- The invoice examples of the spec, and so the pages under `docs/`, show the new
+  fields.
+- Generated with Speakeasy `1.811.0` (generator `2.968.1`).
+
 ## [0.10.0] — 2026-11-23
 
 Regenerates the SDK from the published contract after the legacy client events
