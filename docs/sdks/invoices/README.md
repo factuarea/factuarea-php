@@ -5490,7 +5490,7 @@ if ($response->statusCode === 200) {
 
 Retrieve a sales invoice by its `id`.
 
-### Example Usage
+### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.show" method="get" path="/companies/{company}/invoices/{invoice}" example="success" -->
 ```php
@@ -5515,6 +5515,72 @@ $sdk = Sdk\Factuarea::builder()
 $response = $sdk->invoices->publicApiV1InvoicesShow(
     company: 'Gorczany - Hane',
     invoice: '<value>',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: superseded_by_corrective
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.show" method="get" path="/companies/{company}/invoices/{invoice}" example="superseded_by_corrective" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesShow(
+    company: '2450b97d-8956-467c-99c8-167e83509301',
+    invoice: '2d4de09b-a8bb-4917-b179-5e661052e883',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
+### Example Usage: with_applied_credit_note
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.show" method="get" path="/companies/{company}/invoices/{invoice}" example="with_applied_credit_note" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesShow(
+    company: '97739d14-a185-48c2-aaaf-200dbb22079d',
+    invoice: 'a8dafb5a-8f4f-447c-8bf6-414a5e1acbdb',
     factuareaVersion: LocalDate::parse('2026-06-01')
 
 );
@@ -8380,7 +8446,8 @@ if ($response->object !== null) {
 
 Register a partial or full payment against an invoice.
 - The invoice becomes `partially_paid` until the total is reached, then `paid`.
-- 422 for a status that rejects payments or `paid_on` later than today; an earlier date records an advance payment.
+- 422 `business_rule_violation` for a status that rejects payments (`invoice_not_payable`) and for an original replaced by a corrective invoice (`invoice_superseded_by_corrective`: register the payment on the corrective).
+- 422 for `paid_on` later than today; an earlier date records an advance payment.
 
 ### Example Usage: api_key_revoked
 
@@ -8926,6 +8993,7 @@ if ($response->bytes !== null) {
 ## publicApiV1InvoicesReminderPreview
 
 Renders the HTML, subject, and resolved recipients of the reminder email without sending it. Same override fields as send-reminder.
+- 422 `reminder_not_applicable` when no reminder can be sent: the invoice was replaced by a corrective invoice (remind from the corrective) or nothing is outstanding after its corrective invoices.
 
 ### Example Usage
 
@@ -10257,6 +10325,7 @@ if ($response->object !== null) {
 ## publicApiV1InvoicesSendReminder
 
 Emails a payment reminder to the customer for this invoice. Accepts optional `email`, `subject`, `message`, `cc`, `bcc` overrides.
+- 422 `reminder_not_applicable` when no reminder can be sent, e.g. the invoice was replaced by a corrective invoice (remind from the corrective) or nothing is outstanding after its corrective invoices.
 
 ### Example Usage
 

@@ -53,19 +53,30 @@ class ChargeRuleRequest
     public ?ChargeRuleRequestNonInvoiceReason $nonInvoiceReason = null;
 
     /**
+     * Reason for the exemption or non-subjection of the invoice lines this rule produces: one of `E1`, `E2`, `E3`, `E4`, `E5`, `E6`, `N1` or `N2`. Optional, and accepted only with `outcome` `invoice` and `vat_rate` 0: with any other VAT rate, without `vat_rate`, with `do_not_invoice` or with a value outside that list the request is rejected with 422 `charge_rule_invalid`, with `error.param` = `exemption_reason`. Omitted or `null` means no reason: the lines are invoiced at 0 % without an exemption cause. `PUT` replaces the whole rule, so omitting `exemption_reason` there clears the reason stored.
+     *
+     * @var ?string $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $exemptionReason = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleRequestCondition  $condition
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleRequestOutcome  $outcome
      * @param  ?string  $concept
      * @param  ?float  $vatRate
      * @param  ?\Factuarea\Sdk\Models\Components\ChargeRuleRequestNonInvoiceReason  $nonInvoiceReason
+     * @param  ?string  $exemptionReason
      * @phpstan-pure
      */
-    public function __construct(ChargeRuleRequestCondition $condition, ChargeRuleRequestOutcome $outcome, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleRequestNonInvoiceReason $nonInvoiceReason = null)
+    public function __construct(ChargeRuleRequestCondition $condition, ChargeRuleRequestOutcome $outcome, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleRequestNonInvoiceReason $nonInvoiceReason = null, ?string $exemptionReason = null)
     {
         $this->condition = $condition;
         $this->outcome = $outcome;
         $this->concept = $concept;
         $this->vatRate = $vatRate;
         $this->nonInvoiceReason = $nonInvoiceReason;
+        $this->exemptionReason = $exemptionReason;
     }
 }
