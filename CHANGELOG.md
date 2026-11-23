@@ -4,6 +4,108 @@ All notable changes to the Factuarea PHP SDK are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/). The SDK pins the
 `Factuarea-Version` it was generated against and sends it on every request.
 
+## [0.10.0] — 2026-11-23
+
+Regenerates the SDK from the published contract after the legacy client events
+were retired: **736 operations** over **585 paths** (+0 / −0) and a typed method
+for every one of them. Some generated classes are removed or renamed and some
+constructors reorder their optional arguments: see *Changed — breaking*. The
+default `Factuarea-Version` is unchanged (`2026-10-01`). In `0.x` a breaking
+change travels in a `minor`.
+
+### Changed — breaking
+
+- **The four `client.*` events are gone.** `client.created`, `client.updated`,
+  `client.deleted` and `client.metadata_changed` leave the event and webhook
+  payload unions and the lists of event names. Eight enums lose the cases
+  `ClientCreated`, `ClientUpdated`, `ClientDeleted` and `ClientMetadataChanged`:
+  `CreateAccountWebhookV1RequestEnabledEvent`,
+  `CreateWebhookEndpointRequestEnabledEvent`,
+  `UpdateAccountWebhookV1RequestEnabledEvent`,
+  `UpdateWebhookEndpointRequestEnabledEvent`, `WebhookEndpointEnabledEvent`,
+  `WebhookEndpointWithSecretEnabledEvent`, `SendAccountWebhookTestV1RequestType`
+  and `SendTestEventRequestType`. Use `contact.created`, `contact.updated` and
+  `contact.deleted` (`ContactCreated`, `ContactUpdated` and `ContactDeleted` in
+  those enums, with the `EventDataContact*` and `WebhookEventPayloadContact*`
+  classes). There is no `contact.metadata_changed`: a change of the metadata or
+  notes of a contact arrives as `contact.updated`.
+- **Nineteen classes are removed**: `Components\Client` (a contact is
+  `Components\BusinessContact`) with `ClientObject`, `ClientCoordinates` and
+  `PreferredOperationRegime`; `Address`; `BankAccount` and `BankAccountObject`;
+  `PaymentPreferences`, `PaymentPreferencesMethod` and
+  `PaymentPreferencesObject`; `EventDataClient{Created,Updated,Deleted,MetadataChanged}`;
+  `WebhookEventPayloadClient{Created,Updated,Deleted,MetadataChanged}`; and
+  `AlternativeIdObject`.
+- **Four classes are renamed**, with the same fields:
+
+  | Before | Now |
+  | --- | --- |
+  | `Components\BusinessContactCoordinates` | `Components\Coordinates` |
+  | `Operations\PublicApiV1EmployeesStatsData` | `Components\EmployeeStats` |
+  | `Operations\PublicApiV1SeriesStatsData` | `Components\SeriesStats` |
+  | `Operations\PublicApiV1WorkSchedulesStatsData` | `Components\WorkScheduleStats` |
+
+- **`AlternativeId`, the `alternative_id` of a contact, has no `object`.** Its
+  constructor loses `$object` (the first argument, so the others move up) and
+  `AlternativeIdType` loses `TaxIdForeign` and `NationalId`: they are accepted on
+  input only. The API never returned `object` or those two values.
+- **`environment` is an enum** in `VeriFactuConfig`
+  (`VeriFactuConfigEnvironment`) and in `VeriFactuRecord`
+  (`VeriFactuRecordEnvironment`), with the cases `Production` and `Sandbox`. It
+  was a `string`: read `->environment->value` where the string is needed.
+- **Optional constructor arguments move.** Pass them by name, as the pages under
+  `docs/sdks/` do. It affects `CreateBusinessContactV1Request` and
+  `UpdateBusinessContactV1Request` (new `alternativeId`), `CreateInvoiceRequest`
+  and the invoices of a bulk create (`payment`, `options`),
+  `CreateProductRequest` and `UpdateProductRequest` (`channels`, `seo`),
+  `CreateRecurringInvoiceRequest`, `UpdateRecurringInvoiceRequest` and
+  `CreateRecurringFromInvoiceRequest` (`autoDelivery`),
+  `CreateTransportDocumentRequest`, `UpdateTransportDocumentRequest` and
+  `ModifyTransportDocumentRequest` (`vehicle`, `shipper`, `carrier`), the items
+  of a promotion (new `variantId`) and the request objects of the contacts list,
+  search and activities, of the seat charge preview and of the employee seats
+  preview (their array filters). The response models `NifTransfer`,
+  `NifTransferWithSecret` and `PromotionItem` gain a constructor argument.
+
+### Added
+
+- `contacts` create, update and bulk create accept `alternativeId` (`type`,
+  `value`, `country_code`), the shape a read returns, so a foreign contact can be
+  read and sent back unchanged. The flat `alternativeIdType`,
+  `alternativeIdValue` and `alternativeIdCountryCode` keep working.
+- A promotion item carries `variantId`: always present in `PromotionItem`,
+  optional on the items of a promotion create and update.
+- `NifTransfer` and `NifTransferWithSecret` carry `recipientMember`
+  (`NifTransferRecipientMember`, with the member `id`, or `null`).
+
+### Changed
+
+- Published limits of a contact: `address.line_2` 100 (was 255),
+  `address.postal_code` 10 (was 20), `alternative_id_value` 50 (was 100) and
+  `bank_accounts[].bic` 11 (was 20; 8 or 11 characters). The server already
+  enforced them and the SDK does not check lengths. A longer value answers `422`
+  `invalid_param_value` with the field in `error.param`: `address.line_2` and
+  `address.postal_code` used to answer `500`, and `alternative_id_value` and the
+  BIC used to answer `422` with another `code` and `subcode`
+  (`alternative_id_value_invalid`, `bank_account_bic_invalid`).
+- `find-by-tax-id` accepts the tax ID with spaces, hyphens or dots. The contact
+  import and its preview normalise the tax ID before looking for duplicates and
+  report `value_too_long` with the new limits. The documentation of `quotes
+  accept` now says what the API already did: a quote whose `valid_until` has
+  passed can still be accepted.
+- `autoTransmit` and `environment` of the VeriFactu settings update are
+  deprecated and ignored (accepted until 2026-12-07): the AEAT environment and
+  the automatic submission are set by the instance and returned in the response.
+- The product gallery upload documents `402` and `503`.
+- Nine error codes leave the catalog: `client_has_documents`,
+  `client_import_too_large`, `client_requires_tax_identity` and
+  `supplier_has_documents` (routes retired on 2026-09-16) and
+  `forge_webhook_signature_invalid`, `invalid_pdf_artifact_fingerprint`,
+  `invalid_task_reference`, `quote_expired` and `webhook_endpoint_degraded`,
+  which the API never returned. The error code of the SDK is a `string`: nothing
+  changes at compile time.
+- Generated with Speakeasy `1.811.0` (generator `2.968.1`).
+
 ## [0.9.0] — 2026-11-04
 
 Regenerates the SDK from the published contract of the public API: **736
