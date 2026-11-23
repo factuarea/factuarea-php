@@ -1,0 +1,11 @@
+# InvoiceSupersededBy
+
+Reference to the corrective invoice (corrective by substitution) that replaced this invoice for collection purposes. The original is not voided, but it no longer demands payment: its `paid_amount` and `pending_amount` are `0.00` and it stops becoming overdue. An original that was already overdue goes back to `issued` when the corrective invoice replaces it; until that clean-up runs its `status` can still read `overdue`, although nothing is due on it. Register payments on the corrective invoice. `null` when the invoice has not been replaced.
+
+
+## Fields
+
+| Field                                                                       | Type                                                                        | Required                                                                    | Description                                                                 | Example                                                                     |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `id`                                                                        | *string*                                                                    | :heavy_check_mark:                                                          | UUID v7 of the corrective invoice that replaces this invoice.               | 01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a61                                        |
+| `number`                                                                    | *string*                                                                    | :heavy_check_mark:                                                          | Human-readable number of the corrective invoice that replaces this invoice. | R-2026-002                                                                  |

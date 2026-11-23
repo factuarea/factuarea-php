@@ -3486,7 +3486,8 @@ class Invoices
      *
      * Register a partial or full payment against an invoice.
      * - The invoice becomes `partially_paid` until the total is reached, then `paid`.
-     * - 422 for a status that rejects payments or `paid_on` later than today; an earlier date records an advance payment.
+     * - 422 `business_rule_violation` for a status that rejects payments (`invoice_not_payable`) and for an original replaced by a corrective invoice (`invoice_superseded_by_corrective`: register the payment on the corrective).
+     * - 422 for `paid_on` later than today; an earlier date records an advance payment.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentsCreateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesPaymentsCreateResponse
@@ -4512,6 +4513,7 @@ class Invoices
      * Preview a payment reminder email
      *
      * Renders the HTML, subject, and resolved recipients of the reminder email without sending it. Same override fields as send-reminder.
+     * - 422 `reminder_not_applicable` when no reminder can be sent: the invoice was replaced by a corrective invoice (remind from the corrective) or nothing is outstanding after its corrective invoices.
      *
      * @param  string  $company
      * @param  string  $invoice
@@ -5135,6 +5137,7 @@ class Invoices
      * Send a payment reminder
      *
      * Emails a payment reminder to the customer for this invoice. Accepts optional `email`, `subject`, `message`, `cc`, `bcc` overrides.
+     * - 422 `reminder_not_applicable` when no reminder can be sent, e.g. the invoice was replaced by a corrective invoice (remind from the corrective) or nothing is outstanding after its corrective invoices.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesSendReminderRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesSendReminderResponse

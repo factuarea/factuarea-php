@@ -65,6 +65,7 @@ or renamed, its concrete replacement.
 | `0.8.0`     | `2026-10-01`        | Company axis: every company resource under `/v1/companies/{company}/…`; +57/−5 operations, 652 generated (the 12 seat offer redemption operations are not generated). |
 | `0.9.0`     | `2026-10-01`        | Document templates, packs, promotions, products on the web and account seats: +72/−0 operations, all 736 generated (the 12 seat offer redemption operations included). |
 | `0.10.0`    | `2026-10-01`        | Legacy client events retired and contact types aligned with the contract: +0/−0 operations, all 736 generated; 19 generated classes removed and 4 renamed. |
+| `0.11.0`    | `2026-10-01`        | Rectification chain of an invoice (`superseded_by`, `credited_amount`, `inherited_paid_amount`) and the exemption cause of the Stripe charge rules: +0/−0 operations, all 736 generated; 2 classes added, none removed, 1 request class of the PDF template preview re-pointed. |
 
 When a new spec is pinned (see [`SPEC_SYNC.md`](SPEC_SYNC.md)):
 

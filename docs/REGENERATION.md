@@ -36,8 +36,8 @@ alone.
 | Pin | Value |
 | --- | --- |
 | Operations | **736** over **585** paths: 651 under `/companies/{company}`, 74 under `/accounts/{account}`, 11 at the root |
-| SHA-256 of the file | `75ab1ece535f0cca2f988869f995bac34fbf3f1512b338a836938c5f30f446cb` |
-| Canonical SHA-256 (keys sorted recursively, `x-codeSamples` dropped, compact JSON) | `2566ded607d7c8db2ef389fb3d14731c79f7a8c9036470c15ef71128eb626343` |
+| SHA-256 of the file | `0a53e3e56a8dfefda252225e23edc26e9a9bf10f38a4c3b008afa24d6a5dd967` |
+| Canonical SHA-256 (keys sorted recursively, `x-codeSamples` dropped, compact JSON) | `daf71e0a3d18766f300f6f04d15f8ebdddbd98d23e8ba93c5eb01cdd988dcc78` |
 
 `src/` is generated from this pin (Speakeasy `1.811.0`, generator `2.968.1`):
 **736 typed methods, one per operation**. Against the 664-operation contract of
@@ -46,8 +46,9 @@ generates the **12 seat offer redemption operations** that `0.8.0` could not
 (the contract no longer uses JSON Schema `not`) and adds **22 operations** the
 API published since: packs, promotions, product web channels and the account
 seats. No operation is removed. The `0.10.0` pin keeps those 736 operations and
-drops the legacy client events with their models (see
-[`CHANGELOG.md`](../CHANGELOG.md)). See
+drops the legacy client events with their models, and the `0.11.0` pin keeps them
+again and adds the exemption cause of the Stripe charge rules and the
+rectification chain of an invoice (see [`CHANGELOG.md`](../CHANGELOG.md)). See
 [Document-template contract](#document-template-contract-regenerated) for the
 signature changes and the checks that were run, and
 [Changes already published by the API](#changes-already-published-by-the-api)
@@ -186,7 +187,7 @@ generation, broke on the new signatures and response models.
 ```bash
 # 0. The pin, unchanged.
 sha256sum spec/openapi.json
-# 75ab1ece535f0cca2f988869f995bac34fbf3f1512b338a836938c5f30f446cb
+# 0a53e3e56a8dfefda252225e23edc26e9a9bf10f38a4c3b008afa24d6a5dd967
 
 # 1. Public methods of the generated layer BEFORE (src/*.php: neither src/Custom nor src/Hooks).
 grep -o 'public function publicApi[A-Za-z0-9]*' src/*.php \
