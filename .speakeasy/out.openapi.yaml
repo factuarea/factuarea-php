@@ -4896,6 +4896,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -4911,6 +4913,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -13823,6 +13826,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -13838,6 +13843,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -37011,6 +37017,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -37026,6 +37034,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -37494,6 +37503,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -37509,6 +37520,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -38726,6 +38738,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -38741,6 +38755,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -43110,6 +43125,7 @@ paths:
                       non_invoice_reason: null
                       concept: "Vale regalo"
                       vat_rate: 10
+                      exemption_reason: null
                       created_at: "2026-09-20T09:20:00+00:00"
                       updated_at: "2026-09-20T09:20:00+00:00"
           headers:
@@ -43191,7 +43207,7 @@ paths:
       x-required-scope: "stripe_autoinvoicing:write"
     get:
       operationId: "public-api.v1.stripe_autoinvoicing.accounts.charge_rules.list"
-      description: "Lists the charge treatment rules of a connected Stripe account ordered by `position`; the first match decides.\n- Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`.\n- Returns 404 if the account is not in your company."
+      description: "Lists the charge treatment rules of a connected Stripe account ordered by `position`; the first match decides.\n- Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`, `exemption_reason` (the exemption or non-subjection cause of a rule that invoices at 0 %, otherwise `null`).\n- Returns 404 if the account is not in your company."
       summary: "List charge treatment rules of a connected Stripe account"
       tags:
         - "Stripe"
@@ -43241,6 +43257,7 @@ paths:
                         non_invoice_reason: "indemnity_not_subject"
                         concept: null
                         vat_rate: null
+                        exemption_reason: null
                         created_at: "2026-09-20T09:15:00+00:00"
                         updated_at: "2026-09-20T09:15:00+00:00"
                       - id: "0192e7d1-7a81-7c6e-9345-6f708192a3b4"
@@ -43254,8 +43271,23 @@ paths:
                         non_invoice_reason: null
                         concept: "Vale regalo"
                         vat_rate: 10
+                        exemption_reason: null
                         created_at: "2026-09-20T09:20:00+00:00"
                         updated_at: "2026-09-20T09:20:00+00:00"
+                      - id: "0192e7d2-8b93-7e7f-a567-708192a3b4c5"
+                        object: "charge_rule"
+                        position: 3
+                        condition:
+                          type: "metadata_equals"
+                          key: "tipo"
+                          value: "formacion"
+                        outcome: "invoice"
+                        non_invoice_reason: null
+                        concept: "Formación"
+                        vat_rate: 0
+                        exemption_reason: "E1"
+                        created_at: "2026-09-20T09:25:00+00:00"
+                        updated_at: "2026-09-20T09:25:00+00:00"
           headers:
             X-Request-Id:
               description: "Identifier of this request (`req_` + ULID, or the value you sent, up to 40 characters). Quote it when contacting support."
@@ -43888,10 +43920,12 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
-                        pending: "-605.00"
+                        pending: "0.00"
                       is_corrective: true
                       corrective:
                         original_id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a10"
@@ -43914,6 +43948,7 @@ paths:
                       substituted_by:
                         id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a50"
                         number: "FAC-2026-00050"
+                      superseded_by: null
                       recurring:
                         id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a08"
                       paid_recorded_at: null
@@ -46203,6 +46238,8 @@ paths:
                       verifactu_status: "pending"
                       paid_amount: "5.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "019e5b7a-3d8c-7b14-8c47-2a9e5f0d6b13"
@@ -46237,6 +46274,7 @@ paths:
                         expires_at: null
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-06-01T00:00:00+02:00"
                       paid_date: "2026-06-01"
@@ -46446,6 +46484,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -46461,6 +46501,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -46591,6 +46632,8 @@ paths:
                       verifactu_status: "pending"
                       paid_amount: "5.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "019e5b7a-3d8c-7b14-8c47-2a9e5f0d6b13"
@@ -46625,6 +46668,7 @@ paths:
                         expires_at: null
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-06-01T00:00:00+02:00"
                       paid_date: "2026-06-01"
@@ -47463,6 +47507,8 @@ paths:
                         verifactu_status: "accepted"
                         paid_amount: "1210.00"
                         pending_amount: "0.00"
+                        credited_amount: "0.00"
+                        inherited_paid_amount: "0.00"
                         payments:
                           detail:
                             - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -47497,6 +47543,7 @@ paths:
                           expires_at: "2026-09-15T23:59:59Z"
                           max_days: 120
                         substituted_by: null
+                        superseded_by: null
                         recurring: null
                         paid_recorded_at: "2026-03-20T10:30:00Z"
                         paid_date: "2026-03-20"
@@ -68996,7 +69043,7 @@ paths:
       x-required-scope: "stripe_autoinvoicing:write"
     put:
       operationId: "public-api.v1.stripe_autoinvoicing.accounts.charge_rules.update"
-      description: "Replace a charge treatment rule: `condition`, `outcome`, `concept`, `vat_rate` and `non_invoice_reason` are all sent again; its `position` does not change (use the reorder operation). Returns 404 `charge_rule_not_found` if the rule does not exist in that account and company, and 422 `charge_rule_invalid` when a field breaks the contract."
+      description: "Replace a charge treatment rule: `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason` and `exemption_reason` are all sent again (omitting `exemption_reason` clears the stored cause); its `position` does not change (use the reorder operation). Returns 404 `charge_rule_not_found` if the rule does not exist in that account and company, and 422 `charge_rule_invalid` when a field breaks the contract."
       summary: "Update a charge treatment rule"
       tags:
         - "Stripe"
@@ -69058,6 +69105,7 @@ paths:
                       non_invoice_reason: "indemnity_not_subject"
                       concept: null
                       vat_rate: null
+                      exemption_reason: null
                       created_at: "2026-09-20T09:15:00+00:00"
                       updated_at: "2026-09-21T11:00:00+00:00"
           headers:
@@ -71377,6 +71425,8 @@ paths:
                       verifactu_status: "accepted"
                       paid_amount: "1210.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -71411,9 +71461,326 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-03-20T10:30:00Z"
                       paid_date: "2026-03-20"
+                      issued_at: "2026-03-15T11:45:00Z"
+                      sent_at: "2026-03-15T11:47:12Z"
+                      sent_via: "email"
+                      is_sent: true
+                      voided_at: null
+                      void_reason: null
+                      scheduled_for: null
+                      scheduled_action: null
+                      channel: null
+                      source_store_id: null
+                      origin: "native"
+                      created_at: "2026-03-15T11:30:00Z"
+                      updated_at: "2026-03-20T10:30:00Z"
+                      business_references: null
+                      invoicing_period: null
+                      legal_literals: []
+                      administrative_snapshot: null
+                      administrative_override: null
+                      administrative_centres: null
+                      administrative_version: 1
+                      administrative_revision_id: null
+                      structured_source_snapshots: []
+                      payment_terms: null
+                      payment_terms_version: 0
+                      payment_terms_source: "none"
+                      payment_terms_currency: "EUR"
+                      payment_terms_captured_at: null
+                      payment_terms_frozen_at: null
+                      pdf_output_state:
+                        state: null
+                        presentation_id: null
+                        artifact_id: null
+                        format: null
+                        variant: null
+                        unavailable_reason: null
+                        error: null
+                        retry_after: null
+                        download_url: null
+                      presentation: null
+                superseded_by_corrective:
+                  summary: "GET /v1/companies/{company}/invoices/{invoice} · 200 original invoice replaced by a corrective invoice (still issued, nothing left to collect on it)"
+                  value:
+                    data:
+                      id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a42"
+                      object: "invoice"
+                      number: "FAC-2026-00042"
+                      is_number_assigned: true
+                      type: "F1"
+                      series:
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b02"
+                        code: "FAC-2026"
+                      client:
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a01"
+                        name: "Acme Soluciones SL"
+                      status: "issued"
+                      price_list_id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b10"
+                      price_list_name: "Tarifa profesional 2026"
+                      issued_on: "2026-03-15"
+                      due_on: "2026-04-14"
+                      operation_on: null
+                      subtotal: "1000.00"
+                      taxes_total: "210.00"
+                      total_vat: "210.00"
+                      total_retention: "0.00"
+                      total_surcharge: "0.00"
+                      total: "1210.00"
+                      total_disbursements: "0.00"
+                      total_to_pay: "1210.00"
+                      currency: "EUR"
+                      notes: "Servicios profesionales marzo 2026."
+                      external_id: "ERP-2026-0042"
+                      lines:
+                        - object: "invoice_line"
+                          description: "Consultoría técnica (10 h)"
+                          additional_description: "Auditoría inicial e informe de mejoras"
+                          product:
+                            id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b03"
+                            name: "Consultoría técnica (hora)"
+                          quantity: 10
+                          unit_price: "100.0000"
+                          tax_rate: 21
+                          retention_rate: 0
+                          surcharge_rate: 0
+                          discount_percent: 0
+                          subtotal: "1000.00"
+                          taxes: "210.00"
+                          total: "1210.00"
+                          indirect_tax_regime: "iva"
+                          variant: null
+                          presentation: null
+                          item_kind: "service"
+                          commercial_unit_code: "HUR"
+                          base_unit_code: "HUR"
+                          conversion_factor: "1.000000"
+                          base_quantity: "10.0000"
+                          counted_quantity: null
+                          counted_unit: null
+                          price_list_id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b10"
+                          price_list_name: "Tarifa profesional 2026"
+                          price_source: "price_list"
+                          price_unit_code: "HUR"
+                          configuration: null
+                          options: []
+                          price_semantics: "per_commercial_unit"
+                          price_adjustment_total: "0.0000"
+                          option_adjustments_absorbed: false
+                          regime_key: null
+                          exemption_reason: null
+                          aeat_tax_code: "S1"
+                          line_type: "NORMAL"
+                          source_invoice_reference: null
+                          source_invoice_ids: null
+                          unit: null
+                          exemption_reason_text: null
+                          pack_group: null
+                          id: "019e0000-0000-7000-8000-000000000001"
+                          business_references: null
+                          delivery_notes_references: []
+                          sequence_number: null
+                      metadata:
+                        order_id: "PO-2026-0042"
+                      tags:
+                        - "consultoria"
+                        - "cliente-vip"
+                      custom_fields:
+                        - field: "centro_coste"
+                          value: "CC-2026-001"
+                        - field: "numero_pedido"
+                          value: "PO-2026-0042"
+                      operation_regime: "general"
+                      exemption_reason: null
+                      legal_mentions: []
+                      exclude_347: false
+                      verifactu_status: "accepted"
+                      paid_amount: "0.00"
+                      pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
+                      payments:
+                        detail: []
+                        total: "0.00"
+                        pending: "0.00"
+                      is_corrective: false
+                      corrective: null
+                      payment: null
+                      public_link:
+                        object: "public_link"
+                        url: "https://app.factuarea.com/d/01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a42"
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a42"
+                        enabled: true
+                        expires_at: "2026-09-15T23:59:59Z"
+                        max_days: 120
+                      substituted_by: null
+                      superseded_by:
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a61"
+                        number: "R-2026-002"
+                      recurring: null
+                      paid_recorded_at: null
+                      paid_date: null
+                      issued_at: "2026-03-15T11:45:00Z"
+                      sent_at: "2026-03-15T11:47:12Z"
+                      sent_via: "email"
+                      is_sent: true
+                      voided_at: null
+                      void_reason: null
+                      scheduled_for: null
+                      scheduled_action: null
+                      channel: null
+                      source_store_id: null
+                      origin: "native"
+                      created_at: "2026-03-15T11:30:00Z"
+                      updated_at: "2026-03-20T10:30:00Z"
+                      business_references: null
+                      invoicing_period: null
+                      legal_literals: []
+                      administrative_snapshot: null
+                      administrative_override: null
+                      administrative_centres: null
+                      administrative_version: 1
+                      administrative_revision_id: null
+                      structured_source_snapshots: []
+                      payment_terms: null
+                      payment_terms_version: 0
+                      payment_terms_source: "none"
+                      payment_terms_currency: "EUR"
+                      payment_terms_captured_at: null
+                      payment_terms_frozen_at: null
+                      pdf_output_state:
+                        state: null
+                        presentation_id: null
+                        artifact_id: null
+                        format: null
+                        variant: null
+                        unavailable_reason: null
+                        error: null
+                        retry_after: null
+                        download_url: null
+                      presentation: null
+                with_applied_credit_note:
+                  summary: "GET /v1/companies/{company}/invoices/{invoice} · 200 invoice with an applied credit note (300.00 credited, 1515.00 still pending)"
+                  value:
+                    data:
+                      id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a43"
+                      object: "invoice"
+                      number: "FAC-2026-00043"
+                      is_number_assigned: true
+                      type: "F1"
+                      series:
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b02"
+                        code: "FAC-2026"
+                      client:
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a01"
+                        name: "Acme Soluciones SL"
+                      status: "issued"
+                      price_list_id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b10"
+                      price_list_name: "Tarifa profesional 2026"
+                      issued_on: "2026-03-15"
+                      due_on: "2026-04-14"
+                      operation_on: null
+                      subtotal: "1500.00"
+                      taxes_total: "315.00"
+                      total_vat: "315.00"
+                      total_retention: "0.00"
+                      total_surcharge: "0.00"
+                      total: "1815.00"
+                      total_disbursements: "0.00"
+                      total_to_pay: "1815.00"
+                      currency: "EUR"
+                      notes: "Servicios profesionales marzo 2026."
+                      external_id: "ERP-2026-0043"
+                      lines:
+                        - object: "invoice_line"
+                          description: "Consultoría técnica (15 h)"
+                          additional_description: "Auditoría inicial e informe de mejoras"
+                          product:
+                            id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b03"
+                            name: "Consultoría técnica (hora)"
+                          quantity: 15
+                          unit_price: "100.0000"
+                          tax_rate: 21
+                          retention_rate: 0
+                          surcharge_rate: 0
+                          discount_percent: 0
+                          subtotal: "1500.00"
+                          taxes: "315.00"
+                          total: "1815.00"
+                          indirect_tax_regime: "iva"
+                          variant: null
+                          presentation: null
+                          item_kind: "service"
+                          commercial_unit_code: "HUR"
+                          base_unit_code: "HUR"
+                          conversion_factor: "1.000000"
+                          base_quantity: "15.0000"
+                          counted_quantity: null
+                          counted_unit: null
+                          price_list_id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8b10"
+                          price_list_name: "Tarifa profesional 2026"
+                          price_source: "price_list"
+                          price_unit_code: "HUR"
+                          configuration: null
+                          options: []
+                          price_semantics: "per_commercial_unit"
+                          price_adjustment_total: "0.0000"
+                          option_adjustments_absorbed: false
+                          regime_key: null
+                          exemption_reason: null
+                          aeat_tax_code: "S1"
+                          line_type: "NORMAL"
+                          source_invoice_reference: null
+                          source_invoice_ids: null
+                          unit: null
+                          exemption_reason_text: null
+                          pack_group: null
+                          id: "019e0000-0000-7000-8000-000000000001"
+                          business_references: null
+                          delivery_notes_references: []
+                          sequence_number: null
+                      metadata:
+                        order_id: "PO-2026-0042"
+                      tags:
+                        - "consultoria"
+                        - "cliente-vip"
+                      custom_fields:
+                        - field: "centro_coste"
+                          value: "CC-2026-001"
+                        - field: "numero_pedido"
+                          value: "PO-2026-0042"
+                      operation_regime: "general"
+                      exemption_reason: null
+                      legal_mentions: []
+                      exclude_347: false
+                      verifactu_status: "accepted"
+                      paid_amount: "0.00"
+                      pending_amount: "1515.00"
+                      credited_amount: "300.00"
+                      inherited_paid_amount: "0.00"
+                      payments:
+                        detail: []
+                        total: "0.00"
+                        pending: "1515.00"
+                      is_corrective: false
+                      corrective: null
+                      payment: null
+                      public_link:
+                        object: "public_link"
+                        url: "https://app.factuarea.com/d/01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a43"
+                        id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a43"
+                        enabled: true
+                        expires_at: "2026-09-15T23:59:59Z"
+                        max_days: 120
+                      substituted_by: null
+                      superseded_by: null
+                      recurring: null
+                      paid_recorded_at: null
+                      paid_date: null
                       issued_at: "2026-03-15T11:45:00Z"
                       sent_at: "2026-03-15T11:47:12Z"
                       sent_via: "email"
@@ -72056,6 +72423,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -72071,6 +72440,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -101421,6 +101791,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -101436,6 +101808,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -105667,6 +106040,8 @@ paths:
                       verifactu_status: "accepted"
                       paid_amount: "1210.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -105701,6 +106076,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-03-20T10:30:00Z"
                       paid_date: "2026-03-20"
@@ -106093,6 +106469,8 @@ paths:
                       verifactu_status: "accepted"
                       paid_amount: "1210.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -106127,6 +106505,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-03-20T10:30:00Z"
                       paid_date: "2026-03-20"
@@ -140485,6 +140864,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -140500,6 +140881,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -149924,6 +150306,8 @@ paths:
                             verifactu_status: "accepted"
                             paid_amount: "1210.00"
                             pending_amount: "0.00"
+                            credited_amount: "0.00"
+                            inherited_paid_amount: "0.00"
                             payments:
                               detail:
                                 - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -149958,6 +150342,7 @@ paths:
                               expires_at: "2026-09-15T23:59:59Z"
                               max_days: 120
                             substituted_by: null
+                            superseded_by: null
                             recurring: null
                             paid_recorded_at: "2026-03-20T10:30:00Z"
                             paid_date: "2026-03-20"
@@ -152254,11 +152639,13 @@ paths:
                         exclude_347: false
                         verifactu_status: "accepted"
                         paid_amount: "0.00"
-                        pending_amount: "-605.00"
+                        pending_amount: "0.00"
+                        credited_amount: "0.00"
+                        inherited_paid_amount: "0.00"
                         payments:
                           detail: []
                           total: "0.00"
-                          pending: "-605.00"
+                          pending: "0.00"
                         is_corrective: true
                         corrective:
                           original_id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a10"
@@ -152281,6 +152668,7 @@ paths:
                         substituted_by:
                           id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a50"
                           number: "FAC-2026-00050"
+                        superseded_by: null
                         recurring:
                           id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a08"
                         paid_recorded_at: null
@@ -153665,7 +154053,7 @@ paths:
       x-required-scope: "invoices:read"
     post:
       operationId: "public-api.v1.invoices.payments_create"
-      description: "Register a partial or full payment against an invoice.\n- The invoice becomes `partially_paid` until the total is reached, then `paid`.\n- 422 for a status that rejects payments or `paid_on` later than today; an earlier date records an advance payment."
+      description: "Register a partial or full payment against an invoice.\n- The invoice becomes `partially_paid` until the total is reached, then `paid`.\n- 422 `business_rule_violation` for a status that rejects payments (`invoice_not_payable`) and for an original replaced by a corrective invoice (`invoice_superseded_by_corrective`: register the payment on the corrective).\n- 422 for `paid_on` later than today; an earlier date records an advance payment."
       summary: "Register a payment"
       tags:
         - "Invoices"
@@ -153889,6 +154277,26 @@ paths:
                           message: "El campo amount es obligatorio."
                       doc_url: "https://docs.factuarea.com/guides/errors#invalid_param_value"
                       request_id: "req_4f2ad5b145c424b67e6dc0ccf9"
+                invoice_not_payable:
+                  summary: "POST /v1/companies/{company}/invoices/{invoice}/payments · 422 business_rule_violation (invoice_not_payable: a draft takes no payments)"
+                  value:
+                    error:
+                      type: "invalid_request_error"
+                      code: "business_rule_violation"
+                      message: "No se pueden registrar pagos para la factura en estado draft"
+                      subcode: "invoice_not_payable"
+                      doc_url: "https://docs.factuarea.com/guides/errors#business_rule_violation"
+                      request_id: "req_7c1e4a90b2d8f35e6a0c9d1b47"
+                invoice_superseded_by_corrective:
+                  summary: "POST /v1/companies/{company}/invoices/{invoice}/payments · 422 business_rule_violation (invoice_superseded_by_corrective: register the payment on the corrective invoice)"
+                  value:
+                    error:
+                      type: "invalid_request_error"
+                      code: "business_rule_violation"
+                      message: "Esta factura está sustituida por la rectificativa R-2026-002. Registra el cobro en la rectificativa."
+                      subcode: "invoice_superseded_by_corrective"
+                      doc_url: "https://docs.factuarea.com/guides/errors#business_rule_violation"
+                      request_id: "req_2b9f60d3e8a1c7054f6e3a8d19"
                 idempotency_key_reused:
                   $ref: "#/components/examples/middleware_error_idempotency_key_reused"
                 invalid_idempotency_key_format:
@@ -166465,6 +166873,8 @@ paths:
                               verifactu_status: "accepted"
                               paid_amount: "1210.00"
                               pending_amount: "0.00"
+                              credited_amount: "0.00"
+                              inherited_paid_amount: "0.00"
                               payments:
                                 detail:
                                   - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -166499,6 +166909,7 @@ paths:
                                 expires_at: "2026-09-15T23:59:59Z"
                                 max_days: 120
                               substituted_by: null
+                              superseded_by: null
                               recurring: null
                               paid_recorded_at: "2026-03-20T10:30:00Z"
                               paid_date: "2026-03-20"
@@ -167537,6 +167948,8 @@ paths:
                       verifactu_status: "accepted"
                       paid_amount: "1210.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -167571,6 +167984,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-03-20T10:30:00Z"
                       paid_date: "2026-03-20"
@@ -168011,6 +168425,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -168026,6 +168442,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -173781,7 +174198,7 @@ paths:
   /companies/{company}/invoices/{invoice}/reminder-preview:
     post:
       operationId: "public-api.v1.invoices.reminder_preview"
-      description: "Renders the HTML, subject, and resolved recipients of the reminder email without sending it. Same override fields as send-reminder."
+      description: "Renders the HTML, subject, and resolved recipients of the reminder email without sending it. Same override fields as send-reminder.\n- 422 `reminder_not_applicable` when no reminder can be sent: the invoice was replaced by a corrective invoice (remind from the corrective) or nothing is outstanding after its corrective invoices."
       summary: "Preview a payment reminder email"
       tags:
         - "Invoices"
@@ -173990,6 +174407,15 @@ paths:
                           message: "El campo email no tiene un valor válido."
                       doc_url: "https://docs.factuarea.com/guides/errors#invalid_param_value"
                       request_id: "req_357cee7981b21779534bb4442e"
+                reminder_not_applicable:
+                  summary: "POST /v1/companies/{company}/invoices/{invoice}/reminder-preview · 422 reminder_not_applicable (the invoice is replaced by a corrective invoice)"
+                  value:
+                    error:
+                      type: "invalid_request_error"
+                      code: "reminder_not_applicable"
+                      message: "Esta factura está sustituida por la rectificativa R-2026-002: el recordatorio se envía desde la rectificativa."
+                      doc_url: "https://docs.factuarea.com/guides/errors#reminder_not_applicable"
+                      request_id: "req_a4d07e51c9b3f8260e1d5c7a93"
                 idempotency_key_reused:
                   $ref: "#/components/examples/middleware_error_idempotency_key_reused"
                 invalid_idempotency_key_format:
@@ -183426,6 +183852,7 @@ paths:
                         non_invoice_reason: null
                         concept: "Vale regalo"
                         vat_rate: 10
+                        exemption_reason: null
                         created_at: "2026-09-20T09:20:00+00:00"
                         updated_at: "2026-09-20T09:20:00+00:00"
                       - id: "0192e7d0-5e6f-7a4c-b123-4d5e6f708192"
@@ -183439,8 +183866,23 @@ paths:
                         non_invoice_reason: "indemnity_not_subject"
                         concept: null
                         vat_rate: null
+                        exemption_reason: null
                         created_at: "2026-09-20T09:15:00+00:00"
                         updated_at: "2026-09-20T09:15:00+00:00"
+                      - id: "0192e7d2-8b93-7e7f-a567-708192a3b4c5"
+                        object: "charge_rule"
+                        position: 3
+                        condition:
+                          type: "metadata_equals"
+                          key: "tipo"
+                          value: "formacion"
+                        outcome: "invoice"
+                        non_invoice_reason: null
+                        concept: "Formación"
+                        vat_rate: 0
+                        exemption_reason: "E1"
+                        created_at: "2026-09-20T09:25:00+00:00"
+                        updated_at: "2026-09-20T09:25:00+00:00"
           headers:
             X-Request-Id:
               description: "Identifier of this request (`req_` + ULID, or the value you sent, up to 40 characters). Quote it when contacting support."
@@ -185304,6 +185746,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -185319,6 +185763,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -197259,6 +197704,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -197274,6 +197721,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -200992,6 +201440,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -201007,6 +201457,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -201410,7 +201861,7 @@ paths:
   /companies/{company}/invoices/{invoice}/send-reminder:
     post:
       operationId: "public-api.v1.invoices.send_reminder"
-      description: "Emails a payment reminder to the customer for this invoice. Accepts optional `email`, `subject`, `message`, `cc`, `bcc` overrides."
+      description: "Emails a payment reminder to the customer for this invoice. Accepts optional `email`, `subject`, `message`, `cc`, `bcc` overrides.\n- 422 `reminder_not_applicable` when no reminder can be sent, e.g. the invoice was replaced by a corrective invoice (remind from the corrective) or nothing is outstanding after its corrective invoices."
       summary: "Send a payment reminder"
       tags:
         - "Invoices"
@@ -201629,6 +202080,15 @@ paths:
                       param: "Idempotency-Key"
                       doc_url: "https://docs.factuarea.com/guides/errors#invalid_param_format"
                       request_id: "req_3fd2e61c2e5a8f0c012f89cbd2"
+                reminder_not_applicable:
+                  summary: "POST /v1/companies/{company}/invoices/{invoice}/send-reminder · 422 reminder_not_applicable (the invoice is replaced by a corrective invoice)"
+                  value:
+                    error:
+                      type: "invalid_request_error"
+                      code: "reminder_not_applicable"
+                      message: "Esta factura está sustituida por la rectificativa R-2026-002: el recordatorio se envía desde la rectificativa."
+                      doc_url: "https://docs.factuarea.com/guides/errors#reminder_not_applicable"
+                      request_id: "req_7c1e9a40d2b86f35a0e4c91b78"
                 idempotency_key_reused:
                   $ref: "#/components/examples/middleware_error_idempotency_key_reused"
                 idempotency_key_required:
@@ -208963,6 +209423,8 @@ paths:
                           verifactu_status: "accepted"
                           paid_amount: "1210.00"
                           pending_amount: "0.00"
+                          credited_amount: "0.00"
+                          inherited_paid_amount: "0.00"
                           payments:
                             detail:
                               - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -208997,6 +209459,7 @@ paths:
                             expires_at: "2026-09-15T23:59:59Z"
                             max_days: 120
                           substituted_by: null
+                          superseded_by: null
                           recurring: null
                           paid_recorded_at: "2026-03-20T10:30:00Z"
                           paid_date: "2026-03-20"
@@ -212006,6 +212469,8 @@ paths:
                             verifactu_status: "accepted"
                             paid_amount: "1210.00"
                             pending_amount: "0.00"
+                            credited_amount: "0.00"
+                            inherited_paid_amount: "0.00"
                             payments:
                               detail:
                                 - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -212040,6 +212505,7 @@ paths:
                               expires_at: "2026-09-15T23:59:59Z"
                               max_days: 120
                             substituted_by: null
+                            superseded_by: null
                             recurring: null
                             paid_recorded_at: "2026-03-20T10:30:00Z"
                             paid_date: "2026-03-20"
@@ -215209,6 +215675,8 @@ paths:
                       verifactu_status: "accepted"
                       paid_amount: "1210.00"
                       pending_amount: "0.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail:
                           - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -215243,6 +215711,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: "2026-03-20T10:30:00Z"
                       paid_date: "2026-03-20"
@@ -220466,6 +220935,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -220481,6 +220952,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -220867,6 +221339,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -220882,6 +221356,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -225031,6 +225506,8 @@ paths:
                       verifactu_status: "not_applicable"
                       paid_amount: "0.00"
                       pending_amount: "1210.00"
+                      credited_amount: "0.00"
+                      inherited_paid_amount: "0.00"
                       payments:
                         detail: []
                         total: "0.00"
@@ -225046,6 +225523,7 @@ paths:
                         expires_at: "2026-09-15T23:59:59Z"
                         max_days: 120
                       substituted_by: null
+                      superseded_by: null
                       recurring: null
                       paid_recorded_at: null
                       paid_date: null
@@ -233747,6 +234225,22 @@ components:
           maximum: 100
           example: null
           description: "VAT rate in percent applied to the line. Only with `invoice`; `null` otherwise."
+        exemption_reason:
+          type:
+            - "string"
+            - "null"
+          enum:
+            - "E1"
+            - "E2"
+            - "E3"
+            - "E4"
+            - "E5"
+            - "E6"
+            - "N1"
+            - "N2"
+            - null
+          example: null
+          description: "Cause of exemption (`E1`–`E6`) or non-subjection (`N1`, `N2`) that the invoice lines produced by the rule carry. Only with `invoice` and a `vat_rate` of 0; `null` otherwise, and the lines then carry no cause."
         created_at:
           type: "string"
           format: "date-time"
@@ -233766,6 +234260,7 @@ components:
         - "non_invoice_reason"
         - "concept"
         - "vat_rate"
+        - "exemption_reason"
         - "created_at"
         - "updated_at"
       title: "ChargeRule"
@@ -233818,6 +234313,11 @@ components:
             - "multipurpose_voucher"
             - "invoiced_elsewhere"
             - null
+        exemption_reason:
+          type:
+            - "string"
+            - "null"
+          description: "Reason for the exemption or non-subjection of the invoice lines this rule produces: one of `E1`, `E2`, `E3`, `E4`, `E5`, `E6`, `N1` or `N2`. Optional, and accepted only with `outcome` `invoice` and `vat_rate` 0: with any other VAT rate, without `vat_rate`, with `do_not_invoice` or with a value outside that list the request is rejected with 422 `charge_rule_invalid`, with `error.param` = `exemption_reason`. Omitted or `null` means no reason: the lines are invoiced at 0 % without an exemption cause. `PUT` replaces the whole rule, so omitting `exemption_reason` there clears the reason stored."
       required:
         - "condition"
         - "outcome"
@@ -250988,7 +251488,7 @@ components:
             - "0.00"
         total_to_pay:
           type: "string"
-          description: "Amount the client actually has to pay: `total + total_disbursements`. DERIVED, never stored — one single formula computes it — and equal to `total` on an invoice without disbursements. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line yields `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. Note that `paid_amount`/`pending_amount` are measured against `total`, not against `total_to_pay`."
+          description: "Amount the client actually has to pay: `total + total_disbursements`. DERIVED, never stored — one single formula computes it — and equal to `total` on an invoice without disbursements. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line yields `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. Note that `pending_amount` is measured against `total_to_pay`, not against `total` (see `credited_amount` and `paid_amount`)."
           example: "1210.00"
           examples:
             - "1210.00"
@@ -251085,13 +251585,25 @@ components:
             - "submitted"
         paid_amount:
           type: "string"
-          description: "Amount already collected for this invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`."
+          description: "Amount collected for this invoice along its rectification chain, derived from the payment ledger. Without corrective invoices it is the sum of the payments registered on the invoice. A corrective invoice that replaces the original also counts the payments registered on that original (`inherited_paid_amount`), and an original replaced by a corrective invoice publishes `0.00`."
           example: "1210.00"
           examples:
             - "1210.00"
         pending_amount:
           type: "string"
-          description: "Outstanding balance pending collection for this invoice (derived from the payment ledger)."
+          description: "Outstanding balance pending collection along the rectification chain, derived from the payment ledger. On a live invoice, `pending_amount = total_to_pay - credited_amount - paid_amount`. An original replaced by a corrective invoice (see `superseded_by`) and an applied credit note publish `0.00`, not a negative amount."
+          example: "0.00"
+          examples:
+            - "0.00"
+        credited_amount:
+          type: "string"
+          description: "Amount that the credit notes of the rectification chain (corrective invoices by differences with a negative amount) deduct from what this invoice demands, as a two-decimal string. `0.00` when none applies. Credit notes issued before a replacement corrective invoice are not deducted from it."
+          example: "0.00"
+          examples:
+            - "0.00"
+        inherited_paid_amount:
+          type: "string"
+          description: "Payments registered on the original invoice that count towards this corrective invoice by substitution, as a two-decimal string. `0.00` when none applies. It is included in `paid_amount`; the payments themselves stay listed on the original invoice."
           example: "0.00"
           examples:
             - "0.00"
@@ -251135,6 +251647,10 @@ components:
         substituted_by:
           anyOf:
             - $ref: "#/components/schemas/InvoiceSubstitutedBy"
+            - type: "null"
+        superseded_by:
+          anyOf:
+            - $ref: "#/components/schemas/InvoiceSupersededBy"
             - type: "null"
         recurring:
           anyOf:
@@ -251459,12 +251975,15 @@ components:
         - "verifactu_status"
         - "paid_amount"
         - "pending_amount"
+        - "credited_amount"
+        - "inherited_paid_amount"
         - "payments"
         - "is_corrective"
         - "corrective"
         - "payment"
         - "public_link"
         - "substituted_by"
+        - "superseded_by"
         - "recurring"
         - "paid_recorded_at"
         - "paid_date"
@@ -251586,6 +252105,8 @@ components:
         verifactu_status: "accepted"
         paid_amount: "1210.00"
         pending_amount: "0.00"
+        credited_amount: "0.00"
+        inherited_paid_amount: "0.00"
         payments:
           detail:
             - id: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a90"
@@ -251620,6 +252141,7 @@ components:
           expires_at: "2026-09-15T23:59:59Z"
           max_days: 120
         substituted_by: null
+        superseded_by: null
         recurring: null
         paid_recorded_at: "2026-03-20T10:30:00Z"
         paid_date: "2026-03-20"
@@ -253750,6 +254272,22 @@ components:
         - "id"
         - "number"
       title: "InvoiceSubstitutedBy"
+    InvoiceSupersededBy:
+      type: "object"
+      description: "Reference to the corrective invoice (corrective by substitution) that replaced this invoice for collection purposes. The original is not voided, but it no longer demands payment: its `paid_amount` and `pending_amount` are `0.00` and it stops becoming overdue. An original that was already overdue goes back to `issued` when the corrective invoice replaces it; until that clean-up runs its `status` can still read `overdue`, although nothing is due on it. Register payments on the corrective invoice. `null` when the invoice has not been replaced."
+      properties:
+        id:
+          type: "string"
+          example: "01931b3e-7c4a-7f2e-9a8b-3c5d6e7f8a61"
+          description: "UUID v7 of the corrective invoice that replaces this invoice."
+        number:
+          type: "string"
+          example: "R-2026-002"
+          description: "Human-readable number of the corrective invoice that replaces this invoice."
+      required:
+        - "id"
+        - "number"
+      title: "InvoiceSupersededBy"
     InvoiceTaskTimeV1Request:
       type: "object"
       properties:

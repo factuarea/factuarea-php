@@ -132,7 +132,7 @@ class InvoiceWithCheckoutBlocks
     public string $totalDisbursements;
 
     /**
-     * Amount the client actually has to pay: `total + total_disbursements`. DERIVED, never stored — one single formula computes it — and equal to `total` on an invoice without disbursements. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line yields `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. Note that `paid_amount`/`pending_amount` are measured against `total`, not against `total_to_pay`.
+     * Amount the client actually has to pay: `total + total_disbursements`. DERIVED, never stored — one single formula computes it — and equal to `total` on an invoice without disbursements. Worked example: a 1,000.00 service line at 21% plus a 150.00 `SUPLIDO` line yields `subtotal` 1000.00, `taxes_total` 210.00, `total` 1210.00, `total_disbursements` 150.00 and `total_to_pay` 1360.00. Note that `pending_amount` is measured against `total_to_pay`, not against `total` (see `credited_amount` and `paid_amount`).
      *
      * @var string $totalToPay
      */
@@ -208,7 +208,7 @@ class InvoiceWithCheckoutBlocks
     public string $verifactuStatus;
 
     /**
-     * Amount already collected for this invoice (derived from the payment ledger). Satisfies the invariant `paid_amount + pending_amount === total`.
+     * Amount collected for this invoice along its rectification chain, derived from the payment ledger. Without corrective invoices it is the sum of the payments registered on the invoice. A corrective invoice that replaces the original also counts the payments registered on that original (`inherited_paid_amount`), and an original replaced by a corrective invoice publishes `0.00`.
      *
      * @var string $paidAmount
      */
@@ -216,12 +216,28 @@ class InvoiceWithCheckoutBlocks
     public string $paidAmount;
 
     /**
-     * Outstanding balance pending collection for this invoice (derived from the payment ledger).
+     * Outstanding balance pending collection along the rectification chain, derived from the payment ledger. On a live invoice, `pending_amount = total_to_pay - credited_amount - paid_amount`. An original replaced by a corrective invoice (see `superseded_by`) and an applied credit note publish `0.00`, not a negative amount.
      *
      * @var string $pendingAmount
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('pending_amount')]
     public string $pendingAmount;
+
+    /**
+     * Amount that the credit notes of the rectification chain (corrective invoices by differences with a negative amount) deduct from what this invoice demands, as a two-decimal string. `0.00` when none applies. Credit notes issued before a replacement corrective invoice are not deducted from it.
+     *
+     * @var string $creditedAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('credited_amount')]
+    public string $creditedAmount;
+
+    /**
+     * Payments registered on the original invoice that count towards this corrective invoice by substitution, as a two-decimal string. `0.00` when none applies. It is included in `paid_amount`; the payments themselves stay listed on the original invoice.
+     *
+     * @var string $inheritedPaidAmount
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('inherited_paid_amount')]
+    public string $inheritedPaidAmount;
 
     /**
      * Payment ledger summary, ALWAYS present (never `null`). `total` mirrors `paid_amount`, `pending` mirrors `pending_amount`. `detail` lists the individual payments and is materialized ONLY on the show endpoint (`GET /v1/companies/{company}/invoices/{invoice}`); in list responses `detail` is `[]` (by cost) while `total`/`pending` stay populated. The detail is also available via `GET /v1/companies/{company}/invoices/{invoice}/payments`.
@@ -427,6 +443,14 @@ class InvoiceWithCheckoutBlocks
     #[\Speakeasy\Serializer\Annotation\SerializedName('substituted_by')]
     #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceSubstitutedBy|null')]
     public ?InvoiceSubstitutedBy $substitutedBy;
+
+    /**
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceSupersededBy $supersededBy
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('superseded_by')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceSupersededBy|null')]
+    public ?InvoiceSupersededBy $supersededBy;
 
     /**
      *
@@ -669,6 +693,8 @@ class InvoiceWithCheckoutBlocks
      * @param  string  $verifactuStatus
      * @param  string  $paidAmount
      * @param  string  $pendingAmount
+     * @param  string  $creditedAmount
+     * @param  string  $inheritedPaidAmount
      * @param  \Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksPayments  $payments
      * @param  bool  $isCorrective
      * @param  bool  $isSent
@@ -695,6 +721,7 @@ class InvoiceWithCheckoutBlocks
      * @param  ?\Factuarea\Sdk\Models\Components\InvoicePayment  $payment
      * @param  ?\Factuarea\Sdk\Models\Components\PublicLink  $publicLink
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceSubstitutedBy  $substitutedBy
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceSupersededBy  $supersededBy
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceRecurring  $recurring
      * @param  ?\DateTime  $paidRecordedAt
      * @param  ?LocalDate  $paidDate
@@ -722,7 +749,7 @@ class InvoiceWithCheckoutBlocks
      * @param  ?string  $publicUrl
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceWithCheckoutBlocksObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceWithCheckoutBlocksStatus $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $totalDisbursements, string $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, string $paidAmount, string $pendingAmount, InvoiceWithCheckoutBlocksPayments $payments, bool $isCorrective, bool $isSent, InvoiceWithCheckoutBlocksOrigin $origin, DocumentPdfOutputState $pdfOutputState, \DateTime $createdAt, \DateTime $updatedAt, array $legalLiterals, int $administrativeVersion, array $structuredSourceSnapshots, int $paymentTermsVersion, InvoiceWithCheckoutBlocksPaymentTermsSource $paymentTermsSource, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceWithCheckoutBlocksSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceWithCheckoutBlocksScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?DocumentPresentationState $presentation = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $administrativeSnapshot = null, ?array $administrativeOverride = null, ?array $administrativeCentres = null, ?string $administrativeRevisionId = null, ?array $paymentTerms = null, ?\DateTime $paymentTermsCapturedAt = null, ?\DateTime $paymentTermsFrozenAt = null, ?Verifactu $verifactu = null, ?Pdf $pdf = null, ?string $publicUrl = null, string $paymentTermsCurrency = 'EUR')
+    public function __construct(string $id, InvoiceWithCheckoutBlocksObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceWithCheckoutBlocksStatus $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $totalDisbursements, string $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, string $paidAmount, string $pendingAmount, string $creditedAmount, string $inheritedPaidAmount, InvoiceWithCheckoutBlocksPayments $payments, bool $isCorrective, bool $isSent, InvoiceWithCheckoutBlocksOrigin $origin, DocumentPdfOutputState $pdfOutputState, \DateTime $createdAt, \DateTime $updatedAt, array $legalLiterals, int $administrativeVersion, array $structuredSourceSnapshots, int $paymentTermsVersion, InvoiceWithCheckoutBlocksPaymentTermsSource $paymentTermsSource, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceSupersededBy $supersededBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceWithCheckoutBlocksSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceWithCheckoutBlocksScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?DocumentPresentationState $presentation = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $administrativeSnapshot = null, ?array $administrativeOverride = null, ?array $administrativeCentres = null, ?string $administrativeRevisionId = null, ?array $paymentTerms = null, ?\DateTime $paymentTermsCapturedAt = null, ?\DateTime $paymentTermsFrozenAt = null, ?Verifactu $verifactu = null, ?Pdf $pdf = null, ?string $publicUrl = null, string $paymentTermsCurrency = 'EUR')
     {
         $this->id = $id;
         $this->object = $object;
@@ -750,6 +777,8 @@ class InvoiceWithCheckoutBlocks
         $this->verifactuStatus = $verifactuStatus;
         $this->paidAmount = $paidAmount;
         $this->pendingAmount = $pendingAmount;
+        $this->creditedAmount = $creditedAmount;
+        $this->inheritedPaidAmount = $inheritedPaidAmount;
         $this->payments = $payments;
         $this->isCorrective = $isCorrective;
         $this->isSent = $isSent;
@@ -775,6 +804,7 @@ class InvoiceWithCheckoutBlocks
         $this->payment = $payment;
         $this->publicLink = $publicLink;
         $this->substitutedBy = $substitutedBy;
+        $this->supersededBy = $supersededBy;
         $this->recurring = $recurring;
         $this->paidRecordedAt = $paidRecordedAt;
         $this->paidDate = $paidDate;

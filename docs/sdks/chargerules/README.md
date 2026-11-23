@@ -425,7 +425,7 @@ if ($response->object !== null) {
 ## publicApiV1StripeAutoinvoicingAccountsChargeRulesList
 
 Lists the charge treatment rules of a connected Stripe account ordered by `position`; the first match decides.
-- Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`.
+- Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`, `exemption_reason` (the exemption or non-subjection cause of a rule that invoices at 0 %, otherwise `null`).
 - Returns 404 if the account is not in your company.
 
 ### Example Usage
@@ -544,7 +544,7 @@ if ($response->statusCode === 200) {
 
 ## publicApiV1StripeAutoinvoicingAccountsChargeRulesUpdate
 
-Replace a charge treatment rule: `condition`, `outcome`, `concept`, `vat_rate` and `non_invoice_reason` are all sent again; its `position` does not change (use the reorder operation). Returns 404 `charge_rule_not_found` if the rule does not exist in that account and company, and 422 `charge_rule_invalid` when a field breaks the contract.
+Replace a charge treatment rule: `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason` and `exemption_reason` are all sent again (omitting `exemption_reason` clears the stored cause); its `position` does not change (use the reorder operation). Returns 404 `charge_rule_not_found` if the rule does not exist in that account and company, and 422 `charge_rule_invalid` when a field breaks the contract.
 
 ### Example Usage: api_key_expired
 

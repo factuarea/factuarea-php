@@ -97,6 +97,15 @@ class ChargeRule
     public ?float $vatRate;
 
     /**
+     * Cause of exemption (`E1`–`E6`) or non-subjection (`N1`, `N2`) that the invoice lines produced by the rule carry. Only with `invoice` and a `vat_rate` of 0; `null` otherwise, and the lines then carry no cause.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ChargeRuleExemptionReason $exemptionReason
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('exemption_reason')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ChargeRuleExemptionReason|null')]
+    public ?ChargeRuleExemptionReason $exemptionReason;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleObject  $object
      * @param  int  $position
@@ -107,9 +116,10 @@ class ChargeRule
      * @param  ?\Factuarea\Sdk\Models\Components\ChargeRuleNonInvoiceReason  $nonInvoiceReason
      * @param  ?string  $concept
      * @param  ?float  $vatRate
+     * @param  ?\Factuarea\Sdk\Models\Components\ChargeRuleExemptionReason  $exemptionReason
      * @phpstan-pure
      */
-    public function __construct(string $id, ChargeRuleObject $object, int $position, ChargeRuleCondition $condition, ChargeRuleOutcome $outcome, \DateTime $createdAt, \DateTime $updatedAt, ?ChargeRuleNonInvoiceReason $nonInvoiceReason = null, ?string $concept = null, ?float $vatRate = null)
+    public function __construct(string $id, ChargeRuleObject $object, int $position, ChargeRuleCondition $condition, ChargeRuleOutcome $outcome, \DateTime $createdAt, \DateTime $updatedAt, ?ChargeRuleNonInvoiceReason $nonInvoiceReason = null, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleExemptionReason $exemptionReason = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -121,5 +131,6 @@ class ChargeRule
         $this->nonInvoiceReason = $nonInvoiceReason;
         $this->concept = $concept;
         $this->vatRate = $vatRate;
+        $this->exemptionReason = $exemptionReason;
     }
 }
