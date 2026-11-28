@@ -129,6 +129,23 @@ class ConnectedAccount
     public bool $emailInvoiceToPayer;
 
     /**
+     * Kind of operation this account sells to customers outside Spain: `services` or `goods`. It decides how an invoice line without tax charged to such a customer is qualified. Defaults to `services`. Editable with `PATCH /v1/companies/{company}/connected-accounts/{account}`.
+     *
+     * @var \Factuarea\Sdk\Models\Components\ConnectedAccountCrossBorderSupply $crossBorderSupply
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cross_border_supply')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ConnectedAccountCrossBorderSupply')]
+    public ConnectedAccountCrossBorderSupply $crossBorderSupply;
+
+    /**
+     * Whether the complete invoices auto-created from this account carry the default withholding (IRPF) of the customer contact. It applies only to a customer with a default withholding above 0 and when no line carries a Stripe Tax breakdown. Defaults to `false`. Editable with `PATCH /v1/companies/{company}/connected-accounts/{account}`.
+     *
+     * @var bool $applyCustomerWithholding
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('apply_customer_withholding')]
+    public bool $applyCustomerWithholding;
+
+    /**
      * Account name reported by Stripe, or `null` if unknown.
      *
      * @var ?string $externalAccountName
@@ -186,6 +203,23 @@ class ConnectedAccount
     public ?string $feeExpensesSince;
 
     /**
+     * UUID v7 of the document series used to number the simplified invoices (`F2`) that auto-invoicing creates from this account, or `null` when none is configured (the default): they are then numbered in the company default series for simplified invoices. It is always a series of simplified invoices (`invoice_kind` `simplified`) of your company; complete invoices use `series_id`. Editable with `PATCH /v1/companies/{company}/connected-accounts/{account}`; `null` goes back to the default.
+     *
+     * @var ?string $simplifiedSeriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('simplified_series_id')]
+    public ?string $simplifiedSeriesId;
+
+    /**
+     * Language of the documents that auto-invoicing creates from this account: `es`, `en` or `ca`. Each invoice is born with it and its PDF and email follow it. `null` when none is configured (the default): invoices carry no language of their own and the company issuing language applies. Invoices already issued keep the language they were born with. Editable with `PATCH /v1/companies/{company}/connected-accounts/{account}`.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\ConnectedAccountDocumentLanguage $documentLanguage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('document_language')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\ConnectedAccountDocumentLanguage|null')]
+    public ?ConnectedAccountDocumentLanguage $documentLanguage;
+
+    /**
      * @param  string  $id
      * @param  \Factuarea\Sdk\Models\Components\ConnectedAccountObject  $object
      * @param  string  $name
@@ -200,6 +234,8 @@ class ConnectedAccount
      * @param  \Factuarea\Sdk\Models\Components\ConnectedAccountStatus  $status
      * @param  bool  $feeExpensesEnabled
      * @param  bool  $emailInvoiceToPayer
+     * @param  \Factuarea\Sdk\Models\Components\ConnectedAccountCrossBorderSupply  $crossBorderSupply
+     * @param  bool  $applyCustomerWithholding
      * @param  ?string  $externalAccountName
      * @param  ?string  $seriesId
      * @param  ?string  $defaultLineConcept
@@ -207,9 +243,11 @@ class ConnectedAccount
      * @param  ?\DateTime  $connectedAt
      * @param  ?\Factuarea\Sdk\Models\Components\FeeExpensesTaxTreatment  $feeExpensesTaxTreatment
      * @param  ?string  $feeExpensesSince
+     * @param  ?string  $simplifiedSeriesId
+     * @param  ?\Factuarea\Sdk\Models\Components\ConnectedAccountDocumentLanguage  $documentLanguage
      * @phpstan-pure
      */
-    public function __construct(string $id, ConnectedAccountObject $object, string $name, string $externalAccountId, bool $autoinvoicingEnabled, int $simplifiedThresholdCents, bool $requireNif, bool $refundsEnabled, bool $subscriptionAutoinvoicingEnabled, ConnectionMethod $connectionMethod, AuthorizationStatus $authorizationStatus, ConnectedAccountStatus $status, bool $feeExpensesEnabled, bool $emailInvoiceToPayer, ?string $externalAccountName = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null, ?\DateTime $connectedAt = null, ?FeeExpensesTaxTreatment $feeExpensesTaxTreatment = null, ?string $feeExpensesSince = null)
+    public function __construct(string $id, ConnectedAccountObject $object, string $name, string $externalAccountId, bool $autoinvoicingEnabled, int $simplifiedThresholdCents, bool $requireNif, bool $refundsEnabled, bool $subscriptionAutoinvoicingEnabled, ConnectionMethod $connectionMethod, AuthorizationStatus $authorizationStatus, ConnectedAccountStatus $status, bool $feeExpensesEnabled, bool $emailInvoiceToPayer, ConnectedAccountCrossBorderSupply $crossBorderSupply, bool $applyCustomerWithholding, ?string $externalAccountName = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null, ?\DateTime $connectedAt = null, ?FeeExpensesTaxTreatment $feeExpensesTaxTreatment = null, ?string $feeExpensesSince = null, ?string $simplifiedSeriesId = null, ?ConnectedAccountDocumentLanguage $documentLanguage = null)
     {
         $this->id = $id;
         $this->object = $object;
@@ -225,6 +263,8 @@ class ConnectedAccount
         $this->status = $status;
         $this->feeExpensesEnabled = $feeExpensesEnabled;
         $this->emailInvoiceToPayer = $emailInvoiceToPayer;
+        $this->crossBorderSupply = $crossBorderSupply;
+        $this->applyCustomerWithholding = $applyCustomerWithholding;
         $this->externalAccountName = $externalAccountName;
         $this->seriesId = $seriesId;
         $this->defaultLineConcept = $defaultLineConcept;
@@ -232,5 +272,7 @@ class ConnectedAccount
         $this->connectedAt = $connectedAt;
         $this->feeExpensesTaxTreatment = $feeExpensesTaxTreatment;
         $this->feeExpensesSince = $feeExpensesSince;
+        $this->simplifiedSeriesId = $simplifiedSeriesId;
+        $this->documentLanguage = $documentLanguage;
     }
 }

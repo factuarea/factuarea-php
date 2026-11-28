@@ -19,6 +19,7 @@ class CreateRecurringInvoiceRequestLine
     public float $quantity;
 
     /**
+     * Accepts period variables, replaced when each invoice is generated using its date and the issuing language: `{mes}`, `{mesAnterior}`, `{mesSiguiente}`, `{anio}`, `{anioMesAnterior}`, `{anioMesSiguiente}`, `{trimestre}`, `{trimestreAnterior}` and `{anioTrimestreAnterior}`. A capitalised first letter (for example `{Mes}`) capitalises the value. On save each variable counts as its longest value (month 10 characters, year 4, quarter 14) against the field limit; a 422 is returned if it does not fit.
      *
      * @var ?string $description
      */
@@ -27,6 +28,7 @@ class CreateRecurringInvoiceRequestLine
     public ?string $description = null;
 
     /**
+     * Accepts period variables, replaced when each invoice is generated using its date and the issuing language: `{mes}`, `{mesAnterior}`, `{mesSiguiente}`, `{anio}`, `{anioMesAnterior}`, `{anioMesSiguiente}`, `{trimestre}`, `{trimestreAnterior}` and `{anioTrimestreAnterior}`. A capitalised first letter (for example `{Mes}`) capitalises the value. On save each variable counts as its longest value (month 10 characters, year 4, quarter 14) against the field limit; a 422 is returned if it does not fit.
      *
      * @var ?string $additionalDescription
      */

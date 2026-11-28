@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-class Recipient
+class PdfPreviewFormRecipient
 {
     /**
      *

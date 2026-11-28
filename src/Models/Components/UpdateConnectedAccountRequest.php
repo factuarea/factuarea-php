@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 
-/** UpdateConnectedAccountRequest - Update a connected Stripe account (multi-store). All fields are optional with merge semantics (an omitted field is left unchanged): `name`, `series_id` (auto-invoicing series UUID; `null` clears it back to the company default), `simplified_threshold_cents` (0-300000), `autoinvoicing_enabled`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`, `invoice_note` (up to 500 characters, written in the notes of the auto-created invoices; `null` clears it), the Stripe fee expense settings `fee_expenses_enabled`, `fee_expenses_tax_treatment` and `fee_expenses_since`, and `email_invoice_to_payer` (emails each auto-created invoice to the address that comes with the charge). Turning fee expenses on requires the purchases module of the plan (403 `feature_not_available_in_plan`) and a tax treatment and a first month, sent or already stored (400 `parameter_missing`). A treatment or month outside the catalog is rejected with 422 `parameter_invalid_value`. The company platform account does not accept `subscription_autoinvoicing_enabled`: its subscriptions are invoiced by Factuarea (422 `parameter_invalid_value`, subcode `platform_account_subscriptions_owned_by_billing`). */
+/** UpdateConnectedAccountRequest - Update a connected Stripe account (multi-store). All fields are optional with merge semantics (an omitted field is left unchanged): `name`, `series_id` (auto-invoicing series UUID; `null` clears it back to the company default), `simplified_threshold_cents` (0-300000), `autoinvoicing_enabled`, `require_nif`, `refunds_enabled`, `subscription_autoinvoicing_enabled`, `invoice_note` (up to 500 characters, written in the notes of the auto-created invoices; `null` clears it), the Stripe fee expense settings `fee_expenses_enabled`, `fee_expenses_tax_treatment` and `fee_expenses_since`, `email_invoice_to_payer` (emails each auto-created invoice to the address that comes with the charge), and the document settings `simplified_series_id` (series that numbers the simplified invoices; `null` clears it back to the company default series), `document_language` (`es`, `en` or `ca`; `null` clears it back to the company language), `cross_border_supply` (`services` or `goods`) and `apply_customer_withholding` (applies the withholding of the customer). Turning fee expenses on requires the purchases module of the plan (403 `feature_not_available_in_plan`) and a tax treatment and a first month, sent or already stored (400 `parameter_missing`). A treatment or month outside the catalog is rejected with 422 `parameter_invalid_value`, and so is a `cross_border_supply` outside its catalog (`param` `cross_border_supply`); a `simplified_series_id` that is not a series of simplified invoices is rejected with 422 `business_rule_violation`, subcode `series_invoice_kind_mismatch` and `param` `simplified_series_id`. The company platform account does not accept `subscription_autoinvoicing_enabled`: its subscriptions are invoiced by Factuarea (422 `parameter_invalid_value`, subcode `platform_account_subscriptions_owned_by_billing`). */
 class UpdateConnectedAccountRequest
 {
     /**
@@ -97,6 +97,25 @@ class UpdateConnectedAccountRequest
     public ?string $feeExpensesSince = null;
 
     /**
+     * Kind of operation this account sells to customers outside Spain: `services` (the default) or `goods`. It decides how an invoice line without tax charged to such a customer is qualified. Omitted leaves it unchanged. A value outside the catalog is rejected with 422 `parameter_invalid_value` and `param` `cross_border_supply`, and the stored value does not change.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequestCrossBorderSupply $crossBorderSupply
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('cross_border_supply')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequestCrossBorderSupply|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateConnectedAccountRequestCrossBorderSupply $crossBorderSupply = null;
+
+    /**
+     * Whether the complete invoices auto-created from this account carry the default withholding (IRPF) of the customer contact. It applies only to a customer with a default withholding above 0 and when no line carries a Stripe Tax breakdown. Defaults to `false`. Omitted leaves it unchanged; a value that is not a boolean is rejected with 422 on `apply_customer_withholding`.
+     *
+     * @var ?bool $applyCustomerWithholding
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('apply_customer_withholding')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $applyCustomerWithholding = null;
+
+    /**
      *
      * @var ?string $seriesId
      */
@@ -121,6 +140,25 @@ class UpdateConnectedAccountRequest
     public ?string $invoiceNote = null;
 
     /**
+     * Series that numbers the simplified invoices (`F2`) auto-created from this account: the UUID v7 of a series of your company whose `invoice_kind` is `simplified`. Three states: omitted leaves it unchanged, `null` clears it (simplified invoices go back to the company default series for simplified invoices, which is created when missing) and a UUID sets it. A series that is not a series of simplified invoices (complete, corrective, simplified corrective or of another document type) is rejected with 422 `business_rule_violation`, subcode `series_invoice_kind_mismatch` and `param` `simplified_series_id`; one that does not exist or belongs to another company, with 422. Complete invoices keep using `series_id`.
+     *
+     * @var ?string $simplifiedSeriesId
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('simplified_series_id')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?string $simplifiedSeriesId = null;
+
+    /**
+     * Language of the documents auto-created from this account: `es`, `en` or `ca`. Each invoice the account issues is born with it, and its PDF and email follow it. Three states: omitted leaves it unchanged, `null` clears it (new invoices carry no language of their own and the company issuing language applies, which is the default) and a language sets it. A value outside the catalog is rejected with 422 on `document_language`. Invoices already issued keep the language they were born with.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequestDocumentLanguage $documentLanguage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('document_language')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequestDocumentLanguage|null')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?UpdateConnectedAccountRequestDocumentLanguage $documentLanguage = null;
+
+    /**
      * @param  ?string  $name
      * @param  ?int  $simplifiedThresholdCents
      * @param  ?bool  $autoinvoicingEnabled
@@ -131,12 +169,16 @@ class UpdateConnectedAccountRequest
      * @param  ?bool  $feeExpensesEnabled
      * @param  ?string  $feeExpensesTaxTreatment
      * @param  ?string  $feeExpensesSince
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequestCrossBorderSupply  $crossBorderSupply
+     * @param  ?bool  $applyCustomerWithholding
      * @param  ?string  $seriesId
      * @param  ?string  $defaultLineConcept
      * @param  ?string  $invoiceNote
+     * @param  ?string  $simplifiedSeriesId
+     * @param  ?\Factuarea\Sdk\Models\Components\UpdateConnectedAccountRequestDocumentLanguage  $documentLanguage
      * @phpstan-pure
      */
-    public function __construct(?string $name = null, ?int $simplifiedThresholdCents = null, ?bool $autoinvoicingEnabled = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?bool $emailInvoiceToPayer = null, ?bool $feeExpensesEnabled = null, ?string $feeExpensesTaxTreatment = null, ?string $feeExpensesSince = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null)
+    public function __construct(?string $name = null, ?int $simplifiedThresholdCents = null, ?bool $autoinvoicingEnabled = null, ?bool $requireNif = null, ?bool $refundsEnabled = null, ?bool $subscriptionAutoinvoicingEnabled = null, ?bool $emailInvoiceToPayer = null, ?bool $feeExpensesEnabled = null, ?string $feeExpensesTaxTreatment = null, ?string $feeExpensesSince = null, ?UpdateConnectedAccountRequestCrossBorderSupply $crossBorderSupply = null, ?bool $applyCustomerWithholding = null, ?string $seriesId = null, ?string $defaultLineConcept = null, ?string $invoiceNote = null, ?string $simplifiedSeriesId = null, ?UpdateConnectedAccountRequestDocumentLanguage $documentLanguage = null)
     {
         $this->name = $name;
         $this->simplifiedThresholdCents = $simplifiedThresholdCents;
@@ -148,8 +190,12 @@ class UpdateConnectedAccountRequest
         $this->feeExpensesEnabled = $feeExpensesEnabled;
         $this->feeExpensesTaxTreatment = $feeExpensesTaxTreatment;
         $this->feeExpensesSince = $feeExpensesSince;
+        $this->crossBorderSupply = $crossBorderSupply;
+        $this->applyCustomerWithholding = $applyCustomerWithholding;
         $this->seriesId = $seriesId;
         $this->defaultLineConcept = $defaultLineConcept;
         $this->invoiceNote = $invoiceNote;
+        $this->simplifiedSeriesId = $simplifiedSeriesId;
+        $this->documentLanguage = $documentLanguage;
     }
 }

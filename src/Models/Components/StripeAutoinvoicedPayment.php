@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Factuarea\Sdk\Models\Components;
 
 use Brick\DateTime\LocalDate;
-/** StripeAutoinvoicedPayment - A Stripe charge that generated an invoice (one-shot flows A/B and subscription cycles). The public `id` is the UUID v7 of the payment; `invoice_id`/`client_id` link to the generated invoice and client. Subscription-origin context (`subscription_id`, `stripe_invoice_id`, `period_start`, `period_end`) is `null` for one-shot charges. */
+/** StripeAutoinvoicedPayment - A Stripe charge that generated an invoice (one-shot flows A/B and subscription charges: sign-up, renewal, plan change and threshold charge). The public `id` is the UUID v7 of the payment; `invoice_id`/`client_id` link to the generated invoice and client. Subscription-origin context (`subscription_id`, `stripe_invoice_id`, `period_start`, `period_end`) is `null` for one-shot charges. */
 class StripeAutoinvoicedPayment
 {
     /**
@@ -102,7 +102,7 @@ class StripeAutoinvoicedPayment
     public ?string $stripeReference;
 
     /**
-     * External Stripe subscription id (`sub_xxx`) when the charge comes from a subscription cycle; `null` for one-shot charges. This is an external Stripe id, NOT an internal UUID.
+     * External Stripe subscription id (`sub_xxx`) when the charge comes from a subscription (sign-up, renewal, plan change or threshold charge); `null` for one-shot charges. This is an external Stripe id, NOT an internal UUID.
      *
      * @var ?string $subscriptionId
      */
@@ -110,7 +110,7 @@ class StripeAutoinvoicedPayment
     public ?string $subscriptionId;
 
     /**
-     * Stripe invoice id (`in_xxx`) of the billed cycle; `null` for one-shot charges.
+     * Stripe invoice id (`in_xxx`) of the billed subscription invoice; `null` for one-shot charges.
      *
      * @var ?string $stripeInvoiceId
      */

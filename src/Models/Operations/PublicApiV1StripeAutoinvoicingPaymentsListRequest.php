@@ -21,7 +21,7 @@ class PublicApiV1StripeAutoinvoicingPaymentsListRequest
     public string $company;
 
     /**
-     * Only payments of this origin: `subscription` or `oneshot`.
+     * Only payments of this origin: `subscription` (sign-up, renewal, plan change or threshold charge of a subscription) or `oneshot`.
      *
      * @var ?\Factuarea\Sdk\Models\Operations\Origin $origin
      */

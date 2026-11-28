@@ -1978,7 +1978,7 @@ class Invoices
      * Copy the lines, client and metadata of an invoice into a new draft with a fresh `id`.
      * - The draft is issued today; each `payment_terms` instalment keeps its amount and moves by the days between both issue dates, and `due_on` is the last moved instalment.
      * - A simplified invoice is copied without a series and must still be eligible: 422 `simplified_invoice_not_allowed`.
-     * - Corrective, annulled and cancelled invoices return 422 `invoice_not_duplicatable_in_current_state`.
+     * - Corrective, annulled and cancelled invoices, and a complete invoice without recipient tax id (only auto-invoicing creates one), return 422 `invoice_not_duplicatable_in_current_state`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesDuplicateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1InvoicesDuplicateResponse
@@ -2241,6 +2241,7 @@ class Invoices
      * - Without `submission_id` it exports the current legal source; draft and scheduled invoices return 422 `invoice_not_emittable_for_facturae`.
      * - With an own `submission_id` it returns that attempt's exact retained bytes, never regenerated or completed with live data.
      * - Hash and `ETag` only accompany a known retained artifact.
+     * - 422 `facturae_buyer_required` when the invoice has no recipient, or is a complete invoice without recipient tax id.
      *
      * @param  string  $company
      * @param  string  $invoice

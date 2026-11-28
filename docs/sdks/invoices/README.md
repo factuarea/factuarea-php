@@ -5490,6 +5490,39 @@ if ($response->statusCode === 200) {
 
 Retrieve a sales invoice by its `id`.
 
+### Example Usage: complete_without_recipient_tax_id
+
+<!-- UsageSnippet language="php" operationID="public-api.v1.invoices.show" method="get" path="/companies/{company}/invoices/{invoice}" example="complete_without_recipient_tax_id" -->
+```php
+declare(strict_types=1);
+
+require 'vendor/autoload.php';
+
+use Brick\DateTime\LocalDate;
+use Factuarea\Sdk;
+use Factuarea\Sdk\Models\Components;
+
+$sdk = Sdk\Factuarea::builder()
+    ->setSecurity(
+        new Components\Security(
+            bearerAuth: '<YOUR_BEARER_TOKEN_HERE>',
+        )
+    )
+    ->build();
+
+
+
+$response = $sdk->invoices->publicApiV1InvoicesShow(
+    company: '2450b97d-8956-467c-99c8-167e83509301',
+    invoice: '2d4de09b-a8bb-4917-b179-5e661052e883',
+    factuareaVersion: LocalDate::parse('2026-06-01')
+
+);
+
+if ($response->object !== null) {
+    // handle response
+}
+```
 ### Example Usage: success
 
 <!-- UsageSnippet language="php" operationID="public-api.v1.invoices.show" method="get" path="/companies/{company}/invoices/{invoice}" example="success" -->
@@ -6812,6 +6845,7 @@ Stream the Facturae 3.2.2 XML of an issued invoice: signed `.xsig` with a signin
 - Without `submission_id` it exports the current legal source; draft and scheduled invoices return 422 `invoice_not_emittable_for_facturae`.
 - With an own `submission_id` it returns that attempt's exact retained bytes, never regenerated or completed with live data.
 - Hash and `ETag` only accompany a known retained artifact.
+- 422 `facturae_buyer_required` when the invoice has no recipient, or is a complete invoice without recipient tax id.
 
 ### Example Usage
 
@@ -6971,7 +7005,7 @@ if ($response->bytes !== null) {
 Copy the lines, client and metadata of an invoice into a new draft with a fresh `id`.
 - The draft is issued today; each `payment_terms` instalment keeps its amount and moves by the days between both issue dates, and `due_on` is the last moved instalment.
 - A simplified invoice is copied without a series and must still be eligible: 422 `simplified_invoice_not_allowed`.
-- Corrective, annulled and cancelled invoices return 422 `invoice_not_duplicatable_in_current_state`.
+- Corrective, annulled and cancelled invoices, and a complete invoice without recipient tax id (only auto-invoicing creates one), return 422 `invoice_not_duplicatable_in_current_state`.
 
 ### Example Usage
 

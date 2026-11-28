@@ -137,6 +137,7 @@ Submit an issued invoice to FACe; needs send capability, the issuer signing cert
 - Omit the body for a fresh attempt (201); an own `submission_id` continues that prepared attempt with its retained bytes (200).
 - Concurrent claims and uncertain transmissions return 409; after a 500 or 502 with `attempt_id`, read that attempt before retrying.
 - Test keys never contact FACe.
+- 422 `facturae_buyer_required` when the invoice has no recipient, or is a complete invoice without recipient tax id.
 
 ### Example Usage: continue_prepared
 

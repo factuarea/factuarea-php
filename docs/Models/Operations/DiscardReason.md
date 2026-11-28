@@ -55,3 +55,13 @@ Typed reason why the event was discarded, from the closed catalogue.
 | `RefundOfNonInvoicedCharge`                     | refund_of_non_invoiced_charge                   |
 | `StripeInvoiceWithoutAmount`                    | stripe_invoice_without_amount                   |
 | `DeauthorizationNotApplicable`                  | deauthorization_not_applicable                  |
+| `StripeTaxRateUnresolved`                       | stripe_tax_rate_unresolved                      |
+| `StripeTaxabilityReasonUnsupported`             | stripe_taxability_reason_unsupported            |
+| `StripeForeignVat`                              | stripe_foreign_vat                              |
+| `StripeTaxJurisdictionUnknown`                  | stripe_tax_jurisdiction_unknown                 |
+| `ReverseChargeWithoutVatId`                     | reverse_charge_without_vat_id                   |
+| `RecipientDetailsRequired`                      | recipient_details_required                      |
+| `RecipientTaxIdRequired`                        | recipient_tax_id_required                       |
+| `SubscriptionCreditToBalance`                   | subscription_credit_to_balance                  |
+| `CustomerBalanceApplied`                        | customer_balance_applied                        |
+| `WithholdingWithStripeTax`                      | withholding_with_stripe_tax                     |
