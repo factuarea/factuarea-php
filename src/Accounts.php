@@ -421,6 +421,7 @@ class Accounts
      * - Editable: `name`, `series_id` (`null` uses the company default series) and the per-account fiscal policy.
      * - `invoice_note` (up to 500 characters) goes in auto-created invoices; `null` clears it.
      * - `email_invoice_to_payer` emails each auto-created invoice to the address that comes with the charge.
+     * - Document settings: `simplified_series_id` and `document_language` (`null` clears them), `cross_border_supply` (`services` or `goods`) and `apply_customer_withholding`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsUpdateResponse

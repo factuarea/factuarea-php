@@ -62,15 +62,25 @@ class ChargeRuleRequest
     public ?string $exemptionReason = null;
 
     /**
+     * Whether the rule also applies to the invoices Stripe creates for subscriptions (sign-up, renewal, plan change and usage threshold charge): for those it is matched against the metadata of the invoice and of its subscription and against the texts of its lines. Optional, `false` by default: a rule left at `false` is never evaluated on a subscription invoice. Valid with both outcomes, `invoice` and `do_not_invoice`. `PUT` replaces the whole rule, so omitting `applies_to_subscriptions` there sets it back to `false` even if it was `true`. A value that is not a boolean is rejected with 422 `invalid_param_value`, with `error.param` = `applies_to_subscriptions`.
+     *
+     * @var ?bool $appliesToSubscriptions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('applies_to_subscriptions')]
+    #[\Speakeasy\Serializer\Annotation\SkipWhenNull]
+    public ?bool $appliesToSubscriptions = null;
+
+    /**
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleRequestCondition  $condition
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleRequestOutcome  $outcome
      * @param  ?string  $concept
      * @param  ?float  $vatRate
      * @param  ?\Factuarea\Sdk\Models\Components\ChargeRuleRequestNonInvoiceReason  $nonInvoiceReason
      * @param  ?string  $exemptionReason
+     * @param  ?bool  $appliesToSubscriptions
      * @phpstan-pure
      */
-    public function __construct(ChargeRuleRequestCondition $condition, ChargeRuleRequestOutcome $outcome, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleRequestNonInvoiceReason $nonInvoiceReason = null, ?string $exemptionReason = null)
+    public function __construct(ChargeRuleRequestCondition $condition, ChargeRuleRequestOutcome $outcome, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleRequestNonInvoiceReason $nonInvoiceReason = null, ?string $exemptionReason = null, ?bool $appliesToSubscriptions = null)
     {
         $this->condition = $condition;
         $this->outcome = $outcome;
@@ -78,5 +88,6 @@ class ChargeRuleRequest
         $this->vatRate = $vatRate;
         $this->nonInvoiceReason = $nonInvoiceReason;
         $this->exemptionReason = $exemptionReason;
+        $this->appliesToSubscriptions = $appliesToSubscriptions;
     }
 }

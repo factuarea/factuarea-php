@@ -60,4 +60,14 @@ enum IntegrationEventDiscardReason: string
     case RefundOfNonInvoicedCharge = 'refund_of_non_invoiced_charge';
     case StripeInvoiceWithoutAmount = 'stripe_invoice_without_amount';
     case DeauthorizationNotApplicable = 'deauthorization_not_applicable';
+    case StripeTaxRateUnresolved = 'stripe_tax_rate_unresolved';
+    case StripeTaxabilityReasonUnsupported = 'stripe_taxability_reason_unsupported';
+    case StripeForeignVat = 'stripe_foreign_vat';
+    case StripeTaxJurisdictionUnknown = 'stripe_tax_jurisdiction_unknown';
+    case ReverseChargeWithoutVatId = 'reverse_charge_without_vat_id';
+    case RecipientDetailsRequired = 'recipient_details_required';
+    case RecipientTaxIdRequired = 'recipient_tax_id_required';
+    case SubscriptionCreditToBalance = 'subscription_credit_to_balance';
+    case CustomerBalanceApplied = 'customer_balance_applied';
+    case WithholdingWithStripeTax = 'withholding_with_stripe_tax';
 }

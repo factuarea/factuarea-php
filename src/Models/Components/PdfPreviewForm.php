@@ -71,11 +71,11 @@ class PdfPreviewForm
 
     /**
      *
-     * @var ?\Factuarea\Sdk\Models\Components\Recipient $recipient
+     * @var ?\Factuarea\Sdk\Models\Components\PdfPreviewFormRecipient $recipient
      */
     #[\Speakeasy\Serializer\Annotation\SerializedName('recipient')]
-    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\Recipient|null')]
-    public ?Recipient $recipient;
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\PdfPreviewFormRecipient|null')]
+    public ?PdfPreviewFormRecipient $recipient;
 
     /**
      *
@@ -119,14 +119,14 @@ class PdfPreviewForm
      * @param  array<string>  $legalMentions
      * @param  ?string  $seriesId
      * @param  ?string  $contactId
-     * @param  ?\Factuarea\Sdk\Models\Components\Recipient  $recipient
+     * @param  ?\Factuarea\Sdk\Models\Components\PdfPreviewFormRecipient  $recipient
      * @param  ?\Factuarea\Sdk\Models\Components\Delivery  $delivery
      * @param  ?\Factuarea\Sdk\Models\Components\PdfPreviewFormBusinessData  $businessData
      * @param  ?array<\Factuarea\Sdk\Models\Components\AdministrativeCentres>  $administrativeCentres
      * @param  ?array<\Factuarea\Sdk\Models\Components\PaymentTerms>  $paymentTerms
      * @phpstan-pure
      */
-    public function __construct(Selection $selection, PdfPreviewFormDocument $document, array $lines, array $customFields, array $legalMentions, ?string $seriesId = null, ?string $contactId = null, ?Recipient $recipient = null, ?Delivery $delivery = null, ?PdfPreviewFormBusinessData $businessData = null, ?array $administrativeCentres = null, ?array $paymentTerms = null)
+    public function __construct(Selection $selection, PdfPreviewFormDocument $document, array $lines, array $customFields, array $legalMentions, ?string $seriesId = null, ?string $contactId = null, ?PdfPreviewFormRecipient $recipient = null, ?Delivery $delivery = null, ?PdfPreviewFormBusinessData $businessData = null, ?array $administrativeCentres = null, ?array $paymentTerms = null)
     {
         $this->selection = $selection;
         $this->document = $document;

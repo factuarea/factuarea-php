@@ -50,7 +50,7 @@ class Payments
     /**
      * List Stripe autoinvoiced charges
      *
-     * List the Stripe charges that generated an invoice (flows A and B plus subscription cycles), with cursor-based pagination. The generated invoice and client are returned as `invoice_id`/`client_id`. Subscription-cycle charges also expose `subscription_id` (external `sub_xxx`), `stripe_invoice_id` and the billed period. Filter by `origin` (`subscription`/`oneshot`).
+     * List the Stripe charges that generated an invoice (one-shot flows A and B, plus subscription charges: sign-up, renewal, plan change and threshold charge), with cursor-based pagination. The generated invoice and client are returned as `invoice_id`/`client_id`. Subscription charges also expose `subscription_id` (external `sub_xxx`), `stripe_invoice_id` and the billed period. Filter by `origin` (`subscription`/`oneshot`).
      *
      * @param  string  $company
      * @param  ?\Factuarea\Sdk\Models\Operations\Origin  $origin

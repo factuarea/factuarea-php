@@ -202,7 +202,7 @@ $response = $sdk->pdfTemplatePreviews->publicApiV1PdfTemplatePreviewsCreate(
                     substitutedInvoices: [],
                     shippingCost: '<value>',
                 ),
-                recipient: new Components\Recipient(
+                recipient: new Components\PdfPreviewFormRecipient(
                     name: '<value>',
                     taxId: '<id>',
                     address: '473 Ratke Club',

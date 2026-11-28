@@ -347,6 +347,15 @@ class InvoiceWithCheckoutBlocks
     public ?string $number;
 
     /**
+     * Recipient of a complete invoice issued WITHOUT the recipient's tax ID (article 6.1.d of Royal Decree 1619/2012): name, address and country only, copied onto the invoice when it was issued. When it is present the invoice has no contact, so `client.id` is `null` and `client.name` repeats `recipient.name`. `null` on every invoice that has a client, which is the common case. Only the account's automatic invoicing creates this kind of invoice, and its VeriFactu record is `F2` (`R5` for its corrective).
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksRecipient $recipient
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('recipient')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksRecipient|null')]
+    public ?InvoiceWithCheckoutBlocksRecipient $recipient;
+
+    /**
      * UUID of the price list selected for this document.
      *
      * @var ?string $priceListId
@@ -549,6 +558,15 @@ class InvoiceWithCheckoutBlocks
     public ?string $sourceStoreId;
 
     /**
+     * Own language of the invoice (`es`, `en` or `ca`): fixed when the account's automatic invoicing creates it and read-only, so no write operation accepts it. `null` when the invoice has no language of its own, which is the common case: its PDF and its email then come out in the company's issuing language.
+     *
+     * @var ?\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksDocumentLanguage $documentLanguage
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('document_language')]
+    #[\Speakeasy\Serializer\Annotation\Type('\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksDocumentLanguage|null')]
+    public ?InvoiceWithCheckoutBlocksDocumentLanguage $documentLanguage;
+
+    /**
      *
      * @var ?\Factuarea\Sdk\Models\Components\DocumentPresentationState $presentation
      */
@@ -709,6 +727,7 @@ class InvoiceWithCheckoutBlocks
      * @param  \Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksPaymentTermsSource  $paymentTermsSource
      * @param  string  $paymentTermsCurrency
      * @param  ?string  $number
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksRecipient  $recipient
      * @param  ?string  $priceListId
      * @param  ?string  $priceListName
      * @param  ?LocalDate  $dueOn
@@ -734,6 +753,7 @@ class InvoiceWithCheckoutBlocks
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksScheduledAction  $scheduledAction
      * @param  ?string  $channel
      * @param  ?string  $sourceStoreId
+     * @param  ?\Factuarea\Sdk\Models\Components\InvoiceWithCheckoutBlocksDocumentLanguage  $documentLanguage
      * @param  ?\Factuarea\Sdk\Models\Components\DocumentPresentationState  $presentation
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceHeaderReferences  $businessReferences
      * @param  ?\Factuarea\Sdk\Models\Components\InvoiceInvoicingPeriod  $invoicingPeriod
@@ -749,7 +769,7 @@ class InvoiceWithCheckoutBlocks
      * @param  ?string  $publicUrl
      * @phpstan-pure
      */
-    public function __construct(string $id, InvoiceWithCheckoutBlocksObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceWithCheckoutBlocksStatus $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $totalDisbursements, string $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, string $paidAmount, string $pendingAmount, string $creditedAmount, string $inheritedPaidAmount, InvoiceWithCheckoutBlocksPayments $payments, bool $isCorrective, bool $isSent, InvoiceWithCheckoutBlocksOrigin $origin, DocumentPdfOutputState $pdfOutputState, \DateTime $createdAt, \DateTime $updatedAt, array $legalLiterals, int $administrativeVersion, array $structuredSourceSnapshots, int $paymentTermsVersion, InvoiceWithCheckoutBlocksPaymentTermsSource $paymentTermsSource, ?string $number = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceSupersededBy $supersededBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceWithCheckoutBlocksSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceWithCheckoutBlocksScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?DocumentPresentationState $presentation = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $administrativeSnapshot = null, ?array $administrativeOverride = null, ?array $administrativeCentres = null, ?string $administrativeRevisionId = null, ?array $paymentTerms = null, ?\DateTime $paymentTermsCapturedAt = null, ?\DateTime $paymentTermsFrozenAt = null, ?Verifactu $verifactu = null, ?Pdf $pdf = null, ?string $publicUrl = null, string $paymentTermsCurrency = 'EUR')
+    public function __construct(string $id, InvoiceWithCheckoutBlocksObject $object, bool $isNumberAssigned, string $type, SeriesRef $series, ClientRef $client, InvoiceWithCheckoutBlocksStatus $status, LocalDate $issuedOn, string $subtotal, string $taxesTotal, string $totalVat, string $totalRetention, string $totalSurcharge, string $total, string $totalDisbursements, string $totalToPay, string $currency, array $lines, array $tags, array $customFields, string $operationRegime, array $legalMentions, bool $exclude347, string $verifactuStatus, string $paidAmount, string $pendingAmount, string $creditedAmount, string $inheritedPaidAmount, InvoiceWithCheckoutBlocksPayments $payments, bool $isCorrective, bool $isSent, InvoiceWithCheckoutBlocksOrigin $origin, DocumentPdfOutputState $pdfOutputState, \DateTime $createdAt, \DateTime $updatedAt, array $legalLiterals, int $administrativeVersion, array $structuredSourceSnapshots, int $paymentTermsVersion, InvoiceWithCheckoutBlocksPaymentTermsSource $paymentTermsSource, ?string $number = null, ?InvoiceWithCheckoutBlocksRecipient $recipient = null, ?string $priceListId = null, ?string $priceListName = null, ?LocalDate $dueOn = null, ?LocalDate $operationOn = null, ?string $notes = null, ?string $externalId = null, ?array $metadata = null, ?string $exemptionReason = null, ?InvoiceCorrective $corrective = null, ?InvoicePayment $payment = null, ?PublicLink $publicLink = null, ?InvoiceSubstitutedBy $substitutedBy = null, ?InvoiceSupersededBy $supersededBy = null, ?InvoiceRecurring $recurring = null, ?\DateTime $paidRecordedAt = null, ?LocalDate $paidDate = null, ?\DateTime $issuedAt = null, ?\DateTime $sentAt = null, ?InvoiceWithCheckoutBlocksSentVia $sentVia = null, ?\DateTime $voidedAt = null, ?string $voidReason = null, ?\DateTime $scheduledFor = null, ?InvoiceWithCheckoutBlocksScheduledAction $scheduledAction = null, ?string $channel = null, ?string $sourceStoreId = null, ?InvoiceWithCheckoutBlocksDocumentLanguage $documentLanguage = null, ?DocumentPresentationState $presentation = null, ?InvoiceHeaderReferences $businessReferences = null, ?InvoiceInvoicingPeriod $invoicingPeriod = null, ?array $administrativeSnapshot = null, ?array $administrativeOverride = null, ?array $administrativeCentres = null, ?string $administrativeRevisionId = null, ?array $paymentTerms = null, ?\DateTime $paymentTermsCapturedAt = null, ?\DateTime $paymentTermsFrozenAt = null, ?Verifactu $verifactu = null, ?Pdf $pdf = null, ?string $publicUrl = null, string $paymentTermsCurrency = 'EUR')
     {
         $this->id = $id;
         $this->object = $object;
@@ -792,6 +812,7 @@ class InvoiceWithCheckoutBlocks
         $this->paymentTermsVersion = $paymentTermsVersion;
         $this->paymentTermsSource = $paymentTermsSource;
         $this->number = $number;
+        $this->recipient = $recipient;
         $this->priceListId = $priceListId;
         $this->priceListName = $priceListName;
         $this->dueOn = $dueOn;
@@ -817,6 +838,7 @@ class InvoiceWithCheckoutBlocks
         $this->scheduledAction = $scheduledAction;
         $this->channel = $channel;
         $this->sourceStoreId = $sourceStoreId;
+        $this->documentLanguage = $documentLanguage;
         $this->presentation = $presentation;
         $this->businessReferences = $businessReferences;
         $this->invoicingPeriod = $invoicingPeriod;

@@ -56,6 +56,14 @@ class ChargeRule
     public ChargeRuleOutcome $outcome;
 
     /**
+     * Whether the rule also applies to the invoices Stripe creates for subscriptions (sign-up, renewal, plan change and usage threshold charge). `false` by default: a rule left at `false` is never evaluated on a subscription invoice. It is valid with both outcomes.
+     *
+     * @var bool $appliesToSubscriptions
+     */
+    #[\Speakeasy\Serializer\Annotation\SerializedName('applies_to_subscriptions')]
+    public bool $appliesToSubscriptions;
+
+    /**
      * When the rule was created (ISO 8601).
      *
      * @var \DateTime $createdAt
@@ -111,6 +119,7 @@ class ChargeRule
      * @param  int  $position
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleCondition  $condition
      * @param  \Factuarea\Sdk\Models\Components\ChargeRuleOutcome  $outcome
+     * @param  bool  $appliesToSubscriptions
      * @param  \DateTime  $createdAt
      * @param  \DateTime  $updatedAt
      * @param  ?\Factuarea\Sdk\Models\Components\ChargeRuleNonInvoiceReason  $nonInvoiceReason
@@ -119,13 +128,14 @@ class ChargeRule
      * @param  ?\Factuarea\Sdk\Models\Components\ChargeRuleExemptionReason  $exemptionReason
      * @phpstan-pure
      */
-    public function __construct(string $id, ChargeRuleObject $object, int $position, ChargeRuleCondition $condition, ChargeRuleOutcome $outcome, \DateTime $createdAt, \DateTime $updatedAt, ?ChargeRuleNonInvoiceReason $nonInvoiceReason = null, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleExemptionReason $exemptionReason = null)
+    public function __construct(string $id, ChargeRuleObject $object, int $position, ChargeRuleCondition $condition, ChargeRuleOutcome $outcome, bool $appliesToSubscriptions, \DateTime $createdAt, \DateTime $updatedAt, ?ChargeRuleNonInvoiceReason $nonInvoiceReason = null, ?string $concept = null, ?float $vatRate = null, ?ChargeRuleExemptionReason $exemptionReason = null)
     {
         $this->id = $id;
         $this->object = $object;
         $this->position = $position;
         $this->condition = $condition;
         $this->outcome = $outcome;
+        $this->appliesToSubscriptions = $appliesToSubscriptions;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->nonInvoiceReason = $nonInvoiceReason;

@@ -52,6 +52,7 @@ class ChargeRules
      *
      * Creates a charge treatment rule at the end of the account's list; responds 201.
      * - A rule matches by `condition` and either invoices the charge or excludes it with `non_invoice_reason`.
+     * - Optional `applies_to_subscriptions` (`false` by default) also applies the rule to Stripe subscription invoices.
      * - Fails with `charge_rule_invalid` or `charge_rule_limit_reached`.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesCreateRequest  $request
@@ -280,7 +281,7 @@ class ChargeRules
      * List charge treatment rules of a connected Stripe account
      *
      * Lists the charge treatment rules of a connected Stripe account ordered by `position`; the first match decides.
-     * - Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`, `exemption_reason` (the exemption or non-subjection cause of a rule that invoices at 0 %, otherwise `null`).
+     * - Each rule exposes `id` (UUID v7), `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`, `exemption_reason` (the exemption or non-subjection cause of a rule that invoices at 0 %, otherwise `null`) and `applies_to_subscriptions` (whether the rule also applies to Stripe subscription invoices).
      * - Returns 404 if the account is not in your company.
      *
      * @param  string  $company
@@ -525,7 +526,7 @@ class ChargeRules
     /**
      * Update a charge treatment rule
      *
-     * Replace a charge treatment rule: `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason` and `exemption_reason` are all sent again (omitting `exemption_reason` clears the stored cause); its `position` does not change (use the reorder operation). Returns 404 `charge_rule_not_found` if the rule does not exist in that account and company, and 422 `charge_rule_invalid` when a field breaks the contract.
+     * Replace a charge treatment rule: `condition`, `outcome`, `concept`, `vat_rate`, `non_invoice_reason`, `exemption_reason` and `applies_to_subscriptions` are all sent again (omitting `exemption_reason` clears the stored cause and omitting `applies_to_subscriptions` sets it back to `false`); its `position` does not change (use the reorder operation). Returns 404 `charge_rule_not_found` if the rule does not exist in that account and company, and 422 `charge_rule_invalid` when a field breaks the contract.
      *
      * @param  \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdateRequest  $request
      * @return \Factuarea\Sdk\Models\Operations\PublicApiV1StripeAutoinvoicingAccountsChargeRulesUpdateResponse
